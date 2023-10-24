@@ -929,7 +929,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `split_by` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'con',
   `use_mdomain_in_lists` tinyint(4) NOT NULL DEFAULT '0',
   `use_https` text COLLATE utf8_unicode_ci NOT NULL,
-  `priority_backup` tinyint(4) NOT NULL DEFAULT '1',
+  `priority_backup` tinyint(4) NOT NULL DEFAULT '0',
   `use_buffer_table` tinyint(4) NOT NULL DEFAULT '0',
   `tmdb_api_key` text COLLATE utf8_unicode_ci NOT NULL,
   `toggle_menu` tinyint(4) NOT NULL DEFAULT '0',
@@ -1106,7 +1106,7 @@ CREATE TABLE IF NOT EXISTS `streams_arguments` (
 --
 
 INSERT INTO `streams_arguments` (`id`, `argument_cat`, `argument_name`, `argument_description`, `argument_wprotocol`, `argument_key`, `argument_cmd`, `argument_type`, `argument_default_value`) VALUES
-(1, 'fetch', 'User Agent', 'Set a Custom User Agent', 'http', 'user_agent', '-user-agent "%s"', 'text', 'xui-22f'),
+(1, 'fetch', 'User Agent', 'Set a Custom User Agent', 'http', 'user_agent', '-user-agent "%s"', 'text', 'Xtream-Codes IPTV Panel Pro'),
 (2, 'fetch', 'HTTP Proxy', 'Set an HTTP Proxy in this format: ip:port', 'http', 'proxy', '-http_proxy "%s"', 'text', NULL),
 (3, 'transcode', 'Average Video Bit Rate', 'With this you can change the bitrate of the target video. It is very useful in case you want your video to be playable on slow internet connections', NULL, 'bitrate', '-b:v %dk', 'text', NULL),
 (4, 'transcode', 'Average Audio Bitrate', 'Change Audio Bitrate', NULL, 'audio_bitrate', '-b:a %dk', 'text', NULL),
