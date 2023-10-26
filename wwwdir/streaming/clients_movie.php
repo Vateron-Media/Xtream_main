@@ -4,7 +4,7 @@ set_time_limit(0);
 require "../init.php";
 $f0ac6ad2b40669833242a10c23cad2e0 = true;
 if (isset(a78BF8d35765bE2408c50712CE7a43AD::$request["username"]) || isset(A78bf8D35765be2408C50712cE7a43Ad::$request["password"]) || isset(a78BF8d35765Be2408C50712cE7A43AD::$request["stream"])) {
-    
+
     $geoip = new EA991BA3Ec74f0fb90acC94C2D2dE518(GEOIP2_FILENAME);
     $E821605d1d9382d422040b86d29632d9 = 0;
     $E2e6656d8b1675f70c487f89e4f27a3b = null;
@@ -76,7 +76,7 @@ if (isset(a78BF8d35765bE2408c50712CE7a43AD::$request["username"]) || isset(A78bf
                                                                             $a7e968a4f6d75092e74cdeb1b406041a = time();
                                                                             $E2e6656d8b1675f70c487f89e4f27a3b = "VOD";
                                                                             $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `user_activity_now` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`) VALUES('%d','%d','%d','%s','%s','%s','%d','%d','%s','%s')", $a8df9f055e91a1e9240230b69af85555["id"], $streamId, SERVER_ID, $userAgent, $f4889efa84e1f2e30e5e9780973f68cb, $E2e6656d8b1675f70c487f89e4f27a3b, getmypid(), $a7e968a4f6d75092e74cdeb1b406041a, $A75f2436a5614184bfe3442ddd050ec5, $a8df9f055e91a1e9240230b69af85555["con_isp_name"]);
-                                                                            $E821605d1d9382d422040b86d29632d9 = $f566700a43ee8e1f0412fe10fbdf03df->BeB8A0bBA80a0133A23fe13d34dC94D6();
+                                                                            $E821605d1d9382d422040b86d29632d9 = $f566700a43ee8e1f0412fe10fbdf03df->getLastInsertedId();
                                                                             $Cec7b3525ded5578bb4eaefe5020eb98 = TMP_DIR . $E821605d1d9382d422040b86d29632d9 . ".con";
                                                                             $f566700a43ee8e1f0412fe10fbdf03df->cA531F7bDc43b966DEFB4aBA3C8faf22();
                                                                             switch ($extension) {

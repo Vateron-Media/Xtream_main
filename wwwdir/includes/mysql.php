@@ -10,17 +10,17 @@ class ipTV_db {
     public $dbh;
     protected $pconnect = false;
     protected $connected = false;
-    function __construct($e52446c69000e32dcba3587971751c55, $fe0e191d9679e3b25f12894b8643f8dc, $b4096134eae1a66dde5826015002e9e8, $e81fa4916966385db57a281e4350f3af, $Bbd935a3f7113263ed95731f6a48e3a4 = 7999, $f27e9801e97df9300aad11d5c40edeeb = false, $f828fbd7943068a1cd53cba5fe86120c = false) {
+    function __construct($dbuser, $dbpassword, $dbname, $dbhost, $dbport = 7999, $pconnect = false, $someFlag = false) {
         $this->dbh = false;
-        if ($f828fbd7943068a1cd53cba5fe86120c) {
+        if ($someFlag) {
             goto e13de7cdcb920c2abf50d5cbc49ba564;
         }
-        $this->dbuser = $e52446c69000e32dcba3587971751c55;
-        $this->dbpassword = $fe0e191d9679e3b25f12894b8643f8dc;
-        $this->dbname = $b4096134eae1a66dde5826015002e9e8;
-        $this->dbhost = $e81fa4916966385db57a281e4350f3af;
-        $this->pconnect = $f27e9801e97df9300aad11d5c40edeeb;
-        $this->dbport = $Bbd935a3f7113263ed95731f6a48e3a4;
+        $this->dbuser = $dbuser;
+        $this->dbpassword = $dbpassword;
+        $this->dbname = $dbname;
+        $this->dbhost = $dbhost;
+        $this->pconnect = $pconnect;
+        $this->dbport = $dbport;
         e13de7cdcb920c2abf50d5cbc49ba564:
     }
     function Ca531F7bdc43b966dEFB4ABA3C8fAf22() {
@@ -85,7 +85,7 @@ class ipTV_db {
             return false;
         }
         $Cd4eabf7ecf553f46c17f0bd5a382c46 = array();
-        if (!($this->d1E5ce3b87bb868b9E6eFd39AA355A4F() > 0)) {
+        if (!($this->getRowCount() > 0)) {
             goto Fdf8f732442f344d5925f71f1931e7b6;
         }
         e3988826b887ae0e6e46fbfa14b3f173:
@@ -122,7 +122,7 @@ class ipTV_db {
             return false;
         }
         $c72d66b481d02f854f0bef67db92a547 = array();
-        if (!($this->d1E5Ce3b87Bb868b9e6EFD39aa355A4F() > 0)) {
+        if (!($this->getRowCount() > 0)) {
             goto Ce3310d3ae9e7245600834f20687e69a;
         }
         $c72d66b481d02f854f0bef67db92a547 = mysqli_fetch_array($this->result, MYSQLI_ASSOC);
@@ -135,7 +135,7 @@ class ipTV_db {
             return false;
         }
         $c72d66b481d02f854f0bef67db92a547 = false;
-        if (!($this->d1E5ce3b87Bb868B9E6EfD39Aa355A4f() > 0)) {
+        if (!($this->getRowCount() > 0)) {
             goto ac328ab33eec70cd683cad1c13f5a57e;
         }
         $c72d66b481d02f854f0bef67db92a547 = mysqli_fetch_array($this->result, MYSQLI_NUM);
@@ -165,13 +165,23 @@ class ipTV_db {
         $Dd875708f3436837199ecc6210211f1d = mysqli_num_fields($this->result);
         return empty($Dd875708f3436837199ecc6210211f1d) ? 0 : $Dd875708f3436837199ecc6210211f1d;
     }
-    public function bEb8A0bba80A0133a23fE13d34Dc94d6() {
-        $c56e7d2361269a789b7e90324217084b = mysqli_insert_id($this->dbh);
-        return empty($c56e7d2361269a789b7e90324217084b) ? 0 : $c56e7d2361269a789b7e90324217084b;
+    /**
+     * Get the last inserted ID from the database connection.
+     *
+     * @return int The last inserted ID, or 0 if it is empty.
+     */
+    public function getLastInsertedId() {
+        // Get the last inserted ID from the database connection
+        $lastInsertedId = mysqli_insert_id($this->dbh);
+
+        // Return 0 if the last inserted ID is empty, otherwise return the ID
+        return empty($lastInsertedId) ? 0 : $lastInsertedId;
     }
-    # Get num rows
-    public function d1E5cE3B87bb868B9e6efd39Aa355A4F() {
-        $A1b53d06894cd6b024ae321063e5a015 = mysqli_num_rows($this->result);
-        return empty($A1b53d06894cd6b024ae321063e5a015) ? 0 : $A1b53d06894cd6b024ae321063e5a015;
+    public function getRowCount() {
+        // Get the number of rows in the result
+        $rowCount = mysqli_num_rows($this->result);
+
+        // If the row count is empty, return 0. Otherwise, return the row count.
+        return empty($rowCount) ? 0 : $rowCount;
     }
 }

@@ -7,8 +7,7 @@ if (!@$argc) {
     die(0);
 }
 
-function checkfpm($pid, $prname)
-{
+function checkfpm($pid, $prname) {
     return shell_exec('ps -p ' . $pid . ' | grep ' . $prname);
 }
 
@@ -21,7 +20,7 @@ $tmpFile = TMP_DIR . md5(AFFb052cca396818D81004fF99dB49aa() . __FILE__);
 bbd9e78AC32626e138e758e840305A7C($tmpFile);
 $userAutoDisconnect = A78bf8D35765Be2408c50712Ce7A43Ad::$settings['user_auto_kick_hours'] * 3600;
 $userConnection = array();
-$Bcf87c9b8f60adb6d7364a2c5c48f8d8 = f0Bb8dBeaB7Fb0ECCcC0A73980Dbf47a('open');
+$Bcf87c9b8f60adb6d7364a2c5c48f8d8 = f0bb8dBEaB7fb0ECcCc0a73980dBF47A('open');
 $conList = explode('
 ', shell_exec('find /home/xtreamcodes/iptv_xtream_codes/tmp/ -maxdepth 1 -name "*.con" -print0 | xargs -0 grep "" -H'));
 shell_exec('rm -f /home/xtreamcodes/iptv_xtream_codes/tmp/*.con');

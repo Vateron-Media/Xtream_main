@@ -304,7 +304,7 @@ if (!(empty(A78BF8D35765Be2408C50712cE7a43aD::$request["password"]) || a78bf8D35
                 if (empty(a78bF8D35765be2408c50712CE7a43ad::$request["device_id"])) {
                     goto Ddade308d8bb86dc2d12f7f92835fc10;
                 }
-                $a0bdfe2058b3579da2b71ebf929871e2 = intval(a78bf8D35765bE2408C50712cE7a43Ad::$request["device_id"]);
+                $deviceId = intval(a78bf8D35765bE2408C50712cE7a43Ad::$request["device_id"]);
                 $Af301a166badb15e0b00336d72fb9497 = array();
                 $Af301a166badb15e0b00336d72fb9497["screens"] = array();
                 $Af301a166badb15e0b00336d72fb9497["files"] = array();
@@ -324,7 +324,7 @@ if (!(empty(A78BF8D35765Be2408C50712cE7a43aD::$request["password"]) || a78bf8D35
                     die;
                 }
                 $d76067cf9572f7a6691c85c12faf2a29 = explode("_", $Ca434bcc380e9dbd2a3a588f6c32d84f);
-                if (!(count($d76067cf9572f7a6691c85c12faf2a29) == 4 && $d76067cf9572f7a6691c85c12faf2a29[0] == $a0bdfe2058b3579da2b71ebf929871e2)) {
+                if (!(count($d76067cf9572f7a6691c85c12faf2a29) == 4 && $d76067cf9572f7a6691c85c12faf2a29[0] == $deviceId)) {
                     goto C10e45cc200175c7887f3e45981f4624;
                 }
                 if ($d76067cf9572f7a6691c85c12faf2a29[1] == "screen") {

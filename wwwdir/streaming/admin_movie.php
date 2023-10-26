@@ -21,7 +21,7 @@ if (in_array($f4889efa84e1f2e30e5e9780973f68cb, Cd89785224751CCA8017139daF9e891e
         }
         header("X-Accel-Buffering: no");
         E4408e37ec6ae596b1eee5e7497396f5:
-        if (!($f566700a43ee8e1f0412fe10fbdf03df->D1e5cE3B87Bb868B9E6eFd39aA355A4F() > 0)) {
+        if (!($f566700a43ee8e1f0412fe10fbdf03df->getRowCount() > 0)) {
             goto A87b38db3382712a57fe78b72653a92e;
         }
         $Fc8c2b91e5fde0dc817c47293478940a = $f566700a43ee8e1f0412fe10fbdf03df->F1ed191D78470660edfF4A007696Bc1f();

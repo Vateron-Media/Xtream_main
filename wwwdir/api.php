@@ -76,8 +76,8 @@ if (!(!in_array($remoteIpAddress, Cd89785224751cca8017139DaF9e891e::Ab69E1103C96
                 switch ($rSub) {
                     case "info":
                         if (!empty(A78BF8d35765Be2408c50712ce7a43aD::$request["mac"])) {
-                            $bad0c96fedbc6eccfe927016a4dc3cd6 = a78bf8d35765BE2408C50712ce7a43aD::$request["mac"];
-                            $a8df9f055e91a1e9240230b69af85555 = CD89785224751cCa8017139DAF9e891E::f2cBD6b6F59558B819C0CFF8c3b2Ef2c(false, $bad0c96fedbc6eccfe927016a4dc3cd6, true, false, true);
+                            $mac = a78bf8d35765BE2408C50712ce7a43aD::$request["mac"];
+                            $a8df9f055e91a1e9240230b69af85555 = CD89785224751cCa8017139DAF9e891E::f2cBD6b6F59558B819C0CFF8c3b2Ef2c(false, $mac, true, false, true);
                             if (!empty($a8df9f055e91a1e9240230b69af85555)) {
                                 echo json_encode(array_merge(array("result" => true), $a8df9f055e91a1e9240230b69af85555));
                                 goto Cae5bb3a650138d4e51b652db78b831a;
@@ -91,14 +91,14 @@ if (!(!in_array($remoteIpAddress, Cd89785224751cca8017139DaF9e891e::Ab69E1103C96
                         goto E4df417f5446cab33460283f6bfb20d4;
                     case "edit":
                         if (!empty(a78bf8D35765bE2408C50712cE7a43ad::$request["mac"])) {
-                            $bad0c96fedbc6eccfe927016a4dc3cd6 = a78bf8d35765bE2408C50712Ce7a43AD::$request["mac"];
+                            $mac = a78bf8d35765bE2408C50712Ce7a43AD::$request["mac"];
                             $Bf4bb0ad11102aaccbf77b6cdc1fd66f = empty(A78bf8d35765BE2408c50712CE7A43ad::$request["user_data"]) ? array() : A78bf8D35765bE2408c50712CE7a43AD::$request["user_data"];
                             $Bf4bb0ad11102aaccbf77b6cdc1fd66f["is_mag"] = 1;
                             $b0f1eb357ed72245e03dfe6268912497 = FBAac025084A44F7876230Ff53A6137F($Bf4bb0ad11102aaccbf77b6cdc1fd66f);
-                            if ($f566700a43ee8e1f0412fe10fbdf03df->query("UPDATE `users` SET {$b0f1eb357ed72245e03dfe6268912497} WHERE id = ( SELECT user_id FROM mag_devices WHERE `mac` = '%s' )", base64_encode(strtoupper($bad0c96fedbc6eccfe927016a4dc3cd6)))) {
+                            if ($f566700a43ee8e1f0412fe10fbdf03df->query("UPDATE `users` SET {$b0f1eb357ed72245e03dfe6268912497} WHERE id = ( SELECT user_id FROM mag_devices WHERE `mac` = '%s' )", base64_encode(strtoupper($mac)))) {
                                 if ($f566700a43ee8e1f0412fe10fbdf03df->e872BE457a7F493D774179C6BdF95b46() > 0) {
                                     echo json_encode(array("result" => true));
-                                    $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` ) VALUES( '%s', '%s', '%s', '%s', '%s' )", "SYSTEM API[{$remoteIpAddress}]", $bad0c96fedbc6eccfe927016a4dc3cd6, "-", time(), "[API->Edit MAG Device]");
+                                    $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` ) VALUES( '%s', '%s', '%s', '%s', '%s' )", "SYSTEM API[{$remoteIpAddress}]", $mac, "-", time(), "[API->Edit MAG Device]");
                                     goto ef316132581356bd60698b48094eae79;
                                 }
                                 echo json_encode(array("result" => false));
@@ -116,7 +116,7 @@ if (!(!in_array($remoteIpAddress, Cd89785224751cca8017139DaF9e891e::Ab69E1103C96
                         $Bf4bb0ad11102aaccbf77b6cdc1fd66f = empty(a78bF8d35765BE2408c50712cE7A43Ad::$request["user_data"]) ? array() : a78BF8d35765BE2408c50712ce7A43aD::$request["user_data"];
                         if (!empty($Bf4bb0ad11102aaccbf77b6cdc1fd66f["mac"])) {
                             $fb226b0ab56e366f44da9cf9ee107fff = array(1, 2, 3);
-                            $bad0c96fedbc6eccfe927016a4dc3cd6 = base64_encode(strtoupper($Bf4bb0ad11102aaccbf77b6cdc1fd66f["mac"]));
+                            $mac = base64_encode(strtoupper($Bf4bb0ad11102aaccbf77b6cdc1fd66f["mac"]));
                             unset($Bf4bb0ad11102aaccbf77b6cdc1fd66f["mac"]);
                             $Bf4bb0ad11102aaccbf77b6cdc1fd66f["username"] = a78bF8d35765be2408c50712Ce7a43ad::e5182e3aFA58aC7EC5D69d56B28819cd(10);
                             $Bf4bb0ad11102aaccbf77b6cdc1fd66f["password"] = a78bf8D35765be2408c50712Ce7A43AD::E5182e3afA58AC7Ec5D69D56B28819cd(10);
@@ -141,17 +141,17 @@ if (!(!in_array($remoteIpAddress, Cd89785224751cca8017139DaF9e891e::Ab69E1103C96
                             }
                             unset($Bf4bb0ad11102aaccbf77b6cdc1fd66f["output_formats"]);
                             f11c105aa3afceda245b5b2320f8e469:
-                            if (!CE15043404aa3e950fc9C9dd8bc0325a("mag_devices", "mac", $bad0c96fedbc6eccfe927016a4dc3cd6)) {
+                            if (!CE15043404aa3e950fc9C9dd8bc0325a("mag_devices", "mac", $mac)) {
                                 $b0f1eb357ed72245e03dfe6268912497 = b484C4Ff0e3EE69B9d98B92884B88c0F($Bf4bb0ad11102aaccbf77b6cdc1fd66f);
                                 if ($f566700a43ee8e1f0412fe10fbdf03df->Fc53e22ae7eE3bb881CD95Fb606914F0("INSERT INTO `users` {$b0f1eb357ed72245e03dfe6268912497}")) {
                                     if ($f566700a43ee8e1f0412fe10fbdf03df->e872Be457a7f493d774179c6BDF95B46() > 0) {
-                                        $E38668abaa324e464e266fb7b7e784b1 = $f566700a43ee8e1f0412fe10fbdf03df->bEB8A0Bba80a0133A23FE13D34dC94D6();
+                                        $E38668abaa324e464e266fb7b7e784b1 = $f566700a43ee8e1f0412fe10fbdf03df->getLastInsertedId();
                                         foreach ($fb226b0ab56e366f44da9cf9ee107fff as $b1f84f020035bf724cdc2f6d05ee33c3) {
                                             $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `user_output` ( `user_id`, `access_output_id` )VALUES( '%d', '%d' )", $E38668abaa324e464e266fb7b7e784b1, $b1f84f020035bf724cdc2f6d05ee33c3);
                                         }
-                                        $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `mag_devices` ( `user_id`, `mac`, `created` )VALUES( '%d', '%s', '%d' )", $E38668abaa324e464e266fb7b7e784b1, $bad0c96fedbc6eccfe927016a4dc3cd6, time());
+                                        $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `mag_devices` ( `user_id`, `mac`, `created` )VALUES( '%d', '%s', '%d' )", $E38668abaa324e464e266fb7b7e784b1, $mac, time());
                                         echo json_encode(array("result" => true));
-                                        $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` )VALUES( '%s', '%s', '%s', '%s', '%s' )", "SYSTEM API[{$remoteIpAddress}]", base64_decode($bad0c96fedbc6eccfe927016a4dc3cd6), "-", time(), "[API->New MAG Device]");
+                                        $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` )VALUES( '%s', '%s', '%s', '%s', '%s' )", "SYSTEM API[{$remoteIpAddress}]", base64_decode($mac), "-", time(), "[API->New MAG Device]");
                                         goto b463ba810fc419d0898e72af04bb09aa;
                                     }
                                     echo json_encode(array("result" => false));
@@ -177,8 +177,8 @@ if (!(!in_array($remoteIpAddress, Cd89785224751cca8017139DaF9e891e::Ab69E1103C96
                     case "info":
                         if (!empty(a78Bf8D35765BE2408C50712CE7a43aD::$request["username"]) && !empty(a78bF8d35765bE2408c50712ce7a43aD::$request["password"])) {
                             $f6806488699d3315dc5dc1e27a401b3e = A78bF8D35765bE2408C50712Ce7a43Ad::$request["username"];
-                            $A6a4b4fbceaf0ab570c374f4faaa990f = A78Bf8D35765be2408c50712Ce7A43aD::$request["password"];
-                            $a8df9f055e91a1e9240230b69af85555 = cd89785224751Cca8017139DaF9E891E::E5550592AA298DD1D5Ee59cdCe063a12(false, $f6806488699d3315dc5dc1e27a401b3e, $A6a4b4fbceaf0ab570c374f4faaa990f, true, false, true);
+                            $password = A78Bf8D35765be2408c50712Ce7A43aD::$request["password"];
+                            $a8df9f055e91a1e9240230b69af85555 = cd89785224751Cca8017139DaF9E891E::E5550592AA298DD1D5Ee59cdCe063a12(false, $f6806488699d3315dc5dc1e27a401b3e, $password, true, false, true);
                             if (!empty($a8df9f055e91a1e9240230b69af85555)) {
                                 echo json_encode(array("result" => true, "user_info" => $a8df9f055e91a1e9240230b69af85555));
                                 goto a84bfb6a4d110af65596b1eb3194c15f;
@@ -193,14 +193,14 @@ if (!(!in_array($remoteIpAddress, Cd89785224751cca8017139DaF9e891e::Ab69E1103C96
                     case "edit":
                         if (!empty(A78bf8D35765BE2408c50712cE7a43aD::$request["username"]) && !empty(A78bf8D35765BE2408C50712ce7a43ad::$request["password"])) {
                             $f6806488699d3315dc5dc1e27a401b3e = a78BF8D35765be2408C50712cE7A43aD::$request["username"];
-                            $A6a4b4fbceaf0ab570c374f4faaa990f = A78bF8D35765bE2408C50712Ce7a43aD::$request["password"];
+                            $password = A78bF8D35765bE2408C50712Ce7a43aD::$request["password"];
                             $Bf4bb0ad11102aaccbf77b6cdc1fd66f = empty(A78BF8d35765BE2408C50712Ce7A43aD::$request["user_data"]) ? array() : a78Bf8D35765BE2408C50712Ce7A43aD::$request["user_data"];
-                            $f566700a43ee8e1f0412fe10fbdf03df->query("SELECT * FROM `users` WHERE `username` = '%s' and `password` = '%s'", $f6806488699d3315dc5dc1e27a401b3e, $A6a4b4fbceaf0ab570c374f4faaa990f);
-                            if ($f566700a43ee8e1f0412fe10fbdf03df->d1E5CE3B87BB868b9e6efD39Aa355A4F() > 0) {
+                            $f566700a43ee8e1f0412fe10fbdf03df->query("SELECT * FROM `users` WHERE `username` = '%s' and `password` = '%s'", $f6806488699d3315dc5dc1e27a401b3e, $password);
+                            if ($f566700a43ee8e1f0412fe10fbdf03df->getRowCount() > 0) {
                                 $b0f1eb357ed72245e03dfe6268912497 = fBaaC025084a44F7876230Ff53A6137F($Bf4bb0ad11102aaccbf77b6cdc1fd66f);
-                                if ($f566700a43ee8e1f0412fe10fbdf03df->query("UPDATE `users` SET {$b0f1eb357ed72245e03dfe6268912497} WHERE `username` = '%s' and `password` = '%s'", $f6806488699d3315dc5dc1e27a401b3e, $A6a4b4fbceaf0ab570c374f4faaa990f)) {
+                                if ($f566700a43ee8e1f0412fe10fbdf03df->query("UPDATE `users` SET {$b0f1eb357ed72245e03dfe6268912497} WHERE `username` = '%s' and `password` = '%s'", $f6806488699d3315dc5dc1e27a401b3e, $password)) {
                                     echo json_encode(array("result" => true));
-                                    $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` )VALUES( '%s', '%s', '%s', '%s', '%s' )", "SYSTEM API[{$remoteIpAddress}]", $f6806488699d3315dc5dc1e27a401b3e, $A6a4b4fbceaf0ab570c374f4faaa990f, time(), "[API->Edit Line]");
+                                    $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` )VALUES( '%s', '%s', '%s', '%s', '%s' )", "SYSTEM API[{$remoteIpAddress}]", $f6806488699d3315dc5dc1e27a401b3e, $password, time(), "[API->Edit Line]");
                                     goto A95dbe5b3031f4b2f358372057d6dc0f;
                                 }
                                 echo json_encode(array("result" => false, "error" => "PARAMETER ERROR"));
@@ -248,11 +248,11 @@ if (!(!in_array($remoteIpAddress, Cd89785224751cca8017139DaF9e891e::Ab69E1103C96
                         unset($Bf4bb0ad11102aaccbf77b6cdc1fd66f["output_formats"]);
                         e28125caf199086c993aa163fae1cdad:
                         $f566700a43ee8e1f0412fe10fbdf03df->query("SELECT id FROM `users` WHERE `username` = '%s' AND `password` = '%s' LIMIT 1", $Bf4bb0ad11102aaccbf77b6cdc1fd66f["username"], $Bf4bb0ad11102aaccbf77b6cdc1fd66f["password"]);
-                        if ($f566700a43ee8e1f0412fe10fbdf03df->d1e5Ce3b87bb868b9E6eFd39aA355a4F() == 0) {
+                        if ($f566700a43ee8e1f0412fe10fbdf03df->getRowCount() == 0) {
                             $b0f1eb357ed72245e03dfe6268912497 = b484C4FF0E3eE69b9D98b92884B88c0F($Bf4bb0ad11102aaccbf77b6cdc1fd66f);
                             if ($f566700a43ee8e1f0412fe10fbdf03df->fc53e22AE7Ee3bB881cD95fB606914F0("INSERT INTO `users` {$b0f1eb357ed72245e03dfe6268912497}")) {
                                 if ($f566700a43ee8e1f0412fe10fbdf03df->e872bE457a7F493D774179C6bDF95B46() > 0) {
-                                    $E38668abaa324e464e266fb7b7e784b1 = $f566700a43ee8e1f0412fe10fbdf03df->bEB8A0BbA80a0133a23fe13D34DC94D6();
+                                    $E38668abaa324e464e266fb7b7e784b1 = $f566700a43ee8e1f0412fe10fbdf03df->getLastInsertedId();
                                     foreach ($fb226b0ab56e366f44da9cf9ee107fff as $b1f84f020035bf724cdc2f6d05ee33c3) {
                                         $f566700a43ee8e1f0412fe10fbdf03df->query("INSERT INTO `user_output` ( `user_id`, `access_output_id` ) VALUES( '%d', '%d' )", $E38668abaa324e464e266fb7b7e784b1, $b1f84f020035bf724cdc2f6d05ee33c3);
                                     }
@@ -290,7 +290,7 @@ if (!(!in_array($remoteIpAddress, Cd89785224751cca8017139DaF9e891e::Ab69E1103C96
                             }
                             $f566700a43ee8e1f0412fe10fbdf03df->query("SELECT * FROM reg_users WHERE `username` = '%s'", A78bF8D35765BE2408C50712CE7a43aD::$request["username"]);
                             e87d1e7ab132aced927d2e5144fa0f97:
-                            if ($f566700a43ee8e1f0412fe10fbdf03df->d1e5cE3b87Bb868b9e6efD39aA355A4F()) {
+                            if ($f566700a43ee8e1f0412fe10fbdf03df->getRowCount()) {
                                 $Eb809884ee4b7eb427d7a2ae5a5fb355 = $f566700a43ee8e1f0412fe10fbdf03df->f1Ed191D78470660edff4a007696Bc1F();
                                 $A6f4ecc798bcb285eee6efb4467c6708 = $Cadd766037a4c84044843f30dd506e37 + $Eb809884ee4b7eb427d7a2ae5a5fb355["credits"];
                                 if ($A6f4ecc798bcb285eee6efb4467c6708 < 0) {

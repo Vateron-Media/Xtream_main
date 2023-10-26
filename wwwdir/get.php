@@ -13,7 +13,7 @@ $output = empty(a78Bf8D35765BE2408c50712cE7a43Ad::$request["output"]) ? '' : A78
 $f566700a43ee8e1f0412fe10fbdf03df->query("SELECT `id`,`username`,`password` FROM `users` WHERE `username` = '%s' AND `password` = '%s' LIMIT 1", $username, $password);
 
 // If no matching user is found, go to the error handling section
-if ($f566700a43ee8e1f0412fe10fbdf03df->D1e5CE3b87Bb868B9e6efd39Aa355A4F() <= 0) {
+if ($f566700a43ee8e1f0412fe10fbdf03df->getRowCount() <= 0) {
     D9f93b7C177E377D0BbFe315eAEae505();
     http_response_code(404);
     // [PHPDeobfuscator] Implied script end

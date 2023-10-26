@@ -11,7 +11,6 @@ class E3cf480c172e8B47FE10857c2A5AEb48 {
                 unlink(STREAMS_PATH . md5($F3803fa85b38b65447e6d438f8e9176a));
                 fafad8b3428f2097a65fc4a56ab98c6d:
             }
-            // [PHPDeobfuscator] Implied return
             return;
         }
         return;
@@ -191,7 +190,7 @@ class E3cf480c172e8B47FE10857c2A5AEb48 {
         self::$ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 0 LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = '%d'", $streamId);
 
         // Check if stream information exists
-        if (self::$ipTV_db->d1E5CE3B87bB868b9e6Efd39AA355A4F() <= 0) {
+        if (self::$ipTV_db->getRowCount() <= 0) {
             return false;
         }
 
@@ -210,7 +209,7 @@ class E3cf480c172e8B47FE10857c2A5AEb48 {
         self::$ipTV_db->query("SELECT * FROM `streams_sys` WHERE stream_id  = '%d' AND `server_id` = '%d'", $streamId, SERVER_ID);
 
         // Check if server information exists
-        if (self::$ipTV_db->D1E5cE3B87bb868B9E6EfD39Aa355a4F() <= 0) {
+        if (self::$ipTV_db->getRowCount() <= 0) {
             return false;
         }
 
@@ -366,10 +365,10 @@ class E3cf480c172e8B47FE10857c2A5AEb48 {
         ebaf8e83d6903e697b868e20baf33caa:
         $streamInfo = array();
         self::$ipTV_db->query("SELECT * FROM `streams` t1 \n                               INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 1\n                               LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id \n                               WHERE t1.direct_source = 0 AND t1.id = '%d'", $streamId);
-        if (!(self::$ipTV_db->d1E5CE3b87bB868B9E6EFd39Aa355A4f() <= 0)) {
+        if (!(self::$ipTV_db->getRowCount() <= 0)) {
             $streamInfo["stream_info"] = self::$ipTV_db->F1ED191D78470660EDFF4A007696BC1f();
             self::$ipTV_db->query("SELECT * FROM `streams_sys` WHERE stream_id  = '%d' AND `server_id` = '%d'", $streamId, SERVER_ID);
-            if (!(self::$ipTV_db->d1e5Ce3B87Bb868b9E6efd39aA355a4f() <= 0)) {
+            if (!(self::$ipTV_db->getRowCount() <= 0)) {
                 $streamInfo["server_info"] = self::$ipTV_db->f1ed191D78470660eDFf4a007696bC1f();
                 self::$ipTV_db->query("SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = '%d' AND t1.argument_id = t2.id", $streamId);
                 $streamInfo["stream_arguments"] = self::$ipTV_db->c126FD559932f625cdf6098d86C63880();
@@ -541,17 +540,17 @@ class E3cf480c172e8B47FE10857c2A5AEb48 {
                     }
                     $Ca434bcc380e9dbd2a3a588f6c32d84f = file(DELAY_STREAM . $streamId . "_.m3u8");
                     if (stristr($Ca434bcc380e9dbd2a3a588f6c32d84f[count($Ca434bcc380e9dbd2a3a588f6c32d84f) - 1], $streamId . "_")) {
-                        if (!preg_match("/\\_(.*?)\\.ts/", $Ca434bcc380e9dbd2a3a588f6c32d84f[count($Ca434bcc380e9dbd2a3a588f6c32d84f) - 1], $ae37877cee3bc97c8cfa6ec5843993ed)) {
+                        if (!preg_match("/\\_(.*?)\\.ts/", $Ca434bcc380e9dbd2a3a588f6c32d84f[count($Ca434bcc380e9dbd2a3a588f6c32d84f) - 1], $matches)) {
                             goto E376243a25162a7e9a96615f05736000;
                         }
-                        $ccac9556cf5f7f83df650c022d673042 = intval($ae37877cee3bc97c8cfa6ec5843993ed[1]) + 1;
+                        $ccac9556cf5f7f83df650c022d673042 = intval($matches[1]) + 1;
                         E376243a25162a7e9a96615f05736000:
                         goto Bc358712da2195af6049c6dc19157a6b;
                     }
-                    if (!preg_match("/\\_(.*?)\\.ts/", $Ca434bcc380e9dbd2a3a588f6c32d84f[count($Ca434bcc380e9dbd2a3a588f6c32d84f) - 2], $ae37877cee3bc97c8cfa6ec5843993ed)) {
+                    if (!preg_match("/\\_(.*?)\\.ts/", $Ca434bcc380e9dbd2a3a588f6c32d84f[count($Ca434bcc380e9dbd2a3a588f6c32d84f) - 2], $matches)) {
                         goto Ae9f3a95d0d642988cb827b99cf0c542;
                     }
-                    $ccac9556cf5f7f83df650c022d673042 = intval($ae37877cee3bc97c8cfa6ec5843993ed[1]) + 1;
+                    $ccac9556cf5f7f83df650c022d673042 = intval($matches[1]) + 1;
                     Ae9f3a95d0d642988cb827b99cf0c542:
                     Bc358712da2195af6049c6dc19157a6b:
                     if (file_exists(DELAY_STREAM . $streamId . "_.m3u8_old")) {
@@ -640,11 +639,11 @@ class E3cf480c172e8B47FE10857c2A5AEb48 {
             }
             $Bddd92df0619e485304556731bb7ca2f[$Baee0c34e5755f1cfaa4159ea7e8702e] = $e380987e83a27088358f65f47ff3117f = $e380987e83a27088358f65f47ff3117f["cmd"];
             d5e302a7efdfb9d69e112be61940b67f:
-            if (!preg_match("/-filter_complex \"(.*?)\"/", $e380987e83a27088358f65f47ff3117f, $ae37877cee3bc97c8cfa6ec5843993ed)) {
+            if (!preg_match("/-filter_complex \"(.*?)\"/", $e380987e83a27088358f65f47ff3117f, $matches)) {
                 goto F145724d6c67edfccb510b14b854225d;
             }
-            $Bddd92df0619e485304556731bb7ca2f[$Baee0c34e5755f1cfaa4159ea7e8702e] = trim(str_replace($ae37877cee3bc97c8cfa6ec5843993ed[0], '', $Bddd92df0619e485304556731bb7ca2f[$Baee0c34e5755f1cfaa4159ea7e8702e]));
-            $e80cbed8655f14b141bd53699dbbdc10[] = $ae37877cee3bc97c8cfa6ec5843993ed[1];
+            $Bddd92df0619e485304556731bb7ca2f[$Baee0c34e5755f1cfaa4159ea7e8702e] = trim(str_replace($matches[0], '', $Bddd92df0619e485304556731bb7ca2f[$Baee0c34e5755f1cfaa4159ea7e8702e]));
+            $e80cbed8655f14b141bd53699dbbdc10[] = $matches[1];
             F145724d6c67edfccb510b14b854225d:
         }
         if (empty($e80cbed8655f14b141bd53699dbbdc10)) {

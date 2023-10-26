@@ -14,22 +14,22 @@ class A78Bf8d35765BE2408c50712ce7a43AD {
         if (empty($_GET)) {
             goto b1f9e84b7686b82a8184762739d0afdb;
         }
-        self::Cd74069D0412864c09fB4ED01eaeC324($_GET);
+        self::cleanArrayValues($_GET);
         b1f9e84b7686b82a8184762739d0afdb:
         if (empty($_POST)) {
             goto C24603df2e05281d5426ebcd9f7c424e;
         }
-        self::cD74069d0412864c09fb4Ed01EaeC324($_POST);
+        self::cleanArrayValues($_POST);
         C24603df2e05281d5426ebcd9f7c424e:
         if (empty($_SESSION)) {
             goto a5587727a7e423e1adfdc86bedabcd74;
         }
-        self::cD74069d0412864C09Fb4ED01EaEc324($_SESSION);
+        self::cleanArrayValues($_SESSION);
         a5587727a7e423e1adfdc86bedabcd74:
         if (empty($_COOKIE)) {
             goto e1e16e97f3de19e58325c35dc6a12cb3;
         }
-        self::cD74069d0412864c09fb4eD01eaeC324($_COOKIE);
+        self::cleanArrayValues($_COOKIE);
         e1e16e97f3de19e58325c35dc6a12cb3:
         $d8371b9d492a3a005aae00b32747599b = @self::d0328611B6174b14e3e28130DAa7CEEa($_GET, array());
         self::$request = @self::D0328611B6174b14e3e28130dAa7Ceea($_POST, $d8371b9d492a3a005aae00b32747599b);
@@ -42,7 +42,7 @@ class A78Bf8d35765BE2408c50712ce7a43AD {
         self::$Bouquets = self::dc118DD2B94e5f4e1A21651686ed6719();
         aef19bc2447d15631df60ce23f6fecc4:
         self::$blockedUA = self::A7777eA812B783AE183c0e54B62e833C();
-        self::$customISP = self::b8fcbc16dC5DC82293765A61c8469Af9();
+        self::$customISP = self::getIspCache();
         if (!(self::$StreamingServers[SERVER_ID]["persistent_connections"] != $_INFO["pconnect"])) {
             goto e32ea3d393a97b27383e19592d778ea2;
         }
@@ -53,29 +53,52 @@ class A78Bf8d35765BE2408c50712ce7a43AD {
         file_put_contents("IPTV_PANEL_DIRconfig", base64_encode(EaAB451Ef7A60C6d480e43b6c15A14A1(json_encode($_INFO), CONFIG_CRYPT_KEY)), LOCK_EX);
         Eb3e08254e4ac8018e4cb9e5aa454500:
         e32ea3d393a97b27383e19592d778ea2:
-        self::$SegmentsSettings = self::B142A019701de69Abd16CF1861ae5303();
+        self::$SegmentsSettings = self::getSegmentData();
         eC2283305a3A0aBb64Fab98987118Fb7();
     }
-    public static function b7a3b5FA503D2609667A9ccB4e370Bb5($B6893dda06ade8d0d547aa9b6e6f8591) {
-        $b1adb9f5e0e997d9616b1b6e27bc9b43 = new DateTime("UTC", new DateTimeZone(date_default_timezone_get()));
-        $b7adc9791d8ac3e73be919b8186e780b = new DateTime("UTC", new DateTimeZone($B6893dda06ade8d0d547aa9b6e6f8591));
-        return $b7adc9791d8ac3e73be919b8186e780b->getTimestamp() - $b1adb9f5e0e997d9616b1b6e27bc9b43->getTimestamp();
+    /**
+     * Calculates the difference in seconds between the current UTC time and a given UTC time.
+     *
+     * @param string $timezone The timezone to calculate the difference for.
+     *
+     * @return int The difference in seconds.
+     */
+    public static function calculateTimeDifference($timezone) {
+        $currentTime = new DateTime("UTC", new DateTimeZone(date_default_timezone_get()));
+        $givenTime = new DateTime("UTC", new DateTimeZone($timezone));
+        return $givenTime->getTimestamp() - $currentTime->getTimestamp();
     }
-    public static function B142A019701de69ABd16cF1861aE5303() {
-        $Eb8cdb7167980605052c91d6f856fe86 = array();
-        $Eb8cdb7167980605052c91d6f856fe86["seg_time"] = 10;
-        $Eb8cdb7167980605052c91d6f856fe86["seg_list_size"] = 6;
-        return array("seg_time" => 10, "seg_list_size" => 6);
+    /**
+     * This function returns an array with two keys: seg_time and seg_list_size,
+     * both set to 10 and 6 respectively.
+     *
+     * @return array
+     */
+    public static function getSegmentData() {
+        $segmentData = array();
+        $segmentData["seg_time"] = 10;
+        $segmentData["seg_list_size"] = 6;
+        return $segmentData;
     }
-    public static function B8fcbC16dC5dc82293765A61C8469AF9() {
-        $a0a73187de2a9fa7f9f714c27f33c77c = self::E550705Ec4CE886a5D30a9A137209f2F("customisp_cache");
-        if (!($a0a73187de2a9fa7f9f714c27f33c77c !== false)) {
+    /**
+     * Retrieves ISP cache from database or creates a new one if it doesn't exist
+     *
+     * @return array ISP cache
+     */
+    public static function getIspCache() {
+        // Retrieve ISP cache from database
+        $ispCache = self::E550705Ec4CE886a5D30a9A137209f2F("customisp_cache");
+
+        // If ISP cache doesn't exist, create a new one and return it
+        if ($ispCache === false) {
             $output = array();
             self::$ipTV_db->query("SELECT id,isp,blocked FROM `isp_addon`");
             $output = self::$ipTV_db->c126FD559932F625cDF6098D86c63880();
             return $output;
         }
-        return $a0a73187de2a9fa7f9f714c27f33c77c;
+
+        // If ISP cache exists, return it
+        return $ispCache;
     }
     public static function a7777EA812B783ae183C0E54B62E833C() {
         $a0a73187de2a9fa7f9f714c27f33c77c = self::e550705eC4CE886A5D30A9A137209f2f("uagents_cache");
@@ -209,10 +232,10 @@ class A78Bf8d35765BE2408c50712ce7a43AD {
         if (!(strlen($d17b616e2ba1c5acd831fc89992d19b8) !== mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CBC))) {
             $E7cca48cfca85fc445419a32d7d8f973 = pack("H*", $E7cca48cfca85fc445419a32d7d8f973);
             $D49bad8413a1e326e00365852b39c341 = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $E7cca48cfca85fc445419a32d7d8f973, $e604917258b158ba003c4d7352099362, MCRYPT_MODE_CBC, $d17b616e2ba1c5acd831fc89992d19b8));
-            $bad0c96fedbc6eccfe927016a4dc3cd6 = substr($D49bad8413a1e326e00365852b39c341, -64);
+            $mac = substr($D49bad8413a1e326e00365852b39c341, -64);
             $D49bad8413a1e326e00365852b39c341 = substr($D49bad8413a1e326e00365852b39c341, 0, -64);
             $Bf8251826e25f660c6052c269250efc7 = hash_hmac("sha256", $D49bad8413a1e326e00365852b39c341, substr(bin2hex($E7cca48cfca85fc445419a32d7d8f973), -32));
-            if (!($Bf8251826e25f660c6052c269250efc7 !== $bad0c96fedbc6eccfe927016a4dc3cd6)) {
+            if (!($Bf8251826e25f660c6052c269250efc7 !== $mac)) {
                 $D49bad8413a1e326e00365852b39c341 = unserialize($D49bad8413a1e326e00365852b39c341);
                 return $D49bad8413a1e326e00365852b39c341;
             }
@@ -304,24 +327,45 @@ class A78Bf8d35765BE2408c50712ce7a43AD {
         }
         return array();
     }
-    public static function cD74069d0412864c09Fb4Ed01EAec324(&$d76067cf9572f7a6691c85c12faf2a29, $b2498346a25a7820bd3f3257c06295e1 = 0) {
-        if (!($b2498346a25a7820bd3f3257c06295e1 >= 10)) {
-            foreach ($d76067cf9572f7a6691c85c12faf2a29 as $Baee0c34e5755f1cfaa4159ea7e8702e => $A97fe3f1c8426c96ebcceda8e06bac83) {
-                if (is_array($A97fe3f1c8426c96ebcceda8e06bac83)) {
-                    self::cd74069d0412864c09fB4eD01eAEC324($d76067cf9572f7a6691c85c12faf2a29[$Baee0c34e5755f1cfaa4159ea7e8702e], ++$b2498346a25a7820bd3f3257c06295e1);
-                    goto A8f30c940773326e25f49584fbca0132;
+    /**
+     * Clean and sanitize array values recursively
+     * 
+     * @param array $array - The array to be cleaned
+     * @param int $depth - The current depth of recursion
+     * @return void
+     */
+    public static function cleanArrayValues(&$array, $depth = 0) {
+        // Check if depth is less than 10
+        if ($depth < 10) {
+            // Iterate through each element in the array
+            foreach ($array as $key => &$value) {
+                // Check if the element is an array
+                if (is_array($value)) {
+                    // Recursively clean the array values
+                    self::cleanArrayValues($value, ++$depth);
+                    goto skipReplacement;
                 }
-                $A97fe3f1c8426c96ebcceda8e06bac83 = str_replace("\x00", '', $A97fe3f1c8426c96ebcceda8e06bac83);
-                $A97fe3f1c8426c96ebcceda8e06bac83 = str_replace("\x00", '', $A97fe3f1c8426c96ebcceda8e06bac83);
-                $A97fe3f1c8426c96ebcceda8e06bac83 = str_replace("\x00", '', $A97fe3f1c8426c96ebcceda8e06bac83);
-                $A97fe3f1c8426c96ebcceda8e06bac83 = str_replace("../", "&#46;&#46;/", $A97fe3f1c8426c96ebcceda8e06bac83);
-                $A97fe3f1c8426c96ebcceda8e06bac83 = str_replace("&#8238;", '', $A97fe3f1c8426c96ebcceda8e06bac83);
-                $d76067cf9572f7a6691c85c12faf2a29[$Baee0c34e5755f1cfaa4159ea7e8702e] = $A97fe3f1c8426c96ebcceda8e06bac83;
-                A8f30c940773326e25f49584fbca0132:
+
+                // Replace null bytes with empty string
+                $value = str_replace("\x00", '', $value);
+                $value = str_replace("\x00", '', $value);
+                $value = str_replace("\x00", '', $value);
+
+                // Replace "../" with "&#46;&#46;/"
+                $value = str_replace("../", "&#46;&#46;/", $value);
+
+                // Remove "&#8238;" from the value
+                $value = str_replace("&#8238;", '', $value);
+
+                skipReplacement:
+                // Update the array with the cleaned value
+                $array[$key] = $value;
             }
+
             // [PHPDeobfuscator] Implied return
             return;
         }
+
         return;
     }
     public static function d0328611b6174b14e3e28130dAa7ceea(&$d76067cf9572f7a6691c85c12faf2a29, $d8371b9d492a3a005aae00b32747599b = array(), $b2498346a25a7820bd3f3257c06295e1 = 0) {
@@ -332,8 +376,8 @@ class A78Bf8d35765BE2408c50712ce7a43AD {
                         $d8371b9d492a3a005aae00b32747599b[$Baee0c34e5755f1cfaa4159ea7e8702e] = self::d0328611B6174B14e3e28130DAA7cEea($d76067cf9572f7a6691c85c12faf2a29[$Baee0c34e5755f1cfaa4159ea7e8702e], array(), $b2498346a25a7820bd3f3257c06295e1 + 1);
                         goto F8d038108c2d37a9319026cbbb1f1e1c;
                     }
-                    $Baee0c34e5755f1cfaa4159ea7e8702e = self::cB08394fc6E600FE27f05aEDc447d7bF($Baee0c34e5755f1cfaa4159ea7e8702e);
-                    $A97fe3f1c8426c96ebcceda8e06bac83 = self::d517eF19e12996f7d59BcE1B4ba03104($A97fe3f1c8426c96ebcceda8e06bac83);
+                    $Baee0c34e5755f1cfaa4159ea7e8702e = self::sanitize_input($Baee0c34e5755f1cfaa4159ea7e8702e);
+                    $A97fe3f1c8426c96ebcceda8e06bac83 = self::sanitizeString($A97fe3f1c8426c96ebcceda8e06bac83);
                     $d8371b9d492a3a005aae00b32747599b[$Baee0c34e5755f1cfaa4159ea7e8702e] = $A97fe3f1c8426c96ebcceda8e06bac83;
                     F8d038108c2d37a9319026cbbb1f1e1c:
                 }
@@ -343,7 +387,7 @@ class A78Bf8d35765BE2408c50712ce7a43AD {
         }
         return $d8371b9d492a3a005aae00b32747599b;
     }
-    public static function Cb08394fc6E600fe27F05aEDc447d7bf($E7cca48cfca85fc445419a32d7d8f973) {
+    public static function sanitize_input($E7cca48cfca85fc445419a32d7d8f973) {
         if (!($E7cca48cfca85fc445419a32d7d8f973 === '')) {
             $E7cca48cfca85fc445419a32d7d8f973 = htmlspecialchars(urldecode($E7cca48cfca85fc445419a32d7d8f973));
             $E7cca48cfca85fc445419a32d7d8f973 = str_replace("..", '', $E7cca48cfca85fc445419a32d7d8f973);
@@ -353,17 +397,37 @@ class A78Bf8d35765BE2408c50712ce7a43AD {
         }
         return "";
     }
-    public static function d517ef19e12996f7d59BcE1b4bA03104($C5805ed257c09a3079ad7fa87c6d5bb2) {
-        if (!($C5805ed257c09a3079ad7fa87c6d5bb2 == '')) {
-            $C5805ed257c09a3079ad7fa87c6d5bb2 = str_replace("&#032;", " ", stripslashes($C5805ed257c09a3079ad7fa87c6d5bb2));
-            $C5805ed257c09a3079ad7fa87c6d5bb2 = str_replace(array("\r\n", "\n\r", "\r"), "\n", $C5805ed257c09a3079ad7fa87c6d5bb2);
-            $C5805ed257c09a3079ad7fa87c6d5bb2 = str_replace("<!--", "&#60;&#33;--", $C5805ed257c09a3079ad7fa87c6d5bb2);
-            $C5805ed257c09a3079ad7fa87c6d5bb2 = str_replace("-->", "--&#62;", $C5805ed257c09a3079ad7fa87c6d5bb2);
-            $C5805ed257c09a3079ad7fa87c6d5bb2 = str_ireplace("<script", "&#60;script", $C5805ed257c09a3079ad7fa87c6d5bb2);
-            $C5805ed257c09a3079ad7fa87c6d5bb2 = preg_replace("/&amp;#([0-9]+);/s", "&#\\1;", $C5805ed257c09a3079ad7fa87c6d5bb2);
-            $C5805ed257c09a3079ad7fa87c6d5bb2 = preg_replace("/&#(\\d+?)([^\\d;])/i", "&#\\1;\\2", $C5805ed257c09a3079ad7fa87c6d5bb2);
-            return trim($C5805ed257c09a3079ad7fa87c6d5bb2);
+    /**
+     * This function sanitizes a string by removing unwanted characters and escaping special characters
+     *
+     * @param string $string The string to be sanitized
+     *
+     * @return string The sanitized string
+     */
+    public static function sanitizeString($string) {
+        if (!empty($string)) {
+            // Replace HTML entities with spaces
+            $string = str_replace("&#032;", " ", stripslashes($string));
+
+            // Replace line breaks with "\n"
+            $string = str_replace(array("\r\n", "\n\r", "\r"), "\n", $string);
+
+            // Escape HTML comments
+            $string = str_replace("<!--", "&#60;&#33;--", $string);
+            $string = str_replace("-->", "--&#62;", $string);
+
+            // Escape script tags
+            $string = str_ireplace("<script", "&#60;script", $string);
+
+            // Replace HTML entities with their corresponding characters
+            $string = preg_replace("/&amp;#([0-9]+);/s", "&#\\1;", $string);
+            $string = preg_replace("/&#(\\d+?)([^\\d;])/i", "&#\\1;\\2", $string);
+
+            // Remove leading and trailing whitespace
+            return trim($string);
         }
+
+        // Return an empty string if the input is empty
         return "";
     }
     public static function e501281Ad19Af8a4bbbf9bEd91ee9299($d887d924b23a04b73a6f893291e44509) {
