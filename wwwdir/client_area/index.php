@@ -3,13 +3,13 @@
 require "../init.php";
 session_start();
 if (!(!empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] === true && !empty($_SESSION["cl_data"]))) {
-    if (!(!empty(a78Bf8d35765Be2408C50712CE7a43aD::$request["username"]) && !empty(a78Bf8D35765bE2408c50712CE7a43aD::$request["password"]))) {
+    if (!(!empty(ipTV_lib::$request["username"]) && !empty(ipTV_lib::$request["password"]))) {
         goto Edca3ffe9250f93804ca6930c52ae31e;
     }
-    $f566700a43ee8e1f0412fe10fbdf03df->query("SELECT * FROM `users` WHERE `username` = '%s' AND `password` = '%s' AND (`exp_date` >= " . time() . " OR `exp_date` is null) LIMIT 1", A78bF8D35765bE2408c50712ce7a43aD::$request["username"], a78Bf8D35765BE2408C50712Ce7a43AD::$request["password"]);
-    if ($f566700a43ee8e1f0412fe10fbdf03df->getRowCount() > 0) {
+    $ipTV_db->query("SELECT * FROM `users` WHERE `username` = '%s' AND `password` = '%s' AND (`exp_date` >= " . time() . " OR `exp_date` is null) LIMIT 1", ipTV_lib::$request["username"], ipTV_lib::$request["password"]);
+    if ($ipTV_db->num_rows() > 0) {
         $_SESSION["client_loggedin"] == true;
-        $_SESSION["cl_data"] = $f566700a43ee8e1f0412fe10fbdf03df->F1eD191D78470660EdFf4A007696bC1f();
+        $_SESSION["cl_data"] = $ipTV_db->get_row();
         header("Location: live.php");
         die;
     }

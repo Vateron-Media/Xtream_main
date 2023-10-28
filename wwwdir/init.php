@@ -1,6 +1,4 @@
 <?php
-/*Rev:26.09.18r0*/
-
 error_reporting(E_ERROR);
 ini_set('display_errors', 1);
 define('MAIN_DIR', '/home/xtreamcodes/');
@@ -39,15 +37,18 @@ define('TOTAL_SAVES_DROP', 6);
 define('CLOSE_OPEN_CONS_PATH', TMP_DIR . 'opened_cons/');
 define('ENIGMA2_PLUGIN_DIR', MOVIES_IMAGES . 'enigma2/');
 define('GEOIP2_FILENAME', IPTV_PANEL_DIR . 'GeoLite2.mmdb');
+
 if (!defined('USE_CACHE')) {
     define('USE_CACHE', true);
 }
 if (!defined('FETCH_BOUQUETS')) {
     define('FETCH_BOUQUETS', true);
 }
+
 define('CACHE_STREAMS', false);
 define('CACHE_STREAMS_TIME', 10);
 define('STREAM_TYPE', array('live', 'series', 'movie', 'created_live', 'radio_streams'));
+
 require MAIN_DIR . 'iptv_xtream_codes/xfirewall.php';
 require IPTV_INCLUDES_PATH . 'functions.php';
 require IPTV_INCLUDES_PATH . 'lib.php';
@@ -56,26 +57,32 @@ require IPTV_INCLUDES_PATH . 'streaming.php';
 require IPTV_INCLUDES_PATH . 'servers.php';
 require IPTV_INCLUDES_PATH . 'stream.php';
 require IPTV_ROOT_PATH . 'langs/English.php';
+
 $_INFO = array();
+
 if (file_exists(IPTV_PANEL_DIR . 'config')) {
-    $_INFO = json_decode(EAAB451Ef7a60C6D480E43B6c15A14A1(base64_decode(file_get_contents(IPTV_PANEL_DIR . 'config')), CONFIG_CRYPT_KEY), true);
+    $_INFO = json_decode(decrypt_config(base64_decode(file_get_contents(IPTV_PANEL_DIR . 'config')), CONFIG_CRYPT_KEY), true);
     define('SERVER_ID', $_INFO['server_id']);
 } else {
     die('no config found');
 }
-$f566700a43ee8e1f0412fe10fbdf03df = new ipTV_db($_INFO['db_user'], $_INFO['db_pass'], $_INFO['db_name'], $_INFO['host'], $_INFO['db_port'], empty($_INFO['pconnect']) ? false : true, isset($f828fbd7943068a1cd53cba5fe86120c) ? true : false);
-A78bF8d35765be2408C50712ce7a43aD::$ipTV_db =& $f566700a43ee8e1f0412fe10fbdf03df;
-CD89785224751cCa8017139daf9E891e::$ipTV_db =& $f566700a43ee8e1f0412fe10fbdf03df;
-e3cF480c172E8B47FE10857C2a5Aeb48::$ipTV_db =& $f566700a43ee8e1f0412fe10fbdf03df;
-A78Bf8D35765be2408c50712CE7a43AD::fAB9232Faa11c27667E20D2B25c46266();
+
+$ipTV_db = new ipTV_db($_INFO['db_user'], $_INFO['db_pass'], $_INFO['db_name'], $_INFO['host'], $_INFO['db_port'], empty($_INFO['pconnect']) ? false : true, false);
+
+ipTV_lib::$ipTV_db =& $ipTV_db;
+ipTV_streaming::$ipTV_db =& $ipTV_db;
+ipTV_stream::$ipTV_db =& $ipTV_db;
+ipTV_lib::init();
+
 include IPTV_INCLUDES_PATH . 'geo/Reader.php';
 include IPTV_INCLUDES_PATH . 'geo/Decoder.php';
 include IPTV_INCLUDES_PATH . 'geo/Util.php';
 include IPTV_INCLUDES_PATH . 'geo/Metadata.php';
-$D3dfbeed696b35ae7f2e1ad4fa3c7477 = array('clients_live.php', 'clients_movie.php', 'timeshift.php', 'admin_live.php', 'admin_movie.php', 'xmltv.php', 'panel_api.php', 'enigma2.php', 'portal.php', 'get.php');
+
+$FILES = array('clients_live.php', 'clients_movie.php', 'timeshift.php', 'admin_live.php', 'admin_movie.php', 'xmltv.php', 'panel_api.php', 'enigma2.php', 'portal.php', 'get.php');
+
 if (empty($argc)) {
-    if (!in_array(basename($_SERVER['SCRIPT_FILENAME']), $D3dfbeed696b35ae7f2e1ad4fa3c7477)) {
-        D9f93b7C177E377D0bBFe315eaeae505();
+    if (!in_array(basename($_SERVER['SCRIPT_FILENAME']), $FILES)) {
+        CheckFlood();
     }
 }
-die("no config found");
