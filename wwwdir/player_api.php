@@ -193,16 +193,14 @@ if (!empty(ipTV_lib::$request['username']) && !empty(ipTV_lib::$request['passwor
                 $output['user_info']['password'] = $result['password'];
                 $output['user_info']['message'] = ipTV_lib::$settings['message_of_day'];
                 $output['user_info']['auth'] = 1;
-                if (($result['admin_enabled'] == 0)) {
-                    $output['user_info']['status'] = 'Active';
-                }
-                else if (($result['enabled'] == 0)) {
-                    $output['user_info']['status'] = 'Disabled';
-                }
-                if (is_null($result['exp_date']) or $result['exp_date'] > time()) {
-                    $output['user_info']['status'] = 'Expired';
-                } else {
+                if ($result['admin_enabled'] == 0) {
                     $output['user_info']['status'] = 'Banned';
+                } else if ($result['enabled'] == 0) {
+                    $output['user_info']['status'] = 'Disabled';
+                } else if (is_null($result['exp_date']) or $result['exp_date'] > time()) {
+                    $output['user_info']['status'] = 'Active';
+                } else {
+                    $output['user_info']['status'] = 'Expired';
                 }
                 $output['user_info']['exp_date'] = $result['exp_date'];
                 $output['user_info']['is_trial'] = $result['is_trial'];

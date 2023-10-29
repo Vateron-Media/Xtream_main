@@ -8,7 +8,7 @@ function decrypt_config($data, $key) {
     }
     return $output;
 }
-function systemStatus() {
+function watchdogData() {
     $json = array();
     $json["cpu"] = intval(GetTotalCPUsage());
     $json["cpu_cores"] = intval(shell_exec('cat /proc/cpuinfo | grep "^processor" | wc -l'));

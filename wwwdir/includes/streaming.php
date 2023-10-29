@@ -347,24 +347,24 @@ class ipTV_streaming {
                 }
             }
             if ($get_ChannelIDS) {
-                $Ff48bb3649e5b84524bd8d318c03db3c = $A92229131e0f5177a362478fd6f3bd8d = array();
+                $array1 = $array2 = array();
                 if (ipTV_lib::$settings['new_sorting_bouquet'] != 1) {
                     sort($user_info['bouquet']);
                 }
                 foreach ($user_info['bouquet'] as $id) {
                     if (isset(ipTV_lib::$Bouquets[$id]['streams'])) {
-                        $Ff48bb3649e5b84524bd8d318c03db3c = array_merge($Ff48bb3649e5b84524bd8d318c03db3c, ipTV_lib::$Bouquets[$id]['streams']);
+                        $array1 = array_merge($array1, ipTV_lib::$Bouquets[$id]['streams']);
                     }
                     if (isset(ipTV_lib::$Bouquets[$id]['series'])) {
-                        $A92229131e0f5177a362478fd6f3bd8d = array_merge($A92229131e0f5177a362478fd6f3bd8d, ipTV_lib::$Bouquets[$id]['series']);
+                        $array2 = array_merge($array2, ipTV_lib::$Bouquets[$id]['series']);
                     }
                 }
                 if (ipTV_lib::$settings['new_sorting_bouquet'] != 1) {
-                    $user_info['channel_ids'] = array_unique($Ff48bb3649e5b84524bd8d318c03db3c);
-                    $user_info['series_ids'] = array_unique($A92229131e0f5177a362478fd6f3bd8d);
+                    $user_info['channel_ids'] = array_unique($array1);
+                    $user_info['series_ids'] = array_unique($array2);
                 } else {
-                    $user_info['channel_ids'] = array_reverse(array_unique(array_reverse($Ff48bb3649e5b84524bd8d318c03db3c)));
-                    $user_info['series_ids'] = array_reverse(array_unique(array_reverse($A92229131e0f5177a362478fd6f3bd8d)));
+                    $user_info['channel_ids'] = array_reverse(array_unique(array_reverse($array1)));
+                    $user_info['series_ids'] = array_reverse(array_unique(array_reverse($array2)));
                 }
                 if ($getBouquetInfo && !empty($user_info['channel_ids'])) {
                     $user_info['channels'] = array();
