@@ -1,7 +1,6 @@
 <?php
 
-function userActivityQueryData($connections, &$query)
-{
+function userActivityQueryData($connections, &$query) {
     if (file_exists($connections)) {
         $fp = fopen($connections, 'r');
         while (!feof($fp)) {
@@ -16,22 +15,22 @@ function userActivityQueryData($connections, &$query)
     }
     return $query;
 }
-$connections = TMP_DIR . 'client_request.log';
-$ipTV_db->query('SELECT COUNT(*) FROM `client_logs`');
+set_time_limit(0);
 if (!@$argc) {
+    die(0);
+}
+require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+$unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
+KillProcessCmd($unique_id);
+$ipTV_db->query('SELECT COUNT(*) FROM `client_logs`');
+$result = $ipTV_db->get_col();
+$connections = TMP_DIR . 'client_request.log';
+$query = '';
+if (file_exists($connections)) {
     userActivityQueryData($connections, $query);
     unlink($connections);
-    KillProcessCmd($unique_id);
-    die(0);
+}
+$query = rtrim($query, ',');
+if (!empty($query)) {
     $ipTV_db->simple_query('INSERT INTO `client_logs` (`stream_id`,`user_id`,`client_status`,`query_string`,`user_agent`,`ip`,`extra_data`,`date`) VALUES ' . $query);
-    set_time_limit(0);
-    $result = $ipTV_db->get_col();
-    if (file_exists($connections)) {
-    }
-    do {
-        $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
-        $query = rtrim($query, ',');
-        require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-    } while (empty($query));
-    $query = '';
 }

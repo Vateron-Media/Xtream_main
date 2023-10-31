@@ -27,24 +27,24 @@ foreach ($connections as $user_id => $rows) {
                                 if (ipTV_streaming::ps_running($connection['pid'], 'php-fpm')) {
                                     $bitrates[$connection['activity_id']] = intval($connection['bitrate'] / 8 * 0.92);
                                 } else {
-                                    echo '[+] Closing Connection (Closed UnExp): ' . $connection['activity_id'] . '';
+                                    echo '[+] Closing Connection (Closed UnExp): ' . $connection['activity_id'] . '\n';
                                     ipTV_streaming::RemoveConnection($connection);
                                 }
                             } else {
                                 if (60 <= time() - $connection['hls_last_read'] || $connection['hls_end'] == 1) {
-                                    echo '[+] Closing ENDED Con HLS: ' . $connection['activity_id'] . '';
+                                    echo '[+] Closing ENDED Con HLS: ' . $connection['activity_id'] . '\n';
                                     ipTV_streaming::RemoveConnection($connection);
                                     $length--;
                                 }
                             }
                         }
                     } else {
-                        echo '[+] Closing Connection[KICK TIME ONLINE]: ' . $connection['activity_id'] . '';
+                        echo '[+] Closing Connection[KICK TIME ONLINE]: ' . $connection['activity_id'] . '\n';
                         ipTV_streaming::RemoveConnection($connection);
                         $length--;
                     }
                 } else {
-                    echo '[+] Closing Connection: ' . $connection['activity_id'] . '';
+                    echo '[+] Closing Connection: ' . $connection['activity_id'] . '\n';
                     ipTV_streaming::RemoveConnection($connection);
                     $length = 0;
                 }

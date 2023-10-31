@@ -12,14 +12,14 @@ $ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `transcoding_profiles` t2
 if (0 < $ipTV_db->num_rows()) {
     $streams = $ipTV_db->get_rows();
     foreach ($streams as $stream) {
-        echo '[*] Checking Stream ' . $stream['stream_display_name'] . '';
+        echo '[*] Checking Stream ' . $stream['stream_display_name'] . '\n';
         switch (ipTV_stream::TranscodeBuild($stream['id'])) {
             case 1:
-                echo 'Build Is Still Going!';
+                echo 'Build Is Still Going! \n';
                 ipTV_stream::TranscodeBuild($stream['id']);
                 break;
             case 2:
-                echo 'Build Finished';
+                echo 'Build Finished \n';
                 break;
         }
     }
@@ -32,9 +32,9 @@ if (0 < $ipTV_db->num_rows()) {
         echo '[*] Checking Movie ' . $data['stream_display_name'] . ' ON Server ID ' . $data['server_id'] . ' 		---> ';
         if ($data['to_analyze'] == 1) {
             if (!empty($pid[$data['server_id']]) && in_array($data['pid'], $pid[$data['server_id']])) {
-                echo 'WORKING';
+                echo 'WORKING \n';
             } else {
-                echo '';
+                echo '\n\n\n';
                 $target_container = json_decode($data['target_container'], true);
                 if (json_last_error() === JSON_ERROR_NONE) {
                     $data['target_container'] = $target_container;
@@ -68,14 +68,14 @@ if (0 < $ipTV_db->num_rows()) {
                     }
                     $ipTV_db->query('UPDATE `streams` SET `movie_propeties` = \'%s\' WHERE `id` = \'%d\'', json_encode($movie_propeties), $data['stream_id']);
                     $ipTV_db->query('UPDATE `streams_sys` SET `bitrate` = \'%d\',`to_analyze` = 0,`stream_status` = 0,`stream_info` = \'%s\'  WHERE `server_stream_id` = \'%d\'', $bitrate, json_encode($stream_info), $data['server_stream_id']);
-                    echo 'VALID';
+                    echo 'VALID \n';
                 } else {
                     $ipTV_db->query('UPDATE `streams_sys` SET `to_analyze` = 0,`stream_status` = 1  WHERE `server_stream_id` = \'%d\'', $data['server_stream_id']);
-                    echo 'BAD MOVIE';
+                    echo 'BAD MOVIE \n';
                 }
             }
         } else {
-            echo 'NO ACTION';
+            echo 'NO ACTION \n';
         }
     }
 }

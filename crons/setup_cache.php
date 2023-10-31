@@ -1,7 +1,5 @@
 <?php
 
-require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-
 function WriteFileCacheProperties() {
     global $ipTV_db;
     $ipTV_db->query('SELECT id,movie_propeties FROM `streams`');
@@ -47,61 +45,58 @@ function saveCache() {
         rename($data . '_tmp', $data);
     }
 }
-ipTV_lib::phpFileCache('bouquets_cache', ipTV_lib::$Bouquets);
-file_put_contents(TMP_DIR . 'new_rewrite', 1);
+if (!@$argc) {
+    die(0);
+}
 define('USE_CACHE', false);
-ipTV_lib::phpFileCache('uagents_cache', ipTV_lib::$blockedUA);
-ipTV_lib::phpFileCache('servers_cache', ipTV_lib::$StreamingServers);
-$nginx_data = (int) shell_exec('cat ' . IPTV_PANEL_DIR . 'nginx/conf/nginx.conf | grep -c \'\\/(\\\\d+)\'');
-saveCache();
-die(0);
+require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+cli_set_process_title('XtreamCodes[Cache Builder]');
+$unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
 KillProcessCmd($unique_id);
-do {
-    @unlink($unique_id);
-    $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
-    ini_set('memory_limit', -1);
-    if (@$argc) {
-        $ipTV_db->query('SELECT t1.id, 
-		   t1.added, 
-		   t1.allow_record, 
-		   t1.channel_id, 
-		   if(t1.direct_source = 1 AND t1.redirect_stream = 0,t1.stream_source,NULL) as stream_source,
-		   t1.tv_archive_server_id, 
-		   t1.tv_archive_duration, 
-		   t1.stream_icon, 
-		   t1.custom_sid, 
-		   t1.category_id, 
-		   t1.stream_display_name, 
-		   t2.type_output, 
-		   t1.target_container, 
-		   t2.live, 
-		   t3.category_name, 
-		   t1.rtmp_output, 
-		   t1.number, 
-		   t2.type_key,
-		   t2.type_name
-		   FROM   `streams` t1 
-		   LEFT JOIN `stream_categories` t3 ON t3.id = t1.category_id 
-		   INNER JOIN `streams_types` t2 ON t2.type_id = t1.type
-		');
-        ipTV_lib::phpFileCache('settings_cache', ipTV_lib::$settings);
-        $streamsArray = array();
-        WriteFileCacheProperties();
-        $types = $ipTV_db->get_rows(true, 'type_key', false, 'id');
-    } else {
-        break;
-        require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-        foreach ($types as $type_key => $streams) {
-            $streamsArray = array_replace($streamsArray, $streams);
-            $stream_array_data = '<?php return ' . var_export($streams, true) . '; ?>';
-            $name_type = TMP_DIR . $type_key . '_main.php';
-            if (!file_exists($name_type) || md5_file($name_type) != md5($stream_array_data)) {
-                file_put_contents($name_type . '_tmp', $stream_array_data, LOCK_EX);
-                rename($name_type . '_tmp', $name_type);
-            }
-        }
-        ipTV_lib::phpFileCache('customisp_cache', ipTV_lib::$customISP);
+ini_set('memory_limit', -1);
+ipTV_lib::phpFileCache('settings_cache', ipTV_lib::$settings);
+ipTV_lib::phpFileCache('customisp_cache', ipTV_lib::$customISP);
+ipTV_lib::phpFileCache('uagents_cache', ipTV_lib::$blockedUA);
+ipTV_lib::phpFileCache('bouquets_cache', ipTV_lib::$Bouquets);
+ipTV_lib::phpFileCache('servers_cache', ipTV_lib::$StreamingServers);
+$ipTV_db->query('SELECT t1.id, 
+       t1.added, 
+       t1.allow_record, 
+       t1.channel_id, 
+       if(t1.direct_source = 1 AND t1.redirect_stream = 0,t1.stream_source,NULL) as stream_source,
+       t1.tv_archive_server_id, 
+       t1.tv_archive_duration, 
+       t1.stream_icon, 
+       t1.custom_sid, 
+       t1.category_id, 
+       t1.stream_display_name, 
+       t2.type_output, 
+       t1.target_container, 
+       t2.live, 
+       t3.category_name, 
+       t1.rtmp_output, 
+       t1.number, 
+       t2.type_key,
+       t2.type_name
+       FROM   `streams` t1 
+       LEFT JOIN `stream_categories` t3 ON t3.id = t1.category_id 
+       INNER JOIN `streams_types` t2 ON t2.type_id = t1.type');
+$types = $ipTV_db->get_rows(true, 'type_key', false, 'id');
+$streamsArray = array();
+foreach ($types as $type_key => $streams) {
+    $streamsArray = array_replace($streamsArray, $streams);
+    $stream_array_data = '<?php return ' . var_export($streams, true) . '; ?>';
+    $name_type = TMP_DIR . $type_key . '_main.php';
+    if (!file_exists($name_type) || md5_file($name_type) != md5($stream_array_data)) {
+        file_put_contents($name_type . '_tmp', $stream_array_data, LOCK_EX);
+        rename($name_type . '_tmp', $name_type);
     }
-    cli_set_process_title('XtreamCodes[Cache Builder]');
-    WriteFileCategoriesBouq($streamsArray);
-} while (!($nginx_data == 1));
+}
+WriteFileCacheProperties();
+WriteFileCategoriesBouq($streamsArray);
+saveCache();
+$nginx_data = (int) shell_exec('cat ' . IPTV_PANEL_DIR . 'nginx/conf/nginx.conf | grep -c \'\\/(\\\\d+)\'');
+if ($nginx_data == 1) {
+    file_put_contents(TMP_DIR . 'new_rewrite', 1);
+}
+@unlink($unique_id);

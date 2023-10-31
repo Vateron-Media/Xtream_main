@@ -24,7 +24,7 @@ if ($watchdog_data == 0) {
     shell_exec(PHP_BIN . ' ' . IPTV_PANEL_DIR . 'tools/watchdog_data.php > /dev/null 2>/dev/null &');
 }
 if (!file_exists(MOVIES_IMAGES)) {
-    mkdir(MOVIES_IMAGES);	
+    mkdir(MOVIES_IMAGES);
 }
 if (!file_exists(ENIGMA2_PLUGIN_DIR)) {
     mkdir(ENIGMA2_PLUGIN_DIR);
@@ -55,7 +55,7 @@ if (!empty($int)) {
 }
 $total_running_streams = shell_exec('ps ax | grep -v grep | grep ffmpeg | grep -c ' . FFMPEG_PATH);
 $server_hardware = array('total_ram' => $total_ram, 'total_used' => $total_used, 'cores' => $cpu_cores, 'threads' => $cpu_threads, 'kernel' => trim(shell_exec('uname -r')), 'total_running_streams' => $total_running_streams, 'cpu_name' => $cpu_name, 'cpu_usage' => (int) $cpu_usage / $cpu_threads, 'network_speed' => $speed, 'bytes_sent' => $total_bytes_sent, 'bytes_received' => $total_bytes_received);
-$whitelist_ips = array_values(array_unique(array_map('trim', explode('', shell_exec('ip -4 addr | grep -oP \'(?<=inet\\s)\\d+(\\.\\d+){3}\'')))));
+$whitelist_ips = array_values(array_unique(array_map('trim', explode('\n', shell_exec('ip -4 addr | grep -oP \'(?<=inet\\s)\\d+(\\.\\d+){3}\'')))));
 $ipTV_db->query('UPDATE `streaming_servers` SET `server_hardware` = \'%s\',`whitelist_ips` = \'%s\' WHERE `id` = \'%d\'', json_encode($server_hardware), json_encode($whitelist_ips), SERVER_ID);
 if (!file_exists(GEOIP2_FILENAME) || 86400 <= time() - filemtime(GEOIP2_FILENAME)) {
     passthru('wget --no-check-certificate --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0" --timeout=40 "http://downloads.xtream-codes.com/v2/GeoLite2.mmdb" -O "' . GEOIP2_FILENAME . '" -q 2>/dev/null');

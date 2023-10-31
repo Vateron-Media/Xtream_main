@@ -1,16 +1,15 @@
 <?php
 
-class Epg
-{
+require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+
+class Epg {
     public $validEpg = false;
     public $epgSource;
     public $from_cache = false;
-    function __construct($result, $set = false)
-    {
+    public function __construct($result, $set = false) {
         $this->LoadEpg($result, $set);
     }
-    public function getData()
-    {
+    public function getData() {
         $output = array();
         foreach ($this->epgSource->channel as $item) {
             $channel_id = trim((string) $item->attributes()->id);
@@ -37,8 +36,7 @@ class Epg
         }
         return $output;
     }
-    public function getProgrammes($epg_id, $streams)
-    {
+    public function getProgrammes($epg_id, $streams) {
         global $ipTV_db;
         $list = array();
         foreach ($this->epgSource->programme as $item) {
@@ -52,35 +50,35 @@ class Epg
             if (empty($item->title)) {
                 continue;
             }
-            $title = $item->title;
-            if (is_object($title)) {
+            $titles = $item->title;
+            if (is_object($titles)) {
                 $epg_lang_check = false;
-                foreach ($title as $data) {
-                    if ($data->attributes()->lang == $streams[$channel_id]['epg_lang']) {
+                foreach ($titles as $title) {
+                    if ($title->attributes()->lang == $streams[$channel_id]['epg_lang']) {
                         $epg_lang_check = true;
-                        $desc_data = base64_encode($data);
+                        $desc_data = base64_encode($title);
                         break;
                     }
                 }
                 if (!$epg_lang_check) {
-                    $desc_data = base64_encode($title[0]);
+                    $desc_data = base64_encode($titles[0]);
                 }
             } else {
-                $desc_data = base64_encode($title);
+                $desc_data = base64_encode($titles);
             }
             if (!empty($item->desc)) {
-                $desc = $item->desc;
-                if (is_object($desc)) {
+                $descs = $item->desc;
+                if (is_object($descs)) {
                     $epg_lang_check = false;
-                    foreach ($desc as $data) {
-                        if ($data->attributes()->lang == $streams[$channel_id]['epg_lang']) {
+                    foreach ($descs as $desc) {
+                        if ($desc->attributes()->lang == $streams[$channel_id]['epg_lang']) {
                             $epg_lang_check = true;
-                            $data = base64_encode($data);
+                            $data = base64_encode($desc);
                             break;
                         }
                     }
                     if (!$epg_lang_check) {
-                        $data = base64_encode($desc[0]);
+                        $data = base64_encode($descs[0]);
                     }
                 } else {
                     $data = base64_encode($item->desc);
@@ -94,29 +92,88 @@ class Epg
         }
         return !empty($list) ? $list : false;
     }
-    public function LoadEpg($result, $set)
-    {
+    public function LoadEpg($result, $set) {
         $errors = pathinfo($result, PATHINFO_EXTENSION);
-        if (($errors == 'gz')) {
-            $content = file_get_contents($result);
-            $epgSource = simplexml_load_string($content, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
-            $content = gzdecode(file_get_contents($result));
-            $epgSource = simplexml_load_string($content, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
-        }
-        else if ($errors == 'xz') {
-            $content = shell_exec("wget -qO- \"{$result}\" | unxz -c");
-            $epgSource = simplexml_load_string($content, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
-        } 
-        if ($epgSource !== false) {
-            $this->epgSource = $epgSource;
-            if (empty($this->epgSource->programme)) {
-                ipTV_lib::SaveLog('Not A Valid EPG Source Specified or EPG Crashed: ' . $result);
+        if (!($errors == 'gz')) {
+            if ($errors == 'xz') {
+                $content = shell_exec('wget -qO- "' . $result . '" | unxz -c');
+                $epgSource = simplexml_load_string($content, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
             } else {
-                $this->validEpg = true;
+                $content = file_get_contents($result);
+                $epgSource = simplexml_load_string($content, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
+                $content = gzdecode(file_get_contents($result));
+                $epgSource = simplexml_load_string($content, 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_PARSEHUGE);
             }
-        } else {
-            ipTV_lib::SaveLog('No XML Found At: ' . $result);
+            if ($epgSource !== false) {
+                $this->epgSource = $epgSource;
+                if (empty($this->epgSource->programme)) {
+                    ipTV_lib::SaveLog('Not A Valid EPG Source Specified or EPG Crashed: ' . $result);
+                } else {
+                    $this->validEpg = true;
+                }
+            } else {
+                ipTV_lib::SaveLog('No XML Found At: ' . $result);
+            }
+            $epgSource = $content = NULL;
         }
-        $epgSource = $content = null; 
     }
 }
+if (!@$argc) {
+    die(0);
+}
+ini_set('memory_limit', -1);
+shell_exec('kill -9 `ps -ef | grep \'XtreamCodes\\[EPG\\]\' | grep -v grep | awk \'{print $2}\'`;');
+cli_set_process_title('XtreamCodes[EPG]');
+$ipTV_db->query('SELECT * FROM `epg`');
+foreach ($ipTV_db->get_rows() as $row) {
+    $dataEPG = new Epg($row['epg_file']);
+    if ($dataEPG->validEpg) {
+        $ipTV_db->query('UPDATE `epg` SET `data` = \'%s\' WHERE `id` = \'%d\'', json_encode($dataEPG->getData()), $row['id']);
+        $dataEPG = NULL;
+    }
+}
+$ipTV_db->query('SELECT DISTINCT(t1.`epg_id`),t2.* 
+                    FROM `streams` t1
+                    INNER JOIN `epg` t2 ON t2.id = t1.epg_id
+                    WHERE t1.`epg_id` IS NOT NULL');
+$epgs = $ipTV_db->get_rows();
+foreach ($epgs as $epg) {
+    if ($epg['days_keep'] == 0) {
+        $ipTV_db->query('DELETE FROM `epg_data` WHERE `epg_id` = \'%d\'', $epg['epg_id']);
+    }
+    $dataEPG = new Epg($epg['epg_file']);
+    if ($dataEPG->validEpg) {
+        $ipTV_db->query('SELECT
+                          t1.`channel_id`,
+                          t1.`epg_lang`,
+                          last_row.start
+                        FROM
+                          `streams` t1
+                        LEFT JOIN
+                          (
+                          SELECT
+                            channel_id,
+                            MAX(`start`) as start
+                          FROM
+                            epg_data
+                          WHERE
+                            epg_id = \'%d\'
+                          GROUP BY
+                            channel_id
+                        ) last_row ON last_row.channel_id = t1.channel_id
+                        WHERE
+                          `epg_id` = \'%d\';', $epg['epg_id'], $epg['epg_id']);
+        $chanel_id = $ipTV_db->get_rows(true, 'channel_id');
+        $programmes = $dataEPG->getProgrammes($epg['epg_id'], $chanel_id);
+        $id = 0;
+        while ($id < count($programmes)) {
+            $ipTV_db->query('INSERT INTO `epg_data` (`epg_id`,`channel_id`,`start`,`end`,`lang`,`title`,`description`) VALUES ' . $programmes[$id]);
+            $id++;
+        }
+        $ipTV_db->query('UPDATE `epg` SET `last_updated` = \'%d\' WHERE `id` = \'%d\'', time(), $epg['epg_id']);
+    }
+    if (0 < $epg['days_keep']) {
+        $ipTV_db->query('DELETE FROM `epg_data` WHERE `epg_id` = \'%d\' AND `start` < \'%s\'', $epg['epg_id'], date('Y-m-d H:i:00', strtotime('-' . $epg['days_keep'] . ' days')));
+    }
+}
+$ipTV_db->query('DELETE n1 FROM `epg_data` n1, `epg_data` n2 WHERE n1.id < n2.id AND n1.epg_id = n2.epg_id AND n1.channel_id = n2.channel_id AND n1.start = n2.start AND n1.title = n2.title');
