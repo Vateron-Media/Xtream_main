@@ -247,18 +247,18 @@ class ipTV_streaming {
             }
         }
     }
-    public static function checkStreamExistInBouquet($stream_id, $connections = array(), $type = 'movie') {
-        if (!($type == 'movie')) {
-            if ($type == 'series') {
-                self::$ipTV_db->query('SELECT series_id FROM `series_episodes` WHERE `stream_id` = \'%d\' LIMIT 1', $stream_id);
-                if (self::$ipTV_db->num_rows() > 0) {
-                    return in_array(self::$ipTV_db->get_col(), $connections);
-                }
-            } else {
-                return in_array($stream_id, $connections);
-            }
-            return false;
+    public static function checkStreamExistInBouquet($stream_id, $connections = array(), $type = "movie") {
+        if ($type == "movie") {
+            return in_array($stream_id, $connections);
         }
+        if ($type == "series") {
+            $query = "SELECT series_id FROM `series_episodes` WHERE `stream_id` = '%d' LIMIT 1";
+            self::$ipTV_db->query($query, $stream_id);
+            if (self::$ipTV_db->num_rows() <= 0) {
+                return in_array(self::$ipTV_db->get_col(), $connections);
+            }
+        }
+        return false;
     }
     public static function GetUserInfo($user_id = null, $username = null, $password = null, $get_ChannelIDS = false, $getBouquetInfo = false, $get_cons = false, $type = array(), $B5e1c013996afcec27bf828245c3ec37 = false, $user_ip = '', $user_agent = '', $a8851ef591e0cdd9aad6ec4f7bd4b160 = array(), $play_token = '', $stream_id = 0) {
         if (empty($user_id)) {

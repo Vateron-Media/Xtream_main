@@ -189,7 +189,7 @@ function portal_auth($sn, $mac, $ver, $stb_type, $image_version, $device_id, $de
                 return false;
             }
             $geoip = new Reader(GEOIP2_FILENAME);
-            $geoip_country_code = $geoip->getWithPrefixLen($user_ip)['registered_country']['iso_code'];
+            $geoip_country_code = $geoip->getWithPrefixLen($user_ip)[0]['registered_country']['iso_code'];
             $geoip->close();
             if (!empty($geoip_country_code)) {
                 $forced_country = !empty($userMag['forced_country']) ? true : false;

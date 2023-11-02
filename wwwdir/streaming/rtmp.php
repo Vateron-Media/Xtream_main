@@ -50,7 +50,7 @@ if ($user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, f
         die;
     }
     $geoip = new Reader(GEOIP2_FILENAME);
-    $geoip_country_code = $geoip->getWithPrefixLen($user_ip)['registered_country']['iso_code'];
+    $geoip_country_code = $geoip->getWithPrefixLen($user_ip)[0]['registered_country']['iso_code'];
     $geoip->close();
     if (!empty($user_info['allowed_ips']) && !in_array($user_ip, array_map('gethostbyname', $user_info['allowed_ips']))) {
         ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'IP_BAN', $user_ip);

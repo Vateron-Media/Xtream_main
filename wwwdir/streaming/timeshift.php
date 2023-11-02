@@ -28,7 +28,7 @@ if (!is_numeric($stream_id) && stristr($stream_id, '_')) {
 }
 $user_ip = ipTV_streaming::getUserIP();
 $user_agent = empty($_SERVER['HTTP_USER_AGENT']) ? '' : htmlentities(trim($_SERVER['HTTP_USER_AGENT']));
-$geoip_country_code = $geoip->getWithPrefixLen($user_ip)['registered_country']['iso_code'];
+$geoip_country_code = $geoip->getWithPrefixLen($user_ip)[0]['registered_country']['iso_code'];
 $geoip->close();
 $play_token = empty(ipTV_lib::$request['play_token']) ? null : ipTV_lib::$request['play_token'];
 if ($user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, false, true, array(), false, $user_ip, $user_agent, array(), $play_token, $stream_id)) {
