@@ -309,7 +309,7 @@ if ($rSettings["sidebar"]) {
                                                                 </thead>
                                                                 <tbody>
                                                                     <?php foreach (getBouquets() as $rBouquet) { ?>
-                                                                    <tr<?php if ((isset($rPackage)) & (in_array($rBouquet["id"], json_decode($rPackage["bouquets"], True)))) { echo " class='selected selectedfilter ui-selected'"; } ?>>
+                                                                    <tr<?php if(isset($rPackage)) { if(in_array($rBouquet["id"], json_decode($rPackage["bouquets"], True))) { echo " class='selected selectedfilter ui-selected'"; } } ?>>
                                                                         <td class="text-center"><?=$rBouquet["id"]?></td>
                                                                         <td><?=$rBouquet["bouquet_name"]?></td>
                                                                         <td class="text-center"><?=count(json_decode($rBouquet["bouquet_channels"], True))?></td>

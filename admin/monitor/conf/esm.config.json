@@ -1,0 +1,154 @@
+{
+    "esm": {
+        "version": "0.1",
+        "website": "#",
+        "check_updates": true,
+        "auto_refresh": 300,
+        "theme": "slate",
+        "custom_title": ""
+    },
+    "cpu": {
+        "enable_temperature": true
+    },
+    "disk": {
+        "show_tmpfs": true,
+        "show_filesystem": true
+    },
+    "ping": {
+        "hosts": [
+            "facebook.com",
+            "google.com",
+            "uit.one",
+			"fdcservers.net"
+        ]
+    },
+    "last_login": {
+        "enable": true,
+        "max": 5
+    },
+    "services": {
+        "show_port": true,
+        "list": [
+            {
+                "name": "Web Server",
+                "host": "localhost",
+                "port": 80,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server",
+                "host": "localhost",
+                "port": 443,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server",
+                "host": "localhost",
+                "port": 25500,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server",
+                "host": "localhost",
+                "port": 25461,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server",
+                "host": "localhost",
+                "port": 25462,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server",
+                "host": "localhost",
+                "port": 25463,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 8080,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 8880,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 2052,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 2082,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 2086,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 2095,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 2053,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 2083,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 2087,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 2096,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Web Server Cloudflare",
+                "host": "localhost",
+                "port": 8443,
+                "protocol": "tcp"
+            },
+            {
+                "name": "Database Server",
+                "host": "localhost",
+                "port": 7999,
+                "protocol": "tcp"
+            },
+			{
+                "name": "Database Server",
+                "host": "localhost",
+                "port": 3306,
+                "protocol": "tcp"
+            },
+            {
+                "name": "SSH",
+                "host": "localhost",
+                "port": 22,
+                "protocol": "tcp"
+            }
+        ]
+    }
+}

@@ -110,10 +110,10 @@ if ($rSettings["sidebar"]) {
                         <div class="page-title-box">
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
-                                    <a href="./watch.php"><li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> Back to Folder Watch</li></a>
+                                    <a href="./watch.php"><li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?=$_["back_to_folder_watch"]?></li></a>
                                 </ol>
                             </div>
-                            <h4 class="page-title"><?php if (isset($rFolder)) { echo "Edit"; } else { echo "Add"; } ?> Folder</h4>
+                            <h4 class="page-title"><?php if (isset($rFolder)) { echo $_["edit"]; } else { echo $_["add"]; } ?> <?=$_["folder"]?></h4>
                         </div>
                     </div>
                 </div>     
@@ -125,14 +125,14 @@ if ($rSettings["sidebar"]) {
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            Please select a directory that isn't the root path of the server.
+                            <?=$_["please_select_a_directory"]?>
                         </div>
                         <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            The selected directory is already being watched. Please select another.
+                            <?=$_["the_selected_directory"]?>
                         </div>
                         <?php } ?>
                         <div class="card">
@@ -146,13 +146,13 @@ if ($rSettings["sidebar"]) {
                                             <li class="nav-item">
                                                 <a href="#folder-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2"> 
                                                     <i class="mdi mdi-account-card-details-outline mr-1"></i>
-                                                    <span class="d-none d-sm-inline">Details</span>
+                                                    <span class="d-none d-sm-inline"><?=$_["details"]?></span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="#override" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2"> 
                                                     <i class="mdi mdi-movie mr-1"></i>
-                                                    <span class="d-none d-sm-inline">Override Settings</span>
+                                                    <span class="d-none d-sm-inline"><?=$_["override_settings"]?></span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -161,7 +161,7 @@ if ($rSettings["sidebar"]) {
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="form-group row mb-4">
-                                                            <label class="col-md-4 col-form-label" for="folder_type">Folder Type</label>
+                                                            <label class="col-md-4 col-form-label" for="folder_type"><?=$_["folder_type"]?></label>
                                                             <div class="col-md-8">
                                                                 <select id="folder_type" name="folder_type" class="form-control" data-toggle="select2">
                                                                     <?php foreach (Array("movie" => "Movies", "series" => "TV Series") as $rTypeID => $rType) { ?>
@@ -171,7 +171,7 @@ if ($rSettings["sidebar"]) {
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4">
-                                                            <label class="col-md-4 col-form-label" for="server_id">Server Name</label>
+                                                            <label class="col-md-4 col-form-label" for="server_id"><?=$_["server_name"]?></label>
                                                             <div class="col-md-8">
                                                                 <select id="server_id" name="server_id" class="form-control" data-toggle="select2">
                                                                     <?php foreach (getStreamingServers() as $rServer) { ?>
@@ -181,7 +181,7 @@ if ($rSettings["sidebar"]) {
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4">
-                                                            <label class="col-md-4 col-form-label" for="selected_path">Selected Path</label>
+                                                            <label class="col-md-4 col-form-label" for="selected_path"><?=$_["selected_path"]?></label>
                                                             <div class="col-md-8 input-group">
                                                                 <input type="text" id="selected_path" name="selected_path" class="form-control" value="<?php if (isset($rFolder)) { echo htmlspecialchars($rFolder["directory"]); } else { echo "/"; } ?>" required data-parsley-trigger="change">
                                                                 <div class="input-group-append">
@@ -195,7 +195,7 @@ if ($rSettings["sidebar"]) {
                                                                     <thead>
                                                                         <tr>
                                                                             <th width="20px"></th>
-                                                                            <th>Directory</th>
+                                                                            <th><?=$_["directory"]?></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody></tbody>
@@ -206,7 +206,7 @@ if ($rSettings["sidebar"]) {
                                                                     <thead>
                                                                         <tr>
                                                                             <th width="20px"></th>
-                                                                            <th>Filename</th>
+                                                                            <th><?=$_["filename"]?></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody></tbody>
@@ -217,7 +217,7 @@ if ($rSettings["sidebar"]) {
                                                 </div> <!-- end row -->
                                                 <ul class="list-inline wizard mb-0">
                                                     <li class="list-inline-item float-right">
-                                                        <input name="submit_folder" type="submit" class="btn btn-primary" value="<?php if (isset($rFolder)) { echo "Edit"; } else { echo "Add"; } ?>" />
+                                                        <input name="submit_folder" type="submit" class="btn btn-primary" value="<?php if (isset($rFolder)) { echo $_["edit"]; } else { echo $_["add"]; } ?>" />
                                                     </li>
                                                 </ul>
                                             </div>
@@ -225,10 +225,10 @@ if ($rSettings["sidebar"]) {
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="form-group row mb-4" id="category_movie"<?php if (isset($rFolder)) { if ($rFolder["type"] <> "movie") { echo ' style="display: none;"'; } } ?>>
-                                                            <label class="col-md-4 col-form-label" for="category_id_movie">Override Category <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Ignore category allocation and force category allocation." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="category_id_movie"><?=$_["override_category"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["ignore_category_allocation_category"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-8">
                                                                 <select name="category_id_movie" id="category_id_movie" class="form-control select2" data-toggle="select2">
-                                                                    <option <?php if (isset($rFolder)) { if (intval($rFolder["category_id"]) == 0) { echo "selected "; } } ?>value="0">Do Not Use</option>
+                                                                    <option <?php if (isset($rFolder)) { if (intval($rFolder["category_id"]) == 0) { echo "selected "; } } ?>value="0"><?=$_["do_not_use"]?></option>
                                                                     <?php foreach (getCategories("movie") as $rCategory) { ?>
                                                                         <option <?php if (isset($rFolder)) { if (intval($rFolder["category_id"]) == intval($rCategory["id"])) { echo "selected "; } } ?>value="<?=$rCategory["id"]?>"><?=$rCategory["category_name"]?></option>
                                                                     <?php } ?>
@@ -236,10 +236,10 @@ if ($rSettings["sidebar"]) {
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4" id="category_series"<?php if (isset($rFolder)) { if ($rFolder["type"] <> "series") { echo ' style="display: none;"'; } } else { echo ' style="display: none;"'; } ?>>
-                                                            <label class="col-md-4 col-form-label" for="category_id_series">Override Category <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Ignore category allocation and force category allocation." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="category_id_series"><?=$_["override_category"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["ignore_category_allocation_category"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-8">
                                                                 <select name="category_id_series" id="category_id_series" class="form-control select2" data-toggle="select2">
-                                                                    <option <?php if (isset($rFolder)) { if (intval($rFolder["category_id"]) == 0) { echo "selected "; } } ?>value="0">Do Not Use</option>
+                                                                    <option <?php if (isset($rFolder)) { if (intval($rFolder["category_id"]) == 0) { echo "selected "; } } ?>value="0"><?=$_["do_not_use"]?></option>
                                                                     <?php foreach (getCategories("series") as $rCategory) { ?>
                                                                         <option <?php if (isset($rFolder)) { if (intval($rFolder["category_id"]) == intval($rCategory["id"])) { echo "selected "; } } ?>value="<?=$rCategory["id"]?>"><?=$rCategory["category_name"]?></option>
                                                                     <?php } ?>
@@ -247,7 +247,7 @@ if ($rSettings["sidebar"]) {
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4">
-                                                            <label class="col-md-4 col-form-label" for="bouquets">Override Bouquets <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Ignore category allocation and force bouquet allocation." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="bouquets"><?=$_["override_bouquets"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["ignore_category_allocation_bouquet"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-8">
                                                                 <select name="bouquets[]" id="bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose...">
                                                                     <?php foreach ($rBouquets as $rBouquet) { ?>
@@ -257,10 +257,10 @@ if ($rSettings["sidebar"]) {
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4" id="fb_category_movie"<?php if (isset($rFolder)) { if ($rFolder["type"] <> "movie") { echo ' style="display: none;"'; } } ?>>
-                                                            <label class="col-md-4 col-form-label" for="fb_category_id_movie">Fallback Category <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to this category if the Genre isn't found in the category allocation list." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="fb_category_id_movie"><?=$_["fallback_category"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["add_to_this category"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-8">
                                                                 <select name="fb_category_id_movie" id="fb_category_id_movie" class="form-control select2" data-toggle="select2">
-                                                                    <option <?php if (isset($rFolder)) { if (intval($rFolder["fb_category_id"]) == 0) { echo "selected "; } } ?>value="0">Do Not Use</option>
+                                                                    <option <?php if (isset($rFolder)) { if (intval($rFolder["fb_category_id"]) == 0) { echo "selected "; } } ?>value="0"><?=$_["do_not_use"]?></option>
                                                                     <?php foreach (getCategories("movie") as $rCategory) { ?>
                                                                         <option <?php if (isset($rFolder)) { if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) { echo "selected "; } } ?>value="<?=$rCategory["id"]?>"><?=$rCategory["category_name"]?></option>
                                                                     <?php } ?>
@@ -268,20 +268,20 @@ if ($rSettings["sidebar"]) {
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4" id="fb_category_series"<?php if (isset($rFolder)) { if ($rFolder["type"] <> "series") { echo ' style="display: none;"'; } } else { echo ' style="display: none;"'; } ?>>
-                                                            <label class="col-md-4 col-form-label" for="fb_category_id_series">Fallback Category <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to this category if the Genre isn't found in the category allocation list." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="fb_category_id_series"><?=$_["fallback_category"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["add_to_this category"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-8">
                                                                 <select name="fb_category_id_series" id="fb_category_id_series" class="form-control select2" data-toggle="select2">
-                                                                    <option <?php if (isset($rFolder)) { if (intval($rFolder["fb_category_id"]) == 0) { echo "selected "; } } ?>value="0">Do Not Use</option>
+                                                                    <option <?php if (isset($rFolder)) { if (intval($rFolder["fb_category_id"]) == 0) { echo "selected "; } } ?>value="0"><?=$_["do_not_use"]?></option>
                                                                     <?php foreach (getCategories("series") as $rCategory) { ?>
-                                                                        <option <?php if (isset($rFolder)) { if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) { echo "selected "; } } ?>value="<?=$rCategory["id"]?>"><?=$rCategory["category_name"]?></option>
+                                                                        <option <?php if (isset($rFolder)) { if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) { echo $_["checked "]; } } ?>value="<?=$rCategory["id"]?>"><?=$rCategory["category_name"]?></option>
                                                                     <?php } ?>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4">
-                                                            <label class="col-md-4 col-form-label" for="fb_bouquets">Fallback Bouquets <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to these bouquets if the Genre isn't found in the category allocation list." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="fb_bouquets"><?=$_["fallback_bouquets"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["add_to_these_bouquets"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-8">
-                                                                <select name="fb_bouquets[]" id="fb_bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose...">
+                                                                <select name="fb_bouquets[]" id="fb_bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?=$_["choose"]?>...">
                                                                     <?php foreach ($rBouquets as $rBouquet) { ?>
                                                                     <option <?php if (isset($rFolder)) { if (in_array(intval($rBouquet["id"]), json_decode($rFolder["fb_bouquets"], True))) { echo "selected "; } } ?>value="<?=$rBouquet["id"]?>"><?=$rBouquet["bouquet_name"]?></option>
                                                                     <?php } ?>
@@ -289,27 +289,27 @@ if ($rSettings["sidebar"]) {
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4">
-                                                            <label class="col-md-4 col-form-label" for="allowed_extensions">Allowed Extensions <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Allow scanning of the following extensions only. An empty list will allow all extensions." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="allowed_extensions"><?=$_["allowed_extensions"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["allow_scanning_of"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-8">
-                                                                <select name="allowed_extensions[]" id="allowed_extensions" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose...">
+                                                                <select name="allowed_extensions[]" id="allowed_extensions" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?=$_["choose"]?>">
                                                                     <?php foreach (Array("mp4", "mkv", "avi", "mpg", "flv") as $rExtension) { ?>
-                                                                    <option <?php if (isset($rFolder)) { if (in_array($rExtension, json_decode($rFolder["allowed_extensions"], True))) { echo "selected "; } } ?>value="<?=$rExtension?>"><?=$rExtension?></option>
+                                                                    <option <?php if (isset($rFolder)) { if (in_array($rExtension, json_decode($rFolder["allowed_extensions"], True))) { echo $_["checked "]; } } ?>value="<?=$rExtension?>"><?=$rExtension?></option>
                                                                     <?php } ?>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4">
-                                                            <label class="col-md-4 col-form-label" for="disable_tmdb">Disable TMDb <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Do not use TMDb to match the content." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="disable_tmdb"><?=$_["disable_tmdb"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["do_not_use_tmdb"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
-                                                                <input name="disable_tmdb" id="disable_tmdb" type="checkbox" <?php if (isset($rFolder)) { if ($rFolder["disable_tmdb"]) { echo "checked "; } } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd"/>
+                                                                <input name="disable_tmdb" id="disable_tmdb" type="checkbox" <?php if (isset($rFolder)) { if ($rFolder["disable_tmdb"]) { echo $_["checked "]; } } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd"/>
                                                             </div>
-                                                            <label class="col-md-4 col-form-label" for="ignore_no_match">Ignore No Match <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to database even if no TMDb match is found." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="ignore_no_match"><?=$_["ignore_no match"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["add_to_database_even"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
-                                                                <input name="ignore_no_match" id="ignore_no_match" type="checkbox" <?php if (isset($rFolder)) { if ($rFolder["ignore_no_match"]) { echo "checked "; } } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd"/>
+                                                                <input name="ignore_no_match" id="ignore_no_match" type="checkbox" <?php if (isset($rFolder)) { if ($rFolder["ignore_no_match"]) {echo $_["checked "]; } } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd"/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row mb-4">
-                                                            <label class="col-md-4 col-form-label" for="auto_subtitles">Auto-Add Subtitles <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Automatically embed subtitles of the same name in the same folder." class="mdi mdi-information"></i></label>
+                                                            <label class="col-md-4 col-form-label" for="auto_subtitles"><?=$_["auto-add_subtitles"]?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?=$_["automatically_embed_subtitles"]?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
                                                                 <input name="auto_subtitles" id="auto_subtitles" type="checkbox" <?php if (isset($rFolder)) { if ($rFolder["auto_subtitles"]) { echo "checked "; } } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd"/>
                                                             </div>
@@ -318,7 +318,7 @@ if ($rSettings["sidebar"]) {
                                                 </div> <!-- end row -->
                                                 <ul class="list-inline wizard mb-0">
                                                     <li class="list-inline-item float-right">
-                                                        <input name="submit_folder" type="submit" class="btn btn-primary" value="<?php if (isset($rFolder)) { echo "Edit"; } else { echo "Add"; } ?>" />
+                                                        <input name="submit_folder" type="submit" class="btn btn-primary" value="<?php if (isset($rFolder)) { echo $_["edit"]; } else { echo $_["add"]; } ?>" />
                                                     </li>
                                                 </ul>
                                             </div>
@@ -412,7 +412,7 @@ if ($rSettings["sidebar"]) {
                     {"className": "dt-center", "targets": [0]},
                 ],
                 "language": {
-                    "emptyTable": "No compatible files found"
+                    "emptyTable": "<?=$_["no_compatible_file"]?>"
                 }
             });
             
@@ -428,10 +428,10 @@ if ($rSettings["sidebar"]) {
                 }
                 $("#selected_path").val(window.currentDirectory);
                 $("#datatable").DataTable().clear();
-                $("#datatable").DataTable().row.add(["", "Loading..."]);
+                $("#datatable").DataTable().row.add(["", "<?=$_["loading"]?>..."]);
                 $("#datatable").DataTable().draw(true);
                 $("#datatable-files").DataTable().clear();
-                $("#datatable-files").DataTable().row.add(["", "Please wait..."]);
+                $("#datatable-files").DataTable().row.add(["", "<?=$_["please_wait"]?>..."]);
                 $("#datatable-files").DataTable().draw(true);
                 $.getJSON("./api.php?action=listdir&dir=" + window.currentDirectory + "&server=" + $("#server_id").val() + "&filter=video", function(data) {
                     $("#datatable").DataTable().clear();

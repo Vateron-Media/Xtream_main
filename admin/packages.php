@@ -39,7 +39,7 @@ if ($rSettings["sidebar"]) {
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body" style="overflow-x:auto;">
-                                <table id="datatable" class="table dt-responsive nowrap">
+                                <table id="datatable" class="table table-hover dt-responsive nowrap">
                                     <thead>
                                         <tr>
                                             <th class="text-center"><?=$_["id"]?></th>

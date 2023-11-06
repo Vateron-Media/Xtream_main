@@ -49,7 +49,7 @@ if (!isset($_STATUS)) {
 								header("Location: ./dashboard.php");
 							}
 						} else {
-							$db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(".intval($rUserInfo["id"]).", '', '', ".intval(time()).", '[<b>UserPanel</b> -> <u>".$_["logged_in"]."</u>]');");
+							$db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(".intval($rUserInfo["id"]).", '', '', ".intval(time()).", '[<b>UserPanel</b>] -> Logged In');");
 							if (strlen($_POST["referrer"]) > 0) {
 								header("Location: .".ESC($_POST["referrer"]));
 							} else {
@@ -84,7 +84,7 @@ if (!isset($_STATUS)) {
 					if ($rPermissions["is_admin"]) {
 						header("Location: ./dashboard.php");
 					} else {
-						$db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(".intval($rUserInfo["id"]).", '', '', ".intval(time()).", '[<b>UserPanel</b> -> <u>".$_["logged_in"]."</u>]');");
+						$db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(".intval($rUserInfo["id"]).", '', '', ".intval(time()).", '[<b>UserPanel</b>] -> Logged In');");
 						header("Location: ./reseller.php");
 					}
 				} else if (($rPermissions) && ((($rPermissions["is_admin"]) OR ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
@@ -117,7 +117,7 @@ if (!isset($_STATUS)) {
 					if ($rPermissions["is_admin"]) {
 						header("Location: ./dashboard.php");
 					} else {
-						$db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(".intval($rUserInfo["id"]).", '', '', ".intval(time()).", '[<b>UserPanel</b> -> <u>".$_["logged_in"]."</u>]');");
+						$db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(".intval($rUserInfo["id"]).", '', '', ".intval(time()).", '[<b>UserPanel</b>] -> Logged In');");
 						header("Location: ./reseller.php");
 					}
 				} else if (($rPermissions) && ((($rPermissions["is_admin"]) OR ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
@@ -143,7 +143,7 @@ if (!isset($_STATUS)) {
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Xtream UI - <?=$_["login"]?></title>
+        <title><?=htmlspecialchars($rSettings["server_name"])?> - <?=$_["login"]?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <!-- App favicon -->
@@ -210,13 +210,13 @@ if (!isset($_STATUS)) {
 							<?=str_replace("{num}", $rAdminSettings["pass_length"], $_["login_message_8"])?>
                         </div>
                         <?php } ?>
-                        <div class="card">
+                        <div class="card-login">
                             <div class="card-body p-4">
-                                <div class="text-center w-75 m-auto">
+                                <div class="text-center w-auto m-autologin">
                                     <?php if ($rAdminSettings["dark_mode_login"]) { ?>
-									<span><img src="assets/images/logo.png" width="200px" alt=""></span>
+									<span><img src="<?=$rSettings["logo_url"]?>" width="100px" alt=""></span>
                                     <?php } else { ?>
-                                    <span><img src="assets/images/logo-back.png" width="200px" alt=""></span>
+                                    <span><img src="<?=$rSettings["logo_url"]?>" width="100px" alt=""></span>
                                     <?php } ?>
                                     <p class="text-muted mb-4 mt-3"></p>
                                 </div>
@@ -225,13 +225,13 @@ if (!isset($_STATUS)) {
                                 <form action="./login.php" method="POST" data-parsley-validate="" id="login_form">
                                     <input type="hidden" name="referrer" value="<?=ESC($_GET["referrer"])?>" />
                                     <?php if ((!isset($rQR)) && (!isset($rChangePass))) { ?>
-                                    <div class="form-group mb-3" id="username_group">
-                                        <label for="username"><?=$_["username"]?></label>
-                                        <input class="form-control" autocomplete="off" type="text" id="username" name="username" required data-parsley-trigger="change" placeholder="<?=$_["enter_your_username"]?>">
+                                    <div class="form-group mblog-3" id="username_group">
+                                        <label class="label-login" for="username"><?=$_["username"]?></label>
+                                        <input class="form-login" autocomplete="off" type="text" id="username" name="username" required data-parsley-trigger="change" placeholder="<?=$_["enter_your_username"]?>">
                                     </div>
-                                    <div class="form-group mb-3">
-                                        <label for="password"><?=$_["password"]?></label>
-                                        <input class="form-control" autocomplete="off" type="password" required data-parsley-trigger="change" id="password" name="password" placeholder="<?=$_["enter_your_password"]?>">
+                                    <div class="form-group mblog-3">
+                                        <label class="label-login" for="password"><?=$_["password"]?></label>
+                                        <input class="form-login" autocomplete="off" type="password" required data-parsley-trigger="change" id="password" name="password" placeholder="<?=$_["enter_your_password"]?>">
                                     </div>
 									<?php if ($rAdminSettings["recaptcha_enable"]) { ?>
 									<h5 class="auth-title text-center">
@@ -246,11 +246,11 @@ if (!isset($_STATUS)) {
                                     </div>
 									<div class="form-group mb-3">
                                         <label for="newpass"><?=$_["new_password"]?></label>
-                                        <input class="form-control" autocomplete="off" type="password" id="newpass" name="newpass" required data-parsley-trigger="change" placeholder="<?=$_["enter_a_new_password"]?>">
+                                        <input class="form-login" autocomplete="off" type="password" id="newpass" name="newpass" required data-parsley-trigger="change" placeholder="<?=$_["enter_a_new_password"]?>">
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="confirm"><?=$_["confirm_password"]?></label>
-                                        <input class="form-control" autocomplete="off" type="password" id="confirm" name="confirm" required data-parsley-trigger="change" placeholder="<?=$_["confirm_your_password"]?>">
+                                        <input class="form-login" autocomplete="off" type="password" id="confirm" name="confirm" required data-parsley-trigger="change" placeholder="<?=$_["confirm_your_password"]?>">
                                     </div>
 									<?php } else { ?>
                                     <input type="hidden" name="hash" value="<?=md5($rUserInfo["username"])?>" />
@@ -263,11 +263,11 @@ if (!isset($_STATUS)) {
                                     <?php } ?>
                                     <div class="form-group mb-3">
                                         <label for="gauth"><?=$_["google_authenticator_code"]?></label>
-                                        <input class="form-control" autocomplete="off" type="gauth" required="" id="gauth" name="gauth" placeholder="<?=$_["enter_your_auth_code"]?>">
+                                        <input class="form-login" autocomplete="off" type="gauth" required="" id="gauth" name="gauth" placeholder="<?=$_["enter_your_auth_code"]?>">
                                     </div>
                                     <?php } ?>
                                     <div class="form-group mb-0 text-center">
-                                        <button class="btn btn-danger btn-block" type="submit" id="login_button"><?=$_["login"]?></button>
+                                        <button class="btn btn-dangerlog btn-block" type="submit" id="login_button"><?=$_["login"]?></button>
                                     </div>
                                 </form>
 								<?php } else { ?>
@@ -277,7 +277,6 @@ if (!isset($_STATUS)) {
 								<?php } ?>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>

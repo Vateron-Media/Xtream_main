@@ -16,7 +16,7 @@ body {
 }
 
 .wrapper {
-    padding: 130px 12px 0 12px
+    padding: 110px 12px 0 12px
 }
 
 #topnav {
@@ -149,12 +149,12 @@ body {
 .navigation-menu>li>a {
     display: block;
     color: rgba(255, 255, 255, .7);
-    font-size: 15px;
+    font-size: 13px;
     font-family: "Work Sans", sans-serif;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
     line-height: 20px;
-    padding: 20px;
+    padding: 10px;
     position: relative
 }
 
@@ -224,7 +224,7 @@ body {
     }
     .navigation-menu>li .submenu li a {
         display: block;
-        padding: 9px 25px;
+        padding:3px 10px 0px 10px;
         clear: both;
         white-space: nowrap;
         color: #aab6c3
@@ -768,7 +768,7 @@ body {
 
 .footer {
     bottom: 0;
-    padding: 19px 15px 20px;
+    padding: 10px 5px 5px;
     position: absolute;
     right: 0;
     color: #ced4da;
@@ -3279,10 +3279,17 @@ div.dt-button-info h2 {
     line-height: 30px
 }
 
+.selectepg-container .select2-selection--single{
+    border:1px solid #ced4da;
+    height:33px;
+    outline:0;
+
+}
+
 .select2-container .select2-selection--single {
     border: 1px solid #4b5460;
     background-color: #434b56;
-    height: 38px;
+    height: 32px;
     outline: 0
 }
 
@@ -3964,8 +3971,8 @@ div.dt-button-info h2 {
 }
 
 [data-plugin=knob] {
-    font-family: Poppins, sans-serif!important;
-    font-weight: 600!important
+    font-family: Segoe UI,sans-serif!important;
+    font-weight: 500!important
 }
 
 .apex-charts {
@@ -4110,13 +4117,15 @@ body.authentication-bg {
 }
 
 .auth-title {
-    background-color: #3e4752;
-    border-top: 1px solid #434b56;
-    border-bottom: 1px solid #434b56;
-    padding: 12px 2.25rem;
-    margin: 0 -2.25rem 30px;
+    #background-color: #3e4752;
+    /*border-top: 1px solid #434b56;
+    border-bottom: 1px solid #434b56;*/
+    padding:8px 2.25rem;
+    /*margin: 0 -2.25rem 30px;*/
     text-transform: uppercase;
-    font-weight: 700;
+    font-weight: 400;
+	color: #fff;
+	border-radius: 15px;
     text-align: center
 }
 

@@ -38,27 +38,27 @@ if ($rSettings["sidebar"]) {
                                         <?php if (!$detect->isMobile()) { ?>
                                         <a href="#" onClick="toggleAuto();">
                                             <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
-                                                <i class="mdi mdi-refresh"></i> <span class="auto-text">Auto-Refresh</span>
+                                                <i class="mdi mdi-refresh"></i> <span class="auto-text"><?=$_["auto_refresh"]?></span>
                                             </button>
                                         </a>
                                         <?php } else { ?>
                                         <a href="javascript:location.reload();" onClick="toggleAuto();">
                                             <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
-                                                <i class="mdi mdi-refresh"></i> Refresh
+                                                <i class="mdi mdi-refresh"></i> <?=$_["refresh"]?>
                                             </button>
                                         </a>
                                         <?php }
 										if ((hasPermissions("adv", "add_user")) OR ($rPermissions["is_reseller"])) { ?>
                                         <a href="user<?php if ($rPermissions["is_reseller"]) { echo "_reseller"; } ?>.php">
                                             <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
-                                                <i class="mdi mdi-plus"></i> Add User
+                                                <i class="mdi mdi-plus"></i> <?=$_["add_user"]?>
                                             </button>
                                         </a>
 										<?php } ?>
                                     </li>
                                 </ol>
                             </div>
-                            <h4 class="page-title">Users</h4>
+                            <h4 class="page-title"><?=$_["users"]?></h4>
                         </div>
                     </div>
                 </div>
@@ -70,12 +70,12 @@ if ($rSettings["sidebar"]) {
                                 <form id="users_search">
                                     <div class="form-group row mb-4">
                                         <div class="col-md-3">
-                                            <input type="text" class="form-control" id="user_search" value="" placeholder="Search Users...">
+                                            <input type="text" class="form-control" id="user_search" value="" placeholder="<?=$_["search_users"]?>...">
                                         </div>
-                                        <label class="col-md-2 col-form-label text-center" for="user_reseller">Filter Results</label>
+                                        <label class="col-md-2 col-form-label text-center" for="user_reseller"><?=$_["filter_results"]?></label>
                                         <div class="col-md-3">
                                             <select id="user_reseller" class="form-control" data-toggle="select2">
-                                                <option value="" selected>All Resellers</option>
+                                                <option value="" selected><?=$_["all_resellers"]?></option>
                                                 <?php foreach ($rRegisteredUsers as $rRegisteredUser) { ?>
                                                 <option value="<?=$rRegisteredUser["id"]?>"><?=$rRegisteredUser["username"]?></option>
                                                 <?php } ?>
@@ -83,39 +83,40 @@ if ($rSettings["sidebar"]) {
                                         </div>
                                         <div class="col-md-2">
                                             <select id="user_filter" class="form-control" data-toggle="select2">
-                                                <option value="" selected>No Filter</option>
-                                                <option value="1">Active</option>
-                                                <option value="2">Disabled</option>
-                                                <option value="3">Banned</option>
-                                                <option value="4">Expired</option>
-                                                <option value="5">Trial</option>
+                                                <option value="" selected><?=$_["no_filter"]?></option>
+                                                <option value="1"><?=$_["active"]?></option>
+                                                <option value="2"><?=$_["disabled"]?></option>
+                                                <option value="3"><?=$_["banned"]?></option>
+                                                <option value="4"><?=$_["expired"]?></option>
+                                                <option value="5"><?=$_["trial"]?></option>
                                             </select>
                                         </div>
-                                        <label class="col-md-1 col-form-label text-center" for="user_show_entries">Show</label>
+                                        <label class="col-md-1 col-form-label text-center" for="user_show_entries"><?=$_["show"]?></label>
                                         <div class="col-md-1">
                                             <select id="user_show_entries" class="form-control" data-toggle="select2">
                                                 <?php foreach (Array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                <option<?php if ($rAdminSettings["default_entries"] == $rShow) { echo " selected"; } ?> value="<?=$rShow?>"><?=$rShow?></option>
+                                                <option<?php if ($rAdminSettings["default_entries"] == $rShow) { echo $_[" selected"]; } ?> value="<?=$rShow?>"><?=$rShow?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>
                                     </div>
                                 </form>
-                                <table id="datatable-users" class="table dt-responsive nowrap font-normal">
+                                <table id="datatable-users" class="table table-hover dt-responsive nowrap font-normal">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">ID</th>
-                                            <th>Username</th>
-                                            <th>Password</th>
-                                            <th>Reseller</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Online</th>
-                                            <th class="text-center">Trial</th>
-                                            <th class="text-center">Expiration</th>
-                                            <th class="text-center">Active</th>
-                                            <th class="text-center">Conns.</th>
-                                            <th class="text-center">Last Connection</th>
-                                            <th class="text-center">Actions</th>
+                                            <th class="text-center"><?=$_["id"]?></th>
+                                            <th><?=$_["username"]?></th>
+                                            <th><?=$_["password"]?></th>
+                                            <th><?=$_["reseller"]?></th>
+                                            <th class="text-center"><?=$_["status"]?></th>
+                                            <th class="text-center"><?=$_["online"]?></th>
+                                            <th class="text-center"><?=$_["trial"]?></th>
+                                            <th class="text-center"><?=$_["expiration"]?></th>
+                                            <th class="text-center"><?=$_["days"]?></th>
+                                            <th class="text-center"><?=$_["conns"]?></th>
+                                            <th class="text-center"><?=$_["last_connection"]?></th>
+											<th class="text-center"><?=$_["info"]?></th>
+                                            <th class="text-center"><?=$_["actions"]?></th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -131,13 +132,13 @@ if ($rSettings["sidebar"]) {
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="downloadModal">Download Playlist</h4>
+                            <h4 class="modal-title" id="downloadModal"><?=$_["download_playlist"]?></h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         </div>
                         <div class="modal-body">
                             <div class="col-12">
                                 <select id="download_type" class="form-control" data-toggle="select2">
-                                    <option value="">Select an ouput format: </option>
+                                    <option value=""><?=$_["select_an_ouput_format"]?> </option>
                                     <?php
                                     $result = $db->query("SELECT * FROM `devices` ORDER BY `device_id` ASC;");
                                     if (($result) && ($result->num_rows > 0)) {
@@ -202,28 +203,38 @@ if ($rSettings["sidebar"]) {
 
         function api(rID, rType) {
             if (rType == "delete") {
-                if (confirm('Are you sure you want to delete this user?') == false) {
+                if (confirm('<?=$_["are_you_sure_you_want_to_delete_this_user"]?>') == false) {
                     return;
                 }
             } else if (rType == "kill") {
-                if (confirm('Are you sure you want to kill all connections for this user?') == false) {
+                if (confirm('<?=$_["are_you_sure_you_want_to kill"]?>') == false) {
                     return;
                 }
+			} else if (rType == "resetispuser") {
+                if (confirm('Are you sure you want to reset this ISP?') == false) {
+                    return;
+                }	
             }
             $.getJSON("./api.php?action=user&sub=" + rType + "&user_id=" + rID, function(data) {
                 if (data.result === true) {
                     if (rType == "delete") {
-                        $.toast("User has been deleted.");
+                        $.toast("<?=$_["user_has_been_deleted"]?>");
                     } else if (rType == "enable") {
-                        $.toast("User has been enabled.");
+                        $.toast("<?=$_["user_has_been_enabled"]?>");
                     } else if (rType == "disable") {
-                        $.toast("User has been disabled.");
+                        $.toast("<?=$_["user_has_been_disabled"]?>");
                     } else if (rType == "unban") {
-                        $.toast("User has been unbanned.");
+                        $.toast("<?=$_["user_has_been_unbanned"]?>");
                     } else if (rType == "ban") {
-                        $.toast("User has been banned.");
+                        $.toast("<?=$_["user_has_been_banned"]?>");
+					} else if (rType == "resetispuser") {
+                        $.toast("isp reseted");
+                    } else if (rType == "lockk") {
+                        $.toast("isp has been locked.");
+                    } else if (rType == "unlockk") {
+                        $.toast("isp has been unlocked.");	
                     } else if (rType == "kill") {
-                        $.toast("All connections for this user have been killed.");
+                        $.toast("<?=$_["all_connections_for_this_user_have_been_killed"]?>");
                     }
                     $.each($('.tooltip'), function (index, element) {
                         $(this).remove();
@@ -231,7 +242,7 @@ if ($rSettings["sidebar"]) {
                     $('[data-toggle="tooltip"]').tooltip("hide");
                     $("#datatable-users").DataTable().ajax.reload(null, false);
                 } else {
-                    $.toast("An error occured while processing your request.");
+                    $.toast("<?=$_["an_error_occured_while_processing_your_request"]?>");
                 }
             });
         }
@@ -276,10 +287,10 @@ if ($rSettings["sidebar"]) {
         function toggleAuto() {
             if (autoRefresh == true) {
                 autoRefresh = false;
-                $(".auto-text").html("Manual Mode");
+                $(".auto-text").html("<?=$_["manual_mode"]?>");
             } else {
                 autoRefresh = true;
-                $(".auto-text").html("Auto-Refresh");
+                $(".auto-text").html("<?=$_["auto_refresh"]?>");
             }
         }
         function getFilter() {
@@ -357,9 +368,9 @@ if ($rSettings["sidebar"]) {
                     }
                 },
                 columnDefs: [
-                    {"className": "dt-center", "targets": [0,4,5,6,7,8,9,10,11]},
+                    {"className": "dt-center", "targets": [0,1,2,3,4,5,6,7,8,9,10,11,12]},
                     {"visible": false, "targets": [10]},
-                    {"orderable": false, "targets": [11]}
+                    {"orderable": false, "targets": [8,11,12]}
                 ],
                 order: [[ 0, "desc" ]],
                 pageLength: <?=$rAdminSettings["default_entries"] ?: 10?>,

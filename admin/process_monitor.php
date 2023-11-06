@@ -114,7 +114,7 @@ if ($rSettings["sidebar"]) {
                                         </div>
                                     </div>
                                 </form>
-                                <table id="datatable-activity" class="table dt-responsive nowrap font-small">
+                                <table id="datatable-activity" class="table table-hover dt-responsive nowrap font-small">
                                     <thead>
                                         <tr>
                                             <th><?=$_["pid"]?></th>

@@ -30,6 +30,8 @@ $DB=array(); #working copy for DB settings
 
 $self=$_SERVER['PHP_SELF'];
 
+session_write_close();
+//session_destroy();
 session_set_cookie_params(0, null, null, false, true);
 session_start();
 if (!isset($_SESSION['XSS'])) $_SESSION['XSS']=get_rand_str(16);

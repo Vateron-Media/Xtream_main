@@ -30,7 +30,7 @@ if (isset($_GET["action"])) {
         $rServerID = intval($_GET["server_id"]);
         $rSub = $_GET["sub"];
         if (in_array($rSub, Array("start", "stop"))) {
-            echo APIRequest(Array("action" => "vod", "sub" => "start", "stream_ids" => Array($rStreamID), "servers" => Array($rServerID)));exit;
+            echo APIRequest(Array("action" => "vod", "sub" => $rSub, "stream_ids" => Array($rStreamID), "servers" => Array($rServerID)));exit;
         } else if ($rSub == "delete") {
             $db->query("DELETE FROM `streams_sys` WHERE `stream_id` = ".intval($rStreamID)." AND `server_id` = ".intval($rServerID).";");
             $result = $db->query("SELECT COUNT(`server_stream_id`) AS `count` FROM `streams_sys` WHERE `stream_id` = ".intval($rStreamID).";");
@@ -108,6 +108,17 @@ if (isset($_GET["action"])) {
             if (!$rPermissions["is_admin"]) { echo json_encode(Array("result" => False)); exit; }
             $db->query("UPDATE `users` SET `admin_enabled` = 1 WHERE `id` = ".intval($rUserID).";");
             echo json_encode(Array("result" => True));exit;
+		//isp lock
+        } else if ($rSub == "resetispuser") {
+            $db->query("UPDATE `users` SET `isp_desc` = NULL WHERE `id` = ".intval($rUserID).";");
+            echo json_encode(Array("result" => True));exit;
+        } else if ($rSub == "lockk") {
+            $db->query("UPDATE `users` SET `is_isplock` = 1 WHERE `id` = ".intval($rUserID).";");
+            echo json_encode(Array("result" => True));exit;
+        } else if ($rSub == "unlockk") {
+            $db->query("UPDATE `users` SET `is_isplock` = 0 WHERE `id` = ".intval($rUserID).";");
+            echo json_encode(Array("result" => True));exit;		
+		//isp lock	
         } else if ($rSub == "kill") {
             $rResult = $db->query("SELECT `pid`, `server_id` FROM `user_activity_now` WHERE `user_id` = ".intval($rUserID).";");
             if (($rResult) && ($rResult->num_rows > 0)) {
@@ -322,6 +333,16 @@ if (isset($_GET["action"])) {
         } else {
             echo json_encode(Array("result" => False));exit;
         }
+	} else if ($_GET["action"] == "login_flood") {
+        if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "add_login_flood"))) { echo json_encode(Array("result" => False)); exit; }
+        $rIPID = intval($_GET["ip"]);
+        $rSub = $_GET["sub"];
+        if ($rSub == "delete") {
+            $db->query("DELETE FROM `login_flood` WHERE `id` = ".intval($rIPID).";");
+            echo json_encode(Array("result" => True));exit;
+        } else {
+            echo json_encode(Array("result" => False));exit;
+        }	
     } else if ($_GET["action"] == "rtmp_ip") {
         if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "add_rtmp"))) { echo json_encode(Array("result" => False)); exit; }
         $rIPID = intval($_GET["ip"]);
@@ -602,6 +623,8 @@ if (isset($_GET["action"])) {
                 $return["total_streams"] += $rServerArray["total_streams"];
                 $return["total_running_streams"] += $rServerArray["total_running_streams"];
                 $return["offline_streams"] += $rServerArray["offline_streams"];
+				$return["bytes_received"] += $rServerArray["bytes_received"]; // total input
+                $return["bytes_sent"] += $rServerArray["bytes_sent"]; // total output
             }
         }
         echo json_encode($return);exit;
@@ -697,6 +720,7 @@ if (isset($_GET["action"])) {
         echo json_encode($return);exit;
     } else if ($_GET["action"] == "force_epg") {
         if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "epg"))) { echo json_encode(Array("result" => False)); exit; }
+		   $db->query("TRUNCATE TABLE `epg_data`;");								  
         sexec($_INFO["server_id"], "/home/xtreamcodes/iptv_xtream_codes/php/bin/php /home/xtreamcodes/iptv_xtream_codes/crons/epg.php");
         echo json_encode(Array("result" => True));exit;
     } else if ($_GET["action"] == "tmdb_search") {
@@ -807,19 +831,94 @@ if (isset($_GET["action"])) {
         if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "edit_server"))) { echo json_encode(Array("result" => False)); exit; }
         $rServerID = intval($_GET["server_id"]);
         if (isset($rServers[$rServerID])) {
-            $rJSON = Array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "reboot");
+			$rServer = $rServers[$rServerID];
+			$rJSON = Array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "restart");
             file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/".$rServerID.".json", json_encode($rJSON));
+			startcmd();
             echo json_encode(Array("result" => True));exit;
         }
+		startcmd();
+		echo json_encode(Array("result" => False));exit;
+    } else if ($_GET["action"] == "reboot_server") {
+        if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "edit_server"))) { echo json_encode(Array("result" => False)); exit; }
+        $rServerID = intval($_GET["server_id"]);
+        if (isset($rServers[$rServerID])) {
+			$rServer = $rServers[$rServerID];
+            $rJSON = Array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "reboot");
+            file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/".$rServerID.".json", json_encode($rJSON));
+			startcmd();
+            echo json_encode(Array("result" => True));exit;
+        }
+		startcmd();
+		echo json_encode(Array("result" => False));exit;
+    } else if ($_GET["action"] == "remake_server") {
+        if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "edit_server"))) { echo json_encode(Array("result" => False)); exit; }
+        $rServerID = intval($_GET["server_id"]);
+        if (isset($rServers[$rServerID])) {
+			$rServer = $rServers[$rServerID];
+            $rJSON = Array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "sreload");
+            file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/".$rServerID.".json", json_encode($rJSON));
+			startcmd();
+            echo json_encode(Array("result" => True));exit;
+        }
+		startcmd();
+		echo json_encode(Array("result" => False));exit;
+    } else if ($_GET["action"] == "remake_balancer") {
+        if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "edit_server"))) { echo json_encode(Array("result" => False)); exit; }
+        $rServerID = intval($_GET["server_id"]);
+        if (isset($rServers[$rServerID])) {
+			$rServer = $rServers[$rServerID];
+            $rJSON = Array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "breload");
+            file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/".$rServerID.".json", json_encode($rJSON));
+			startcmd();
+            echo json_encode(Array("result" => True));exit;
+        }
+		startcmd();
+		echo json_encode(Array("result" => False));exit;	
+	} else if ($_GET["action"] == "fremake_server") {
+        if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "edit_server"))) { echo json_encode(Array("result" => False)); exit; }
+        $rServerID = intval($_GET["server_id"]);
+        if (isset($rServers[$rServerID])) {
+			$rServer = $rServers[$rServerID];
+            $rJSON = Array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "fsremake");
+            file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/".$rServerID.".json", json_encode($rJSON));
+			startcmd();
+            echo json_encode(Array("result" => True));exit;
+        }
+		startcmd();
         echo json_encode(Array("result" => False));exit;
+	} else if ($_GET["action"] == "fremake_balancer") {
+        if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "edit_server"))) { echo json_encode(Array("result" => False)); exit; }
+        $rServerID = intval($_GET["server_id"]);
+        if (isset($rServers[$rServerID])) {
+			$rServer = $rServers[$rServerID];
+            $rJSON = Array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "fbremake");
+            file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/".$rServerID.".json", json_encode($rJSON));
+			startcmd();
+            echo json_encode(Array("result" => True));exit;
+        }
+		startcmd();
+        echo json_encode(Array("result" => False));exit;	
+	} else if ($_GET["action"] == "update_release") {
+        if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "edit_server"))) { echo json_encode(Array("result" => False)); exit; }
+        $rServerID = intval($_GET["server_id"]);
+        if (isset($rServers[$rServerID])) {
+			$rServer = $rServers[$rServerID];
+            $rJSON = Array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "urelease");
+            file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/".$rServerID.".json", json_encode($rJSON));
+			startcmd();
+            echo json_encode(Array("result" => True));exit;
+		startcmd();
+        }
+        echo json_encode(Array("result" => False));exit;	
     } else if ($_GET["action"] == "map_stream") {
         if ((!$rPermissions["is_admin"]) OR ((!hasPermissions("adv", "add_stream")) && (!hasPermissions("adv", "edit_stream")))) { echo json_encode(Array("result" => False)); exit; }
         set_time_limit(300);
         ini_set('max_execution_time', 300);
         ini_set('default_socket_timeout', 300);
-        echo shell_exec("/home/xtreamcodes/iptv_xtream_codes/bin/ffprobe -v quiet -probesize 2000000 -print_format json -show_format -show_streams \"".escapeshellcmd($_GET["stream"])."\"");exit;
+        echo shell_exec("/home/xtreamcodes/iptv_xtream_codes/bin/ffprobe -v quiet -probesize 4000000 -print_format json -show_format -show_streams \"".$_GET["stream"]."\"");exit;
     } else if ($_GET["action"] == "clear_logs") {
-        if ((!$rPermissions["is_admin"]) OR ((!hasPermissions("adv", "reg_userlog")) && (!hasPermissions("adv", "client_request_log")) && (!hasPermissions("adv", "connection_logs")) && (!hasPermissions("adv", "stream_errors")) && (!hasPermissions("adv", "credits_log")) && (!hasPermissions("adv", "folder_watch_settings")))) { echo json_encode(Array("result" => False)); exit; }
+        if ((!$rPermissions["is_admin"]) OR ((!hasPermissions("adv", "reg_userlog")) && (!hasPermissions("adv", "client_request_log")) && (!hasPermissions("adv", "connection_logs")) && (!hasPermissions("adv", "stream_errors")) && (!hasPermissions("adv", "panel_errors")) && (!hasPermissions("adv", "credits_log")) && (!hasPermissions("adv", "folder_watch_settings")))) { echo json_encode(Array("result" => False)); exit; }
         if (strlen($_GET["from"]) == 0) {
             $rStartTime = null;
         } else if (!$rStartTime = strtotime($_GET["from"]. " 00:00:00")) {
@@ -830,7 +929,7 @@ if (isset($_GET["action"])) {
         } else if (!$rEndTime = strtotime($_GET["to"]." 23:59:59")) {
             echo json_encode(Array("result" => False));exit;
         }
-        if (in_array($_GET["type"], Array("client_logs", "stream_logs", "user_activity", "credits_log", "reg_userlog"))) {
+        if (in_array($_GET["type"], Array("client_logs", "stream_logs", "user_activity", "credits_log", "reg_userlog", "panel_logs"))) {
             if ($_GET["type"] == "user_activity") {
                 $rColumn = "date_start";
             } else {
@@ -891,6 +990,7 @@ if (isset($_GET["action"])) {
             echo json_encode(Array("result" => True));exit;
         }
         echo json_encode(Array("result" => False));exit;
+		/* 
     } else if ($_GET["action"] == "send_event") {
         if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "manage_events"))) { echo json_encode(Array("result" => False)); exit; }
         $rData = json_decode($_GET["data"], True);
@@ -915,6 +1015,38 @@ if (isset($_GET["action"])) {
             }
         }
         echo json_encode(Array("result" => False));exit;
+    }  
+    */
+	// SEND MAG EVENT RESELLERS
+    } else if ($_GET["action"] == "send_event") {
+        if (($rPermissions["is_admin"]) && (hasPermissions("adv", "manage_events")) OR (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_mag_events"]))) {
+            $rData = json_decode($_GET["data"], True);
+            $rMag = getMag($rData["id"]);
+            if ($rMag) {
+                if ($rData["type"] == "send_msg") {
+                    $rData["need_confirm"] = 1;
+                } else if ($rData["type"] == "play_channel") {
+                    $rData["need_confirm"] = 0;
+                    $rData["reboot_portal"] = 0;
+                    $rData["message"] = intval($rData["channel"]);
+                } else if ($rData["type"] == "reset_stb_lock") {
+                    resetSTB($rData["id"]);
+                    echo json_encode(Array("result" => True));exit;
+                } else {
+                    $rData["need_confirm"] = 0;
+                    $rData["reboot_portal"] = 0;
+                    $rData["message"] = "";
+                }
+                if ((!$rPermissions["is_admin"]) && !$rData["message"] == 0) {$rData["reseller_message_prefix"] = "Reseller Sent: ";}
+                if ($db->query("INSERT INTO `mag_events`(`status`, `mag_device_id`, `event`, `need_confirm`, `msg`, `reboot_after_ok`, `send_time`) VALUES (0, ".intval($rData["id"]).", '".ESC($rData["type"])."', ".intval($rData["need_confirm"]).", '".ESC($rData["reseller_message_prefix"])."".ESC($rData["message"])."', ".intval($rData["reboot_portal"]).", ".intval(time()).");")) {
+                    echo json_encode(Array("result" => True));exit;
+                }
+            }
+            echo json_encode(Array("result" => False));exit;
+        }
+		// SEND MAG EVENT RESELLERS
+        else {
+            echo json_encode(Array("result" => False)); exit; }
     }
 }
 echo json_encode(Array("result" => False));
