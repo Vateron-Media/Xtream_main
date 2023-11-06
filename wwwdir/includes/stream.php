@@ -182,7 +182,7 @@ class ipTV_stream {
             if ($subtitles["location"] == SERVER_ID) {
                 $commandSubCharenc .= "-sub_charenc \"{$subtitleCharset}\" -i \"{$subtitleFile}\" ";
             } else {
-                $commandSubCharenc .= "-sub_charenc \"{$subtitleCharset}\" -i \"" . a78BF8D35765be2408c50712Ce7a43aD::$StreamingServers[$subtitles["location"]]["api_url"] . "&action=getFile&filename=" . urlencode($subtitleFile) . "\" ";
+                $commandSubCharenc .= "-sub_charenc \"{$subtitleCharset}\" -i \"" . ipTV_lib::$StreamingServers[$subtitles["location"]]["api_url"] . "&action=getFile&filename=" . urlencode($subtitleFile) . "\" ";
             }
         }
 
@@ -411,7 +411,7 @@ class ipTV_stream {
                     $command .= ' >/dev/null 2>>' . STREAMS_PATH . $stream_id . '.errors & echo $! > ' . STREAMS_PATH . $stream_id . '_.pid';
                     $command = str_replace(array('{INPUT}', '{FETCH_OPTIONS}', '{GEN_PTS}', '{STREAM_SOURCE}', '{MAP}', '{READ_NATIVE}', '{CONCAT}', '{AAC_FILTER}'), array("\"{$stream_source}\"", empty($stream['stream_info']['custom_ffmpeg']) ? $be9f906faa527985765b1d8c897fb13a : '', empty($stream['stream_info']['custom_ffmpeg']) ? $e9652f3db39531a69b91900690d5d064 : '', $stream_source, empty($stream['stream_info']['custom_ffmpeg']) ? $map : '', empty($stream['stream_info']['custom_ffmpeg']) ? $read_native : '', $stream['stream_info']['type_key'] == 'created_live' && $stream['server_info']['parent_id'] == 0 ? '-safe 0 -f concat' : '', !stristr($StreamInfo['container'], 'flv') && $StreamInfo['codecs']['audio']['codec_name'] == 'aac' && $stream['stream_info']['transcode_attributes']['-acodec'] == 'copy' ? '-bsf:a aac_adtstoasc' : ''), $command);
                     shell_exec($command);
-                    $pid = $pid = intval(file_get_contents(STREAMS_PATH . $stream_id . '_.pid'));
+                    $pid = $D90a38f0f1d7f1bcd1b2eee088e76aca = intval(file_get_contents(STREAMS_PATH . $stream_id . '_.pid'));
                     if (SERVER_ID == $stream['stream_info']['tv_archive_server_id']) {
                         shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'archive.php ' . $stream_id . ' >/dev/null 2>/dev/null & echo $!');
                     }

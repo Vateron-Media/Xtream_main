@@ -2,11 +2,11 @@
 
 define("MAX_API_REQ_INTERVAL", 1);
 define("MAX_TRIES", 30);
-define("BLACKLIST", "IPTV_PANEL_DIRtmp/blacklist");
-if (!(!file_exists("TMP_DIRd52d7d1df4f329bda8b2d9f67fa5d846") && file_exists("TMP_DIR5a9ccab64e61d9af12baa7d4011acc1a"))) {
+define("BLACKLIST", IPTV_PANEL_DIR. "tmp/blacklist");
+if (!(!file_exists(TMP_DIR . "d52d7d1df4f329bda8b2d9f67fa5d846") && file_exists(TMP_DIR . "5a9ccab64e61d9af12baa7d4011acc1a"))) {
     goto B7659fdb52f2416e910c60aaf9c6b08a;
 }
-if (!(file_exists("IPTV_PANEL_DIRwatchdog_optimize") && isset($_REQUEST["action"]) && isset($_REQUEST["type"]) && $_REQUEST["type"] == "watchdog" && $_REQUEST["action"] == "get_events")) {
+if (!(file_exists(IPTV_PANEL_DIR . "watchdog_optimize") && isset($_REQUEST["action"]) && isset($_REQUEST["type"]) && $_REQUEST["type"] == "watchdog" && $_REQUEST["action"] == "get_events")) {
     if (!(!empty($_REQUEST["username"]) && !empty($_REQUEST["password"]))) {
         goto Bbf3210aaaa65beef8d46a20ab02b50d;
     }
