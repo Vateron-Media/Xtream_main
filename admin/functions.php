@@ -432,6 +432,12 @@ function getSelections($rSources) {
 
 function getBackups() {
     $rBackups = array();
+
+    # create directory backups
+    if (!is_dir(MAIN_DIR . "adtools/backups/")) {
+        mkdir(MAIN_DIR . "adtools/backups/");
+    }
+
     foreach (scandir(MAIN_DIR . "adtools/backups/") as $rBackup) {
         $rInfo = pathinfo(MAIN_DIR . "adtools/backups/" . $rBackup);
         if ($rInfo["extension"] == "sql") {
