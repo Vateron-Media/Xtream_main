@@ -1,6 +1,6 @@
 <?php
 
-require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+require str_replace('\\', '/', dirname($argv[0])) . '/./wwwdir/init.php';
 
 $crons = scandir(CRON_PATH);
 foreach ($crons as $cron) {
@@ -12,5 +12,5 @@ foreach ($crons as $cron) {
         continue;
     }
     print "Running: " . $cron . "\n";
-    // shell_exec(PHP_BIN . ' ' . $full_path);
+    shell_exec(PHP_BIN . ' ' . $full_path);
 }
