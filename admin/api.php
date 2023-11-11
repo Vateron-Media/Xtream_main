@@ -124,6 +124,7 @@ if (isset($_GET["action"])) {
             if (($rResult) && ($rResult->num_rows > 0)) {
                 while ($rRow = $rResult->fetch_assoc()) {
                     sexec($rRow["server_id"], "kill -9 ".$rRow["pid"]);
+                    $db->query("DELETE FROM `user_activity_now` WHERE `pid` = ".intval($rRow["pid"]).";");
                 }
             }
             echo json_encode(Array("result" => True));exit;
@@ -143,7 +144,9 @@ if (isset($_GET["action"])) {
             $rResult = $db->query("SELECT `server_id` FROM `user_activity_now` WHERE `pid` = ".intval($rPID)." LIMIT 1;");
             if (($rResult) && ($rResult->num_rows == 1)) {
                 sexec($rResult->fetch_assoc()["server_id"], "kill -9 ".$rPID);
-                echo json_encode(Array("result" => True));exit;
+                $db->query("DELETE FROM `user_activity_now` WHERE `pid` = ".$rPID.";");
+                echo json_encode(Array("result" => True));
+                exit;
             }
         }
         echo json_encode(Array("result" => False));exit;
@@ -1050,4 +1053,3 @@ if (isset($_GET["action"])) {
     }
 }
 echo json_encode(Array("result" => False));
-?>
