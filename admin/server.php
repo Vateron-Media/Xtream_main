@@ -419,7 +419,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php $rSelected = json_decode($rServerArr["geoip_countries"], True);
                                                                         foreach ($rCountries as $rCountry) { ?>
                                                                             <!--<option <?php if (isset($rServerArr)) {
-                                                                                            if (in_array($rCountry["id"], $rSelected)) {
+                                                                                            if (!empty($rSelected) && in_array($rCountry["id"], $rSelected)) {
                                                                                                 echo "selected ";
                                                                                             }
                                                                                         } ?>value="<?= $rCountry["id"] ?>"><?= $rCountry["name"] ?></option>-->
