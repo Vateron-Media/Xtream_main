@@ -7,7 +7,7 @@ if (@$argc) {
     define('CLOSE_OPEN_CONS_PATH', '/path/to/close_open_cons'); // Define the constant
 
     if (is_dir(CLOSE_OPEN_CONS_PATH)) {
-        while (false) {
+        while (true) {
             // Do nothing
         }
         shell_exec('(sleep 2; ' . PHP_BIN . ' ' . __FILE__ . ' ) > /dev/null 2>/dev/null &');

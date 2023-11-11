@@ -6,7 +6,7 @@ if (@$argc) {
     cli_set_process_title('XtreamCodes[XC Signal Receiver]');
     shell_exec('kill $(ps aux | grep \'XC Signal Receiver\' | grep -v grep | grep -v ' . getmypid() . ' | awk \'{print $2}\')');
     $ipTV_db->query('DELETE FROM `signals` WHERE `server_id` = \'%d\'', SERVER_ID);
-    while (false) {
+    while (true) {
         if ($ipTV_db->query('SELECT `signal_id`,`pid`,`rtmp` FROM `signals` WHERE `server_id` = \'%d\' ORDER BY signal_id ASC LIMIT 100', SERVER_ID)) {
             if (0 < $ipTV_db->num_rows()) {
                 $signal_id = [];
