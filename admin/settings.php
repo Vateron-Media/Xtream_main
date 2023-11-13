@@ -19,13 +19,13 @@ if (isset($_GET["geolite2"])) {
     }
 }
 
-if (isset($_GET["panel_version"])) {
-    if (updatePanel()) {
-        $_STATUS = 5;
-    } else {
-        $_STATUS = 4;
-    }
-}
+// if (isset($_GET["panel_version"])) {
+//     if (updatePanel()) {
+//         $_STATUS = 5;
+//     } else {
+//         $_STATUS = 4;
+//     }
+// }
 
 if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rArray = getSettings();
@@ -334,12 +334,11 @@ if ($rSettings["sidebar"]) { ?>
                                     </div>
                                 <?php }
                                 $rContext = stream_context_create(array('http' => array('timeout' => 3)));
-                                $rCurrent = json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/current.json", false, $rContext), True);
-                                $rInfos = json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/infos.json", false, $rContext), True);
+                                $rUpdatePanel = $rCurrent = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/current.json", false, $rContext), True);
+                                $rInfos = array(); //json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/infos.json", false, $rContext), True);
                                 $rGeoLite2 = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/status.json", false, $rContext), True);
                                 if (intval($rGeoLite2["version"]) > $rAdminSettings["geolite2_version"]);
-                                $rUpdatePanel = json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/current.json", false, $rContext), True);
-                                if (intval($rUpdatePanel["version"]) > $rAdminSettings["panel_version"])
+                                if (intval($rUpdatePanel["version"]) > $rAdminSettings["panel_version"]);
                                 ?>
                                 <?php if ($rGeoLite2["version"] > $rAdminSettings["geolite2_version"]) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -354,7 +353,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        A new version R22F Mods (<?= $rUpdatePanel["version"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?panel_version"><?= $_["click_here_to_update"] ?></a>
+                                        A new version (<?= $rUpdatePanel["version"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?panel_version"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
                                 <div class="card">

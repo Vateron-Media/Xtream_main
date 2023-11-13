@@ -74,7 +74,7 @@ function updateGeoLite2() {
 
 function updatePanel() {
     global $rAdminSettings;
-    $rURL2 = "http://xtream-ui.mine.nu/Update/current.json";
+    $rURL2 = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/current.json";
     $rData2 = json_decode(file_get_contents($rURL2), True);
     if ($rData2["version"]) {
         $rFileData2 = file_get_contents("/home/xtreamcodes/iptv_xtream_codes/pytools/autoupdate.py");
