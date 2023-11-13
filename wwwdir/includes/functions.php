@@ -433,59 +433,52 @@ function GetConnections($end, $server_id = null) {
     $ipTV_db->query($query);
     return $ipTV_db->get_rows(true, 'user_id', false);
 }
+//checked
 function crontab_refresh() {
-    if (file_exists(TMP_DIR . 'crontab_refresh')) {
-        return false;
-    }
-    $crons = scandir(CRON_PATH);
-    $jobs = array();
-    foreach ($crons as $cron) {
-        $full_path = CRON_PATH . $cron;
-        if (!is_file($full_path)) {
-            continue;
+    if (!file_exists(TMP_DIR . 'crontab_refresh')) {
+        $crons = scandir(CRON_PATH);
+        $jobs = array();
+        foreach ($crons as $cron) {
+            $full_path = CRON_PATH . $cron;
+            if (is_file($full_path) && pathinfo($full_path, PATHINFO_EXTENSION) == "php") {
+                if ($cron != "epg.php") {
+                    $time = "*/1 * * * *";
+                } else {
+                    $time = "0 1 * * *";
+                }
+                $jobs[] = "{$time} " . PHP_BIN . " " . $full_path . " # Xtream-Codes IPTV Panel";
+            }
         }
-        if (pathinfo($full_path, PATHINFO_EXTENSION) != 'php') {
-            continue;
-        }
-        if ($cron != 'epg.php') {
-            $time = '*/1 * * * *';
-        } else {
-            $time = '0 1 * * *';
-        }
-        $jobs[] = "{$time} " . PHP_BIN . ' ' . $full_path . ' # Xtream-Codes IPTV Panel';
-    }
-
-    $crontab = trim(shell_exec('crontab -l'));
-
-    if (!empty($crontab)) {
-        $lines = explode('', $crontab);
-        $lines = array_map('trim', $lines);
-        if ($lines == $jobs) {
-            file_put_contents(TMP_DIR . 'crontab_refresh', 1);
+        $crontab = trim(shell_exec("crontab -l"));
+        
+        print_r($crontab);
+        if (!empty($crontab)) {
+            $lines = explode("\n", $crontab);
+            $lines = array_map("trim", $lines);
+            if ($lines != $jobs) {
+                foreach ($lines as $index => $line) {
+                    if (stripos($line, CRON_PATH)) {
+                        unset($lines[$index]);
+                    }
+                }
+                $lines = array_values($lines); // reindex array
+                $lines = array_merge($lines, $jobs);
+            }
+            file_put_contents(TMP_DIR . "crontab_refresh", 1);
             return true;
         }
-        $counter = count($lines);
-        $index = 0;
-        while ($index < $counter) {
-            if (stripos($lines[$index], CRON_PATH)) {
-                unset($lines[$index]);
-            }
-            $index++;
-        }
-        foreach ($jobs as $job) {
-            array_push($lines, $job);
-        }
-    } else {
         $lines = $jobs;
+        shell_exec("crontab -r");
+        $tmpfname = tempnam("/tmp", "crontab");
+        $handle = fopen($tmpfname, "w");
+        fwrite($handle, implode("\r\n", $lines) . "\r\n");
+        fclose($handle);
+        shell_exec("crontab {$tmpfname}");
+        @unlink($tmpfname);
+        file_put_contents(TMP_DIR . "crontab_refresh", 1);
+        return;
     }
-    shell_exec('crontab -r');
-    $tmpfname = tempnam('/tmp', 'crontab');
-    $handle = fopen($tmpfname, 'w');
-    fwrite($handle, implode('', $lines) . '');
-    fclose($handle);
-    shell_exec("crontab {$tmpfname}");
-    @unlink($tmpfname);
-    file_put_contents(TMP_DIR . 'crontab_refresh', 1);
+    return false;
 }
 function searchQuery($tableName, $columnName, $value) {
     global $ipTV_db;
