@@ -2,7 +2,7 @@
 include "session.php";
 include "functions.php";
 
-$nabillangues = array("" => "Default - EN", "fr" => "French", "es" => "Spanish", "it" => "Italian", "pt" => "Portuguese");
+$nabillangues = array("" => "Default - EN", "fr" => "French", "es" => "Spanish", "it" => "Italian", "pt" => "Portuguese", "ru" => "Русский");
 
 if (isset($_POST["submit_profile"])) {
     if ((strlen($_POST["password"]) < intval($rAdminSettings["pass_length"])) && (intval($rAdminSettings["pass_length"]) > 0)) {
