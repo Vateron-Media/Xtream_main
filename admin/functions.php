@@ -72,44 +72,6 @@ function updateGeoLite2() {
     return false;
 }
 
-function updatePanel() {
-    global $rAdminSettings;
-    $rURL2 = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/current.json";
-    $rData2 = json_decode(file_get_contents($rURL2), True);
-    if ($rData2["version"]) {
-        $rFileData2 = file_get_contents("/home/xtreamcodes/iptv_xtream_codes/pytools/autoupdate.py");
-        if (stripos($rFileData2, "# update panel") !== false) {
-            $rFilePath2 = "/tmp/autoupdate.py";
-            file_put_contents($rFilePath2, $rFileData2);
-            exec("sudo chmod 777 {$rFilePath2}");
-            if (file_get_contents($rFilePath2) == $rFileData2) {
-                $rAdminSettings["panel_version"] = $rData2["version"];
-                writeAdminSettings();
-                exec('rm /usr/bin/ffmpeg');
-                exec('rm /usr/bin/ffprobe');
-                exec('chattr -i /home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb');
-                exec('wget "https://bitbucket.org/le_lio/assets/raw/master/update.zip" -O /tmp/update.zip -o /dev/null');
-                exec('unzip /tmp/update.zip -d /tmp/update/ >/dev/null');
-                exec('rm -rf /home/xtreamcodes/iptv_xtream_codes/crons');
-                exec('rm -rf /home/xtreamcodes/iptv_xtream_codes/php/etc');
-                exec('cp -rf /tmp/update/XtreamUI-master/* /home/xtreamcodes/iptv_xtream_codes/ 2>/dev/null');
-                exec('rm -rf /tmp/update/XtreamUI-master');
-                exec('rm /tmp/update.zip');
-                exec('rm -rf /tmp/update');
-                exec('wget http://xtream-ui.mine.nu/GeoLite2.mmdb -O /home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb -o /dev/null');
-                exec('chown -R xtreamcodes:xtreamcodes /home/xtreamcodes');
-                exec('find /home/xtreamcodes/ -type d -not \( -name .update -prune \) -exec chmod -R 777 {} + ');
-                exec('chattr +i /home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb');
-                exec('ln -s /home/xtreamcodes/iptv_xtream_codes/bin/ffmpeg /usr/bin/');
-                exec('rm /tmp/autoupdate.py');
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-    return false;
-}
 function mapmap() {
     global $db;
     $rQuery = "SELECT geoip_country_code, count(geoip_country_code) AS total FROM user_activity_now GROUP BY geoip_country_code";
