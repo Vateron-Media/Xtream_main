@@ -2,7 +2,15 @@
 
 class ipTV_stream {
     public static $ipTV_db;
-    static function deleteFiles($sources) {
+    /**
+     * Deletes files based on the provided sources.
+     *
+     * This function takes an array of file sources and deletes the corresponding files from the STREAMS_PATH directory if they exist.
+     *
+     * @param array $sources An array of file sources to be deleted.
+     * @return void
+     */
+    static function deleteFilesStream(array $sources) {
         if (empty($sources)) {
             return;
         }
@@ -12,6 +20,14 @@ class ipTV_stream {
             }
         }
     }
+    /**
+     * Transcodes and builds a stream based on the provided stream ID.
+     *
+     * This function retrieves stream data from the database, transcodes the stream using FFmpeg with specified attributes, creates a new MPEG-TS file, and updates the stream information in the database accordingly.
+     *
+     * @param int $stream_id The ID of the stream to transcode and build.
+     * @return int Returns 1 if the stream is successfully transcoded and built, 2 if there are no PIDs for the channel, or 2 if there are no differences in stream sources.
+     */
     static function TranscodeBuild($stream_id) {
         self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `transcoding_profiles` t3 ON t1.transcode_profile_id = t3.profile_id WHERE t1.`id` = \'%d\'', $stream_id);
         $stream = self::$ipTV_db->get_row();
@@ -19,21 +35,29 @@ class ipTV_stream {
         $stream['stream_source'] = json_decode($stream['stream_source'], true);
         $stream['pids_create_channel'] = json_decode($stream['pids_create_channel'], true);
         $stream['transcode_attributes'] = json_decode($stream['profile_options'], true);
+
+        // Set default audio and video codecs if not present
         if (!array_key_exists('-acodec', $stream['transcode_attributes'])) {
             $stream['transcode_attributes']['-acodec'] = 'copy';
         }
         if (!array_key_exists('-vcodec', $stream['transcode_attributes'])) {
             $stream['transcode_attributes']['-vcodec'] = 'copy';
         }
+
+        // Construct FFmpeg command
         $ffmpegCommand = FFMPEG_PATH . ' -fflags +genpts -async 1 -y -nostdin -hide_banner -loglevel quiet -i "{INPUT}" ';
         $ffmpegCommand .= implode(' ', self::formatAttributes($stream['transcode_attributes'])) . ' ';
         $ffmpegCommand .= '-strict -2 -mpegts_flags +initial_discontinuity -f mpegts "' . CREATED_CHANNELS . $stream_id . '_{INPUT_MD5}.ts" >/dev/null 2>/dev/null & jobs -p';
+
         $result = array_diff($stream['stream_source'], $stream['cchannel_rsources']);
         $json_string_data = '';
+
+        // Generate JSON string data for stream sources
         foreach ($stream['stream_source'] as $source) {
             $json_string_data .= 'file \'' . CREATED_CHANNELS . $stream_id . '_' . md5($source) . '.ts\'';
         }
         $json_string_data = base64_encode($json_string_data);
+
         if ((!empty($result) || $stream['stream_source'] !== $stream['cchannel_rsources'])) {
             foreach ($result as $source) {
                 $stream['pids_create_channel'][] = ipTV_servers::RunCommandServer($stream['created_channel_location'], str_ireplace(array('{INPUT}', '{INPUT_MD5}'), array($source, md5($source)), $ffmpegCommand), 'raw')[$stream['created_channel_location']];
@@ -53,11 +77,20 @@ class ipTV_stream {
 
         return 2;
     }
-    static function E0A1164567005185e0818F081674E240($InputFileUrl, $serverId, $f84c1c6145bb73410b3ea7c0f8b4a9f3 = array(), $dir = '') {
-        $stream_max_analyze = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
+    /** 
+     * Analyze a stream using FFprobe. 
+     * 
+     * @param string $InputFileUrl The URL of the input file 
+     * @param int $serverId The ID of the server 
+     * @param array $options Additional options for FFprobe 
+     * @param string $dir The directory path 
+     * @return array The parsed codecs from the analyzed stream 
+     */
+    static function analyzeStream(string $InputFileUrl, int $serverId, array $options = [], string $dir = '') {
+        $streamMaxAnalyze = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
         $probesize = abs(intval(ipTV_lib::$settings['probesize']));
-        $timeout = intval($stream_max_analyze / 1000000) + 5;
-        $command = "{$dir}/usr/bin/timeout {$timeout}s " . FFPROBE_PATH . " -probesize {$probesize} -analyzeduration {$stream_max_analyze} " . implode(' ', $f84c1c6145bb73410b3ea7c0f8b4a9f3) . " -i \"{$InputFileUrl}\" -v quiet -print_format json -show_streams -show_format";
+        $timeout = intval($streamMaxAnalyze / 1000000) + 5;
+        $command = "{$dir}/usr/bin/timeout {$timeout}s " . FFPROBE_PATH . " -probesize {$probesize} -analyzeduration {$streamMaxAnalyze} " . implode(' ', $options) . " -i \"{$InputFileUrl}\" -v quiet -print_format json -show_streams -show_format";
         $result = ipTV_servers::RunCommandServer($serverId, $command, 'raw', $timeout * 2, $timeout * 2);
         return self::ParseCodecs(json_decode($result[$serverId], true));
     }
@@ -160,7 +193,7 @@ class ipTV_stream {
             $server_protocol = substr($stream_source, 0, strpos($stream_source, '://'));
             $fileURL = str_replace(' ', '%20', $stream_source);
         }
-        $streamArguments = implode(' ', self::eA860C1D3851c46D06e64911E3602768($stream['stream_arguments'], $server_protocol, 'fetch'));
+        $streamArguments = implode(' ', self::getFormattedStreamArguments($stream['stream_arguments'], $server_protocol, 'fetch'));
 
         if (isset($server_id) && $server_id == SERVER_ID && $stream['stream_info']['movie_symlink'] == 1) {
             $command = "ln -s \"{$fileURL}\" " . MOVIES_PATH . $stream_id . "." . pathinfo($fileURL, PATHINFO_EXTENSION) . " >/dev/null 2>/dev/null & echo \$! > " . MOVIES_PATH . $stream_id . "_.pid";
@@ -185,7 +218,7 @@ class ipTV_stream {
         }
         if ($stream['stream_info']['enable_transcode'] == 1) {
             if ($stream['stream_info']['transcode_profile_id'] == -1) {
-                $stream['stream_info']['transcode_attributes'] = array_merge(self::ea860c1d3851c46d06E64911e3602768($stream['stream_arguments'], $server_protocol, 'transcode'), json_decode($stream['stream_info']['transcode_attributes'], true));
+                $stream['stream_info']['transcode_attributes'] = array_merge(self::getFormattedStreamArguments($stream['stream_arguments'], $server_protocol, 'transcode'), json_decode($stream['stream_info']['transcode_attributes'], true));
             } else {
                 $stream['stream_info']['transcode_attributes'] = json_decode($stream['stream_info']['profile_options'], true);
             }
@@ -257,13 +290,13 @@ class ipTV_stream {
                 $stream['stream_arguments'] = self::$ipTV_db->get_rows();
                 if ($stream['server_info']['on_demand'] == 1) {
                     $stream_probesize = $stream['stream_info']['probesize_ondemand'];
-                    $stream_max_analyze = '10000000';
+                    $streamMaxAnalyze = '10000000';
                 } else {
-                    $stream_max_analyze = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
+                    $streamMaxAnalyze = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
                     $stream_probesize = abs(intval(ipTV_lib::$settings['probesize']));
                 }
-                $d1c5b35a94aa4152ee37c6cfedfb2ec3 = intval($stream_max_analyze / 1000000) + 7;
-                $Fa28e3498375fc4da68f3f818d774249 = "/usr/bin/timeout {$d1c5b35a94aa4152ee37c6cfedfb2ec3}s " . FFPROBE_PATH . " {FETCH_OPTIONS} -probesize {$stream_probesize} -analyzeduration {$stream_max_analyze} {CONCAT} -i \"{STREAM_SOURCE}\" -v quiet -print_format json -show_streams -show_format";
+                $d1c5b35a94aa4152ee37c6cfedfb2ec3 = intval($streamMaxAnalyze / 1000000) + 7;
+                $Fa28e3498375fc4da68f3f818d774249 = "/usr/bin/timeout {$d1c5b35a94aa4152ee37c6cfedfb2ec3}s " . FFPROBE_PATH . " {FETCH_OPTIONS} -probesize {$stream_probesize} -analyzeduration {$streamMaxAnalyze} {CONCAT} -i \"{STREAM_SOURCE}\" -v quiet -print_format json -show_streams -show_format";
                 $be9f906faa527985765b1d8c897fb13a = array();
                 if ($stream["server_info"]["parent_id"] == 0) {
                     $A733a5416ffab6ff47547550f3f9f641 = $stream["stream_info"]["type_key"] == "created_live" ? array(CREATED_CHANNELS . $stream_id . "_.list") : json_decode($stream["stream_info"]["stream_source"], true);
@@ -306,12 +339,12 @@ class ipTV_stream {
                 if ($F7b03a1f7467c01c6ea18452d9a5202f) {
                     goto ebd27b3edaaacb30705e86c5be704ca9;
                 }
-                self::deleteFiles($A733a5416ffab6ff47547550f3f9f641);
+                self::deleteFilesStream($A733a5416ffab6ff47547550f3f9f641);
                 ebd27b3edaaacb30705e86c5be704ca9:
                 foreach ($A733a5416ffab6ff47547550f3f9f641 as $F3803fa85b38b65447e6d438f8e9176a) {
                     $B16ceb354351bfb3944291018578c764 = self::ParseStreamURL($F3803fa85b38b65447e6d438f8e9176a);
                     $F53be324c8d9391cc021f5be5dacdfc1 = strtolower(substr($B16ceb354351bfb3944291018578c764, 0, strpos($B16ceb354351bfb3944291018578c764, "://")));
-                    $be9f906faa527985765b1d8c897fb13a = implode(" ", self::Ea860c1d3851C46D06E64911E3602768($stream["stream_arguments"], $F53be324c8d9391cc021f5be5dacdfc1, "fetch"));
+                    $be9f906faa527985765b1d8c897fb13a = implode(" ", self::getFormattedStreamArguments($stream["stream_arguments"], $F53be324c8d9391cc021f5be5dacdfc1, "fetch"));
                     if (!($F7b03a1f7467c01c6ea18452d9a5202f && file_exists(STREAMS_PATH . md5($B16ceb354351bfb3944291018578c764)))) {
                         $e49460014c491accfafaa768ea84cd9c = json_decode(shell_exec(str_replace(array("{FETCH_OPTIONS}", "{CONCAT}", "{STREAM_SOURCE}"), array($be9f906faa527985765b1d8c897fb13a, $stream["stream_info"]["type_key"] == "created_live" && $stream["server_info"]["parent_id"] == 0 ? "-safe 0 -f concat" : '', $B16ceb354351bfb3944291018578c764), $Fa28e3498375fc4da68f3f818d774249)), true);
                         if (empty($e49460014c491accfafaa768ea84cd9c)) {
@@ -332,7 +365,7 @@ class ipTV_stream {
                     $stream_external_push = json_decode($stream["stream_info"]["external_push"], true);
                     $e1dc30615033011f7166d1950e7036ee = "http://127.0.0.1:" . ipTV_lib::$StreamingServers[SERVER_ID]["http_broadcast_port"] . "/progress.php?stream_id={$stream_id}";
                     if (empty($stream["stream_info"]["custom_ffmpeg"])) {
-                        $af428179032a83d9ec1df565934b1c89 = FFMPEG_PATH . " -y -nostdin -hide_banner -loglevel warning -err_detect ignore_err {FETCH_OPTIONS} {GEN_PTS} {READ_NATIVE} -probesize {$stream_probesize} -analyzeduration {$stream_max_analyze} -progress \"{$e1dc30615033011f7166d1950e7036ee}\" {CONCAT} -i \"{STREAM_SOURCE}\" ";
+                        $af428179032a83d9ec1df565934b1c89 = FFMPEG_PATH . " -y -nostdin -hide_banner -loglevel warning -err_detect ignore_err {FETCH_OPTIONS} {GEN_PTS} {READ_NATIVE} -probesize {$stream_probesize} -analyzeduration {$streamMaxAnalyze} -progress \"{$e1dc30615033011f7166d1950e7036ee}\" {CONCAT} -i \"{STREAM_SOURCE}\" ";
                         if ($stream["stream_info"]["stream_all"] == 1) {
                             $fd85ae68a4de5cc6cec54942d82e8f80 = "-map 0 -copy_unknown ";
                             goto F7052b7340617388b1314ad99c08b3b6;
@@ -362,7 +395,7 @@ class ipTV_stream {
                         f283f80882362b693eafe8affe5b7574:
                         if ($stream["server_info"]["parent_id"] == 0 and $stream["stream_info"]["enable_transcode"] == 1 and $stream["stream_info"]["type_key"] != "created_live") {
                             if ($stream["stream_info"]["transcode_profile_id"] == -1) {
-                                $stream["stream_info"]["transcode_attributes"] = array_merge(self::EA860c1D3851c46d06E64911E3602768($stream["stream_arguments"], $F53be324c8d9391cc021f5be5dacdfc1, "transcode"), json_decode($stream["stream_info"]["transcode_attributes"], true));
+                                $stream["stream_info"]["transcode_attributes"] = array_merge(self::getFormattedStreamArguments($stream["stream_arguments"], $F53be324c8d9391cc021f5be5dacdfc1, "transcode"), json_decode($stream["stream_info"]["transcode_attributes"], true));
                             } else {
                                 $stream["stream_info"]["transcode_attributes"] = json_decode($stream["stream_info"]["profile_options"], true);
                             }
@@ -477,26 +510,57 @@ class ipTV_stream {
         }
         return 1;
     }
-    public static function EA860c1D3851C46d06E64911E3602768($stream_arguments, $server_protocol, $type) {
-        $Eb6e347d24315f277ac38240a6589dd0 = array();
+    /**
+     * Generates an array of stream arguments based on the provided stream arguments and server protocol.
+     *
+     * This method processes the input `$stream_arguments` array, filtering the arguments based on the
+     * specified `$type` and `$server_protocol`. It then constructs an array of formatted arguments
+     * that can be used in FFmpeg commands or other stream-related operations.
+     *
+     * @param array $stream_arguments An array of stream arguments, where each element is an associative
+     *                                array with keys such as 'argument_cat', 'argument_wprotocol',
+     *                                'argument_type', 'argument_cmd', and 'value'.
+     * @param string $server_protocol The server protocol to be used for filtering the stream arguments.
+     * @param string $type The type of stream arguments to be included in the output.
+     * @return array An array of formatted stream arguments, ready for use in FFmpeg commands or other
+     *               stream-related operations.
+     */
+    public static function getFormattedStreamArguments(array $stream_arguments, string $server_protocol, string $type) {
+        $formattedArguments = [];
+
         if (!empty($stream_arguments)) {
-            foreach ($stream_arguments as $f091df572e6d2b79881acbf4e5500a7e => $attribute) {
-                if ($attribute['argument_cat'] != $type) {
+            foreach ($stream_arguments as $argument) {
+                if ($argument['argument_cat'] != $type) {
                     continue;
                 }
-                if (!is_null($attribute['argument_wprotocol']) && !stristr($server_protocol, $attribute['argument_wprotocol']) && !is_null($server_protocol)) {
+                if (!is_null($argument['argument_wprotocol']) && !stristr($server_protocol, $argument['argument_wprotocol']) && !is_null($server_protocol)) {
                     continue;
                 }
-                if ($attribute['argument_type'] == 'text') {
-                    $Eb6e347d24315f277ac38240a6589dd0[] = sprintf($attribute['argument_cmd'], $attribute['value']);
+                if ($argument['argument_type'] == 'text') {
+                    $formattedArguments[] = sprintf($argument['argument_cmd'], $argument['value']);
                 } else {
-                    $Eb6e347d24315f277ac38240a6589dd0[] = $attribute['argument_cmd'];
+                    $formattedArguments[] = $argument['argument_cmd'];
                 }
             }
         }
-        return $Eb6e347d24315f277ac38240a6589dd0;
+
+        return $formattedArguments;
     }
-    public static function formatAttributes($transcode_attributes) {
+    /**
+     * Formats the transcode attributes for use in FFmpeg commands.
+     *
+     * This method processes the input `$transcode_attributes` array, which may contain
+     * both individual attributes and complex filter expressions. It extracts the
+     * filter expressions, formats the attributes, and returns an array of formatted
+     * attributes ready for use in FFmpeg commands.
+     *
+     * @param array $transcode_attributes An array of transcode attributes, which may
+     *                                   include individual attributes and/or complex
+     *                                   filter expressions.
+     * @return array An array of formatted transcode attributes, ready for use in
+     *               FFmpeg commands.
+     */
+    public static function formatAttributes(array $transcode_attributes) {
         $filter_complex = array();
         foreach ($transcode_attributes as $k => $attribute) {
             if (isset($attribute['cmd'])) {
@@ -522,7 +586,17 @@ class ipTV_stream {
         uasort($formatted_attributes, array(__CLASS__, 'customOrder'));
         return array_map('trim', array_values(array_filter($formatted_attributes)));
     }
-    public static function ParseStreamURL($url) {
+    /**
+     * Parses the stream URL and modifies it based on the server protocol.
+     *
+     * This function takes a stream URL as input, checks the server protocol, and processes the URL accordingly.
+     * For RTMP protocol, it appends ' live=1 timeout=10' to the URL.
+     * For HTTP protocol, it extracts the host from the URL and processes specific hosts to get the best stream URL.
+     *
+     * @param string $url The stream URL to be parsed.
+     * @return string The modified stream URL after parsing.
+     */
+    public static function ParseStreamURL(string $url) {
         $server_protocol = strtolower(substr($url, 0, 4));
         if (($server_protocol == 'rtmp')) {
             if (stristr($url, '$OPT')) {
