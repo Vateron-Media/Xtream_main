@@ -33,8 +33,10 @@ while (true) {
                     }
                 }
                 if (600 <= time() - $time) {
-                    unlink(IPTV_PANEL_DIR . "tmp/blacklist");
-                    $time = time();
+                    $blacklistFile = IPTV_PANEL_DIR . "tmp/blacklist";
+                    if (file_exists($blacklistFile)) {
+                        unlink($blacklistFile);
+                    }
                 }
                 sleep(3);
             }

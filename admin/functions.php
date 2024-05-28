@@ -55,11 +55,11 @@ function updateGeoLite2() {
         $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/raw/main/GeoLite2.mmdb");
         if (stripos($rFileData, "MaxMind.com") !== false) {
             $rFilePath = "/home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb";
-            exec("sudo chattr -i {$rFilePath}");
+            // exec("sudo chattr -i {$rFilePath}");
             unlink($rFilePath);
             file_put_contents($rFilePath, $rFileData);
-            exec("sudo chmod 777 {$rFilePath}");
-            exec("sudo chattr +i {$rFilePath}");
+            exec("sudo chmod 644 {$rFilePath}");
+            //exec("sudo chattr +i {$rFilePath}");
             if (file_get_contents($rFilePath) == $rFileData) {
                 $rAdminSettings["geolite2_version"] = $rData["version"];
                 writeAdminSettings();

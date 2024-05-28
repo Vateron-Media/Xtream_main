@@ -70,11 +70,11 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
                 ratio: 9 / 16,
                 clip: {
                     autoplay: true,
-                    title: "<? echo $cfd246a8499e5bb4a9d89e37c524322a; ?>",
+                    title: "<?php echo $cfd246a8499e5bb4a9d89e37c524322a; ?>",
                     sources: [{
-                        type: "<? echo $a28758c1ab974badfc544e11aaf19a57; ?>",
-                        src: "<? echo $B80b91ec08fe2fc8b600751840264e3a; ?> ",
-                        live: <? echo $Ac783e41c152569f224242dacb8b03d3; ?>
+                        type: "<?php echo $a28758c1ab974badfc544e11aaf19a57; ?>",
+                        src: "<?php echo $B80b91ec08fe2fc8b600751840264e3a; ?> ",
+                        live: <?php echo $Ac783e41c152569f224242dacb8b03d3; ?>
                     }]
                 },
                 embed: false

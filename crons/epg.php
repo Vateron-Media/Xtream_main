@@ -1,4 +1,5 @@
 <?php
+ini_set("memory_limit", -1);
 class Epg {
     public $validEpg = false;
     public $epgSource = NULL;
@@ -114,7 +115,6 @@ class Epg {
 
 
 if (@$argc) {
-    ini_set("memory_limit", -1);
     shell_exec("kill -9 `ps -ef | grep 'XtreamCodes\\[EPG\\]' | grep -v grep | awk '{print \$2}'`;");
     require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
     cli_set_process_title("XtreamCodes[EPG]");
