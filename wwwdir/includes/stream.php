@@ -587,11 +587,14 @@ class ipTV_stream {
             }
             $url .= ' live=1 timeout=10';
         } else if ($server_protocol == 'http') {
-            $hosts = array('youtube.com', 'youtu.be', 'livestream.com', 'ustream.tv', 'twitch.tv', 'vimeo.com', 'facebook.com', 'dailymotion.com', 'cnn.com', 'edition.cnn.com', 'youporn.com', 'pornhub.com', 'youjizz.com', 'xvideos.com', 'redtube.com', 'ruleporn.com', 'pornotube.com', 'skysports.com', 'screencast.com', 'xhamster.com', 'pornhd.com', 'pornktube.com', 'tube8.com', 'vporn.com', 'giniko.com', 'xtube.com');
+            $hosts = array('youtube.com', 'youtu.be', 'livestream.com', 'ustream.tv', 'twitch.tv', 'vimeo.com', 'facebook.com', 'dailymotion.com', 'cnn.com', 'edition.cnn.com', 'youporn.com', 'pornhub.com', 'youjizz.com', 'xvideos.com', 'redtube.com', 'ruleporn.com', 'pornotube.com', 'skysports.com', 'screencast.com', 'xhamster.com', 'pornhd.com', 'pornktube.com', 'tube8.com', 'vporn.com', 'giniko.com');
             $host = str_ireplace('www.', '', parse_url($url, PHP_URL_HOST));
             if (in_array($host, $hosts)) {
                 $urls = trim(shell_exec(YOUTUBE_PATH . " \"{$url}\" -q --get-url --skip-download -f best"));
                 $url = explode('', $urls)[0];
+                if (empty($url)) {
+                    $url = $urls;
+                }
             }
         }
         return $url;
