@@ -47,6 +47,15 @@ switch ($action) {
                 foreach ($servers as $server_id) {
                     $urls[$server_id] = array('url' => ipTV_lib::$StreamingServers[$server_id]['api_url_ip'] . '&action=stream', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
                 }
+                // $urls = array(
+                //     1 => array(
+                //         'url' => 'http://192.168.0.124:25461/system_api.php?password=XXXXXXXXXXXXXXXXXXXX&action=stream',
+                //         'postdata' => array(
+                //             'function' => 'start',
+                //             'stream_ids' => array(1)
+                //         )
+                //     )
+                // );
                 ipTV_lib::curlMultiRequest($urls);
                 echo json_encode(array('result' => true));
                 die;

@@ -681,6 +681,14 @@ class ipTV_streaming {
             die;
         }
     }
+    /** 
+     * Check if a process with a given PID exists and is associated with a specific stream ID. 
+     * 
+     * @param int $pid The process ID to check. 
+     * @param int $stream_id The stream ID to match against. 
+     * @param string $ffmpeg_path The path to the ffmpeg executable (default is PHP_BIN). 
+     * @return bool True if a matching process is found, false otherwise. 
+     */
     public static function CheckPidExist($pid, $stream_id, $ffmpeg_path = PHP_BIN) {
         if (empty($pid)) {
             return false;
@@ -699,13 +707,6 @@ class ipTV_streaming {
         if (file_exists($user_ip_file)) {
             $contents = intval(file_get_contents($user_ip_file));
             return $contents == 1 ? true : false;
-        }
-        if (file_exists(TMP_DIR . 'cache_x')) {
-            $cachex = json_decode(decrypt_config(base64_decode(file_get_contents(TMP_DIR . 'cache_x')), KEY_CRYPT), true);
-            if (is_array($cachex['ips']) && !empty($cachex['ips']) && in_array($user_ip, $cachex['ips'])) {
-                file_put_contents($user_ip_file, 1);
-                return true;
-            }
         }
         file_put_contents($user_ip_file, 0);
         return false;

@@ -215,7 +215,15 @@ class ipTV_lib {
         }
         return trim($res);
     }
-    public static function curlMultiRequest($urls, $callback = null, $timeout = 5) {
+    /** 
+     * Makes multiple cURL requests to the specified URLs and returns the results. 
+     * 
+     * @param array $urls An array of URLs to make cURL requests to. 
+     * @param callable|null $callback Optional callback function to process the cURL response. 
+     * @param int $timeout The timeout value for each cURL request (default is 5 seconds). 
+     * @return array An array of results from the cURL requests. 
+     */
+    public static function curlMultiRequest(array $urls,$callback = null,int $timeout = 5) {
         if (empty($urls)) {
             return array();
         }

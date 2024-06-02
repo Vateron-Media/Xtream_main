@@ -1106,7 +1106,7 @@ CREATE TABLE IF NOT EXISTS `streams_arguments` (
 --
 
 INSERT INTO `streams_arguments` (`id`, `argument_cat`, `argument_name`, `argument_description`, `argument_wprotocol`, `argument_key`, `argument_cmd`, `argument_type`, `argument_default_value`) VALUES
-(1, 'fetch', 'User Agent', 'Set a Custom User Agent', 'http', 'user_agent', '-user-agent "%s"', 'text', 'Xtream-Codes IPTV Panel Pro'),
+(1, 'fetch', 'User Agent', 'Set a Custom User Agent', 'http', 'user_agent', '-user_agent "%s"', 'text', 'Xtream-Codes IPTV Panel Pro'),
 (2, 'fetch', 'HTTP Proxy', 'Set an HTTP Proxy in this format: ip:port', 'http', 'proxy', '-http_proxy "%s"', 'text', NULL),
 (3, 'transcode', 'Average Video Bit Rate', 'With this you can change the bitrate of the target video. It is very useful in case you want your video to be playable on slow internet connections', NULL, 'bitrate', '-b:v %dk', 'text', NULL),
 (4, 'transcode', 'Average Audio Bitrate', 'Change Audio Bitrate', NULL, 'audio_bitrate', '-b:a %dk', 'text', NULL),
