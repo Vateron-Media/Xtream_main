@@ -334,6 +334,8 @@ class ipTV_streaming {
             return false;
         }
         $user_info = self::$ipTV_db->get_row();
+        $username = $user_info["username"];
+        $password = $user_info["password"];
         if (ipTV_lib::$settings["case_sensitive_line"] == 1 && !empty($username) && !empty($password)) {
             if ($user_info["username"] == $username || $user_info["password"] == $password) {
                 if (ipTV_lib::$settings["county_override_1st"] == 1 && empty($user_info["forced_country"]) && !empty($user_ip) && $user_info["max_connections"] == 1) {

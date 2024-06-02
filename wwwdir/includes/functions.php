@@ -232,9 +232,9 @@ function GetCategories($type = null) {
 function UniqueID() {
     return substr(md5(ipTV_lib::$settings['unique_id']), 0, 15);
 }
-function GenerateList($user_id, $device_key, $output_key = 'ts', $force_download = false) {
+function GenerateList($user_id, $playlistType, $output_key = 'ts', $force_download = false) {
     global $ipTV_db;
-    if (empty($device_key)) {
+    if (empty($playlistType)) {
         return false;
     }
     if ($output_key == 'mpegts') {
@@ -244,7 +244,7 @@ function GenerateList($user_id, $device_key, $output_key = 'ts', $force_download
         $output_key = 'm3u8';
     }
     if (empty($output_key)) {
-        $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 INNER JOIN `devices` t2 ON t2.default_output = t1.access_output_id AND `device_key` = \'%s\'', $device_key);
+        $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 INNER JOIN `devices` t2 ON t2.default_output = t1.access_output_id AND `device_key` = \'%s\'', $playlistType);
     } else {
         $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 WHERE `output_key` = \'%s\'', $output_key);
     }
@@ -273,7 +273,7 @@ function GenerateList($user_id, $device_key, $output_key = 'ts', $force_download
     if (empty($output_ext)) {
         $output_ext = 'ts';
     }
-    $ipTV_db->query('SELECT t1.*,t2.* FROM `devices` t1 LEFT JOIN `access_output` t2 ON t2.access_output_id = t1.default_output WHERE t1.device_key = \'%s\' LIMIT 1', $device_key);
+    $ipTV_db->query('SELECT t1.*,t2.* FROM `devices` t1 LEFT JOIN `access_output` t2 ON t2.access_output_id = t1.default_output WHERE t1.device_key = \'%s\' LIMIT 1', $playlistType);
     if ($ipTV_db->num_rows() > 0) {
         $device_info = $ipTV_db->get_row();
         $data = '';
@@ -302,7 +302,7 @@ function GenerateList($user_id, $device_key, $output_key = 'ts', $force_download
                 }
             }
         }
-        if ($device_key == 'starlivev5') {
+        if ($playlistType == 'starlivev5') {
             $output_array = array();
             $output_array['iptvstreams_list'] = array();
             $output_array['iptvstreams_list']['@version'] = 1;
@@ -310,16 +310,16 @@ function GenerateList($user_id, $device_key, $output_key = 'ts', $force_download
             $output_array['iptvstreams_list']['group']['name'] = 'IPTV';
             $output_array['iptvstreams_list']['group']['channel'] = array();
             foreach ($user_info['channels'] as $channel_info) {
-                $movie_propeties = !isset($channel_info['movie_propeties']) ? ipTV_lib::movieProperties($channel['id']) : $channel_info['movie_propeties'];
+                $movie_properties = !isset($channel_info['movie_propeties']) ? ipTV_lib::movieProperties($channel['id']) : $channel_info['movie_propeties'];
                 if (!empty($channel_info['stream_source'])) {
                     $url = str_replace(' ', '%20', json_decode($channel_info['stream_source'], true)[0]);
-                    $icon = !empty($movie_propeties['movie_image']) ? $movie_propeties['movie_image'] : $channel_info['stream_icon'];
+                    $icon = !empty($movie_properties['movie_image']) ? $movie_properties['movie_image'] : $channel_info['stream_icon'];
                 } else {
                     $url = $domain_name . "{$channel_info['type_output']}/{$user_info['username']}/{$user_info['password']}/";
                     if ($channel_info['live'] == 0) {
                         $url .= $channel_info['id'] . '.' . GetContainerExtension($channel_info['target_container']);
-                        if (!empty($movie_propeties['movie_image'])) {
-                            $icon = $movie_propeties['movie_image'];
+                        if (!empty($movie_properties['movie_image'])) {
+                            $icon = $movie_properties['movie_image'];
                         }
                     } else {
                         $url .= $channel_info['id'] . '.' . $output_ext;
@@ -341,44 +341,32 @@ function GenerateList($user_id, $device_key, $output_key = 'ts', $force_download
             }
             if (!empty($device_info['device_conf'])) {
                 if (preg_match('/\\{URL\\#(.*?)\\}/', $device_info['device_conf'], $matches)) {
-                    $devicesArray = str_split($matches[1]);
+                    $url_encoded_charts = str_split($matches[1]);
                     $url_pattern = $matches[0];
                 } else {
-                    $devicesArray = array();
+                    $url_encoded_charts = array();
                     $url_pattern = '{URL}';
                 }
                 foreach ($user_info['channels'] as $channel) {
-                    $movie_propeties = !isset($channel['movie_propeties']) ? ipTV_lib::movieProperties($channel['id']) : $channel['movie_propeties'];
-                    if (empty($channel['stream_source'])) {
-                        if (!($channel['live'] == 0)) {
-                            if (!($output_key != 'rtmp' || !array_key_exists($channel['id'], $streams_sys))) {
-                                $StreamSysIds = array_values(array_keys($streams_sys[$channel['id']]));
-                                if (in_array($user_info['force_server_id'], $StreamSysIds)) {
-                                    $server_id = $user_info['force_server_id'];
-                                } else if (ipTV_lib::$settings['rtmp_random'] == 1) {
-                                    $server_id = $StreamSysIds[array_rand($StreamSysIds, 1)];
-                                } else {
-                                    $server_id = $StreamSysIds[0];
-                                }
-                                $url = ipTV_lib::$StreamingServers[$server_id]['rtmp_server'] . "{$channel['id']}?username={$user_info['username']}&password={$user_info['password']}";
-                                if (!file_exists(TMP_DIR . 'new_rewrite') || $output_ext != 'ts') {
-                                    $url = $domain_name . "{$channel['type_output']}/{$user_info['username']}/{$user_info['password']}/{$channel['id']}.{$output_ext}";
-                                } else {
-                                    $url = $domain_name . "{$user_info['username']}/{$user_info['password']}/{$channel['id']}";
-                                }
-                                $icon = $channel['stream_icon'];
-                                $url = $domain_name . "{$channel['type_output']}/{$user_info['username']}/{$user_info['password']}/{$channel['id']}." . GetContainerExtension($channel['target_container']);
-                                if (!empty($movie_propeties['movie_image'])) {
-                                    $icon = $movie_propeties['movie_image'];
-                                }
-                                $url = str_replace(' ', '%20', json_decode($channel['stream_source'], true)[0]);
-                                $icon = !empty($movie_propeties['movie_image']) ? $movie_propeties['movie_image'] : $channel['stream_icon'];
-                                $esr_id = $channel['live'] == 1 ? 1 : 4097;
-                                $sid = !empty($channel['custom_sid']) ? $channel['custom_sid'] : ':0:1:0:0:0:0:0:0:0:';
-                                $data .= str_replace(array($url_pattern, '{ESR_ID}', '{SID}', '{chANNEL_NAME}', '{chANNEL_ID}', '{CATEGORY}', '{chANNEL_ICON}'), array(str_replace($devicesArray, array_map('urlencode', $devicesArray), $url), $esr_id, $sid, $channel['stream_display_name'], $channel['channel_id'], $channel['category_name'], $icon), $device_info['device_conf']) . '';
-                            }
+
+                    $url = $domain_name . "{$channel["type_output"]}/{$user_info["username"]}/{$user_info["password"]}/";
+                    $icon = "";
+
+                    if ($channel["live"] == 0) {
+                        $url .= $channel["id"] . "." . $channel["container_extension"];
+                        $movie_propeties = json_decode($channel["movie_propeties"], true);
+
+                        if (!empty($movie_propeties["movie_image"])) {
+                            $icon = $movie_propeties["movie_image"];
                         }
+                    } else {
+                        $url .= $channel["id"] . "." . $output_ext;
+                        $icon = $channel["stream_icon"];
                     }
+
+                    $esr_id = ($channel["live"] == 1 ? 1 : 4097);
+                    $sid = (!empty($channel["custom_sid"]) ? $channel["custom_sid"] : ":0:1:0:0:0:0:0:0:0:");
+                    $data .= "\n" . str_replace(array($url_pattern, "{ESR_ID}", "{SID}", "{CHANNEL_NAME}", "{CHANNEL_ID}", "{CATEGORY}", "{CHANNEL_ICON}"), array(str_replace($url_encoded_charts, array_map("urlencode", $url_encoded_charts), $url), $esr_id, $sid, $channel["stream_display_name"], $channel["channel_id"], $channel["category_name"], $icon), $device_info["device_conf"]) . "\r\n";
                 }
                 $data .= $device_info['device_footer'];
                 $data = trim($data);
@@ -450,7 +438,7 @@ function crontab_refresh() {
             }
         }
         $crontab = trim(shell_exec("crontab -l"));
-        
+
         print_r($crontab);
         if (!empty($crontab)) {
             $lines = explode("\n", $crontab);
