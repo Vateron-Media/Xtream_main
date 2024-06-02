@@ -56,7 +56,7 @@ if (@$argc) {
     $whitelist_ips = array_values(array_unique(array_map('trim', explode('\n', shell_exec('ip -4 addr | grep -oP \'(?<=inet\\s)\\d+(\\.\\d+){3}\'')))));
     $ipTV_db->query('UPDATE `streaming_servers` SET `server_hardware` = \'%s\',`whitelist_ips` = \'%s\' WHERE `id` = \'%d\'', json_encode($server_hardware), json_encode($whitelist_ips), SERVER_ID);
     if (!(file_exists(GEOIP2_FILENAME) && 86400 > time() - filemtime(GEOIP2_FILENAME))) {
-        passthru('wget --no-check-certificate --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0" --timeout=40 "http://downloads.xtream-codes.com/v2/GeoLite2.mmdb" -O "' . GEOIP2_FILENAME . '" -q 2>/dev/null');
+        passthru('wget --no-check-certificate --user-agent "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0" --timeout=40 "https://github.com/Vateron-Media/Xtream_Update/raw/main/GeoLite2.mmdb" -O "' . GEOIP2_FILENAME . '" -q 2>/dev/null');
         touch(GEOIP2_FILENAME);
     }
     @unlink($unique_id);
