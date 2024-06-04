@@ -8,8 +8,10 @@ class ipTV_lib {
     public static $SegmentsSettings = array();
     public static $blockedUA = array();
     public static $customISP = array();
+
     public static function init() {
         global $_INFO;
+
         if (!empty($_GET)) {
             self::cleanGlobals($_GET);
         }
@@ -22,36 +24,47 @@ class ipTV_lib {
         if (!empty($_COOKIE)) {
             self::cleanGlobals($_COOKIE);
         }
+
         $input = @self::parseIncomingRecursively($_GET, array());
         self::$request = @self::parseIncomingRecursively($_POST, $input);
         self::$settings = self::GetSettings();
         date_default_timezone_set(self::$settings["default_timezone"]);
         self::$StreamingServers = self::GetServers();
+
         if (FETCH_BOUQUETS) {
             self::$Bouquets = self::GetBouquets();
         }
         self::$blockedUA = self::GetBlockedUserAgents();
         self::$customISP = self::GetIspAddon();
+
+        if (!isset($_INFO["pconnect"])) {
+            $_INFO["pconnect"] = null;
+        }
+
         if (self::$StreamingServers[SERVER_ID]["persistent_connections"] != $_INFO["pconnect"]) {
             $_INFO["pconnect"] = self::$StreamingServers[SERVER_ID]["persistent_connections"];
             if (!empty($_INFO) && is_array($_INFO) && !empty($_INFO["db_user"])) {
                 file_put_contents(IPTV_PANEL_DIR . "config", base64_encode(decrypt_config(json_encode($_INFO), CONFIG_CRYPT_KEY)), LOCK_EX);
             }
         }
+
         self::$SegmentsSettings = self::calculateSegNumbers();
         crontab_refresh();
     }
+
     public static function GetDateUTCTimestamp($date) {
         $utcDefaultTimezone = new DateTime("UTC", new DateTimeZone(date_default_timezone_get()));
         $utcDate = new DateTime("UTC", new DateTimeZone($date));
         return $utcDate->getTimestamp() - $utcDefaultTimezone->getTimestamp();
     }
+
     public static function calculateSegNumbers() {
         $segments_settings = array();
         $segments_settings["seg_time"] = 10;
         $segments_settings["seg_list_size"] = 6;
         return $segments_settings;
     }
+
     public static function GetIspAddon() {
         $file = self::requestFile("customisp_cache");
         if ($file !== false) {
@@ -62,6 +75,7 @@ class ipTV_lib {
         $output = self::$ipTV_db->get_rows();
         return $output;
     }
+
     public static function GetBlockedUserAgents() {
         $file = self::requestFile("uagents_cache");
         if ($file !== false) {
@@ -72,6 +86,7 @@ class ipTV_lib {
         $output = self::$ipTV_db->get_rows(true, "id");
         return $output;
     }
+
     public static function GetBouquets() {
         $file = self::requestFile("bouquets_cache");
         if ($file !== false) {
@@ -85,6 +100,7 @@ class ipTV_lib {
         }
         return $output;
     }
+
     public static function GetSettings() {
         $file = self::requestFile("settings_cache");
         if ($file !== false) {
@@ -108,6 +124,7 @@ class ipTV_lib {
         $output["api_ips"] = explode(",", $output["api_ips"]);
         return $output;
     }
+
     public static function phpFileCache($file, $data) {
         $data = '<?php $output = ' . var_export($data, true) . '; ?>';
         if (!file_exists(TMP_DIR . $file . ".php") || md5_file(TMP_DIR . $file . ".php") != md5($data)) {
@@ -115,6 +132,7 @@ class ipTV_lib {
             rename(TMP_DIR . $file . ".php_cache", TMP_DIR . $file . ".php");
         }
     }
+
     public static function requestFile($file) {
         if (file_exists(TMP_DIR . $file . ".php") && USE_CACHE === true) {
             include TMP_DIR . $file . ".php";
@@ -122,6 +140,7 @@ class ipTV_lib {
         }
         return false;
     }
+
     public static function seriesData() {
         $output = array();
         if (file_exists(TMP_DIR . "series_data.php")) {
@@ -129,6 +148,7 @@ class ipTV_lib {
         }
         return $output;
     }
+
     public static function movieProperties($stream_id) {
         $movie_properties = array();
         if (file_exists(TMP_DIR . $stream_id . "_cache_properties")) {
@@ -136,6 +156,7 @@ class ipTV_lib {
         }
         return isset($movie_properties) && is_array($movie_properties) ? $movie_properties : array();
     }
+
     public static function GetServers() {
         $file = self::requestFile("servers_cache");
         if ($file !== false) {
@@ -173,6 +194,7 @@ class ipTV_lib {
         }
         return $servers;
     }
+
     public static function mc_decrypt($decrypt, $key) {
         $decrypt = explode("|", $decrypt . "|");
         $decoded = base64_decode($decrypt[0]);
@@ -191,6 +213,7 @@ class ipTV_lib {
         $decrypted = unserialize($decrypted);
         return $decrypted;
     }
+
     public static function SimpleWebGet($url, $save_cache = false) {
         if (file_exists(TMP_DIR . md5($url)) && time() - filemtime(TMP_DIR . md5($url)) <= 300) {
             return false;
@@ -215,15 +238,16 @@ class ipTV_lib {
         }
         return trim($res);
     }
-    /** 
-     * Makes multiple cURL requests to the specified URLs and returns the results. 
-     * 
-     * @param array $urls An array of URLs to make cURL requests to. 
-     * @param callable|null $callback Optional callback function to process the cURL response. 
-     * @param int $timeout The timeout value for each cURL request (default is 5 seconds). 
-     * @return array An array of results from the cURL requests. 
+
+    /**
+     * Makes multiple cURL requests to the specified URLs and returns the results.
+     *
+     * @param array $urls An array of URLs to make cURL requests to.
+     * @param callable|null $callback Optional callback function to process the cURL response.
+     * @param int $timeout The timeout value for each cURL request (default is 5 seconds).
+     * @return array An array of results from the cURL requests.
      */
-    public static function curlMultiRequest(array $urls,$callback = null,int $timeout = 5) {
+    public static function curlMultiRequest(array $urls, $callback = null, int $timeout = 5) {
         if (empty($urls)) {
             return array();
         }
@@ -278,6 +302,7 @@ class ipTV_lib {
         curl_multi_close($mh);
         return $results;
     }
+
     public static function cleanGlobals(&$data, $iteration = 0) {
         if ($iteration >= 10) {
             return;
@@ -295,6 +320,7 @@ class ipTV_lib {
             }
         }
     }
+
     public static function parseIncomingRecursively(&$data, $input = array(), $iteration = 0) {
         if ($iteration >= 20) {
             return $input;
@@ -313,6 +339,7 @@ class ipTV_lib {
         }
         return $input;
     }
+
     public static function parseCleanKey($key) {
         if ($key === '') {
             return '';
@@ -323,6 +350,7 @@ class ipTV_lib {
         $key = preg_replace('/^([\\w\\.\\-\\_]+)$/', '$1', $key);
         return $key;
     }
+
     public static function parseCleanValue($val) {
         if ($val == "") {
             return "";
@@ -336,9 +364,11 @@ class ipTV_lib {
         $val = preg_replace("/&#(\\d+?)([^\\d;])/i", "&#\\1;\\2", $val);
         return trim($val);
     }
+
     public static function SaveLog($msg) {
         self::$ipTV_db->query('INSERT INTO `panel_logs` (`log_message`,`date`) VALUES(\'%s\',\'%d\')', $msg, time());
     }
+
     public static function GenerateString($length = 10) {
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789qwertyuiopasdfghjklzxcvbnm";
         $str = '';
@@ -350,6 +380,7 @@ class ipTV_lib {
         }
         return $str;
     }
+
     public static function array_values_recursive($array) {
         if (!is_array($array)) {
             return $array;
