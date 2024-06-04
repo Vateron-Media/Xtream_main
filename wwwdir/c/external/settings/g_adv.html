@@ -10,7 +10,7 @@
         }
         tread += ']}';
         read = JSON.parse(parent.stb.GetEnv(tread));
-        if (read.result.language == "")read.result.language = "en";
+        if (read.result.language == "") read.result.language = "en";
         var langv = read.result.language;
         var gr;
         var menuT = [
@@ -28,21 +28,21 @@
             read.result.b = prof.screensaver_delay;
             gr = parseInt(read.result.a);
             init();
-            if (gr == 0)document.getElementById('i11').style.visibility = 'hidden'; else {
+            if (gr == 0) document.getElementById('i11').style.visibility = 'hidden'; else {
                 document.getElementById('i11').style.width = step * gr;
             }
             document.getElementById('i12').innerHTML = gr;
 
-            if (prof.hasOwnProperty('plasma_saving')){
-                if (prof.plasma_saving === '1'){
+            if (prof.hasOwnProperty('plasma_saving')) {
+                if (prof.plasma_saving === '1') {
                     document.getElementById('i7').setAttribute('checked', 'checked');
-                }else{
+                } else {
                     document.getElementById('i7').removeAttribute('checked');
                 }
             }
 
-            if (prof.hide_adv_mc_settings){
-                ['igmp_block', 'mcproxy_option', 'mcproxy_addr'].map(function(id){
+            if (prof.hide_adv_mc_settings) {
+                ['igmp_block', 'mcproxy_option', 'mcproxy_addr'].map(function (id) {
                     document.getElementById(id).parentNode.removeChild(document.getElementById(id));
                 })
             }
@@ -51,6 +51,7 @@
 
         });
         var step;
+
         function onLoad() {
             sload();
             switch (screen.height) {
@@ -86,7 +87,7 @@
                 pr = true;
                 parent.stb.SetBufferSize(gr * 1000, by);
             }
-            if (document.getElementById("i3")){
+            if (document.getElementById("i3")) {
                 var t = document.getElementById("i3").value;
                 if (t != read.result.igmp_conf) {
                     wf = true;
@@ -100,7 +101,7 @@
                 wr += (pr ? ',' : '') + '"upnp_conf":"' + t + '"';
                 pr = true;
             }
-            if (document.getElementById("i5")){
+            if (document.getElementById("i5")) {
                 var mc_proxy_enabled = t = document.getElementById("i5").checked;
                 if (t != (read.result.mc_proxy_enabled == "true" ? true : false)) {
                     wf = true;
@@ -109,9 +110,9 @@
                     parent.stb.EnableMulticastProxy(t);
                 }
             }
-            if (document.getElementById("i6")){
+            if (document.getElementById("i6")) {
                 var mc_proxy_url = t = document.getElementById("i6").value;
-                if (t != read.result.mc_proxy_url)if (!(url.test(t) || t == ''))erm += parent.t("No correct") + "<br />" + parent.t("Multicast proxy URL:"); else {
+                if (t != read.result.mc_proxy_url) if (!(url.test(t) || t == '')) erm += parent.t("No correct") + "<br />" + parent.t("Multicast proxy URL:"); else {
                     wf = true;
                     wr += (pr ? ',' : '') + '"mc_proxy_url":"' + t + '"';
                     pr = true;
@@ -128,16 +129,25 @@
                     erm += parent.t('Saving error');
                     parent.erMes(erm, "i" + iid);
                 } else {
-                    parent.load({"type": "stb", "action": "set_playback_buffer", "playback_buffer_bytes": by, "playback_buffer_size": gr}, function (result) {
+                    parent.load({
+                        "type": "stb",
+                        "action": "set_playback_buffer",
+                        "playback_buffer_bytes": by,
+                        "playback_buffer_size": gr
+                    }, function (result) {
                         if (!result) {
                             erm += parent.t('Saving error');
                             parent.erMes(erm, "i" + iid);
-                        }else{
-                            parent.load({"type": "stb", "action": "set_plasma_saving", "plasma_saving": plasma}, function (result) {
+                        } else {
+                            parent.load({
+                                "type": "stb",
+                                "action": "set_plasma_saving",
+                                "plasma_saving": plasma
+                            }, function (result) {
                                 if (!result) {
                                     erm += parent.t('Saving error');
                                 }
-                                if (erm != ''){
+                                if (erm != '') {
                                     parent.erMes(erm, "i" + iid);
                                 } else {
                                     if (wf) {
@@ -145,9 +155,9 @@
                                     }
                                     try {
                                         parent.stb.SendEventToPortal('{"type":"settings",'
-                                                + '"screensaver_delay":"' + t + '",'
-                                                + '"plasma_saving":"'+(plasma ? 1 : 0)+'",'
-                                                + '"mc_proxy_url":"' + (mc_proxy_enabled && mc_proxy_url ? mc_proxy_url : '') + '"}'
+                                            + '"screensaver_delay":"' + t + '",'
+                                            + '"plasma_saving":"' + (plasma ? 1 : 0) + '",'
+                                            + '"mc_proxy_url":"' + (mc_proxy_enabled && mc_proxy_url ? mc_proxy_url : '') + '"}'
                                         );
                                     } catch (e) {
                                     }
@@ -170,7 +180,7 @@
                         var d = document.getElementById('i11');
                         d.style.visibility = 'visible';
                         gr = gr + (1 * a);
-                        if (gr > 15)gr = 15;
+                        if (gr > 15) gr = 15;
                         if (gr <= 0) {
                             gr = 0;
                             d.style.visibility = 'hidden';

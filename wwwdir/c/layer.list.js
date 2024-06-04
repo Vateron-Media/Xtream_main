@@ -24,6 +24,7 @@ function ListLayer(){
     this.cur_row = 0;
     this.prev_row = 0;
     this.cur_page = 1;
+    this.prev_page = 1;
     this.data_items  = [];
     this.map = [];
     this.loading = false;
@@ -66,8 +67,6 @@ ListLayer.prototype.show = function(do_not_load){
     this.base_layer.show.call(this);
     
     if (!do_not_load){
-        
-        
         this.load_data();
     }else{
         this.set_active_row(this.cur_row);
@@ -99,6 +98,7 @@ ListLayer.prototype.reset = function(){
     
     this.cur_row = 0;
     this.cur_page = 1;
+    this.prev_page = 1;
     this.page_dir = 1;
     this.total_pages = 0;
 
@@ -118,9 +118,9 @@ ListLayer.prototype.clear_list = function(){
 };
 
 ListLayer.prototype.init = function(){
-    
+
     this.load_params_pattern = this.load_params.clone();
-    
+
     this.base_layer.init.call(this);
     
     this.init_page_bar();
@@ -137,30 +137,34 @@ ListLayer.prototype.init_page_bar = function(){
 
 ListLayer.prototype.init_list = function(){
     _debug('ListLayer.init_list');
-    
+
     var item;
     var offset;
-    
+
     this.init_page_bar();
-    
+
     this.main_container = create_block_element('wide_container', this.dom_obj);
-    
+
     for (var i=0; i<this.total_rows; i++){
         item = this.create_block('blue_row_bg');
         //item = document.createElement('ul');
         //item.setClass('blue_row_bg');
-        
-        if (i > 0){
-            offset = this.map[i-1].row.clientHeight + this.map[i-1].row.offsetTop;
-            item.moveY(offset);
-        }
-        
+
         this.map[i] = this.init_blocks(item);
 
         this.map[i]['row'] = item;
         this.main_container.appendChild(item);
+
+        item.show();
+
+        if (i > 0){
+            offset = this.map[i-1].row.clientHeight + this.map[i-1].row.offsetTop;
+            item.moveY(offset);
+        }
+
+        this.map[i]['top'] = item.offsetTop;
     }
-    
+
     this.init_active_row();
 };
 
@@ -236,6 +240,7 @@ ListLayer.prototype.load_data = function(){
     this.set_total_items(-1);
     
     this.load_params['p'] = this.cur_page;
+    this.load_params['prev_p'] = this.prev_page;
     
     this.loading = true;
     
@@ -298,6 +303,7 @@ ListLayer.prototype.fill_list = function(data){
     
     this.total_items = data.length;
     this.data_items = data;
+    this.last_active_row = -1;
     
     for (var i=0; i<data.length; i++){
         
@@ -333,9 +339,9 @@ ListLayer.prototype.fill_list = function(data){
             this.cur_row = this.total_items-1;
         }
     }
-    
+
     this.set_active_row(this.cur_row);
-    
+
     this.loading = false;
 };
 
@@ -401,19 +407,16 @@ ListLayer.prototype.set_active_row = function(num){
                 }
             }
         }
-        
-        var offset = this.map[num]['row'].offsetTop - this.active_row_offset;
-
+        var offset = this.map[num]['top'] - this.active_row_offset;
         this.active_row['row'].moveY(offset);
-        
+
         if (this.active_row['row'].isHidden()){
             this.active_row['row'].show();
         }
-        
+
         _debug('this.data_items[num]', this.data_items[num]);
-        
+
         if (this.data_items[num]){
-        
             if (this.data_items[num].hasOwnProperty('open') && (!this.data_items[num].open || this.data_items[num].only_for_moderator == 1)){
                 this.active_row['row'].addClass('close');
                 //this.active_row['row'].setAttribute('rel', 'close');
@@ -422,15 +425,16 @@ ListLayer.prototype.set_active_row = function(num){
                 //this.active_row['row'].setAttribute('rel', '');
             }
         }
-        
+
         if(!this.fav_manage_mode){
             
             if (this.data_items.length != 0){
-            
-                for (var j=0; j<this.row_blocks.length; j++){
-                    this.handling_block(this.data_items[num][this.row_blocks[j]], this.active_row, this.row_blocks[j]);
+
+                if (this.last_active_row != num) {
+                    for (var j = 0; j < this.row_blocks.length; j++) {
+                        this.handling_block(this.data_items[num][this.row_blocks[j]], this.active_row, this.row_blocks[j]);
+                    }
                 }
-                
                 if (this.shift_row_callback && (this.cur_view == 'middle' || this.cur_view == 'short')){
                     this.shift_row_callback.call(this, this.data_items[num]);
                 }
@@ -438,6 +442,9 @@ ListLayer.prototype.set_active_row = function(num){
                 this.active_row['row'].hide();
             }
         }
+
+        this.last_active_row = num;
+        _debug('this.last_active_row', this.last_active_row);
 
         _debug('ListLayer.set_active_row end')
     }catch(e){
@@ -482,6 +489,7 @@ ListLayer.prototype.shift_row = function(dir){
 ListLayer.prototype.shift_page = function(dir){
 
     this.page_dir = dir;
+    this.prev_page = this.cur_page;
     
     if (dir > 0){
         if (this.cur_page < this.total_pages){

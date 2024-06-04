@@ -117,7 +117,7 @@
 
             _debug('stb.player.cur_media_item.cmd', stb.player.cur_media_item.cmd);
 
-            if (/([^\/]*)\.ts/.exec(stb.player.cur_media_item.cmd) || this.cur_media_item['wowza_dvr'] == 1 || this.cur_media_item['flussonic_dvr'] == 1){
+            if (/([^\/]*)\.mp[g,4]/.exec(stb.player.cur_media_item.cmd) || this.cur_media_item['wowza_dvr'] == 1 || this.cur_media_item['flussonic_dvr'] == 1 && (this.cur_media_item['onestream_dvr'] != 1) || this.cur_media_item['nimble_dvr'] == 1){
 
                 _debug('stb.player.play_initiated', stb.player.play_initiated);
 
@@ -125,7 +125,7 @@
                     var position_part = /position:(\d*)/.exec(stb.player.cur_media_item.cmd);
 
                     if (position_part){
-                        var current_pos_time = parseInt(position_part[1], 10);
+                       var current_pos_time = parseInt(position_part[1], 10);
                     }else{
                         current_pos_time = 0;
                     }
@@ -138,7 +138,7 @@
                 }
 
             /*}else if (this.cur_media_item['wowza_dvr'] == 1){
-                
+
                 var cur_time = new Date();
                 var media_len = stb.GetMediaLen();
                 var cur_pos_time = stb.GetPosTime();
@@ -152,22 +152,28 @@
                 _debug('pos_time', pos_time);
 
                 return pos_time;*/
-                
+
             }else{
                 var now = new Date();
                 current_pos_time = now.getMinutes() * 60 + now.getSeconds();
                 _debug('current_pos_time 3', current_pos_time);
+
             }
 
             //var current_pos_time = stb.GetPosTime();
 
             _debug('current_pos_time', current_pos_time);
 
-            if (this.cur_media_item['wowza_dvr'] == 1){
+            if (this.cur_media_item['onestream_dvr'] == 1) {
+                cur_file_date = this._get_flussonic_playlist_start_date_by_url(this.cur_media_item.cmd);
+            }else if (this.cur_media_item['wowza_dvr'] == 1){
                 var cur_file_date = this._get_wowza_playlist_start_date_by_url(this.cur_media_item.cmd);
             }else if (this.cur_media_item['flussonic_dvr'] == 1){
                 cur_file_date = this._get_flussonic_playlist_start_date_by_url(this.cur_media_item.cmd);
-            }else{
+            }else if (this.cur_media_item['nimble_dvr'] == 1) {
+                cur_file_date = this._get_nimble_playlist_start_date_by_url(this.cur_media_item.cmd);
+            }
+            else {
                 cur_file_date = this._get_file_date_by_url(this.cur_media_item.cmd);
             }
 
@@ -226,10 +232,24 @@
             return new Date(file_date_str*1000);
         },
 
+        _get_nimble_playlist_start_date_by_url : function(url){
+            _debug('time_shift._get_nimble_playlist_start_date_by_url', url);
+
+            var date_part = /range-(\d+)/.exec(url);
+
+            _debug('date_part', date_part);
+
+            if (!date_part || !date_part[1]){
+                return new Date();
+            }
+
+            return new Date(date_part[1]*1000);
+        },
+
         _get_file_date_by_url : function(url){
             _debug('time_shift._get_file_date_by_url', url);
 
-            var date_part = /([^\/]*)\.ts/.exec(url);
+            var date_part = /([^\/]*)\.mp[g,4]/.exec(url);
 
             _debug('date_part', date_part);
 
@@ -366,24 +386,60 @@
             return cur_date;
         },
 
-        get_url_by_pos : function(pos){
+        get_url_by_pos : function(pos, timeArr){
+
             _debug('time_shift.get_url_by_pos', pos);
 
             //var cur_file_date = this._get_file_date_by_url(this.cur_media_item.cmd);
             //var cur_file_date = this._get_file_date_by_url(this.cur_media_item.cmd);
 
-            var cur_file_date = new Date(this.cur_piece_date);
+            _debug('this.cur_piece_date', this.cur_piece_date);
+
+            var cur_file_date = new Date(this.cur_piece_date.valueOf());
             //cur_file_date.setHours(0);
 
-            cur_file_date.setSeconds(pos + cur_file_date.getSeconds());
+            // cur_file_date.setSeconds(pos + cur_file_date.getSeconds());
+            cur_file_date.setSeconds(pos);
 
             //var new_file_date = new Date(cur_file_date.getTime());
 
             var position = pos - cur_file_date.getHours() * 3600;
 
+            var abs = new Date();
+            var duration = cur_file_date.getHours() == abs.getHours() ? abs.getMinutes() * 60 + abs.getSeconds() : 3600;
+
             _debug('position', position);
 
-            if (stb.player.cur_tv_item['wowza_dvr'] == 1){
+            if (this.cur_media_item['onestream_dvr'] == 1) {
+                //here we fetch timestamp from request
+                var matchBOtimeRegex = "\\d{10}";
+                var matchedTime = this.cur_media_item.cmd.match(matchBOtimeRegex)
+                var requestTime = matchedTime[0];
+
+                var date = new Date();
+
+                if (!empty(requestTime)) {
+                    date = new Date(Math.floor(requestTime * 1000));
+                }
+
+                var time = timeArr
+
+                var myDate = time.split(":");
+                date.setHours(myDate[0]);
+                date.setMinutes(myDate[1]);
+                date.setSeconds(myDate[2]);
+                var mytime = Math.floor(date.getTime() / 1000).toString()
+
+                new_playlist_start = mytime;
+
+                _debug('new_playlist_start', new_playlist_start);
+
+                if (this.cur_media_item.cmd.indexOf('/mpegts') != -1){
+                    url = this.cur_media_item.cmd.replace(/\/(\d{10})\//, '/'+new_playlist_start+'/');
+                }else{
+                    url = this.cur_media_item.cmd.replace(/-(\d{10})-/, '-'+new_playlist_start+'-');
+                }
+            } else if (stb.player.cur_tv_item['wowza_dvr'] == 1){
 
                 var new_playlist_start = this.get_wowza_playlist_start(cur_file_date);
 
@@ -391,7 +447,7 @@
 
                 var url = this.cur_media_item.cmd.replace(/wowzadvrplayliststart=(\d+)/, 'wowzadvrplayliststart='+new_playlist_start).trim();
 
-            }else if (this.cur_media_item['flussonic_dvr'] == 1){
+            } else if (this.cur_media_item['flussonic_dvr'] == 1){
 
                 new_playlist_start = this.get_flussonic_playlist_start(cur_file_date);
 
@@ -404,12 +460,18 @@
                 }
 
 
-            }else{
+            } else if (this.cur_media_item['nimble_dvr'] == 1) {
+
+                new_playlist_start = this.get_nimble_playlist_start(cur_file_date);
+
+                var range = new_playlist_start + '-' + duration;
+                var url = this.cur_media_item.cmd.replace(/_dvr_range-(\d+-\d+)/, '_dvr_range-' + range).trim();
+            } else {
                 var new_file_name = this.get_filename_by_date(cur_file_date);
 
                 _debug('new_file_name', new_file_name);
 
-                url = this.cur_media_item.cmd.replace(/([^\/]*)\.ts/, new_file_name).trim();
+                url = this.cur_media_item.cmd.replace(/([^\/]*)\.mp[g,4]/, new_file_name).trim();
             }
 
             _debug('url 1', url);
@@ -422,6 +484,9 @@
 
             _debug('this.cur_media_item.cmd', this.cur_media_item.cmd);
             _debug('url 2', url);
+
+            url = url.replace(/media_len:(\d*)/, 'media_len:' + duration).trim();
+            _debug('url 3', url);
 
             return url;
         },
@@ -451,6 +516,15 @@
             return date.getTime()/1000;
         },
 
+        get_nimble_playlist_start : function(date){
+            _debug('time_shift.get_nimble_playlist_start', date);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+
+            return date.getTime()/1000;
+        },
+
         get_filename_by_date : function(date){
             _debug('time_shift.get_filename_by_date', date);
 
@@ -466,7 +540,7 @@
                     + this.format_date(date.getMonth() + 1) + ''
                     + this.format_date(date.getDate()) + '-'
                     + this.format_date(date.getHours())
-                    + '.ts';
+                    + '.mpg';
         },
 
         format_date : function(param){
@@ -495,8 +569,10 @@
 
             if (stb.player.cur_tv_item['wowza_dvr'] == 1){
                 var cur_file_date = this._get_wowza_playlist_start_date_by_url(stb.player.cur_media_item.cmd);
-            }else if (stb.player.cur_tv_item['flussonic_dvr'] == 1){
+            }else if (stb.player.cur_tv_item['flussonic_dvr'] == 1 && (stb.player.cur_tv_item['onestream_dvr'] != 1)){
                 cur_file_date = this._get_flussonic_playlist_start_date_by_url(stb.player.cur_media_item.cmd);
+            }else if (stb.player.cur_tv_item['nimble_dvr'] == 1){
+                cur_file_date = this._get_nimble_playlist_start_date_by_url(stb.player.cur_media_item.cmd);
             }else{
                 cur_file_date = this._get_file_date_by_url(stb.player.cur_media_item.cmd);
             }
@@ -514,7 +590,7 @@
 
                 var url = this.cur_media_item.cmd.replace(/wowzadvrplayliststart=(\d+)/, 'wowzadvrplayliststart='+new_playlist_start).replace(/position:(\d*)/, '').trim();
 
-            }else if (stb.player.cur_tv_item['flussonic_dvr'] == 1){
+            }else if (stb.player.cur_tv_item['flussonic_dvr'] == 1 && (stb.player.cur_tv_item['onestream_dvr'] != 1)){
 
                 new_playlist_start = this.get_flussonic_playlist_start(next_file_date);
 
@@ -525,12 +601,19 @@
                 }else{
                     url = this.cur_media_item.cmd.replace(/-(\d{10})-/, '-'+new_playlist_start+'-').replace(/position:(\d*)/, '').trim();
                 }
+            }else if (this.cur_media_item['nimble_dvr'] == 1){
+                new_playlist_start = this.get_nimble_playlist_start(next_file_date);
+
+                _debug('new_playlist_start', new_playlist_start);
+
+                url = this.cur_media_item.cmd.replace(/_dvr_range-(\d+)/, '_dvr_range-'+new_playlist_start).trim();
+
             }else{
                 var next_file_name = this.get_filename_by_date(next_file_date);
 
                 _debug('next_file_name', next_file_name);
 
-                url = stb.player.cur_media_item.cmd.replace(/([^\/]*)\.ts/, next_file_name).replace(/position:(\d*)/, '').trim();
+                url = stb.player.cur_media_item.cmd.replace(/([^\/]*)\.mp[g,4]/, next_file_name).replace(/position:(\d*)/, '').trim();
             }
 
             this.cur_media_item.live_date = new Date();
@@ -776,7 +859,6 @@
         }
 
     };
-
 
 })();
 

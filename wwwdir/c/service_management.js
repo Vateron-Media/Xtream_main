@@ -414,6 +414,8 @@
 
         this.parent = parent;
 
+        this.use_visibility = false;
+
         this.header_path_map = [];
 
         this.superclass = SimpleLayer.prototype;

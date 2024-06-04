@@ -55,7 +55,7 @@ function _log(action, param, content_id){
         "real_action" : action,
         "param"  : (typeof param == 'string' || param instanceof String) ? encodeURIComponent(param) : param,
         "content_id" : content_id,
-        "tmp_type" : stb.get_current_place()
+        "tmp_type" : module.radio_widget && module.radio_widget.widget_on ? 5 : module.audio_widget && module.audio_widget.widget_on ? 4 : stb.get_current_place()
     };
 
     if (_log.hasOwnProperty('last_data')
@@ -216,7 +216,9 @@ HTMLElement.prototype.offsetY = function(offset_y){
 
 HTMLElement.prototype.setClass = function(class_name){
     try{
-        this.className = class_name;
+        if (!this.haveClass(class_name)){
+            this.className = class_name;
+        }
     }catch(e){
         _debug(e);
     }

@@ -1,46 +1,46 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<script type="text/javascript">
-	this.loadRequiredFiles = function (callback) {
-		var scripts = ['version.js', 'global.js', 'JsHttpRequest.js', 'keydown.keycodes.js', 'keydown.observer.js', 'watchdog.js', 'usbdisk.js', 'load_bar.js', 'xpcom.common.js', 'xpcom.webkit.js', 'blocking.js', 'player.js'];
-		var filesloaded = 0;
-		var filestoload = scripts.length;
-		var i = 0;
-		onLoadScript();
+    <script type="text/javascript">
+        this.loadRequiredFiles = function (callback) {
+            var scripts = ['version.js', 'global.js', 'JsHttpRequest.js', 'keydown.keycodes.js', 'keydown.observer.js', 'watchdog.js', 'usbdisk.js', 'load_bar.js', 'xpcom.common.js', 'xpcom.webkit.js', 'blocking.js', 'player.js'];
+            var filesloaded = 0;
+            var filestoload = scripts.length;
+            var i = 0;
+            onLoadScript();
 
-		function finishLoad() {
-			//console.log('Loading finish');
-			if (filesloaded === filestoload) {
-				//console.log('Load callback');
-				callback();
-			}
-		}
+            function finishLoad() {
+                console.log('Loading finish');
+                if (filesloaded === filestoload) {
+                    console.log('Load callback');
+                    callback();
+                }
+            }
 
-		function onLoadScript() {
-			if ( i < scripts.length){
-				//console.log('Loading script ' + scripts[i]);
-				var script = document.createElement('script');
-				script.type = 'text/javascript';
-				script.src = scripts[i];
-				script.onload = function () {
-					//console.log('Loaded script ' + scripts[i]);
-					filesloaded++;  // (This means increment, i.e. add one)
-					i++;
-					onLoadScript();
-				};
-				document.head.appendChild(script);
-			} else {
-				finishLoad();
-			}
-		}
-	};	
-	</script>
+            function onLoadScript() {
+                if (i < scripts.length) {
+                    console.log('Loading script ' + scripts[i]);
+                    var script = document.createElement('script');
+                    script.type = 'text/javascript';
+                    script.src = scripts[i];
+                    script.onload = function () {
+                        console.log('Loaded script ' + scripts[i]);
+                        filesloaded++;  // (This means increment, i.e. add one)
+                        i++;
+                        onLoadScript();
+                    };
+                    document.head.appendChild(script);
+                } else {
+                    finishLoad();
+                }
+            }
+        };
+    </script>
 <title>stalker_portal</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <!--debug-->
-<!--<script type="text/javascript" src="http://192.168.1.13:8000/target/target-script-min.js#azhurb"></script>-->
+<!--<script type="text/javascript" src="http://192.168.0.100:8000/target/target-script-min.js#massiw"></script>-->
 
 <script type="text/javascript" defer="defer">
 
@@ -158,6 +158,8 @@ var loader = {
 
         if (module.indexOf('supermodule') > 0){
             _style.href = module + resolution_prefix +".css&single_module="+single_module.join(',');
+        } else if (module.indexOf('fonts') > -1){
+            _style.href = 'template/' + this.template + '/fonts.css';
         }else{
             _style.href = 'template/' + this.template + '/' + module + resolution_prefix +".css";
         }
@@ -289,8 +291,9 @@ function init(){
                 }
                 return;
             }
-            
-            stb.player.prev_layer && stb.player.prev_layer.hide && stb.player.prev_layer.hide();
+
+            _debug('hide() - trying on player.prev_layer');
+            stb.player.prev_layer && stb.player.prev_layer.hide && stb.player.prev_layer.hide(true);
 
             if (stb.player.on){
                 stb.player.stop();

@@ -546,7 +546,6 @@ switch ($req_type) {
                 $output = array();
                 $output['js'] = array();
                 $categories = GetCategories('movie');
-                $category_id = array_column($user_info['channels'], 'category_id');
                 if (ipTV_lib::$settings['show_all_category_mag'] == 1) {
                     $output['js'][] = array('id' => '*', 'title' => 'All', 'alias' => '*', 'censored' => 0);
                 }
@@ -993,7 +992,7 @@ function GetVodOrderedList($category_id = null, $fav = null, $orderby = null, $s
         }
     }
     $streamSys = array_slice($streamSys['streams'], ($page - 1) * $page_items, $page_items);
-    $datas = array();
+    $data = array();
     foreach ($streamSys as $movie) {
         if (!is_null($fav) && $fav == 1) {
             if (in_array($movie['id'], $dev['fav_channels']['movie'])) {
@@ -1016,7 +1015,7 @@ function GetVodOrderedList($category_id = null, $fav = null, $orderby = null, $s
                     $added_val = date('F', $movie['added']) . ' ' . date('Y', $movie['added']);
                 }
                 $duration = isset($movie_properties['duration_secs']) ? $movie_properties['duration_secs'] : 60;
-                $datas[] = array('id' => $movie['id'], 'owner' => '', 'name' => $movie['stream_display_name'], 'old_name' => '', 'o_name' => $movie['stream_display_name'], 'fname' => '', 'description' => empty($movie_properties['plot']) ? 'N/A' : $movie_properties['plot'], 'pic' => '', 'cost' => 0, 'time' => intval($duration / 60), 'file' => '', 'path' => str_replace(' ', '_', $movie['stream_display_name']), 'protocol' => '', 'rtsp_url' => '', 'censored' => $movie['is_adult'], 'series' => array(), 'volume_correction' => 0, 'category_id' => $movie['category_id'], 'genre_id' => 0, 'genre_id_1' => 0, 'genre_id_2' => 0, 'genre_id_3' => 0, 'hd' => 1, 'genre_id_4' => 0, 'cat_genre_id_1' => $movie['category_id'], 'cat_genre_id_2' => 0, 'cat_genre_id_3' => 0, 'cat_genre_id_4' => 0, 'director' => empty($movie_properties['director']) ? 'N/A' : $movie_properties['director'], 'actors' => empty($movie_properties['cast']) ? 'N/A' : $movie_properties['cast'], 'year' => empty($movie_properties['releasedate']) ? 'N/A' : $movie_properties['releasedate'], 'accessed' => 1, 'status' => 1, 'disable_for_hd_devices' => 0, 'added' => date('Y-m-d H:i:s', $movie['added']), 'count' => 0, 'count_first_0_5' => 0, 'count_second_0_5' => 0, 'vote_sound_good' => 0, 'vote_sound_bad' => 0, 'vote_video_good' => 0, 'vote_video_bad' => 0, 'rate' => '', 'last_rate_update' => '', 'last_played' => '', 'for_sd_stb' => 0, 'rating_imdb' => empty($movie_properties['rating']) ? 'N/A' : $movie_properties['rating'], 'rating_count_imdb' => '', 'rating_last_update' => '0000-00-00 00:00:00', 'age' => '12+', 'high_quality' => 0, 'rating_kinopoisk' => empty($movie_properties['rating']) ? 'N/A' : $movie_properties['rating'], 'comments' => '', 'low_quality' => 0, 'is_series' => 0, 'year_end' => 0, 'autocomplete_provider' => 'imdb', 'screenshots' => '', 'is_movie' => 1, 'lock' => $movie['is_adult'], 'fav' => in_array($movie['id'], $dev['fav_channels']['movie']) ? 1 : 0, 'for_rent' => 0, 'screenshot_uri' => empty($movie_properties['movie_image']) ? '' : $movie_properties['movie_image'], 'genres_str' => empty($movie_properties['genre']) ? 'N/A' : $movie_properties['genre'], 'cmd' => base64_encode(json_encode($cmd, JSON_PARTIAL_OUTPUT_ON_ERROR)), $added_key => $added_val, 'has_files' => 0);
+                $data[] = array('id' => $movie['id'], 'owner' => '', 'name' => $movie['stream_display_name'], 'old_name' => '', 'o_name' => $movie['stream_display_name'], 'fname' => '', 'description' => empty($movie_properties['plot']) ? 'N/A' : $movie_properties['plot'], 'pic' => '', 'cost' => 0, 'time' => intval($duration / 60), 'file' => '', 'path' => str_replace(' ', '_', $movie['stream_display_name']), 'protocol' => '', 'rtsp_url' => '', 'censored' => $movie['is_adult'], 'series' => array(), 'volume_correction' => 0, 'category_id' => $movie['category_id'], 'genre_id' => 0, 'genre_id_1' => 0, 'genre_id_2' => 0, 'genre_id_3' => 0, 'hd' => 1, 'genre_id_4' => 0, 'cat_genre_id_1' => $movie['category_id'], 'cat_genre_id_2' => 0, 'cat_genre_id_3' => 0, 'cat_genre_id_4' => 0, 'director' => empty($movie_properties['director']) ? 'N/A' : $movie_properties['director'], 'actors' => empty($movie_properties['cast']) ? 'N/A' : $movie_properties['cast'], 'year' => empty($movie_properties['releasedate']) ? 'N/A' : $movie_properties['releasedate'], 'accessed' => 1, 'status' => 1, 'disable_for_hd_devices' => 0, 'added' => date('Y-m-d H:i:s', $movie['added']), 'count' => 0, 'count_first_0_5' => 0, 'count_second_0_5' => 0, 'vote_sound_good' => 0, 'vote_sound_bad' => 0, 'vote_video_good' => 0, 'vote_video_bad' => 0, 'rate' => '', 'last_rate_update' => '', 'last_played' => '', 'for_sd_stb' => 0, 'rating_imdb' => empty($movie_properties['rating']) ? 'N/A' : $movie_properties['rating'], 'rating_count_imdb' => '', 'rating_last_update' => '0000-00-00 00:00:00', 'age' => '12+', 'high_quality' => 0, 'rating_kinopoisk' => empty($movie_properties['rating']) ? 'N/A' : $movie_properties['rating'], 'comments' => '', 'low_quality' => 0, 'is_series' => 0, 'year_end' => 0, 'autocomplete_provider' => 'imdb', 'screenshots' => '', 'is_movie' => 1, 'lock' => $movie['is_adult'], 'fav' => in_array($movie['id'], $dev['fav_channels']['movie']) ? 1 : 0, 'for_rent' => 0, 'screenshot_uri' => empty($movie_properties['movie_image']) ? '' : $movie_properties['movie_image'], 'genres_str' => empty($movie_properties['genre']) ? 'N/A' : $movie_properties['genre'], 'cmd' => base64_encode(json_encode($cmd, JSON_PARTIAL_OUTPUT_ON_ERROR)), $added_key => $added_val, 'has_files' => 0);
             } else {
                 --$counter;
             }
@@ -1029,14 +1028,14 @@ function GetVodOrderedList($category_id = null, $fav = null, $orderby = null, $s
         $cur_page = 0;
         $selected_item = 0;
     }
-    $output = array('js' => array('total_items' => $counter, 'max_page_items' => $page_items, 'selected_item' => $selected_item, 'cur_page' => $cur_page, 'data' => $datas));
+    $output = array('js' => array('total_items' => $counter, 'max_page_items' => $page_items, 'selected_item' => $selected_item, 'cur_page' => $cur_page, 'data' => $data));
     return json_encode($output, JSON_PARTIAL_OUTPUT_ON_ERROR);
 }
-function EfbbCCe59aAbcEb0b973f0Ba1a94d948($id, $fav = null, $orderby = null, $stream_display_name = null, $movie_properties = array()) {
+function SeriesEpisodes($id, $fav = null, $orderby = null, $stream_display_name = null, $movie_properties = array()) {
     global $ipTV_db;
     $ipTV_db->query('SELECT * FROM `series_episodes` t1 INNER JOIN `streams` t2 ON t2.id=t1.stream_id WHERE t1.series_id = \'%d\' ORDER BY t1.season_num DESC, t1.sort ASC', $id);
-    $cc69dbb0749cadc4d6c0543ba360c09d = $ipTV_db->get_rows(true, 'season_num', false);
-    return $cc69dbb0749cadc4d6c0543ba360c09d;
+    $seasons = $ipTV_db->get_rows(true, 'season_num', false);
+    return $seasons;
 }
 function GetSeriesOrderedList($movie_id = null, $category_id = null, $fav = null, $orderby = null, $stream_display_name = null, $movie_properties = array()) {
     global $dev, $player, $_LANG, $ipTV_db;
@@ -1044,13 +1043,13 @@ function GetSeriesOrderedList($movie_id = null, $category_id = null, $fav = null
     $page_items = 14;
     $default_page = false;
     if (empty($movie_id)) {
-        $Fc0cf310dd1b2294ab167a0658937ab5 = eA44215481573d77C59D844454c19797($dev['user_id'], $category_id, $fav, $orderby, $stream_display_name, $movie_properties);
+        $episodes = SeriesEpisodesByUserId($dev['user_id'], $category_id, $fav, $orderby, $stream_display_name, $movie_properties);
     } else {
-        $Fc0cf310dd1b2294ab167a0658937ab5 = eFBbCCe59AaBcEb0b973F0Ba1A94D948($movie_id, $fav, $orderby, $stream_display_name, $movie_properties);
+        $episodes = SeriesEpisodes($movie_id, $fav, $orderby, $stream_display_name, $movie_properties);
         $ipTV_db->query('SELECT * FROM `series` WHERE `id` = \'%d\'', $movie_id);
         $serie = $ipTV_db->get_row();
     }
-    $counter = count($Fc0cf310dd1b2294ab167a0658937ab5);
+    $counter = count($episodes);
     $ch_idx = 0;
     if ($page == 0) {
         $default_page = true;
@@ -1059,9 +1058,9 @@ function GetSeriesOrderedList($movie_id = null, $category_id = null, $fav = null
             $page = 1;
         }
     }
-    $Fc0cf310dd1b2294ab167a0658937ab5 = array_slice($Fc0cf310dd1b2294ab167a0658937ab5, ($page - 1) * $page_items, $page_items, true);
-    $datas = array();
-    foreach ($Fc0cf310dd1b2294ab167a0658937ab5 as $key => $movie) {
+    $episodes = array_slice($episodes, ($page - 1) * $page_items, $page_items, true);
+    $data = array();
+    foreach ($episodes as $key => $movie) {
         if (!is_null($fav) && $fav == 1 && empty($movie_id)) {
             if (in_array($movie['id'], $dev['fav_channels']['series'])) {
                 if (!empty($serie)) {
@@ -1102,7 +1101,7 @@ function GetSeriesOrderedList($movie_id = null, $category_id = null, $fav = null
                 } else {
                     $title = $movie['title'];
                 }
-                $datas[] = array('id' => empty($movie_id) ? $movie_propeties['id'] : $movie_propeties['id'] . ':' . $key, 'owner' => '', 'name' => $title, 'old_name' => '', 'o_name' => $title, 'fname' => '', 'description' => empty($movie_propeties['plot']) ? 'N/A' : $movie_propeties['plot'], 'pic' => '', 'cost' => 0, 'time' => 'N/a', 'file' => '', 'path' => str_replace(' ', '_', $movie_propeties['title']), 'protocol' => '', 'rtsp_url' => '', 'censored' => 0, 'series' => !empty($serie) ? range(1, count($movie)) : array(), 'volume_correction' => 0, 'category_id' => $movie_propeties['category_id'], 'genre_id' => 0, 'genre_id_1' => 0, 'genre_id_2' => 0, 'genre_id_3' => 0, 'hd' => 1, 'genre_id_4' => 0, 'cat_genre_id_1' => $movie_propeties['category_id'], 'cat_genre_id_2' => 0, 'cat_genre_id_3' => 0, 'cat_genre_id_4' => 0, 'director' => empty($movie_propeties['director']) ? 'N/A' : $movie_propeties['director'], 'actors' => empty($movie_propeties['cast']) ? 'N/A' : $movie_propeties['cast'], 'year' => empty($movie_propeties['releaseDate']) ? 'N/A' : $movie_propeties['releaseDate'], 'accessed' => 1, 'status' => 1, 'disable_for_hd_devices' => 0, 'added' => date('Y-m-d H:i:s', $Bb2aa338b4f24748194863e13511a725), 'count' => 0, 'count_first_0_5' => 0, 'count_second_0_5' => 0, 'vote_sound_good' => 0, 'vote_sound_bad' => 0, 'vote_video_good' => 0, 'vote_video_bad' => 0, 'rate' => '', 'last_rate_update' => '', 'last_played' => '', 'for_sd_stb' => 0, 'rating_imdb' => empty($movie_propeties['rating']) ? 'N/A' : $movie_propeties['rating'], 'rating_count_imdb' => '', 'rating_last_update' => '0000-00-00 00:00:00', 'age' => '12+', 'high_quality' => 0, 'rating_kinopoisk' => empty($movie_propeties['rating']) ? 'N/A' : $movie_propeties['rating'], 'comments' => '', 'low_quality' => 0, 'is_series' => 1, 'year_end' => 0, 'autocomplete_provider' => 'imdb', 'screenshots' => '', 'is_movie' => 1, 'lock' => 0, 'fav' => empty($movie_id) && in_array($movie_propeties['id'], $dev['fav_channels']['series']) ? 1 : 0, 'for_rent' => 0, 'screenshot_uri' => empty($movie_propeties['cover']) ? '' : $movie_propeties['cover'], 'genres_str' => empty($movie_propeties['genre']) ? 'N/A' : $movie_propeties['genre'], 'cmd' => !empty($serie) ? base64_encode(json_encode($cmd, JSON_PARTIAL_OUTPUT_ON_ERROR)) : '', $added_key => $added_val, 'has_files' => empty($movie_id) ? 1 : 0);
+                $data[] = array('id' => empty($movie_id) ? $movie_propeties['id'] : $movie_propeties['id'] . ':' . $key, 'owner' => '', 'name' => $title, 'old_name' => '', 'o_name' => $title, 'fname' => '', 'description' => empty($movie_propeties['plot']) ? 'N/A' : $movie_propeties['plot'], 'pic' => '', 'cost' => 0, 'time' => 'N/a', 'file' => '', 'path' => str_replace(' ', '_', $movie_propeties['title']), 'protocol' => '', 'rtsp_url' => '', 'censored' => 0, 'series' => !empty($serie) ? range(1, count($movie)) : array(), 'volume_correction' => 0, 'category_id' => $movie_propeties['category_id'], 'genre_id' => 0, 'genre_id_1' => 0, 'genre_id_2' => 0, 'genre_id_3' => 0, 'hd' => 1, 'genre_id_4' => 0, 'cat_genre_id_1' => $movie_propeties['category_id'], 'cat_genre_id_2' => 0, 'cat_genre_id_3' => 0, 'cat_genre_id_4' => 0, 'director' => empty($movie_propeties['director']) ? 'N/A' : $movie_propeties['director'], 'actors' => empty($movie_propeties['cast']) ? 'N/A' : $movie_propeties['cast'], 'year' => empty($movie_propeties['releaseDate']) ? 'N/A' : $movie_propeties['releaseDate'], 'accessed' => 1, 'status' => 1, 'disable_for_hd_devices' => 0, 'added' => date('Y-m-d H:i:s', $Bb2aa338b4f24748194863e13511a725), 'count' => 0, 'count_first_0_5' => 0, 'count_second_0_5' => 0, 'vote_sound_good' => 0, 'vote_sound_bad' => 0, 'vote_video_good' => 0, 'vote_video_bad' => 0, 'rate' => '', 'last_rate_update' => '', 'last_played' => '', 'for_sd_stb' => 0, 'rating_imdb' => empty($movie_propeties['rating']) ? 'N/A' : $movie_propeties['rating'], 'rating_count_imdb' => '', 'rating_last_update' => '0000-00-00 00:00:00', 'age' => '12+', 'high_quality' => 0, 'rating_kinopoisk' => empty($movie_propeties['rating']) ? 'N/A' : $movie_propeties['rating'], 'comments' => '', 'low_quality' => 0, 'is_series' => 1, 'year_end' => 0, 'autocomplete_provider' => 'imdb', 'screenshots' => '', 'is_movie' => 1, 'lock' => 0, 'fav' => empty($movie_id) && in_array($movie_propeties['id'], $dev['fav_channels']['series']) ? 1 : 0, 'for_rent' => 0, 'screenshot_uri' => empty($movie_propeties['cover']) ? '' : $movie_propeties['cover'], 'genres_str' => empty($movie_propeties['genre']) ? 'N/A' : $movie_propeties['genre'], 'cmd' => !empty($serie) ? base64_encode(json_encode($cmd, JSON_PARTIAL_OUTPUT_ON_ERROR)) : '', $added_key => $added_val, 'has_files' => empty($movie_id) ? 1 : 0);
             } else {
                 --$counter;
             }
@@ -1115,14 +1114,14 @@ function GetSeriesOrderedList($movie_id = null, $category_id = null, $fav = null
         $cur_page = 0;
         $selected_item = 0;
     }
-    $output = array('js' => array('total_items' => $counter, 'max_page_items' => $page_items, 'selected_item' => $selected_item, 'cur_page' => $cur_page, 'data' => $datas));
+    $output = array('js' => array('total_items' => $counter, 'max_page_items' => $page_items, 'selected_item' => $selected_item, 'cur_page' => $cur_page, 'data' => $data));
     return json_encode($output, JSON_PARTIAL_OUTPUT_ON_ERROR);
 }
-function EA44215481573D77c59D844454c19797($user_id, $category_id = null, $fav = null, $orderby = null, $stream_display_name = null, $movie_properties = array()) {
+function SeriesEpisodesByUserId($user_id, $category_id = null, $fav = null, $orderby = null, $stream_display_name = null, $movie_properties = array()) {
     global $dev, $ipTV_db;
     $user_info = ipTV_streaming::GetUserInfo($user_id, null, null, true);
     $series = ipTV_lib::seriesData();
-    $Cc88d22d55f69d2409f5c72665474b50 = array();
+    $ArraySeries = array();
     foreach ($series as $id => $serie) {
         if (!in_array($id, $user_info['series_ids'])) {
             continue;
@@ -1145,26 +1144,26 @@ function EA44215481573D77c59D844454c19797($user_id, $category_id = null, $fav = 
         if (!empty($fav) && !in_array($id, $dev['fav_channels']['series'])) {
             continue;
         }
-        $Cc88d22d55f69d2409f5c72665474b50[$id] = $serie;
+        $ArraySeries[$id] = $serie;
     }
     switch ($orderby) {
         case 'name':
-            uasort($Cc88d22d55f69d2409f5c72665474b50, 'sortArrayStreamName');
+            uasort($ArraySeries, 'sortArrayStreamName');
             break;
         case 'top':
-            uasort($Cc88d22d55f69d2409f5c72665474b50, 'sortArrayStreamRating');
+            uasort($ArraySeries, 'sortArrayStreamRating');
             break;
         case 'rating':
-            uasort($Cc88d22d55f69d2409f5c72665474b50, 'sortArrayStreamRating');
+            uasort($ArraySeries, 'sortArrayStreamRating');
             break;
         case 'added':
-            uasort($Cc88d22d55f69d2409f5c72665474b50, 'sortArrayStreamAdded');
+            uasort($ArraySeries, 'sortArrayStreamAdded');
             break;
         case 'number':
-            uasort($Cc88d22d55f69d2409f5c72665474b50, 'sortArrayStreamNumber');
+            uasort($ArraySeries, 'sortArrayStreamNumber');
             break;
     }
-    return $Cc88d22d55f69d2409f5c72665474b50;
+    return $ArraySeries;
 }
 function GetStreamsFromUser($user_id, $types = array(), $category_id = null, $fav = null, $orderby = null, $stream_display_name = null, $movie_properties = array()) {
     global $dev;
@@ -1284,7 +1283,7 @@ function GetRadioOrderedList($category_id = null, $fav = null, $orderby = null) 
         }
     }
     $streamSys = array_slice($streamSys['streams'], ($page - 1) * $page_items, $page_items);
-    $datas = array();
+    $data = array();
     $index = 1;
     foreach ($streamSys as $order_id => $stream) {
         if (ipTV_lib::$settings['mag_security'] == 0) {
@@ -1306,7 +1305,7 @@ function GetRadioOrderedList($category_id = null, $fav = null, $orderby = null) 
             }
             $stream_source_st = 1;
         }
-        $datas[] = array('id' => $stream['id'], 'name' => $stream['stream_display_name'], 'number' => $index++, 'cmd' => $url, 'count' => 0, 'open' => 1, 'use_http_tmp_link' => "{$stream_source_st}", 'status' => 1, 'volume_correction' => 0, 'fav' => in_array($stream['id'], $dev['fav_channels']['radio_streams']) ? 1 : 0);
+        $data[] = array('id' => $stream['id'], 'name' => $stream['stream_display_name'], 'number' => $index++, 'cmd' => $url, 'count' => 0, 'open' => 1, 'use_http_tmp_link' => "{$stream_source_st}", 'status' => 1, 'volume_correction' => 0, 'fav' => in_array($stream['id'], $dev['fav_channels']['radio_streams']) ? 1 : 0);
     }
     if ($default_page) {
         $cur_page = $page;
@@ -1315,7 +1314,7 @@ function GetRadioOrderedList($category_id = null, $fav = null, $orderby = null) 
         $cur_page = 0;
         $selected_item = 0;
     }
-    $output = array('js' => array('total_items' => $counter, 'max_page_items' => $page_items, 'selected_item' => $selected_item, 'cur_page' => $cur_page, 'data' => $datas));
+    $output = array('js' => array('total_items' => $counter, 'max_page_items' => $page_items, 'selected_item' => $selected_item, 'cur_page' => $cur_page, 'data' => $data));
     return json_encode($output, JSON_PARTIAL_OUTPUT_ON_ERROR);
 }
 function GetOrderedList($category_id = null, $all = false, $fav = null, $orderby = null) {
@@ -1349,9 +1348,9 @@ function GetOrderedList($category_id = null, $all = false, $fav = null, $orderby
         $streamSys = $streamSys['streams'];
     }
     $epgInfo = '';
-    $datas = array();
+    $data = array();
     $index = 1;
-    foreach ($streamSys as $order_id => $stream) {
+    foreach ($streamSys as $stream) {
         if (ipTV_lib::$settings['mag_security'] == 0) {
             if (!empty($stream['stream_source'])) {
                 $url = $player . json_decode($stream['stream_source'], true)[0];
@@ -1371,7 +1370,7 @@ function GetOrderedList($category_id = null, $all = false, $fav = null, $orderby
             }
             $stream_source_st = 1;
         }
-        $datas[] = array('id' => $stream['id'], 'name' => $stream['stream_display_name'], 'number' => (string) $stream['number'], 'censored' => $stream['is_adult'] == 1 ? '1' : '', 'cmd' => $url, 'cost' => '0', 'count' => '0', 'status' => 1, 'hd' => 0, 'tv_genre_id' => $stream['category_id'], 'base_ch' => '1', 'hd' => '0', 'xmltv_id' => !empty($stream['channel_id']) ? $stream['channel_id'] : '', 'service_id' => '', 'bonus_ch' => '0', 'volume_correction' => '0', 'mc_cmd' => '', 'enable_tv_archive' => $stream['tv_archive_duration'] > 0 ? 1 : 0, 'wowza_tmp_link' => '0', 'wowza_dvr' => '0', 'use_http_tmp_link' => "{$stream_source_st}", 'monitoring_status' => '1', 'enable_monitoring' => '0', 'enable_wowza_load_balancing' => '0', 'cmd_1' => '', 'cmd_2' => '', 'cmd_3' => '', 'logo' => $stream['stream_icon'], 'correct_time' => '0', 'nimble_dvr' => '0', 'allow_pvr' => (int) $stream['allow_record'], 'allow_local_pvr' => (int) $stream['allow_record'], 'allow_remote_pvr' => 0, 'modified' => '', 'allow_local_timeshift' => '1', 'nginx_secure_link' => "{$stream_source_st}", 'tv_archive_duration' => $stream['tv_archive_duration'] > 0 ? $stream['tv_archive_duration'] * 24 : 0, 'locked' => 0, 'lock' => $stream['is_adult'], 'fav' => in_array($stream['id'], $dev['fav_channels']['live']) ? 1 : 0, 'archive' => $stream['tv_archive_duration'] > 0 ? 1 : 0, 'genres_str' => '', 'cur_playing' => '[No channel info]', 'epg' => array(), 'open' => 1, 'cmds' => array(array('id' => (string) $stream['id'], 'ch_id' => (string) $stream['id'], 'priority' => '0', 'url' => $player . "http : //localhost/ch/{$stream['id']}_{$streamIdValue}", 'status' => '1', 'use_http_tmp_link' => "{$stream_source_st}", 'wowza_tmp_link' => '0', 'user_agent_filter' => '', 'use_load_balancing' => '0', 'changed' => '', 'enable_monitoring' => '0', 'enable_balancer_monitoring' => '0', 'nginx_secure_link' => "{$stream_source_st}", 'flussonic_tmp_link' => '0')), 'use_load_balancing' => 0, 'pvr' => (int) $stream['allow_record']);
+        $data[] = array('id' => $stream['id'], 'name' => $stream['stream_display_name'], 'number' => (string) $stream['number'], 'censored' => $stream['is_adult'] == 1 ? '1' : '', 'cmd' => $url, 'cost' => '0', 'count' => '0', 'status' => 1, 'hd' => 0, 'tv_genre_id' => $stream['category_id'], 'base_ch' => '1', 'hd' => '0', 'xmltv_id' => !empty($stream['channel_id']) ? $stream['channel_id'] : '', 'service_id' => '', 'bonus_ch' => '0', 'volume_correction' => '0', 'mc_cmd' => '', 'enable_tv_archive' => $stream['tv_archive_duration'] > 0 ? 1 : 0, 'wowza_tmp_link' => '0', 'wowza_dvr' => '0', 'use_http_tmp_link' => "{$stream_source_st}", 'monitoring_status' => '1', 'enable_monitoring' => '0', 'enable_wowza_load_balancing' => '0', 'cmd_1' => '', 'cmd_2' => '', 'cmd_3' => '', 'logo' => $stream['stream_icon'], 'correct_time' => '0', 'nimble_dvr' => '0', 'allow_pvr' => (int) $stream['allow_record'], 'allow_local_pvr' => (int) $stream['allow_record'], 'allow_remote_pvr' => 0, 'modified' => '', 'allow_local_timeshift' => '1', 'nginx_secure_link' => "{$stream_source_st}", 'tv_archive_duration' => $stream['tv_archive_duration'] > 0 ? $stream['tv_archive_duration'] * 24 : 0, 'locked' => 0, 'lock' => $stream['is_adult'], 'fav' => in_array($stream['id'], $dev['fav_channels']['live']) ? 1 : 0, 'archive' => $stream['tv_archive_duration'] > 0 ? 1 : 0, 'genres_str' => '', 'cur_playing' => '[No channel info]', 'epg' => array(), 'open' => 1, 'cmds' => array(array('id' => (string) $stream['id'], 'ch_id' => (string) $stream['id'], 'priority' => '0', 'url' => $player . "http : //localhost/ch/{$stream['id']}_{$streamIdValue}", 'status' => '1', 'use_http_tmp_link' => "{$stream_source_st}", 'wowza_tmp_link' => '0', 'user_agent_filter' => '', 'use_load_balancing' => '0', 'changed' => '', 'enable_monitoring' => '0', 'enable_balancer_monitoring' => '0', 'nginx_secure_link' => "{$stream_source_st}", 'flussonic_tmp_link' => '0')), 'use_load_balancing' => 0, 'pvr' => (int) $stream['allow_record']);
     }
     if ($default_page) {
         $cur_page = $page;
@@ -1380,7 +1379,7 @@ function GetOrderedList($category_id = null, $all = false, $fav = null, $orderby
         $cur_page = 0;
         $selected_item = 0;
     }
-    $output = array('js' => array('total_items' => $counter, 'max_page_items' => $page_items, 'selected_item' => $selected_item, 'cur_page' => $all ? 0 : $cur_page, 'data' => $datas));
+    $output = array('js' => array('total_items' => $counter, 'max_page_items' => $page_items, 'selected_item' => $selected_item, 'cur_page' => $all ? 0 : $cur_page, 'data' => $data));
     return json_encode($output, JSON_PARTIAL_OUTPUT_ON_ERROR);
 }
 function getDataTable() {

@@ -1,10 +1,4 @@
 <?php
-// debug
-ini_set("log_errors", 1);
-error_reporting(E_ALL);
-ini_set('error_log', __DIR__ . '/php-errors.log');
-// debug
-
 ini_set('display_errors', 1);
 define('MAIN_DIR', '/home/xtreamcodes/');
 define('IPTV_ROOT_PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');

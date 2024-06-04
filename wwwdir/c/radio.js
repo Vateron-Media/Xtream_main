@@ -185,8 +185,7 @@
                     this.sidebar.hide();
                 }
             }
-            this.dom_obj.hide();
-            this.on = false;
+            this.superclass.hide.call(this, do_not_reset);
             this.update_header_path([{"alias" : "playing", "item" : "*"}]);
         };
 
@@ -614,6 +613,17 @@
     radio.init_color_buttons(color_buttons_map);
 
     var sort_menu_map = [
+        {
+            "label": word['radio_sort_default'],
+            "cmd": function () {
+                stb.player.stop();
+                this.parent.load_params.fav = false;
+                this.parent.load_params.sortby = 'default';
+                stb.user.fav_radio_on = 0;
+                module.radio_widget && module.radio_widget.set_radio_widget_items_list();
+                this.parent.load_params.all = 0;
+            }
+        },
         {
             "label" : word['radio_by_number'],
             "cmd" : function(){

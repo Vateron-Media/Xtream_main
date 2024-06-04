@@ -27,6 +27,7 @@
             stb.player.addCustomEventListener("radiostart", function (item) {
                 if (item.radio) {
                     _debug('radio_widget.radiostart');
+                    stb.player.cur_media_item = item;
                     self.show(item);
                 }
             });
@@ -42,6 +43,7 @@
                 if (item.radio) {
                     _debug('radio_widget.radiopause');
                     self.show(item);
+                    stb.player.cur_media_item = item;
                     self.pause_btn.hide();
                     self.play_btn.show();
                 }
@@ -51,6 +53,7 @@
                 if (item.radio) {
                     _debug('radio_widget.radiocontinue');
                     self.show(item);
+                    stb.player.cur_media_item = item;
                     self.play_btn.hide();
                     self.pause_btn.show();
                 }

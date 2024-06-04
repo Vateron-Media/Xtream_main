@@ -22,17 +22,17 @@
             }
         };
 
-        toggle_rc = function(state){
+        toggle_rc = function (state) {
             parent.gSTB.SetNetRcStatus(state);
         }
 
-        init_rc = function(){
+        init_rc = function () {
             remoteControlFileData = get_rc_data();
             if (remoteControlFileData.enable) {
                 parent.gSTB.ConfigNetRc(remoteControlFileData.deviceName, remoteControlFileData.password);
             }
             toggle_rc(remoteControlFileData.enable);
-            console.log("remote control enabled - " + (remoteControlFileData.enable? 'true': 'false'));
+            console.log("remote control enabled - " + (remoteControlFileData.enable ? 'true' : 'false'));
         };
 
         var rc_data = get_rc_data();
@@ -47,11 +47,12 @@
             ['input', parent.t('Password (only digits):')]
         ];
         var mid = menuT.length + 2;
+
         function onLoad() {
             sload();
             init();
             parent.cont.focus();
-            if (rc_data.enable){
+            if (rc_data.enable) {
                 document.getElementById('i1').setAttribute('checked', 'checked');
             }
             toggle_rc(document.getElementById("i1").checked);
@@ -78,8 +79,9 @@
             init_rc();
             back();
         }
+
         function change(a) {
-            if (iid > mid - 2){
+            if (iid > mid - 2) {
                 if (iid + a <= mid && iid + a >= mid - 1) {
                     iid += a;
                     document.getElementById('i' + iid).focus();

@@ -11,7 +11,7 @@
         play : function(download, download_callback){
             _debug('tv_archive.play');
 
-            this.get_item().cmd  = 'auto /media/' + this.get_item().id + '.ts';
+            this.get_item().cmd  = 'auto /media/' + this.get_item().id + '.mpg';
 
             if (!this.get_item().hasOwnProperty('o_name')){
                 this.get_item().o_name = this.get_item().name;
@@ -110,7 +110,7 @@
 
             _debug('url 1', url);
 
-            var url = stb.player.cur_media_item.cmd.replace(/([^\/]*)\.ts/, new_file_name).trim();
+            var url = stb.player.cur_media_item.cmd.replace(/([^\/]*)\.mp[g,4]/, new_file_name).trim();
 
             _debug('url 2', url);
 
@@ -140,7 +140,7 @@
 
             _debug('next_file_name', next_file_name);
 
-            var url = stb.player.cur_media_item.cmd.replace(/([^\/]*)\.ts/, next_file_name).replace(/position:(\d*)/, '').trim();
+            var url = stb.player.cur_media_item.cmd.replace(/([^\/]*)\.mp[g,4]/, next_file_name).replace(/position:(\d*)/, '').trim();
 
             _debug('stb.player.cur_media_item.cmd', stb.player.cur_media_item.cmd);
             _debug('url', url);
@@ -157,7 +157,7 @@
                     + this.format_date(date.getMonth() + 1) + ''
                     + this.format_date(date.getDate()) + '-'
                     + this.format_date(date.getHours())
-                    + (parseInt(stb.player.cur_tv_item['wowza_dvr'], 10) ? '.mp4' : '.ts');
+                    + (parseInt(stb.player.cur_tv_item['wowza_dvr'], 10) ? '.mp4' : '.mpg');
         },
 
         get_file_piece_num : function(){
@@ -188,7 +188,7 @@
         _get_file_date_by_url : function(url){
             _debug('tv_archive._get_file_date_by_url', url);
 
-            var date_part = /([^\/]*)\.ts/.exec(url);
+            var date_part = /([^\/]*)\.mp[g,4]/.exec(url);
 
             _debug('date_part', date_part);
 

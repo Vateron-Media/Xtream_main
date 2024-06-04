@@ -33,10 +33,10 @@
                 main_menu.hide();
                 stb.loader.show();
                 stb.key_lock = false;
-                if (!stb.auth_dialog){
+/*                if (!stb.auth_dialog){
                     stb.init_auth_dialog();
                 }
-                stb.auth_dialog.show();
+                stb.auth_dialog.show();*/
 
                 // logout on server
                 stb.load(
@@ -49,6 +49,7 @@
 
                         stb.access_token = 'invalid';
                         stb.save_access_token();
+                        window.location.reload();
                     }
                 )
             }

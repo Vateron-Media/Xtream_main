@@ -735,7 +735,7 @@ function common_xpcom(){
             if (this.access_token){
                 req.setRequestHeader("Authorization", "Bearer " + this.access_token);
             }
-
+			
             req.addEventListener("error", function(){
                 console.log('XMLHttpRequest error event');
                 connection_problem.show();
@@ -986,7 +986,7 @@ function common_xpcom(){
                 'hw_version_2'     : stb.GetHashVersion1 ? stb.GetHashVersion1(JSON.stringify(metrics), this.random) : '',
                 'timestamp'        : Math.round(new Date().getTime()/1000),
                 'api_signature'    : typeof(gSTB) == 'undefined' ? 0 : (function(){var p=0;for(var d in gSTB){if(gSTB.hasOwnProperty(d)){p++}} return p})(),
-                'prehash'          : prehash
+                'prehash'          : prehash,
             },
 
             function(result){
@@ -1050,7 +1050,7 @@ function common_xpcom(){
 
             _debug('checking conditions 2');
 
-            if ((this.num_banks == 2 || ['MAG256', 'MAG257', 'MAG322', 'MAG323', 'MAG324', 'MAG325', 'MAG349', 'MAG350', 'MAG351', 'MAG352'].indexOf(this.type) >= 0) && params.update_type == 'http_update'){
+            if ((this.num_banks == 2 || ['MAG256', 'MAG257', 'MAG322', 'MAG323', 'MAG324', 'IM2101VI', 'IM2101VO', 'MAG325', 'MAG349', 'MAG350', 'MAG351', 'MAG352', 'MAG425'].indexOf(this.type) >= 0) && params.update_type == 'http_update'){
                 try{
                     _debug('this.user[update_url]', this.user['update_url']);
 
@@ -1112,11 +1112,12 @@ function common_xpcom(){
 
             stb.loader.stop();
             this.cut_off(get_word('stb_type_not_supported'));
-
             return;
         }
 
-        if (['MAG200', 'MAG256', 'MAG257', 'MAG260', 'MAG322', 'MAG323', 'MAG324', 'MAG325', 'MAG349', 'MAG350', 'MAG351', 'MAG352'].indexOf(this.type) === -1  && !_GET['debug_key']){
+        if (['MAG200','MAG245','MAG245D','MAG250','MAG254','MAG255','MAG256','MAG256W1','MAG257','MAG260','MAG270','MAG275','MAG322','MAG322w1','MAG322w2','MAG323','MAG324','MAG324C','MAG324w2','MAG325','MAG349','MAG350','MAG351','MAG352','MAG420','MAG420w1','MAG420w2','MAG422','MAG422A','MAG422Aw1','MAG424','MAG424w1','MAG424w2','MAG424w3','MAG424A','MAG424Aw3','MAG425','MAG425A','MAG520','MAG520W1','MAG520W2','MAG520W3','MAG520A','MAG520Aw3','MAG522','MAG522v2','MAG522W1','MAG522W3','MAG524','MAG524W3','MAG540','MAG540W1','MAG540W3','MAG540V2','MAG544','MAG544V2','MAG544W1','MAG544W3','AuraHD','AuraHD0','AuraHD1','AuraHD2','AuraHD3','AuraHD4','AuraHD5','AuraHD6','AuraHD7','AuraHD8','AuraHD9','WR320','IM2100','IM2100w1','IM2100V','IM2100VI','IM2101','IM2101V','IM2101VI','IM2101VO','IM2101w2','IM2102','IM4410','IM4410w3','IM4411','IM4411w1','IM4412','IM4414','IM4414w1','IP_STB_HD'].indexOf(this.type) === -1  && !_GET['debug_key']){
+			
+			
             var match = /Player Engine version: (\S+)/.exec(this.version);
             _debug('match', match);
 
@@ -1236,7 +1237,7 @@ function common_xpcom(){
 
                 _debug('this.user[update_url]', this.user['update_url']);
 
-                if (['MAG200', 'MAG245','MAG245D', 'MAG250', 'MAG254', 'MAG255', 'MAG256', 'MAG257', 'MAG270', 'MAG275', 'MAG322', 'MAG323', 'MAG324', 'MAG325', 'MAG349', 'MAG350', 'MAG351', 'MAG352', 'WR320', 'IP_STB_HD'].indexOf(this.type) >= 0 || this.type.indexOf('AuraHD') != -1){
+                if (['MAG200','MAG245','MAG245D','MAG250','MAG254','MAG255','MAG256','MAG256W1','MAG257','MAG260','MAG270','MAG275','MAG322','MAG322w1','MAG322w2','MAG322w3','MAG323','MAG324','MAG324C','MAG324w2','MAG325','MAG349','MAG350','MAG351','MAG352','MAG420','MAG420w1','MAG420w2','MAG422','MAG422А','MAG422Аw1','MAG424','MAG424w1','MAG424w2','MAG424w3','MAG424А','MAG424Аw3','MAG425','MAG425А','MAG520','MAG520W1','MAG520W3','MAG522','MAG522V2','MAG522W1','MAG522W2','MAG522W3','MAG524','MAG524W3','MAG540','MAG540W1','MAG540W3','MAG540V2','MAG544','MAG544V2','MAG544W1','MAG544W3','AuraHD','AuraHD0','AuraHD1','AuraHD2','AuraHD3','AuraHD4','AuraHD8','AuraHD9','WR320','IM2100','IM2100w1','IM2100V','IM2100VI','IM2101','IM2101V','IM2101VI','IM2101VO','IM2101w2','IM2102','IM4410','IM4410w3','IM4411','IM4411w1','IM4412','IM4414','IM4414w1','IP_STB_HD'].indexOf(this.type) >= 0 || this.type.indexOf('AuraHD') != -1){
                     this.check_image_version();
                 }
 

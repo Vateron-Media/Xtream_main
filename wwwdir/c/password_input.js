@@ -40,7 +40,7 @@ function password_input(options){
 password_input.prototype.init = function(){
     
     this.dom_obj   = create_block_element('password');
-    var container  = create_block_element('password_continer', this.dom_obj);
+    var container  = create_block_element('password_container', this.dom_obj);
     this.error_ico = create_block_element('password_error_ico', container);
     this.input     = create_block_element('password_input', container);
     
@@ -91,11 +91,14 @@ password_input.prototype.check = function(){
 
 password_input.prototype.add_number = function(num){
     _debug('password_input.add_number', num);
-    
-    this.input.innerHTML = this.input.innerHTML + '*';
-    
-    this.input_value = this.input_value + '' + num;
-    
+
+    if (this.input_value.length <4) {
+
+        this.input.innerHTML = this.input.innerHTML + '&bull;';
+
+        this.input_value = this.input_value + '' + num;
+    }
+
     this.hide_error();
 };
 
@@ -139,7 +142,12 @@ password_input.prototype.bind = function(){
     
     this.hide.bind(key.EXIT, this);
 
-    (function(){}).bind(key.APP, this).bind(key.REC, this).bind(key.RED, this);
+    (function(){})
+        .bind(key.EPG, this)
+        .bind(key.BLUE, this)
+        .bind(key.APP, this)
+        .bind(key.REC, this)
+        .bind(key.RED, this);
 
     (function(key){
 

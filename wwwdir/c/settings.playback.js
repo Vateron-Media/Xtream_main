@@ -2,17 +2,17 @@
  * Playback settings module.
  */
 
-(function(){
+(function () {
 
-    if (!stb.profile['use_embedded_settings']){
+    if (!stb.profile['use_embedded_settings']) {
         return;
     }
 
-    function PlaybackSettingsConstructor(){
+    function PlaybackSettingsConstructor() {
 
         this.layer_name = 'playback_settings';
 
-        this.save_params = {"type" : "stb", "action" : "set_playback_settings"};
+        this.save_params = {"type": "stb", "action": "set_playback_settings"};
 
         this.superclass = SettingLayer.prototype;
 
@@ -21,19 +21,19 @@
 
         this.audio_out_map = [
             {
-                "label" : get_word('audio_out_analog'),
-                "value" : 0
+                "label": get_word('audio_out_analog'),
+                "value": 0
             },
             {
-                "label" : get_word('audio_out_analog_spdif'),
-                "value" : 1
+                "label": get_word('audio_out_analog_spdif'),
+                "value": 1
             },
             {
-                "label" : get_word('audio_out_spdif'),
-                "value" : 2
+                "label": get_word('audio_out_spdif'),
+                "value": 2
             }
-        ].map(function(item){
-            if (item.value == stb.user['audio_out']){
+        ].map(function (item) {
+            if (item.value == stb.user['audio_out']) {
                 item.selected = 1;
             }
             return item;
@@ -41,36 +41,36 @@
 
         this.playback_limit_map = [
             {
-                "label" : get_word('playback_limit_off'),
-                "value" : 0
+                "label": get_word('playback_limit_off'),
+                "value": 0
             },
             {
-                "label" : 3 + get_word('playback_hours'),
-                "value" : 3
+                "label": 3 + get_word('playback_hours'),
+                "value": 3
             },
             {
-                "label" : 4 + get_word('playback_hours'),
-                "value" : 4
+                "label": 4 + get_word('playback_hours'),
+                "value": 4
             },
             {
-                "label" : 5 + get_word('playback_hours'),
-                "value" : 5
+                "label": 5 + get_word('playback_hours'),
+                "value": 5
             },
             {
-                "label" : 6 + get_word('playback_hours'),
-                "value" : 6
+                "label": 6 + get_word('playback_hours'),
+                "value": 6
             }
-        ].map(function(item){
-            if (item.value == stb.user['playback_limit']){
+        ].map(function (item) {
+            if (item.value == stb.user['playback_limit']) {
                 item.selected = 1;
             }
             return item;
         });
 
-        this.save_callback = function(result){
+        this.save_callback = function (result) {
             _debug('playback_settings.save_callback', result);
 
-            if (!result){
+            if (!result) {
                 stb.notice.push(word['settings_saving_error']);
                 return;
             }
@@ -84,7 +84,7 @@
             stb.user['playback_limit'] = this.save_params.playback_limit;
         };
 
-        this.save = function(){
+        this.save = function () {
             _debug('playback_settings.save');
 
             var playback_buffer_time = parseInt(this.buffer_changer.get_value());
@@ -96,7 +96,7 @@
             this.superclass.save.apply(this);
         };
 
-        this.hide = function(){
+        this.hide = function () {
             _debug('playback_settings.hide');
 
             this.buffer_changer.set_default();
@@ -104,19 +104,19 @@
             this.superclass.hide.call(this);
         };
 
-        this.init = function(){
+        this.init = function () {
             _debug('playback_settings.init');
 
             this.superclass.init.call(this);
 
             this.buffer_changer = this.add_control(new VisualValuePickerInput(this,
                 {
-                    "label"       : get_word('playback_settings_buffer_size'),
-                    "name"        : "playback_buffer_size",
-                    "default_val" : parseInt(stb.user['playback_buffer_size']) || 0,
-                    "min_val"     : this.min_buffer_time,
-                    "max_val"     : this.max_buffer_time,
-                    "hint_title"  : get_word('playback_settings_time')
+                    "label": get_word('playback_settings_buffer_size'),
+                    "name": "playback_buffer_size",
+                    "default_val": parseInt(stb.user['playback_buffer_size']) || 0,
+                    "min_val": this.min_buffer_time,
+                    "max_val": this.max_buffer_time,
+                    "hint_title": get_word('playback_settings_time')
                 }
             ));
 
@@ -124,13 +124,21 @@
 
             var self = this;
 
-            this.buffer_changer.onchange = function(){
+            this.buffer_changer.onchange = function () {
                 self.buffer_changer.hint_text.innerHTML = self.buffer_changer.get_value();
             };
 
-            this.audio_out = this.add_control(new OptionInput(this , {"name" : "audio_out", "label" : get_word('audio_out'), "map" : this.audio_out_map}));
+            this.audio_out = this.add_control(new OptionInput(this, {
+                "name": "audio_out",
+                "label": get_word('audio_out'),
+                "map": this.audio_out_map
+            }));
 
-            this.playback_limit = this.add_control(new OptionInput(this , {"name" : "playback_limit", "label" : get_word('playback_limit_title'), "map" : this.playback_limit_map}));
+            this.playback_limit = this.add_control(new OptionInput(this, {
+                "name": "playback_limit",
+                "label": get_word('playback_limit_title'),
+                "map": this.playback_limit_map
+            }));
         };
     }
 
@@ -142,10 +150,15 @@
     playback_settings.bind();
 
     playback_settings.init_color_buttons([
-        {"label" : word['playback_settings_cancel'], "cmd" : function(){playback_settings.hide(); main_menu.show()} },
-        {"label" : word['playback_settings_save'], "cmd" : playback_settings.save},
-        {"label" : word['empty'], "cmd" : ''},
-        {"label" : word['empty'], "cmd" : ''}
+        {
+            "label": word['playback_settings_cancel'], "cmd": function () {
+                playback_settings.hide();
+                main_menu.show()
+            }
+        },
+        {"label": word['playback_settings_save'], "cmd": playback_settings.save},
+        {"label": word['empty'], "cmd": ''},
+        {"label": word['empty'], "cmd": ''}
     ]);
 
     playback_settings.init_header_path(get_word('playback_settings_title'));
@@ -154,13 +167,13 @@
 
     module.playback_settings = playback_settings;
 
-    if (!module.settings_sub){
+    if (!module.settings_sub) {
         module.settings_sub = [];
     }
 
     module.settings_sub.push({
-        "title" : get_word('playback_settings_title'),
-        "cmd"   : function(){
+        "title": get_word('playback_settings_title'),
+        "cmd": function () {
             main_menu.hide();
             module.playback_settings.show();
         }

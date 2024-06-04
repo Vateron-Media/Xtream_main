@@ -12,7 +12,7 @@
 
         parent.prof.themes = parent.prof.themes || [];
 
-        parent.prof.themes.map(function(theme){
+        parent.prof.themes.map(function (theme) {
             themes_select.push(theme.id);
             themes_select.push(theme.name);
         });
@@ -21,11 +21,13 @@
 
         var mid = menuT.length + 2;
         var pread = [0, 1, 2];
-        var read = {result: [
-            parent.prof.show_after_loading,
-            parent.prof.play_in_preview_by_ok,
-            parent.prof.user_theme
-        ]};
+        var read = {
+            result: [
+                parent.prof.show_after_loading,
+                parent.prof.play_in_preview_by_ok,
+                parent.prof.user_theme
+            ]
+        };
 
         function onLoad() {
             sload();
@@ -35,7 +37,7 @@
             document.getElementById("i4").value = parent.t('OK');
             document.getElementById("i5").value = parent.t('Cancel');
 
-            if (parent.prof.play_in_preview_by_ok){
+            if (parent.prof.play_in_preview_by_ok) {
                 document.getElementById('i2').setAttribute('checked', 'checked');
             }
         }
@@ -43,9 +45,9 @@
         function submit() {
 
             var save_data = {
-                "show_after_loading"    : document.getElementById("i1").value,
-                "play_in_preview_by_ok" : document.getElementById("i2").checked,
-                "theme"                 : document.getElementById("i3").value
+                "show_after_loading": document.getElementById("i1").value,
+                "play_in_preview_by_ok": document.getElementById("i2").checked,
+                "theme": document.getElementById("i3").value
             };
 
             parent.rebut = document.getElementById("i3").value != parent.prof.user_theme;

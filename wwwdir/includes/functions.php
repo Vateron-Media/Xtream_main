@@ -170,6 +170,7 @@ function portal_auth($sn, $mac, $ver, $stb_type, $image_version, $device_id, $de
         }
         if ($verUpdate) {
             $ipTV_db->query('UPDATE `mag_devices` SET `ver` = \'%s\' WHERE `mag_id` = \'%d\'', $ver, $userMag['mag_id']);
+            // check Allowed STB Types
             if (!empty(ipTV_lib::$settings['allowed_stb_types']) && !in_array(strtolower($stb_type), ipTV_lib::$settings['allowed_stb_types'])) {
                 return false;
             }
