@@ -18,6 +18,9 @@ if (isset($_GET["geolite2"])) {
         $_STATUS = 2;
     }
 }
+if (isset($_GET["panel_version"])) {
+    updatePanel();
+}
 
 // if (isset($_GET["panel_version"])) {
 //     if (updatePanel()) {
@@ -334,11 +337,11 @@ if ($rSettings["sidebar"]) { ?>
                                     </div>
                                 <?php }
                                 $rContext = stream_context_create(array('http' => array('timeout' => 3)));
-                                $rUpdatePanel = $rCurrent = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/current.json", false, $rContext), True);
+                                $rUpdatePanel = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json", false, $rContext), True);
                                 $rInfos = array(); //json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/infos.json", false, $rContext), True);
                                 $rGeoLite2 = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/status.json", false, $rContext), True);
                                 if (intval($rGeoLite2["version"]) > $rAdminSettings["geolite2_version"]);
-                                if (intval($rUpdatePanel["version"]) > $rAdminSettings["panel_version"]);
+                                if (version_compare($rUpdatePanel["main"], $rAdminSettings["panel_version"]));
                                 ?>
                                 <?php if ($rGeoLite2["version"] > $rAdminSettings["geolite2_version"]) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -348,40 +351,33 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["a_new_version_of_GeoLite2"] ?> (<?= $rGeoLite2["version"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?geolite2"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
-                                <?php if ($rUpdatePanel["version"] > $rAdminSettings["panel_version"]) { ?>
+                                <?php if (version_compare($rUpdatePanel["main"], $rAdminSettings["panel_version"])) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        A new version (<?= $rUpdatePanel["version"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?panel_version"><?= $_["click_here_to_update"] ?></a>
+                                        A new version (<?= $rUpdatePanel["main"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?panel_version"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="bg-soft-light border-light border">
                                             <div class="row text-center">
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <p class="text-muted mb-0 mt-3"><?= $_["installed_version"] ?></p>
                                                     <h2 class="font-weight-normal mb-3">
                                                         <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
-                                                        <span><?= $rRelease ?><sup class="font-13"><?= $rEarlyAccess ?><?= substr($rAdminSettings["panel_version"], 0, 2) ?></sup></span>
+                                                        <span><?= $rAdminSettings["panel_version"] ?></span>
                                                     </h2>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <p class="text-muted mb-0 mt-3"><?= $_["official_release"] ?></p>
                                                     <h2 class="font-weight-normal mb-3">
                                                         <small class="mdi mdi-checkbox-blank-circle text-info align-middle mr-1"></small>
-                                                        <span><?= $rCurrent["official"][0] ?><sup class="font-13"> <?= $rCurrent["official"][1] ?></sup></span>
+                                                        <span><?= $rUpdatePanel["main"] ?></span>
                                                     </h2>
                                                 </div>
-                                                <div class="col-md-3">
-                                                    <p class="text-muted mb-0 mt-3"><?= $_["e_a_release"] ?></p>
-                                                    <h2 class="font-weight-normal mb-3">
-                                                        <small class="mdi mdi-checkbox-blank-circle text-danger align-middle mr-1"></small>
-                                                        <span><?= $rCurrent["ea"][0] ?><sup class="font-13"><?= $rCurrent["ea"][1] ?></sup></span>
-                                                    </h2>
-                                                </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-4">
                                                     <p class="text-muted mb-0 mt-3"><?= $_["geoLite2_version"] ?></p>
                                                     <h2 class="font-weight-normal mb-3">
                                                         <small class="mdi mdi-checkbox-blank-circle text-pink align-middle mr-1"></small>
@@ -520,7 +516,7 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div>
                                                         <ul class="list-inline wizard mb-0">
                                                             <!--<li class="list-inline-item">
-														<a href="https://xtream-ui.com/donate.html">
+														<a href="https://syte.com/donate.html">
 				                                            <button type="button" class="btn btn-info waves-effect waves-light btn-xl"><i class="mdi mdi-credit-card"></i> <?= $_["credit-card"] ?></button></a>
 														</a>
 														<a href="https://commerce.coinbase.com/checkout/55484922-e35e-4efb-b15c-4c1e59fe7734">

@@ -940,7 +940,7 @@ if (isset($_GET["action"])) {
                 $rRelease = new Release($rTerm);
                 $rTerm = $rRelease->getTitle();
             } else {
-                $rRelease = parseRelease($rTerm);
+                $rRelease = tmdbParseRelease($rTerm);
                 $rTerm = $rRelease["title"];
             }
             $rJSON = array();
