@@ -1169,55 +1169,50 @@ function GetStreamsFromUser($user_id, $types = array(), $category_id = null, $fa
     global $dev;
     $user_info = ipTV_streaming::GetUserInfo($user_id, null, null, true, true, false, $types, true);
     $streamSys = array();
-    $streamSys['streams'] = array();
+    $streamSys["streams"] = array();
     if (!empty($user_info)) {
         $key = 1;
-        foreach ($user_info['channels'] as $stream) {
-            $stream['number'] = ipTV_lib::$settings['channel_number_type'] == 'bouquet' ? $key++ : (string) $stream['number'];
-            if (!empty($category_id) && $stream['category_id'] != $category_id) {
-                continue;
-            }
-            if (empty($category_id) && $stream['is_adult'] == 1) {
-                continue;
-            }
-            if (!empty($stream_display_name) && !stristr($stream['stream_display_name'], $stream_display_name)) {
-                continue;
-            }
-            if (!empty($movie_properties['abc']) && $movie_properties['abc'] != '*' && strtoupper(substr($stream['stream_display_name'], 0, 1)) != $movie_properties['abc']) {
-                continue;
-            }
-            if (!empty($movie_properties['genre']) && $movie_properties['genre'] != '*' && $stream['category_id'] != $movie_properties['genre']) {
-                continue;
-            }
-            if (!empty($fav)) {
-                $existFav = false;
-                foreach ($types as $type) {
-                    if (!empty($dev['fav_channels'][$type]) && in_array($stream['id'], $dev['fav_channels'][$type])) {
-                        $existFav = true;
-                        break;
+        foreach ($user_info["channels"] as $stream) {
+            $stream["number"] = ipTV_lib::$settings["channel_number_type"] == "bouquet" ? $key++ : (string) $stream["number"];
+            if (!(!empty($category_id) && $stream["category_id"] != $category_id)) {
+                if (!(empty($category_id) && $stream["is_adult"] == 1)) {
+                    if (!(!empty($stream_display_name) && !stristr($stream["stream_display_name"], $stream_display_name))) {
+                        if (!(!empty($movie_properties["abc"]) && $movie_properties["abc"] != "*" && strtoupper(substr($stream["stream_display_name"], 0, 1)) != $movie_properties["abc"])) {
+                            if (!(!empty($movie_properties["genre"]) && $movie_properties["genre"] != "*" && $stream["category_id"] != $movie_properties["genre"])) {
+                                if (empty($fav)) {
+                                    $streamSys["streams"][$stream["id"]] = $stream;
+                                } else {
+                                    $existFav = false;
+                                    foreach ($types as $type) {
+                                        if (!empty($dev["fav_channels"][$type]) && in_array($stream["id"], $dev["fav_channels"][$type])) {
+                                            $existFav = true;
+                                        }
+                                    }
+                                    if ($existFav) {
+                                        $streamSys["streams"][$stream["id"]] = $stream;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-                if (!$existFav) {
-                    continue;
-                }
             }
-            $streamSys['streams'][$stream['id']] = $stream;
         }
         switch ($orderby) {
-            case 'name':
-                uasort($streamSys['streams'], 'sortArrayStreamName');
+            case "name":
+                uasort($streamSys["streams"], "sortArrayStreamName");
                 break;
-            case 'top':
-                uasort($streamSys['streams'], 'sortArrayStreamRating');
+            case "top":
+                uasort($streamSys["streams"], "sortArrayStreamRating");
                 break;
-            case 'rating':
-                uasort($streamSys['streams'], 'sortArrayStreamRating');
+            case "rating":
+                uasort($streamSys["streams"], "sortArrayStreamRating");
                 break;
-            case 'added':
-                uasort($streamSys['streams'], 'sortArrayStreamAdded');
+            case "added":
+                uasort($streamSys["streams"], "sortArrayStreamAdded");
                 break;
-            case 'number':
-                uasort($streamSys['streams'], 'sortArrayStreamNumber');
+            case "number":
+                uasort($streamSys["streams"], "sortArrayStreamNumber");
                 break;
         }
     }
@@ -1319,7 +1314,7 @@ function GetRadioOrderedList($category_id = null, $fav = null, $orderby = null) 
 }
 function GetOrderedList($category_id = null, $all = false, $fav = null, $orderby = null) {
     global $dev, $player, $ipTV_db;
-    $page = isset($_REQUEST['p']) ? intval($_REQUEST['p']) : 0;
+    $page = isset($_REQUEST["p"]) ? intval($_REQUEST["p"]) : 0;
     $page_items = 14;
     $default_page = false;
     $ch_idx = 0;
@@ -1330,9 +1325,9 @@ function GetOrderedList($category_id = null, $all = false, $fav = null, $orderby
             $page = 1;
         }
     }
-    $streamSys = GetStreamsFromUser($dev['user_id'], array('live', 'created_live'), $category_id, $fav, $orderby);
-    if ($default_page && array_key_exists($dev['last_itv_id'], $streamSys['streams'])) {
-        $ch_idx = array_search($dev['last_itv_id'], array_keys($streamSys['streams'])) + 1;
+    $streamSys = GetStreamsFromUser($dev["user_id"], array("live", "created_live"), $category_id, $fav, $orderby);
+    if ($default_page && array_key_exists($dev["last_itv_id"], $streamSys["streams"])) {
+        $ch_idx = array_search($dev["last_itv_id"], array_keys($streamSys["streams"])) + 1;
         $page = $ch_idx / $page_items;
         if (is_float($page)) {
             $page = ceil($page);
@@ -1341,36 +1336,103 @@ function GetOrderedList($category_id = null, $all = false, $fav = null, $orderby
             $page = 1;
         }
     }
-    $counter = count($streamSys['streams']);
+    $counter = count($streamSys["streams"]);
     if (!$all) {
-        $streamSys = array_slice($streamSys['streams'], ($page - 1) * $page_items, $page_items);
+        $streamSys = array_slice($streamSys["streams"], ($page - 1) * $page_items, $page_items);
     } else {
-        $streamSys = $streamSys['streams'];
+        $streamSys = $streamSys["streams"];
     }
     $epgInfo = '';
-    $data = array();
+    $datas = array();
     $index = 1;
-    foreach ($streamSys as $stream) {
-        if (ipTV_lib::$settings['mag_security'] == 0) {
-            if (!empty($stream['stream_source'])) {
-                $url = $player . json_decode($stream['stream_source'], true)[0];
+    foreach ($streamSys as $order_id => $stream) {
+        if (ipTV_lib::$settings["mag_security"] == 0) {
+            if (!empty($stream["stream_source"])) {
+                $url = $player . json_decode($stream["stream_source"], true)[0];
             } else {
-                if (!file_exists(TMP_DIR . 'new_rewrite') || ipTV_lib::$settings['mag_container'] == 'm3u8') {
-                    $url = $player . ipTV_lib::$StreamingServers[SERVER_ID]['site_url'] . "live/{$dev['username']}/{$dev['password']}/{$stream['id']}." . ipTV_lib::$settings['mag_container'];
+                if (!file_exists(TMP_DIR . "new_rewrite") || ipTV_lib::$settings["mag_container"] == "m3u8") {
+                    $url = $player . ipTV_lib::$StreamingServers[SERVER_ID]["site_url"] . "live/{$dev["username"]}/{$dev["password"]}/{$stream["id"]}." . ipTV_lib::$settings["mag_container"];
                 } else {
-                    $url = $player . ipTV_lib::$StreamingServers[SERVER_ID]['site_url'] . "{$dev['username']}/{$dev['password']}/{$stream['id']}";
+                    $url = $player . ipTV_lib::$StreamingServers[SERVER_ID]["site_url"] . "{$dev["username"]}/{$dev["password"]}/{$stream["id"]}";
                 }
             }
             $stream_source_st = 0;
         } else {
-            if (!empty($stream['stream_source'])) {
-                $url = $player . "http://localhost/ch/{$stream['id']}_" . json_decode($stream['stream_source'], true)[0];
+            if (!empty($stream["stream_source"])) {
+                $url = $player . "http://localhost/ch/{$stream["id"]}_" . json_decode($stream["stream_source"], true)[0];
             } else {
-                $url = $player . "http://localhost/ch/{$stream['id']}_";
+                $url = $player . "http://localhost/ch/{$stream["id"]}_";
             }
             $stream_source_st = 1;
         }
-        $data[] = array('id' => $stream['id'], 'name' => $stream['stream_display_name'], 'number' => (string) $stream['number'], 'censored' => $stream['is_adult'] == 1 ? '1' : '', 'cmd' => $url, 'cost' => '0', 'count' => '0', 'status' => 1, 'hd' => 0, 'tv_genre_id' => $stream['category_id'], 'base_ch' => '1', 'hd' => '0', 'xmltv_id' => !empty($stream['channel_id']) ? $stream['channel_id'] : '', 'service_id' => '', 'bonus_ch' => '0', 'volume_correction' => '0', 'mc_cmd' => '', 'enable_tv_archive' => $stream['tv_archive_duration'] > 0 ? 1 : 0, 'wowza_tmp_link' => '0', 'wowza_dvr' => '0', 'use_http_tmp_link' => "{$stream_source_st}", 'monitoring_status' => '1', 'enable_monitoring' => '0', 'enable_wowza_load_balancing' => '0', 'cmd_1' => '', 'cmd_2' => '', 'cmd_3' => '', 'logo' => $stream['stream_icon'], 'correct_time' => '0', 'nimble_dvr' => '0', 'allow_pvr' => (int) $stream['allow_record'], 'allow_local_pvr' => (int) $stream['allow_record'], 'allow_remote_pvr' => 0, 'modified' => '', 'allow_local_timeshift' => '1', 'nginx_secure_link' => "{$stream_source_st}", 'tv_archive_duration' => $stream['tv_archive_duration'] > 0 ? $stream['tv_archive_duration'] * 24 : 0, 'locked' => 0, 'lock' => $stream['is_adult'], 'fav' => in_array($stream['id'], $dev['fav_channels']['live']) ? 1 : 0, 'archive' => $stream['tv_archive_duration'] > 0 ? 1 : 0, 'genres_str' => '', 'cur_playing' => '[No channel info]', 'epg' => array(), 'open' => 1, 'cmds' => array(array('id' => (string) $stream['id'], 'ch_id' => (string) $stream['id'], 'priority' => '0', 'url' => $player . "http : //localhost/ch/{$stream['id']}_{$streamIdValue}", 'status' => '1', 'use_http_tmp_link' => "{$stream_source_st}", 'wowza_tmp_link' => '0', 'user_agent_filter' => '', 'use_load_balancing' => '0', 'changed' => '', 'enable_monitoring' => '0', 'enable_balancer_monitoring' => '0', 'nginx_secure_link' => "{$stream_source_st}", 'flussonic_tmp_link' => '0')), 'use_load_balancing' => 0, 'pvr' => (int) $stream['allow_record']);
+        $datas[] = array(
+            "id" => $stream["id"],
+            "name" => $stream["stream_display_name"],
+            "number" => (string) $stream["number"],
+            "censored" => $stream["is_adult"] == 1 ? "1" : '',
+            "cmd" => $url,
+            "cost" => "0",
+            "count" => "0",
+            "status" => 1,
+            "hd" => 0,
+            "tv_genre_id" => $stream["category_id"],
+            "base_ch" => "1",
+            "hd" => "0",
+            "xmltv_id" => !empty($stream["channel_id"]) ? $stream["channel_id"] : '',
+            "service_id" => '',
+            "bonus_ch" => "0",
+            "volume_correction" => "0",
+            "mc_cmd" => '',
+            "enable_tv_archive" => $stream["tv_archive_duration"] > 0 ? 1 : 0,
+            "wowza_tmp_link" => "0",
+            "wowza_dvr" => "0",
+            "use_http_tmp_link" => "{$stream_source_st}",
+            "monitoring_status" => "1",
+            "enable_monitoring" => "0",
+            "enable_wowza_load_balancing" => "0",
+            "cmd_1" => '',
+            "cmd_2" => '',
+            "cmd_3" => '',
+            "logo" => $stream["stream_icon"],
+            "correct_time" => "0",
+            "nimble_dvr" => "0",
+            "allow_pvr" => (int) $stream["allow_record"],
+            "allow_local_pvr" => (int) $stream["allow_record"],
+            "allow_remote_pvr" => 0,
+            "modified" => '',
+            "allow_local_timeshift" => "1",
+            "nginx_secure_link" => "{$stream_source_st}",
+            "tv_archive_duration" => $stream["tv_archive_duration"] > 0 ? $stream["tv_archive_duration"] * 24 : 0,
+            "locked" => 0,
+            "lock" => $stream["is_adult"],
+            "fav" => in_array(
+                $stream["id"],
+                $dev["fav_channels"]["live"]
+            ) ? 1 : 0,
+            "archive" => $stream["tv_archive_duration"] > 0 ? 1 : 0,
+            "genres_str" => '',
+            "cur_playing" => "[No channel info]",
+            "epg" => array(),
+            "open" => 1,
+            "cmds" => array(array(
+                "id" => (string) $stream["id"],
+                "ch_id" => (string) $stream["id"],
+                "priority" => "0",
+                "url" => $player . $url,
+                "status" => "1",
+                "use_http_tmp_link" => "{$stream_source_st}",
+                "wowza_tmp_link" => "0",
+                "user_agent_filter" => '',
+                "use_load_balancing" => "0",
+                "changed" => '',
+                "enable_monitoring" => "0",
+                "enable_balancer_monitoring" => "0",
+                "nginx_secure_link" => "{$stream_source_st}",
+                "flussonic_tmp_link" => "0"
+            )),
+            "use_load_balancing" => 0,
+            "pvr" => (int) $stream["allow_record"]
+        );
     }
     if ($default_page) {
         $cur_page = $page;
@@ -1379,7 +1441,7 @@ function GetOrderedList($category_id = null, $all = false, $fav = null, $orderby
         $cur_page = 0;
         $selected_item = 0;
     }
-    $output = array('js' => array('total_items' => $counter, 'max_page_items' => $page_items, 'selected_item' => $selected_item, 'cur_page' => $all ? 0 : $cur_page, 'data' => $data));
+    $output = array("js" => array("total_items" => $counter, "max_page_items" => $page_items, "selected_item" => $selected_item, "cur_page" => $all ? 0 : $cur_page, "data" => $datas));
     return json_encode($output, JSON_PARTIAL_OUTPUT_ON_ERROR);
 }
 function getDataTable() {
