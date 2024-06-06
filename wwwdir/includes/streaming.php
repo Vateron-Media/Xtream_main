@@ -8,6 +8,13 @@ class ipTV_streaming {
         self::$ipTV_db->query("SELECT `ip` FROM `rtmp_ips`");
         return array_merge(array("127.0.0.1"), array_map("gethostbyname", ipTV_lib::array_values_recursive(self::$ipTV_db->get_rows())));
     }
+    /** 
+     * startFFMPEGSegment function starts a new FFMPEG segment with specified data and segment file. 
+     * 
+     * @param array $data An array containing data for the FFMPEG segment. 
+     * @param string $segment_file The path to the segment file to be processed. 
+     * @return bool Returns true if the FFMPEG segment is successfully started. 
+     */
     public static function startFFMPEGSegment($data, $segment_file) {
         if (empty($data["xy_offset"])) {
             $x = rand(150, 380);
@@ -337,7 +344,7 @@ class ipTV_streaming {
             return false;
         }
         $user_info = self::$ipTV_db->get_row();
-        if (empty($username) && empty($password) && !empty($user_id)){
+        if (empty($username) && empty($password) && !empty($user_id)) {
             $username = $user_info["username"];
             $password = $user_info["password"];
         }
@@ -630,6 +637,13 @@ class ipTV_streaming {
         $data = array('user_id' => $user_id, 'stream_id' => $stream_id, 'action' => $action, 'query_string' => htmlentities($_SERVER['QUERY_STRING']), 'user_agent' => $user_agent, 'user_ip' => $user_ip, 'time' => time(), 'extra_data' => $data);
         file_put_contents(TMP_DIR . 'client_request.log', base64_encode(json_encode($data)) . '', FILE_APPEND);
     }
+    /** 
+     * GetSegmentsOfPlaylist function retrieves segments of a playlist file based on specified prebuffer value. 
+     * 
+     * @param string $playlist The path to the playlist file. 
+     * @param int $prebuffer The prebuffer value to determine the number of segments to retrieve. 
+     * @return mixed Returns an array of segments if prebuffer is greater than 0, otherwise returns a single segment. 
+     */
     public static function GetSegmentsOfPlaylist($playlist, $prebuffer = 0) {
         if (file_exists($playlist)) {
             $source = file_get_contents($playlist);
