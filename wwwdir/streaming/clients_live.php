@@ -216,7 +216,7 @@ if ($user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, f
                 }
                 break;
             default:
-            // generate ts stream
+                // generate ts stream
                 $ipTV_db->query("INSERT INTO `user_activity_now` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES('%d','%d','%d','%s','%s','%s','%d','%d','%s','%s','%s')", $user_info["id"], $stream_id, SERVER_ID, $user_agent, $user_ip, $extension, getmypid(), $date, $geoip_country_code, $user_info["con_isp_name"], $external_device);
                 $activity_id = $ipTV_db->last_insert_id();
                 $connection_speed_file = TMP_DIR . $activity_id . ".con";
@@ -282,7 +282,7 @@ if ($user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, f
 
                                     $final_time = time() - $time_start;
                                     if ($final_time <= 0) {
-                                        $final_time = 0.05;
+                                        $final_time = 0.1;
                                     }
 
                                     // Calculate and store connection speed
