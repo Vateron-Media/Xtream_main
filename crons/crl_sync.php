@@ -21,11 +21,10 @@ function loadCron() {
     } else {
         $Query = rtrim(parseLogs($logFile), ',');
 
-        print_r(parseLogs($logFile));
         if (!empty($Query)) {
             $ipTV_db->simple_query("INSERT INTO `client_logs` (`stream_id`,`user_id`,`client_status`,`query_string`,`user_agent`,`ip`,`extra_data`,`date`) VALUES " . $Query);
         }
-        // unlink($logFile);
+        unlink($logFile);
     }
 }
 function parseLogs($logFile) {
