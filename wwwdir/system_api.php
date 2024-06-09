@@ -63,7 +63,7 @@ switch ($action) {
             switch ($function) {
                 case 'start':
                     foreach ($stream_ids as $stream_id) {
-                        ipTV_stream::startStream($stream_id, true);
+                        ipTV_stream::startMonitor($stream_id, true);
                         usleep(50000);
                     }
                     echo json_encode(array('result' => true));

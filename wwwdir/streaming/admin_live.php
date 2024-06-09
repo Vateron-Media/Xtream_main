@@ -26,8 +26,8 @@ if ($ipTV_db->num_rows() > 0) {
     $playlist = STREAMS_PATH . $stream_id . "_.m3u8";
     if (!ipTV_streaming::CheckPidChannelM3U8Exist($channel_info["pid"], $stream_id)) {
         if ($channel_info["on_demand"] == 1) {
-            if (!ipTV_streaming::CheckPidExist($channel_info["monitor_pid"], $stream_id)) {
-                ipTV_stream::startStream($stream_id);
+            if (!ipTV_streaming::CheckMonitorRunning($channel_info["monitor_pid"], $stream_id)) {
+                ipTV_stream::startMonitor($stream_id);
             }
         } else {
             http_response_code(403);

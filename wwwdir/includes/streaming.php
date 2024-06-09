@@ -709,23 +709,23 @@ class ipTV_streaming {
         }
     }
     /** 
-     * Check if a process with a given PID exists and is associated with a specific stream ID. 
+     * Checks if a monitor process is running with the specified PID and stream ID. 
      * 
-     * @param int $pid The process ID to check. 
-     * @param int $stream_id The stream ID to match against. 
-     * @param string $ffmpeg_path The path to the ffmpeg executable (default is PHP_BIN). 
-     * @return bool True if a matching process is found, false otherwise. 
+     * @param int $pid The process ID of the monitor. 
+     * @param int $stream_id The stream ID to check against. 
+     * @param string $ffmpeg_path The path to the FFmpeg executable (default is PHP_BIN). 
+     * @return bool Returns true if the monitor process is running with the specified PID and stream ID, false otherwise. 
      */
-    public static function CheckPidExist($pid, $stream_id, $ffmpeg_path = PHP_BIN) {
-        if (empty($pid)) {
-            return false;
-        }
-        clearstatcache(true);
-        if (file_exists('/proc/' . $pid) && is_readable('/proc/' . $pid . '/exe') && basename(readlink('/proc/' . $pid . '/exe')) == basename($ffmpeg_path)) {
-            $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
-            if ($value == "XtreamCodes[{$stream_id}]") {
-                return true;
+    public static function CheckMonitorRunning($pid, $stream_id, $ffmpeg_path = PHP_BIN) {
+        if (!empty($pid)) {
+            clearstatcache(true);
+            if (file_exists('/proc/' . $pid) && is_readable('/proc/' . $pid . '/exe') && basename(readlink('/proc/' . $pid . '/exe')) == basename($ffmpeg_path)) {
+                $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
+                if ($value == "XtreamCodes[{$stream_id}]") {
+                    return true;
+                }
             }
+            return false;
         }
         return false;
     }

@@ -127,7 +127,7 @@ class ipTV_stream {
      * @param int $stream_delay The boolean value indicating whether to delay the stream. 
      * @return void 
      */
-    static function startStream(int $stream_id, int $stream_delay  = 0) {
+    static function startMonitor(int $stream_id, int $stream_delay  = 0) {
         // Define the lock file for the stream
         $stream_lock_file = STREAMS_PATH . $stream_id . '.lock';
         // Open the lock file for writing

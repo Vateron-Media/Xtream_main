@@ -155,8 +155,8 @@ if ($user_info) {
         $playlist = STREAMS_PATH . $stream_id . '_.m3u8';
         if (!ipTV_streaming::ps_running($channel_info["pid"], FFMPEG_PATH)) {
             if ($channel_info["on_demand"] == 1) {
-                if (!ipTV_streaming::CheckPidExist($channel_info["monitor_pid"], $stream_id)) {
-                    ipTV_stream::startStream($stream_id);
+                if (!ipTV_streaming::CheckMonitorRunning($channel_info["monitor_pid"], $stream_id)) {
+                    ipTV_stream::startMonitor($stream_id);
                 }
             } else {
                 ipTV_streaming::ShowVideo($user_info["is_restreamer"], 'show_not_on_air_video', 'not_on_air_video_path', $extension);
