@@ -6,6 +6,12 @@ header('cache-control: no-store, no-cache, must-revalidate');
 header('cache-control: post-check=0, pre-check=0', false);
 header('Pragma: no-cache');
 @header('Content-type: text/javascript');
+
+// config
+// the lifetime of the mag authorization key
+$life_mag_key = 7200;
+//-----------
+
 $user_ip = ipTV_streaming::getUserIP();
 $req_type = !empty($_REQUEST['type']) ? $_REQUEST['type'] : null;
 $req_action = !empty($_REQUEST['action']) ? $_REQUEST['action'] : null;
@@ -296,7 +302,7 @@ switch ($req_type) {
                 list($stream_id, $streamIdValue) = explode('_', substr($cmd, strpos($cmd, $value) + strlen($value)));
                 if (empty($streamIdValue)) {
                     $play_token = ipTV_lib::GenerateString();
-                    $ipTV_db->query('UPDATE `users` SET `play_token` = \'%s\' WHERE `id` = \'%d\'', $play_token . ':' . (time() + 10) . ':' . $stream_id, $dev['user_id']);
+                    $ipTV_db->query('UPDATE `users` SET `play_token` = \'%s\' WHERE `id` = \'%d\'', $play_token . ':' . (time() + $life_mag_key) . ':' . $stream_id, $dev['user_id']);
                     if (!file_exists(TMP_DIR . 'new_rewrite') || ipTV_lib::$settings['mag_container'] == 'm3u8') {
                         $url = $player . ipTV_lib::$StreamingServers[SERVER_ID]['site_url'] . "live/{$dev['username']}/{$dev['password']}/{$stream_id}." . ipTV_lib::$settings['mag_container'] . '?play_token=' . $play_token;
                     } else {

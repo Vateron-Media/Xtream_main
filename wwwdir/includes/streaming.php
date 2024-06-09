@@ -334,8 +334,8 @@ class ipTV_streaming {
         return false;
     }
     // checked
-    public static function GetUserInfo($user_id = null, $username = null, $password = null, $get_channel_IDS = false, $getBouquetInfo = false, $get_cons = false, $type = array(), $is_adult = false, $user_ip = '', $user_agent = '', $a8851ef591e0cdd9aad6ec4f7bd4b160 = array(), $play_token = '', $stream_id = 0) {
-        if (empty($user_id)) {
+    public static function GetUserInfo($user_id = null, $username = null, $password = null, $get_channel_IDS = false, $getBouquetInfo = false, $get_cons = false, $type = array(), $is_adult = false, $user_ip = '', $user_agent = '', $a8851ef591e0cdd9aad6ec4f7bd4b160 = array(), $play_token = '', $stream_id = 0, $segment_name = "") {
+        if (empty($user_id) && !is_null($username) && !is_null($password)) {
             self::$ipTV_db->query('SELECT * FROM `users` WHERE `username` = \'%s\' AND `password` = \'%s\' LIMIT 1', $username, $password);
         } else {
             self::$ipTV_db->query('SELECT * FROM `users` WHERE `id` = \'%d\'', $user_id);
@@ -344,6 +344,7 @@ class ipTV_streaming {
             return false;
         }
         $user_info = self::$ipTV_db->get_row();
+
         if (empty($username) && empty($password) && !empty($user_id)) {
             $username = $user_info["username"];
             $password = $user_info["password"];
@@ -351,13 +352,17 @@ class ipTV_streaming {
         if (ipTV_lib::$settings["case_sensitive_line"] == 1 && !empty($username) && !empty($password)) {
             if ($user_info["username"] == $username || $user_info["password"] == $password) {
                 if (ipTV_lib::$settings["county_override_1st"] == 1 && empty($user_info["forced_country"]) && !empty($user_ip) && $user_info["max_connections"] == 1) {
-                    $user_info["forced_country"] = geoip_country_code_by_name($user_ip);
+                    $user_info["forced_country"] = self::getIPInfo($user_ip)['registered_country']['iso_code'];
                     self::$ipTV_db->query("UPDATE `users` SET `forced_country` = '%s' WHERE `id` = '%d'", $user_info["forced_country"], $user_info["id"]);
                 }
-                if ($user_info['is_mag'] == 1 && ipTV_lib::$settings['mag_security'] == 1) {
+                // Check if user is a mag and mag security is enabled
+                if ($user_info['is_mag'] == 1 && ipTV_lib::$settings['mag_security'] == 1 && $segment_name == "") {
+                    // Check if play token is not empty and match with provided token
                     if (!empty($user_info['play_token']) && !empty($play_token)) {
-                        list($token, $B96676565d19827b6e2eda6db94167c0, $cced8089119eaa83c17b19ea19d9af22) = explode(':', $user_info['play_token']);
-                        if (!($token == $play_token && $B96676565d19827b6e2eda6db94167c0 >= time() && $cced8089119eaa83c17b19ea19d9af22 == $stream_id)) {
+                        // Extract token, timestamp, and stream ID from play token
+                        list($token, $timestamp, $stream_id) = explode(':', $user_info['play_token']);
+                        // Validate token, timestamp, and stream ID
+                        if (!($token == $play_token && $timestamp >= time() && $stream_id == $stream_id)) {
                             $user_info['mag_invalid_token'] = true;
                         }
                     } else {
@@ -399,10 +404,11 @@ class ipTV_streaming {
                 $user_info["con_isp_name"] = $user_info["con_isp_type"] = null;
                 $user_info["isp_is_server"] = $user_info["isp_violate"] = 0;
                 if (ipTV_lib::$settings['show_isps'] == 1 && !empty($user_ip)) {
-                    $isp_lock = self::apiGetISPName($user_ip, $user_agent);
+                    $isp_lock = self::getISP($user_ip);
+                    //isp bad code. It will need to be fixed
                     if (is_array($isp_lock)) {
-                        if (!empty($isp_lock["isp_info"]["description"])) {
-                            $user_info["con_isp_name"] = $isp_lock["isp_info"]["description"];
+                        if (!empty($isp_lock['isp'])) {
+                            $user_info["con_isp_name"] = $isp_lock["isp"];
                             $IspIsBlocked = self::checkIspIsBlocked($user_info["con_isp_name"]);
                             if ($user_info["is_restreamer"] == 0 && ipTV_lib::$settings["block_svp"] == 1 && !empty($isp_lock["isp_info"]["is_server"])) {
                                 $user_info["isp_is_server"] = $isp_lock["isp_info"]["is_server"];
@@ -634,7 +640,7 @@ class ipTV_streaming {
         }
         $user_agent = !empty($_SERVER['HTTP_USER_AGENT']) ? htmlentities($_SERVER['HTTP_USER_AGENT']) : '';
         $query_string = empty($_SERVER['QUERY_STRING']) ? '' : $_SERVER['QUERY_STRING'];
-        $data = array('user_id' => $user_id, 'stream_id' => $stream_id, 'action' => $action, 'query_string' => htmlentities($_SERVER['QUERY_STRING']), 'user_agent' => $user_agent, 'user_ip' => $user_ip, 'time' => time(), 'extra_data' => $data);
+        $data = array('user_id' => $user_id, 'stream_id' => $stream_id, 'action' => $action, 'query_string' => htmlentities($query_string), 'user_agent' => $user_agent, 'user_ip' => $user_ip, 'time' => time(), 'extra_data' => $data);
         file_put_contents(TMP_DIR . 'client_request.log', base64_encode(json_encode($data)) . '', FILE_APPEND);
     }
     /** 
@@ -799,6 +805,22 @@ class ipTV_streaming {
     public static function getUserIP() {
         return !empty(ipTV_lib::$settings['get_real_ip_client']) && !empty($_SERVER[ipTV_lib::$settings['get_real_ip_client']]) ? $_SERVER[ipTV_lib::$settings['get_real_ip_client']] : $_SERVER['REMOTE_ADDR'];
     }
+    public static function getIPInfo($user_ip) {
+        if (!empty($user_ip)) {
+            if (!file_exists(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_geo2')) {
+                $rGeoIP = new Reader(GEOIP2_FILENAME);
+                $rResponse = $rGeoIP->get($user_ip);
+                $rGeoIP->close();
+                if (!$rResponse) {
+                } else {
+                    file_put_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_geo2', json_encode($rResponse));
+                }
+                return $rResponse;
+            }
+            return json_decode(file_get_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_geo2'), true);
+        }
+        return false;
+    }
     public static function GetStreamBitrate($type, $path, $force_duration = null) {
         clearstatcache();
         if (!file_exists($path)) {
@@ -838,20 +860,24 @@ class ipTV_streaming {
         }
         return $bitrate > 0 ? $bitrate : false;
     }
-    public static function apiGetISPName($user_ip, $user_agent) {
-        if (empty($user_ip)) {
-            return false;
-        }
-        if (file_exists(TMP_DIR . md5($user_ip))) {
-            return json_decode(file_get_contents(TMP_DIR . md5($user_ip)), true);
-        }
-        $ctx = stream_context_create(array('http' => array('timeout' => 2)));
-        $response = @file_get_contents("http://api.xtream-codes.com/api.php?ip={$user_ip}&user_agent=" . base64_encode($user_agent) . '&block_svp=' . ipTV_lib::$settings['block_svp'], false, $ctx);
-        if (!empty($response)) {
-            file_put_contents(TMP_DIR . md5($user_ip), $response);
-        }
-        return json_decode($response, true);
-    }
+    public static function getISP($user_ip)
+	{
+		if (!empty($user_ip)) {
+			$rResponse = (file_exists(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp') ? json_decode(file_get_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp'), true) : null);
+			if (is_array($rResponse)) {
+			} else {
+				$rGeoIP = new Reader(GEOIP2_FILENAME);
+				$rResponse = $rGeoIP->get($user_ip);
+				$rGeoIP->close();
+				if (!is_array($rResponse)) {
+				} else {
+					file_put_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp', json_encode($rResponse));
+				}
+			}
+			return $rResponse;
+		}
+		return false;
+	}
     public static function checkIspIsBlocked($con_isp_name) {
         foreach (ipTV_lib::$customISP as $isp) {
             if (strtolower($con_isp_name) == strtolower($isp['isp'])) {

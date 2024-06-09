@@ -19,6 +19,7 @@ $close_connection = true;
 $connection_speed_file = null;
 $user_ip = ipTV_streaming::getUserIP();
 $user_agent = empty($_SERVER["HTTP_USER_AGENT"]) ? '' : htmlentities(trim($_SERVER["HTTP_USER_AGENT"]));
+$rSegmentName = empty(ipTV_lib::$request["segment"]) ? '' : ipTV_lib::$request["segment"];
 $external_device = null;
 $username = ipTV_lib::$request["username"];
 $password = ipTV_lib::$request["password"];
@@ -29,8 +30,11 @@ if (ipTV_lib::$settings["use_buffer"] == 0) {
     header('X-Accel-Buffering: no');
 }
 header('Access-Control-Allow-Origin: *');
+
 $play_token = empty(ipTV_lib::$request["play_token"]) ? null : ipTV_lib::$request["play_token"];
-if ($user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, false, true, array(), false, $user_ip, $user_agent, array(), $play_token, $stream_id)) {
+
+$user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, false, true, array(), false, $user_ip, $user_agent, array(), $play_token, $stream_id, $rSegmentName);
+if ($user_info) {
     if (isset($user_info["mag_invalid_token"])) {
         ipTV_streaming::ClientLog($stream_id, $user_info["id"], 'MAG_TOKEN_INVALID', $user_ip);
         die;
@@ -357,6 +361,7 @@ function shutdown() {
         CheckFlood();
         http_response_code(401);
     }
+
     $ipTV_db->close_mysql();
     if ($activity_id != 0 && $close_connection) {
         ipTV_streaming::CloseAndTransfer($activity_id);
