@@ -32,7 +32,6 @@ if (ipTV_lib::$settings["use_buffer"] == 0) {
 header('Access-Control-Allow-Origin: *');
 
 $play_token = empty(ipTV_lib::$request["play_token"]) ? null : ipTV_lib::$request["play_token"];
-
 $user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, false, true, array(), false, $user_ip, $user_agent, array(), $play_token, $stream_id, $rSegmentName);
 if ($user_info) {
     if (isset($user_info["mag_invalid_token"])) {
@@ -361,8 +360,9 @@ function shutdown() {
         CheckFlood();
         http_response_code(401);
     }
-
-    $ipTV_db->close_mysql();
+    if (is_object($ipTV_db)) {
+        $ipTV_db->close_mysql();
+    }
     if ($activity_id != 0 && $close_connection) {
         ipTV_streaming::CloseAndTransfer($activity_id);
         ipTV_streaming::SaveClosedConnection(SERVER_ID, $user_info["id"], $stream_id, $date, $user_agent, $user_ip, $extension, $geoip_country_code, $user_info["con_isp_name"], $external_device);

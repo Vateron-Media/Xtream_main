@@ -395,4 +395,24 @@ class ipTV_lib {
         }
         return $arrayValues;
     }
+    public static function check_cron($rFilename, $rTime = 1800)
+	{
+		if (!file_exists($rFilename)) {
+		} else {
+			$rPID = trim(file_get_contents($rFilename));
+			if (!file_exists('/proc/' . $rPID)) {
+			} else {
+				if (time() - filemtime($rFilename) >= $rTime) {
+					if (!(is_numeric($rPID) && 0 < $rPID)) {
+					} else {
+						posix_kill($rPID, 9);
+					}
+				} else {
+					exit('Running...');
+				}
+			}
+		}
+		file_put_contents($rFilename, getmypid());
+		return false;
+	}
 }

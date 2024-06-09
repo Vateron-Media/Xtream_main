@@ -634,14 +634,14 @@ class ipTV_streaming {
         file_put_contents(TMP_DIR . 'connections', base64_encode(json_encode($activity_id)) . '', FILE_APPEND | LOCK_EX);
     }
     # create clientlog file 
-    public static function ClientLog($stream_id, $user_id, $action, $user_ip, $data = '', $clientLogsSave = false) {
-        if (ipTV_lib::$settings['client_logs_save'] == 0 && !$clientLogsSave) {
-            return;
+    public static function ClientLog($streamId, $userId, $action, $ip, $data = '', $bypass = false) {
+        if (ipTV_lib::$settings['client_logs_save'] != 0 || $bypass) {
+            $user_agent = (!empty($_SERVER['HTTP_USER_AGENT']) ? htmlentities($_SERVER['HTTP_USER_AGENT']) : '');
+            $data = array('user_id' => $userId, 'stream_id' => $streamId, 'action' => $action, 'query_string' => htmlentities($_SERVER['QUERY_STRING']), 'user_agent' => $user_agent, 'user_ip' => $ip, 'time' => time(), 'extra_data' => $data);
+            file_put_contents(TMP_DIR . 'client_request.log', base64_encode(json_encode($data)) . "\n", FILE_APPEND);
+        } else {
+            return null;
         }
-        $user_agent = !empty($_SERVER['HTTP_USER_AGENT']) ? htmlentities($_SERVER['HTTP_USER_AGENT']) : '';
-        $query_string = empty($_SERVER['QUERY_STRING']) ? '' : $_SERVER['QUERY_STRING'];
-        $data = array('user_id' => $user_id, 'stream_id' => $stream_id, 'action' => $action, 'query_string' => htmlentities($query_string), 'user_agent' => $user_agent, 'user_ip' => $user_ip, 'time' => time(), 'extra_data' => $data);
-        file_put_contents(TMP_DIR . 'client_request.log', base64_encode(json_encode($data)) . '', FILE_APPEND);
     }
     /** 
      * GetSegmentsOfPlaylist function retrieves segments of a playlist file based on specified prebuffer value. 
@@ -860,24 +860,23 @@ class ipTV_streaming {
         }
         return $bitrate > 0 ? $bitrate : false;
     }
-    public static function getISP($user_ip)
-	{
-		if (!empty($user_ip)) {
-			$rResponse = (file_exists(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp') ? json_decode(file_get_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp'), true) : null);
-			if (is_array($rResponse)) {
-			} else {
-				$rGeoIP = new Reader(GEOIP2_FILENAME);
-				$rResponse = $rGeoIP->get($user_ip);
-				$rGeoIP->close();
-				if (!is_array($rResponse)) {
-				} else {
-					file_put_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp', json_encode($rResponse));
-				}
-			}
-			return $rResponse;
-		}
-		return false;
-	}
+    public static function getISP($user_ip) {
+        if (!empty($user_ip)) {
+            $rResponse = (file_exists(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp') ? json_decode(file_get_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp'), true) : null);
+            if (is_array($rResponse)) {
+            } else {
+                $rGeoIP = new Reader(GEOIP2_FILENAME);
+                $rResponse = $rGeoIP->get($user_ip);
+                $rGeoIP->close();
+                if (!is_array($rResponse)) {
+                } else {
+                    file_put_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp', json_encode($rResponse));
+                }
+            }
+            return $rResponse;
+        }
+        return false;
+    }
     public static function checkIspIsBlocked($con_isp_name) {
         foreach (ipTV_lib::$customISP as $isp) {
             if (strtolower($con_isp_name) == strtolower($isp['isp'])) {
