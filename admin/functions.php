@@ -1,7 +1,7 @@
 <?php
 include_once("/home/xtreamcodes/iptv_xtream_codes/admin/HTMLPurifier.standalone.php");
 
-$rRelease = "1.1.11";       // Official Release Number
+$rRelease = '1.1.11';       // Official Release Number
 $rTimeout = 60;             // Seconds Timeout for Functions & Requests
 $rSQLTimeout = 5;           // Max execution time for MySQL queries.
 $rDebug = False;
@@ -1972,8 +1972,10 @@ function updateTables() {
         $db->query("ALTER TABLE `streaming_servers` ADD COLUMN `http_isp_port` int(11) NOT NULL DEFAULT '8805';");
     }
     $rResult = $db->query("SELECT * FROM `admin_settings` WHERE `type` = 'panel_version';");
+
     if (($rResult) && ($rResult->num_rows == 0)) {
-        $db->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('panel_version', $rRelease);");
+        $release = '\'' . $rRelease . '\'';
+        $db->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('panel_version', $release);");
     }
     //priority backup
     //$db->query("UPDATE settings SET priority_backup = 1;");
