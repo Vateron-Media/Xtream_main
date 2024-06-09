@@ -1,7 +1,7 @@
 <?php
 include_once("/home/xtreamcodes/iptv_xtream_codes/admin/HTMLPurifier.standalone.php");
 
-$rRelease = "1.1.10";       // Official Release Number
+$rRelease = "1.1.11";       // Official Release Number
 $rTimeout = 60;             // Seconds Timeout for Functions & Requests
 $rSQLTimeout = 5;           // Max execution time for MySQL queries.
 $rDebug = False;
