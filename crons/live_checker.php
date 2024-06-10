@@ -14,7 +14,7 @@ if (0 < $ipTV_db->num_rows()) {
     $streams = $ipTV_db->get_rows();
     foreach ($streams as $stream) {
         $stream_ids[] = $stream["stream_id"];
-        if (ipTV_streaming::CheckPidExist($stream["monitor_pid"], $stream["stream_id"])) {
+        if (ipTV_streaming::CheckMonitorRunning($stream["monitor_pid"], $stream["stream_id"])) {
             if ($stream["on_demand"] == 1 && $stream["online_clients"] == 0) {
                 ipTV_stream::stopStream($stream["stream_id"], true);
             } else {
@@ -35,7 +35,7 @@ if (0 < $ipTV_db->num_rows()) {
                 }
             }
         } else {
-            ipTV_stream::startStream($stream["stream_id"]);
+            ipTV_stream::startMonitor($stream["stream_id"]);
             usleep(50000);
         }
     }
