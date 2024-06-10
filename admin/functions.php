@@ -91,10 +91,10 @@ function updatePanel() {
 //                 exec('rm -rf /tmp/update/XtreamUI-master');
 //                 exec('rm /tmp/update.zip');
 //                 exec('rm -rf /tmp/update');
-//                 exec('wget https://github.com/Vateron-Media/Xtream_Update/raw/main/GeoLite2.mmdb -O /home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb -o /dev/null');
+//                 exec('wget https://github.com/Vateron-Media/Xtream_Update/raw/main/GeoLite2.mmdb -O /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb -o /dev/null');
 //                 exec('chown -R xtreamcodes:xtreamcodes /home/xtreamcodes');
 //                 exec('find /home/xtreamcodes/ -type d -not \( -name .update -prune \) -exec chmod -R 777 {} + ');
-//                 exec('chattr +i /home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb');
+//                 exec('chattr +i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb');
 //                 exec('ln -s /home/xtreamcodes/iptv_xtream_codes/bin/ffmpeg /usr/bin/');
 //                 exec('rm /tmp/autoupdate.py');
 //                 return true;
@@ -113,7 +113,7 @@ function updateGeoLite2() {
     if ($rData["version"]) {
         $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/raw/main/GeoLite2.mmdb");
         if (stripos($rFileData, "MaxMind.com") !== false) {
-            $rFilePath = "/home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb";
+            $rFilePath = "/home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb";
             // exec("sudo chattr -i {$rFilePath}");
             unlink($rFilePath);
             file_put_contents($rFilePath, $rFileData);

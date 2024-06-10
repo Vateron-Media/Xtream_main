@@ -35,8 +35,8 @@ define('RESTART_TAKE_CACHE', 5);
 define('TOTAL_SAVES_DROP', 6);
 define('CLOSE_OPEN_CONS_PATH', TMP_DIR . 'opened_cons/');
 define('ENIGMA2_PLUGIN_DIR', MOVIES_IMAGES . 'enigma2/');
-define('GEOIP2_FILENAME', IPTV_PANEL_DIR . 'GeoLite2.mmdb');
-define('GEOIP2ISP_FILENAME', IPTV_PANEL_DIR . 'GeoLite2-ISP.mmdb');
+define('GEOIP2_FILENAME', BIN_PATH . 'maxmind/GeoLite2.mmdb');
+define('GEOIP2ISP_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ISP.mmdb');
 
 if (!defined('USE_CACHE')) {
     define('USE_CACHE', true);
