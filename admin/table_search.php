@@ -232,7 +232,7 @@ if ($rType == "users") {
                 $row2 = mysqli_fetch_assoc($result);
                 if(!empty($row2['stream_display_name'])){
 			      $rTime = intval(time()) - intval($row2["date_start"]);
-                  $rStream_name = "<span style='color: #20a009;'</span>" . $row2['stream_display_name'] . "<br><span style='color: #737373;'>" . "Uptime </span>" . "<span style='color: #737373;'>" . sprintf('%02d:%02d:%02d', ($rTime / 3600) , ($rTime / 60 % 60) , $rTime % 60) . "<br><a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $row2["user_ip"] . "'</span>" . $row2["user_ip"] . " <img src='https://www.ip-tracker.org/images/ip-flags/" . strtolower($row2['geoip_country_code']) . ".png'></img>" . "<br><span style='color: #737373;'></span>" .$rRow["isp_desc"];
+                  $rStream_name = "<span style='color: #20a009;'</span>" . $row2['stream_display_name'] . "<br><span style='color: #737373;'>" . "Uptime </span>" . "<span style='color: #737373;'>" . sprintf('%02d:%02d:%02d', ($rTime / 3600) , ($rTime / 60 % 60) , $rTime % 60) . "<br><a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $row2["user_ip"] . "'</span>" . $row2["user_ip"] . " ". $row2['geoip_country_code'] . "<br><span style='color: #737373;'></span>" .$rRow["isp_desc"];
                 } else {
                   $rStream_name = "-";
                 }
@@ -448,7 +448,7 @@ if ($rType == "users") {
                 $row2 = mysqli_fetch_assoc($result);
                 if(!empty($row2['stream_display_name'])){
 			      $rTime = intval(time()) - intval($row2["date_start"]);
-                  $rStream_name = "<span style='color: #20a009;'</span>" . $row2['stream_display_name'] . "<br><span style='color: #737373;'>" . "Uptime </span>" . "<span style='color: #737373;'>" . sprintf('%02d:%02d:%02d', ($rTime / 3600) , ($rTime / 60 % 60) , $rTime % 60) . "<br><a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $row2["user_ip"] . "'</span>" . $row2["user_ip"] . " <img src='https://www.ip-tracker.org/images/ip-flags/" . strtolower($row2['geoip_country_code']) . ".png'></img>" . "<br><span style='color: #737373;'></span>" .$rRow["isp_desc"];
+                  $rStream_name = "<span style='color: #20a009;'</span>" . $row2['stream_display_name'] . "<br><span style='color: #737373;'>" . "Uptime </span>" . "<span style='color: #737373;'>" . sprintf('%02d:%02d:%02d', ($rTime / 3600) , ($rTime / 60 % 60) , $rTime % 60) . "<br><a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $row2["user_ip"] . "'</span>" . $row2["user_ip"] . " " . $row2['geoip_country_code'] . "<br><span style='color: #737373;'></span>" .$rRow["isp_desc"];
                 } else {
                   $rStream_name = "-";
                 }
@@ -645,7 +645,7 @@ if ($rType == "users") {
                 $row2 = mysqli_fetch_assoc($result);
                 if(!empty($row2['stream_display_name'])){
 			      $rTime = intval(time()) - intval($row2["date_start"]);
-                  $rStream_name = "<span style='color: #20a009;'</span>" . $row2['stream_display_name'] . "<br><span style='color: #737373;'>" . "Uptime </span>" . "<span style='color: #737373;'>" . sprintf('%02d:%02d:%02d', ($rTime / 3600) , ($rTime / 60 % 60) , $rTime % 60) . "<br><a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $row2["user_ip"] . "'</span>" . $row2["user_ip"] . " <img src='https://www.ip-tracker.org/images/ip-flags/" . strtolower($row2['geoip_country_code']) . ".png'></img>" . "<br><span style='color: #737373;'></span>" .$rRow["isp_desc"];
+                  $rStream_name = "<span style='color: #20a009;'</span>" . $row2['stream_display_name'] . "<br><span style='color: #737373;'>" . "Uptime </span>" . "<span style='color: #737373;'>" . sprintf('%02d:%02d:%02d', ($rTime / 3600) , ($rTime / 60 % 60) , $rTime % 60) . "<br><a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $row2["user_ip"] . "'</span>" . $row2["user_ip"] . " " . $row2['geoip_country_code'] . "<br><span style='color: #737373;'></span>" .$rRow["isp_desc"];
                 } else {
                   $rStream_name = "-";
                 }
@@ -1425,7 +1425,7 @@ LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_server
                     $rIP = "";
                 }
                 if (strlen($rRow["geoip_country_code"]) > 0) {
-                    $rGeoCountry = "<img src='https://www.ip-tracker.org/images/ip-flags/".strtolower($rRow["geoip_country_code"]).".png'></img>";
+                    $rGeoCountry = $rRow["geoip_country_code"];
                 } else {
                     $rGeoCountry = "";
                 }
@@ -1532,7 +1532,7 @@ LEFT JOIN `streaming_servers` ON `user_activity_now`.`server_id` = `streaming_se
                     $rIP = "";
                 }
                 if (strlen($rRow["geoip_country_code"]) > 0) {
-                    $rGeoCountry = "<img src='https://www.ip-tracker.org/images/ip-flags/".strtolower($rRow["geoip_country_code"]).".png'></img>";
+                    $rGeoCountry = $rRow["geoip_country_code"];
                 } else {
                     $rGeoCountry = "";
                 }

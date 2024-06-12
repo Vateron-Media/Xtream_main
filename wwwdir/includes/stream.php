@@ -347,7 +347,7 @@ class ipTV_stream {
             self::deleteFilesStream($streamUrlArr);
         }
         foreach ($streamUrlArr as $streamUrl) {
-            $ParseStreamUrl = self::ParseStreamURL($streamUrl);
+            $ParseStreamUrl = self::parseStreamURL($streamUrl);
             $streamProtocol = strtolower(substr($ParseStreamUrl, 0, strpos($ParseStreamUrl, '://')));
             $formattedArguments = implode(' ', self::getFormattedStreamArguments($stream['stream_arguments'], $streamProtocol, 'fetch'));
             if ($streamStatusCounter1 && file_exists(STREAMS_PATH . md5($ParseStreamUrl))) {
@@ -578,25 +578,24 @@ class ipTV_stream {
      * @param string $url The stream URL to be parsed.
      * @return string The modified stream URL after parsing.
      */
-    public static function ParseStreamURL(string $url) {
-        $server_protocol = strtolower(substr($url, 0, 4));
-        if (($server_protocol == 'rtmp')) {
-            if (stristr($url, '$OPT')) {
-                $rtmp_url = 'rtmp://$OPT:rtmp-raw=';
-                $url = trim(substr($url, stripos($url, $rtmp_url) + strlen($rtmp_url)));
+    public static function parseStreamURL($URL) {
+        $protocol = strtolower(substr($URL, 0, 4));
+        if ($protocol == 'rtmp') {
+            if (stristr($URL, '$OPT')) {
+                $Pattern = 'rtmp://$OPT:rtmp-raw=';
+                $URL = trim(substr($URL, stripos($URL, $Pattern) + strlen($Pattern)));
             }
-            $url .= ' live=1 timeout=10';
-        } else if ($server_protocol == 'http') {
-            $hosts = array('youtube.com', 'youtu.be', 'livestream.com', 'ustream.tv', 'twitch.tv', 'vimeo.com', 'facebook.com', 'dailymotion.com', 'cnn.com', 'edition.cnn.com', 'youporn.com', 'pornhub.com', 'youjizz.com', 'xvideos.com', 'redtube.com', 'ruleporn.com', 'pornotube.com', 'skysports.com', 'screencast.com', 'xhamster.com', 'pornhd.com', 'pornktube.com', 'tube8.com', 'vporn.com', 'giniko.com');
-            $host = str_ireplace('www.', '', parse_url($url, PHP_URL_HOST));
-            if (in_array($host, $hosts)) {
-                $urls = trim(shell_exec(YOUTUBE_PATH . " \"{$url}\" -q --get-url --skip-download -f best"));
-                $url = explode('', $urls)[0];
-                if (empty($url)) {
-                    $url = $urls;
+            $URL .= ' live=1 timeout=10';
+        } else {
+            if ($protocol == 'http') {
+                $Platforms = array('livestream.com', 'ustream.tv', 'twitch.tv', 'vimeo.com', 'facebook.com', 'dailymotion.com', 'cnn.com', 'edition.cnn.com', 'youtube.com', 'youtu.be');
+                $Host = str_ireplace('www.', '', parse_url($URL, PHP_URL_HOST));
+                if (in_array($Host, $Platforms)) {
+                    $URLs = trim(shell_exec(YOUTUBE_PATH . ' ' . escapeshellarg($URL) . ' -q --get-url --skip-download -f best'));
+                    list($URL) = explode("\n", $URLs);
                 }
             }
         }
-        return $url;
+        return $URL;
     }
 }

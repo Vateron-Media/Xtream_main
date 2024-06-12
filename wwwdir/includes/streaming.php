@@ -81,19 +81,19 @@ class ipTV_streaming {
     public static function CloseAndTransfer($activity_id) {
         file_put_contents(CLOSE_OPEN_CONS_PATH . $activity_id, 1);
     }
-    public static function GetStreamData($stream_id) {
+    public static function GetStreamData($streamID) {
         if (CACHE_STREAMS) {
-            if (file_exists(TMP_DIR . $stream_id . "_cacheStream") && time() - filemtime(TMP_DIR . $stream_id . "_cacheStream") <= CACHE_STREAMS_TIME) {
-                return unserialize(file_get_contents(TMP_DIR . $stream_id . "_cacheStream"));
+            if (file_exists(TMP_DIR . $streamID . "_cacheStream") && time() - filemtime(TMP_DIR . $streamID . "_cacheStream") <= CACHE_STREAMS_TIME) {
+                return unserialize(file_get_contents(TMP_DIR . $streamID . "_cacheStream"));
             }
         }
         $output = array();
-        self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE t1.`id` = \'%d\'', $stream_id);
+        self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE t1.`id` = \'%d\'', $streamID);
         if (self::$ipTV_db->num_rows() > 0) {
             $streamData = self::$ipTV_db->get_row();
             $servers = array();
             if ($streamData["direct_source"] == 0) {
-                self::$ipTV_db->query('SELECT * FROM `streams_sys` WHERE `stream_id` = \'%d\'', $stream_id);
+                self::$ipTV_db->query('SELECT * FROM `streams_sys` WHERE `stream_id` = \'%d\'', $streamID);
                 if (self::$ipTV_db->num_rows() > 0) {
                     $servers = self::$ipTV_db->get_rows(true, "server_id");
                 }
@@ -101,14 +101,14 @@ class ipTV_streaming {
             $output["info"] = $streamData;
             $output["servers"] = $servers;
             if (CACHE_STREAMS) {
-                file_put_contents(TMP_DIR . $stream_id . "_cacheStream", serialize($output), LOCK_EX);
+                file_put_contents(TMP_DIR . $streamID . "_cacheStream", serialize($output), LOCK_EX);
             }
         }
         return !empty($output) ? $output : false;
     }
-    public static function ChannelInfo($stream_id, $extension, $user_info, $user_ip, $geoip_country_code, $external_device = '', $con_isp_name = '', $type) {
+    public static function ChannelInfo($streamID, $extension, $user_info, $user_ip, $geoip_country_code, $external_device = '', $con_isp_name = '', $type) {
         if (!($type == "archive")) {
-            $stream = self::GetStreamData($stream_id);
+            $stream = self::GetStreamData($streamID);
             if (!empty($stream)) {
                 if (!($stream["info"]["direct_source"] == 1)) {
                     $StreamSysIds = array();
@@ -251,7 +251,7 @@ class ipTV_streaming {
                                     "hash" => md5(
                                         json_encode(
                                             array(
-                                                "stream_id" => $stream_id,
+                                                "stream_id" => $streamID,
                                                 "user_id" => $user_info["id"],
                                                 "username" => $user_info["username"],
                                                 "password" => $user_info["password"],
@@ -271,7 +271,7 @@ class ipTV_streaming {
                                             )
                                         )
                                     ),
-                                    "stream_id" => $stream_id,
+                                    "stream_id" => $streamID,
                                     "user_id" => $user_info["id"],
                                     "time" => $D4a67bbd52a22a102a646011a4bec962,
                                     "pid" => $stream["servers"][$force_server_id]["pid"],
@@ -300,7 +300,7 @@ class ipTV_streaming {
             }
             return false;
         }
-        self::$ipTV_db->query("SELECT `tv_archive_server_id`,`tv_archive_duration` FROM `streams` WHERE `id` = '%d'", $stream_id);
+        self::$ipTV_db->query("SELECT `tv_archive_server_id`,`tv_archive_duration` FROM `streams` WHERE `id` = '%d'", $streamID);
         if (!(self::$ipTV_db->num_rows() > 0)) {
             goto fe44649b515c4ec3e22b8a3cf1fc4d22;
         }
@@ -313,20 +313,20 @@ class ipTV_streaming {
         if ($c72d66b481d02f854f0bef67db92a547["tv_archive_server_id"] != SERVER_ID) {
             parse_str($_SERVER["QUERY_STRING"], $Cc31a34e0b1fa157d875f9946912d9fa);
             $D4a67bbd52a22a102a646011a4bec962 = time() + $Cc31a34e0b1fa157d875f9946912d9fa["duration"] * 60;
-            $data = array("hash" => md5(json_encode(array("user_id" => $user_info["id"], "username" => $user_info["username"], "password" => $user_info["password"], "user_ip" => $user_ip, "live_streaming_pass" => ipTV_lib::$settings["live_streaming_pass"], "external_device" => $external_device, "isp" => $con_isp_name, "country" => $geoip_country_code, "stream_id" => $stream_id, "start" => $Cc31a34e0b1fa157d875f9946912d9fa["start"], "duration" => $Cc31a34e0b1fa157d875f9946912d9fa["duration"], "extension" => $Cc31a34e0b1fa157d875f9946912d9fa["extension"], "time" => $D4a67bbd52a22a102a646011a4bec962))), "user_id" => $user_info["id"], "username" => $user_info["username"], "password" => $user_info["password"], "time" => $D4a67bbd52a22a102a646011a4bec962, "external_device" => $external_device, "isp" => $con_isp_name, "country" => $geoip_country_code, "stream_id" => $stream_id, "start" => $Cc31a34e0b1fa157d875f9946912d9fa["start"], "duration" => $Cc31a34e0b1fa157d875f9946912d9fa["duration"], "extension" => $Cc31a34e0b1fa157d875f9946912d9fa["extension"]);
+            $data = array("hash" => md5(json_encode(array("user_id" => $user_info["id"], "username" => $user_info["username"], "password" => $user_info["password"], "user_ip" => $user_ip, "live_streaming_pass" => ipTV_lib::$settings["live_streaming_pass"], "external_device" => $external_device, "isp" => $con_isp_name, "country" => $geoip_country_code, "stream_id" => $streamID, "start" => $Cc31a34e0b1fa157d875f9946912d9fa["start"], "duration" => $Cc31a34e0b1fa157d875f9946912d9fa["duration"], "extension" => $Cc31a34e0b1fa157d875f9946912d9fa["extension"], "time" => $D4a67bbd52a22a102a646011a4bec962))), "user_id" => $user_info["id"], "username" => $user_info["username"], "password" => $user_info["password"], "time" => $D4a67bbd52a22a102a646011a4bec962, "external_device" => $external_device, "isp" => $con_isp_name, "country" => $geoip_country_code, "stream_id" => $streamID, "start" => $Cc31a34e0b1fa157d875f9946912d9fa["start"], "duration" => $Cc31a34e0b1fa157d875f9946912d9fa["duration"], "extension" => $Cc31a34e0b1fa157d875f9946912d9fa["extension"]);
             $req_uri = substr($_SERVER["REQUEST_URI"], 1);
             header("Location: " . ipTV_lib::$StreamingServers[$c72d66b481d02f854f0bef67db92a547["tv_archive_server_id"]]["site_url"] . "streaming/timeshift.php?token=" . base64_encode(decrypt_config(json_encode($data), md5(ipTV_lib::$settings["crypt_load_balancing"]))));
             die;
         }
         return true;
     }
-    public static function checkStreamExistInBouquet($stream_id, $connections = array(), $type = "movie") {
+    public static function checkStreamExistInBouquet($streamID, $connections = array(), $type = "movie") {
         if ($type == "movie") {
-            return in_array($stream_id, $connections);
+            return in_array($streamID, $connections);
         }
         if ($type == "series") {
             $query = "SELECT series_id FROM `series_episodes` WHERE `stream_id` = '%d' LIMIT 1";
-            self::$ipTV_db->query($query, $stream_id);
+            self::$ipTV_db->query($query, $streamID);
             if (self::$ipTV_db->num_rows() <= 0) {
                 return in_array(self::$ipTV_db->get_col(), $connections);
             }
@@ -334,7 +334,7 @@ class ipTV_streaming {
         return false;
     }
     // checked
-    public static function GetUserInfo($user_id = null, $username = null, $password = null, $get_channel_IDS = false, $getBouquetInfo = false, $get_cons = false, $type = array(), $is_adult = false, $user_ip = '', $user_agent = '', $a8851ef591e0cdd9aad6ec4f7bd4b160 = array(), $play_token = '', $stream_id = 0, $segment_name = "") {
+    public static function GetUserInfo($user_id = null, $username = null, $password = null, $get_channel_IDS = false, $getBouquetInfo = false, $get_cons = false, $type = array(), $is_adult = false, $user_ip = '', $user_agent = '', $a8851ef591e0cdd9aad6ec4f7bd4b160 = array(), $play_token = '', $streamID = 0, $segment_name = "") {
         if (empty($user_id) && !is_null($username) && !is_null($password)) {
             self::$ipTV_db->query('SELECT * FROM `users` WHERE `username` = \'%s\' AND `password` = \'%s\' LIMIT 1', $username, $password);
         } else {
@@ -360,9 +360,9 @@ class ipTV_streaming {
                     // Check if play token is not empty and match with provided token
                     if (!empty($user_info['play_token']) && !empty($play_token)) {
                         // Extract token, timestamp, and stream ID from play token
-                        list($token, $timestamp, $stream_id) = explode(':', $user_info['play_token']);
+                        list($token, $timestamp, $streamID) = explode(':', $user_info['play_token']);
                         // Validate token, timestamp, and stream ID
-                        if (!($token == $play_token && $timestamp >= time() && $stream_id == $stream_id)) {
+                        if (!($token == $play_token && $timestamp >= time() && $streamID == $streamID)) {
                             $user_info['mag_invalid_token'] = true;
                         }
                     } else {
@@ -626,18 +626,28 @@ class ipTV_streaming {
         }
         return false;
     }
-    public static function SaveClosedConnection($server_id, $user_id, $stream_id, $start, $user_agent, $user_ip, $extension, $geoip_country_code, $isp, $external_device = '') {
+    public static function SaveClosedConnection($server_id, $user_id, $streamID, $start, $user_agent, $user_ip, $extension, $geoip_country_code, $isp, $external_device = '') {
         if (ipTV_lib::$settings['save_closed_connection'] == 0) {
             return;
         }
-        $activity_id = array('user_id' => intval($user_id), 'stream_id' => intval($stream_id), 'server_id' => intval($server_id), 'date_start' => intval($start), 'user_agent' => $user_agent, 'user_ip' => htmlentities($user_ip), 'date_end' => time(), 'container' => $extension, 'geoip_country_code' => $geoip_country_code, 'isp' => $isp, 'external_device' => htmlentities($external_device));
+        $activity_id = array('user_id' => intval($user_id), 'stream_id' => intval($streamID), 'server_id' => intval($server_id), 'date_start' => intval($start), 'user_agent' => $user_agent, 'user_ip' => htmlentities($user_ip), 'date_end' => time(), 'container' => $extension, 'geoip_country_code' => $geoip_country_code, 'isp' => $isp, 'external_device' => htmlentities($external_device));
         file_put_contents(TMP_DIR . 'connections', base64_encode(json_encode($activity_id)) . '', FILE_APPEND | LOCK_EX);
     }
-    # create clientlog file 
-    public static function ClientLog($streamId, $userId, $action, $ip, $data = '', $bypass = false) {
+    /** 
+     * Logs client actions to a file if client_logs_save setting is enabled or bypass flag is set to true. 
+     *  
+     * @param int $streamID The ID of the stream. 
+     * @param int $userID The ID of the user performing the action. 
+     * @param string $action The action being performed. 
+     * @param string $IP The IP address of the user. 
+     * @param string $data Additional data to be logged (optional). 
+     * @param bool $bypass Flag to bypass the client_logs_save setting (optional). 
+     * @return void|null 
+     */
+    public static function ClientLog($streamID, $userID, $action, $IP, $data = '', $bypass = false) {
         if (ipTV_lib::$settings['client_logs_save'] != 0 || $bypass) {
             $user_agent = (!empty($_SERVER['HTTP_USER_AGENT']) ? htmlentities($_SERVER['HTTP_USER_AGENT']) : '');
-            $data = array('user_id' => $userId, 'stream_id' => $streamId, 'action' => $action, 'query_string' => htmlentities($_SERVER['QUERY_STRING']), 'user_agent' => $user_agent, 'user_ip' => $ip, 'time' => time(), 'extra_data' => $data);
+            $data = array('user_id' => $userID, 'stream_id' => $streamID, 'action' => $action, 'query_string' => htmlentities($_SERVER['QUERY_STRING']), 'user_agent' => $user_agent, 'user_ip' => $IP, 'time' => time(), 'extra_data' => $data);
             file_put_contents(TMP_DIR . 'client_request.log', base64_encode(json_encode($data)) . "\n", FILE_APPEND);
         } else {
             return null;
@@ -665,25 +675,50 @@ class ipTV_streaming {
         }
         return false;
     }
-    public static function GeneratePlayListWithAuthenticationAdmin($m3u8_playlist, $password, $stream_id) {
-        if (file_exists($m3u8_playlist)) {
-            $source = file_get_contents($m3u8_playlist);
+    /** 
+     * Generates a playlist with authentication for an admin stream. 
+     * 
+     * This function takes the path to an M3U8 file, a password, and a stream ID as parameters. 
+     * It reads the content of the M3U8 file, searches for .ts segments, and replaces them with authenticated URLs. 
+     * The authenticated URLs include the admin_live.php script with the provided password, extension, segment, and stream ID. 
+     * 
+     * @param string $M3U8 The path to the M3U8 file. 
+     * @param string $password The password for authentication. 
+     * @param int $streamID The ID of the stream. 
+     * @return string|false The generated playlist with authentication URLs or false if the M3U8 file does not exist. 
+     */
+    public static function GeneratePlayListWithAuthenticationAdmin($M3U8, $password, $streamID) {
+        if (file_exists($M3U8)) {
+            $source = file_get_contents($M3U8);
             if (preg_match_all('/(.*?)\\.ts/', $source, $matches)) {
                 foreach ($matches[0] as $match) {
-                    $source = str_replace($match, "/streaming/admin_live.php?password={$password}&extension=m3u8&segment={$match}&stream={$stream_id}", $source);
+                    $source = str_replace($match, "/streaming/admin_live.php?password={$password}&extension=m3u8&segment={$match}&stream={$streamID}", $source);
                 }
                 return $source;
             }
             return false;
         }
     }
-    public static function GeneratePlayListWithAuthentication($m3u8_playlist, $username = '', $password = '', $stream_id) {
-        if (file_exists($m3u8_playlist)) {
-            $source = file_get_contents($m3u8_playlist);
+    /** 
+     * Generates a playlist with authentication for a stream. 
+     * 
+     * This function takes the path to an M3U8 file, and optional username, password, and stream ID as parameters. 
+     * It reads the content of the M3U8 file, searches for .ts segments, and replaces them with authenticated URLs. 
+     * The authenticated URLs include the username, password, stream ID, token, and segment information. 
+     * 
+     * @param string $M3U8 The path to the M3U8 file. 
+     * @param string $username The username for authentication (default empty). 
+     * @param string $password The password for authentication (default empty). 
+     * @param int $streamID The ID of the stream. 
+     * @return string|false The generated playlist with authentication URLs or false if the M3U8 file does not exist. 
+     */
+    public static function GeneratePlayListWithAuthentication($M3U8, $username = '', $password = '', $streamID) {
+        if (file_exists($M3U8)) {
+            $source = file_get_contents($M3U8);
             if (preg_match_all('/(.*?)\\.ts/', $source, $matches)) {
                 foreach ($matches[0] as $match) {
                     $token = md5($match . $username . ipTV_lib::$settings['crypt_load_balancing'] . filesize(STREAMS_PATH . $match));
-                    $source = str_replace($match, "/hls/{$username}/{$password}/{$stream_id}/{$token}/{$match}", $source);
+                    $source = str_replace($match, "/hls/{$username}/{$password}/{$streamID}/{$token}/{$match}", $source);
                 }
                 return $source;
             }
@@ -712,16 +747,16 @@ class ipTV_streaming {
      * Checks if a monitor process is running with the specified PID and stream ID. 
      * 
      * @param int $pid The process ID of the monitor. 
-     * @param int $stream_id The stream ID to check against. 
+     * @param int $streamID The stream ID to check against. 
      * @param string $ffmpeg_path The path to the FFmpeg executable (default is PHP_BIN). 
      * @return bool Returns true if the monitor process is running with the specified PID and stream ID, false otherwise. 
      */
-    public static function CheckMonitorRunning($pid, $stream_id, $ffmpeg_path = PHP_BIN) {
+    public static function CheckMonitorRunning($pid, $streamID, $ffmpeg_path = PHP_BIN) {
         if (!empty($pid)) {
             clearstatcache(true);
             if (file_exists('/proc/' . $pid) && is_readable('/proc/' . $pid . '/exe') && basename(readlink('/proc/' . $pid . '/exe')) == basename($ffmpeg_path)) {
                 $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
-                if ($value == "XtreamCodes[{$stream_id}]") {
+                if ($value == "XtreamCodes[{$streamID}]") {
                     return true;
                 }
             }
@@ -738,27 +773,27 @@ class ipTV_streaming {
         file_put_contents($user_ip_file, 0);
         return false;
     }
-    public static function CheckPidStreamExist($pid, $stream_id) {
+    public static function CheckPidStreamExist($pid, $streamID) {
         if (empty($pid)) {
             return false;
         }
         clearstatcache(true);
         if (file_exists('/proc/' . $pid) && is_readable('/proc/' . $pid . '/exe')) {
             $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
-            if ($value == "XtreamCodesDelay[{$stream_id}]") {
+            if ($value == "XtreamCodesDelay[{$streamID}]") {
                 return true;
             }
         }
         return false;
     }
-    public static function CheckPidChannelM3U8Exist($pid, $stream_id, $ffmpeg_path = FFMPEG_PATH) {
+    public static function CheckPidChannelM3U8Exist($pid, $streamID, $ffmpeg_path = FFMPEG_PATH) {
         if (!empty($pid)) {
             clearstatcache(true);
             if (!(file_exists("/proc/" . $pid) && is_readable("/proc/" . $pid . "/exe") && basename(readlink("/proc/" . $pid . "/exe")) == basename($ffmpeg_path))) {
                 return false;
             }
             $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
-            if (!stristr($value, "/{$stream_id}_.m3u8")) {
+            if (!stristr($value, "/{$streamID}_.m3u8")) {
                 return false;
             }
             return true;

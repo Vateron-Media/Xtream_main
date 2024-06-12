@@ -107,7 +107,7 @@ if ($argc >= 1) {
                         $Baee0c34e5755f1cfaa4159ea7e8702e = array_search($stream_curent_source, $streamSources);
                         if (0 < $Baee0c34e5755f1cfaa4159ea7e8702e) {
                             foreach ($streamSources as $source) {
-                                $parsedURL = ipTV_stream::ParseStreamURL($source);
+                                $parsedURL = ipTV_stream::parseStreamURL($source);
                                 if ($parsedURL == $stream_curent_source) {
                                     break;
                                 }
