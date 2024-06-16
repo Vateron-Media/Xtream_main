@@ -340,10 +340,10 @@ if ($rSettings["sidebar"]) { ?>
                                 $rUpdatePanel = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json", false, $rContext), True);
                                 $rInfos = array(); //json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/infos.json", false, $rContext), True);
                                 $rGeoLite2 = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/status.json", false, $rContext), True);
-                                if (intval($rGeoLite2["version"]) > $rAdminSettings["geolite2_version"]);
+                                if (version_compare($rGeoLite2["version"], $rAdminSettings["geolite2_version"]));
                                 if (version_compare($rUpdatePanel["main"], $rAdminSettings["panel_version"]));
                                 ?>
-                                <?php if ($rGeoLite2["version"] > $rAdminSettings["geolite2_version"]) { ?>
+                                <?php if (version_compare($rGeoLite2["version"], $rAdminSettings["geolite2_version"])) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
