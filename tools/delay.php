@@ -110,7 +110,7 @@ if (@$argc) {
                 }
                 $previous_hash = 0;
                 $f4cb2e0f4f9d3070cea6104f839ddf0c = md5(file_get_contents($m3uFile));
-                while (!(ipTV_streaming::CheckPidChannelM3U8Exist($delay_pid, $stream_id) && file_exists($m3uFile))) {
+                while (!(ipTV_streaming::isStreamRunning($delay_pid, $stream_id) && file_exists($m3uFile))) {
                     if ($f4cb2e0f4f9d3070cea6104f839ddf0c != $previous_hash) {
                         $playlist_data["segments"] = processM3uFile($m3uFile, $segment_list, $total_segments);
                         if (!empty($playlist_data["segments"])) {

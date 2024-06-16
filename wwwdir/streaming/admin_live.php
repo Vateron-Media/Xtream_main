@@ -24,7 +24,7 @@ if ($ipTV_db->num_rows() > 0) {
     $channel_info = $ipTV_db->get_row();
     $ipTV_db->close_mysql();
     $playlist = STREAMS_PATH . $stream_id . "_.m3u8";
-    if (!ipTV_streaming::CheckPidChannelM3U8Exist($channel_info["pid"], $stream_id)) {
+    if (!ipTV_streaming::isStreamRunning($channel_info["pid"], $stream_id)) {
         if ($channel_info["on_demand"] == 1) {
             if (!ipTV_streaming::CheckMonitorRunning($channel_info["monitor_pid"], $stream_id)) {
                 ipTV_stream::startMonitor($stream_id);
@@ -104,7 +104,7 @@ if ($ipTV_db->num_rows() > 0) {
                         echo $data;
                         $fails = 0;
                     }
-                    if (ipTV_streaming::ps_running($channel_info["pid"], FFMPEG_PATH) && $fails <= $total_failed_tries && file_exists(STREAMS_PATH . $segment_file) && is_resource($fp)) {
+                    if (ipTV_streaming::isProcessRunning($channel_info["pid"], FFMPEG_PATH) && $fails <= $total_failed_tries && file_exists(STREAMS_PATH . $segment_file) && is_resource($fp)) {
                         $size = filesize(STREAMS_PATH . $segment_file);
                         $line = $size - ftell($fp);
                         if ($line > 0) {

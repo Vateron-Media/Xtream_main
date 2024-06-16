@@ -979,6 +979,7 @@ CREATE TABLE IF NOT EXISTS `streaming_servers` (
   `server_ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `vpn_ip` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ssh_password` mediumtext COLLATE utf8_unicode_ci,
+  `is_main` int(16) DEFAULT '0',
   `ssh_port` int(11) DEFAULT NULL,
   `diff_time_main` int(11) NOT NULL DEFAULT '0',
   `http_broadcast_port` int(11) NOT NULL,
@@ -1019,7 +1020,7 @@ CREATE TABLE IF NOT EXISTS `streaming_servers` (
 --
 
 INSERT INTO `streaming_servers` (`id`, `script_version`, `server_name`, `domain_name`, `server_ip`, `vpn_ip`, `ssh_password`, `ssh_port`, `diff_time_main`, `http_broadcast_port`, `total_clients`, `system_os`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `boost_fpm`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`, `time_offset`) VALUES
-(1, NULL, 'Main Server', '', '127.0.0.1', '', NULL, NULL, 0, 25461, 1000, NULL, 'eh0', 0, 1, 0, '', 0, 0, '', 3, 0, 25462, 'low_priority', '', 'low_priority', 0, 0, '', 0, 25463, '', '', '', 0, 0);
+(1, NULL, 'Main Server', '', '127.0.0.1', '', NULL, 1, NULL, 0, 25461, 1000, NULL, 'eh0', 0, 1, 0, '', 0, 0, '', 3, 0, 25462, 'low_priority', '', 'low_priority', 0, 0, '', 0, 25463, '', '', '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1555,6 +1556,14 @@ CREATE TABLE IF NOT EXISTS `lines_live` (
   KEY `hmac_id` (`hmac_id`),
   KEY `hmac_identifier` (`hmac_identifier`),
   KEY `uuid` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `lines_divergence` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(32) DEFAULT NULL,
+  `divergence` float DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uuid` (`uuid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

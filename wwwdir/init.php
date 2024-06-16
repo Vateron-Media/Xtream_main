@@ -33,9 +33,10 @@ define('FFMPEG_FONTS_PATH', SIGNALS_PATH . 'free-sans.ttf');
 define('CONFIG_CRYPT_KEY', '5709650b0d7806074842c6de575025b1');
 define('RESTART_TAKE_CACHE', 5);
 define('TOTAL_SAVES_DROP', 6);
-define('CLOSE_OPEN_CONS_PATH', TMP_DIR . 'opened_cons/');
+define('CONS_TMP_PATH', TMP_DIR . 'opened_cons/');
+define('DIVERGENCE_TMP_PATH', TMP_DIR . 'divergence/');
 define('ENIGMA2_PLUGIN_DIR', MOVIES_IMAGES . 'enigma2/');
-define('GEOIP2_FILENAME', BIN_PATH . 'maxmind/GeoLite2-City.mmdb');
+define('GEOIP2_FILENAME', BIN_PATH . 'maxmind/GeoLite2-Country.mmdb');
 define('GEOIP2ISP_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ISP.mmdb');
 define('OPENSSL_EXTRA', '5gd46z5s4fg6sd8f4gs6');
 

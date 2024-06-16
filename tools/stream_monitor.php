@@ -55,7 +55,7 @@ if ($argc >= 1) {
             $stream_path = STREAMS_PATH;
         }
         $streamStatusCounter = 0;
-        if (ipTV_streaming::CheckPidChannelM3U8Exist($stream_pid, $stream_id)) {
+        if (ipTV_streaming::isStreamRunning($stream_pid, $stream_id)) {
             if ($stream_delay) {
                 $streamStatusCounter = RESTART_TAKE_CACHE + 1;
                 shell_exec("kill -9 " . $stream_pid);
@@ -72,7 +72,7 @@ if ($argc >= 1) {
                 $ipTV_db->close_mysql();
                 $audio_restart_loss = $seg_time = $priority_backup = time();
                 $stream_out_file_path = md5_file($stream_m3u8_file_path);
-                while (ipTV_streaming::CheckPidChannelM3U8Exist($stream_pid, $stream_id) && file_exists($stream_m3u8_file_path)) {
+                while (ipTV_streaming::isStreamRunning($stream_pid, $stream_id) && file_exists($stream_m3u8_file_path)) {
                     if (!empty($stream_auto_restart["days"]) && !empty($stream_auto_restart["at"])) {
                         list($Ed62709841469f20fe0f7a17a4268692, $Bc1d36e0762a7ca0e7cbaddd76686790) = explode(":", $stream_auto_restart["at"]);
                         if (in_array(date("l"), $stream_auto_restart["days"]) && date("H") == $Ed62709841469f20fe0f7a17a4268692) {
@@ -127,7 +127,7 @@ if ($argc >= 1) {
                 }
                 $ipTV_db->db_connect();
             }
-            if (ipTV_streaming::CheckPidChannelM3U8Exist($stream_pid, $stream_id)) {
+            if (ipTV_streaming::isStreamRunning($stream_pid, $stream_id)) {
                 shell_exec("kill -9 " . $stream_pid);
                 usleep(50000);
             }
@@ -135,7 +135,7 @@ if ($argc >= 1) {
                 shell_exec("kill -9 " . $stream_delay_pid);
                 usleep(50000);
             }
-            while (!ipTV_streaming::CheckPidChannelM3U8Exist($stream_pid, $stream_id)) {
+            while (!ipTV_streaming::isStreamRunning($stream_pid, $stream_id)) {
                 echo "Restarting...\n";
                 shell_exec("rm -f " . STREAMS_PATH . $stream_id . "_*");
                 $d76067cf9572f7a6691c85c12faf2a29 = ipTV_stream::runStreamFfmpeg($stream_id, $streamStatusCounter, $streamUrl);
@@ -160,7 +160,7 @@ if ($argc >= 1) {
                     $stream_path = STREAMS_PATH;
                 }
                 $retryCount = 0;
-                while (ipTV_streaming::CheckPidChannelM3U8Exist($stream_pid, $stream_id) && !file_exists($stream_m3u8_file_path) && $retryCount <= ipTV_lib::$SegmentsSettings["seg_time"] * 3) {
+                while (ipTV_streaming::isStreamRunning($stream_pid, $stream_id) && !file_exists($stream_m3u8_file_path) && $retryCount <= ipTV_lib::$SegmentsSettings["seg_time"] * 3) {
                     echo "Checking For PlayList...\n";
                     sleep(1);
                     ++$retryCount;

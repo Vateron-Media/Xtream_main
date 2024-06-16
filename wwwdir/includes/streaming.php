@@ -1,6 +1,4 @@
 <?php
-/*Rev:26.09.18r0*/
-
 class ipTV_streaming {
     public static $ipTV_db;
     public static $AllowedIPs = array();
@@ -8,21 +6,21 @@ class ipTV_streaming {
         self::$ipTV_db->query("SELECT `ip` FROM `rtmp_ips`");
         return array_merge(array("127.0.0.1"), array_map("gethostbyname", ipTV_lib::array_values_recursive(self::$ipTV_db->get_rows())));
     }
-    /** 
-     * startFFMPEGSegment function starts a new FFMPEG segment with specified data and segment file. 
-     * 
-     * @param array $data An array containing data for the FFMPEG segment. 
-     * @param string $segment_file The path to the segment file to be processed. 
-     * @return bool Returns true if the FFMPEG segment is successfully started. 
-     */
-    public static function startFFMPEGSegment($data, $segment_file) {
-        if (empty($data["xy_offset"])) {
+    public static function sendSignalFFMPEG($signalData, $segmentFile, $codec = 'h264', $return = false) {
+        if (empty($signalData["xy_offset"])) {
             $x = rand(150, 380);
             $y = rand(110, 250);
         } else {
-            list($x, $y) = explode("x", $data["xy_offset"]);
+            list($x, $y) = explode("x", $signalData["xy_offset"]);
         }
-        passthru(FFMPEG_PATH . ' -nofix_dts -fflags +igndts -copyts -vsync 0 -nostats -nostdin -hide_banner -loglevel quiet -y -i "' . STREAMS_PATH . $segment_file . '" -filter_complex "drawtext=fontfile=' . FFMPEG_FONTS_PATH . ":text='{$data["message"]}':fontsize={$data["font_size"]}:x={$x}:y={$y}:fontcolor={$data["font_color"]}\" -map 0 -vcodec libx264 -preset ultrafast -acodec copy -scodec copy -mpegts_flags +initial_discontinuity -mpegts_copyts 1 -f mpegts -");
+        if ($return) {
+            $rOutput = SIGNALS_PATH . $signalData['activity_id'] . '_' . $segmentFile;
+            shell_exec(FFMPEG_PATH . ' -copyts -vsync 0 -nostats -nostdin -hide_banner -loglevel quiet -y -i ' . escapeshellarg(STREAMS_PATH . $segmentFile) . ' -filter_complex "drawtext=fontfile=' . FFMPEG_FONTS_PATH . ":text='" . escapeshellcmd($signalData['message']) . "':fontsize=" . escapeshellcmd($signalData['font_size']) . ':x=' . intval($x) . ':y=' . intval($y) . ':fontcolor=' . escapeshellcmd($signalData['font_color']) . '" -map 0 -vcodec ' . $codec . ' -preset ultrafast -acodec copy -scodec copy -mpegts_flags +initial_discontinuity -mpegts_copyts 1 -f mpegts ' . escapeshellarg($rOutput));
+            $data = file_get_contents($rOutput);
+            unlink($rOutput);
+            return $data;
+        }
+        passthru(FFMPEG_PATH . ' -copyts -vsync 0 -nostats -nostdin -hide_banner -loglevel quiet -y -i ' . escapeshellarg(STREAMS_PATH . $segmentFile) . ' -filter_complex "drawtext=fontfile=' . FFMPEG_FONTS_PATH . ":text='" . escapeshellcmd($signalData['message']) . "':fontsize=" . escapeshellcmd($signalData['font_size']) . ':x=' . intval($x) . ':y=' . intval($y) . ':fontcolor=' . escapeshellcmd($signalData['font_color']) . '" -map 0 -vcodec ' . $codec . ' -preset ultrafast -acodec copy -scodec copy -mpegts_flags +initial_discontinuity -mpegts_copyts 1 -f mpegts -');
         return true;
     }
     public static function getAllowedIPsCloudIps() {
@@ -79,7 +77,7 @@ class ipTV_streaming {
         return array_unique($ips);
     }
     public static function CloseAndTransfer($activity_id) {
-        file_put_contents(CLOSE_OPEN_CONS_PATH . $activity_id, 1);
+        file_put_contents(CONS_TMP_PATH . $activity_id, 1);
     }
     public static function GetStreamData($streamID) {
         if (CACHE_STREAMS) {
@@ -551,147 +549,154 @@ class ipTV_streaming {
         }
         return false;
     }
-    public static function validateConnections($rUserInfo, $rIP = null, $rUserAgent = null) {
-        if ($rUserInfo['max_connections'] != 0) {
-            if (empty($rUserInfo['pair_id'])) {
-            } else {
-                self::closeConnections($rUserInfo['pair_id'], $rUserInfo['max_connections'], $rIP, $rUserAgent);
-            }
-            self::closeConnections($rUserInfo['id'], $rUserInfo['max_connections'], $rUserAgent);
-        }
-    }
-    public static function closeConnections($rUserID, $rMaxConnections, $rIP = null, $rUserAgent = null) {
 
-        self::$ipTV_db->query('SELECT `lines_live`.*, `on_demand` FROM `lines_live` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `lines_live`.`stream_id` AND `streams_servers`.`server_id` = `lines_live`.`server_id` WHERE `lines_live`.`user_id` = ? AND `lines_live`.`hls_end` = 0 ORDER BY `lines_live`.`activity_id` ASC', $rUserID);
 
-        $rConnectionCount = self::$ipTV_db->num_rows();
-        $rToKill = $rConnectionCount - $rMaxConnections;
-        if ($rToKill > 0) {
-            $rConnections = self::$ipTV_db->get_rows();
-        } else {
-            return null;
-        }
+    // TEST code
+    // public static function validateConnections($rUserInfo, $rIP = null, $rUserAgent = null) {
+    //     if ($rUserInfo['max_connections'] != 0) {
+    //         if (empty($rUserInfo['pair_id'])) {
+    //         } else {
+    //             self::closeConnections($rUserInfo['pair_id'], $rUserInfo['max_connections'], $rIP, $rUserAgent);
+    //         }
+    //         self::closeConnections($rUserInfo['id'], $rUserInfo['max_connections'], $rUserAgent);
+    //     }
+    // }
+    // public static function closeConnections($rUserID, $rMaxConnections, $rIP = null, $rUserAgent = null) {
 
-        $rIP = self::getUserIP();
-        $rKilled = 0;
-        $rDelSID = $rDelUUID = $rIDs = array();
-        if ($rIP && $rUserAgent) {
-            $rKillTypes = array(2, 1, 0);
-        } else {
-            if ($rIP) {
-                $rKillTypes = array(1, 0);
-            } else {
-                $rKillTypes = array(0);
-            }
-        }
-        foreach ($rKillTypes as $rKillOwnIP) {
-            $i = 0;
-            while ($i < count($rConnections) && $rKilled < $rToKill) {
-                if ($rKilled != $rToKill) {
-                    if ($rConnections[$i]['pid'] != getmypid()) {
-                        if (!($rConnections[$i]['user_ip'] == $rIP && $rConnections[$i]['user_agent'] == $rUserAgent && $rKillOwnIP == 2 || $rConnections[$i]['user_ip'] == $rIP && $rKillOwnIP == 1 || $rKillOwnIP == 0)) {
-                        } else {
-                            if (self::closeConnection($rConnections[$i])) {
-                                $rKilled++;
-                                if ($rConnections[$i]['container'] == 'hls') {
-                                } else {
+    //     self::$ipTV_db->query('SELECT `lines_live`.*, `on_demand` FROM `lines_live` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `lines_live`.`stream_id` AND `streams_servers`.`server_id` = `lines_live`.`server_id` WHERE `lines_live`.`user_id` = ? AND `lines_live`.`hls_end` = 0 ORDER BY `lines_live`.`activity_id` ASC', $rUserID);
 
-                                    $rIDs[] = intval($rConnections[$i]['activity_id']);
+    //     $rConnectionCount = self::$ipTV_db->num_rows();
+    //     $rToKill = $rConnectionCount - $rMaxConnections;
+    //     if ($rToKill > 0) {
+    //         $rConnections = self::$ipTV_db->get_rows();
+    //     } else {
+    //         return null;
+    //     }
 
-                                    $rDelUUID[] = $rConnections[$i]['uuid'];
-                                    $rDelSID[$rConnections[$i]['stream_id']][] = $rDelUUID;
-                                }
-                                if (!($rConnections[$i]['on_demand'] && $rConnections[$i]['server_id'] == SERVER_ID && ipTV_lib::$settings['on_demand_instant_off'])) {
-                                } else {
-                                    self::removeFromQueue($rConnections[$i]['stream_id'], $rConnections[$i]['pid']);
-                                }
-                            }
-                        }
-                    }
-                    $i++;
-                } else {
-                    break;
-                }
-            }
-        }
-        if (!empty($rIDs)) {
-            self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` IN (' . implode(',', array_map('intval', $rIDs)) . ')');
-            foreach ($rDelUUID as $rUUID) {
-                @unlink(CLOSE_OPEN_CONS_PATH . $rUUID);
-            }
-            foreach ($rDelSID as $rStreamID => $rUUIDs) {
-                foreach ($rUUIDs as $rUUID) {
-                    @unlink(CLOSE_OPEN_CONS_PATH . $rStreamID . '/' . $rUUID);
-                }
-            }
-        }
-        return $rKilled;
-    }
-    public static function closeConnection($rActivityInfo) {
-        if (!empty($rActivityInfo)) {
-            if (!is_array($rActivityInfo)) {
-                if (strlen(strval($rActivityInfo)) == 32) {
-                    self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `uuid` = ?', $rActivityInfo);
-                } else {
-                    self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `activity_id` = ?', $rActivityInfo);
-                }
-                $rActivityInfo = self::$ipTV_db->get_row();
-            }
-            if (is_array($rActivityInfo)) {
-                if ($rActivityInfo['container'] == 'rtmp') {
-                    if ($rActivityInfo['server_id'] == SERVER_ID) {
-                        shell_exec('wget --timeout=2 -O /dev/null -o /dev/null "' . self::$rServers[SERVER_ID]['rtmp_mport_url'] . 'control/drop/client?clientid=' . intval($rActivityInfo['pid']) . '" >/dev/null 2>/dev/null &');
-                    } else {
+    //     $rIP = self::getUserIP();
+    //     $rKilled = 0;
+    //     $rDelSID = $rDelUUID = $rIDs = array();
+    //     if ($rIP && $rUserAgent) {
+    //         $rKillTypes = array(2, 1, 0);
+    //     } else {
+    //         if ($rIP) {
+    //             $rKillTypes = array(1, 0);
+    //         } else {
+    //             $rKillTypes = array(0);
+    //         }
+    //     }
+    //     foreach ($rKillTypes as $rKillOwnIP) {
+    //         $i = 0;
+    //         while ($i < count($rConnections) && $rKilled < $rToKill) {
+    //             if ($rKilled != $rToKill) {
+    //                 if ($rConnections[$i]['pid'] != getmypid()) {
+    //                     if (!($rConnections[$i]['user_ip'] == $rIP && $rConnections[$i]['user_agent'] == $rUserAgent && $rKillOwnIP == 2 || $rConnections[$i]['user_ip'] == $rIP && $rKillOwnIP == 1 || $rKillOwnIP == 0)) {
+    //                     } else {
+    //                         if (self::closeConnection($rConnections[$i])) {
+    //                             $rKilled++;
+    //                             if ($rConnections[$i]['container'] == 'hls') {
+    //                             } else {
 
-                        self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`rtmp`,`time`) VALUES(?,?,?,UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id'], 1);
-                    }
-                } else {
-                    if ($rActivityInfo['container'] == 'hls') {
+    //                                 $rIDs[] = intval($rConnections[$i]['activity_id']);
 
-                        self::$ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `activity_id` = ?', $rActivityInfo['activity_id']);
-                    } else {
-                        if ($rActivityInfo['server_id'] == SERVER_ID) {
-                            if (!($rActivityInfo['pid'] != getmypid() && is_numeric($rActivityInfo['pid']) && 0 < $rActivityInfo['pid'])) {
-                            } else {
-                                posix_kill(intval($rActivityInfo['pid']), 9);
-                            }
-                        } else {
-                            self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(?,?,UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id']);
-                        }
-                    }
-                }
-                self::writeOfflineActivity($rActivityInfo['server_id'], $rActivityInfo['proxy_id'], $rActivityInfo['user_id'], $rActivityInfo['stream_id'], $rActivityInfo['date_start'], $rActivityInfo['user_agent'], $rActivityInfo['user_ip'], $rActivityInfo['container'], $rActivityInfo['geoip_country_code'], $rActivityInfo['isp'], $rActivityInfo['external_device'], $rActivityInfo['divergence'], $rActivityInfo['hmac_id'], $rActivityInfo['hmac_identifier']);
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-    public static function removeFromQueue($rStreamID, $rPID) {
-        $rActivePIDs = array();
-        foreach ((igbinary_unserialize(file_get_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID))) ?: array()) as $rActivePID) {
-            if (!(self::isProcessRunning($rActivePID, 'php-fpm') && $rPID != $rActivePID)) {
-            } else {
-                $rActivePIDs[] = $rActivePID;
-            }
-        }
-        if (0 < count($rActivePIDs)) {
-            file_put_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID), igbinary_serialize($rActivePIDs));
-        } else {
-            unlink(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID));
-        }
-    }
-    public static function writeOfflineActivity($rServerID, $rProxyID, $rUserID, $rStreamID, $rStart, $rUserAgent, $rIP, $rExtension, $rGeoIP, $rISP, $rExternalDevice = '', $rDivergence = 0, $rIsHMAC = null, $rIdentifier = '') {
-        if (self::$rSettings['save_closed_connection'] != 0) {
-            if (!($rServerID && $rUserID && $rStreamID)) {
-            } else {
-                $rActivityInfo = array('user_id' => intval($rUserID), 'stream_id' => intval($rStreamID), 'server_id' => intval($rServerID), 'proxy_id' => intval($rProxyID), 'date_start' => intval($rStart), 'user_agent' => $rUserAgent, 'user_ip' => htmlentities($rIP), 'date_end' => time(), 'container' => $rExtension, 'geoip_country_code' => $rGeoIP, 'isp' => $rISP, 'external_device' => htmlentities($rExternalDevice), 'divergence' => intval($rDivergence), 'hmac_id' => $rIsHMAC, 'hmac_identifier' => $rIdentifier);
-                file_put_contents(LOGS_TMP_PATH . 'activity', base64_encode(json_encode($rActivityInfo)) . "\n", FILE_APPEND | LOCK_EX);
-            }
-        } else {
-            return null;
-        }
-    }
+    //                                 $rDelUUID[] = $rConnections[$i]['uuid'];
+    //                                 $rDelSID[$rConnections[$i]['stream_id']][] = $rDelUUID;
+    //                             }
+    //                             if (!($rConnections[$i]['on_demand'] && $rConnections[$i]['server_id'] == SERVER_ID && ipTV_lib::$settings['on_demand_instant_off'])) {
+    //                             } else {
+    //                                 self::removeFromQueue($rConnections[$i]['stream_id'], $rConnections[$i]['pid']);
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //                 $i++;
+    //             } else {
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     if (!empty($rIDs)) {
+    //         self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` IN (' . implode(',', array_map('intval', $rIDs)) . ')');
+    //         foreach ($rDelUUID as $rUUID) {
+    //             @unlink(CONS_TMP_PATH . $rUUID);
+    //         }
+    //         foreach ($rDelSID as $streamID => $rUUIDs) {
+    //             foreach ($rUUIDs as $rUUID) {
+    //                 @unlink(CONS_TMP_PATH . $streamID . '/' . $rUUID);
+    //             }
+    //         }
+    //     }
+    //     return $rKilled;
+    // }
+    // public static function closeConnection($rActivityInfo) {
+    //     if (!empty($rActivityInfo)) {
+    //         if (!is_array($rActivityInfo)) {
+    //             if (strlen(strval($rActivityInfo)) == 32) {
+    //                 self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `uuid` = ?', $rActivityInfo);
+    //             } else {
+    //                 self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `activity_id` = ?', $rActivityInfo);
+    //             }
+    //             $rActivityInfo = self::$ipTV_db->get_row();
+    //         }
+    //         if (is_array($rActivityInfo)) {
+    //             if ($rActivityInfo['container'] == 'rtmp') {
+    //                 if ($rActivityInfo['server_id'] == SERVER_ID) {
+    //                     shell_exec('wget --timeout=2 -O /dev/null -o /dev/null "' . self::$rServers[SERVER_ID]['rtmp_mport_url'] . 'control/drop/client?clientid=' . intval($rActivityInfo['pid']) . '" >/dev/null 2>/dev/null &');
+    //                 } else {
+
+    //                     self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`rtmp`,`time`) VALUES(?,?,?,UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id'], 1);
+    //                 }
+    //             } else {
+    //                 if ($rActivityInfo['container'] == 'hls') {
+
+    //                     self::$ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `activity_id` = ?', $rActivityInfo['activity_id']);
+    //                 } else {
+    //                     if ($rActivityInfo['server_id'] == SERVER_ID) {
+    //                         if (!($rActivityInfo['pid'] != getmypid() && is_numeric($rActivityInfo['pid']) && 0 < $rActivityInfo['pid'])) {
+    //                         } else {
+    //                             posix_kill(intval($rActivityInfo['pid']), 9);
+    //                         }
+    //                     } else {
+    //                         self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(?,?,UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id']);
+    //                     }
+    //                 }
+    //             }
+    //             self::writeOfflineActivity($rActivityInfo['server_id'], $rActivityInfo['proxy_id'], $rActivityInfo['user_id'], $rActivityInfo['stream_id'], $rActivityInfo['date_start'], $rActivityInfo['user_agent'], $rActivityInfo['user_ip'], $rActivityInfo['container'], $rActivityInfo['geoip_country_code'], $rActivityInfo['isp'], $rActivityInfo['external_device'], $rActivityInfo['divergence'], $rActivityInfo['hmac_id'], $rActivityInfo['hmac_identifier']);
+    //             return true;
+    //         }
+    //         return false;
+    //     }
+    //     return false;
+    // }
+    // public static function removeFromQueue($rStreamID, $rPID) {
+    //     $rActivePIDs = array();
+    //     foreach ((igbinary_unserialize(file_get_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID))) ?: array()) as $rActivePID) {
+    //         if (!(self::isProcessRunning($rActivePID, 'php-fpm') && $rPID != $rActivePID)) {
+    //         } else {
+    //             $rActivePIDs[] = $rActivePID;
+    //         }
+    //     }
+    //     if (0 < count($rActivePIDs)) {
+    //         file_put_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID), igbinary_serialize($rActivePIDs));
+    //     } else {
+    //         unlink(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID));
+    //     }
+    // }
+    // public static function writeOfflineActivity($rServerID, $rProxyID, $rUserID, $rStreamID, $rStart, $rUserAgent, $rIP, $rExtension, $rGeoIP, $rISP, $rExternalDevice = '', $rDivergence = 0, $rIsHMAC = null, $rIdentifier = '') {
+    //     if (ipTV_lib::$settings['save_closed_connection'] != 0) {
+    //         if (!($rServerID && $rUserID && $rStreamID)) {
+    //         } else {
+    //             $rActivityInfo = array('user_id' => intval($rUserID), 'stream_id' => intval($rStreamID), 'server_id' => intval($rServerID), 'proxy_id' => intval($rProxyID), 'date_start' => intval($rStart), 'user_agent' => $rUserAgent, 'user_ip' => htmlentities($rIP), 'date_end' => time(), 'container' => $rExtension, 'geoip_country_code' => $rGeoIP, 'isp' => $rISP, 'external_device' => htmlentities($rExternalDevice), 'divergence' => intval($rDivergence), 'hmac_id' => $rIsHMAC, 'hmac_identifier' => $rIdentifier);
+    //             file_put_contents(LOGS_TMP_PATH . 'activity', base64_encode(json_encode($rActivityInfo)) . "\n", FILE_APPEND | LOCK_EX);
+    //         }
+    //     } else {
+    //         return null;
+    //     }
+    // }
+    // TEST code
+
+
+
     public static function CloseLastCon($user_id, $max_connections) {
         self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `user_id` = \'%d\' ORDER BY activity_id ASC', $user_id);
         $rows = self::$ipTV_db->get_rows();
@@ -754,11 +759,11 @@ class ipTV_streaming {
             return true;
         }
     }
-    public static function playDone($pid) {
-        if (empty($pid)) {
+    public static function playDone($PID) {
+        if (empty($PID)) {
             return false;
         }
-        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `container` = \'rtmp\' AND `pid` = \'%d\' AND `server_id` = \'%d\'', $pid, SERVER_ID);
+        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `container` = \'rtmp\' AND `pid` = \'%d\' AND `server_id` = \'%d\'', $PID, SERVER_ID);
         if (self::$ipTV_db->num_rows() > 0) {
             $activity_id = self::$ipTV_db->get_row();
             self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
@@ -794,27 +799,24 @@ class ipTV_streaming {
             return null;
         }
     }
-    /** 
-     * GetSegmentsOfPlaylist function retrieves segments of a playlist file based on specified prebuffer value. 
-     * 
-     * @param string $playlist The path to the playlist file. 
-     * @param int $prebuffer The prebuffer value to determine the number of segments to retrieve. 
-     * @return mixed Returns an array of segments if prebuffer is greater than 0, otherwise returns a single segment. 
-     */
-    public static function GetSegmentsOfPlaylist($playlist, $prebuffer = 0) {
+    public static function GetSegmentsOfPlaylist($playlist, $prebuffer = 0, $segmentDuration = 10) {
         if (file_exists($playlist)) {
             $source = file_get_contents($playlist);
-            if (preg_match_all('/(.*?).ts/', $source, $matches)) {
-                if ($prebuffer > 0) {
-                    $total_segs = intval($prebuffer / 10);
-                    return array_slice($matches[0], -$total_segs);
-                } else {
-                    preg_match('/_(.*)\\./', array_pop($matches[0]), $pregmatches);
-                    return $pregmatches[1];
+            if (preg_match_all('/(.*?).ts/', $source, $rMatches)) {
+                if (0 < $prebuffer) {
+                    $totalSegments = intval($prebuffer / $segmentDuration);
+                    if (!$totalSegments) {
+                        $totalSegments = 1;
+                    }
+                    return array_slice($rMatches[0], 0 - $totalSegments);
                 }
+                if ($prebuffer == -1) {
+                    return $rMatches[0];
+                }
+                preg_match('/_(.*)\\./', array_pop($rMatches[0]), $currentSegment);
+                return $currentSegment[1];
             }
         }
-        return false;
     }
     /** 
      * Generates a playlist with authentication for an admin stream. 
@@ -881,27 +883,6 @@ class ipTV_streaming {
             die;
         }
     }
-    /** 
-     * Checks if a monitor process is running with the specified PID and stream ID. 
-     * 
-     * @param int $pid The process ID of the monitor. 
-     * @param int $streamID The stream ID to check against. 
-     * @param string $ffmpeg_path The path to the FFmpeg executable (default is PHP_BIN). 
-     * @return bool Returns true if the monitor process is running with the specified PID and stream ID, false otherwise. 
-     */
-    public static function CheckMonitorRunning($pid, $streamID, $ffmpeg_path = PHP_BIN) {
-        if (!empty($pid)) {
-            clearstatcache(true);
-            if (file_exists('/proc/' . $pid) && is_readable('/proc/' . $pid . '/exe') && basename(readlink('/proc/' . $pid . '/exe')) == basename($ffmpeg_path)) {
-                $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
-                if ($value == "XtreamCodes[{$streamID}]") {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return false;
-    }
     public static function checkIsCracked($user_ip) {
         $user_ip_file = TMP_DIR . md5($user_ip . 'cracked');
         if (file_exists($user_ip_file)) {
@@ -911,39 +892,81 @@ class ipTV_streaming {
         file_put_contents($user_ip_file, 0);
         return false;
     }
-    public static function CheckPidStreamExist($pid, $streamID) {
-        if (empty($pid)) {
+    public static function isArchiveRunning($PID, $streamID, $EXE = PHP_BIN) {
+        if (!empty($PID)) {
+            clearstatcache(true);
+            if (!(file_exists('/proc/' . $PID) && is_readable('/proc/' . $PID . '/exe') && strpos(basename(readlink('/proc/' . $PID . '/exe')), basename($EXE)) === 0)) {
+            } else {
+                $command = trim(file_get_contents('/proc/' . $PID . '/cmdline'));
+                if ($command != 'TVArchive[' . $streamID . ']') {
+                } else {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
+    }
+    /** 
+     * Checks if a monitor process is running with the specified PID and stream ID. 
+     * 
+     * @param int $PID The process ID of the monitor. 
+     * @param int $streamID The stream ID to check against. 
+     * @param string $ffmpeg_path The path to the FFmpeg executable (default is PHP_BIN). 
+     * @return bool Returns true if the monitor process is running with the specified PID and stream ID, false otherwise. 
+     */
+    public static function CheckMonitorRunning($PID, $streamID, $ffmpeg_path = PHP_BIN) {
+        if (!empty($PID)) {
+            clearstatcache(true);
+            if (file_exists('/proc/' . $PID) && is_readable('/proc/' . $PID . '/exe') && basename(readlink('/proc/' . $PID . '/exe')) == basename($ffmpeg_path)) {
+                $value = trim(file_get_contents("/proc/{$PID}/cmdline"));
+                if ($value == "XtreamCodes[{$streamID}]") {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
+    }
+    public static function CheckPidStreamExist($PID, $streamID) {
+        if (empty($PID)) {
             return false;
         }
         clearstatcache(true);
-        if (file_exists('/proc/' . $pid) && is_readable('/proc/' . $pid . '/exe')) {
-            $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
+        if (file_exists('/proc/' . $PID) && is_readable('/proc/' . $PID . '/exe')) {
+            $value = trim(file_get_contents("/proc/{$PID}/cmdline"));
             if ($value == "XtreamCodesDelay[{$streamID}]") {
                 return true;
             }
         }
         return false;
     }
-    public static function CheckPidChannelM3U8Exist($pid, $streamID, $ffmpeg_path = FFMPEG_PATH) {
-        if (!empty($pid)) {
+    public static function isStreamRunning($PID, $streamID) {
+        if (!empty($PID)) {
             clearstatcache(true);
-            if (!(file_exists("/proc/" . $pid) && is_readable("/proc/" . $pid . "/exe") && basename(readlink("/proc/" . $pid . "/exe")) == basename($ffmpeg_path))) {
-                return false;
+            if (file_exists('/proc/' . $PID) && is_readable('/proc/' . $PID . '/exe')) {
+                if (strpos(basename(readlink('/proc/' . $PID . '/exe')), 'ffmpeg') === 0) {
+                    $command = trim(file_get_contents('/proc/' . $PID . '/cmdline'));
+                    if (stristr($command, '/' . $streamID . '_.m3u8') || stristr($command, '/' . $streamID . '_%d.ts')) {
+                        return true;
+                    }
+                } else {
+                    if (strpos(basename(readlink('/proc/' . $PID . '/exe')), 'php') !== 0) {
+                    } else {
+                        return true;
+                    }
+                }
             }
-            $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
-            if (!stristr($value, "/{$streamID}_.m3u8")) {
-                return false;
-            }
-            return true;
+            return false;
         }
         return false;
     }
-    public static function ps_running($pid, $ffmpeg_path) {
-        if (empty($pid)) {
-            return false;
-        }
-        clearstatcache(true);
-        if (file_exists('/proc/' . $pid) && is_readable('/proc/' . $pid . '/exe') && basename(readlink('/proc/' . $pid . '/exe')) == basename($ffmpeg_path)) {
+    public static function isProcessRunning($PID, $EXE) {
+        if (!empty($PID)) {
+            clearstatcache(true);
+            if (!(file_exists('/proc/' . $PID) && is_readable('/proc/' . $PID . '/exe') && strpos(basename(readlink('/proc/' . $PID . '/exe')), basename($EXE)) === 0)) {
+                return false;
+            }
             return true;
         }
         return false;
@@ -972,25 +995,25 @@ class ipTV_streaming {
         http_response_code(403);
         die;
     }
-    public static function IsValidStream($playlist, $pid) {
-        return self::ps_running($pid, FFMPEG_PATH) && file_exists($playlist);
+    public static function IsValidStream($playlist, $PID) {
+        return self::isProcessRunning($PID, FFMPEG_PATH) && file_exists($playlist);
     }
     public static function getUserIP() {
         return !empty(ipTV_lib::$settings['get_real_ip_client']) && !empty($_SERVER[ipTV_lib::$settings['get_real_ip_client']]) ? $_SERVER[ipTV_lib::$settings['get_real_ip_client']] : $_SERVER['REMOTE_ADDR'];
     }
     public static function getIPInfo($user_ip) {
         if (!empty($user_ip)) {
-            if (!file_exists(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_geo2')) {
+            if (!file_exists(CONS_TMP_PATH . md5($user_ip) . '_geo2')) {
                 $rGeoIP = new Reader(GEOIP2_FILENAME);
                 $rResponse = $rGeoIP->get($user_ip);
                 $rGeoIP->close();
                 if (!$rResponse) {
                 } else {
-                    file_put_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_geo2', json_encode($rResponse));
+                    file_put_contents(CONS_TMP_PATH . md5($user_ip) . '_geo2', json_encode($rResponse));
                 }
                 return $rResponse;
             }
-            return json_decode(file_get_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_geo2'), true);
+            return json_decode(file_get_contents(CONS_TMP_PATH . md5($user_ip) . '_geo2'), true);
         }
         return false;
     }
@@ -1035,7 +1058,7 @@ class ipTV_streaming {
     }
     public static function getISP($user_ip) {
         if (!empty($user_ip)) {
-            $rResponse = (file_exists(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp') ? json_decode(file_get_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp'), true) : null);
+            $rResponse = (file_exists(CONS_TMP_PATH . md5($user_ip) . '_isp') ? json_decode(file_get_contents(CONS_TMP_PATH . md5($user_ip) . '_isp'), true) : null);
             if (is_array($rResponse)) {
             } else {
                 $rGeoIP = new Reader(GEOIP2_FILENAME);
@@ -1043,7 +1066,7 @@ class ipTV_streaming {
                 $rGeoIP->close();
                 if (!is_array($rResponse)) {
                 } else {
-                    file_put_contents(CLOSE_OPEN_CONS_PATH . md5($user_ip) . '_isp', json_encode($rResponse));
+                    file_put_contents(CONS_TMP_PATH . md5($user_ip) . '_isp', json_encode($rResponse));
                 }
             }
             return $rResponse;
@@ -1057,5 +1080,24 @@ class ipTV_streaming {
             }
         }
         return false;
+    }
+    public static function getConnections($rServerID = null, $rUserID = null, $rStreamID = null) {
+        $rWhere = array();
+        if (empty($rServerID)) {
+        } else {
+            $rWhere[] = 't1.server_id = ' . intval($rServerID);
+        }
+        if (empty($rUserID)) {
+        } else {
+            $rWhere[] = 't1.user_id = ' . intval($rUserID);
+        }
+        $rExtra = '';
+        if (0 >= count($rWhere)) {
+        } else {
+            $rExtra = 'WHERE ' . implode(' AND ', $rWhere);
+        }
+        $rQuery = 'SELECT t2.*,t3.*,t5.bitrate,t1.*,t1.uuid AS `uuid` FROM `lines_live` t1 LEFT JOIN `lines` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_servers` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id ' . $rExtra . ' ORDER BY t1.activity_id ASC';
+        self::$ipTV_db->query($rQuery);
+        return self::$ipTV_db->get_rows(true, 'user_id', false);
     }
 }

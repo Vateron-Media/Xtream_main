@@ -24,7 +24,7 @@ if (@$argc) {
         if (0 >= $ipTV_db->num_rows()) {
         } else {
             $stream = $ipTV_db->get_row();
-            if (ipTV_streaming::ps_running($stream["tv_archive_pid"], PHP_BIN)) {
+            if (ipTV_streaming::isProcessRunning($stream["tv_archive_pid"], PHP_BIN)) {
                 posix_kill($stream["tv_archive_pid"], 9);
             }
             if (empty($stream["pid"])) {
