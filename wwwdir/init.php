@@ -35,7 +35,7 @@ define('RESTART_TAKE_CACHE', 5);
 define('TOTAL_SAVES_DROP', 6);
 define('CLOSE_OPEN_CONS_PATH', TMP_DIR . 'opened_cons/');
 define('ENIGMA2_PLUGIN_DIR', MOVIES_IMAGES . 'enigma2/');
-define('GEOIP2_FILENAME', BIN_PATH . 'maxmind/GeoLite2.mmdb');
+define('GEOIP2_FILENAME', BIN_PATH . 'maxmind/GeoLite2-City.mmdb');
 define('GEOIP2ISP_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ISP.mmdb');
 define('OPENSSL_EXTRA', '5gd46z5s4fg6sd8f4gs6');
 

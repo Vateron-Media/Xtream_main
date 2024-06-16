@@ -111,20 +111,23 @@ function updateGeoLite2() {
     $rURL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/status.json";
     $rData = json_decode(file_get_contents($rURL), True);
     if ($rData["version"]) {
-        $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/raw/main/GeoLite2.mmdb");
-        if (stripos($rFileData, "MaxMind.com") !== false) {
-            $rFilePath = "/home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb";
-            // exec("sudo chattr -i {$rFilePath}");
-            unlink($rFilePath);
-            file_put_contents($rFilePath, $rFileData);
-            exec("sudo chmod 644 {$rFilePath}");
-            //exec("sudo chattr +i {$rFilePath}");
-            if (file_get_contents($rFilePath) == $rFileData) {
-                $rAdminSettings["geolite2_version"] = $rData["version"];
-                writeAdminSettings();
-                return true;
-            } else {
-                return false;
+        $fileNames = ["GeoLite2-City.mmdb", "GeoLite2-Country.mmdb", "GeoLite2-ASN.mmdb"];
+        foreach ($fileNames as $value) {
+            $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/raw/main/{$value}");
+            if (stripos($rFileData, "MaxMind.com") !== false) {
+                $rFilePath = "/home/xtreamcodes/iptv_xtream_codes/bin/maxmind/{$value}";
+                // exec("sudo chattr -i {$rFilePath}");
+                unlink($rFilePath);
+                file_put_contents($rFilePath, $rFileData);
+                exec("sudo chmod 644 {$rFilePath}");
+                //exec("sudo chattr +i {$rFilePath}");
+                if (file_get_contents($rFilePath) == $rFileData) {
+                    $rAdminSettings["geolite2_version"] = $rData["version"];
+                    writeAdminSettings();
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }

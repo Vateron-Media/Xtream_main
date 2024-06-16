@@ -18,7 +18,7 @@ rPackages = [
     "mc",
     "python-paramiko",
 ]
-rGeo = "http://xtream-ui.mine.nu/GeoLite2.mmdb"
+rGeo = "http://xtream-ui.mine.nu/GeoLite2-City.mmdb"
 
 
 def prepare():
@@ -100,15 +100,20 @@ def install():
             'mv "%s" "%s.xc" && mv "%s" "%s.xc" && mv "%s" "%s.xc"'
             % (rNginx, rNginx, rNginxRtmp, rNginxRtmp, rIni, rIni)
         )
-        os.system("chattr -i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb")
+        os.system(
+            "chattr -i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb"
+        )
         os.system("umount -l /home/xtreamcodes/iptv_xtream_codes/streams")
         os.system("umount -l /home/xtreamcodes/iptv_xtream_codes/tmp")
         os.system(
             'tar -zxvf "/tmp/xtreamcodes.tar.gz" -C "/home/xtreamcodes/" > /dev/null'
         )
-        os.system("rm /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb")
         os.system(
-            'wget -q -O "/home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb" "%s"' % rGeo
+            "rm /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb"
+        )
+        os.system(
+            'wget -q -O "/home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb" "%s"'
+            % rGeo
         )
         os.system("chown -R xtreamcodes:xtreamcodes /home/xtreamcodes/")
         os.system("mount -a")
@@ -117,7 +122,7 @@ def install():
             % (rNginx, rNginx, rNginxRtmp, rNginxRtmp, rIni, rIni)
         )
         os.system("chmod -R 777 /home/xtreamcodes/")
-        # os.system("chattr +i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb")
+        # os.system("chattr +i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb")
         os.system(
             "rm /home/xtreamcodes/iptv_xtream_codes/adtools/backups/* 2>/dev/null"
         )
@@ -193,7 +198,9 @@ def start():
     os.system("rm /usr/bin/ffmpeg")
     os.system("rm /usr/bin/ffprobe")
     os.system("apt-get install unzip e2fsprogs python-paramiko -y")
-    os.system("chattr -i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb")
+    os.system(
+        "chattr -i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb"
+    )
     os.system(
         'wget "https://bitbucket.org/le_lio/assets/raw/master/release_22f.zip" -O /tmp/update.zip -o /dev/null'
     )
@@ -207,13 +214,13 @@ def start():
     os.system("rm /tmp/update.zip")
     os.system("rm -rf /tmp/update")
     os.system(
-        "wget http://xtream-ui.mine.nu/GeoLite2.mmdb -O /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb -o /dev/null"
+        "wget http://xtream-ui.mine.nu/GeoLite2-City.mmdb -O /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb -o /dev/null"
     )
     os.system("chown -R xtreamcodes:xtreamcodes /home/xtreamcodes")
     os.system(
         "find /home/xtreamcodes/ -type d -not \( -name .update -prune \) -exec chmod -R 777 {} + "
     )
-    # os.system('chattr +i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2.mmdb')
+    # os.system('chattr +i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb')
     os.system("ln -s /home/xtreamcodes/iptv_xtream_codes/bin/ffmpeg /usr/bin/")
     if os.path.exists(
         "/home/xtreamcodes/iptv_xtream_codes/wwwdir/includes/streaming.php.xc"
