@@ -57,7 +57,8 @@ if ($rSettings["sidebar"]) { ?>
                                             ?>
                                                 <tr>
                                                     <td class="text-center"><?= $rPlog["id"] ?> </td>
-                                                    <td><?= (strlen($rPlog["log_message"]) > 130 ? substr($rPlog["log_message"], 0, 130) . "..." : $rPlog["log_message"]) ?> </td>
+                                                    <!-- <td><?= (strlen($rPlog["log_message"]) > 130 ? substr($rPlog["log_message"], 0, 130) . "..." : $rPlog["log_message"]) ?> </td> -->
+                                                    <td><?= $rPlog["log_message"] ?> </td>
                                                     <td class="text-center"><?= date("Y-m-d", $rPlog["date"]) ?> </td>
                                                 </tr>
                                             <?php } ?>

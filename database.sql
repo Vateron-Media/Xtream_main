@@ -973,6 +973,7 @@ CREATE TABLE IF NOT EXISTS `signals` (
 
 CREATE TABLE IF NOT EXISTS `streaming_servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `script_version` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `server_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `domain_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `server_ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1006,6 +1007,7 @@ CREATE TABLE IF NOT EXISTS `streaming_servers` (
   `whitelist_ips` text COLLATE utf8_unicode_ci NOT NULL,
   `watchdog_data` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `timeshift_only` tinyint(4) NOT NULL DEFAULT '0',
+  `time_offset` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `server_ip` (`server_ip`,`http_broadcast_port`),
   KEY `total_clients` (`total_clients`),
@@ -1016,8 +1018,8 @@ CREATE TABLE IF NOT EXISTS `streaming_servers` (
 -- Dumping data for table `streaming_servers`
 --
 
-INSERT INTO `streaming_servers` (`id`, `server_name`, `domain_name`, `server_ip`, `vpn_ip`, `ssh_password`, `ssh_port`, `diff_time_main`, `http_broadcast_port`, `total_clients`, `system_os`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `boost_fpm`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`) VALUES
-(1, 'Main Server', '', '127.0.0.1', '', NULL, NULL, 0, 25461, 1000, NULL, 'eh0', 0, 1, 0, '', 0, 0, '', 3, 0, 25462, 'low_priority', '', 'low_priority', 0, 0, '', 0, 25463, '', '', '', 0);
+INSERT INTO `streaming_servers` (`id`, `script_version`, `server_name`, `domain_name`, `server_ip`, `vpn_ip`, `ssh_password`, `ssh_port`, `diff_time_main`, `http_broadcast_port`, `total_clients`, `system_os`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `boost_fpm`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`, `time_offset`) VALUES
+(1, NULL, 'Main Server', '', '127.0.0.1', '', NULL, NULL, 0, 25461, 1000, NULL, 'eh0', 0, 1, 0, '', 0, 0, '', 3, 0, 25462, 'low_priority', '', 'low_priority', 0, 0, '', 0, 25463, '', '', '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1510,6 +1512,50 @@ CREATE TABLE IF NOT EXISTS `xtream_main` (
   `root_ip` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `lines_live` (
+  `activity_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `stream_id` int(11) DEFAULT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `proxy_id` int(11) DEFAULT NULL,
+  `user_agent` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_ip` varchar(39) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `container` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pid` int(11) DEFAULT NULL,
+  `active_pid` int(11) DEFAULT NULL,
+  `date_start` int(11) DEFAULT NULL,
+  `date_end` int(11) DEFAULT NULL,
+  `geoip_country_code` varchar(22) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `isp` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `external_device` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `divergence` float DEFAULT '0',
+  `hls_last_read` int(11) DEFAULT NULL,
+  `hls_end` tinyint(4) DEFAULT '0',
+  `fingerprinting` tinyint(4) DEFAULT '0',
+  `hmac_id` tinyint(4) DEFAULT NULL,
+  `hmac_identifier` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `uuid` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`activity_id`),
+  KEY `user_agent` (`user_agent`),
+  KEY `user_ip` (`user_ip`),
+  KEY `container` (`container`),
+  KEY `pid` (`pid`),
+  KEY `active_pid` (`active_pid`),
+  KEY `geoip_country_code` (`geoip_country_code`),
+  KEY `user_id` (`user_id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `server_id` (`server_id`),
+  KEY `date_start` (`date_start`),
+  KEY `date_end` (`date_end`),
+  KEY `hls_end` (`hls_end`),
+  KEY `parent_id` (`proxy_id`) USING BTREE,
+  KEY `fingerprinting` (`fingerprinting`),
+  KEY `hmac_id` (`hmac_id`),
+  KEY `hmac_identifier` (`hmac_identifier`),
+  KEY `uuid` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

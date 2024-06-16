@@ -10,7 +10,7 @@ if (isset(ipTV_lib::$request["qs"])) {
         ipTV_lib::$request["username"] = substr($qs[0], 2);
     }
 }
-if (!isset(ipTV_lib::$request["extension"]) || !isset(ipTV_lib::$request["username"]) || !isset(ipTV_lib::$request["password"]) || !isset(ipTV_lib::$request["stream"])) {
+if (!isset(ipTV_lib::$request["extension"]) || !isset(ipTV_lib::$request["username"]) || !isset(ipTV_lib::$request["password"]) || !isset(ipTV_lib::$request["uuid"]) || !isset(ipTV_lib::$request["stream"])) {
     die;
 }
 $geoip = new Reader(GEOIP2_FILENAME);
@@ -18,20 +18,24 @@ $activity_id = 0;
 $close_connection = true;
 $connection_speed_file = null;
 $user_ip = ipTV_streaming::getUserIP();
+$rCountryCode = ipTV_streaming::getIPInfo($user_ip)['country']['iso_code'];
 $user_agent = empty($_SERVER["HTTP_USER_AGENT"]) ? '' : htmlentities(trim($_SERVER["HTTP_USER_AGENT"]));
 $rSegmentName = empty(ipTV_lib::$request["segment"]) ? '' : ipTV_lib::$request["segment"];
 $external_device = null;
 $username = ipTV_lib::$request["username"];
 $password = ipTV_lib::$request["password"];
+$uuid = ipTV_lib::$request["uuid"];
 $stream_id = intval(ipTV_lib::$request["stream"]);
 $extension = preg_replace('/[^A-Za-z0-9 ]/', '', trim(ipTV_lib::$request["extension"]));
 $date = time();
+$rConnection = null;
+
 if (ipTV_lib::$settings["use_buffer"] == 0) {
     header('X-Accel-Buffering: no');
 }
 header('Access-Control-Allow-Origin: *');
-
 $play_token = empty(ipTV_lib::$request["play_token"]) ? null : ipTV_lib::$request["play_token"];
+
 $user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, false, true, array(), false, $user_ip, $user_agent, array(), $play_token, $stream_id, $rSegmentName);
 if ($user_info) {
     if (isset($user_info["mag_invalid_token"])) {
@@ -164,50 +168,62 @@ if ($user_info) {
         }
         switch ($extension) {
             case 'm3u8':
-                $close_connection = false;
-                $items = 0;
-                while (!file_exists($playlist) && $items <= 20) {
-                    usleep(500000);
-                    ++$items;
-                }
-                if ($items == 20) {
-                    die;
-                }
                 if (empty(ipTV_lib::$request["segment"])) {
-                    $ipTV_db->query('SELECT activity_id,hls_end FROM `user_activity_now` WHERE `user_id` = \'%d\' AND `server_id` = \'%d\' AND `container` = \'hls\' AND `user_ip` = \'%s\' AND `user_agent` = \'%s\' AND `stream_id` = \'%d\'', $user_info["id"], SERVER_ID, $user_ip, $user_agent, $stream_id);
-                    if ($ipTV_db->num_rows() == 0) {
-                        if ($user_info["max_connections"] != 0) {
-                            $ipTV_db->query('UPDATE `user_activity_now` SET `hls_end` = 1 WHERE `user_id` = \'%d\' AND `container` = \'hls\'', $user_info["id"]);
-                        }
-                        $ipTV_db->query('INSERT INTO `user_activity_now` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`,`hls_last_read`) VALUES(\'%d\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\',\'%d\')', $user_info["id"], $stream_id, SERVER_ID, $user_agent, $user_ip, 'hls', getmypid(), $date, $geoip_country_code, $user_info["con_isp_name"], $external_device, time());
-                        $activity_id = $ipTV_db->last_insert_id();
+                    $rProxyID = null;
+                    $ipTV_db->query('SELECT activity_id,hls_end FROM `lines_live` WHERE `uuid` = \'%d\' AND `user_id` = \'%d\' AND `server_id` = \'%s\' AND `container` = \'hls\' AND `stream_id` = \'%s\' AND `hls_end` = 0', $uuid, $user_info["id"], SERVER_ID, $stream_id);
+
+                    if ($ipTV_db->num_rows() > 0) {
+                        $rConnection = $ipTV_db->get_row();
+                    }
+
+                    if (!$rConnection) {
+                        // if (time() > $rExpiresAt) {
+                        //     generateError("TOKEN_EXPIRED");
+                        //     http_response_code(404);
+                        // }
+
+                        $rResult = $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`proxy_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`,`external_device`,`hls_last_read`) VALUES(\'%d\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\',\'%d\',\'%d\',\'%d\')', $user_info["id"], $stream_id, SERVER_ID, $rProxyID, $user_agent, $user_ip, "hls", NULL, $uuid, time(), $rCountryCode, $user_info["con_isp_name"], null, time() - (int) ipTV_lib::$StreamingServers[SERVER_ID]["time_offset"]);
                     } else {
-                        $row = $ipTV_db->get_row();
-                        if ($row["hls_end"] == 1) {
-                            header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
-                            die;
+                        $rIPMatch = ipTV_lib::$settings["ip_subnet_match"] ? implode(".", array_slice(explode(".", $rConnection["user_ip"]), 0, -1)) == implode(".", array_slice(explode(".", $user_ip), 0, -1)) : $rConnection["user_ip"] == $user_ip;
+                        if (!$rIPMatch && ipTV_lib::$settings["restrict_same_ip"]) {
+                            ipTV_streaming::ClientLog($stream_id, $user_info["id"], "IP_MISMATCH", $user_ip);
+                            // generateError("IP_MISMATCH");
+                            http_response_code(404);
                         }
-                        $activity_id = $row["activity_id"];
-                        $ipTV_db->query('UPDATE `user_activity_now` SET `hls_last_read` = \'%d\' WHERE `activity_id` = \'%d\'', time(), $row['activity_id']);
+                        $rResult = $ipTV_db->query("UPDATE `lines_live` SET `hls_last_read` = ?, `hls_end` = 0, `server_id` = ?, `proxy_id` = ? WHERE `activity_id` = ?", time() - (int) ipTV_lib::$StreamingServers[SERVER_ID]["time_offset"], SERVER_ID, $rProxyID, $rConnection["activity_id"]);
                     }
+                    if (!$rResult) {
+                        ipTV_streaming::ClientLog($stream_id, $user_info["id"], "LINE_CREATE_FAIL", $user_ip);
+                        // generateError("LINE_CREATE_FAIL");
+                        http_response_code(404);
+                    }
+                    // ipTV_streaming::validateConnections($rUserInfo, $user_ip, $user_agent);
+
                     $ipTV_db->close_mysql();
-                    if ($source = ipTV_streaming::GeneratePlayListWithAuthentication($playlist, $username, $password, $stream_id)) {
+
+                    $rHLS = ipTV_streaming::GeneratePlayListWithAuthentication($playlist, $username, $password, $uuid, $stream_id);
+                    if ($rHLS) {
+                        touch(CLOSE_OPEN_CONS_PATH . $uuid);
+                        ob_end_clean();
                         header("Content-Type: application/x-mpegurl");
-                        header("Content-Length: " . strlen($source));
-                        header("cache-Control: no-store, no-cache, must-revalidate");
-                        echo $source;
+                        header("Content-Length: " . strlen($rHLS));
+                        header("Cache-Control: no-store, no-cache, must-revalidate");
+                        echo $rHLS;
+                    } else {
+                        // ipTV_streaming::ShowVideo("show_not_on_air_video", "not_on_air_video_path", $rExtension, $rUserInfo, $user_ip, $rCountryCode, $rUserInfo["con_isp_name"], SERVER_ID, $rProxyID);
                     }
-                    die;
+                    exit;
                 } else {
                     $ipTV_db->close_mysql();
                     $segment = STREAMS_PATH . str_replace(array('\\', '/'), '', urldecode(ipTV_lib::$request["segment"]));
+
                     $current_ts = explode("_", basename($segment));
                     if (!file_exists($segment) || $current_ts[0] != $stream_id || empty(ipTV_lib::$request["token"])) {
                         header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
                         die;
                     }
                     $token = ipTV_lib::$request["token"];
-                    $token_segment = md5(urldecode(ipTV_lib::$request["segment"]) . $user_info["username"] . ipTV_lib::$settings["crypt_load_balancing"] . filesize($segment));
+                    $token_segment = md5(urldecode(ipTV_lib::$request["segment"]) . $username . $uuid . ipTV_lib::$settings["crypt_load_balancing"] . filesize($segment));
                     if ($token_segment != $token) {
                         header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
                         die;
@@ -220,7 +236,7 @@ if ($user_info) {
                 break;
             default:
                 // generate ts stream
-                $ipTV_db->query("INSERT INTO `user_activity_now` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES('%d','%d','%d','%s','%s','%s','%d','%d','%s','%s','%s')", $user_info["id"], $stream_id, SERVER_ID, $user_agent, $user_ip, $extension, getmypid(), $date, $geoip_country_code, $user_info["con_isp_name"], $external_device);
+                $ipTV_db->query("INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES('%d','%d','%d','%s','%s','%s','%d','%d','%s','%s','%s')", $user_info["id"], $stream_id, SERVER_ID, $user_agent, $user_ip, $extension, getmypid(), $date, $geoip_country_code, $user_info["con_isp_name"], $external_device);
                 $activity_id = $ipTV_db->last_insert_id();
                 $connection_speed_file = TMP_DIR . $activity_id . ".con";
                 $ipTV_db->close_mysql();

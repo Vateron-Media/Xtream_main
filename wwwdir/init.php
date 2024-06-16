@@ -1,5 +1,6 @@
 <?php
 ini_set('display_errors', 1);
+define('SCRIPT_VERSION', '1.1.11');
 define('MAIN_DIR', '/home/xtreamcodes/');
 define('IPTV_ROOT_PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');
 define('IPTV_INCLUDES_PATH', IPTV_ROOT_PATH . 'includes' . '/');
@@ -8,7 +9,6 @@ define('IPTV_TEMPLATES_PATH', IPTV_ROOT_PATH . 'templates' . '/');
 @ini_set('default_socket_timeout', 5);
 define('IN_SCRIPT', true);
 define('SOFTWARE', 'iptv');
-define('SCRIPT_VERSION', '2.9.2');
 define('IPTV_PANEL_DIR', MAIN_DIR . 'iptv_xtream_codes/');
 define('BIN_PATH', IPTV_PANEL_DIR . 'bin/');
 define('FFMPEG_PATH', file_exists(BIN_PATH . 'ffmpeg') ? BIN_PATH . 'ffmpeg' : '/usr/bin/ffmpeg');
@@ -37,6 +37,7 @@ define('CLOSE_OPEN_CONS_PATH', TMP_DIR . 'opened_cons/');
 define('ENIGMA2_PLUGIN_DIR', MOVIES_IMAGES . 'enigma2/');
 define('GEOIP2_FILENAME', BIN_PATH . 'maxmind/GeoLite2.mmdb');
 define('GEOIP2ISP_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ISP.mmdb');
+define('OPENSSL_EXTRA', '5gd46z5s4fg6sd8f4gs6');
 
 if (!defined('USE_CACHE')) {
     define('USE_CACHE', true);

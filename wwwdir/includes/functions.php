@@ -235,6 +235,9 @@ function UniqueID() {
 }
 function GenerateList($user_id, $playlistType, $output_key = 'ts', $force_download = false) {
     global $ipTV_db;
+
+    $uuid = generateUUID($user_id);
+
     if (empty($playlistType)) {
         return false;
     }
@@ -254,9 +257,19 @@ function GenerateList($user_id, $playlistType, $output_key = 'ts', $force_downlo
     }
     $output_ext = $ipTV_db->get_col();
     $user_info = ipTV_streaming::GetUserInfo($user_id, null, null, true, true, false);
+
+    // test function
+    // $rEncryptPlaylist = ($user_info['is_restreamer'] ? ipTV_lib::$settings['encrypt_playlist_restreamer'] : ipTV_lib::$settings['encrypt_playlist']);
+    // if ($user_info['is_stalker']) {
+    //     $rEncryptPlaylist = false;
+    // }
+    $rEncryptPlaylist = false;
+    // test function
+
     if (empty($user_info)) {
         return false;
     }
+
     if (!empty($user_info['exp_date']) && time() >= $user_info['exp_date']) {
         return false;
     }
@@ -350,7 +363,18 @@ function GenerateList($user_id, $playlistType, $output_key = 'ts', $force_downlo
                 }
                 foreach ($user_info['channels'] as $channel) {
 
-                    $url = $domain_name . "{$channel["type_output"]}/{$user_info["username"]}/{$user_info["password"]}/";
+                    // test function
+                    if ($rEncryptPlaylist) {
+                        $rEncData = $channel['type_output'] . '/' . $user_info['username'] . '/' . $user_info['password'] . '/' . $uuid . '/' . $channel['id'];
+                        $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+
+                        $url = $domain_name . 'play/' . $rToken . '/';
+                    } else {
+                        $url = $domain_name . "{$channel["type_output"]}/{$user_info["username"]}/{$user_info["password"]}/{$uuid}/";
+                    }
+                    // test function
+
+                    // $url = $domain_name . "{$channel["type_output"]}/{$user_info["username"]}/{$user_info["password"]}/";
                     $icon = "";
 
                     if ($channel["live"] == 0) {
@@ -364,7 +388,6 @@ function GenerateList($user_id, $playlistType, $output_key = 'ts', $force_downlo
                         $url .= $channel["id"] . "." . $output_ext;
                         $icon = $channel["stream_icon"];
                     }
-
                     $esr_id = ($channel["live"] == 1 ? 1 : 4097);
                     $sid = (!empty($channel["custom_sid"]) ? $channel["custom_sid"] : ":0:1:0:0:0:0:0:0:0:");
                     $data .= "\n" . str_replace(array($url_pattern, "{ESR_ID}", "{SID}", "{CHANNEL_NAME}", "{CHANNEL_ID}", "{CATEGORY}", "{CHANNEL_ICON}"), array(str_replace($url_encoded_charts, array_map("urlencode", $url_encoded_charts), $url), $esr_id, $sid, $channel["stream_display_name"], $channel["channel_id"], $channel["category_name"], $icon), $device_info["device_conf"]) . "\r\n";
@@ -413,7 +436,7 @@ function GetConnections($end, $server_id = null) {
     }
     switch ($end) {
         case 'open':
-            $query = "SELECT t1.*,t2.*,t3.*,t5.bitrate FROM `user_activity_now` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_sys` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id {$extra} ORDER BY t1.activity_id ASC";
+            $query = "SELECT t1.*,t2.*,t3.*,t5.bitrate FROM `lines_live` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_sys` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id {$extra} ORDER BY t1.activity_id ASC";
             break;
         case 'closed':
             $query = "SELECT t1.*,t2.*,t3.*,t5.bitrate FROM `user_activity` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_sys` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id {$extra} ORDER BY t1.activity_id ASC";
@@ -507,4 +530,40 @@ function secondsToTime($inputSeconds) {
     }
     $final .= "{$seconds}s";
     return $final;
+}
+function encryptData($rData, $decryptionKey, $rDeviceID) {
+    return base64url_encode(openssl_encrypt($rData, 'aes-256-cbc', md5(sha1($rDeviceID) . $decryptionKey), OPENSSL_RAW_DATA, substr(md5(sha1($decryptionKey)), 0, 16)));
+}
+
+function decryptData($rData, $decryptionKey, $rDeviceID) {
+    return openssl_decrypt(base64url_decode($rData), 'aes-256-cbc', md5(sha1($rDeviceID) . $decryptionKey), OPENSSL_RAW_DATA, substr(md5(sha1($decryptionKey)), 0, 16));
+}
+
+function base64url_encode($rData) {
+    return rtrim(strtr(base64_encode($rData), '+/', '-_'), '=');
+}
+
+function base64url_decode($rData) {
+    return base64_decode(strtr($rData, '-_', '+/'));
+}
+/**
+ * Generates a UUID (Universally Unique Identifier) using a specified key and length.
+ *
+ * @param string|null $key The key used to generate the UUID. If not provided, a random 16-byte key is generated.
+ * @return string The generated UUID with the specified length.
+ */
+function generateUUID($key = null) {
+    if ($key === null) {
+        $key = random_bytes(16); // Generate a random 16-byte key
+    }
+
+    $data = openssl_random_pseudo_bytes(16, $crytoStrong);
+    assert($data !== false && $crytoStrong === true);
+
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // Set version to 0100
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // Set bits 6-7 to 10
+
+    $uuid = vsprintf('%s%s-%s-%s-%s%s', str_split(bin2hex($key . $data), 4));
+
+    return $uuid;
 }

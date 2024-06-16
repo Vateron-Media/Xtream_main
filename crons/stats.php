@@ -36,13 +36,13 @@ if (($rPeriod >= 60) && ($rAdminSettings["dashboard_stats"])) {
 		$rCount = 0;
 		$rResult = $db->query("SELECT COUNT(`activity_id`) AS `count` FROM `user_activity` WHERE `date_start` <= " . intval($rDate) . " AND `date_end` >= " . intval($rDate) . ";");
 		$rCount += $rResult->fetch_assoc()["count"];
-		$rResult = $db->query("SELECT COUNT(`activity_id`) AS `count` FROM `user_activity_now` WHERE `date_start` <= " . intval($rDate) . ";");
+		$rResult = $db->query("SELECT COUNT(`activity_id`) AS `count` FROM `lines_live` WHERE `date_start` <= " . intval($rDate) . ";");
 		$rCount += $rResult->fetch_assoc()["count"];
 		$rStatistics["conns"][] = array(intval($rDate), $rCount);
 		$rCount = 0;
 		$rResult = $db->query("SELECT COUNT(DISTINCT(`activity_id`)) AS `count` FROM `user_activity` WHERE `date_start` <= " . intval($rDate) . " AND `date_end` >= " . intval($rDate) . ";");
 		$rCount += $rResult->fetch_assoc()["count"];
-		$rResult = $db->query("SELECT COUNT(DISTINCT(`activity_id`)) AS `count` FROM `user_activity_now` WHERE `date_start` <= " . intval($rDate) . ";");
+		$rResult = $db->query("SELECT COUNT(DISTINCT(`activity_id`)) AS `count` FROM `lines_live` WHERE `date_start` <= " . intval($rDate) . ";");
 		$rCount += $rResult->fetch_assoc()["count"];
 		$rStatistics["users"][] = array(intval($rDate), $rCount);
 	}

@@ -54,7 +54,7 @@ if (@$argc) {
     $total_running_streams = shell_exec('ps ax | grep -v grep | grep ffmpeg | grep -c ' . FFMPEG_PATH);
     $server_hardware = array('total_ram' => $total_ram, 'total_used' => $total_used, 'cores' => $cpu_cores, 'threads' => $cpu_threads, 'kernel' => trim(shell_exec('uname -r')), 'total_running_streams' => $total_running_streams, 'cpu_name' => $cpu_name, 'cpu_usage' => (int) $cpu_usage / $cpu_threads, 'network_speed' => $speed, 'bytes_sent' => $total_bytes_sent, 'bytes_received' => $total_bytes_received);
     $whitelist_ips = array_values(array_unique(array_map('trim', explode('\n', shell_exec('ip -4 addr | grep -oP \'(?<=inet\\s)\\d+(\\.\\d+){3}\'')))));
-    $ipTV_db->query('UPDATE `streaming_servers` SET `server_hardware` = \'%s\',`whitelist_ips` = \'%s\' WHERE `id` = \'%d\'', json_encode($server_hardware), json_encode($whitelist_ips), SERVER_ID);
+    $ipTV_db->query('UPDATE `streaming_servers` SET `server_hardware` = \'%s\',`whitelist_ips` = \'%s\', `time_offset` = ' . intval(time()) . ' - UNIX_TIMESTAMP(), `script_version` = \'%s\' WHERE `id` = \'%d\'', json_encode($server_hardware), json_encode($whitelist_ips), SCRIPT_VERSION, SERVER_ID);
     @unlink($unique_id);
 } else {
     exit(0);

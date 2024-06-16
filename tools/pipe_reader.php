@@ -21,7 +21,7 @@ if (!empty($files)) {
     foreach ($files as $file) {
         unlink(CLOSE_OPEN_CONS_PATH . $file);
     }
-    if ($ipTV_db->query('DELETE FROM `user_activity_now` WHERE `activity_id` IN (' . implode(',', $files) . ')') !== false) {
+    if ($ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` IN (' . implode(',', $files) . ')') !== false) {
         // Query executed successfully
     }
 } else {

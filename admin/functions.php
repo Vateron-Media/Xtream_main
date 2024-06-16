@@ -62,7 +62,7 @@ function updatePanel() {
                 echo "Download Version: " . $versions[$i] . "\n";
                 // exec('wget "https://git/update.zip" -O /tmp/update.zip -o /dev/null');
             }
-        }        
+        }
         // $rAdminSettings["panel_version"] = $rData["main"];
         // writeAdminSettings();
     }
@@ -133,7 +133,7 @@ function updateGeoLite2() {
 
 function mapmap() {
     global $db;
-    $rQuery = "SELECT geoip_country_code, count(geoip_country_code) AS total FROM user_activity_now GROUP BY geoip_country_code";
+    $rQuery = "SELECT geoip_country_code, count(geoip_country_code) AS total FROM lines_live GROUP BY geoip_country_code";
     if ($rResult = $db->query($rQuery)) {
         while ($row = $rResult->fetch_assoc()) {
             $gggrr = "{\"code\":" . json_encode($row["geoip_country_code"]) . ",\"value\":" . json_encode($row["total"]) . "},";
@@ -417,7 +417,7 @@ function getStreamPIDs($rServerID) {
             }
         }
     }
-    $result = $db->query("SELECT `streams`.`id`, `streams`.`stream_display_name`, `streams`.`type`, `user_activity_now`.`pid` FROM `user_activity_now` LEFT JOIN `streams` ON `streams`.`id` = `user_activity_now`.`stream_id` WHERE `user_activity_now`.`server_id` = " . intval($rServerID) . ";");
+    $result = $db->query("SELECT `streams`.`id`, `streams`.`stream_display_name`, `streams`.`type`, `lines_live`.`pid` FROM `lines_live` LEFT JOIN `streams` ON `streams`.`id` = `lines_live`.`stream_id` WHERE `lines_live`.`server_id` = " . intval($rServerID) . ";");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             if ($row["pid"]) {
@@ -655,7 +655,7 @@ function getStreamList() {
 function getConnections($rServerID) {
     global $db;
     $return = array();
-    $result = $db->query("SELECT * FROM `user_activity_now` WHERE `server_id` = '" . ESC($rServerID) . "';");
+    $result = $db->query("SELECT * FROM `lines_live` WHERE `server_id` = '" . ESC($rServerID) . "';");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             $return[] = $row;
@@ -667,7 +667,7 @@ function getConnections($rServerID) {
 function getUserConnections($rUserID) {
     global $db;
     $return = array();
-    $result = $db->query("SELECT * FROM `user_activity_now` WHERE `user_id` = '" . ESC($rUserID) . "';");
+    $result = $db->query("SELECT * FROM `lines_live` WHERE `user_id` = '" . ESC($rUserID) . "';");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             $return[] = $row;
@@ -920,9 +920,9 @@ is_restreamer < 1;");
 function getSecurityCenter() {
     global $db;
     $return = array();
-    $result = $db->query("SELECT Distinct users.id, users.username, SUBSTR(`streams`.`stream_display_name`, 1, 30) stream_display_name, users.max_connections, (SELECT count(*) FROM `user_activity_now` WHERE `user_activity_now`.`stream_id` = `streams`.`id`) AS `active_connections`, (SELECT count(*) FROM `user_activity_now` WHERE `users`.`id` = `user_activity_now`.`user_id`) AS `total_active_connections` FROM user_activity_now
-INNER JOIN `streams` ON `user_activity_now`.`stream_id` = `streams`.`id`
-LEFT JOIN users ON user_id = users.id WHERE (SELECT count(*) FROM `user_activity_now` WHERE `users`.`id` = `user_activity_now`.`user_id`) > `users`.`max_connections`
+    $result = $db->query("SELECT Distinct users.id, users.username, SUBSTR(`streams`.`stream_display_name`, 1, 30) stream_display_name, users.max_connections, (SELECT count(*) FROM `lines_live` WHERE `lines_live`.`stream_id` = `streams`.`id`) AS `active_connections`, (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) AS `total_active_connections` FROM lines_live
+INNER JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id`
+LEFT JOIN users ON user_id = users.id WHERE (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) > `users`.`max_connections`
 AND
 is_restreamer < 1;");
     if (($result) && ($result->num_rows > 0)) {
@@ -1039,7 +1039,7 @@ function hasPermissions($rType, $rID) {
             return true;
         }
     } else if ($rType == "pid") {
-        $result = $db->query("SELECT `user_id` FROM `user_activity_now` WHERE `pid` = " . intval($rID) . ";");
+        $result = $db->query("SELECT `user_id` FROM `lines_live` WHERE `pid` = " . intval($rID) . ";");
         if (($result) && ($result->num_rows > 0)) {
             if (in_array(intval(getUser($result->fetch_assoc()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
                 return true;
@@ -1634,7 +1634,7 @@ function secondsToTime($inputSeconds) {
 
 function getWorldMapLive() {
     global $db;
-    $rQuery = "SELECT geoip_country_code, count(geoip_country_code) AS total FROM user_activity_now GROUP BY geoip_country_code";
+    $rQuery = "SELECT geoip_country_code, count(geoip_country_code) AS total FROM lines_live GROUP BY geoip_country_code";
     if ($rResult = $db->query($rQuery)) {
         while ($row = $rResult->fetch_assoc()) {
             $WorldMapLive = "{\"code\":" . json_encode($row["geoip_country_code"]) . ",\"value\":" . json_encode($row["total"]) . "},";

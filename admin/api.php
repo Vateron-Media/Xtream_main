@@ -159,11 +159,11 @@ if (isset($_GET["action"])) {
                 exit;
                 //isp lock	
             } else if ($rSub == "kill") {
-                $rResult = $db->query("SELECT `pid`, `server_id` FROM `user_activity_now` WHERE `user_id` = " . intval($rUserID) . ";");
+                $rResult = $db->query("SELECT `pid`, `server_id` FROM `lines_live` WHERE `user_id` = " . intval($rUserID) . ";");
                 if (($rResult) && ($rResult->num_rows > 0)) {
                     while ($rRow = $rResult->fetch_assoc()) {
                         sexec($rRow["server_id"], "kill -9 " . $rRow["pid"]);
-                        $db->query("DELETE FROM `user_activity_now` WHERE `pid` = " . intval($rRow["pid"]) . ";");
+                        $db->query("DELETE FROM `lines_live` WHERE `pid` = " . intval($rRow["pid"]) . ";");
                     }
                 }
                 echo json_encode(array("result" => True));
@@ -184,10 +184,10 @@ if (isset($_GET["action"])) {
             }
             $rSub = $_GET["sub"];
             if ($rSub == "kill") {
-                $rResult = $db->query("SELECT `server_id` FROM `user_activity_now` WHERE `pid` = " . intval($rPID) . " LIMIT 1;");
+                $rResult = $db->query("SELECT `server_id` FROM `lines_live` WHERE `pid` = " . intval($rPID) . " LIMIT 1;");
                 if (($rResult) && ($rResult->num_rows == 1)) {
                     sexec($rResult->fetch_assoc()["server_id"], "kill -9 " . $rPID);
-                    $db->query("DELETE FROM `user_activity_now` WHERE `pid` = " . $rPID . ";");
+                    $db->query("DELETE FROM `lines_live` WHERE `pid` = " . $rPID . ";");
                     echo json_encode(array("result" => True));
                     exit;
                 }
@@ -546,7 +546,7 @@ if (isset($_GET["action"])) {
                     exit;
                 }
             } else if ($rSub == "kill") {
-                $rResult = $db->query("SELECT `pid`, `server_id` FROM `user_activity_now` WHERE `server_id` = " . intval($rServerID) . ";");
+                $rResult = $db->query("SELECT `pid`, `server_id` FROM `lines_live` WHERE `server_id` = " . intval($rServerID) . ";");
                 if (($rResult) && ($rResult->num_rows > 0)) {
                     while ($rRow = $rResult->fetch_assoc()) {
                         sexec($rRow["server_id"], "kill -9 " . $rRow["pid"]);
@@ -744,13 +744,13 @@ if (isset($_GET["action"])) {
                     $return["bytes_received"] = intval($rWatchDog["bytes_received"]);
                     $return["bytes_sent"] = intval($rWatchDog["bytes_sent"]);
                 }
-                $result = $db->query("SELECT COUNT(*) AS `count` FROM `user_activity_now` WHERE `server_id` = " . $rServerID . ";");
+                $result = $db->query("SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = " . $rServerID . ";");
                 $return["open_connections"] = $result->fetch_assoc()["count"];
-                $result = $db->query("SELECT COUNT(*) AS `count` FROM `user_activity_now`;");
+                $result = $db->query("SELECT COUNT(*) AS `count` FROM `lines_live`;");
                 $return["total_connections"] = $result->fetch_assoc()["count"];
-                $result = $db->query("SELECT COUNT(`user_id`) AS `count` FROM `user_activity_now` WHERE `server_id` = " . $rServerID . " GROUP BY `user_id`;");
+                $result = $db->query("SELECT COUNT(`user_id`) AS `count` FROM `lines_live` WHERE `server_id` = " . $rServerID . " GROUP BY `user_id`;");
                 $return["online_users"] = $result->num_rows;
-                $result = $db->query("SELECT COUNT(`user_id`) AS `count` FROM `user_activity_now` GROUP BY `user_id`;");
+                $result = $db->query("SELECT COUNT(`user_id`) AS `count` FROM `lines_live` GROUP BY `user_id`;");
                 $return["total_users"] = $result->num_rows;
                 $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `stream_status` <> 2 AND `type` IN (1,3);");
                 $return["total_streams"] = $result->fetch_assoc()["count"];
@@ -761,16 +761,16 @@ if (isset($_GET["action"])) {
                 $return["network_guaranteed_speed"] = $rServers[$rServerID]["network_guaranteed_speed"];
             } else {
                 $rUptime = 0;
-                $result = $db->query("SELECT COUNT(*) AS `count` FROM `user_activity_now`;");
+                $result = $db->query("SELECT COUNT(*) AS `count` FROM `lines_live`;");
                 $rTotalConnections = $result->fetch_assoc()["count"];
-                $result = $db->query("SELECT COUNT(*) AS `count` FROM `user_activity_now` GROUP BY `user_id`;");
+                $result = $db->query("SELECT COUNT(*) AS `count` FROM `lines_live` GROUP BY `user_id`;");
                 $rTotalUsers = $result->fetch_assoc()["count"];
-                $result = $db->query("SELECT `user_id` FROM `user_activity_now` GROUP BY `user_id`;");
+                $result = $db->query("SELECT `user_id` FROM `lines_live` GROUP BY `user_id`;");
                 $return["online_users"] = $result->num_rows;
                 $return["open_connections"] = $rTotalConnections;
                 foreach (array_keys($rServers) as $rServerID) {
                     $rArray = array();
-                    $result = $db->query("SELECT COUNT(*) AS `count` FROM `user_activity_now` WHERE `server_id` = " . $rServerID . ";");
+                    $result = $db->query("SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = " . $rServerID . ";");
                     $rArray["open_connections"] = $result->fetch_assoc()["count"];
                     $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `stream_status` <> 2 AND `type` IN (1,3);");
                     $rArray["total_streams"] = $result->fetch_assoc()["count"];
@@ -779,7 +779,7 @@ if (isset($_GET["action"])) {
                     $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `server_id` = " . $rServerID . " AND ((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 0);");
                     $rArray["offline_streams"] = $result->fetch_assoc()["count"];
                     $rArray["network_guaranteed_speed"] = $rServers[$rServerID]["network_guaranteed_speed"];
-                    $result = $db->query("SELECT `user_id` FROM `user_activity_now` WHERE `server_id` = " . intval($rServerID) . " GROUP BY `user_id`;");
+                    $result = $db->query("SELECT `user_id` FROM `lines_live` WHERE `server_id` = " . intval($rServerID) . " GROUP BY `user_id`;");
                     $rArray["online_users"] = $result->num_rows;
                     $rWatchDog = json_decode($rServers[$rServerID]["watchdog_data"], True);
                     if (is_array($rWatchDog)) {
@@ -810,9 +810,9 @@ if (isset($_GET["action"])) {
                 exit;
             }
             $return = array("open_connections" => 0, "online_users" => 0, "active_accounts" => 0, "credits" => 0);
-            $result = $db->query("SELECT `activity_id` FROM `user_activity_now` AS `a` LEFT JOIN `users` AS `u` ON `a`.`user_id` = `u`.`id` WHERE `u`.`member_id` IN (" . ESC(join(",", array_keys(getRegisteredUsers($rUserInfo["id"])))) . ");");
+            $result = $db->query("SELECT `activity_id` FROM `lines_live` AS `a` LEFT JOIN `users` AS `u` ON `a`.`user_id` = `u`.`id` WHERE `u`.`member_id` IN (" . ESC(join(",", array_keys(getRegisteredUsers($rUserInfo["id"])))) . ");");
             $return["open_connections"] = $result->num_rows;
-            $result = $db->query("SELECT `activity_id` FROM `user_activity_now` AS `a` LEFT JOIN `users` AS `u` ON `a`.`user_id` = `u`.`id` WHERE `u`.`member_id` IN (" . ESC(join(",", array_keys(getRegisteredUsers($rUserInfo["id"])))) . ") GROUP BY `a`.`user_id`;");
+            $result = $db->query("SELECT `activity_id` FROM `lines_live` AS `a` LEFT JOIN `users` AS `u` ON `a`.`user_id` = `u`.`id` WHERE `u`.`member_id` IN (" . ESC(join(",", array_keys(getRegisteredUsers($rUserInfo["id"])))) . ") GROUP BY `a`.`user_id`;");
             $return["online_users"] = $result->num_rows;
             $result = $db->query("SELECT `id` FROM `users` WHERE `member_id` IN (" . ESC(join(",", array_keys(getRegisteredUsers($rUserInfo["id"])))) . ");");
             $return["active_accounts"] = $result->num_rows;
@@ -1026,7 +1026,7 @@ if (isset($_GET["action"])) {
                 }
             }
             if (($rData["id"] > 0) && ($rData["font_size"] > 0) && (strlen($rData["font_color"]) > 0) && (strlen($rData["xy_offset"]) > 0) && ((strlen($rData["message"]) > 0) or ($rData["type"] < 3))) {
-                $result = $db->query("SELECT `user_activity_now`.`activity_id`, `user_activity_now`.`user_id`, `user_activity_now`.`server_id`, `users`.`username` FROM `user_activity_now` LEFT JOIN `users` ON `users`.`id` = `user_activity_now`.`user_id` WHERE `user_activity_now`.`container` = 'ts' AND `stream_id` = " . intval($rData["id"]) . ";");
+                $result = $db->query("SELECT `lines_live`.`activity_id`, `lines_live`.`user_id`, `lines_live`.`server_id`, `users`.`username` FROM `lines_live` LEFT JOIN `users` ON `users`.`id` = `lines_live`.`user_id` WHERE `lines_live`.`container` = 'ts' AND `stream_id` = " . intval($rData["id"]) . ";");
                 if (($result) && ($result->num_rows > 0)) {
                     set_time_limit(360);
                     ini_set('max_execution_time', 360);

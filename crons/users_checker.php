@@ -61,7 +61,7 @@ if (@$argc) {
                 if (0 < $divergence) {
                     $divergence = 0;
                 }
-                $ipTV_db->query('UPDATE `user_activity_now` SET `divergence` = \'%d\' WHERE `activity_id` = \'%d\'', abs($divergence), $activity_id);
+                $ipTV_db->query('UPDATE `lines_live` SET `divergence` = \'%d\' WHERE `activity_id` = \'%d\'', abs($divergence), $activity_id);
             } else {
                 @unlink(TMP_DIR . $fl);
             }

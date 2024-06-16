@@ -138,7 +138,7 @@ class ipTV_streaming {
                             $rows = json_decode(file_get_contents(TMP_DIR . "servers_capacity"), true);
                             goto Dcb6013d6c011b31fa12d890c6f527c4;
                         }
-                        self::$ipTV_db->query("SELECT server_id, COUNT(*) AS online_clients FROM `user_activity_now` GROUP BY server_id");
+                        self::$ipTV_db->query("SELECT server_id, COUNT(*) AS online_clients FROM `lines_live` GROUP BY server_id");
                         $rows = self::$ipTV_db->get_rows(true, "server_id");
                         if (ipTV_lib::$settings["split_by"] == "band") {
                             $D8d3ca7afab93e5c110124dc7611906c = array();
@@ -373,10 +373,10 @@ class ipTV_streaming {
                 $user_info["allowed_ips"] = @array_filter(array_map("trim", json_decode($user_info["allowed_ips"], true)));
                 $user_info["allowed_ua"] = @array_filter(array_map("trim", json_decode($user_info["allowed_ua"], true)));
                 if ($get_cons) {
-                    self::$ipTV_db->query("SELECT COUNT(`activity_id`) FROM `user_activity_now` WHERE `user_id` = '%d'", $user_info["id"]);
+                    self::$ipTV_db->query("SELECT COUNT(`activity_id`) FROM `lines_live` WHERE `user_id` = '%d'", $user_info["id"]);
                     $user_info["active_cons"] = self::$ipTV_db->get_col();
                     if ($user_info["max_connections"] == 1 && ipTV_lib::$settings["disallow_2nd_ip_con"] == 1 && $user_info["active_cons"] > 0 && !empty($user_ip)) {
-                        self::$ipTV_db->query("SELECT user_ip FROM `user_activity_now` WHERE `user_id` = '%d' LIMIT 1", $user_info["id"]);
+                        self::$ipTV_db->query("SELECT user_ip FROM `lines_live` WHERE `user_id` = '%d' LIMIT 1", $user_info["id"]);
                         if (self::$ipTV_db->num_rows() > 0) {
                             $user_ip_db = self::$ipTV_db->get_col();
                             if ($user_ip_db != $user_ip) {
@@ -386,7 +386,7 @@ class ipTV_streaming {
                     }
                     $user_info["pair_line_info"] = array();
                     if (!is_null($user_info["pair_id"])) {
-                        self::$ipTV_db->query("SELECT COUNT(`activity_id`) FROM `user_activity_now` WHERE `user_id` = '%d'", $user_info["pair_id"]);
+                        self::$ipTV_db->query("SELECT COUNT(`activity_id`) FROM `lines_live` WHERE `user_id` = '%d'", $user_info["pair_id"]);
                         $user_info["pair_line_info"]["active_cons"] = self::$ipTV_db->get_col();
                         self::$ipTV_db->query("SELECT max_connections FROM `users` WHERE `id` = '%d'", $user_info["pair_id"]);
                         $user_info["pair_line_info"]["max_connections"] = self::$ipTV_db->get_col();
@@ -551,8 +551,149 @@ class ipTV_streaming {
         }
         return false;
     }
+    public static function validateConnections($rUserInfo, $rIP = null, $rUserAgent = null) {
+        if ($rUserInfo['max_connections'] != 0) {
+            if (empty($rUserInfo['pair_id'])) {
+            } else {
+                self::closeConnections($rUserInfo['pair_id'], $rUserInfo['max_connections'], $rIP, $rUserAgent);
+            }
+            self::closeConnections($rUserInfo['id'], $rUserInfo['max_connections'], $rUserAgent);
+        }
+    }
+    public static function closeConnections($rUserID, $rMaxConnections, $rIP = null, $rUserAgent = null) {
+
+        self::$ipTV_db->query('SELECT `lines_live`.*, `on_demand` FROM `lines_live` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `lines_live`.`stream_id` AND `streams_servers`.`server_id` = `lines_live`.`server_id` WHERE `lines_live`.`user_id` = ? AND `lines_live`.`hls_end` = 0 ORDER BY `lines_live`.`activity_id` ASC', $rUserID);
+
+        $rConnectionCount = self::$ipTV_db->num_rows();
+        $rToKill = $rConnectionCount - $rMaxConnections;
+        if ($rToKill > 0) {
+            $rConnections = self::$ipTV_db->get_rows();
+        } else {
+            return null;
+        }
+
+        $rIP = self::getUserIP();
+        $rKilled = 0;
+        $rDelSID = $rDelUUID = $rIDs = array();
+        if ($rIP && $rUserAgent) {
+            $rKillTypes = array(2, 1, 0);
+        } else {
+            if ($rIP) {
+                $rKillTypes = array(1, 0);
+            } else {
+                $rKillTypes = array(0);
+            }
+        }
+        foreach ($rKillTypes as $rKillOwnIP) {
+            $i = 0;
+            while ($i < count($rConnections) && $rKilled < $rToKill) {
+                if ($rKilled != $rToKill) {
+                    if ($rConnections[$i]['pid'] != getmypid()) {
+                        if (!($rConnections[$i]['user_ip'] == $rIP && $rConnections[$i]['user_agent'] == $rUserAgent && $rKillOwnIP == 2 || $rConnections[$i]['user_ip'] == $rIP && $rKillOwnIP == 1 || $rKillOwnIP == 0)) {
+                        } else {
+                            if (self::closeConnection($rConnections[$i])) {
+                                $rKilled++;
+                                if ($rConnections[$i]['container'] == 'hls') {
+                                } else {
+
+                                    $rIDs[] = intval($rConnections[$i]['activity_id']);
+
+                                    $rDelUUID[] = $rConnections[$i]['uuid'];
+                                    $rDelSID[$rConnections[$i]['stream_id']][] = $rDelUUID;
+                                }
+                                if (!($rConnections[$i]['on_demand'] && $rConnections[$i]['server_id'] == SERVER_ID && ipTV_lib::$settings['on_demand_instant_off'])) {
+                                } else {
+                                    self::removeFromQueue($rConnections[$i]['stream_id'], $rConnections[$i]['pid']);
+                                }
+                            }
+                        }
+                    }
+                    $i++;
+                } else {
+                    break;
+                }
+            }
+        }
+        if (!empty($rIDs)) {
+            self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` IN (' . implode(',', array_map('intval', $rIDs)) . ')');
+            foreach ($rDelUUID as $rUUID) {
+                @unlink(CLOSE_OPEN_CONS_PATH . $rUUID);
+            }
+            foreach ($rDelSID as $rStreamID => $rUUIDs) {
+                foreach ($rUUIDs as $rUUID) {
+                    @unlink(CLOSE_OPEN_CONS_PATH . $rStreamID . '/' . $rUUID);
+                }
+            }
+        }
+        return $rKilled;
+    }
+    public static function closeConnection($rActivityInfo) {
+        if (!empty($rActivityInfo)) {
+            if (!is_array($rActivityInfo)) {
+                if (strlen(strval($rActivityInfo)) == 32) {
+                    self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `uuid` = ?', $rActivityInfo);
+                } else {
+                    self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `activity_id` = ?', $rActivityInfo);
+                }
+                $rActivityInfo = self::$ipTV_db->get_row();
+            }
+            if (is_array($rActivityInfo)) {
+                if ($rActivityInfo['container'] == 'rtmp') {
+                    if ($rActivityInfo['server_id'] == SERVER_ID) {
+                        shell_exec('wget --timeout=2 -O /dev/null -o /dev/null "' . self::$rServers[SERVER_ID]['rtmp_mport_url'] . 'control/drop/client?clientid=' . intval($rActivityInfo['pid']) . '" >/dev/null 2>/dev/null &');
+                    } else {
+
+                        self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`rtmp`,`time`) VALUES(?,?,?,UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id'], 1);
+                    }
+                } else {
+                    if ($rActivityInfo['container'] == 'hls') {
+
+                        self::$ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `activity_id` = ?', $rActivityInfo['activity_id']);
+                    } else {
+                        if ($rActivityInfo['server_id'] == SERVER_ID) {
+                            if (!($rActivityInfo['pid'] != getmypid() && is_numeric($rActivityInfo['pid']) && 0 < $rActivityInfo['pid'])) {
+                            } else {
+                                posix_kill(intval($rActivityInfo['pid']), 9);
+                            }
+                        } else {
+                            self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(?,?,UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id']);
+                        }
+                    }
+                }
+                self::writeOfflineActivity($rActivityInfo['server_id'], $rActivityInfo['proxy_id'], $rActivityInfo['user_id'], $rActivityInfo['stream_id'], $rActivityInfo['date_start'], $rActivityInfo['user_agent'], $rActivityInfo['user_ip'], $rActivityInfo['container'], $rActivityInfo['geoip_country_code'], $rActivityInfo['isp'], $rActivityInfo['external_device'], $rActivityInfo['divergence'], $rActivityInfo['hmac_id'], $rActivityInfo['hmac_identifier']);
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+    public static function removeFromQueue($rStreamID, $rPID) {
+        $rActivePIDs = array();
+        foreach ((igbinary_unserialize(file_get_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID))) ?: array()) as $rActivePID) {
+            if (!(self::isProcessRunning($rActivePID, 'php-fpm') && $rPID != $rActivePID)) {
+            } else {
+                $rActivePIDs[] = $rActivePID;
+            }
+        }
+        if (0 < count($rActivePIDs)) {
+            file_put_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID), igbinary_serialize($rActivePIDs));
+        } else {
+            unlink(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID));
+        }
+    }
+    public static function writeOfflineActivity($rServerID, $rProxyID, $rUserID, $rStreamID, $rStart, $rUserAgent, $rIP, $rExtension, $rGeoIP, $rISP, $rExternalDevice = '', $rDivergence = 0, $rIsHMAC = null, $rIdentifier = '') {
+        if (self::$rSettings['save_closed_connection'] != 0) {
+            if (!($rServerID && $rUserID && $rStreamID)) {
+            } else {
+                $rActivityInfo = array('user_id' => intval($rUserID), 'stream_id' => intval($rStreamID), 'server_id' => intval($rServerID), 'proxy_id' => intval($rProxyID), 'date_start' => intval($rStart), 'user_agent' => $rUserAgent, 'user_ip' => htmlentities($rIP), 'date_end' => time(), 'container' => $rExtension, 'geoip_country_code' => $rGeoIP, 'isp' => $rISP, 'external_device' => htmlentities($rExternalDevice), 'divergence' => intval($rDivergence), 'hmac_id' => $rIsHMAC, 'hmac_identifier' => $rIdentifier);
+                file_put_contents(LOGS_TMP_PATH . 'activity', base64_encode(json_encode($rActivityInfo)) . "\n", FILE_APPEND | LOCK_EX);
+            }
+        } else {
+            return null;
+        }
+    }
     public static function CloseLastCon($user_id, $max_connections) {
-        self::$ipTV_db->query('SELECT * FROM `user_activity_now` WHERE `user_id` = \'%d\' ORDER BY activity_id ASC', $user_id);
+        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `user_id` = \'%d\' ORDER BY activity_id ASC', $user_id);
         $rows = self::$ipTV_db->get_rows();
         $length = count($rows) - $max_connections + 1;
         if ($length <= 0) {
@@ -574,7 +715,7 @@ class ipTV_streaming {
             $index++;
         }
         if (!empty($connections)) {
-            self::$ipTV_db->query('DELETE FROM `user_activity_now` WHERE `activity_id` IN (' . implode(',', $connections) . ')');
+            self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` IN (' . implode(',', $connections) . ')');
         }
         return $total;
     }
@@ -583,7 +724,7 @@ class ipTV_streaming {
             return false;
         }
         if (empty($activity_id['activity_id'])) {
-            self::$ipTV_db->query('SELECT * FROM `user_activity_now` WHERE `activity_id` = \'%d\'', $activity_id);
+            self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `activity_id` = \'%d\'', $activity_id);
             $activity_id = self::$ipTV_db->get_row();
         }
         if (empty($activity_id)) {
@@ -592,7 +733,7 @@ class ipTV_streaming {
         if (!($activity_id['container'] == 'rtmp')) {
             if ($activity_id['container'] == 'hls') {
                 if (!$ActionUserActivityNow) {
-                    self::$ipTV_db->query('UPDATE `user_activity_now` SET `hls_end` = 1 WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
+                    self::$ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
                 }
             } else {
                 if ($activity_id['server_id'] == SERVER_ID) {
@@ -607,7 +748,7 @@ class ipTV_streaming {
                 }
             }
             if ($ActionUserActivityNow) {
-                self::$ipTV_db->query('DELETE FROM `user_activity_now` WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
+                self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
             }
             self::SaveClosedConnection($activity_id['server_id'], $activity_id['user_id'], $activity_id['stream_id'], $activity_id['date_start'], $activity_id['user_agent'], $activity_id['user_ip'], $activity_id['container'], $activity_id['geoip_country_code'], $activity_id['isp'], $activity_id['external_device']);
             return true;
@@ -617,10 +758,10 @@ class ipTV_streaming {
         if (empty($pid)) {
             return false;
         }
-        self::$ipTV_db->query('SELECT * FROM `user_activity_now` WHERE `container` = \'rtmp\' AND `pid` = \'%d\' AND `server_id` = \'%d\'', $pid, SERVER_ID);
+        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `container` = \'rtmp\' AND `pid` = \'%d\' AND `server_id` = \'%d\'', $pid, SERVER_ID);
         if (self::$ipTV_db->num_rows() > 0) {
             $activity_id = self::$ipTV_db->get_row();
-            self::$ipTV_db->query('DELETE FROM `user_activity_now` WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
+            self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
             self::SaveClosedConnection($activity_id['server_id'], $activity_id['user_id'], $activity_id['stream_id'], $activity_id['date_start'], $activity_id['user_agent'], $activity_id['user_ip'], $activity_id['container'], $activity_id['geoip_country_code'], $activity_id['isp'], $activity_id['external_device']);
             return true;
         }
@@ -700,25 +841,22 @@ class ipTV_streaming {
         }
     }
     /** 
-     * Generates a playlist with authentication for a stream. 
-     * 
-     * This function takes the path to an M3U8 file, and optional username, password, and stream ID as parameters. 
-     * It reads the content of the M3U8 file, searches for .ts segments, and replaces them with authenticated URLs. 
-     * The authenticated URLs include the username, password, stream ID, token, and segment information. 
+     * Generates a playlist with authentication tokens for the given M3U8 file and user credentials. 
      * 
      * @param string $M3U8 The path to the M3U8 file. 
-     * @param string $username The username for authentication (default empty). 
-     * @param string $password The password for authentication (default empty). 
-     * @param int $streamID The ID of the stream. 
-     * @return string|false The generated playlist with authentication URLs or false if the M3U8 file does not exist. 
+     * @param string $username The username for authentication. Default is an empty string. 
+     * @param string $password The password for authentication. 
+     * @param string $uuid The UUID for authentication. 
+     * @param int $streamID The stream ID for authentication. 
+     * @return string|bool The modified playlist with authentication tokens or false if the M3U8 file does not exist. 
      */
-    public static function GeneratePlayListWithAuthentication($M3U8, $username = '', $password = '', $streamID) {
+    public static function GeneratePlayListWithAuthentication($M3U8, $username = '', $password = '', $uuid = '', $streamID) {
         if (file_exists($M3U8)) {
             $source = file_get_contents($M3U8);
             if (preg_match_all('/(.*?)\\.ts/', $source, $matches)) {
                 foreach ($matches[0] as $match) {
-                    $token = md5($match . $username . ipTV_lib::$settings['crypt_load_balancing'] . filesize(STREAMS_PATH . $match));
-                    $source = str_replace($match, "/hls/{$username}/{$password}/{$streamID}/{$token}/{$match}", $source);
+                    $token = md5($match . $username . $uuid . ipTV_lib::$settings['crypt_load_balancing'] . filesize(STREAMS_PATH . $match));
+                    $source = str_replace($match, "/hls/{$username}/{$password}/{$uuid}/{$streamID}/{$token}/{$match}", $source);
                 }
                 return $source;
             }
