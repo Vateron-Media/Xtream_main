@@ -5,7 +5,9 @@ if (@$argc) {
     cli_set_process_title('XtreamCodes[Server WatchDog]');
     shell_exec('kill $(ps aux | grep \'Server WatchDog\' | grep -v grep | grep -v ' . getmypid() . ' | awk \'{print $2}\')');
     while (true) {
-        if ($ipTV_db->query('UPDATE `streaming_servers` SET `watchdog_data` = \'%s\' WHERE `id` = \'%d\'', json_encode(watchdogData(), JSON_PARTIAL_OUTPUT_ON_ERROR), SERVER_ID)) {
+        $rPHPPIDs = array();
+        exec("ps -u xtreamcodes | grep php-fpm | awk {'print \$1'}", $rPHPPIDs);
+        if ($ipTV_db->query('UPDATE `streaming_servers` SET `watchdog_data` = \'%s\', `php_pids` = \'%s\' WHERE `id` = \'%d\'', json_encode(watchdogData(), JSON_PARTIAL_OUTPUT_ON_ERROR), json_encode($rPHPPIDs), SERVER_ID)) {
             sleep(2);
         }
     }

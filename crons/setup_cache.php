@@ -100,4 +100,9 @@ $nginx_data = (int) shell_exec('cat ' . IPTV_PANEL_DIR . 'nginx/conf/nginx.conf 
 if ($nginx_data == 1) {
     file_put_contents(TMP_DIR . 'new_rewrite', 1);
 }
+foreach (array(CONS_TMP_PATH, DIVERGENCE_TMP_PATH, USER_TMP_PATH, MOVIES_IMAGES, ENIGMA2_PLUGIN_DIR) as $rPath) {
+    if (!file_exists($rPath)) {
+        mkdir($rPath);
+    }
+}
 @unlink($unique_id);

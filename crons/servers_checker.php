@@ -21,12 +21,6 @@ if (@$argc) {
     if ($watchdog_data == 0) {
         shell_exec(PHP_BIN . ' ' . IPTV_PANEL_DIR . 'tools/watchdog_data.php > /dev/null 2>/dev/null &');
     }
-    if (!file_exists(MOVIES_IMAGES)) {
-        mkdir(MOVIES_IMAGES);
-    }
-    if (!file_exists(ENIGMA2_PLUGIN_DIR)) {
-        mkdir(ENIGMA2_PLUGIN_DIR);
-    }
     $available = (int) trim(shell_exec('free | grep -c available'));
     if ($available == 0) {
         $total_ram = intval(shell_exec('/usr/bin/free -tk | grep -i Mem: | awk \'{print $2}\''));

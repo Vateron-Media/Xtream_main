@@ -428,24 +428,23 @@ function GetContainerExtension($target_container, $stalker_container_priority = 
     }
     return $target_container[0];
 }
-function GetConnections($end, $server_id = null) {
-    global $ipTV_db;
-    $extra = '';
-    if (!empty($server_id)) {
-        $extra = 'WHERE t1.server_id = \'' . intval($server_id) . '\'';
-    }
-    switch ($end) {
-        case 'open':
-            $query = "SELECT t1.*,t2.*,t3.*,t5.bitrate FROM `lines_live` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_sys` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id {$extra} ORDER BY t1.activity_id ASC";
-            break;
-        case 'closed':
-            $query = "SELECT t1.*,t2.*,t3.*,t5.bitrate FROM `user_activity` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_sys` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id {$extra} ORDER BY t1.activity_id ASC";
-            break;
-    }
-    $ipTV_db->query($query);
-    return $ipTV_db->get_rows(true, 'user_id', false);
-}
-//checked
+// function GetConnections($end, $server_id = null) {
+//     global $ipTV_db;
+//     $extra = '';
+//     if (!empty($server_id)) {
+//         $extra = 'WHERE t1.server_id = \'' . intval($server_id) . '\'';
+//     }
+//     switch ($end) {
+//         case 'open':
+//             $query = "SELECT t1.*,t2.*,t3.*,t5.bitrate FROM `lines_live` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_sys` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id {$extra} ORDER BY t1.activity_id ASC";
+//             break;
+//         case 'closed':
+//             $query = "SELECT t1.*,t2.*,t3.*,t5.bitrate FROM `user_activity` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_sys` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id {$extra} ORDER BY t1.activity_id ASC";
+//             break;
+//     }
+//     $ipTV_db->query($query);
+//     return $ipTV_db->get_rows(true, 'user_id', false);
+// }
 function crontab_refresh() {
     if (!file_exists(TMP_DIR . 'crontab_refresh')) {
         $crons = scandir(CRON_PATH);

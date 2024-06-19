@@ -415,4 +415,17 @@ class ipTV_lib {
 		file_put_contents($rFilename, getmypid());
 		return false;
 	}
+    public static function confirmIDs($rIDs)
+	{
+		$rReturn = array();
+
+		foreach ($rIDs as $rID) {
+			if (0 >= intval($rID)) {
+			} else {
+				$rReturn[] = $rID;
+			}
+		}
+
+		return $rReturn;
+	}
 }
