@@ -9,13 +9,10 @@ SET time_zone = "+00:00";
 --
 -- Database: `xtream_iptvpro`
 --
-
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `access_output`
 --
-
 CREATE TABLE IF NOT EXISTS `access_output` (
   `access_output_id` int(11) NOT NULL AUTO_INCREMENT,
   `output_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -24,23 +21,27 @@ CREATE TABLE IF NOT EXISTS `access_output` (
   PRIMARY KEY (`access_output_id`),
   KEY `output_key` (`output_key`),
   KEY `output_ext` (`output_ext`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 4;
 
 --
 -- Dumping data for table `access_output`
 --
-
-INSERT INTO `access_output` (`access_output_id`, `output_name`, `output_key`, `output_ext`) VALUES
-(1, 'HLS', 'm3u8', 'm3u8'),
-(2, 'MPEGTS', 'ts', 'ts'),
-(3, 'RTMP', 'rtmp', '');
+INSERT INTO
+  `access_output` (
+    `access_output_id`,
+    `output_name`,
+    `output_key`,
+    `output_ext`
+  )
+VALUES
+  (1, 'HLS', 'm3u8', 'm3u8'),
+  (2, 'MPEGTS', 'ts', 'ts'),
+  (3, 'RTMP', 'rtmp', '');
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `blocked_ips`
 --
-
 CREATE TABLE IF NOT EXISTS `blocked_ips` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(39) COLLATE utf8_unicode_ci NOT NULL,
@@ -52,14 +53,12 @@ CREATE TABLE IF NOT EXISTS `blocked_ips` (
   UNIQUE KEY `ip_3` (`ip`),
   KEY `ip` (`ip`),
   KEY `date` (`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `blocked_user_agents`
 --
-
 CREATE TABLE IF NOT EXISTS `blocked_user_agents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_agent` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -68,28 +67,24 @@ CREATE TABLE IF NOT EXISTS `blocked_user_agents` (
   PRIMARY KEY (`id`),
   KEY `exact_match` (`exact_match`),
   KEY `user_agent` (`user_agent`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `bouquets`
 --
-
 CREATE TABLE IF NOT EXISTS `bouquets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `bouquet_name` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `bouquet_channels` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `bouquet_series` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `client_logs`
 --
-
 CREATE TABLE IF NOT EXISTS `client_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `stream_id` int(11) DEFAULT NULL,
@@ -103,14 +98,12 @@ CREATE TABLE IF NOT EXISTS `client_logs` (
   PRIMARY KEY (`id`),
   KEY `stream_id` (`stream_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `created`
 --
-
 CREATE TABLE IF NOT EXISTS `created` (
   `id` tinyint(4) NOT NULL,
   `type` tinyint(4) NOT NULL,
@@ -154,14 +147,12 @@ CREATE TABLE IF NOT EXISTS `created` (
   `custom_map` tinyint(4) NOT NULL,
   `external_push` tinyint(4) NOT NULL,
   `delay_minutes` tinyint(4) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE = MyISAM DEFAULT CHARSET = utf8;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `credits_log`
 --
-
 CREATE TABLE IF NOT EXISTS `credits_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `target_id` int(11) NOT NULL,
@@ -172,14 +163,12 @@ CREATE TABLE IF NOT EXISTS `credits_log` (
   PRIMARY KEY (`id`),
   KEY `target_id` (`target_id`),
   KEY `admin_id` (`admin_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `cronjobs`
 --
-
 CREATE TABLE IF NOT EXISTS `cronjobs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
@@ -192,14 +181,12 @@ CREATE TABLE IF NOT EXISTS `cronjobs` (
   PRIMARY KEY (`id`),
   KEY `enabled` (`enabled`),
   KEY `filename` (`filename`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `devices`
 --
-
 CREATE TABLE IF NOT EXISTS `devices` (
   `device_id` int(11) NOT NULL AUTO_INCREMENT,
   `device_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -213,40 +200,249 @@ CREATE TABLE IF NOT EXISTS `devices` (
   PRIMARY KEY (`device_id`),
   KEY `device_key` (`device_key`),
   KEY `default_output` (`default_output`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=24 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 24;
 
 --
 -- Dumping data for table `devices`
 --
-
-INSERT INTO `devices` (`device_id`, `device_name`, `device_key`, `device_filename`, `device_header`, `device_conf`, `device_footer`, `default_output`, `copy_text`) VALUES
-(1, 'GigaBlue', 'gigablue', 'userbouquet.favourites.tv', '#NAME {BOUQUET_NAME}', '#SERVICE 4097:0:1:0:0:0:0:0:0:0:{URL#:}\r\n#DESCRIPTION {CHANNEL_NAME}', '', 2, NULL),
-(2, 'Enigma 2 OE 1.6', 'enigma16', 'userbouquet.favourites.tv', '#NAME {BOUQUET_NAME}', '#SERVICE 4097{SID}{URL#:}\r\n#DESCRIPTION {CHANNEL_NAME}', '', 2, NULL),
-(3, 'DreamBox OE 2.0', 'dreambox', 'userbouquet.favourites.tv', '#NAME {BOUQUET_NAME}', '#SERVICE {ESR_ID}{SID}{URL#:}\r\n#DESCRIPTION {CHANNEL_NAME}', '', 2, NULL),
-(4, 'm3u', 'm3u', 'tv_channels_{USERNAME}.m3u', '#EXTM3U', '#EXTINF:-1,{CHANNEL_NAME}\r\n{URL}', '', 2, NULL),
-(5, 'Simple List', 'simple', 'simple_{USERNAME}.txt', '', '{URL} #Name: {CHANNEL_NAME}', '', 2, NULL),
-(6, 'Octagon', 'octagon', 'internettv.feed', '', '[TITLE]\r\n{CHANNEL_NAME}\r\n[URL]\r\n{URL}\r\n[DESCRIPTION]\r\nIPTV\r\n[TYPE]\r\nLive', '', 2, NULL),
-(7, 'Starlive v3/StarSat HD6060/AZclass', 'starlivev3', 'iptvlist.txt', '', '{CHANNEL_NAME},{URL}', '', 2, NULL),
-(8, 'MediaStar / StarLive v4', 'mediastar', 'tvlist.txt', '', '{CHANNEL_NAME} {URL}', '', 2, NULL),
-(9, 'Enigma 2 OE 1.6 Auto Script', 'enigma216_script', 'iptv.sh', 'USERNAME="{USERNAME}";PASSWORD="{PASSWORD}";bouquet="{BOUQUET_NAME}";directory="/etc/enigma2/iptv.sh";url="{SERVER_URL}get.php?username=$USERNAME&password=$PASSWORD&type=enigma16&output={OUTPUT_KEY}";rm /etc/enigma2/userbouquet."$bouquet"__tv_.tv;wget -O /etc/enigma2/userbouquet."$bouquet"__tv_.tv $url;if ! cat /etc/enigma2/bouquets.tv | grep -v grep | grep -c $bouquet > /dev/null;then echo "[+]Creating Folder for iptv and rehashing...";cat /etc/enigma2/bouquets.tv | sed -n 1p > /etc/enigma2/new_bouquets.tv;echo ''#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.''$bouquet''__tv_.tv" ORDER BY bouquet'' >> /etc/enigma2/new_bouquets.tv; cat /etc/enigma2/bouquets.tv | sed -n ''2,$p'' >> /etc/enigma2/new_bouquets.tv;rm /etc/enigma2/bouquets.tv;mv /etc/enigma2/new_bouquets.tv /etc/enigma2/bouquets.tv;fi;rm /usr/bin/enigma2_pre_start.sh;echo "writing to the file.. NO NEED FOR REBOOT";echo "/bin/sh "$directory" > /dev/null 2>&1 &" > /usr/bin/enigma2_pre_start.sh;chmod 777 /usr/bin/enigma2_pre_start.sh;wget -qO - "http://127.0.0.1/web/servicelistreload?mode=2";wget -qO - "http://127.0.0.1/web/servicelistreload?mode=2";', '', '', 2, 'wget -O /etc/enigma2/iptv.sh {DEVICE_LINK} && chmod 777 /etc/enigma2/iptv.sh && /etc/enigma2/iptv.sh'),
-(10, 'Enigma 2 OE 2.0 Auto Script', 'enigma22_script', 'iptv.sh', 'USERNAME="{USERNAME}";PASSWORD="{PASSWORD}";bouquet="{BOUQUET_NAME}";directory="/etc/enigma2/iptv.sh";url="{SERVER_URL}get.php?username=$USERNAME&password=$PASSWORD&type=dreambox&output={OUTPUT_KEY}";rm /etc/enigma2/userbouquet."$bouquet"__tv_.tv;wget -O /etc/enigma2/userbouquet."$bouquet"__tv_.tv $url;if ! cat /etc/enigma2/bouquets.tv | grep -v grep | grep -c $bouquet > /dev/null;then echo "[+]Creating Folder for iptv and rehashing...";cat /etc/enigma2/bouquets.tv | sed -n 1p > /etc/enigma2/new_bouquets.tv;echo ''#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.''$bouquet''__tv_.tv" ORDER BY bouquet'' >> /etc/enigma2/new_bouquets.tv; cat /etc/enigma2/bouquets.tv | sed -n ''2,$p'' >> /etc/enigma2/new_bouquets.tv;rm /etc/enigma2/bouquets.tv;mv /etc/enigma2/new_bouquets.tv /etc/enigma2/bouquets.tv;fi;rm /usr/bin/enigma2_pre_start.sh;echo "writing to the file.. NO NEED FOR REBOOT";echo "/bin/sh "$directory" > /dev/null 2>&1 &" > /usr/bin/enigma2_pre_start.sh;chmod 777 /usr/bin/enigma2_pre_start.sh;wget -qO - "http://127.0.0.1/web/servicelistreload?mode=2";wget -qO - "http://127.0.0.1/web/servicelistreload?mode=2";', '', '', 2, 'wget -O /etc/enigma2/iptv.sh {DEVICE_LINK} && chmod 777 /etc/enigma2/iptv.sh && /etc/enigma2/iptv.sh'),
-(13, 'm3u With Options', 'm3u_plus', 'tv_channels_{USERNAME}_plus.m3u', '#EXTM3U', '#EXTINF:-1 tvg-id="{CHANNEL_ID}" tvg-name="{CHANNEL_NAME}" tvg-logo="{CHANNEL_ICON}" group-title="{CATEGORY}",{CHANNEL_NAME}\r\n{URL}', '', 2, NULL),
-(14, 'StarLive v5', 'starlivev5', 'channel.jason', '', '', '', 2, NULL),
-(15, 'WebTV List', 'webtvlist', 'webtv list.txt', '', 'Channel name:{CHANNEL_NAME}\r\nURL:{URL}', '[Webtv channel END]', 2, NULL),
-(16, 'Octagon Auto Script', 'octagon_script', 'iptv', 'USERNAME="{USERNAME}";PASSWORD="{PASSWORD}";url="{SERVER_URL}get.php?username=$USERNAME&password=$PASSWORD&type=octagon&output={OUTPUT_KEY}";rm /var/freetvplus/internettv.feed;wget -O /var/freetvplus/internettv.feed1 $url;chmod 777 /var/freetvplus/internettv.feed1;awk -v BINMODE=3 -v RS=''(\\r\\n|\\n)'' -v ORS=''\\n'' ''{ print }'' /var/freetvplus/internettv.feed1 > /var/freetvplus/internettv.feed;rm /var/freetvplus/internettv.feed1', '', '', 2, 'wget -qO /var/bin/iptv {DEVICE_LINK}'),
-(18, 'Ariva', 'ariva', 'ariva_{USERNAME}.txt', '', '{CHANNEL_NAME},{URL}', '', 2, NULL),
-(19, 'Spark', 'spark', 'webtv_usr.xml', '<?xml version="1.0"?>\r\n<webtvs>', '<webtv title="{CHANNEL_NAME}" urlkey="0" url="{URL}" description="" iconsrc="{CHANNEL_ICON}" iconsrc_b="" group="0" type="0" />', '</webtvs>', 2, NULL),
-(20, 'Geant/Starsat/Tiger/Qmax/Hyper/Royal', 'gst', '{USERNAME}_list.txt', '', 'I: {URL} {CHANNEL_NAME}', '', 2, NULL),
-(21, 'Fortec999/Prifix9400/Starport', 'fps', 'Royal.cfg', '', 'IPTV: { {CHANNEL_NAME} } { {URL} }', '', 2, NULL),
-(22, 'Revolution 60/60 | Sunplus', 'revosun', 'network_iptv.cfg', '', 'IPTV: { {CHANNEL_NAME} } { {URL} }', '', 2, NULL),
-(23, 'Zorro', 'zorro', 'iptv.cfg', '<NETDBS_TXT_VER_1>', 'IPTV: { {CHANNEL_NAME} } { {URL} } -HIDE_URL', '', 2, NULL);
+INSERT INTO
+  `devices` (
+    `device_id`,
+    `device_name`,
+    `device_key`,
+    `device_filename`,
+    `device_header`,
+    `device_conf`,
+    `device_footer`,
+    `default_output`,
+    `copy_text`
+  )
+VALUES
+  (
+    1,
+    'GigaBlue',
+    'gigablue',
+    'userbouquet.favourites.tv',
+    '#NAME {BOUQUET_NAME}',
+    '#SERVICE 4097:0:1:0:0:0:0:0:0:0:{URL#:}\r\n#DESCRIPTION {CHANNEL_NAME}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    2,
+    'Enigma 2 OE 1.6',
+    'enigma16',
+    'userbouquet.favourites.tv',
+    '#NAME {BOUQUET_NAME}',
+    '#SERVICE 4097{SID}{URL#:}\r\n#DESCRIPTION {CHANNEL_NAME}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    3,
+    'DreamBox OE 2.0',
+    'dreambox',
+    'userbouquet.favourites.tv',
+    '#NAME {BOUQUET_NAME}',
+    '#SERVICE {ESR_ID}{SID}{URL#:}\r\n#DESCRIPTION {CHANNEL_NAME}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    4,
+    'm3u',
+    'm3u',
+    'tv_channels_{USERNAME}.m3u',
+    '#EXTM3U',
+    '#EXTINF:-1,{CHANNEL_NAME}\r\n{URL}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    5,
+    'Simple List',
+    'simple',
+    'simple_{USERNAME}.txt',
+    '',
+    '{URL} #Name: {CHANNEL_NAME}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    6,
+    'Octagon',
+    'octagon',
+    'internettv.feed',
+    '',
+    '[TITLE]\r\n{CHANNEL_NAME}\r\n[URL]\r\n{URL}\r\n[DESCRIPTION]\r\nIPTV\r\n[TYPE]\r\nLive',
+    '',
+    2,
+    NULL
+  ),
+  (
+    7,
+    'Starlive v3/StarSat HD6060/AZclass',
+    'starlivev3',
+    'iptvlist.txt',
+    '',
+    '{CHANNEL_NAME},{URL}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    8,
+    'MediaStar / StarLive v4',
+    'mediastar',
+    'tvlist.txt',
+    '',
+    '{CHANNEL_NAME} {URL}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    9,
+    'Enigma 2 OE 1.6 Auto Script',
+    'enigma216_script',
+    'iptv.sh',
+    'USERNAME="{USERNAME}";PASSWORD="{PASSWORD}";bouquet="{BOUQUET_NAME}";directory="/etc/enigma2/iptv.sh";url="{SERVER_URL}get.php?username=$USERNAME&password=$PASSWORD&type=enigma16&output={OUTPUT_KEY}";rm /etc/enigma2/userbouquet."$bouquet"__tv_.tv;wget -O /etc/enigma2/userbouquet."$bouquet"__tv_.tv $url;if ! cat /etc/enigma2/bouquets.tv | grep -v grep | grep -c $bouquet > /dev/null;then echo "[+]Creating Folder for iptv and rehashing...";cat /etc/enigma2/bouquets.tv | sed -n 1p > /etc/enigma2/new_bouquets.tv;echo ''#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.''$bouquet''__tv_.tv" ORDER BY bouquet'' >> /etc/enigma2/new_bouquets.tv; cat /etc/enigma2/bouquets.tv | sed -n ''2,$p'' >> /etc/enigma2/new_bouquets.tv;rm /etc/enigma2/bouquets.tv;mv /etc/enigma2/new_bouquets.tv /etc/enigma2/bouquets.tv;fi;rm /usr/bin/enigma2_pre_start.sh;echo "writing to the file.. NO NEED FOR REBOOT";echo "/bin/sh "$directory" > /dev/null 2>&1 &" > /usr/bin/enigma2_pre_start.sh;chmod 777 /usr/bin/enigma2_pre_start.sh;wget -qO - "http://127.0.0.1/web/servicelistreload?mode=2";wget -qO - "http://127.0.0.1/web/servicelistreload?mode=2";',
+    '',
+    '',
+    2,
+    'wget -O /etc/enigma2/iptv.sh {DEVICE_LINK} && chmod 777 /etc/enigma2/iptv.sh && /etc/enigma2/iptv.sh'
+  ),
+  (
+    10,
+    'Enigma 2 OE 2.0 Auto Script',
+    'enigma22_script',
+    'iptv.sh',
+    'USERNAME="{USERNAME}";PASSWORD="{PASSWORD}";bouquet="{BOUQUET_NAME}";directory="/etc/enigma2/iptv.sh";url="{SERVER_URL}get.php?username=$USERNAME&password=$PASSWORD&type=dreambox&output={OUTPUT_KEY}";rm /etc/enigma2/userbouquet."$bouquet"__tv_.tv;wget -O /etc/enigma2/userbouquet."$bouquet"__tv_.tv $url;if ! cat /etc/enigma2/bouquets.tv | grep -v grep | grep -c $bouquet > /dev/null;then echo "[+]Creating Folder for iptv and rehashing...";cat /etc/enigma2/bouquets.tv | sed -n 1p > /etc/enigma2/new_bouquets.tv;echo ''#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.''$bouquet''__tv_.tv" ORDER BY bouquet'' >> /etc/enigma2/new_bouquets.tv; cat /etc/enigma2/bouquets.tv | sed -n ''2,$p'' >> /etc/enigma2/new_bouquets.tv;rm /etc/enigma2/bouquets.tv;mv /etc/enigma2/new_bouquets.tv /etc/enigma2/bouquets.tv;fi;rm /usr/bin/enigma2_pre_start.sh;echo "writing to the file.. NO NEED FOR REBOOT";echo "/bin/sh "$directory" > /dev/null 2>&1 &" > /usr/bin/enigma2_pre_start.sh;chmod 777 /usr/bin/enigma2_pre_start.sh;wget -qO - "http://127.0.0.1/web/servicelistreload?mode=2";wget -qO - "http://127.0.0.1/web/servicelistreload?mode=2";',
+    '',
+    '',
+    2,
+    'wget -O /etc/enigma2/iptv.sh {DEVICE_LINK} && chmod 777 /etc/enigma2/iptv.sh && /etc/enigma2/iptv.sh'
+  ),
+  (
+    13,
+    'm3u With Options',
+    'm3u_plus',
+    'tv_channels_{USERNAME}_plus.m3u',
+    '#EXTM3U',
+    '#EXTINF:-1 tvg-id="{CHANNEL_ID}" tvg-name="{CHANNEL_NAME}" tvg-logo="{CHANNEL_ICON}" group-title="{CATEGORY}",{CHANNEL_NAME}\r\n{URL}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    14,
+    'StarLive v5',
+    'starlivev5',
+    'channel.jason',
+    '',
+    '',
+    '',
+    2,
+    NULL
+  ),
+  (
+    15,
+    'WebTV List',
+    'webtvlist',
+    'webtv list.txt',
+    '',
+    'Channel name:{CHANNEL_NAME}\r\nURL:{URL}',
+    '[Webtv channel END]',
+    2,
+    NULL
+  ),
+  (
+    16,
+    'Octagon Auto Script',
+    'octagon_script',
+    'iptv',
+    'USERNAME="{USERNAME}";PASSWORD="{PASSWORD}";url="{SERVER_URL}get.php?username=$USERNAME&password=$PASSWORD&type=octagon&output={OUTPUT_KEY}";rm /var/freetvplus/internettv.feed;wget -O /var/freetvplus/internettv.feed1 $url;chmod 777 /var/freetvplus/internettv.feed1;awk -v BINMODE=3 -v RS=''(\\r\\n|\\n)'' -v ORS=''\\n'' ''{ print }'' /var/freetvplus/internettv.feed1 > /var/freetvplus/internettv.feed;rm /var/freetvplus/internettv.feed1',
+    '',
+    '',
+    2,
+    'wget -qO /var/bin/iptv {DEVICE_LINK}'
+  ),
+  (
+    18,
+    'Ariva',
+    'ariva',
+    'ariva_{USERNAME}.txt',
+    '',
+    '{CHANNEL_NAME},{URL}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    19,
+    'Spark',
+    'spark',
+    'webtv_usr.xml',
+    '<?xml version="1.0"?>\r\n<webtvs>',
+    '<webtv title="{CHANNEL_NAME}" urlkey="0" url="{URL}" description="" iconsrc="{CHANNEL_ICON}" iconsrc_b="" group="0" type="0" />',
+    '</webtvs>',
+    2,
+    NULL
+  ),
+  (
+    20,
+    'Geant/Starsat/Tiger/Qmax/Hyper/Royal',
+    'gst',
+    '{USERNAME}_list.txt',
+    '',
+    'I: {URL} {CHANNEL_NAME}',
+    '',
+    2,
+    NULL
+  ),
+  (
+    21,
+    'Fortec999/Prifix9400/Starport',
+    'fps',
+    'Royal.cfg',
+    '',
+    'IPTV: { {CHANNEL_NAME} } { {URL} }',
+    '',
+    2,
+    NULL
+  ),
+  (
+    22,
+    'Revolution 60/60 | Sunplus',
+    'revosun',
+    'network_iptv.cfg',
+    '',
+    'IPTV: { {CHANNEL_NAME} } { {URL} }',
+    '',
+    2,
+    NULL
+  ),
+  (
+    23,
+    'Zorro',
+    'zorro',
+    'iptv.cfg',
+    '<NETDBS_TXT_VER_1>',
+    'IPTV: { {CHANNEL_NAME} } { {URL} } -HIDE_URL',
+    '',
+    2,
+    NULL
+  );
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `enigma2_actions`
 --
-
 CREATE TABLE IF NOT EXISTS `enigma2_actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `device_id` int(11) NOT NULL,
@@ -255,14 +451,12 @@ CREATE TABLE IF NOT EXISTS `enigma2_actions` (
   `command` text NOT NULL,
   `command2` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `enigma2_devices`
 --
-
 CREATE TABLE IF NOT EXISTS `enigma2_devices` (
   `device_id` int(12) NOT NULL AUTO_INCREMENT,
   `mac` varchar(255) NOT NULL,
@@ -288,14 +482,12 @@ CREATE TABLE IF NOT EXISTS `enigma2_devices` (
   PRIMARY KEY (`device_id`),
   KEY `mac` (`mac`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `enigma2_failed`
 --
-
 CREATE TABLE IF NOT EXISTS `enigma2_failed` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `original_mac` varchar(255) NOT NULL,
@@ -303,14 +495,12 @@ CREATE TABLE IF NOT EXISTS `enigma2_failed` (
   `date` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `original_mac` (`original_mac`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `epg`
 --
-
 CREATE TABLE IF NOT EXISTS `epg` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epg_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -320,14 +510,12 @@ CREATE TABLE IF NOT EXISTS `epg` (
   `days_keep` int(11) NOT NULL DEFAULT '7',
   `data` longtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `epg_data`
 --
-
 CREATE TABLE IF NOT EXISTS `epg_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epg_id` int(11) NOT NULL,
@@ -343,27 +531,23 @@ CREATE TABLE IF NOT EXISTS `epg_data` (
   KEY `end` (`end`),
   KEY `lang` (`lang`),
   KEY `channel_id` (`channel_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `isp_addon`
 --
-
 CREATE TABLE IF NOT EXISTS `isp_addon` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `isp` text NOT NULL,
   `blocked` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `licence`
 --
-
 CREATE TABLE IF NOT EXISTS `licence` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_key` varchar(29) COLLATE utf8_unicode_ci NOT NULL,
@@ -371,14 +555,12 @@ CREATE TABLE IF NOT EXISTS `licence` (
   `update_available` int(11) NOT NULL DEFAULT '0',
   `reshare_deny_addon` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `login_logs`
 --
-
 CREATE TABLE IF NOT EXISTS `login_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -387,14 +569,12 @@ CREATE TABLE IF NOT EXISTS `login_logs` (
   `date` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `mag_claims`
 --
-
 CREATE TABLE IF NOT EXISTS `mag_claims` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `mag_id` int(11) NOT NULL,
@@ -406,14 +586,12 @@ CREATE TABLE IF NOT EXISTS `mag_claims` (
   KEY `stream_id` (`stream_id`),
   KEY `real_type` (`real_type`),
   KEY `date` (`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `mag_devices`
 --
-
 CREATE TABLE IF NOT EXISTS `mag_devices` (
   `mag_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -492,14 +670,12 @@ CREATE TABLE IF NOT EXISTS `mag_devices` (
   PRIMARY KEY (`mag_id`),
   KEY `user_id` (`user_id`),
   KEY `mac` (`mac`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `mag_events`
 --
-
 CREATE TABLE IF NOT EXISTS `mag_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `status` tinyint(3) NOT NULL DEFAULT '0',
@@ -517,28 +693,24 @@ CREATE TABLE IF NOT EXISTS `mag_events` (
   KEY `status` (`status`),
   KEY `mag_device_id` (`mag_device_id`),
   KEY `event` (`event`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `mag_logs`
 --
-
 CREATE TABLE IF NOT EXISTS `mag_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `mag_id` int(11) DEFAULT NULL,
   `action` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `mag_id` (`mag_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `member_groups`
 --
-
 CREATE TABLE IF NOT EXISTS `member_groups` (
   `group_id` int(11) NOT NULL AUTO_INCREMENT,
   `group_name` mediumtext COLLATE utf8_unicode_ci NOT NULL,
@@ -572,38 +744,175 @@ CREATE TABLE IF NOT EXISTS `member_groups` (
   KEY `is_banned` (`is_banned`),
   KEY `is_reseller` (`is_reseller`),
   KEY `can_delete` (`can_delete`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 5;
 
 --
 -- Dumping data for table `member_groups`
 --
-
-INSERT INTO `member_groups` (`group_id`, `group_name`, `group_color`, `is_banned`, `is_admin`, `is_reseller`, `total_allowed_gen_trials`, `total_allowed_gen_in`, `delete_users`, `allowed_pages`, `can_delete`, `reseller_force_server`, `create_sub_resellers_price`, `create_sub_resellers`, `alter_packages_ids`, `alter_packages_prices`, `reseller_client_connection_logs`, `reseller_assign_pass`, `allow_change_pass`, `allow_import`, `allow_export`, `reseller_trial_credit_allow`, `edit_mac`, `edit_isplock`, `reset_stb_data`, `reseller_bonus_package_inc`, `allow_download`) VALUES
-(1, 'Channel Admin', '#FF0000', 0, 1, 0, 0, 'day', 0, '["add_stream","edit_stream","streams","archive","add_movie","edit_movie","import_movies","filexplorer","movies","add_series","series_list","edit_series","add_episode","edit_episode","import_episodes","series","add_radio","edit_radio","radio","create_channel","edit_cchannel","manage_cchannels","mass_sedits","mass_sedits_vod","epg","epg_edit","tprofiles","categories","edit_cat","stream_tools","add_bouquet","edit_bouquet","bouquets"]', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(2, 'Registered Users', '#66FF66', 0, 0, 0, 0, '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(3, 'Banned', '#194775', 1, 0, 0, 0, '', 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(4, 'Resellers', '#FF9933', 0, 0, 1, 100000, 'month', 0, '[]', 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1);
+INSERT INTO
+  `member_groups` (
+    `group_id`,
+    `group_name`,
+    `group_color`,
+    `is_banned`,
+    `is_admin`,
+    `is_reseller`,
+    `total_allowed_gen_trials`,
+    `total_allowed_gen_in`,
+    `delete_users`,
+    `allowed_pages`,
+    `can_delete`,
+    `reseller_force_server`,
+    `create_sub_resellers_price`,
+    `create_sub_resellers`,
+    `alter_packages_ids`,
+    `alter_packages_prices`,
+    `reseller_client_connection_logs`,
+    `reseller_assign_pass`,
+    `allow_change_pass`,
+    `allow_import`,
+    `allow_export`,
+    `reseller_trial_credit_allow`,
+    `edit_mac`,
+    `edit_isplock`,
+    `reset_stb_data`,
+    `reseller_bonus_package_inc`,
+    `allow_download`
+  )
+VALUES
+  (
+    1,
+    'Channel Admin',
+    '#FF0000',
+    0,
+    1,
+    0,
+    0,
+    'day',
+    0,
+    '["add_stream","edit_stream","streams","archive","add_movie","edit_movie","import_movies","filexplorer","movies","add_series","series_list","edit_series","add_episode","edit_episode","import_episodes","series","add_radio","edit_radio","radio","create_channel","edit_cchannel","manage_cchannels","mass_sedits","mass_sedits_vod","epg","epg_edit","tprofiles","categories","edit_cat","stream_tools","add_bouquet","edit_bouquet","bouquets"]',
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1
+  ),
+  (
+    2,
+    'Registered Users',
+    '#66FF66',
+    0,
+    0,
+    0,
+    0,
+    '',
+    0,
+    '',
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1
+  ),
+  (
+    3,
+    'Banned',
+    '#194775',
+    1,
+    0,
+    0,
+    0,
+    '',
+    0,
+    '',
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1
+  ),
+  (
+    4,
+    'Resellers',
+    '#FF9933',
+    0,
+    0,
+    1,
+    100000,
+    'month',
+    0,
+    '[]',
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1
+  );
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `movie_containers`
 --
-
 CREATE TABLE IF NOT EXISTS `movie_containers` (
   `container_id` int(11) NOT NULL AUTO_INCREMENT,
   `container_extension` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `container_header` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`container_id`),
   KEY `container_extension` (`container_extension`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `packages`
 --
-
 CREATE TABLE IF NOT EXISTS `packages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `package_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -635,27 +944,23 @@ CREATE TABLE IF NOT EXISTS `packages` (
   KEY `can_gen_e2` (`can_gen_e2`),
   KEY `only_e2` (`only_e2`),
   KEY `only_mag` (`only_mag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `panel_logs`
 --
-
 CREATE TABLE IF NOT EXISTS `panel_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `log_message` longtext COLLATE utf8_unicode_ci NOT NULL,
   `date` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `reg_userlog`
 --
-
 CREATE TABLE IF NOT EXISTS `reg_userlog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL,
@@ -664,14 +969,12 @@ CREATE TABLE IF NOT EXISTS `reg_userlog` (
   `date` int(30) NOT NULL,
   `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `reg_users`
 --
-
 CREATE TABLE IF NOT EXISTS `reg_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
@@ -695,14 +998,12 @@ CREATE TABLE IF NOT EXISTS `reg_users` (
   KEY `member_group_id` (`member_group_id`),
   KEY `username` (`username`),
   KEY `password` (`password`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `reseller_imex`
 --
-
 CREATE TABLE IF NOT EXISTS `reseller_imex` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `reg_id` int(11) NOT NULL,
@@ -713,28 +1014,24 @@ CREATE TABLE IF NOT EXISTS `reseller_imex` (
   `bouquet_ids` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `reg_id` (`reg_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `rtmp_ips`
 --
-
 CREATE TABLE IF NOT EXISTS `rtmp_ips` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(255) NOT NULL,
   `notes` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ip` (`ip`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `series`
 --
-
 CREATE TABLE IF NOT EXISTS `series` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
@@ -756,14 +1053,12 @@ CREATE TABLE IF NOT EXISTS `series` (
   PRIMARY KEY (`id`),
   KEY `last_modified` (`last_modified`),
   KEY `tmdb_id` (`tmdb_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `series_episodes`
 --
-
 CREATE TABLE IF NOT EXISTS `series_episodes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `season_num` int(11) NOT NULL,
@@ -775,14 +1070,12 @@ CREATE TABLE IF NOT EXISTS `series_episodes` (
   KEY `series_id` (`series_id`),
   KEY `stream_id` (`stream_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `server_activity`
 --
-
 CREATE TABLE IF NOT EXISTS `server_activity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `source_server_id` int(11) NOT NULL,
@@ -798,14 +1091,12 @@ CREATE TABLE IF NOT EXISTS `server_activity` (
   KEY `stream_id` (`stream_id`),
   KEY `pid` (`pid`),
   KEY `date_end` (`date_end`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `settings`
 --
-
 CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL,
   `bouquet_name` mediumtext COLLATE utf8_unicode_ci NOT NULL,
@@ -939,21 +1230,286 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `tmdb_default` varchar(3) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en',
   `series_custom_name` tinyint(4) NOT NULL DEFAULT '0',
   `mag_security` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
 --
 -- Dumping data for table `settings`
 --
-
-INSERT INTO `settings` (`id`, `bouquet_name`, `live_streaming_pass`, `email_verify_sub`, `email_verify_cont`, `email_forgot_sub`, `email_forgot_cont`, `mail_from`, `smtp_host`, `smtp_port`, `min_password`, `username_strlen`, `username_alpha`, `allow_multiple_accs`, `allow_registrations`, `server_name`, `smtp_username`, `smtp_password`, `email_new_pass_sub`, `logo_url`, `email_new_pass_cont`, `smtp_from_name`, `confirmation_email`, `smtp_encryption`, `unique_id`, `copyrights_removed`, `copyrights_text`, `default_timezone`, `default_locale`, `allowed_stb_types`, `client_prebuffer`, `split_clients`, `stream_max_analyze`, `show_not_on_air_video`, `not_on_air_video_path`, `show_banned_video`, `banned_video_path`, `show_expired_video`, `expired_video_path`, `mag_container`, `probesize`, `allowed_ips_admin`, `block_svp`, `allow_countries`, `user_auto_kick_hours`, `show_in_red_online`, `disallow_empty_user_agents`, `show_all_category_mag`, `default_lang`, `autobackup_status`, `autobackup_pass`, `flood_limit`, `flood_ips_exclude`, `reshare_deny_addon`, `restart_http`, `css_layout`, `flood_seconds`, `flood_max_attempts`, `flood_apply_clients`, `flood_apply_restreamers`, `backup_source_all`, `flood_get_block`, `portal_block`, `streaming_block`, `stream_start_delay`, `hash_lb`, `vod_bitrate_plus`, `read_buffer_size`, `tv_channel_default_aspect`, `playback_limit`, `show_tv_channel_logo`, `show_channel_logo_in_preview`, `enable_connection_problem_indication`, `enable_pseudo_hls`, `vod_limit_at`, `client_area_plugin`, `persistent_connections`, `record_max_length`, `total_records_length`, `max_local_recordings`, `allowed_stb_types_for_local_recording`, `allowed_stb_types_rec`, `show_captcha`, `dynamic_timezone`, `stalker_theme`, `rtmp_random`, `api_ips`, `crypt_load_balancing`, `use_buffer`, `restreamer_prebuffer`, `audio_restart_loss`, `stalker_lock_images`, `channel_number_type`, `stb_change_pass`, `enable_debug_stalker`, `online_capacity_interval`, `always_enabled_subtitles`, `test_download_url`, `xc_support_allow`, `e2_arm7a`, `e2_mipsel`, `e2_mips32el`, `e2_sh4`, `e2_arm`, `api_pass`, `message_of_day`, `double_auth`, `mysql_remote_sec`, `enable_isp_lock`, `show_isps`, `userpanel_mainpage`, `save_closed_connection`, `client_logs_save`, `get_real_ip_client`, `case_sensitive_line`, `county_override_1st`, `disallow_2nd_ip_con`, `firewall`, `new_sorting_bouquet`, `split_by`, `use_mdomain_in_lists`, `use_https`, `priority_backup`, `use_buffer_table`, `tmdb_api_key`, `toggle_menu`, `mobile_apps`, `stalker_container_priority`, `gen_container_priority`, `tmdb_default`, `series_custom_name`, `mag_security`) VALUES
-(1, 'Xtream Codes', '', 'Verify Registration @ {SERVER_NAME}', 'Hello,<p><br></p><p>Please Click at the following URL to activate your account {VERIFY_LINK}</p><p><br></p><p>{SERVER_NAME} Team</p><p>Thank you</p>', 'Forgot Password @ {SERVER_NAME}', 'Hello,<p><br></p><p>Someone requested new password @&nbsp;&nbsp;{SERVER_NAME} . To verify this request please click at the following link: {FORGOT_LINK}<br></p><p><br></p><p>{SERVER_NAME} Team</p><p>Thank you</p>', 'support@website.com', 'mail.website.com', 0, 5, 15, 0, 1, 0, 'Xtream Codes', 'support@website.com', '', 'Your New Password @ {SERVER_NAME}', '', 'Hello,<p><br></p><p>Your New Password is: {NEW_PASSWORD}<br></p><p><br></p><p>{SERVER_NAME} Team</p><p>Thank you</p>', 'Support', 0, 'no', '', 0, 'Xtream Codes', 'Europe/London', 'en_GB.utf8', '["MAG200","MAG322","MAG323","MAG324","MAG325","MAG349","MAG350","MAG351","MAG352","MAG245","MAG245D","MAG250","MAG254","MAG255","MAG256","MAG257","MAG260","MAG270","MAG275","AuraHD","AuraHD2","AuraHD3","AuraHD4","AuraHD5","AuraHD6","AuraHD7","AuraHD8","AuraHD9","WR320"]', 30, 'equal', 5000000, 0, '', 0, '', 0, '', 'ts', 5000000, '', 0, '["ALL","A1","A2","O1","AF","AX","AL","DZ","AS","AD","AO","AI","AQ","AG","AR","AM","AW","AU","AT","AZ","BS","BH","BD","BB","BY","BE","BZ","BJ","BM","BT","BO","BA","BW","BV","BQ","BR","IO","BN","BG","BF","BI","KH","CM","CA","CV","KY","CF","TD","CL","CN","CX","CC","CO","KM","CG","CD","CK","CR","CI","HR","CU","CW","CY","CZ","DK","DJ","DM","DO","EC","EG","SV","GQ","ER","EE","ET","EU","FK","FO","FJ","FI","FR","GF","PF","TF","MK","GA","GM","GE","DE","GH","GI","GR","GL","GD","GP","GU","GT","GG","GN","GW","GY","HT","HM","VA","HN","HK","HU","IS","IN","ID","IR","IQ","IE","IM","IL","IT","JM","JP","JE","JO","KZ","KE","KI","KR","KV","KW","KG","LA","LV","LB","LS","LR","LY","LI","LT","LU","MO","MG","MW","MY","MV","ML","MT","MH","MQ","MR","MU","YT","MX","FM","MD","MC","MN","ME","MS","MA","MZ","MM","NA","NR","NP","NL","AN","NC","NZ","NI","NE","NG","NU","NF","MP","NO","OM","PK","PW","PS","PA","PG","PY","PE","PH","PN","PL","PT","PR","QA","RE","RO","RU","RW","BL","SH","KN","LC","MF","PM","VC","WS","SM","ST","SA","SN","RS","SC","SL","SG","SK","SI","SB","SO","ZA","GS","ES","LK","SD","SR","SJ","SZ","SE","SX","CH","SY","TW","TJ","TZ","TH","TL","TG","TK","TO","TT","TN","TR","TM","TC","TV","UG","UA","AE","GB","US","UM","UY","UZ","VU","VE","VN","VG","VI","WF","EH","YE","ZM","ZW"]', 3, 2, 0, 1, 'English', 0, '', 40, '', 0, 0, 'light', 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 200, 8192, 'fit', 3, 1, 1, 1, 1, 0, 'flow', 1, 180, 600, 10, '["MAG255","MAG256","MAG257"]', 'null', 1, 1, 'default', 1, '', '', 0, 0, 0, 'null', 'bouquet', 1, 0, 10, 0, '', 0, '', '', '', '', '', '', 'Welcome to Xtream Codes Reborn', 0, 0, 0, 1, '[]', 1, 1, 'HTTP_CF_CONNECTING_IP', 1, 0, 0, 1, 1, 'con', 0, 'null', 0, 0, '', 0, 0, '["mp4","mkv","avi"]', '["mp4","mkv","avi"]', 'en', 0, 1);
+INSERT INTO
+  `settings` (
+    `id`,
+    `bouquet_name`,
+    `live_streaming_pass`,
+    `email_verify_sub`,
+    `email_verify_cont`,
+    `email_forgot_sub`,
+    `email_forgot_cont`,
+    `mail_from`,
+    `smtp_host`,
+    `smtp_port`,
+    `min_password`,
+    `username_strlen`,
+    `username_alpha`,
+    `allow_multiple_accs`,
+    `allow_registrations`,
+    `server_name`,
+    `smtp_username`,
+    `smtp_password`,
+    `email_new_pass_sub`,
+    `logo_url`,
+    `email_new_pass_cont`,
+    `smtp_from_name`,
+    `confirmation_email`,
+    `smtp_encryption`,
+    `unique_id`,
+    `copyrights_removed`,
+    `copyrights_text`,
+    `default_timezone`,
+    `default_locale`,
+    `allowed_stb_types`,
+    `client_prebuffer`,
+    `split_clients`,
+    `stream_max_analyze`,
+    `show_not_on_air_video`,
+    `not_on_air_video_path`,
+    `show_banned_video`,
+    `banned_video_path`,
+    `show_expired_video`,
+    `expired_video_path`,
+    `mag_container`,
+    `probesize`,
+    `allowed_ips_admin`,
+    `block_svp`,
+    `allow_countries`,
+    `user_auto_kick_hours`,
+    `show_in_red_online`,
+    `disallow_empty_user_agents`,
+    `show_all_category_mag`,
+    `default_lang`,
+    `autobackup_status`,
+    `autobackup_pass`,
+    `flood_limit`,
+    `flood_ips_exclude`,
+    `reshare_deny_addon`,
+    `restart_http`,
+    `css_layout`,
+    `flood_seconds`,
+    `flood_max_attempts`,
+    `flood_apply_clients`,
+    `flood_apply_restreamers`,
+    `backup_source_all`,
+    `flood_get_block`,
+    `portal_block`,
+    `streaming_block`,
+    `stream_start_delay`,
+    `hash_lb`,
+    `vod_bitrate_plus`,
+    `read_buffer_size`,
+    `tv_channel_default_aspect`,
+    `playback_limit`,
+    `show_tv_channel_logo`,
+    `show_channel_logo_in_preview`,
+    `enable_connection_problem_indication`,
+    `enable_pseudo_hls`,
+    `vod_limit_at`,
+    `client_area_plugin`,
+    `persistent_connections`,
+    `record_max_length`,
+    `total_records_length`,
+    `max_local_recordings`,
+    `allowed_stb_types_for_local_recording`,
+    `allowed_stb_types_rec`,
+    `show_captcha`,
+    `dynamic_timezone`,
+    `stalker_theme`,
+    `rtmp_random`,
+    `api_ips`,
+    `crypt_load_balancing`,
+    `use_buffer`,
+    `restreamer_prebuffer`,
+    `audio_restart_loss`,
+    `stalker_lock_images`,
+    `channel_number_type`,
+    `stb_change_pass`,
+    `enable_debug_stalker`,
+    `online_capacity_interval`,
+    `always_enabled_subtitles`,
+    `test_download_url`,
+    `xc_support_allow`,
+    `e2_arm7a`,
+    `e2_mipsel`,
+    `e2_mips32el`,
+    `e2_sh4`,
+    `e2_arm`,
+    `api_pass`,
+    `message_of_day`,
+    `double_auth`,
+    `mysql_remote_sec`,
+    `enable_isp_lock`,
+    `show_isps`,
+    `userpanel_mainpage`,
+    `save_closed_connection`,
+    `client_logs_save`,
+    `get_real_ip_client`,
+    `case_sensitive_line`,
+    `county_override_1st`,
+    `disallow_2nd_ip_con`,
+    `firewall`,
+    `new_sorting_bouquet`,
+    `split_by`,
+    `use_mdomain_in_lists`,
+    `use_https`,
+    `priority_backup`,
+    `use_buffer_table`,
+    `tmdb_api_key`,
+    `toggle_menu`,
+    `mobile_apps`,
+    `stalker_container_priority`,
+    `gen_container_priority`,
+    `tmdb_default`,
+    `series_custom_name`,
+    `mag_security`
+  )
+VALUES
+  (
+    1,
+    'Xtream Codes',
+    '',
+    'Verify Registration @ {SERVER_NAME}',
+    'Hello,<p><br></p><p>Please Click at the following URL to activate your account {VERIFY_LINK}</p><p><br></p><p>{SERVER_NAME} Team</p><p>Thank you</p>',
+    'Forgot Password @ {SERVER_NAME}',
+    'Hello,<p><br></p><p>Someone requested new password @&nbsp;&nbsp;{SERVER_NAME} . To verify this request please click at the following link: {FORGOT_LINK}<br></p><p><br></p><p>{SERVER_NAME} Team</p><p>Thank you</p>',
+    'support@website.com',
+    'mail.website.com',
+    0,
+    5,
+    15,
+    0,
+    1,
+    0,
+    'Xtream Codes',
+    'support@website.com',
+    '',
+    'Your New Password @ {SERVER_NAME}',
+    '',
+    'Hello,<p><br></p><p>Your New Password is: {NEW_PASSWORD}<br></p><p><br></p><p>{SERVER_NAME} Team</p><p>Thank you</p>',
+    'Support',
+    0,
+    'no',
+    '',
+    0,
+    'Xtream Codes',
+    'Europe/London',
+    'en_GB.utf8',
+    '["MAG200","MAG322","MAG323","MAG324","MAG325","MAG349","MAG350","MAG351","MAG352","MAG245","MAG245D","MAG250","MAG254","MAG255","MAG256","MAG257","MAG260","MAG270","MAG275","AuraHD","AuraHD2","AuraHD3","AuraHD4","AuraHD5","AuraHD6","AuraHD7","AuraHD8","AuraHD9","WR320"]',
+    30,
+    'equal',
+    5000000,
+    0,
+    '',
+    0,
+    '',
+    0,
+    '',
+    'ts',
+    5000000,
+    '',
+    0,
+    '["ALL","A1","A2","O1","AF","AX","AL","DZ","AS","AD","AO","AI","AQ","AG","AR","AM","AW","AU","AT","AZ","BS","BH","BD","BB","BY","BE","BZ","BJ","BM","BT","BO","BA","BW","BV","BQ","BR","IO","BN","BG","BF","BI","KH","CM","CA","CV","KY","CF","TD","CL","CN","CX","CC","CO","KM","CG","CD","CK","CR","CI","HR","CU","CW","CY","CZ","DK","DJ","DM","DO","EC","EG","SV","GQ","ER","EE","ET","EU","FK","FO","FJ","FI","FR","GF","PF","TF","MK","GA","GM","GE","DE","GH","GI","GR","GL","GD","GP","GU","GT","GG","GN","GW","GY","HT","HM","VA","HN","HK","HU","IS","IN","ID","IR","IQ","IE","IM","IL","IT","JM","JP","JE","JO","KZ","KE","KI","KR","KV","KW","KG","LA","LV","LB","LS","LR","LY","LI","LT","LU","MO","MG","MW","MY","MV","ML","MT","MH","MQ","MR","MU","YT","MX","FM","MD","MC","MN","ME","MS","MA","MZ","MM","NA","NR","NP","NL","AN","NC","NZ","NI","NE","NG","NU","NF","MP","NO","OM","PK","PW","PS","PA","PG","PY","PE","PH","PN","PL","PT","PR","QA","RE","RO","RU","RW","BL","SH","KN","LC","MF","PM","VC","WS","SM","ST","SA","SN","RS","SC","SL","SG","SK","SI","SB","SO","ZA","GS","ES","LK","SD","SR","SJ","SZ","SE","SX","CH","SY","TW","TJ","TZ","TH","TL","TG","TK","TO","TT","TN","TR","TM","TC","TV","UG","UA","AE","GB","US","UM","UY","UZ","VU","VE","VN","VG","VI","WF","EH","YE","ZM","ZW"]',
+    3,
+    2,
+    0,
+    1,
+    'English',
+    0,
+    '',
+    40,
+    '',
+    0,
+    0,
+    'light',
+    2,
+    3,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    200,
+    8192,
+    'fit',
+    3,
+    1,
+    1,
+    1,
+    1,
+    0,
+    'flow',
+    1,
+    180,
+    600,
+    10,
+    '["MAG255","MAG256","MAG257"]',
+    'null',
+    1,
+    1,
+    'default',
+    1,
+    '',
+    '',
+    0,
+    0,
+    0,
+    'null',
+    'bouquet',
+    1,
+    0,
+    10,
+    0,
+    '',
+    0,
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    'Welcome to Xtream Codes Reborn',
+    0,
+    0,
+    0,
+    1,
+    '[]',
+    1,
+    1,
+    'HTTP_CF_CONNECTING_IP',
+    1,
+    0,
+    0,
+    1,
+    1,
+    'con',
+    0,
+    'null',
+    0,
+    0,
+    '',
+    0,
+    0,
+    '["mp4","mkv","avi"]',
+    '["mp4","mkv","avi"]',
+    'en',
+    0,
+    1
+  );
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `signals`
 --
-
 CREATE TABLE IF NOT EXISTS `signals` (
   `signal_id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL,
@@ -963,14 +1519,12 @@ CREATE TABLE IF NOT EXISTS `signals` (
   PRIMARY KEY (`signal_id`),
   KEY `server_id` (`server_id`),
   KEY `time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `streaming_servers`
 --
-
 CREATE TABLE IF NOT EXISTS `streaming_servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `script_version` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1011,24 +1565,100 @@ CREATE TABLE IF NOT EXISTS `streaming_servers` (
   `time_offset` int(11) DEFAULT '0',
   `php_pids` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `server_ip` (`server_ip`,`http_broadcast_port`),
+  UNIQUE KEY `server_ip` (`server_ip`, `http_broadcast_port`),
   KEY `total_clients` (`total_clients`),
   KEY `status` (`status`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 2;
 
 --
 -- Dumping data for table `streaming_servers`
 --
-
-INSERT INTO `streaming_servers` (`id`, `script_version`, `server_name`, `domain_name`, `server_ip`, `vpn_ip`, `ssh_password`, `ssh_port`, `diff_time_main`, `http_broadcast_port`, `total_clients`, `system_os`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `boost_fpm`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`, `time_offset`, `php_pids`) VALUES
-(1, NULL, 'Main Server', '', '127.0.0.1', '', NULL, 1, NULL, 0, 25461, 1000, NULL, 'eh0', 0, 1, 0, '', 0, 0, '', 3, 0, 25462, 'low_priority', '', 'low_priority', 0, 0, '', 0, 25463, '', '', '', 0, 0, NULL);
+INSERT INTO
+  `streaming_servers` (
+    `id`,
+    `script_version`,
+    `server_name`,
+    `domain_name`,
+    `server_ip`,
+    `vpn_ip`,
+    `ssh_password`,
+    `ssh_port`,
+    `diff_time_main`,
+    `http_broadcast_port`,
+    `total_clients`,
+    `system_os`,
+    `network_interface`,
+    `latency`,
+    `status`,
+    `enable_geoip`,
+    `geoip_countries`,
+    `last_check_ago`,
+    `can_delete`,
+    `server_hardware`,
+    `total_services`,
+    `persistent_connections`,
+    `rtmp_port`,
+    `geoip_type`,
+    `isp_names`,
+    `isp_type`,
+    `enable_isp`,
+    `boost_fpm`,
+    `http_ports_add`,
+    `network_guaranteed_speed`,
+    `https_broadcast_port`,
+    `https_ports_add`,
+    `whitelist_ips`,
+    `watchdog_data`,
+    `timeshift_only`,
+    `time_offset`,
+    `php_pids`
+  )
+VALUES
+  (
+    1,
+    NULL,
+    'Main Server',
+    '',
+    '127.0.0.1',
+    '',
+    NULL,
+    1,
+    NULL,
+    0,
+    25461,
+    1000,
+    NULL,
+    'eh0',
+    0,
+    1,
+    0,
+    '',
+    0,
+    0,
+    '',
+    3,
+    0,
+    25462,
+    'low_priority',
+    '',
+    'low_priority',
+    0,
+    0,
+    '',
+    0,
+    25463,
+    '',
+    '',
+    '',
+    0,
+    0,
+    NULL
+  );
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `streams`
 --
-
 CREATE TABLE IF NOT EXISTS `streams` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` int(11) NOT NULL,
@@ -1084,14 +1714,12 @@ CREATE TABLE IF NOT EXISTS `streams` (
   KEY `order` (`order`),
   KEY `direct_source` (`direct_source`),
   KEY `rtmp_output` (`rtmp_output`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `streams_arguments`
 --
-
 CREATE TABLE IF NOT EXISTS `streams_arguments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `argument_cat` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -1103,38 +1731,227 @@ CREATE TABLE IF NOT EXISTS `streams_arguments` (
   `argument_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `argument_default_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=19 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 19;
 
 --
 -- Dumping data for table `streams_arguments`
 --
-
-INSERT INTO `streams_arguments` (`id`, `argument_cat`, `argument_name`, `argument_description`, `argument_wprotocol`, `argument_key`, `argument_cmd`, `argument_type`, `argument_default_value`) VALUES
-(1, 'fetch', 'User Agent', 'Set a Custom User Agent', 'http', 'user_agent', '-user_agent "%s"', 'text', 'Xtream-Codes IPTV Panel Pro'),
-(2, 'fetch', 'HTTP Proxy', 'Set an HTTP Proxy in this format: ip:port', 'http', 'proxy', '-http_proxy "%s"', 'text', NULL),
-(3, 'transcode', 'Average Video Bit Rate', 'With this you can change the bitrate of the target video. It is very useful in case you want your video to be playable on slow internet connections', NULL, 'bitrate', '-b:v %dk', 'text', NULL),
-(4, 'transcode', 'Average Audio Bitrate', 'Change Audio Bitrate', NULL, 'audio_bitrate', '-b:a %dk', 'text', NULL),
-(5, 'transcode', 'Minimum Bitrate Tolerance', '-minrate FFmpeg argument. Specify the minimum bitrate tolerance here. Specify in kbps. Enter INT number.', NULL, 'minimum_bitrate', '-minrate %dk', 'text', NULL),
-(6, 'transcode', 'Maximum Bitrate Tolerance', '-maxrate FFmpeg argument. Specify the maximum bitrate tolerance here.Specify in kbps. Enter INT number. ', NULL, 'maximum_bitrate', '-maxrate %dk', 'text', NULL),
-(7, 'transcode', 'Buffer Size', '-bufsize is the rate control buffer. Basically it is assumed that the receiver/end player will buffer that much data so its ok to fluctuate within that much. Specify in kbps. Enter INT number.', NULL, 'bufsize', '-bufsize %dk', 'text', NULL),
-(8, 'transcode', 'CRF Value', 'The range of the quantizer scale is 0-51: where 0 is lossless, 23 is default, and 51 is worst possible. A lower value is a higher quality and a subjectively sane range is 18-28. Consider 18 to be visually lossless or nearly so: it should look the same or ', NULL, 'crf', '-crf %d', 'text', NULL),
-(9, 'transcode', 'Scaling', 'Change the Width & Height of the target Video. (Eg. 320:240 ) .  If we''d like to keep the aspect ratio, we need to specify only one component, either width or height, and set the other component to -1. (eg 320:-1)', NULL, 'scaling', '-filter_complex "scale=%s"', 'text', NULL),
-(10, 'transcode', 'Aspect', 'Change the target Video Aspect. (eg 16:9)', NULL, 'aspect', '-aspect %s', 'text', NULL),
-(11, 'transcode', 'Target Video FrameRate', 'Set the frame rate', NULL, 'video_frame_rate', '-r %d', 'text', NULL),
-(12, 'transcode', 'Audio Sample Rate', 'Set the Audio Sample rate in Hz', NULL, 'audio_sample_rate', '-ar %d', 'text', NULL),
-(13, 'transcode', 'Audio Channels', 'Specify Audio Channels', NULL, 'audio_channels', '-ac %d', 'text', NULL),
-(14, 'transcode', 'Remove Sensitive Parts (delogo filter)', 'With this filter you can remove sensitive parts in your video. You will just specifiy the x & y pixels where there is a sensitive area and the width and height that will be removed. Example Use: x=0:y=0:w=100:h=77:band=10 ', NULL, 'delogo', '-filter_complex "delogo=%s"', 'text', NULL),
-(15, 'transcode', 'Threads', 'Specify the number of threads you want to use for the transcoding process. Entering 0 as value will make FFmpeg to choose the most optimal settings', NULL, 'threads', '-threads %d', 'text', NULL),
-(16, 'transcode', 'Logo Path', 'Add your Own Logo to the stream. The logo will be placed in the upper left. Please be sure that you have selected H.264 as codec otherwise this option won''t work. Note that adding your own logo will consume A LOT of cpu power', NULL, 'logo', '-i "%s" -filter_complex "overlay"', 'text', NULL),
-(17, 'fetch', 'Cookie', 'Set an HTTP Cookie that might be useful to fetch your INPUT Source.', 'http', 'cookie', '-cookie ''%s''', 'text', NULL),
-(18, 'transcode', 'DeInterlacing Filter', 'It check pixels of previous, current and next frames to re-create the missed field by some local adaptive method (edge-directed interpolation) and uses spatial check to prevent most artifacts. ', NULL, '', '-filter_complex "yadif"', 'radio', '0');
+INSERT INTO
+  `streams_arguments` (
+    `id`,
+    `argument_cat`,
+    `argument_name`,
+    `argument_description`,
+    `argument_wprotocol`,
+    `argument_key`,
+    `argument_cmd`,
+    `argument_type`,
+    `argument_default_value`
+  )
+VALUES
+  (
+    1,
+    'fetch',
+    'User Agent',
+    'Set a Custom User Agent',
+    'http',
+    'user_agent',
+    '-user_agent "%s"',
+    'text',
+    'Xtream-Codes IPTV Panel Pro'
+  ),
+  (
+    2,
+    'fetch',
+    'HTTP Proxy',
+    'Set an HTTP Proxy in this format: ip:port',
+    'http',
+    'proxy',
+    '-http_proxy "%s"',
+    'text',
+    NULL
+  ),
+  (
+    3,
+    'transcode',
+    'Average Video Bit Rate',
+    'With this you can change the bitrate of the target video. It is very useful in case you want your video to be playable on slow internet connections',
+    NULL,
+    'bitrate',
+    '-b:v %dk',
+    'text',
+    NULL
+  ),
+  (
+    4,
+    'transcode',
+    'Average Audio Bitrate',
+    'Change Audio Bitrate',
+    NULL,
+    'audio_bitrate',
+    '-b:a %dk',
+    'text',
+    NULL
+  ),
+  (
+    5,
+    'transcode',
+    'Minimum Bitrate Tolerance',
+    '-minrate FFmpeg argument. Specify the minimum bitrate tolerance here. Specify in kbps. Enter INT number.',
+    NULL,
+    'minimum_bitrate',
+    '-minrate %dk',
+    'text',
+    NULL
+  ),
+  (
+    6,
+    'transcode',
+    'Maximum Bitrate Tolerance',
+    '-maxrate FFmpeg argument. Specify the maximum bitrate tolerance here.Specify in kbps. Enter INT number. ',
+    NULL,
+    'maximum_bitrate',
+    '-maxrate %dk',
+    'text',
+    NULL
+  ),
+  (
+    7,
+    'transcode',
+    'Buffer Size',
+    '-bufsize is the rate control buffer. Basically it is assumed that the receiver/end player will buffer that much data so its ok to fluctuate within that much. Specify in kbps. Enter INT number.',
+    NULL,
+    'bufsize',
+    '-bufsize %dk',
+    'text',
+    NULL
+  ),
+  (
+    8,
+    'transcode',
+    'CRF Value',
+    'The range of the quantizer scale is 0-51: where 0 is lossless, 23 is default, and 51 is worst possible. A lower value is a higher quality and a subjectively sane range is 18-28. Consider 18 to be visually lossless or nearly so: it should look the same or ',
+    NULL,
+    'crf',
+    '-crf %d',
+    'text',
+    NULL
+  ),
+  (
+    9,
+    'transcode',
+    'Scaling',
+    'Change the Width & Height of the target Video. (Eg. 320:240 ) .  If we''d like to keep the aspect ratio, we need to specify only one component, either width or height, and set the other component to -1. (eg 320:-1)',
+    NULL,
+    'scaling',
+    '-filter_complex "scale=%s"',
+    'text',
+    NULL
+  ),
+  (
+    10,
+    'transcode',
+    'Aspect',
+    'Change the target Video Aspect. (eg 16:9)',
+    NULL,
+    'aspect',
+    '-aspect %s',
+    'text',
+    NULL
+  ),
+  (
+    11,
+    'transcode',
+    'Target Video FrameRate',
+    'Set the frame rate',
+    NULL,
+    'video_frame_rate',
+    '-r %d',
+    'text',
+    NULL
+  ),
+  (
+    12,
+    'transcode',
+    'Audio Sample Rate',
+    'Set the Audio Sample rate in Hz',
+    NULL,
+    'audio_sample_rate',
+    '-ar %d',
+    'text',
+    NULL
+  ),
+  (
+    13,
+    'transcode',
+    'Audio Channels',
+    'Specify Audio Channels',
+    NULL,
+    'audio_channels',
+    '-ac %d',
+    'text',
+    NULL
+  ),
+  (
+    14,
+    'transcode',
+    'Remove Sensitive Parts (delogo filter)',
+    'With this filter you can remove sensitive parts in your video. You will just specifiy the x & y pixels where there is a sensitive area and the width and height that will be removed. Example Use: x=0:y=0:w=100:h=77:band=10 ',
+    NULL,
+    'delogo',
+    '-filter_complex "delogo=%s"',
+    'text',
+    NULL
+  ),
+  (
+    15,
+    'transcode',
+    'Threads',
+    'Specify the number of threads you want to use for the transcoding process. Entering 0 as value will make FFmpeg to choose the most optimal settings',
+    NULL,
+    'threads',
+    '-threads %d',
+    'text',
+    NULL
+  ),
+  (
+    16,
+    'transcode',
+    'Logo Path',
+    'Add your Own Logo to the stream. The logo will be placed in the upper left. Please be sure that you have selected H.264 as codec otherwise this option won''t work. Note that adding your own logo will consume A LOT of cpu power',
+    NULL,
+    'logo',
+    '-i "%s" -filter_complex "overlay"',
+    'text',
+    NULL
+  ),
+  (
+    17,
+    'fetch',
+    'Cookie',
+    'Set an HTTP Cookie that might be useful to fetch your INPUT Source.',
+    'http',
+    'cookie',
+    '-cookie ''%s''',
+    'text',
+    NULL
+  ),
+  (
+    18,
+    'transcode',
+    'DeInterlacing Filter',
+    'It check pixels of previous, current and next frames to re-create the missed field by some local adaptive method (edge-directed interpolation) and uses spatial check to prevent most artifacts. ',
+    NULL,
+    '',
+    '-filter_complex "yadif"',
+    'radio',
+    '0'
+  );
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `streams_options`
 --
-
 CREATE TABLE IF NOT EXISTS `streams_options` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `stream_id` int(11) NOT NULL,
@@ -1143,27 +1960,23 @@ CREATE TABLE IF NOT EXISTS `streams_options` (
   PRIMARY KEY (`id`),
   KEY `stream_id` (`stream_id`),
   KEY `argument_id` (`argument_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `streams_seasons`
 --
-
 CREATE TABLE IF NOT EXISTS `streams_seasons` (
   `season_id` int(11) NOT NULL AUTO_INCREMENT,
   `season_name` varchar(255) NOT NULL,
   `stream_id` int(11) NOT NULL,
   PRIMARY KEY (`season_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `streams_sys`
 --
-
 CREATE TABLE IF NOT EXISTS `streams_sys` (
   `server_stream_id` int(11) NOT NULL AUTO_INCREMENT,
   `stream_id` int(11) NOT NULL,
@@ -1182,7 +1995,7 @@ CREATE TABLE IF NOT EXISTS `streams_sys` (
   `delay_pid` int(11) DEFAULT NULL,
   `delay_available_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`server_stream_id`),
-  UNIQUE KEY `stream_id_2` (`stream_id`,`server_id`),
+  UNIQUE KEY `stream_id_2` (`stream_id`, `server_id`),
   KEY `stream_id` (`stream_id`),
   KEY `pid` (`pid`),
   KEY `server_id` (`server_id`),
@@ -1190,14 +2003,12 @@ CREATE TABLE IF NOT EXISTS `streams_sys` (
   KEY `stream_started` (`stream_started`),
   KEY `parent_id` (`parent_id`),
   KEY `to_analyze` (`to_analyze`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `streams_types`
 --
-
 CREATE TABLE IF NOT EXISTS `streams_types` (
   `type_id` int(11) NOT NULL AUTO_INCREMENT,
   `type_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -1208,25 +2019,36 @@ CREATE TABLE IF NOT EXISTS `streams_types` (
   KEY `type_key` (`type_key`),
   KEY `type_output` (`type_output`),
   KEY `live` (`live`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 6;
 
 --
 -- Dumping data for table `streams_types`
 --
-
-INSERT INTO `streams_types` (`type_id`, `type_name`, `type_key`, `type_output`, `live`) VALUES
-(1, 'Live Streams', 'live', 'live', 1),
-(2, 'Movies', 'movie', 'movie', 0),
-(3, 'Created Live Channels', 'created_live', 'live', 1),
-(4, 'Radio', 'radio_streams', 'live', 1),
-(5, 'TV Series', 'series', 'series', 0);
+INSERT INTO
+  `streams_types` (
+    `type_id`,
+    `type_name`,
+    `type_key`,
+    `type_output`,
+    `live`
+  )
+VALUES
+  (1, 'Live Streams', 'live', 'live', 1),
+  (2, 'Movies', 'movie', 'movie', 0),
+  (
+    3,
+    'Created Live Channels',
+    'created_live',
+    'live',
+    1
+  ),
+  (4, 'Radio', 'radio_streams', 'live', 1),
+  (5, 'TV Series', 'series', 'series', 0);
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `stream_categories`
 --
-
 CREATE TABLE IF NOT EXISTS `stream_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -1237,14 +2059,12 @@ CREATE TABLE IF NOT EXISTS `stream_categories` (
   KEY `category_type` (`category_type`),
   KEY `cat_order` (`cat_order`),
   KEY `parent_id` (`parent_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `stream_logs`
 --
-
 CREATE TABLE IF NOT EXISTS `stream_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `stream_id` int(11) NOT NULL,
@@ -1254,52 +2074,24 @@ CREATE TABLE IF NOT EXISTS `stream_logs` (
   PRIMARY KEY (`id`),
   KEY `stream_id` (`stream_id`),
   KEY `server_id` (`server_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
-
---
--- Dumping data for table `stream_logs`
---
-
-INSERT INTO `stream_logs` (`id`, `stream_id`, `server_id`, `date`, `error`) VALUES
-(1, 309255, 16, 1570285389, '[tcp @ 0x520c540] Connection to tcp://127.0.0.1:83 failed: Connection refused'),
-(2, 309255, 16, 1570285389, 'Failed to open progress URL "http://127.0.0.1:83/progress.php?stream_id=309255": Connection refused'),
-(3, 309255, 16, 1570285389, '[tcp @ 0x5212600] Connection to tcp://127.0.0.1:83 failed: Connection refused'),
-(4, 309255, 16, 1570285389, '[tcp @ 0x522b2c0] Connection to tcp://127.0.0.1:83 failed: Connection refused'),
-(5, 21112, 16, 1570285389, '[tcp @ 0x554a940] Connection to tcp://127.0.0.1:83 failed: Connection refused'),
-(6, 21112, 16, 1570285389, 'Failed to open progress URL "http://127.0.0.1:83/progress.php?stream_id=21112": Connection refused'),
-(7, 21112, 16, 1570285389, '[http @ 0x55162c0] HTTP error 403 Forbidden'),
-(8, 21112, 16, 1570285389, '[hls,applehttp @ 0x5510c00] keepalive request failed for ''http://50.7.198.106:80/uk_bbc_2_hd/tracks-v1a1/mono.m3u8?token=djIubG9jYWwuQzJlS2o5ck0xcEJaTF8tOGhHcnJqbkV3RWZsS28tSm9vSWt5V1g4bkJSSGMwYU5hLUR5SThCZ0twbDhnbXZYNlZ0S1gwLVc3NWFfc2I5RkNTYnpQR1RmZHI4QW1xN3VNZDlEaF9xenFUQlVLRG5wOVhmZ0JVc0c0YnUyamktbHVSaWM%3D'', retrying with new connection: Server returned 403 Forbidden (access denied)'),
-(9, 21112, 16, 1570285389, '[http @ 0x567a300] HTTP error 403 Forbidden'),
-(10, 21112, 16, 1570285389, '[hls,applehttp @ 0x5510c00] Failed to reload playlist 0'),
-(11, 21112, 16, 1570285389, '[http @ 0x5679bc0] HTTP error 403 Forbidden'),
-(12, 321974, 16, 1570285389, '[tcp @ 0x429a7c0] Connection to tcp://127.0.0.1:83 failed: Connection refused'),
-(13, 321974, 16, 1570285389, 'Failed to open progress URL "http://127.0.0.1:83/progress.php?stream_id=321974": Connection refused'),
-(14, 321974, 16, 1570285389, '[http @ 0x4282080] HTTP error 403 Forbidden'),
-(15, 321974, 16, 1570285389, '[hls,applehttp @ 0x427cb40] keepalive request failed for ''http://50.7.198.106:80/uk_virgin_media_1_hd/tracks-v1a1/mono.m3u8?token=djIubG9jYWwub3FDYktRRFo0Zzl3TjBtZFFzTmNqdDBxNEhnSzlEa2N3M0EycDN4ZFNEeUplSVJwU2FJaWw2c3VOMWtBcFBtb2VNWXVmSWVGY1VXNmd3THlVQXZVa2FRaVBkbzV6d1cwVFVKNWh6VGhYVFlIRnktUnpuaGwwSUlWalR4Zk94ZEZ6U2c%3D'', retrying with new connection: Server returned 403 Forbidden (access denied)'),
-(16, 321974, 16, 1570285390, '[http @ 0x44cf880] HTTP error 403 Forbidden'),
-(17, 321974, 16, 1570285390, '[hls,applehttp @ 0x427cb40] Failed to reload playlist 0'),
-(18, 321974, 16, 1570285390, '[http @ 0x42fed40] HTTP error 403 Forbidden');
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `stream_subcategories`
 --
-
 CREATE TABLE IF NOT EXISTS `stream_subcategories` (
   `sub_id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL,
   `subcategory_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`sub_id`),
   KEY `parent_id` (`parent_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `suspicious_logs`
 --
-
 CREATE TABLE IF NOT EXISTS `suspicious_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -1307,14 +2099,12 @@ CREATE TABLE IF NOT EXISTS `suspicious_logs` (
   `last_updated` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `tickets`
 --
-
 CREATE TABLE IF NOT EXISTS `tickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
@@ -1327,14 +2117,12 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   KEY `status` (`status`),
   KEY `admin_read` (`admin_read`),
   KEY `user_read` (`user_read`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `tickets_replies`
 --
-
 CREATE TABLE IF NOT EXISTS `tickets_replies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ticket_id` int(11) NOT NULL,
@@ -1343,34 +2131,35 @@ CREATE TABLE IF NOT EXISTS `tickets_replies` (
   `date` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ticket_id` (`ticket_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `transcoding_profiles`
 --
-
 CREATE TABLE IF NOT EXISTS `transcoding_profiles` (
   `profile_id` int(11) NOT NULL AUTO_INCREMENT,
   `profile_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `profile_options` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`profile_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=27 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 27;
 
 --
 -- Dumping data for table `transcoding_profiles`
 --
-
-INSERT INTO `transcoding_profiles` (`profile_id`, `profile_name`, `profile_options`) VALUES
-(1, 'Standard H264 AAC', '{"-vcodec":"h264","-acodec":"aac"}');
+INSERT INTO
+  `transcoding_profiles` (`profile_id`, `profile_name`, `profile_options`)
+VALUES
+  (
+    1,
+    'Standard H264 AAC',
+    '{"-vcodec":"h264","-acodec":"aac"}'
+  );
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `users`
 --
-
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) DEFAULT NULL,
@@ -1414,14 +2203,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `username` (`username`),
   KEY `password` (`password`),
   KEY `is_e2` (`is_e2`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `user_activity`
 --
-
 CREATE TABLE IF NOT EXISTS `user_activity` (
   `activity_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -1444,18 +2231,16 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
   KEY `container` (`container`),
   KEY `geoip_country_code` (`geoip_country_code`),
   KEY `date_start` (`date_start`),
-  KEY `date_start_2` (`date_start`,`date_end`),
+  KEY `date_start_2` (`date_start`, `date_end`),
   KEY `user_ip` (`user_ip`),
   KEY `user_agent` (`user_agent`),
   KEY `isp` (`isp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `user_activity_now`
 --
-
 CREATE TABLE IF NOT EXISTS `user_activity_now` (
   `activity_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -1485,14 +2270,12 @@ CREATE TABLE IF NOT EXISTS `user_activity_now` (
   KEY `date_start` (`date_start`),
   KEY `date_end` (`date_end`),
   KEY `hls_end` (`hls_end`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `user_output`
 --
-
 CREATE TABLE IF NOT EXISTS `user_output` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -1500,21 +2283,18 @@ CREATE TABLE IF NOT EXISTS `user_output` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `access_output_id` (`access_output_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `xtream_main`
 --
-
 CREATE TABLE IF NOT EXISTS `xtream_main` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `update_available` int(11) NOT NULL DEFAULT '0',
   `root_ip` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci AUTO_INCREMENT = 1;
 
 CREATE TABLE IF NOT EXISTS `lines_live` (
   `activity_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1551,7 +2331,7 @@ CREATE TABLE IF NOT EXISTS `lines_live` (
   KEY `hls_end` (`hls_end`),
   KEY `fingerprinting` (`fingerprinting`),
   KEY `uuid` (`uuid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `lines_divergence` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1559,8 +2339,9 @@ CREATE TABLE IF NOT EXISTS `lines_divergence` (
   `divergence` float DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uuid` (`uuid`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COLLATE = utf8_unicode_ci;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

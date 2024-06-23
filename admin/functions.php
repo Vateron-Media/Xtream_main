@@ -1,11 +1,16 @@
 <?php
 include_once("/home/xtreamcodes/iptv_xtream_codes/admin/HTMLPurifier.standalone.php");
 
-$rRelease = '1.1.11';       // Official Release Number
 $rTimeout = 60;             // Seconds Timeout for Functions & Requests
 $rSQLTimeout = 5;           // Max execution time for MySQL queries.
 $rDebug = False;
 $rPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
+function getScriptVer(){
+    global $db;
+    $rVersion = $db->query("SELECT `script_version` FROM `streaming_servers` WHERE `is_main` = '1'")->fetch_assoc()["script_version"];
+    return $rVersion;
+}
 
 function XSS($rString, $rSQL = False) {
     global $rPurifier, $db;
@@ -47,64 +52,10 @@ function sortArrayByArray(array $rArray, array $rSort) {
 }
 
 function updatePanel() {
-    global $rAdminSettings;
-    $rURL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json";
-    $rData = json_decode(file_get_contents($rURL), True);
-    if ($rData["main"]) {
-        $versions = $rData["main_versions"];
-
-        // Find the index of the current version in the array
-        $current_index = array_search($rData["main"], $versions) + 1;
-
-        if ($current_index !== false) {
-            // Start the loop from the current index
-            for ($i = $current_index; $i < count($versions); $i++) {
-                echo "Download Version: " . $versions[$i] . "\n";
-                // exec('wget "https://git/update.zip" -O /tmp/update.zip -o /dev/null');
-            }
-        }
-        // $rAdminSettings["panel_version"] = $rData["main"];
-        // writeAdminSettings();
-    }
+    global $db;
+    $db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'UPDATE', 'Updating XtreamUI...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
+    shell_exec('sudo ' . PHP_BIN . ' ' . TOOLS_PATH . '/update.php "update" 2>&1 &');
 }
-
-// function updatePanel() {
-//     global $rAdminSettings;
-//     $rURL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json";
-//     $rData = json_decode(file_get_contents($rURL), True);
-//     if ($rData["version"]) {
-//         $rFileData = file_get_contents("/home/xtreamcodes/iptv_xtream_codes/pytools/autoupdate.py");
-//         if (stripos($rFileData, "# update panel") !== false) {
-//             $rFilePath = "/tmp/autoupdate.py";
-//             file_put_contents($rFilePath, $rFileData);
-//             exec("sudo chmod 777 {$rFilePath}");
-//             if (file_get_contents($rFilePath) == $rFileData) {
-//                 $rAdminSettings["panel_version"] = $rData["version"];
-//                 writeAdminSettings();
-//                 exec('rm /usr/bin/ffmpeg');
-//                 exec('rm /usr/bin/ffprobe');
-//                 exec('wget "https://git/update.zip" -O /tmp/update.zip -o /dev/null');
-//                 exec('unzip /tmp/update.zip -d /tmp/update/ >/dev/null');
-//                 exec('rm -rf /home/xtreamcodes/iptv_xtream_codes/crons');
-//                 exec('rm -rf /home/xtreamcodes/iptv_xtream_codes/php/etc');
-//                 exec('cp -rf /tmp/update/XtreamUI-master/* /home/xtreamcodes/iptv_xtream_codes/ 2>/dev/null');
-//                 exec('rm -rf /tmp/update/XtreamUI-master');
-//                 exec('rm /tmp/update.zip');
-//                 exec('rm -rf /tmp/update');
-//                 exec('wget https://github.com/Vateron-Media/Xtream_Update/raw/main/GeoLite2-City.mmdb -O /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb -o /dev/null');
-//                 exec('chown -R xtreamcodes:xtreamcodes /home/xtreamcodes');
-//                 exec('find /home/xtreamcodes/ -type d -not \( -name .update -prune \) -exec chmod -R 777 {} + ');
-//                 exec('chattr +i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb');
-//                 exec('ln -s /home/xtreamcodes/iptv_xtream_codes/bin/ffmpeg /usr/bin/');
-//                 exec('rm /tmp/autoupdate.py');
-//                 return true;
-//             } else {
-//                 return false;
-//             }
-//         }
-//     }
-//     return false;
-// }
 
 function updateGeoLite2() {
     global $rAdminSettings;
@@ -117,11 +68,11 @@ function updateGeoLite2() {
             $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/raw/main/{$value}");
             if (stripos($rFileData, "MaxMind.com") !== false) {
                 $rFilePath = "/home/xtreamcodes/iptv_xtream_codes/bin/maxmind/{$value}";
-                // exec("sudo chattr -i {$rFilePath}");
+                exec("sudo chattr -i {$rFilePath}");
                 unlink($rFilePath);
                 file_put_contents($rFilePath, $rFileData);
                 exec("sudo chmod 644 {$rFilePath}");
-                //exec("sudo chattr +i {$rFilePath}");
+                exec("sudo chattr +i {$rFilePath}");
                 if (file_get_contents($rFilePath) == $rFileData) {
                     $checker[$key] = true;
                 }
@@ -1738,7 +1689,7 @@ function getFooter() {
     // Don't be a dick. Leave it.
     global $rAdminSettings, $rPermissions, $rSettings, $_;
     if ($rPermissions["is_admin"]) {
-        return $_["copyright"] . " &copy; 2023 - " . date("Y") . " - <a href=\"https://github.com/Vateron-Media/Xtream_main\">Xtream UI</a> " . $rAdminSettings["panel_version"] . " - " . $_["free_forever"];
+        return $_["copyright"] . " &copy; 2023 - " . date("Y") . " - <a href=\"https://github.com/Vateron-Media/Xtream_main\">Xtream UI</a> " . getScriptVer() . " - " . $_["free_forever"];
     } else {
         return $rSettings["copyrights_text"];
     }
@@ -1880,7 +1831,7 @@ function flushEvents() {
 }
 
 function updateTables() {
-    global $db, $rRelease;
+    global $db;
     // Update table settings etc.
     checkTable("tmdb_async");
     checkTable("subreseller_setup");
@@ -1978,12 +1929,7 @@ function updateTables() {
     if (($rResult) && ($rResult->num_rows == 0)) {
         $db->query("ALTER TABLE `streaming_servers` ADD COLUMN `http_isp_port` int(11) NOT NULL DEFAULT '8805';");
     }
-    $rResult = $db->query("SELECT * FROM `admin_settings` WHERE `type` = 'panel_version';");
 
-    if (($rResult) && ($rResult->num_rows == 0)) {
-        $release = '\'' . $rRelease . '\'';
-        $db->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('panel_version', $release);");
-    }
     //priority backup
     //$db->query("UPDATE settings SET priority_backup = 1;");
 

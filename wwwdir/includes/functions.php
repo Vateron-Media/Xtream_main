@@ -566,3 +566,50 @@ function generateUUID($key = null) {
 
     return $uuid;
 }
+/** 
+ * Function to check for updates based on the current version provided. 
+ * 
+ * @param string $currentVersion The current version to compare against 
+ * @return array|bool Returns an array with the next version information (version, url, md5) if an update is available, otherwise returns false 
+ */
+function checkUpdate($currentVersion, $type = "main") {
+    // $rURL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json";
+    // $rData = json_decode(file_get_contents($rURL), True);
+
+    //test
+    $rData = [
+        "main" => "1.1.14",
+        "main_versions" => [
+            ["version" => "1.1.10", "md5" => "hadoiufsglfigsldgskhg"],
+            ["version" => "1.1.11", "md5" => "sflishdlfgsldifgsldhf"],
+            ["version" => "1.1.12", "md5" => "sldfgayidgfadfasdg4a2"],
+            ["version" => "1.1.13", "md5" => "fsdjfsidglhdsgflhzdff"],
+            ["version" => "1.1.14", "md5" => "sdlfihsduigfliasdgfll"]
+        ]
+    ];
+    //test
+
+    if ($rData[$type]) {
+        if (version_compare($rData[$type], $currentVersion)) {
+            $mainVersions = $rData["main_versions"];
+
+            // Find the index of the current version
+            $currentIndex = array_search($currentVersion, array_column($mainVersions, 'version'));
+
+            if ($currentIndex !== false && $currentIndex < count($mainVersions) - 1) {
+                // Get the next version
+                $nextVersion = $mainVersions[$currentIndex + 1]['version'];
+                $hashNextVersion = $mainVersions[$currentIndex + 1]['md5'];
+
+                $version["version"] = $nextVersion;
+                $version["url"] = "https://github.com/Vateron-Media/Xtream_main/releases/download/" . $nextVersion . "/" . $type . "_xui.tar.gz";
+                $version["md5"] = $hashNextVersion;
+                return $version;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+}

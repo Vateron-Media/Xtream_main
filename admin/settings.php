@@ -340,8 +340,6 @@ if ($rSettings["sidebar"]) { ?>
                                 $rUpdatePanel = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json", false, $rContext), True);
                                 $rInfos = array(); //json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/infos.json", false, $rContext), True);
                                 $rGeoLite2 = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/status.json", false, $rContext), True);
-                                if (version_compare($rGeoLite2["version"], $rAdminSettings["geolite2_version"]));
-                                if (version_compare($rUpdatePanel["main"], $rAdminSettings["panel_version"]));
                                 ?>
                                 <?php if (version_compare($rGeoLite2["version"], $rAdminSettings["geolite2_version"])) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -351,7 +349,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["a_new_version_of_GeoLite2"] ?> (<?= $rGeoLite2["version"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?geolite2"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
-                                <?php if (version_compare($rUpdatePanel["main"], $rAdminSettings["panel_version"])) { ?>
+                                <?php if (version_compare($rUpdatePanel["main"], getScriptVer())) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -367,7 +365,7 @@ if ($rSettings["sidebar"]) { ?>
                                                     <p class="text-muted mb-0 mt-3"><?= $_["installed_version"] ?></p>
                                                     <h2 class="font-weight-normal mb-3">
                                                         <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
-                                                        <span><?= $rAdminSettings["panel_version"] ?></span>
+                                                        <span><?= getScriptVer() ?></span>
                                                     </h2>
                                                 </div>
                                                 <div class="col-md-4">
