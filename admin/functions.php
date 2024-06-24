@@ -1874,37 +1874,9 @@ function updateTables() {
     $db->query("UPDATE `streams_arguments` SET `argument_cmd` = '-cookies \'%s\'' WHERE `id` = 17;");
     // R21 Early Access
     $db->query("INSERT IGNORE INTO `streams_arguments` VALUES (19, 'fetch', 'Headers', 'Set Custom Headers', 'http', 'headers', '-headers \"%s\"', 'text', NULL);");
-    $rResult = $db->query("SHOW COLUMNS FROM `reg_users` LIKE 'dark_mode';");
-    if (($rResult) && ($rResult->num_rows == 0)) {
-        $db->query("ALTER TABLE `reg_users` ADD COLUMN `dark_mode` int(1) NOT NULL DEFAULT '0';");
-        $db->query("ALTER TABLE `reg_users` ADD COLUMN `sidebar` int(1) NOT NULL DEFAULT '0';");
-    }
-    $rResult = $db->query("SHOW COLUMNS FROM `member_groups` LIKE 'minimum_trial_credits';");
-    if (($rResult) && ($rResult->num_rows == 0)) {
-        $db->query("ALTER TABLE `member_groups` ADD COLUMN `minimum_trial_credits` int(16) NOT NULL DEFAULT '0';");
-    }
-    // R22 Early Access
-    $rResult = $db->query("SHOW COLUMNS FROM `bouquets` LIKE 'bouquet_order';");
-    if (($rResult) && ($rResult->num_rows == 0)) {
-        $db->query("ALTER TABLE `bouquets` ADD COLUMN `bouquet_order` int(16) NOT NULL DEFAULT '0';");
-    }
-    $rResult = $db->query("SHOW COLUMNS FROM `reg_users` LIKE 'expanded_sidebar';");
-    if (($rResult) && ($rResult->num_rows == 0)) {
-        $db->query("ALTER TABLE `reg_users` ADD COLUMN `expanded_sidebar` int(1) NOT NULL DEFAULT '0';");
-    }
     $rResult = $db->query("SELECT * FROM `admin_settings` WHERE `type` = 'auto_refresh';");
     if (($rResult) && ($rResult->num_rows == 0)) {
         $db->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('auto_refresh', 1);");
-    }
-    //logo sidebar
-    $rResult = $db->query("SHOW COLUMNS FROM `settings` LIKE 'logo_url_sidebar';");
-    if (($rResult) && ($rResult->num_rows == 0)) {
-        $db->query("ALTER TABLE `settings` ADD COLUMN `logo_url_sidebar` mediumtext NOT NULL DEFAULT '';");
-    }
-    //page mannuals
-    $rResult = $db->query("SHOW COLUMNS FROM `settings` LIKE 'page_mannuals';");
-    if (($rResult) && ($rResult->num_rows == 0)) {
-        $db->query("ALTER TABLE `settings` ADD COLUMN `page_mannuals` mediumtext NOT NULL DEFAULT '';");
     }
     $rResult = $db->query("SELECT * FROM `admin_settings` WHERE `type` = 'active_mannuals';");
     if (($rResult) && ($rResult->num_rows == 0)) {
@@ -1918,16 +1890,6 @@ function updateTables() {
     $rResult = $db->query("SELECT * FROM `admin_settings` WHERE `type` = 'reseller_reset_isplock';");
     if (($rResult) && ($rResult->num_rows == 0)) {
         $db->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('reseller_reset_isplock', 1);");
-    }
-    //reselers bouquets
-    $rResult = $db->query("SHOW COLUMNS FROM `member_groups` LIKE 'reseller_can_select_bouquets';");
-    if (($rResult) && ($rResult->num_rows == 0)) {
-        $db->query("ALTER TABLE `member_groups` ADD COLUMN `reseller_can_select_bouquets` int(16) NOT NULL DEFAULT '0';");
-    }
-    //update table streaming_servers isp
-    $rResult = $db->query("SHOW COLUMNS FROM `streaming_servers` LIKE 'http_isp_port';");
-    if (($rResult) && ($rResult->num_rows == 0)) {
-        $db->query("ALTER TABLE `streaming_servers` ADD COLUMN `http_isp_port` int(11) NOT NULL DEFAULT '8805';");
     }
 
     //priority backup
