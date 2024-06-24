@@ -6,7 +6,7 @@ $rSQLTimeout = 5;           // Max execution time for MySQL queries.
 $rDebug = False;
 $rPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
 
-function getScriptVer(){
+function getScriptVer() {
     global $db;
     $rVersion = $db->query("SELECT `script_version` FROM `streaming_servers` WHERE `is_main` = '1'")->fetch_assoc()["script_version"];
     return $rVersion;
@@ -53,8 +53,24 @@ function sortArrayByArray(array $rArray, array $rSort) {
 
 function updatePanel() {
     global $db;
-    $db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'UPDATE', 'Updating XtreamUI...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-    shell_exec('sudo ' . PHP_BIN . ' ' . TOOLS_PATH . '/update.php "update" 2>&1 &');
+
+    $URL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/update_files/";
+    $ToolsPath = "/home/xtreamcodes/iptv_xtream_codes/tools/";
+    $PYToolsPath = "/home/xtreamcodes/iptv_xtream_codes/pytools3/";
+    $PHPPath = "/home/xtreamcodes/iptv_xtream_codes/php/bin/php";
+
+    $PHPTools = ["update.php", "update_bd.php"];
+    $PythonScrypt = "update.py";
+
+    foreach ($PHPTools as $value) {
+        $data1 = file_get_contents($URL . $value);
+        file_put_contents($ToolsPath . $value, $data1);
+    }
+
+    $data2 = file_get_contents($URL . $PythonScrypt);
+    file_put_contents($PYToolsPath . $PythonScrypt, $data2);
+
+    shell_exec('sudo ' . $PHPPath . ' ' . $ToolsPath . '/update.php "update" 2>&1 &');
 }
 
 function updateGeoLite2() {

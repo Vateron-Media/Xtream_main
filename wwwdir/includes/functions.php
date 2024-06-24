@@ -573,21 +573,8 @@ function generateUUID($key = null) {
  * @return array|bool Returns an array with the next version information (version, url, md5) if an update is available, otherwise returns false 
  */
 function checkUpdate($currentVersion, $type = "main") {
-    // $rURL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json";
-    // $rData = json_decode(file_get_contents($rURL), True);
-
-    //test
-    $rData = [
-        "main" => "1.1.14",
-        "main_versions" => [
-            ["version" => "1.1.10", "md5" => "hadoiufsglfigsldgskhg"],
-            ["version" => "1.1.11", "md5" => "sflishdlfgsldifgsldhf"],
-            ["version" => "1.1.12", "md5" => "sldfgayidgfadfasdg4a2"],
-            ["version" => "1.1.13", "md5" => "fsdjfsidglhdsgflhzdff"],
-            ["version" => "1.1.14", "md5" => "sdlfihsduigfliasdgfll"]
-        ]
-    ];
-    //test
+    $rURL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json";
+    $rData = json_decode(file_get_contents($rURL), True);
 
     if ($rData[$type]) {
         if (version_compare($rData[$type], $currentVersion)) {

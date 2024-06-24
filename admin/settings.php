@@ -18,17 +18,14 @@ if (isset($_GET["geolite2"])) {
         $_STATUS = 2;
     }
 }
-if (isset($_GET["panel_version"])) {
-    updatePanel();
-}
 
-// if (isset($_GET["panel_version"])) {
-//     if (updatePanel()) {
-//         $_STATUS = 5;
-//     } else {
-//         $_STATUS = 4;
-//     }
-// }
+if (isset($_GET["panel_version"])) {
+    if (updatePanel()) {
+        $_STATUS = 5;
+    } else {
+        $_STATUS = 4;
+    }
+}
 
 if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rArray = getSettings();
