@@ -65,10 +65,12 @@ function updatePanel() {
     foreach ($PHPTools as $value) {
         $data1 = file_get_contents($URL . $value);
         file_put_contents($ToolsPath . $value, $data1);
+        exec("sudo chmod 644 {$ToolsPath}{$value}");
     }
 
     $data2 = file_get_contents($URL . $PythonScrypt);
     file_put_contents($PYToolsPath . $PythonScrypt, $data2);
+    exec("sudo chmod 644 {$PYToolsPath}{$PythonScrypt}");
 
     shell_exec('sudo ' . $PHPPath . ' ' . $ToolsPath . '/update.php "update" 2>&1 &');
 }
