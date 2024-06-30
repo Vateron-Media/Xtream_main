@@ -18,12 +18,15 @@ SET time_zone = "+00:00";
 -- Table structure for table `access_output`
 --
 
-CREATE TABLE `access_output` (
-  `access_output_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `access_output` (
+  `access_output_id` int(11) NOT NULL AUTO_INCREMENT,
   `output_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `output_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `output_ext` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `output_ext` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`access_output_id`),
+  KEY `output_key` (`output_key`),
+  KEY `output_ext` (`output_ext`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `access_output`
@@ -40,13 +43,31 @@ INSERT INTO `access_output` (`access_output_id`, `output_name`, `output_key`, `o
 -- Table structure for table `blocked_ips`
 --
 
-CREATE TABLE `blocked_ips` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `blocked_ips` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(39) COLLATE utf8_unicode_ci NOT NULL,
   `notes` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `date` int(11) NOT NULL,
-  `attempts_blocked` int(11) NOT NULL
+  `attempts_blocked` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ip_2` (`ip`),
+  UNIQUE KEY `ip_3` (`ip`),
+  KEY `ip` (`ip`),
+  KEY `date` (`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blocked_isps`
+--
+
+CREATE TABLE IF NOT EXISTS `blocked_isps` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `isp` mediumtext,
+  `blocked` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -54,11 +75,14 @@ CREATE TABLE `blocked_ips` (
 -- Table structure for table `blocked_user_agents`
 --
 
-CREATE TABLE `blocked_user_agents` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `blocked_user_agents` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_agent` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `exact_match` int(11) NOT NULL DEFAULT '0',
-  `attempts_blocked` int(11) NOT NULL DEFAULT '0'
+  `attempts_blocked` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `exact_match` (`exact_match`),
+  KEY `user_agent` (`user_agent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -67,12 +91,15 @@ CREATE TABLE `blocked_user_agents` (
 -- Table structure for table `bouquets`
 --
 
-CREATE TABLE `bouquets` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `bouquets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `bouquet_name` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `bouquet_channels` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `bouquet_series` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `bouquet_order` int(16) NOT NULL DEFAULT '0'
+  `bouquet_channels` mediumtext COLLATE utf8_unicode_ci,
+  `bouquet_movies` mediumtext COLLATE utf8_unicode_ci,
+  `bouquet_radios` mediumtext COLLATE utf8_unicode_ci,
+  `bouquet_series` mediumtext COLLATE utf8_unicode_ci,
+  `bouquet_order` int(16) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -81,8 +108,8 @@ CREATE TABLE `bouquets` (
 -- Table structure for table `client_logs`
 --
 
-CREATE TABLE `client_logs` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `client_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `stream_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `client_status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -90,7 +117,10 @@ CREATE TABLE `client_logs` (
   `user_agent` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `ip` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `extra_data` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `date` int(11) NOT NULL
+  `date` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -99,7 +129,7 @@ CREATE TABLE `client_logs` (
 -- Table structure for table `created`
 --
 
-CREATE TABLE `created` (
+CREATE TABLE IF NOT EXISTS `created` (
   `id` tinyint(4) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `category_id` tinyint(4) NOT NULL,
@@ -150,13 +180,16 @@ CREATE TABLE `created` (
 -- Table structure for table `credits_log`
 --
 
-CREATE TABLE `credits_log` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `credits_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `target_id` int(11) NOT NULL,
   `admin_id` int(11) NOT NULL,
   `amount` float NOT NULL,
   `date` int(11) NOT NULL,
-  `reason` text NOT NULL
+  `reason` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `target_id` (`target_id`),
+  KEY `admin_id` (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -165,15 +198,18 @@ CREATE TABLE `credits_log` (
 -- Table structure for table `cronjobs`
 --
 
-CREATE TABLE `cronjobs` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `cronjobs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `run_per_mins` int(11) NOT NULL DEFAULT '1',
   `run_per_hours` int(11) NOT NULL DEFAULT '0',
   `enabled` int(11) NOT NULL DEFAULT '0',
   `pid` int(11) NOT NULL DEFAULT '0',
-  `timestamp` int(11) DEFAULT NULL
+  `timestamp` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `enabled` (`enabled`),
+  KEY `filename` (`filename`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -182,8 +218,8 @@ CREATE TABLE `cronjobs` (
 -- Table structure for table `devices`
 --
 
-CREATE TABLE `devices` (
-  `device_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `devices` (
+  `device_id` int(11) NOT NULL AUTO_INCREMENT,
   `device_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `device_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `device_filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -191,8 +227,11 @@ CREATE TABLE `devices` (
   `device_conf` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `device_footer` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `default_output` int(11) NOT NULL DEFAULT '0',
-  `copy_text` mediumtext COLLATE utf8_unicode_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `copy_text` mediumtext COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`device_id`),
+  KEY `device_key` (`device_key`),
+  KEY `default_output` (`default_output`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `devices`
@@ -226,13 +265,14 @@ INSERT INTO `devices` (`device_id`, `device_name`, `device_key`, `device_filenam
 -- Table structure for table `enigma2_actions`
 --
 
-CREATE TABLE `enigma2_actions` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `enigma2_actions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `device_id` int(11) NOT NULL,
   `type` text NOT NULL,
   `key` text NOT NULL,
   `command` text NOT NULL,
-  `command2` text NOT NULL
+  `command2` text NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -241,8 +281,8 @@ CREATE TABLE `enigma2_actions` (
 -- Table structure for table `enigma2_devices`
 --
 
-CREATE TABLE `enigma2_devices` (
-  `device_id` int(12) NOT NULL,
+CREATE TABLE IF NOT EXISTS `enigma2_devices` (
+  `device_id` int(12) NOT NULL AUTO_INCREMENT,
   `mac` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   `modem_mac` varchar(255) NOT NULL,
@@ -262,7 +302,10 @@ CREATE TABLE `enigma2_devices` (
   `ssh_enable` tinyint(4) NOT NULL DEFAULT '1',
   `dns` varchar(255) NOT NULL,
   `original_mac` varchar(255) NOT NULL,
-  `rc` tinyint(4) NOT NULL DEFAULT '1'
+  `rc` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`device_id`),
+  KEY `mac` (`mac`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -271,11 +314,13 @@ CREATE TABLE `enigma2_devices` (
 -- Table structure for table `enigma2_failed`
 --
 
-CREATE TABLE `enigma2_failed` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `enigma2_failed` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `original_mac` varchar(255) NOT NULL,
   `virtual_mac` varchar(255) NOT NULL,
-  `date` int(11) NOT NULL
+  `date` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `original_mac` (`original_mac`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -284,14 +329,15 @@ CREATE TABLE `enigma2_failed` (
 -- Table structure for table `epg`
 --
 
-CREATE TABLE `epg` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `epg` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `epg_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `epg_file` varchar(300) COLLATE utf8_unicode_ci NOT NULL,
   `integrity` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `last_updated` int(11) DEFAULT NULL,
   `days_keep` int(11) NOT NULL DEFAULT '7',
-  `data` longtext COLLATE utf8_unicode_ci NOT NULL
+  `data` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -300,15 +346,35 @@ CREATE TABLE `epg` (
 -- Table structure for table `epg_data`
 --
 
-CREATE TABLE `epg_data` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `epg_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `epg_id` int(11) NOT NULL,
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `lang` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `channel_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL
+  `channel_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `epg_id` (`epg_id`),
+  KEY `start` (`start`),
+  KEY `end` (`end`),
+  KEY `lang` (`lang`),
+  KEY `channel_id` (`channel_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hmac_keys`
+--
+
+CREATE TABLE IF NOT EXISTS `hmac_keys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `key` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `notes` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `enabled` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -317,10 +383,11 @@ CREATE TABLE `epg_data` (
 -- Table structure for table `isp_addon`
 --
 
-CREATE TABLE `isp_addon` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `isp_addon` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `isp` text NOT NULL,
-  `blocked` tinyint(4) NOT NULL DEFAULT '0'
+  `blocked` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -329,12 +396,13 @@ CREATE TABLE `isp_addon` (
 -- Table structure for table `licence`
 --
 
-CREATE TABLE `licence` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `licence` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `licence_key` varchar(29) COLLATE utf8_unicode_ci NOT NULL,
   `show_message` tinyint(4) NOT NULL,
   `update_available` int(11) NOT NULL DEFAULT '0',
-  `reshare_deny_addon` tinyint(4) DEFAULT '0'
+  `reshare_deny_addon` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -343,10 +411,12 @@ CREATE TABLE `licence` (
 -- Table structure for table `lines_divergence`
 --
 
-CREATE TABLE `lines_divergence` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `lines_divergence` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uuid` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `divergence` float DEFAULT NULL
+  `divergence` float DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uuid` (`uuid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -355,8 +425,8 @@ CREATE TABLE `lines_divergence` (
 -- Table structure for table `lines_live`
 --
 
-CREATE TABLE `lines_live` (
-  `activity_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `lines_live` (
+  `activity_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `stream_id` int(11) DEFAULT NULL,
   `server_id` int(11) DEFAULT NULL,
@@ -374,7 +444,22 @@ CREATE TABLE `lines_live` (
   `hls_last_read` int(11) DEFAULT NULL,
   `hls_end` tinyint(4) DEFAULT '0',
   `fingerprinting` tinyint(4) DEFAULT '0',
-  `uuid` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL
+  `uuid` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`activity_id`),
+  KEY `user_agent` (`user_agent`),
+  KEY `user_ip` (`user_ip`),
+  KEY `container` (`container`),
+  KEY `pid` (`pid`),
+  KEY `active_pid` (`active_pid`),
+  KEY `geoip_country_code` (`geoip_country_code`),
+  KEY `user_id` (`user_id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `server_id` (`server_id`),
+  KEY `date_start` (`date_start`),
+  KEY `date_end` (`date_end`),
+  KEY `hls_end` (`hls_end`),
+  KEY `fingerprinting` (`fingerprinting`),
+  KEY `uuid` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -383,12 +468,14 @@ CREATE TABLE `lines_live` (
 -- Table structure for table `login_logs`
 --
 
-CREATE TABLE `login_logs` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `login_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `data` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `login_ip` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `date` int(11) NOT NULL
+  `date` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -397,12 +484,17 @@ CREATE TABLE `login_logs` (
 -- Table structure for table `mag_claims`
 --
 
-CREATE TABLE `mag_claims` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `mag_claims` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `mag_id` int(11) NOT NULL,
   `stream_id` int(11) NOT NULL,
   `real_type` varchar(10) NOT NULL,
-  `date` datetime NOT NULL
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mag_id` (`mag_id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `real_type` (`real_type`),
+  KEY `date` (`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -411,8 +503,8 @@ CREATE TABLE `mag_claims` (
 -- Table structure for table `mag_devices`
 --
 
-CREATE TABLE `mag_devices` (
-  `mag_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `mag_devices` (
+  `mag_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `bright` int(10) NOT NULL DEFAULT '200',
   `contrast` int(10) NOT NULL DEFAULT '127',
@@ -485,7 +577,10 @@ CREATE TABLE `mag_devices` (
   `last_itv_id` int(11) NOT NULL DEFAULT '0',
   `units` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'metric',
   `token` varchar(32) COLLATE utf8_unicode_ci DEFAULT '',
-  `lock_device` tinyint(4) NOT NULL DEFAULT '0'
+  `lock_device` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`mag_id`),
+  KEY `user_id` (`user_id`),
+  KEY `mac` (`mac`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -494,8 +589,8 @@ CREATE TABLE `mag_devices` (
 -- Table structure for table `mag_events`
 --
 
-CREATE TABLE `mag_events` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `mag_events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `status` tinyint(3) NOT NULL DEFAULT '0',
   `mag_device_id` int(11) NOT NULL,
   `event` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
@@ -506,7 +601,11 @@ CREATE TABLE `mag_events` (
   `send_time` int(50) NOT NULL,
   `additional_services_on` tinyint(3) NOT NULL DEFAULT '1',
   `anec` tinyint(3) NOT NULL DEFAULT '0',
-  `vclub` tinyint(3) NOT NULL DEFAULT '0'
+  `vclub` tinyint(3) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `status` (`status`),
+  KEY `mag_device_id` (`mag_device_id`),
+  KEY `event` (`event`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -515,10 +614,12 @@ CREATE TABLE `mag_events` (
 -- Table structure for table `mag_logs`
 --
 
-CREATE TABLE `mag_logs` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `mag_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `mag_id` int(11) DEFAULT NULL,
-  `action` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `action` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mag_id` (`mag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -527,8 +628,8 @@ CREATE TABLE `mag_logs` (
 -- Table structure for table `member_groups`
 --
 
-CREATE TABLE `member_groups` (
-  `group_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `member_groups` (
+  `group_id` int(11) NOT NULL AUTO_INCREMENT,
   `group_name` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `group_color` varchar(7) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#000000',
   `is_banned` tinyint(4) NOT NULL DEFAULT '0',
@@ -556,8 +657,13 @@ CREATE TABLE `member_groups` (
   `reseller_bonus_package_inc` tinyint(4) NOT NULL DEFAULT '0',
   `allow_download` tinyint(4) NOT NULL DEFAULT '1',
   `minimum_trial_credits` int(16) NOT NULL DEFAULT '0',
-  `reseller_can_select_bouquets` int(16) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `reseller_can_select_bouquets` int(16) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`group_id`),
+  KEY `is_admin` (`is_admin`),
+  KEY `is_banned` (`is_banned`),
+  KEY `is_reseller` (`is_reseller`),
+  KEY `can_delete` (`can_delete`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `member_groups`
@@ -575,10 +681,12 @@ INSERT INTO `member_groups` (`group_id`, `group_name`, `group_color`, `is_banned
 -- Table structure for table `movie_containers`
 --
 
-CREATE TABLE `movie_containers` (
-  `container_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `movie_containers` (
+  `container_id` int(11) NOT NULL AUTO_INCREMENT,
   `container_extension` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `container_header` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `container_header` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`container_id`),
+  KEY `container_extension` (`container_extension`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -587,8 +695,8 @@ CREATE TABLE `movie_containers` (
 -- Table structure for table `packages`
 --
 
-CREATE TABLE `packages` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `packages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `package_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `is_trial` tinyint(4) NOT NULL,
   `is_official` tinyint(4) NOT NULL,
@@ -610,7 +718,14 @@ CREATE TABLE `packages` (
   `can_gen_e2` tinyint(4) NOT NULL DEFAULT '0',
   `only_e2` tinyint(4) NOT NULL DEFAULT '0',
   `forced_country` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
-  `lock_device` tinyint(4) NOT NULL DEFAULT '0'
+  `lock_device` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `is_trial` (`is_trial`),
+  KEY `is_official` (`is_official`),
+  KEY `can_gen_mag` (`can_gen_mag`),
+  KEY `can_gen_e2` (`can_gen_e2`),
+  KEY `only_e2` (`only_e2`),
+  KEY `only_mag` (`only_mag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -619,10 +734,11 @@ CREATE TABLE `packages` (
 -- Table structure for table `panel_logs`
 --
 
-CREATE TABLE `panel_logs` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `panel_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `log_message` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `date` int(11) NOT NULL
+  `date` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -631,13 +747,14 @@ CREATE TABLE `panel_logs` (
 -- Table structure for table `reg_userlog`
 --
 
-CREATE TABLE `reg_userlog` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `reg_userlog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL,
   `username` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `password` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `date` int(30) NOT NULL,
-  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -646,8 +763,8 @@ CREATE TABLE `reg_userlog` (
 -- Table structure for table `reg_users`
 --
 
-CREATE TABLE `reg_users` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `reg_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -667,7 +784,11 @@ CREATE TABLE `reg_users` (
   `google_2fa_sec` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `dark_mode` int(1) NOT NULL DEFAULT '0',
   `sidebar` int(1) NOT NULL DEFAULT '0',
-  `expanded_sidebar` int(1) NOT NULL DEFAULT '0'
+  `expanded_sidebar` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `member_group_id` (`member_group_id`),
+  KEY `username` (`username`),
+  KEY `password` (`password`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -676,14 +797,16 @@ CREATE TABLE `reg_users` (
 -- Table structure for table `reseller_imex`
 --
 
-CREATE TABLE `reseller_imex` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `reseller_imex` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `reg_id` int(11) NOT NULL,
   `header` longtext NOT NULL,
   `data` longtext NOT NULL,
   `accepted` tinyint(4) NOT NULL DEFAULT '0',
   `finished` tinyint(4) NOT NULL DEFAULT '0',
-  `bouquet_ids` text NOT NULL
+  `bouquet_ids` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `reg_id` (`reg_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -692,10 +815,12 @@ CREATE TABLE `reseller_imex` (
 -- Table structure for table `rtmp_ips`
 --
 
-CREATE TABLE `rtmp_ips` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `rtmp_ips` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(255) NOT NULL,
-  `notes` text NOT NULL
+  `notes` text NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ip` (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -704,8 +829,8 @@ CREATE TABLE `rtmp_ips` (
 -- Table structure for table `series`
 --
 
-CREATE TABLE `series` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `series` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `category_id` int(11) DEFAULT NULL,
   `cover` varchar(255) NOT NULL,
@@ -721,7 +846,10 @@ CREATE TABLE `series` (
   `seasons` mediumtext NOT NULL,
   `episode_run_time` int(11) NOT NULL DEFAULT '0',
   `backdrop_path` text NOT NULL,
-  `youtube_trailer` text NOT NULL
+  `youtube_trailer` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `last_modified` (`last_modified`),
+  KEY `tmdb_id` (`tmdb_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -730,12 +858,17 @@ CREATE TABLE `series` (
 -- Table structure for table `series_episodes`
 --
 
-CREATE TABLE `series_episodes` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `series_episodes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `season_num` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
   `stream_id` int(11) NOT NULL,
-  `sort` int(11) NOT NULL
+  `sort` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `season_num` (`season_num`),
+  KEY `series_id` (`series_id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -744,15 +877,21 @@ CREATE TABLE `series_episodes` (
 -- Table structure for table `server_activity`
 --
 
-CREATE TABLE `server_activity` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `server_activity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `source_server_id` int(11) NOT NULL,
   `dest_server_id` int(11) NOT NULL,
   `stream_id` int(11) NOT NULL,
   `pid` int(11) DEFAULT NULL,
   `bandwidth` int(11) NOT NULL DEFAULT '0',
   `date_start` int(11) NOT NULL,
-  `date_end` int(11) DEFAULT NULL
+  `date_end` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `source_server_id` (`source_server_id`),
+  KEY `dest_server_id` (`dest_server_id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `pid` (`pid`),
+  KEY `date_end` (`date_end`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -761,7 +900,7 @@ CREATE TABLE `server_activity` (
 -- Table structure for table `settings`
 --
 
-CREATE TABLE `settings` (
+CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL,
   `bouquet_name` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `live_streaming_pass` mediumtext COLLATE utf8_unicode_ci NOT NULL,
@@ -911,12 +1050,17 @@ INSERT INTO `settings` (`id`, `bouquet_name`, `live_streaming_pass`, `email_veri
 -- Table structure for table `signals`
 --
 
-CREATE TABLE `signals` (
-  `signal_id` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `server_id` int(11) NOT NULL,
-  `rtmp` tinyint(4) NOT NULL DEFAULT '0',
-  `time` int(11) NOT NULL
+CREATE TABLE IF NOT EXISTS `signals` (
+  `signal_id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) DEFAULT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `rtmp` tinyint(4) DEFAULT '0',
+  `time` int(11) DEFAULT NULL,
+  `custom_data` mediumtext,
+  `cache` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`signal_id`),
+  KEY `server_id` (`server_id`),
+  KEY `time` (`time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -925,8 +1069,8 @@ CREATE TABLE `signals` (
 -- Table structure for table `streaming_servers`
 --
 
-CREATE TABLE `streaming_servers` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `streaming_servers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `server_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `domain_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `server_ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -964,8 +1108,12 @@ CREATE TABLE `streaming_servers` (
   `time_offset` int(11) DEFAULT '0',
   `script_version` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `is_main` int(16) DEFAULT '0',
-  `php_pids` longtext COLLATE utf8_unicode_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `php_pids` longtext COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `server_ip` (`server_ip`,`http_broadcast_port`),
+  KEY `total_clients` (`total_clients`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `streaming_servers`
@@ -980,8 +1128,8 @@ INSERT INTO `streaming_servers` (`id`, `server_name`, `domain_name`, `server_ip`
 -- Table structure for table `streams`
 --
 
-CREATE TABLE `streams` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `streams` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` int(11) NOT NULL,
   `category_id` int(11) DEFAULT NULL,
   `stream_display_name` mediumtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1022,7 +1170,19 @@ CREATE TABLE `streams` (
   `probesize_ondemand` int(11) NOT NULL DEFAULT '128000',
   `custom_map` text COLLATE utf8_unicode_ci NOT NULL,
   `external_push` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `delay_minutes` int(11) NOT NULL DEFAULT '0'
+  `delay_minutes` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `type` (`type`),
+  KEY `category_id` (`category_id`),
+  KEY `created_channel_location` (`created_channel_location`),
+  KEY `enable_transcode` (`enable_transcode`),
+  KEY `read_native` (`read_native`),
+  KEY `epg_id` (`epg_id`),
+  KEY `channel_id` (`channel_id`),
+  KEY `transcode_profile_id` (`transcode_profile_id`),
+  KEY `order` (`order`),
+  KEY `direct_source` (`direct_source`),
+  KEY `rtmp_output` (`rtmp_output`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1031,8 +1191,8 @@ CREATE TABLE `streams` (
 -- Table structure for table `streams_arguments`
 --
 
-CREATE TABLE `streams_arguments` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `streams_arguments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `argument_cat` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `argument_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `argument_description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1040,8 +1200,9 @@ CREATE TABLE `streams_arguments` (
   `argument_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `argument_cmd` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `argument_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `argument_default_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `argument_default_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `streams_arguments`
@@ -1074,11 +1235,14 @@ INSERT INTO `streams_arguments` (`id`, `argument_cat`, `argument_name`, `argumen
 -- Table structure for table `streams_options`
 --
 
-CREATE TABLE `streams_options` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `streams_options` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `stream_id` int(11) NOT NULL,
   `argument_id` int(11) NOT NULL,
-  `value` text COLLATE utf8_unicode_ci
+  `value` text COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `argument_id` (`argument_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1087,10 +1251,11 @@ CREATE TABLE `streams_options` (
 -- Table structure for table `streams_seasons`
 --
 
-CREATE TABLE `streams_seasons` (
-  `season_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `streams_seasons` (
+  `season_id` int(11) NOT NULL AUTO_INCREMENT,
   `season_name` varchar(255) NOT NULL,
-  `stream_id` int(11) NOT NULL
+  `stream_id` int(11) NOT NULL,
+  PRIMARY KEY (`season_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1099,8 +1264,8 @@ CREATE TABLE `streams_seasons` (
 -- Table structure for table `streams_sys`
 --
 
-CREATE TABLE `streams_sys` (
-  `server_stream_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `streams_sys` (
+  `server_stream_id` int(11) NOT NULL AUTO_INCREMENT,
   `stream_id` int(11) NOT NULL,
   `server_id` int(11) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
@@ -1115,7 +1280,16 @@ CREATE TABLE `streams_sys` (
   `progress_info` text COLLATE utf8_unicode_ci NOT NULL,
   `on_demand` tinyint(4) NOT NULL DEFAULT '0',
   `delay_pid` int(11) DEFAULT NULL,
-  `delay_available_at` int(11) DEFAULT NULL
+  `delay_available_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`server_stream_id`),
+  UNIQUE KEY `stream_id_2` (`stream_id`,`server_id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `pid` (`pid`),
+  KEY `server_id` (`server_id`),
+  KEY `stream_status` (`stream_status`),
+  KEY `stream_started` (`stream_started`),
+  KEY `parent_id` (`parent_id`),
+  KEY `to_analyze` (`to_analyze`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1124,13 +1298,17 @@ CREATE TABLE `streams_sys` (
 -- Table structure for table `streams_types`
 --
 
-CREATE TABLE `streams_types` (
-  `type_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `streams_types` (
+  `type_id` int(11) NOT NULL AUTO_INCREMENT,
   `type_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `type_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `type_output` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `live` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `live` tinyint(4) NOT NULL,
+  PRIMARY KEY (`type_id`),
+  KEY `type_key` (`type_key`),
+  KEY `type_output` (`type_output`),
+  KEY `live` (`live`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `streams_types`
@@ -1149,12 +1327,16 @@ INSERT INTO `streams_types` (`type_id`, `type_name`, `type_key`, `type_output`, 
 -- Table structure for table `stream_categories`
 --
 
-CREATE TABLE `stream_categories` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `stream_categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `category_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `parent_id` int(11) NOT NULL DEFAULT '0',
-  `cat_order` int(11) NOT NULL DEFAULT '0'
+  `cat_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `category_type` (`category_type`),
+  KEY `cat_order` (`cat_order`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1163,12 +1345,15 @@ CREATE TABLE `stream_categories` (
 -- Table structure for table `stream_logs`
 --
 
-CREATE TABLE `stream_logs` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `stream_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `stream_id` int(11) NOT NULL,
   `server_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
-  `error` varchar(500) NOT NULL
+  `error` varchar(500) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `server_id` (`server_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1177,10 +1362,12 @@ CREATE TABLE `stream_logs` (
 -- Table structure for table `stream_subcategories`
 --
 
-CREATE TABLE `stream_subcategories` (
-  `sub_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `stream_subcategories` (
+  `sub_id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL,
-  `subcategory_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `subcategory_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`sub_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1189,11 +1376,13 @@ CREATE TABLE `stream_subcategories` (
 -- Table structure for table `suspicious_logs`
 --
 
-CREATE TABLE `suspicious_logs` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `suspicious_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `data` mediumtext NOT NULL,
-  `last_updated` datetime NOT NULL
+  `last_updated` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1202,13 +1391,18 @@ CREATE TABLE `suspicious_logs` (
 -- Table structure for table `tickets`
 --
 
-CREATE TABLE `tickets` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `tickets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `status` int(11) NOT NULL DEFAULT '1',
   `admin_read` tinyint(4) NOT NULL,
-  `user_read` tinyint(4) NOT NULL
+  `user_read` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  KEY `status` (`status`),
+  KEY `admin_read` (`admin_read`),
+  KEY `user_read` (`user_read`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1217,12 +1411,14 @@ CREATE TABLE `tickets` (
 -- Table structure for table `tickets_replies`
 --
 
-CREATE TABLE `tickets_replies` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `tickets_replies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `ticket_id` int(11) NOT NULL,
   `admin_reply` tinyint(4) NOT NULL,
   `message` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `date` int(11) NOT NULL
+  `date` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ticket_id` (`ticket_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1231,11 +1427,12 @@ CREATE TABLE `tickets_replies` (
 -- Table structure for table `transcoding_profiles`
 --
 
-CREATE TABLE `transcoding_profiles` (
-  `profile_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `transcoding_profiles` (
+  `profile_id` int(11) NOT NULL AUTO_INCREMENT,
   `profile_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `profile_options` mediumtext COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `profile_options` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`profile_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `transcoding_profiles`
@@ -1250,8 +1447,8 @@ INSERT INTO `transcoding_profiles` (`profile_id`, `profile_name`, `profile_optio
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) DEFAULT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -1278,7 +1475,21 @@ CREATE TABLE `users` (
   `forced_country` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
   `is_stalker` tinyint(4) NOT NULL DEFAULT '0',
   `bypass_ua` tinyint(4) NOT NULL DEFAULT '0',
-  `play_token` text COLLATE utf8_unicode_ci NOT NULL
+  `play_token` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  KEY `exp_date` (`exp_date`),
+  KEY `is_restreamer` (`is_restreamer`),
+  KEY `admin_enabled` (`admin_enabled`),
+  KEY `enabled` (`enabled`),
+  KEY `is_trial` (`is_trial`),
+  KEY `created_at` (`created_at`),
+  KEY `created_by` (`created_by`),
+  KEY `pair_id` (`pair_id`),
+  KEY `is_mag` (`is_mag`),
+  KEY `username` (`username`),
+  KEY `password` (`password`),
+  KEY `is_e2` (`is_e2`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1287,8 +1498,8 @@ CREATE TABLE `users` (
 -- Table structure for table `user_activity`
 --
 
-CREATE TABLE `user_activity` (
-  `activity_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `user_activity` (
+  `activity_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `stream_id` int(11) NOT NULL,
   `server_id` int(11) NOT NULL,
@@ -1300,7 +1511,19 @@ CREATE TABLE `user_activity` (
   `geoip_country_code` varchar(22) COLLATE utf8_unicode_ci NOT NULL,
   `isp` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `external_device` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `divergence` int(11) DEFAULT NULL
+  `divergence` int(11) DEFAULT NULL,
+  PRIMARY KEY (`activity_id`),
+  KEY `user_id` (`user_id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `server_id` (`server_id`),
+  KEY `date_end` (`date_end`),
+  KEY `container` (`container`),
+  KEY `geoip_country_code` (`geoip_country_code`),
+  KEY `date_start` (`date_start`),
+  KEY `date_start_2` (`date_start`,`date_end`),
+  KEY `user_ip` (`user_ip`),
+  KEY `user_agent` (`user_agent`),
+  KEY `isp` (`isp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1309,8 +1532,8 @@ CREATE TABLE `user_activity` (
 -- Table structure for table `user_activity_now`
 --
 
-CREATE TABLE `user_activity_now` (
-  `activity_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `user_activity_now` (
+  `activity_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `stream_id` int(11) NOT NULL,
   `server_id` int(11) NOT NULL,
@@ -1325,7 +1548,19 @@ CREATE TABLE `user_activity_now` (
   `external_device` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `divergence` int(11) DEFAULT NULL,
   `hls_last_read` int(11) DEFAULT NULL,
-  `hls_end` tinyint(4) NOT NULL DEFAULT '0'
+  `hls_end` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`activity_id`),
+  KEY `user_agent` (`user_agent`),
+  KEY `user_ip` (`user_ip`),
+  KEY `container` (`container`),
+  KEY `pid` (`pid`),
+  KEY `geoip_country_code` (`geoip_country_code`),
+  KEY `user_id` (`user_id`),
+  KEY `stream_id` (`stream_id`),
+  KEY `server_id` (`server_id`),
+  KEY `date_start` (`date_start`),
+  KEY `date_end` (`date_end`),
+  KEY `hls_end` (`hls_end`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1334,10 +1569,13 @@ CREATE TABLE `user_activity_now` (
 -- Table structure for table `user_output`
 --
 
-CREATE TABLE `user_output` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `user_output` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `access_output_id` int(11) NOT NULL
+  `access_output_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `access_output_id` (`access_output_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1346,810 +1584,12 @@ CREATE TABLE `user_output` (
 -- Table structure for table `xtream_main`
 --
 
-CREATE TABLE `xtream_main` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `xtream_main` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `update_available` int(11) NOT NULL DEFAULT '0',
-  `root_ip` mediumtext COLLATE utf8_unicode_ci NOT NULL
+  `root_ip` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `access_output`
---
-ALTER TABLE `access_output`
-  ADD PRIMARY KEY (`access_output_id`),
-  ADD KEY `output_key` (`output_key`),
-  ADD KEY `output_ext` (`output_ext`);
-
---
--- Indexes for table `blocked_ips`
---
-ALTER TABLE `blocked_ips`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `ip_2` (`ip`),
-  ADD UNIQUE KEY `ip_3` (`ip`),
-  ADD KEY `ip` (`ip`),
-  ADD KEY `date` (`date`);
-
---
--- Indexes for table `blocked_user_agents`
---
-ALTER TABLE `blocked_user_agents`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `exact_match` (`exact_match`),
-  ADD KEY `user_agent` (`user_agent`);
-
---
--- Indexes for table `bouquets`
---
-ALTER TABLE `bouquets`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `client_logs`
---
-ALTER TABLE `client_logs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `credits_log`
---
-ALTER TABLE `credits_log`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `target_id` (`target_id`),
-  ADD KEY `admin_id` (`admin_id`);
-
---
--- Indexes for table `cronjobs`
---
-ALTER TABLE `cronjobs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `enabled` (`enabled`),
-  ADD KEY `filename` (`filename`);
-
---
--- Indexes for table `devices`
---
-ALTER TABLE `devices`
-  ADD PRIMARY KEY (`device_id`),
-  ADD KEY `device_key` (`device_key`),
-  ADD KEY `default_output` (`default_output`);
-
---
--- Indexes for table `enigma2_actions`
---
-ALTER TABLE `enigma2_actions`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `enigma2_devices`
---
-ALTER TABLE `enigma2_devices`
-  ADD PRIMARY KEY (`device_id`),
-  ADD KEY `mac` (`mac`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `enigma2_failed`
---
-ALTER TABLE `enigma2_failed`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `original_mac` (`original_mac`);
-
---
--- Indexes for table `epg`
---
-ALTER TABLE `epg`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `epg_data`
---
-ALTER TABLE `epg_data`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `epg_id` (`epg_id`),
-  ADD KEY `start` (`start`),
-  ADD KEY `end` (`end`),
-  ADD KEY `lang` (`lang`),
-  ADD KEY `channel_id` (`channel_id`);
-
---
--- Indexes for table `isp_addon`
---
-ALTER TABLE `isp_addon`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `licence`
---
-ALTER TABLE `licence`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `lines_divergence`
---
-ALTER TABLE `lines_divergence`
-  ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD UNIQUE KEY `uuid` (`uuid`) USING BTREE;
-
---
--- Indexes for table `lines_live`
---
-ALTER TABLE `lines_live`
-  ADD PRIMARY KEY (`activity_id`),
-  ADD KEY `user_agent` (`user_agent`),
-  ADD KEY `user_ip` (`user_ip`),
-  ADD KEY `container` (`container`),
-  ADD KEY `pid` (`pid`),
-  ADD KEY `active_pid` (`active_pid`),
-  ADD KEY `geoip_country_code` (`geoip_country_code`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `server_id` (`server_id`),
-  ADD KEY `date_start` (`date_start`),
-  ADD KEY `date_end` (`date_end`),
-  ADD KEY `hls_end` (`hls_end`),
-  ADD KEY `fingerprinting` (`fingerprinting`),
-  ADD KEY `uuid` (`uuid`);
-
---
--- Indexes for table `login_logs`
---
-ALTER TABLE `login_logs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `mag_claims`
---
-ALTER TABLE `mag_claims`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `mag_id` (`mag_id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `real_type` (`real_type`),
-  ADD KEY `date` (`date`);
-
---
--- Indexes for table `mag_devices`
---
-ALTER TABLE `mag_devices`
-  ADD PRIMARY KEY (`mag_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `mac` (`mac`);
-
---
--- Indexes for table `mag_events`
---
-ALTER TABLE `mag_events`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `status` (`status`),
-  ADD KEY `mag_device_id` (`mag_device_id`),
-  ADD KEY `event` (`event`);
-
---
--- Indexes for table `mag_logs`
---
-ALTER TABLE `mag_logs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `mag_id` (`mag_id`);
-
---
--- Indexes for table `member_groups`
---
-ALTER TABLE `member_groups`
-  ADD PRIMARY KEY (`group_id`),
-  ADD KEY `is_admin` (`is_admin`),
-  ADD KEY `is_banned` (`is_banned`),
-  ADD KEY `is_reseller` (`is_reseller`),
-  ADD KEY `can_delete` (`can_delete`);
-
---
--- Indexes for table `movie_containers`
---
-ALTER TABLE `movie_containers`
-  ADD PRIMARY KEY (`container_id`),
-  ADD KEY `container_extension` (`container_extension`);
-
---
--- Indexes for table `packages`
---
-ALTER TABLE `packages`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `is_trial` (`is_trial`),
-  ADD KEY `is_official` (`is_official`),
-  ADD KEY `can_gen_mag` (`can_gen_mag`),
-  ADD KEY `can_gen_e2` (`can_gen_e2`),
-  ADD KEY `only_e2` (`only_e2`),
-  ADD KEY `only_mag` (`only_mag`);
-
---
--- Indexes for table `panel_logs`
---
-ALTER TABLE `panel_logs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `reg_userlog`
---
-ALTER TABLE `reg_userlog`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `reg_users`
---
-ALTER TABLE `reg_users`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `member_group_id` (`member_group_id`),
-  ADD KEY `username` (`username`),
-  ADD KEY `password` (`password`);
-
---
--- Indexes for table `reseller_imex`
---
-ALTER TABLE `reseller_imex`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `reg_id` (`reg_id`);
-
---
--- Indexes for table `rtmp_ips`
---
-ALTER TABLE `rtmp_ips`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `ip` (`ip`);
-
---
--- Indexes for table `series`
---
-ALTER TABLE `series`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `last_modified` (`last_modified`),
-  ADD KEY `tmdb_id` (`tmdb_id`);
-
---
--- Indexes for table `series_episodes`
---
-ALTER TABLE `series_episodes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `season_num` (`season_num`),
-  ADD KEY `series_id` (`series_id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `sort` (`sort`);
-
---
--- Indexes for table `server_activity`
---
-ALTER TABLE `server_activity`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `source_server_id` (`source_server_id`),
-  ADD KEY `dest_server_id` (`dest_server_id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `pid` (`pid`),
-  ADD KEY `date_end` (`date_end`);
-
---
--- Indexes for table `signals`
---
-ALTER TABLE `signals`
-  ADD PRIMARY KEY (`signal_id`),
-  ADD KEY `server_id` (`server_id`),
-  ADD KEY `time` (`time`);
-
---
--- Indexes for table `streaming_servers`
---
-ALTER TABLE `streaming_servers`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `server_ip` (`server_ip`,`http_broadcast_port`),
-  ADD KEY `total_clients` (`total_clients`),
-  ADD KEY `status` (`status`);
-
---
--- Indexes for table `streams`
---
-ALTER TABLE `streams`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `type` (`type`),
-  ADD KEY `category_id` (`category_id`),
-  ADD KEY `created_channel_location` (`created_channel_location`),
-  ADD KEY `enable_transcode` (`enable_transcode`),
-  ADD KEY `read_native` (`read_native`),
-  ADD KEY `epg_id` (`epg_id`),
-  ADD KEY `channel_id` (`channel_id`),
-  ADD KEY `transcode_profile_id` (`transcode_profile_id`),
-  ADD KEY `order` (`order`),
-  ADD KEY `direct_source` (`direct_source`),
-  ADD KEY `rtmp_output` (`rtmp_output`);
-
---
--- Indexes for table `streams_arguments`
---
-ALTER TABLE `streams_arguments`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `streams_options`
---
-ALTER TABLE `streams_options`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `argument_id` (`argument_id`);
-
---
--- Indexes for table `streams_seasons`
---
-ALTER TABLE `streams_seasons`
-  ADD PRIMARY KEY (`season_id`);
-
---
--- Indexes for table `streams_sys`
---
-ALTER TABLE `streams_sys`
-  ADD PRIMARY KEY (`server_stream_id`),
-  ADD UNIQUE KEY `stream_id_2` (`stream_id`,`server_id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `pid` (`pid`),
-  ADD KEY `server_id` (`server_id`),
-  ADD KEY `stream_status` (`stream_status`),
-  ADD KEY `stream_started` (`stream_started`),
-  ADD KEY `parent_id` (`parent_id`),
-  ADD KEY `to_analyze` (`to_analyze`);
-
---
--- Indexes for table `streams_types`
---
-ALTER TABLE `streams_types`
-  ADD PRIMARY KEY (`type_id`),
-  ADD KEY `type_key` (`type_key`),
-  ADD KEY `type_output` (`type_output`),
-  ADD KEY `live` (`live`);
-
---
--- Indexes for table `stream_categories`
---
-ALTER TABLE `stream_categories`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `category_type` (`category_type`),
-  ADD KEY `cat_order` (`cat_order`),
-  ADD KEY `parent_id` (`parent_id`);
-
---
--- Indexes for table `stream_logs`
---
-ALTER TABLE `stream_logs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `server_id` (`server_id`);
-
---
--- Indexes for table `stream_subcategories`
---
-ALTER TABLE `stream_subcategories`
-  ADD PRIMARY KEY (`sub_id`),
-  ADD KEY `parent_id` (`parent_id`);
-
---
--- Indexes for table `suspicious_logs`
---
-ALTER TABLE `suspicious_logs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `tickets`
---
-ALTER TABLE `tickets`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `member_id` (`member_id`),
-  ADD KEY `status` (`status`),
-  ADD KEY `admin_read` (`admin_read`),
-  ADD KEY `user_read` (`user_read`);
-
---
--- Indexes for table `tickets_replies`
---
-ALTER TABLE `tickets_replies`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `ticket_id` (`ticket_id`);
-
---
--- Indexes for table `transcoding_profiles`
---
-ALTER TABLE `transcoding_profiles`
-  ADD PRIMARY KEY (`profile_id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `member_id` (`member_id`),
-  ADD KEY `exp_date` (`exp_date`),
-  ADD KEY `is_restreamer` (`is_restreamer`),
-  ADD KEY `admin_enabled` (`admin_enabled`),
-  ADD KEY `enabled` (`enabled`),
-  ADD KEY `is_trial` (`is_trial`),
-  ADD KEY `created_at` (`created_at`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `pair_id` (`pair_id`),
-  ADD KEY `is_mag` (`is_mag`),
-  ADD KEY `username` (`username`),
-  ADD KEY `password` (`password`),
-  ADD KEY `is_e2` (`is_e2`);
-
-  --
--- Indexes for table `user_activity`
---
-ALTER TABLE `user_activity`
-  ADD PRIMARY KEY (`activity_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `server_id` (`server_id`),
-  ADD KEY `date_end` (`date_end`),
-  ADD KEY `container` (`container`),
-  ADD KEY `geoip_country_code` (`geoip_country_code`),
-  ADD KEY `date_start` (`date_start`),
-  ADD KEY `date_start_2` (`date_start`,`date_end`),
-  ADD KEY `user_ip` (`user_ip`),
-  ADD KEY `user_agent` (`user_agent`),
-  ADD KEY `isp` (`isp`);
-
---
--- Indexes for table `user_activity_now`
---
-ALTER TABLE `user_activity_now`
-  ADD PRIMARY KEY (`activity_id`),
-  ADD KEY `user_agent` (`user_agent`),
-  ADD KEY `user_ip` (`user_ip`),
-  ADD KEY `container` (`container`),
-  ADD KEY `pid` (`pid`),
-  ADD KEY `geoip_country_code` (`geoip_country_code`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `stream_id` (`stream_id`),
-  ADD KEY `server_id` (`server_id`),
-  ADD KEY `date_start` (`date_start`),
-  ADD KEY `date_end` (`date_end`),
-  ADD KEY `hls_end` (`hls_end`);
-
---
--- Indexes for table `user_output`
---
-ALTER TABLE `user_output`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `access_output_id` (`access_output_id`);
-
---
--- Indexes for table `xtream_main`
---
-ALTER TABLE `xtream_main`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `access_output`
---
-ALTER TABLE `access_output`
-  MODIFY `access_output_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `blocked_ips`
---
-ALTER TABLE `blocked_ips`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `blocked_user_agents`
---
-ALTER TABLE `blocked_user_agents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `bouquets`
---
-ALTER TABLE `bouquets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `client_logs`
---
-ALTER TABLE `client_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `credits_log`
---
-ALTER TABLE `credits_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `cronjobs`
---
-ALTER TABLE `cronjobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `devices`
---
-ALTER TABLE `devices`
-  MODIFY `device_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
-
---
--- AUTO_INCREMENT for table `enigma2_actions`
---
-ALTER TABLE `enigma2_actions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `enigma2_devices`
---
-ALTER TABLE `enigma2_devices`
-  MODIFY `device_id` int(12) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `enigma2_failed`
---
-ALTER TABLE `enigma2_failed`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `epg`
---
-ALTER TABLE `epg`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `epg_data`
---
-ALTER TABLE `epg_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `isp_addon`
---
-ALTER TABLE `isp_addon`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `licence`
---
-ALTER TABLE `licence`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `lines_divergence`
---
-ALTER TABLE `lines_divergence`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `lines_live`
---
-ALTER TABLE `lines_live`
-  MODIFY `activity_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `login_logs`
---
-ALTER TABLE `login_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `mag_claims`
---
-ALTER TABLE `mag_claims`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `mag_devices`
---
-ALTER TABLE `mag_devices`
-  MODIFY `mag_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `mag_events`
---
-ALTER TABLE `mag_events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `mag_logs`
---
-ALTER TABLE `mag_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `member_groups`
---
-ALTER TABLE `member_groups`
-  MODIFY `group_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `movie_containers`
---
-ALTER TABLE `movie_containers`
-  MODIFY `container_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `packages`
---
-ALTER TABLE `packages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `panel_logs`
---
-ALTER TABLE `panel_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reg_userlog`
---
-ALTER TABLE `reg_userlog`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reg_users`
---
-ALTER TABLE `reg_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reseller_imex`
---
-ALTER TABLE `reseller_imex`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `rtmp_ips`
---
-ALTER TABLE `rtmp_ips`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `series`
---
-ALTER TABLE `series`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `series_episodes`
---
-ALTER TABLE `series_episodes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `server_activity`
---
-ALTER TABLE `server_activity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `signals`
---
-ALTER TABLE `signals`
-  MODIFY `signal_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `streaming_servers`
---
-ALTER TABLE `streaming_servers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `streams`
---
-ALTER TABLE `streams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `streams_arguments`
---
-ALTER TABLE `streams_arguments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
-
---
--- AUTO_INCREMENT for table `streams_options`
---
-ALTER TABLE `streams_options`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `streams_seasons`
---
-ALTER TABLE `streams_seasons`
-  MODIFY `season_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `streams_sys`
---
-ALTER TABLE `streams_sys`
-  MODIFY `server_stream_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `streams_types`
---
-ALTER TABLE `streams_types`
-  MODIFY `type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `stream_categories`
---
-ALTER TABLE `stream_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `stream_logs`
---
-ALTER TABLE `stream_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `stream_subcategories`
---
-ALTER TABLE `stream_subcategories`
-  MODIFY `sub_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `suspicious_logs`
---
-ALTER TABLE `suspicious_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tickets`
---
-ALTER TABLE `tickets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tickets_replies`
---
-ALTER TABLE `tickets_replies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `transcoding_profiles`
---
-ALTER TABLE `transcoding_profiles`
-  MODIFY `profile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `user_activity`
---
-ALTER TABLE `user_activity`
-  MODIFY `activity_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `user_activity_now`
---
-ALTER TABLE `user_activity_now`
-  MODIFY `activity_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `user_output`
---
-ALTER TABLE `user_output`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `xtream_main`
---
-ALTER TABLE `xtream_main`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

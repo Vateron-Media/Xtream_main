@@ -25,11 +25,11 @@ class ipTV_stream {
      *
      * This function retrieves stream data from the database, transcodes the stream using FFmpeg with specified attributes, creates a new MPEG-TS file, and updates the stream information in the database accordingly.
      *
-     * @param int $stream_id The ID of the stream to transcode and build.
+     * @param int $streamID The ID of the stream to transcode and build.
      * @return int Returns 1 if the stream is successfully transcoded and built, 2 if there are no PIDs for the channel, or 2 if there are no differences in stream sources.
      */
-    static function TranscodeBuild($stream_id) {
-        self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `transcoding_profiles` t3 ON t1.transcode_profile_id = t3.profile_id WHERE t1.`id` = \'%d\'', $stream_id);
+    static function TranscodeBuild($streamID) {
+        self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `transcoding_profiles` t3 ON t1.transcode_profile_id = t3.profile_id WHERE t1.`id` = \'%d\'', $streamID);
         $stream = self::$ipTV_db->get_row();
         $stream['cchannel_rsources'] = json_decode($stream['cchannel_rsources'], true);
         $stream['stream_source'] = json_decode($stream['stream_source'], true);
@@ -47,14 +47,14 @@ class ipTV_stream {
         // Construct FFmpeg command
         $ffmpegCommand = FFMPEG_PATH . ' -fflags +genpts -async 1 -y -nostdin -hide_banner -loglevel quiet -i "{INPUT}" ';
         $ffmpegCommand .= implode(' ', self::formatAttributes($stream['transcode_attributes'])) . ' ';
-        $ffmpegCommand .= '-strict -2 -mpegts_flags +initial_discontinuity -f mpegts "' . CREATED_CHANNELS . $stream_id . '_{INPUT_MD5}.ts" >/dev/null 2>/dev/null & jobs -p';
+        $ffmpegCommand .= '-strict -2 -mpegts_flags +initial_discontinuity -f mpegts "' . CREATED_CHANNELS . $streamID . '_{INPUT_MD5}.ts" >/dev/null 2>/dev/null & jobs -p';
 
         $result = array_diff($stream['stream_source'], $stream['cchannel_rsources']);
         $json_string_data = '';
 
         // Generate JSON string data for stream sources
         foreach ($stream['stream_source'] as $source) {
-            $json_string_data .= 'file \'' . CREATED_CHANNELS . $stream_id . '_' . md5($source) . '.ts\'';
+            $json_string_data .= 'file \'' . CREATED_CHANNELS . $streamID . '_' . md5($source) . '.ts\'';
         }
         $json_string_data = base64_encode($json_string_data);
 
@@ -62,8 +62,8 @@ class ipTV_stream {
             foreach ($result as $source) {
                 $stream['pids_create_channel'][] = ipTV_servers::RunCommandServer($stream['created_channel_location'], str_ireplace(array('{INPUT}', '{INPUT_MD5}'), array($source, md5($source)), $ffmpegCommand), 'raw')[$stream['created_channel_location']];
             }
-            self::$ipTV_db->query('UPDATE `streams` SET pids_create_channel = \'%s\',`cchannel_rsources` = \'%s\' WHERE `id` = \'%d\'', json_encode($stream['pids_create_channel']), json_encode($stream['stream_source']), $stream_id);
-            ipTV_servers::RunCommandServer($stream['created_channel_location'], "echo {$json_string_data} | base64 --decode > \"" . CREATED_CHANNELS . $stream_id . '_.list"', 'raw');
+            self::$ipTV_db->query('UPDATE `streams` SET pids_create_channel = \'%s\',`cchannel_rsources` = \'%s\' WHERE `id` = \'%d\'', json_encode($stream['pids_create_channel']), json_encode($stream['stream_source']), $streamID);
+            ipTV_servers::RunCommandServer($stream['created_channel_location'], "echo {$json_string_data} | base64 --decode > \"" . CREATED_CHANNELS . $streamID . '_.list"', 'raw');
             return 1;
         } else if (!empty($stream['pids_create_channel'])) {
             foreach ($stream['pids_create_channel'] as $key => $pid) {
@@ -71,7 +71,7 @@ class ipTV_stream {
                     unset($stream['pids_create_channel'][$key]);
                 }
             }
-            self::$ipTV_db->query('UPDATE `streams` SET pids_create_channel = \'%s\' WHERE `id` = \'%d\'', json_encode($stream['pids_create_channel']), $stream_id);
+            self::$ipTV_db->query('UPDATE `streams` SET pids_create_channel = \'%s\' WHERE `id` = \'%d\'', json_encode($stream['pids_create_channel']), $streamID);
             return empty($stream['pids_create_channel']) ? 2 : 1;
         }
 
@@ -123,13 +123,13 @@ class ipTV_stream {
     /** 
      * Starts a stream with a specified delay. 
      * 
-     * @param int $stream_id The unique identifier for the stream. 
+     * @param int $streamID The unique identifier for the stream. 
      * @param int $stream_delay The boolean value indicating whether to delay the stream. 
      * @return void 
      */
-    static function startMonitor(int $stream_id, int $stream_delay  = 0) {
+    static function startMonitor(int $streamID, int $stream_delay  = 0) {
         // Define the lock file for the stream
-        $stream_lock_file = STREAMS_PATH . $stream_id . '.lock';
+        $stream_lock_file = STREAMS_PATH . $streamID . '.lock';
         // Open the lock file for writing
         $fp = fopen($stream_lock_file, 'a+');
         // Check if file locking was successful
@@ -137,7 +137,7 @@ class ipTV_stream {
             // Convert bool to integer
             $stream_delay = intval($stream_delay);
             // Execute the stream monitor script with stream_id and delay
-            shell_exec(PHP_BIN . ' ' . TOOLS_PATH . "stream_monitor.php {$stream_id} {$stream_delay} >/dev/null 2>/dev/null &");
+            shell_exec(PHP_BIN . ' ' . TOOLS_PATH . "stream_monitor.php {$streamID} {$stream_delay} >/dev/null 2>/dev/null &");
             // Pause for 300 microseconds
             usleep(300);
             // Release the file lock
@@ -146,24 +146,25 @@ class ipTV_stream {
         // Close the file pointer
         fclose($fp);
     }
-    static function stopStream($stream_id, $reset_stream_sys = false) {
-        if (file_exists("/home/xtreamcodes/iptv_xtream_codes/streams/{$stream_id}.monitor")) {
-            $pid_stream_monitor = intval(file_get_contents("/home/xtreamcodes/iptv_xtream_codes/streams/{$stream_id}.monitor"));
-            if (self::FindPidByValue($pid_stream_monitor, "XtreamCodes[{$stream_id}]")) {
+    static function stopStream($streamID, $reset_stream_sys = false) {
+        if (file_exists("/home/xtreamcodes/iptv_xtream_codes/streams/{$streamID}.monitor")) {
+            $pid_stream_monitor = intval(file_get_contents("/home/xtreamcodes/iptv_xtream_codes/streams/{$streamID}.monitor"));
+            if (self::FindPidByValue($pid_stream_monitor, "XtreamCodes[{$streamID}]")) {
                 posix_kill($pid_stream_monitor, 9);
             }
         }
-        if (file_exists(STREAMS_PATH . $stream_id . '_.pid')) {
-            $pid = intval(file_get_contents(STREAMS_PATH . $stream_id . '_.pid'));
-            if (self::FindPidByValue($pid, "{$stream_id}_.m3u8")) {
+        if (file_exists(STREAMS_PATH . $streamID . '_.pid')) {
+            $pid = intval(file_get_contents(STREAMS_PATH . $streamID . '_.pid'));
+            if (self::FindPidByValue($pid, "{$streamID}_.m3u8")) {
                 posix_kill($pid, 9);
             }
         }
-        shell_exec('rm -f ' . STREAMS_PATH . $stream_id . '_*');
+        shell_exec('rm -f ' . STREAMS_PATH . $streamID . '_*');
         if ($reset_stream_sys) {
-            shell_exec('rm -f ' . DELAY_STREAM . $stream_id . '_*');
-            self::$ipTV_db->query('UPDATE `streams_sys` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0,`monitor_pid` = NULL WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $stream_id, SERVER_ID);
+            shell_exec('rm -f ' . DELAY_STREAM . $streamID . '_*');
+            self::$ipTV_db->query('UPDATE `streams_sys` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0,`monitor_pid` = NULL WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
         }
+        ipTV_streaming::updateStream($streamID);
     }
     static function FindPidByValue($pid, $search) {
         if (file_exists('/proc/' . $pid)) {
@@ -174,9 +175,9 @@ class ipTV_stream {
         }
         return false;
     }
-    static function startVODstream($stream_id) {
+    static function startVODstream($streamID) {
         $stream = array();
-        self::$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 0 LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = \'%d\'', $stream_id);
+        self::$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 0 LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = \'%d\'', $streamID);
         if (self::$ipTV_db->num_rows() <= 0) {
             return false;
         }
@@ -187,12 +188,12 @@ class ipTV_stream {
         } else {
             $stream['stream_info']['target_container'] = array($stream['stream_info']['target_container']);
         }
-        self::$ipTV_db->query('SELECT * FROM `streams_sys` WHERE stream_id  = \'%d\' AND `server_id` = \'%d\'', $stream_id, SERVER_ID);
+        self::$ipTV_db->query('SELECT * FROM `streams_sys` WHERE stream_id  = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
         if (self::$ipTV_db->num_rows() <= 0) {
             return false;
         }
         $stream['server_info'] = self::$ipTV_db->get_row();
-        self::$ipTV_db->query('SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = \'%d\' AND t1.argument_id = t2.id', $stream_id);
+        self::$ipTV_db->query('SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = \'%d\' AND t1.argument_id = t2.id', $streamID);
         $stream['stream_arguments'] = self::$ipTV_db->get_rows();
         $stream_source = urldecode(json_decode($stream['stream_info']['stream_source'], true)[0]);
         if (substr($stream_source, 0, 2) == 's:') {
@@ -211,7 +212,7 @@ class ipTV_stream {
         $streamArguments = implode(' ', self::getFormattedStreamArguments($stream['stream_arguments'], $server_protocol, 'fetch'));
 
         if (isset($server_id) && $server_id == SERVER_ID && $stream['stream_info']['movie_symlink'] == 1) {
-            $command = "ln -s \"{$fileURL}\" " . MOVIES_PATH . $stream_id . "." . pathinfo($fileURL, PATHINFO_EXTENSION) . " >/dev/null 2>/dev/null & echo \$! > " . MOVIES_PATH . $stream_id . "_.pid";
+            $command = "ln -s \"{$fileURL}\" " . MOVIES_PATH . $streamID . "." . pathinfo($fileURL, PATHINFO_EXTENSION) . " >/dev/null 2>/dev/null & echo \$! > " . MOVIES_PATH . $streamID . "_.pid";
         }
         $subtitles = json_decode($stream["stream_info"]["movie_subtitles"], true);
         $commandSubCharenc = '';
@@ -255,7 +256,7 @@ class ipTV_stream {
         }
         $fileExtensions = array();
         foreach ($stream['stream_info']['target_container'] as $extension) {
-            $fileExtensions[$extension] = "-movflags +faststart -dn {$map} -ignore_unknown {$subtitlesOptions} " . MOVIES_PATH . $stream_id . "." . $extension . " ";
+            $fileExtensions[$extension] = "-movflags +faststart -dn {$map} -ignore_unknown {$subtitlesOptions} " . MOVIES_PATH . $streamID . "." . $extension . " ";
         }
 
         foreach ($fileExtensions as $extension => $codec) {
@@ -270,42 +271,42 @@ class ipTV_stream {
             $command .= $codec;
         }
 
-        $command .= ' >/dev/null 2>' . MOVIES_PATH . $stream_id . '.errors & echo $! > ' . MOVIES_PATH . $stream_id . '_.pid';
+        $command .= ' >/dev/null 2>' . MOVIES_PATH . $streamID . '.errors & echo $! > ' . MOVIES_PATH . $streamID . '_.pid';
         $command = str_replace(array('{FETCH_OPTIONS}', '{STREAM_SOURCE}', '{READ_NATIVE}'), array(empty($streamArguments) ? '' : $streamArguments, $fileURL, empty($stream['stream_info']['custom_ffmpeg']) ? $read_native : ''), $command);
         shell_exec($command);
         file_put_contents('/tmp/commands', $command . '\n', FILE_APPEND);
-        $pid = intval(file_get_contents(MOVIES_PATH . $stream_id . '_.pid'));
-        self::$ipTV_db->query('UPDATE `streams_sys` SET `to_analyze` = 1,`stream_started` = \'%d\',`stream_status` = 0,`pid` = \'%d\' WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', time(), $pid, $stream_id, SERVER_ID);
+        $pid = intval(file_get_contents(MOVIES_PATH . $streamID . '_.pid'));
+        self::$ipTV_db->query('UPDATE `streams_sys` SET `to_analyze` = 1,`stream_started` = \'%d\',`stream_status` = 0,`pid` = \'%d\' WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', time(), $pid, $streamID, SERVER_ID);
         return $pid;
     }
-    static function stopVODstream($stream_id) {
-        if (file_exists(MOVIES_PATH . $stream_id . '_.pid')) {
-            $pid = (int) file_get_contents(MOVIES_PATH . $stream_id . '_.pid');
+    static function stopVODstream($streamID) {
+        if (file_exists(MOVIES_PATH . $streamID . '_.pid')) {
+            $pid = (int) file_get_contents(MOVIES_PATH . $streamID . '_.pid');
             posix_kill($pid, 9);
         }
-        shell_exec('rm -f ' . MOVIES_PATH . $stream_id . '.*');
-        self::$ipTV_db->query('UPDATE `streams_sys` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0 WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $stream_id, SERVER_ID);
+        shell_exec('rm -f ' . MOVIES_PATH . $streamID . '.*');
+        self::$ipTV_db->query('UPDATE `streams_sys` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0 WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
     }
-    static function runStreamFfmpeg(int $stream_id, &$streamStatusCounter2, $streamUrl = null) {
+    static function startStream(int $streamID, &$streamStatusCounter2, $streamUrl = null) {
         ++$streamStatusCounter2;
-        if (file_exists(STREAMS_PATH . $stream_id . '_.pid')) {
-            unlink(STREAMS_PATH . $stream_id . '_.pid');
+        if (file_exists(STREAMS_PATH . $streamID . '_.pid')) {
+            unlink(STREAMS_PATH . $streamID . '_.pid');
         }
         $stream = array();
         self::$ipTV_db->query("SELECT * FROM `streams` t1
                                INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 1
                                LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id 
-                               WHERE t1.direct_source = 0 AND t1.id = '%d'", $stream_id);
+                               WHERE t1.direct_source = 0 AND t1.id = '%d'", $streamID);
         if (self::$ipTV_db->num_rows() <= 0) {
             return false;
         }
         $stream['stream_info'] = self::$ipTV_db->get_row();
-        self::$ipTV_db->query('SELECT * FROM `streams_sys` WHERE stream_id  = \'%d\' AND `server_id` = \'%d\'', $stream_id, SERVER_ID);
+        self::$ipTV_db->query('SELECT * FROM `streams_sys` WHERE stream_id  = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
         if (self::$ipTV_db->num_rows() <= 0) {
             return false;
         }
         $stream['server_info'] = self::$ipTV_db->get_row();
-        self::$ipTV_db->query('SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = \'%d\' AND t1.argument_id = t2.id', $stream_id);
+        self::$ipTV_db->query('SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = \'%d\' AND t1.argument_id = t2.id', $streamID);
         $stream['stream_arguments'] = self::$ipTV_db->get_rows();
         if ($stream['server_info']['on_demand'] == 1) {
             $stream_probesize = $stream['stream_info']['probesize_ondemand'];
@@ -318,9 +319,9 @@ class ipTV_stream {
         $Fa28e3498375fc4da68f3f818d774249 = "/usr/bin/timeout {$streamTimeout}s " . FFPROBE_PATH . " {FETCH_OPTIONS} -probesize {$stream_probesize} -analyzeduration {$streamMaxAnalyze} {CONCAT} -i \"{STREAM_SOURCE}\" -v quiet -print_format json -show_streams -show_format";
         $formattedArguments = array();
         if ($stream["server_info"]["parent_id"] == 0) {
-            $streamUrlArr = $stream["stream_info"]["type_key"] == "created_live" ? array(CREATED_CHANNELS . $stream_id . "_.list") : json_decode($stream["stream_info"]["stream_source"], true);
+            $streamUrlArr = $stream["stream_info"]["type_key"] == "created_live" ? array(CREATED_CHANNELS . $streamID . "_.list") : json_decode($stream["stream_info"]["stream_source"], true);
         } else {
-            $streamUrlArr = array(ipTV_lib::$StreamingServers[$stream['server_info']['parent_id']]['site_url_ip'] . 'streaming/admin_live.php?stream=' . $stream_id . '&password=' . ipTV_lib::$settings['live_streaming_pass'] . '&extension=ts');
+            $streamUrlArr = array(ipTV_lib::$StreamingServers[$stream['server_info']['parent_id']]['site_url_ip'] . 'streaming/admin_live.php?stream=' . $streamID . '&password=' . ipTV_lib::$settings['live_streaming_pass'] . '&extension=ts');
         }
 
         if (count($streamUrlArr) > 0) {
@@ -361,7 +362,7 @@ class ipTV_stream {
         }
         if (empty($streamData)) {
             if ($stream["server_info"]["stream_status"] == 0 || $stream["server_info"]["to_analyze"] == 1 || $stream["server_info"]["pid"] != -1) {
-                self::$ipTV_db->query("UPDATE `streams_sys` SET `progress_info` = '',`to_analyze` = 0,`pid` = -1,`stream_status` = 1 WHERE `server_id` = '%d' AND `stream_id` = '%d'", SERVER_ID, $stream_id);
+                self::$ipTV_db->query("UPDATE `streams_sys` SET `progress_info` = '',`to_analyze` = 0,`pid` = -1,`stream_status` = 1 WHERE `server_id` = '%d' AND `stream_id` = '%d'", SERVER_ID, $streamID);
             }
             return 0;
         }
@@ -370,7 +371,7 @@ class ipTV_stream {
         }
         $streamData = self::ParseCodecs($streamData);
         $stream_external_push = json_decode($stream["stream_info"]["external_push"], true);
-        $streamProgressUrl = "http://127.0.0.1:" . ipTV_lib::$StreamingServers[SERVER_ID]["http_broadcast_port"] . "/progress.php?stream_id={$stream_id}";
+        $streamProgressUrl = "http://127.0.0.1:" . ipTV_lib::$StreamingServers[SERVER_ID]["http_broadcast_port"] . "/progress.php?stream_id={$streamID}";
         if (empty($stream["stream_info"]["custom_ffmpeg"])) {
             $ffmpegRunCommand = FFMPEG_PATH . " -y -nostdin -hide_banner -loglevel warning -err_detect ignore_err {FETCH_OPTIONS} {GEN_PTS} {READ_NATIVE} -probesize {$stream_probesize} -analyzeduration {$streamMaxAnalyze} -progress \"{$streamProgressUrl}\" {CONCAT} -i \"{STREAM_SOURCE}\" ";
 
@@ -422,9 +423,9 @@ class ipTV_stream {
         }
 
         $ffmpegOutputFormats = array();
-        $ffmpegOutputFormats["mpegts"][] = "{MAP} -individual_header_trailer 0 -f segment -segment_format mpegts -segment_time " . ipTV_lib::$SegmentsSettings["seg_time"] . " -segment_list_size " . ipTV_lib::$SegmentsSettings["seg_list_size"] . " -segment_format_options \"mpegts_flags=+initial_discontinuity:mpegts_copyts=1\" -segment_list_type m3u8 -segment_list_flags +live+delete -segment_list \"" . STREAMS_PATH . $stream_id . "_.m3u8\" \"" . STREAMS_PATH . $stream_id . "_%d.ts\" ";
+        $ffmpegOutputFormats["mpegts"][] = "{MAP} -individual_header_trailer 0 -f segment -segment_format mpegts -segment_time " . ipTV_lib::$SegmentsSettings["seg_time"] . " -segment_list_size " . ipTV_lib::$SegmentsSettings["seg_list_size"] . " -segment_format_options \"mpegts_flags=+initial_discontinuity:mpegts_copyts=1\" -segment_list_type m3u8 -segment_list_flags +live+delete -segment_list \"" . STREAMS_PATH . $streamID . "_.m3u8\" \"" . STREAMS_PATH . $streamID . "_%d.ts\" ";
         if ($stream['stream_info']['rtmp_output'] == 1) {
-            $ffmpegOutputFormats['flv'][] = '{MAP} {AAC_FILTER} -f flv rtmp://127.0.0.1:' . ipTV_lib::$StreamingServers[$stream['server_info']['server_id']]['rtmp_port'] . '/live/{$stream_id} ';
+            $ffmpegOutputFormats['flv'][] = '{MAP} {AAC_FILTER} -f flv rtmp://127.0.0.1:' . ipTV_lib::$StreamingServers[$stream['server_info']['server_id']]['rtmp_port'] . '/live/{$streamID} ';
         }
         if (!empty($stream_external_push[SERVER_ID])) {
             foreach ($stream_external_push[SERVER_ID] as $b202bc9c1c41da94906c398ceb9f3573) {
@@ -442,9 +443,9 @@ class ipTV_stream {
             }
         } else {
             $ccac9556cf5f7f83df650c022d673042 = 0;
-            if (file_exists(DELAY_STREAM . $stream_id . "_.m3u8")) {
-                $Ca434bcc380e9dbd2a3a588f6c32d84f = file(DELAY_STREAM . $stream_id . "_.m3u8");
-                if (stristr($Ca434bcc380e9dbd2a3a588f6c32d84f[count($Ca434bcc380e9dbd2a3a588f6c32d84f) - 1], $stream_id . "_")) {
+            if (file_exists(DELAY_STREAM . $streamID . "_.m3u8")) {
+                $Ca434bcc380e9dbd2a3a588f6c32d84f = file(DELAY_STREAM . $streamID . "_.m3u8");
+                if (stristr($Ca434bcc380e9dbd2a3a588f6c32d84f[count($Ca434bcc380e9dbd2a3a588f6c32d84f) - 1], $streamID . "_")) {
                     if (preg_match("/\\_(.*?)\\.ts/", $Ca434bcc380e9dbd2a3a588f6c32d84f[count($Ca434bcc380e9dbd2a3a588f6c32d84f) - 1], $ae37877cee3bc97c8cfa6ec5843993ed)) {
                         $ccac9556cf5f7f83df650c022d673042 = intval($ae37877cee3bc97c8cfa6ec5843993ed[1]) + 1;
                     }
@@ -453,15 +454,15 @@ class ipTV_stream {
                         $ccac9556cf5f7f83df650c022d673042 = intval($ae37877cee3bc97c8cfa6ec5843993ed[1]) + 1;
                     }
                 }
-                if (file_exists(DELAY_STREAM . $stream_id . "_.m3u8_old")) {
-                    file_put_contents(DELAY_STREAM . $stream_id . "_.m3u8_old", file_get_contents(DELAY_STREAM . $stream_id . "_.m3u8_old") . file_get_contents(DELAY_STREAM . $stream_id . "_.m3u8"));
-                    shell_exec("sed -i '/EXTINF\\|.ts/!d' DELAY_STREAM" . $stream_id . "_.m3u8_old");
+                if (file_exists(DELAY_STREAM . $streamID . "_.m3u8_old")) {
+                    file_put_contents(DELAY_STREAM . $streamID . "_.m3u8_old", file_get_contents(DELAY_STREAM . $streamID . "_.m3u8_old") . file_get_contents(DELAY_STREAM . $streamID . "_.m3u8"));
+                    shell_exec("sed -i '/EXTINF\\|.ts/!d' DELAY_STREAM" . $streamID . "_.m3u8_old");
                 } else {
-                    copy(DELAY_STREAM . $stream_id . "_.m3u8", DELAY_STREAM . $stream_id . "_.m3u8_old");
+                    copy(DELAY_STREAM . $streamID . "_.m3u8", DELAY_STREAM . $streamID . "_.m3u8_old");
                 }
             }
             $ffmpegRunCommand .= implode(" ", self::formatAttributes($stream["stream_info"]["transcode_attributes"])) . " ";
-            $ffmpegRunCommand .= "{MAP} -individual_header_trailer 0 -f segment -segment_format mpegts -segment_time " . ipTV_lib::$SegmentsSettings["seg_time"] . " -segment_list_size " . $stream["stream_info"]["delay_minutes"] * 6 . " -segment_start_number {$ccac9556cf5f7f83df650c022d673042} -segment_format_options \"mpegts_flags=+initial_discontinuity:mpegts_copyts=1\" -segment_list_type m3u8 -segment_list_flags +live+delete -segment_list \"" . DELAY_STREAM . $stream_id . "_.m3u8\" \"" . DELAY_STREAM . $stream_id . "_%d.ts\" ";
+            $ffmpegRunCommand .= "{MAP} -individual_header_trailer 0 -f segment -segment_format mpegts -segment_time " . ipTV_lib::$SegmentsSettings["seg_time"] . " -segment_list_size " . $stream["stream_info"]["delay_minutes"] * 6 . " -segment_start_number {$ccac9556cf5f7f83df650c022d673042} -segment_format_options \"mpegts_flags=+initial_discontinuity:mpegts_copyts=1\" -segment_list_type m3u8 -segment_list_flags +live+delete -segment_list \"" . DELAY_STREAM . $streamID . "_.m3u8\" \"" . DELAY_STREAM . $streamID . "_%d.ts\" ";
             $Dedb93a1e8822879d8790c1f2fc7d6f1 = $stream["stream_info"]["delay_minutes"] * 60;
             if ($ccac9556cf5f7f83df650c022d673042 > 0) {
                 $Dedb93a1e8822879d8790c1f2fc7d6f1 -= ($ccac9556cf5f7f83df650c022d673042 - 1) * 10;
@@ -471,19 +472,20 @@ class ipTV_stream {
             }
         }
 
-        $ffmpegRunCommand .= " >/dev/null 2>>" . STREAMS_PATH . $stream_id . ".errors & echo \$! > " . STREAMS_PATH . $stream_id . "_.pid";
+        $ffmpegRunCommand .= " >/dev/null 2>>" . STREAMS_PATH . $streamID . ".errors & echo \$! > " . STREAMS_PATH . $streamID . "_.pid";
         $ffmpegRunCommand = str_replace(array("{INPUT}", "{FETCH_OPTIONS}", "{GEN_PTS}", "{STREAM_SOURCE}", "{MAP}", "{READ_NATIVE}", "{CONCAT}", "{AAC_FILTER}"), array("\"{$ParseStreamUrl}\"", empty($stream["stream_info"]["custom_ffmpeg"]) ? $formattedArguments : '', empty($stream["stream_info"]["custom_ffmpeg"]) ? $ffmpegTimestampsOptions : '', $ParseStreamUrl, empty($stream["stream_info"]["custom_ffmpeg"]) ? $ffmpegMapOptions : '', empty($stream["stream_info"]["custom_ffmpeg"]) ? $ffmpegNativeOptions : '', $stream["stream_info"]["type_key"] == "created_live" && $stream["server_info"]["parent_id"] == 0 ? "-safe 0 -f concat" : '', !stristr($streamData["container"], "flv") && $streamData["codecs"]["audio"]["codec_name"] == "aac" && $stream["stream_info"]["transcode_attributes"]["-acodec"] == "copy" ? "-bsf:a aac_adtstoasc" : ''), $ffmpegRunCommand);
 
         shell_exec($ffmpegRunCommand);
 
-        $streamPid = intval(file_get_contents(STREAMS_PATH . $stream_id . "_.pid"));
+        $streamPid = intval(file_get_contents(STREAMS_PATH . $streamID . "_.pid"));
         if (SERVER_ID == $stream["stream_info"]["tv_archive_server_id"]) {
-            shell_exec(PHP_BIN . ' ' . TOOLS_PATH . "archive.php " . $stream_id . " >/dev/null 2>/dev/null & echo \$!");
+            shell_exec(PHP_BIN . ' ' . TOOLS_PATH . "archive.php " . $streamID . " >/dev/null 2>/dev/null & echo \$!");
         }
         $Dac1208baefb5d684938829a3a0e0bc6 = $stream["stream_info"]["delay_minutes"] > 0 && $stream["server_info"]["parent_id"] == 0 ? true : false;
         $delay_start_at = $Dac1208baefb5d684938829a3a0e0bc6 ? time() + $Dedb93a1e8822879d8790c1f2fc7d6f1 : 0;
-        self::$ipTV_db->query("UPDATE `streams_sys` SET `delay_available_at` = '%d',`to_analyze` = 0,`stream_started` = '%d',`stream_info` = '%s',`stream_status` = 0,`pid` = '%d',`progress_info` = '%s',`current_source` = '%s' WHERE `stream_id` = '%d' AND `server_id` = '%d'", $delay_start_at, time(), json_encode($streamData), $streamPid, json_encode(array()), $streamUrl, $stream_id, SERVER_ID);
-        $streamPlaylist = !$Dac1208baefb5d684938829a3a0e0bc6 ? STREAMS_PATH . $stream_id . "_.m3u8" : DELAY_STREAM . $stream_id . "_.m3u8";
+        self::$ipTV_db->query("UPDATE `streams_sys` SET `delay_available_at` = '%d',`to_analyze` = 0,`stream_started` = '%d',`stream_info` = '%s',`stream_status` = 0,`pid` = '%d',`progress_info` = '%s',`current_source` = '%s' WHERE `stream_id` = '%d' AND `server_id` = '%d'", $delay_start_at, time(), json_encode($streamData), $streamPid, json_encode(array()), $streamUrl, $streamID, SERVER_ID);
+        ipTV_streaming::updateStream($streamID);
+        $streamPlaylist = !$Dac1208baefb5d684938829a3a0e0bc6 ? STREAMS_PATH . $streamID . "_.m3u8" : DELAY_STREAM . $streamID . "_.m3u8";
         return array("main_pid" => $streamPid, "stream_source" => $ParseStreamUrl, "delay_enabled" => $Dac1208baefb5d684938829a3a0e0bc6, "parent_id" => $stream["server_info"]["parent_id"], "delay_start_at" => $delay_start_at, "playlist" => $streamPlaylist);
     }
     public static function customOrder($a, $b) {

@@ -33,10 +33,10 @@ if (isset($_POST["submit_stream"])) {
     }
     $rArray["movie_propeties"] = array("type" => intval($_POST["channel_type"]));
     if (intval($_POST["channel_type"]) == 0) {
-        $rPlaylist = generateSeriesPlaylist($_POST["series_no"]);
-        if ($rPlaylist["success"]) {
-            $rArray["created_channel_location"] = $rPlaylist["server_id"];
-            $rArray["stream_source"] = $rPlaylist["sources"];
+        $playlist = generateSeriesPlaylist($_POST["series_no"]);
+        if ($playlist["success"]) {
+            $rArray["created_channel_location"] = $playlist["server_id"];
+            $rArray["stream_source"] = $playlist["sources"];
             $rArray["series_no"] = intval($_POST["series_no"]);
             unset($_POST["created_channel_location"]);
         } else {

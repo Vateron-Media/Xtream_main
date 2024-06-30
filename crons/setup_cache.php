@@ -1,108 +1,210 @@
 <?php
-
-function WriteFileCacheProperties() {
+if ($argc) {
+    register_shutdown_function('shutdown');
+    require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+    ini_set('memory_limit', -1);
+    $rStartup = false;
+    if (count($argv) == 2) {
+        $rStartup = true;
+    }
+    cli_set_process_title('XtreamCodes[Cache Builder]');
+    $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
+    ipTV_lib::check_cron($unique_id);
+    loadCron();
+} else {
+    exit(0);
+}
+function loadCron() {
     global $ipTV_db;
-    $ipTV_db->query('SELECT id,movie_propeties FROM `streams`');
-    foreach ($ipTV_db->get_rows(true, 'id') as $key => $data) {
-        if (3 < strlen($data['movie_propeties'])) {
-            $movie_propeties = json_decode($data['movie_propeties'], true);
-            if (is_array($movie_propeties)) {
-                file_put_contents(TMP_DIR . $key . '_cache_properties', serialize($movie_propeties), LOCK_EX);
+    global $rStartup;
+    if (defined('CACHE_TMP_PATH')) {
+        if ($rStartup && file_exists(CACHE_TMP_PATH . 'settings')) {
+            echo 'Checking cache readability...' . "\n";
+            $rSerialize = unserialize(file_get_contents(CACHE_TMP_PATH . 'settings'));
+            if (!is_array($rSerialize) && !isset($rSerialize['server_name'])) {
+                echo 'Clearing cache...' . "\n\n";
+                foreach (array(STREAMS_TMP_PATH, USER_TMP_PATH, SERIES_TMP_PATH) as $rTmpPath) {
+                    foreach (scandir($rTmpPath) as $rFile) {
+                        unlink($rTmpPath . $rFile);
+                    }
+                }
+                exec('sudo rm -rf ' . TMP_DIR . '*');
+                exec('sudo rm -rf ' . SIGNALS_PATH . '*');
             }
         }
-    }
-}
-function WriteFileCategoriesBouq($streamsArray) {
-    $categories = array();
-    foreach (ipTV_lib::$Bouquets as $key => $item) {
-        $categories[$key] = array();
-        if (is_array($item['streams'])) {
-            foreach ($item['streams'] as $stream_id) {
-                if (isset($streamsArray[$stream_id])) {
-                    if (!in_array($streamsArray[$stream_id]['category_id'], $categories[$key])) {
-                        $categories[$key][] = $streamsArray[$stream_id]['category_id'];
+        foreach (array(USER_TMP_PATH, MOVIES_IMAGES, CONS_TMP_PATH, CACHE_TMP_PATH, DIVERGENCE_TMP_PATH, STREAMS_TMP_PATH, SERIES_TMP_PATH, ENIGMA2_PLUGIN_DIR, FLOOD_TMP_PATH) as $rPath) {
+            if (!file_exists($rPath)) {
+                mkdir($rPath);
+            }
+        }
+
+        ipTV_lib::setCache('settings', ipTV_lib::$settings);
+        ipTV_lib::setCache('bouquets', ipTV_lib::$Bouquets);
+        ipTV_lib::setCache('servers', ipTV_lib::$StreamingServers);
+        ipTV_lib::setCache('blocked_ua', ipTV_lib::$blockedUA);
+        ipTV_lib::setCache('customisp', ipTV_lib::$customISP);
+        ipTV_lib::setCache('uagents', ipTV_lib::$blockedUA);
+        ipTV_lib::setCache('blocked_ips', ipTV_lib::$blockedIPs);
+
+
+        if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
+
+            // $rOutputFormats = array();
+            // $ipTV_db->query('SELECT `access_output_id`, `output_key` FROM `output_formats`;');
+            // foreach ($ipTV_db->get_rows() as $rRow) {
+            //     $rOutputFormats[] = $rRow;
+            // }
+            // file_put_contents(CACHE_TMP_PATH . 'output_formats', serialize($rOutputFormats));
+
+            $rHMACKeys = array();
+            $ipTV_db->query('SELECT `id`, `key` FROM `hmac_keys` WHERE `enabled` = 1;');
+            foreach ($ipTV_db->get_rows() as $rRow) {
+                $rHMACKeys[] = $rRow;
+            }
+            file_put_contents(CACHE_TMP_PATH . 'hmac_keys', serialize($rHMACKeys));
+
+            // $rRTMPIPs = array();
+            // $ipTV_db->query('SELECT `ip`, `password`, `push`, `pull` FROM `rtmp_ips`');
+            // foreach ($ipTV_db->get_rows() as $rRow) {
+            //     $rRTMPIPs[gethostbyname($rRow['ip'])] = array('password' => $rRow['password'], 'push' => boolval($rRow['push']), 'pull' => boolval($rRow['pull']));
+            // }
+            // file_put_contents(CACHE_TMP_PATH . 'rtmp_ips', serialize($rRTMPIPs));
+
+            $rChannelOrder = array();
+            if (ipTV_lib::$settings['channel_number_type'] == 'manual') {
+                $ipTV_db->query('SELECT `id`, `order` FROM `streams` ORDER BY `order` ASC;');
+                foreach ($ipTV_db->get_rows() as $rRow) {
+                    $rChannelOrder[] = intval($rRow['id']);
+                }
+            }
+            $rCategoryMap = array();
+            $rBouquetMap = array();
+            $rStreamIDs = array('channels' => array(), 'radios' => array(), 'movies' => array(), 'episodes' => array(), 'series' => array());
+            $ipTV_db->query('SELECT *, IF(`bouquet_order` > 0, `bouquet_order`, 999) AS `order` FROM `bouquets` ORDER BY `order` ASC;');
+            foreach ($ipTV_db->get_rows(true, 'id') as $rID => $rChannels) {
+                $rAllowedCategories = array();
+                $rAllChannels = array();
+                foreach (json_decode($rChannels['bouquet_channels'], true) as $rStreamID) {
+                    if (intval($rStreamID) > 0 || !in_array($rStreamID, $rStreamIDs['channels'])) {
+                        $rStreamIDs['channels'][] = $rStreamID;
+                    }
+                    if (!isset($rBouquetMap[intval($rStreamID)])) {
+                        $rBouquetMap[intval($rStreamID)] = array();
+                    }
+                    $rBouquetMap[intval($rStreamID)][] = $rID;
+                }
+                foreach (json_decode($rChannels['bouquet_radios'], true) as $rStreamID) {
+                    if (intval($rStreamID) > 0 || !in_array($rStreamID, $rStreamIDs['radios'])) {
+                        $rStreamIDs['radios'][] = $rStreamID;
+                    }
+                    if (!isset($rBouquetMap[intval($rStreamID)])) {
+                        $rBouquetMap[intval($rStreamID)] = array();
+                    }
+                    $rBouquetMap[intval($rStreamID)][] = $rID;
+                }
+                foreach (json_decode($rChannels['bouquet_movies'], true) as $rStreamID) {
+                    if (intval($rStreamID) > 0 || !in_array($rStreamID, $rStreamIDs['movies'])) {
+                        $rStreamIDs['movies'][] = $rStreamID;
+                    }
+                    if (!isset($rBouquetMap[intval($rStreamID)])) {
+                        $rBouquetMap[intval($rStreamID)] = array();
+                    }
+                    $rBouquetMap[intval($rStreamID)][] = $rID;
+                }
+                foreach (json_decode($rChannels['bouquet_series'], true) as $rSeriesID) {
+                    if (intval($rSeriesID) > 0 || !in_array($rSeriesID, $rStreamIDs['series'])) {
+                        $ipTV_db->query('SELECT `stream_id` FROM `streams_episodes` WHERE `series_id` = ? ORDER BY `season_num` ASC, `episode_num` ASC;', $rSeriesID);
+                        foreach ($ipTV_db->get_rows() as $rEpisode) {
+                            if (intval($rEpisode['stream_id']) > 0) {
+                                $rStreamIDs['episodes'][] = $rEpisode['stream_id'];
+                            }
+                            if (!isset($rBouquetMap[intval($rEpisode['stream_id'])])) {
+                                $rBouquetMap[intval($rEpisode['stream_id'])] = array();
+                            }
+                            $rBouquetMap[intval($rEpisode['stream_id'])][] = $rID;
+                        }
+                    }
+                }
+                $rAllChannels = array_map('intval', array_unique(array_merge((json_decode($rChannels['bouquet_channels'], true) ?: array()), (json_decode($rChannels['bouquet_radios'], true) ?: array()), (json_decode($rChannels['bouquet_movies'], true) ?: array()))));
+                $rAllSeries = array_map('intval', array_unique((json_decode($rChannels['bouquet_series'], true) ?: array())));
+                if (count($rAllChannels) > 0) {
+                    $ipTV_db->query('SELECT DISTINCT(`category_id`) AS `category_id` FROM `streams` WHERE `id` IN (' . implode(',', $rAllChannels) . ');');
+                    foreach ($ipTV_db->get_rows() as $rRow) {
+                        $rAllowedCategories = array_merge($rAllowedCategories, (json_decode($rRow['category_id'], true) ?: array()));
+                    }
+                }
+                if (count($rAllSeries) > 0) {
+                    $ipTV_db->query('SELECT DISTINCT(`category_id`) AS `category_id` FROM `streams_series` WHERE `id` IN (' . implode(',', $rAllSeries) . ');');
+                    foreach ($ipTV_db->get_rows() as $rRow) {
+                        $rAllowedCategories = array_merge($rAllowedCategories, (json_decode($rRow['category_id'], true) ?: array()));
+                    }
+                }
+                $rCategoryMap[$rID] = array_unique($rAllowedCategories);
+            }
+            if (ipTV_lib::$settings['channel_number_type'] != 'manual') {
+                foreach (array('channels', 'radios', 'movies', 'episodes') as $rKey) {
+                    if (0 < count($rStreamIDs[$rKey])) {
+                        $rWhere = 'AND `id` NOT IN (' . implode(',', array_map('intval', $rStreamIDs[$rKey])) . ')';
+                    } else {
+                        $rWhere = '';
+                    }
+                    switch ($rKey) {
+                        case 'channels':
+                            $rType = array(1, 3);
+                            break;
+                        case 'radios':
+                            $rType = array(4);
+                            break;
+                        case 'movies':
+                            $rType = array(2);
+                            break;
+                        case 'episodes':
+                            $rType = array(5);
+                            break;
+                    }
+                    if (count($rType) > 0) {
+                        $ipTV_db->query('SELECT `id` FROM `streams` WHERE `type` IN (' . implode(',', $rType) . ') ' . $rWhere . ' ORDER BY `order` ASC;');
+                        foreach ($ipTV_db->get_rows() as $rRow) {
+                            $rStreamIDs[$rKey][] = $rRow['id'];
+                        }
+                    }
+                }
+                foreach (array('channels', 'radios', 'movies', 'episodes') as $rKey) {
+                    foreach ($rStreamIDs[$rKey] as $rStreamID) {
+                        $rChannelOrder[] = intval($rStreamID);
+                    }
+                }
+                $rChannelOrder = array_unique($rChannelOrder);
+            }
+            $rCategoryChannels = array();
+            $ipTV_db->query('SELECT `id`, `category_id` FROM `streams`;');
+            if ($ipTV_db->dbh && $ipTV_db->result) {
+                if ($ipTV_db->num_rows() > 0) {
+                    foreach ($ipTV_db->get_rows() as $rStreamInfo) {
+                        $rCategoryChannels[$rStreamInfo['id']] = json_decode($rStreamInfo['category_id'], true);
                     }
                 }
             }
+            $rResellerDomains = array();
+            $ipTV_db->query('SELECT `reseller_dns` FROM `reg_users` WHERE `status` = 1 AND `reseller_dns` IS NOT NULL;');
+            foreach ($ipTV_db->get_rows() as $rRow) {
+                $rResellerDomains[] = strtolower($rRow['reseller_dns']);
+            }
+            file_put_contents(CACHE_TMP_PATH . 'reseller_domains', serialize($rResellerDomains));
+            file_put_contents(CACHE_TMP_PATH . 'channel_order', serialize($rChannelOrder));
+            file_put_contents(CACHE_TMP_PATH . 'bouquet_map', serialize($rBouquetMap));
+            file_put_contents(CACHE_TMP_PATH . 'category_map', serialize($rCategoryMap));
+            file_put_contents(STREAMS_TMP_PATH . 'channels_categories', serialize($rCategoryChannels));
         }
+    } else {
+        exit();
     }
-    file_put_contents(TMP_DIR . 'categories_bouq', serialize($categories), LOCK_EX);
 }
-function saveCache() {
+function shutdown() {
     global $ipTV_db;
-    $ipTV_db->query('SELECT t1.*,t2.category_name FROM `series` t1 LEFT JOIN `stream_categories` t2 ON t1.category_id = t2.id');
-    $categories = $ipTV_db->get_rows(true, 'id');
-    foreach ($categories as $id => $value) {
-        $ipTV_db->query('SELECT t1.season_num,t2.added,if(t2.direct_source = 1 AND t2.redirect_stream = 0,t2.stream_source,NULL) as stream_source,t2.custom_sid,t1.stream_id,t2.stream_display_name,t2.target_container FROM `series_episodes` t1 INNER JOIN `streams` t2 ON t2.id=t1.stream_id WHERE t1.series_id = \'%d\' ORDER BY t1.season_num ASC, t1.sort ASC', $id);
-        $series_data = $ipTV_db->get_rows(true, 'season_num', false, 'stream_id');
-        $categories[$id]['series_data'] = $series_data;
+    global $unique_id;
+    if (is_object($ipTV_db)) {
+        $ipTV_db->close_mysql();
     }
-    $item = '<?php $output = ' . var_export($categories, true) . '; ?>';
-    $data = TMP_DIR . 'series_data.php';
-    if (!file_exists($data) || md5_file($data) != md5($item)) {
-        file_put_contents($data . '_tmp', $item, LOCK_EX);
-        rename($data . '_tmp', $data);
-    }
+    @unlink($unique_id);
 }
-
-
-if (!@$argc) {
-    exit(0);
-}
-define('USE_CACHE', false);
-require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-cli_set_process_title('XtreamCodes[Cache Builder]');
-$unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
-KillProcessCmd($unique_id);
-ini_set('memory_limit', -1);
-ipTV_lib::phpFileCache('settings_cache', ipTV_lib::$settings);
-ipTV_lib::phpFileCache('customisp_cache', ipTV_lib::$customISP);
-ipTV_lib::phpFileCache('uagents_cache', ipTV_lib::$blockedUA);
-ipTV_lib::phpFileCache('bouquets_cache', ipTV_lib::$Bouquets);
-ipTV_lib::phpFileCache('servers_cache', ipTV_lib::$StreamingServers);
-$ipTV_db->query('SELECT t1.id, 
-    t1.added, 
-    t1.allow_record, 
-    t1.channel_id, 
-    if(t1.direct_source = 1 AND t1.redirect_stream = 0,t1.stream_source,NULL) as stream_source,
-    t1.tv_archive_server_id, 
-    t1.tv_archive_duration, 
-    t1.stream_icon, 
-    t1.custom_sid, 
-    t1.category_id, 
-    t1.stream_display_name, 
-    t2.type_output, 
-    t1.target_container, 
-    t2.live, 
-    t3.category_name, 
-    t1.rtmp_output, 
-    t1.number, 
-    t2.type_key,
-    t2.type_name
-    FROM   `streams` t1 
-    LEFT JOIN `stream_categories` t3 ON t3.id = t1.category_id 
-    INNER JOIN `streams_types` t2 ON t2.type_id = t1.type');
-$types = $ipTV_db->get_rows(true, 'type_key', false, 'id');
-$streamsArray = array();
-foreach ($types as $type_key => $streams) {
-    $streamsArray = array_replace($streamsArray, $streams);
-    $stream_array_data = '<?php return ' . var_export($streams, true) . '; ?>';
-    $name_type = TMP_DIR . $type_key . '_main.php';
-    if (!file_exists($name_type) || md5_file($name_type) != md5($stream_array_data)) {
-        file_put_contents($name_type . '_tmp', $stream_array_data, LOCK_EX);
-        rename($name_type . '_tmp', $name_type);
-    }
-}
-WriteFileCacheProperties();
-WriteFileCategoriesBouq($streamsArray);
-saveCache();
-$nginx_data = (int) shell_exec('cat ' . IPTV_PANEL_DIR . 'nginx/conf/nginx.conf | grep -c \'\\/(\\\\d+)\'');
-if ($nginx_data == 1) {
-    file_put_contents(TMP_DIR . 'new_rewrite', 1);
-}
-foreach (array(CONS_TMP_PATH, DIVERGENCE_TMP_PATH, USER_TMP_PATH, MOVIES_IMAGES, ENIGMA2_PLUGIN_DIR) as $rPath) {
-    if (!file_exists($rPath)) {
-        mkdir($rPath);
-    }
-}
-@unlink($unique_id);

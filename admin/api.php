@@ -842,21 +842,34 @@ if (isset($_GET["action"])) {
                 exit;
             }
             $return = array("streams" => array(), "vod" => array(), "series" => array(), "radios" => array(), "result" => true);
+            // stream
             if (isset($_POST["data"]["stream"])) {
                 foreach ($_POST["data"]["stream"] as $rStreamID) {
                     $rResult = $db->query("SELECT `id`, `stream_display_name`, `type` FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                     if (($rResult) && ($rResult->num_rows == 1)) {
-                        $rData = $rResult->fetch_assoc();
-                        if ($rData["type"] == 2) {
-                            $return["vod"][] = $rData;
-                        } else if ($rData["type"] == 4) {
-                            $return["radios"][] = $rData;
-                        } else {
-                            $return["streams"][] = $rData;
-                        }
+                        $return["streams"][] = $rResult->fetch_assoc();
                     }
                 }
             }
+            // vod
+            if (isset($_POST["data"]["vod"])) {
+                foreach ($_POST["data"]["vod"] as $rStreamID) {
+                    $rResult = $db->query("SELECT `id`, `stream_display_name`, `type` FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
+                    if (($rResult) && ($rResult->num_rows == 1)) {
+                        $return["vod"][] = $rResult->fetch_assoc();
+                    }
+                }
+            }
+            // radios
+            if (isset($_POST["data"]["radios"])) {
+                foreach ($_POST["data"]["radios"] as $rStreamID) {
+                    $rResult = $db->query("SELECT `id`, `stream_display_name`, `type` FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
+                    if (($rResult) && ($rResult->num_rows == 1)) {
+                        $return["radios"][] = $rResult->fetch_assoc();
+                    }
+                }
+            }
+            // series
             if (isset($_POST["data"]["series"])) {
                 foreach ($_POST["data"]["series"] as $rSeriesID) {
                     $rResult = $db->query("SELECT `id`, `title` FROM `series` WHERE `id` = " . intval($rSeriesID) . ";");

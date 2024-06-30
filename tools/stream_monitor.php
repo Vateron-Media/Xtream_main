@@ -138,7 +138,7 @@ if ($argc >= 1) {
             while (!ipTV_streaming::isStreamRunning($stream_pid, $stream_id)) {
                 echo "Restarting...\n";
                 shell_exec("rm -f " . STREAMS_PATH . $stream_id . "_*");
-                $d76067cf9572f7a6691c85c12faf2a29 = ipTV_stream::runStreamFfmpeg($stream_id, $streamStatusCounter, $streamUrl);
+                $d76067cf9572f7a6691c85c12faf2a29 = ipTV_stream::startStream($stream_id, $streamStatusCounter, $streamUrl);
                 if ($d76067cf9572f7a6691c85c12faf2a29 === false) {
                     die;
                 }

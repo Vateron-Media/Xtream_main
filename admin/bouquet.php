@@ -6,11 +6,13 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_bouquet")) && 
 }
 
 if (isset($_POST["submit_bouquet"])) {
-    $rArray = array("bouquet_name" => "", "bouquet_channels" => array(), "bouquet_series" => array());
+    $rArray = array("bouquet_name" => "", "bouquet_channels" => array(), "bouquet_movies" => array(), "bouquet_radios" => array(), "bouquet_series" => array());
     if (is_array(json_decode($_POST["bouquet_data"], True))) {
         $rBouquetData = json_decode($_POST["bouquet_data"], True);
         $rArray["bouquet_channels"] = array_values($rBouquetData["stream"]);
         $rArray["bouquet_series"] = array_values($rBouquetData["series"]);
+        $rArray["bouquet_movies"] = array_values($rBouquetData["vod"]);
+        $rArray["bouquet_radios"] = array_values($rBouquetData["radios"]);
     } else if (isset($_POST["edit"])) {
         echo $_["bouquet_data_not_transfered"];
         exit;
@@ -484,10 +486,18 @@ if ($rSettings["sidebar"]) { ?>
                         if (!is_array(json_decode($rBouquetArr["bouquet_channels"], True))) {
                             $rBouquetArr["bouquet_channels"] = "[]";
                         }
+                        if (!is_array(json_decode($rBouquetArr["bouquet_movies"], True))) {
+                            $rBouquetArr["bouquet_movies"] = "[]";
+                        }
+                        if (!is_array(json_decode($rBouquetArr["bouquet_radios"], True))) {
+                            $rBouquetArr["bouquet_radios"] = "[]";
+                        }
                     ?>
                         var rBouquet = {
                             "stream": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_channels"]) ?>),
-                            "series": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_series"]) ?>)
+                            "series": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_series"]) ?>),
+                            "vod": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_movies"]) ?>),
+                            "radios": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_radios"]) ?>)
                         };
                     <?php } ?>
 
@@ -503,7 +513,7 @@ if ($rSettings["sidebar"]) { ?>
                                     rTable.row.add([rData.streams[rIndex].id, '<?= $_["stream"] ?>', rData.streams[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.streams[rIndex].id + ', \'stream\', true);"><i class="mdi mdi-minus"></i></button>']);
                                 });
                                 $(rData.vod).each(function(rIndex) {
-                                    rTable.row.add([rData.vod[rIndex].id, '<?= $_["movie"] ?>', rData.vod[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.vod[rIndex].id + ', \'vod\', true);"><i class="mdi mdi-minus"></i></button>']);
+                                    rTable.row.add([rData.vod[rIndex].id, '<?= $_["vod"] ?>', rData.vod[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.vod[rIndex].id + ', \'vod\', true);"><i class="mdi mdi-minus"></i></button>']);
                                 });
                                 $(rData.radios).each(function(rIndex) {
                                     rTable.row.add([rData.radios[rIndex].id, '<?= $_["radio"] ?>', rData.radios[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.radios[rIndex].id + ', \'radios\', true);"><i class="mdi mdi-minus"></i></button>']);
@@ -519,12 +529,6 @@ if ($rSettings["sidebar"]) { ?>
                     }
 
                     function toggleBouquet(rID, rType, rReview = false) {
-                        if (rType == "vod") {
-                            rType = "stream";
-                        }
-                        if (rType == "radios") {
-                            rType = "stream";
-                        }
                         var rIndex = rBouquet[rType].indexOf(parseInt(rID));
                         if (rIndex > -1) {
                             rBouquet[rType] = jQuery.grep(rBouquet[rType], function(rValue) {
@@ -534,13 +538,10 @@ if ($rSettings["sidebar"]) { ?>
                             rBouquet[rType].push(parseInt(rID));
                         }
                         if (rReview == true) {
-                            if (rType == "stream") {
-                                $("#datatable-streams").DataTable().ajax.reload(null, false);
-                                $("#datatable-vod").DataTable().ajax.reload(null, false);
-                                $("#datatable-radios").DataTable().ajax.reload(null, false);
-                            } else {
-                                $("#datatable-series").DataTable().ajax.reload(null, false);
-                            }
+                            $("#datatable-streams").DataTable().ajax.reload(null, false);
+                            $("#datatable-vod").DataTable().ajax.reload(null, false);
+                            $("#datatable-radios").DataTable().ajax.reload(null, false);
+                            $("#datatable-series").DataTable().ajax.reload(null, false);
                             reviewBouquet()
                         }
                     }
@@ -606,7 +607,7 @@ if ($rSettings["sidebar"]) { ?>
                             },
                             createdRow: function(row, data, index) {
                                 $(row).addClass('vod-' + data[0]);
-                                var rIndex = rBouquet["stream"].indexOf(parseInt(data[0]));
+                                var rIndex = rBouquet["vod"].indexOf(parseInt(data[0]));
                                 if (rIndex > -1) {
                                     $(row).find(".btn-remove").show();
                                 } else {
@@ -682,7 +683,7 @@ if ($rSettings["sidebar"]) { ?>
                             },
                             createdRow: function(row, data, index) {
                                 $(row).addClass('radios-' + data[0]);
-                                var rIndex = rBouquet["stream"].indexOf(parseInt(data[0]));
+                                var rIndex = rBouquet["radios"].indexOf(parseInt(data[0]));
                                 if (rIndex > -1) {
                                     $(row).find(".btn-remove").show();
                                 } else {

@@ -158,7 +158,7 @@ function loadCron() {
     $rConnectionSpeeds = glob(DIVERGENCE_TMP_PATH . '*');
     if (count($rConnectionSpeeds) > 0) {
         $rBitrates = array();
-        $ipTV_db->query('SELECT `lines_live`.`uuid`, `streams_servers`.`bitrate` FROM `lines_live` LEFT JOIN `streams_servers` ON `lines_live`.`stream_id` = `streams_servers`.`stream_id` AND `lines_live`.`server_id` = `streams_servers`.`server_id` WHERE `lines_live`.`server_id` = \'%s\';', SERVER_ID);
+        $ipTV_db->query('SELECT `lines_live`.`uuid`, `streams_sys`.`bitrate` FROM `lines_live` LEFT JOIN `streams_sys` ON `lines_live`.`stream_id` = `streams_sys`.`stream_id` AND `lines_live`.`server_id` = `streams_sys`.`server_id` WHERE `lines_live`.`server_id` = \'%s\';', SERVER_ID);
         foreach ($ipTV_db->get_rows() as $rRow) {
             $rBitrates[$rRow['uuid']] = intval($rRow['bitrate'] / 8 * 0.92);
         }

@@ -8,6 +8,8 @@ class ipTV_lib {
     public static $SegmentsSettings = array();
     public static $blockedUA = array();
     public static $customISP = array();
+    public static $blockedISP = array();
+    public static $blockedIPs = array();
 
     public static function init() {
         global $_INFO;
@@ -30,6 +32,8 @@ class ipTV_lib {
         self::$settings = self::GetSettings();
         date_default_timezone_set(self::$settings["default_timezone"]);
         self::$StreamingServers = self::GetServers();
+        self::$blockedISP = self::getBlockedISP();
+        self::$blockedIPs = self::getBlockedIPs();
 
         if (FETCH_BOUQUETS) {
             self::$Bouquets = self::GetBouquets();
@@ -66,9 +70,9 @@ class ipTV_lib {
     }
 
     public static function GetIspAddon() {
-        $file = self::requestFile("customisp_cache");
-        if ($file !== false) {
-            return $file;
+        $cache = self::getCache('customisp', 60);
+        if (!empty($cache)) {
+            return $cache;
         }
         $output = array();
         self::$ipTV_db->query("SELECT id,isp,blocked FROM `isp_addon`");
@@ -77,34 +81,71 @@ class ipTV_lib {
     }
 
     public static function GetBlockedUserAgents() {
-        $file = self::requestFile("uagents_cache");
-        if ($file !== false) {
-            return $file;
+        $cache = self::getCache('uagents', 60);
+        if (!empty($cache)) {
+            return $cache;
         }
         $output = array();
         self::$ipTV_db->query("SELECT id,exact_match,LOWER(user_agent) as blocked_ua FROM `blocked_user_agents`");
         $output = self::$ipTV_db->get_rows(true, "id");
         return $output;
     }
+    /** 
+     * Retrieves the list of bouquets with their associated streams, series, channels, movies, and radios. 
+     * 
+     * @return array An array containing the bouquets with their respective streams, series, channels, movies, and radios. 
+     */
+    public static function getBouquets() {
+        $rCache = self::getCache('bouquets', 60);
+        if (!empty($rCache)) {
+            return $rCache;
+        }
+        $rOutput = array();
+        self::$ipTV_db->query('SELECT *, IF(`bouquet_order` > 0, `bouquet_order`, 999) AS `order` FROM `bouquets` ORDER BY `order` ASC;');
+        foreach (self::$ipTV_db->get_rows(true, 'id') as $rID => $rChannels) {
+            $rOutput[$rID]['streams'] = array_merge(json_decode($rChannels['bouquet_channels'], true), json_decode($rChannels['bouquet_movies'], true), json_decode($rChannels['bouquet_radios'], true));
+            $rOutput[$rID]['series'] = json_decode($rChannels['bouquet_series'], true);
+            $rOutput[$rID]['channels'] = json_decode($rChannels['bouquet_channels'], true);
+            $rOutput[$rID]['movies'] = json_decode($rChannels['bouquet_movies'], true);
+            $rOutput[$rID]['radios'] = json_decode($rChannels['bouquet_radios'], true);
+        }
+        self::setCache('bouquets', $rOutput);
+        return $rOutput;
+    }
+    public static function getBlockedIPs() {
+        $rCache = self::getCache('blocked_ips', 20);
+        if (!empty($cache)) {
+            return $rCache;
+        }
 
-    public static function GetBouquets() {
-        $file = self::requestFile("bouquets_cache");
-        if ($file !== false) {
-            return $file;
+        $rOutput = array();
+        self::$ipTV_db->query('SELECT `ip` FROM `blocked_ips`');
+        foreach (self::$ipTV_db->get_rows() as $rRow) {
+            $rOutput[] = $rRow['ip'];
         }
-        $output = array();
-        self::$ipTV_db->query("SELECT `id`,`bouquet_channels`,`bouquet_series` FROM `bouquets`");
-        foreach (self::$ipTV_db->get_rows(true, "id") as $id => $value) {
-            $output[$id]["streams"] = json_decode($value["bouquet_channels"], true);
-            $output[$id]["series"] = json_decode($value["bouquet_series"], true);
+        self::setCache('blocked_ips', $rOutput);
+        return $rOutput;
+    }
+    /** 
+     * Retrieves the list of blocked ISPs from the cache or database. 
+     * 
+     * @return array The list of blocked ISPs with their IDs, ISP names, and blocked status. 
+     */
+    public static function getBlockedISP() {
+        $cache = self::getCache('blocked_isp', 20);
+        if (!empty($cache)) {
+            return $cache;
         }
+
+        self::$ipTV_db->query('SELECT id,isp,blocked FROM `blocked_isps`');
+        $output = self::$ipTV_db->get_rows();
+        self::setCache('blocked_isp', $output);
         return $output;
     }
-
     public static function GetSettings() {
-        $file = self::requestFile("settings_cache");
-        if ($file !== false) {
-            return $file;
+        $cache = self::getCache('settings', 20);
+        if (!empty($cache)) {
+            return $cache;
         }
         $output = array();
         self::$ipTV_db->query("SELECT * FROM `settings`");
@@ -124,23 +165,6 @@ class ipTV_lib {
         $output["api_ips"] = explode(",", $output["api_ips"]);
         return $output;
     }
-
-    public static function phpFileCache($file, $data) {
-        $data = '<?php $output = ' . var_export($data, true) . '; ?>';
-        if (!file_exists(TMP_DIR . $file . ".php") || md5_file(TMP_DIR . $file . ".php") != md5($data)) {
-            file_put_contents(TMP_DIR . $file . ".php_cache", $data, LOCK_EX);
-            rename(TMP_DIR . $file . ".php_cache", TMP_DIR . $file . ".php");
-        }
-    }
-
-    public static function requestFile($file) {
-        if (file_exists(TMP_DIR . $file . ".php") && USE_CACHE === true) {
-            include TMP_DIR . $file . ".php";
-            return $output;
-        }
-        return false;
-    }
-
     public static function seriesData() {
         $output = array();
         if (file_exists(TMP_DIR . "series_data.php")) {
@@ -148,7 +172,22 @@ class ipTV_lib {
         }
         return $output;
     }
-
+    public static function sortChannels($rChannels) {
+        if (0 < count($rChannels) && file_exists(CACHE_TMP_PATH . 'channel_order') && self::$settings['channel_number_type'] != 'bouquet') {
+            $rOrder = unserialize(file_get_contents(CACHE_TMP_PATH . 'channel_order'));
+            $rChannels = array_flip($rChannels);
+            $rNewOrder = array();
+            foreach ($rOrder as $rID) {
+                if (isset($rChannels[$rID])) {
+                    $rNewOrder[] = $rID;
+                }
+            }
+            if (count($rNewOrder) > 0) {
+                return $rNewOrder;
+            }
+        }
+        return $rChannels;
+    }
     public static function movieProperties($stream_id) {
         $movie_properties = array();
         if (file_exists(TMP_DIR . $stream_id . "_cache_properties")) {
@@ -156,11 +195,40 @@ class ipTV_lib {
         }
         return isset($movie_properties) && is_array($movie_properties) ? $movie_properties : array();
     }
-
+    /** 
+     * Sets the cache data for a given cache key. 
+     * 
+     * @param string $cache The cache key. 
+     * @param mixed $data The data to be cached. 
+     * @return void 
+     */
+    public static function setCache($cache, $data) {
+        $serializedData = serialize($data);
+        if (!file_exists(CACHE_TMP_PATH)) {
+            mkdir(CACHE_TMP_PATH);
+        }
+        file_put_contents(CACHE_TMP_PATH . $cache, $serializedData, LOCK_EX);
+    }
+    /** 
+     * Retrieves the cached data for a given cache key if it exists and is not expired. 
+     * 
+     * @param string $cache The cache key. 
+     * @param int|null $rSeconds The expiration time in seconds. 
+     * @return mixed|null The cached data if it exists and is not expired, null otherwise. 
+     */
+    public static function getCache($cache, $rSeconds = null) {
+        if (file_exists(CACHE_TMP_PATH . $cache)) {
+            if (!$rSeconds && time() - filemtime(CACHE_TMP_PATH . $cache) > $rSeconds) {
+                $data = file_get_contents(CACHE_TMP_PATH . $cache);
+                return unserialize($data);
+            }
+        }
+        return null;
+    }
     public static function GetServers() {
-        $file = self::requestFile("servers_cache");
-        if ($file !== false) {
-            return $file;
+        $cache = self::getCache('servers', 20);
+        if (!empty($cache)) {
+            return $cache;
         }
         if (empty($_SERVER["REQUEST_SCHEME"])) {
             $_SERVER["REQUEST_SCHEME"] = "http";
@@ -195,23 +263,23 @@ class ipTV_lib {
         return $servers;
     }
 
-    public static function mc_decrypt($decrypt, $key) {
-        $decrypt = explode("|", $decrypt . "|");
-        $decoded = base64_decode($decrypt[0]);
-        $iv = base64_decode($decrypt[1]);
-        if (strlen($iv) !== mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CBC)) {
+    public static function mc_decrypt($data, $key) {
+        $data = explode("|", $data . "|");
+        $decoded = base64_decode($data[0]);
+        $iv = base64_decode($data[1]);
+        if (strlen($iv) === mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CBC)) {
+            $key = pack('H*', $key);
+            $rDecrypted = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $decoded, MCRYPT_MODE_CBC, $iv));
+            $rMAC = substr($rDecrypted, -64);
+            $rDecrypted = substr($rDecrypted, 0, -64);
+            $rCalcHMAC = hash_hmac('sha256', $rDecrypted, substr(bin2hex($key), -32));
+            if ($rCalcHMAC === $rMAC) {
+                $rDecrypted = unserialize($rDecrypted);
+                return $rDecrypted;
+            }
             return false;
         }
-        $key = pack("H*", $key);
-        $decrypted = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $decoded, MCRYPT_MODE_CBC, $iv));
-        $mac = substr($decrypted, -64);
-        $decrypted = substr($decrypted, 0, -64);
-        $calcmac = hash_hmac("sha256", $decrypted, substr(bin2hex($key), -32));
-        if ($calcmac !== $mac) {
-            return false;
-        }
-        $decrypted = unserialize($decrypted);
-        return $decrypted;
+        return false;
     }
 
     public static function SimpleWebGet($url, $save_cache = false) {
@@ -395,37 +463,31 @@ class ipTV_lib {
         }
         return $arrayValues;
     }
-    public static function check_cron($rFilename, $rTime = 1800)
-	{
-		if (!file_exists($rFilename)) {
-		} else {
-			$rPID = trim(file_get_contents($rFilename));
-			if (!file_exists('/proc/' . $rPID)) {
-			} else {
-				if (time() - filemtime($rFilename) >= $rTime) {
-					if (!(is_numeric($rPID) && 0 < $rPID)) {
-					} else {
-						posix_kill($rPID, 9);
-					}
-				} else {
-					exit('Running...');
-				}
-			}
-		}
-		file_put_contents($rFilename, getmypid());
-		return false;
-	}
-    public static function confirmIDs($rIDs)
-	{
-		$rReturn = array();
+    public static function check_cron($rFilename, $rTime = 1800) {
+        if (file_exists($rFilename)) {
+            $PID = trim(file_get_contents($rFilename));
+            if (file_exists('/proc/' . $PID)) {
+                if (time() - filemtime($rFilename) >= $rTime) {
+                    if (is_numeric($PID) && 0 < $PID) {
+                        posix_kill($PID, 9);
+                    }
+                } else {
+                    exit('Running...');
+                }
+            }
+        }
+        file_put_contents($rFilename, getmypid());
+        return false;
+    }
+    public static function confirmIDs($rIDs) {
+        $rReturn = array();
 
-		foreach ($rIDs as $rID) {
-			if (0 >= intval($rID)) {
-			} else {
-				$rReturn[] = $rID;
-			}
-		}
+        foreach ($rIDs as $rID) {
+            if (intval($rID) > 0) {
+                $rReturn[] = $rID;
+            }
+        }
 
-		return $rReturn;
-	}
+        return $rReturn;
+    }
 }
