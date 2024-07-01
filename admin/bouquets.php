@@ -51,6 +51,8 @@ if ($rSettings["sidebar"]) { ?>
                                                 <th class="text-center"><?= $_["id"] ?></th>
                                                 <th><?= $_["bouquet_name"] ?></th>
                                                 <th class="text-center"><?= $_["streams"] ?></th>
+                                                <th class="text-center"><?= $_["movies"] ?></th>
+                                                <th class="text-center"><?= $_["radio"] ?></th>
                                                 <th class="text-center"><?= $_["series"] ?></th>
                                                 <th class="text-center"><?= $_["actions"] ?></th>
                                             </tr>
@@ -61,6 +63,8 @@ if ($rSettings["sidebar"]) { ?>
                                                     <td class="text-center"><?= $rBouquet["id"] ?></td>
                                                     <td><?= $rBouquet["bouquet_name"] ?></td>
                                                     <td class="text-center"><?= count(json_decode($rBouquet["bouquet_channels"], True)) ?></td>
+                                                    <td class="text-center"><?= count(json_decode($rBouquet["bouquet_movies"], True)) ?></td>
+                                                    <td class="text-center"><?= count(json_decode($rBouquet["bouquet_radios"], True)) ?></td>
                                                     <td class="text-center"><?= count(json_decode($rBouquet["bouquet_series"], True)) ?></td>
                                                     <td class="text-center">
                                                         <?php if (hasPermissions("adv", "edit_bouquet")) { ?>
