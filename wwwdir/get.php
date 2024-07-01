@@ -1,28 +1,145 @@
 <?php
 
-require "./init.php";
-$user_ip = ipTV_streaming::getUserIP();
-if (!isset(ipTV_lib::$request["username"]) || !isset(ipTV_lib::$request["password"]) || !isset(ipTV_lib::$request["type"])) {
-    if (ipTV_lib::$settings["flood_get_block"] == 1) {
-        $ipTV_db->query("INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES('%s','%s','%d')", $user_ip, "BRUTE FORCING", time());
-        ipTV_servers::RunCommandServer(array_keys(ipTV_lib::$StreamingServers), "sudo /sbin/iptables -A INPUT -s $user_ip -j DROP");
+register_shutdown_function('shutdown');
+require 'init.php';
+set_time_limit(0);
+header('Access-Control-Allow-Origin: *');
+$rDeny = true;
+$rDownloading = false;
+$rIP = ipTV_streaming::getUserIP();
+$rCountryCode = ipTV_streaming::getIPInfo($userIP)['country']['iso_code'];
+$rUserAgent = (empty($_SERVER['HTTP_USER_AGENT']) ? '' : htmlentities(trim($_SERVER['HTTP_USER_AGENT'])));
+$rDeviceKey = (empty(ipTV_lib::$request['type']) ? 'm3u_plus' : ipTV_lib::$request['type']);
+$rTypeKey = (empty(ipTV_lib::$request['key']) ? null : explode(',', ipTV_lib::$request['key']));
+$rOutputKey = (empty(ipTV_lib::$request['output']) ? '' : ipTV_lib::$request['output']);
+$rNoCache = !empty(ipTV_lib::$request['nocache']);
+
+if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'])) {
+    $rUsername = ipTV_lib::$request['username'];
+    $rPassword = ipTV_lib::$request['password'];
+
+    if (empty($rUsername) || empty($rPassword)) {
+        generateError('NO_CREDENTIALS');
     }
-    exit("Missing parameters.");
+
+    $rUserInfo = ipTV_streaming::GetUserInfo(null, $rUsername, $rPassword, true, false, $rIP);
+} else {
+    if (isset(ipTV_lib::$request['token'])) {
+        $rToken = ipTV_lib::$request['token'];
+
+        if (empty($rToken)) {
+            generateError('NO_CREDENTIALS');
+        }
+
+        $rUserInfo = ipTV_streaming::GetUserInfo(null, $rToken, null, true, false, $rIP);
+    } else {
+        generateError('NO_CREDENTIALS');
+    }
 }
 
-$username = ipTV_lib::$request["username"];
-$password = ipTV_lib::$request["password"];
-$device_key = ipTV_lib::$request["type"];
-$output_key = (empty(ipTV_lib::$request["output"]) ? "" : ipTV_lib::$request["output"]);
-$ipTV_db->query("SELECT `id` FROM `users` WHERE `username` = '%s' AND `password` = '%s' LIMIT 1", $username, $password);
+ini_set('memory_limit', -1);
 
-if (0 < $ipTV_db->num_rows()) {
-    $user_id = $ipTV_db->get_col();
-    if ($output = GenerateList($user_id, $device_key, $output_key, true)) {
-        echo $output;
+if ($rUserInfo) {
+    $rDeny = false;
+
+    // if ($rUserInfo['bypass_ua'] == 0) {
+    //     if (XUI::checkBlockedUAs($rUserAgent, true)) {
+    //         generateError('BLOCKED_USER_AGENT');
+    //     }
+    // }
+
+    if (is_null($rUserInfo['exp_date']) || $rUserInfo['exp_date'] > time()) {
+    } else {
+        generateError('EXPIRED');
+    }
+
+    if (!($rUserInfo['is_mag'] || $rUserInfo['is_e2'])) {
+    } else {
+        generateError('DEVICE_NOT_ALLOWED');
+    }
+
+    if ($rUserInfo['admin_enabled']) {
+    } else {
+        generateError('BANNED');
+    }
+
+    if ($rUserInfo['enabled']) {
+    } else {
+        generateError('DISABLED');
+    }
+
+    if (!(empty($rUserAgent) && ipTV_lib::$settings['disallow_empty_user_agents'] == 1)) {
+    } else {
+        generateError('EMPTY_USER_AGENT');
+    }
+
+    if (empty($rUserInfo['allowed_ips']) || in_array($rIP, array_map('gethostbyname', $rUserInfo['allowed_ips']))) {
+    } else {
+        generateError('NOT_IN_ALLOWED_IPS');
+    }
+
+    if (empty($rCountryCode)) {
+    } else {
+        $rForceCountry = !empty($rUserInfo['forced_country']);
+
+        if (!($rForceCountry && $rUserInfo['forced_country'] != 'ALL' && $rCountryCode != $rUserInfo['forced_country'])) {
+        } else {
+            generateError('FORCED_COUNTRY_INVALID');
+        }
+
+        if ($rForceCountry || in_array('ALL', ipTV_lib::$settings['allow_countries']) || in_array($rCountryCode, ipTV_lib::$settings['allow_countries'])) {
+        } else {
+            generateError('NOT_IN_ALLOWED_COUNTRY');
+        }
+    }
+
+    if (empty($rUserInfo['allowed_ua']) || in_array($rUserAgent, $rUserInfo['allowed_ua'])) {
+    } else {
+        generateError('NOT_IN_ALLOWED_UAS');
+    }
+
+    if ($rUserInfo['isp_violate'] != 1) {
+    } else {
+        generateError('ISP_BLOCKED');
+    }
+
+    if ($rUserInfo['isp_is_server'] != 1 || $rUserInfo['is_restreamer']) {
+    } else {
+        generateError('ASN_BLOCKED');
+    }
+
+
+    $rDownloading = true;
+
+    if (startDownload('playlist', $rUserInfo, getmypid())) {
+        if (!generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey, $rTypeKey, $rNoCache)) {
+            generateError('GENERATE_PLAYLIST_FAILED');
+        }
+    } else {
+        generateError('DOWNLOAD_LIMIT_REACHED', false);
+        http_response_code(429);
         exit();
     }
-} else if (ipTV_lib::$settings["flood_get_block"] == 1) {
-    $ipTV_db->query("INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES('%s','%s','%d')", $user_ip, "BRUTE FORCING", time());
-    ipTV_servers::RunCommandServer(array_keys(ipTV_lib::$StreamingServers), "sudo /sbin/iptables -A INPUT -s $user_ip -j DROP");
+} else {
+    checkBruteforce(null, null, $rUsername);
+    generateError('INVALID_CREDENTIALS');
+}
+
+function shutdown() {
+    global $ipTV_db;
+    global $rDeny;
+    global $rDownloading;
+    global $rUserInfo;
+
+    if ($rDeny) {
+        checkFlood();
+    }
+
+    if (is_object($ipTV_db)) {
+        $ipTV_db->close_mysql();
+    }
+
+    if ($rDownloading) {
+        stopDownload('playlist', $rUserInfo, getmypid());
+    }
 }

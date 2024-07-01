@@ -401,183 +401,362 @@ function GetCategories($type = null) {
 function UniqueID() {
     return substr(md5(ipTV_lib::$settings['unique_id']), 0, 15);
 }
-function GenerateList($user_id, $playlistType, $output_key = 'ts', $force_download = false) {
+function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey = null, $rNoCache = false) {
     global $ipTV_db;
-
-    $uuid = generateUUID($user_id);
-
-    if (empty($playlistType)) {
-        return false;
-    }
-    if ($output_key == 'mpegts') {
-        $output_key = 'ts';
-    }
-    if ($output_key == 'hls') {
-        $output_key = 'm3u8';
-    }
-    if (empty($output_key)) {
-        $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 INNER JOIN `devices` t2 ON t2.default_output = t1.access_output_id AND `device_key` = \'%s\'', $playlistType);
-    } else {
-        $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 WHERE `output_key` = \'%s\'', $output_key);
-    }
-    if ($ipTV_db->num_rows() <= 0) {
-        return false;
-    }
-    $output_ext = $ipTV_db->get_col();
-    $user_info = ipTV_streaming::GetUserInfo($user_id, null, null, true, true, false);
-
-    // test function
-    // $rEncryptPlaylist = ($user_info['is_restreamer'] ? ipTV_lib::$settings['encrypt_playlist_restreamer'] : ipTV_lib::$settings['encrypt_playlist']);
-    // if ($user_info['is_stalker']) {
-    //     $rEncryptPlaylist = false;
-    // }
-    $rEncryptPlaylist = false;
-    // test function
-
-    if (empty($user_info)) {
-        return false;
-    }
-
-    if (!empty($user_info['exp_date']) && time() >= $user_info['exp_date']) {
-        return false;
-    }
-    if (ipTV_lib::$settings['use_mdomain_in_lists'] == 1) {
-        $domain_name = ipTV_lib::$StreamingServers[SERVER_ID]['site_url'];
-    } else {
-        list($host, $act) = explode(':', $_SERVER['HTTP_HOST']);
-        $domain_name = ipTV_lib::$StreamingServers[SERVER_ID]['server_protocol'] . '://' . $host . ':' . ipTV_lib::$StreamingServers[SERVER_ID]['request_port'] . '/';
-    }
-    $streams_sys = array();
-    if ($output_key == 'rtmp') {
-        $ipTV_db->query('SELECT t1.id,t2.server_id FROM `streams` t1 INNER JOIN `streams_sys` t2 ON t2.stream_id = t1.id WHERE t1.rtmp_output = 1');
-        $streams_sys = $ipTV_db->get_rows(true, 'id', false, 'server_id');
-    }
-    if (empty($output_ext)) {
-        $output_ext = 'ts';
-    }
-    $ipTV_db->query('SELECT t1.*,t2.* FROM `devices` t1 LEFT JOIN `access_output` t2 ON t2.access_output_id = t1.default_output WHERE t1.device_key = \'%s\' LIMIT 1', $playlistType);
-    if ($ipTV_db->num_rows() > 0) {
-        $device_info = $ipTV_db->get_row();
-        $data = '';
-        if (!empty($user_info['series_ids'])) {
-            $series = ipTV_lib::seriesData();
-            foreach ($series as $id => $serie) {
-                if (!in_array($id, $user_info['series_ids'])) {
-                    continue;
-                }
-                foreach ($serie['series_data'] as $category_id => $series) {
-                    $epNumber = 0;
-                    foreach ($series as $stream_id => $serie) {
-                        $movie_properties = ipTV_lib::movieProperties($stream_id);
-                        $serie['live'] = 0;
-                        if (ipTV_lib::$settings['series_custom_name'] == 0) {
-                            $serie['stream_display_name'] = $serie['title'] . ' S' . sprintf('%02d', $category_id) . ' E' . sprintf('%02d', ++$epNumber);
-                        } else {
-                            $serie['stream_display_name'] = $serie['title'] . ' S' . sprintf('%02d', $category_id) . " {$serie['stream_display_name']}";
-                        }
-                        $serie['movie_propeties'] = array('movie_image' => !empty($movie_properties['movie_image']) ? $movie_properties['movie_image'] : $serie['cover']);
-                        $serie['type_output'] = 'series';
-                        $serie['category_name'] = $serie['category_name'];
-                        $serie['id'] = $stream_id;
-                        $user_info['channels'][$stream_id] = $serie;
-                    }
-                }
-            }
+    if (!empty($rDeviceKey)) {
+        if ($rOutputKey == 'mpegts') {
+            $rOutputKey = 'ts';
         }
-        if ($playlistType == 'starlivev5') {
-            $output_array = array();
-            $output_array['iptvstreams_list'] = array();
-            $output_array['iptvstreams_list']['@version'] = 1;
-            $output_array['iptvstreams_list']['group'] = array();
-            $output_array['iptvstreams_list']['group']['name'] = 'IPTV';
-            $output_array['iptvstreams_list']['group']['channel'] = array();
-            foreach ($user_info['channels'] as $channel_info) {
-                $movie_properties = !isset($channel_info['movie_propeties']) ? ipTV_lib::movieProperties($channel['id']) : $channel_info['movie_propeties'];
-                if (!empty($channel_info['stream_source'])) {
-                    $url = str_replace(' ', '%20', json_decode($channel_info['stream_source'], true)[0]);
-                    $icon = !empty($movie_properties['movie_image']) ? $movie_properties['movie_image'] : $channel_info['stream_icon'];
-                } else {
-                    $url = $domain_name . "{$channel_info['type_output']}/{$user_info['username']}/{$user_info['password']}/";
-                    if ($channel_info['live'] == 0) {
-                        $url .= $channel_info['id'] . '.' . GetContainerExtension($channel_info['target_container']);
-                        if (!empty($movie_properties['movie_image'])) {
-                            $icon = $movie_properties['movie_image'];
-                        }
-                    } else {
-                        $url .= $channel_info['id'] . '.' . $output_ext;
-                        $icon = $channel_info['stream_icon'];
-                    }
-                }
-                $channel = array();
-                $channel['name'] = $channel_info['stream_display_name'];
-                $icon = '';
-                $channel['icon'] = $icon;
-                $channel['stream_url'] = $url;
-                $channel['stream_type'] = 0;
-                $output_array['iptvstreams_list']['group']['channel'][] = $channel;
-            }
-            $data = json_encode((object) $output_array);
+        if ($rOutputKey == 'hls') {
+            $rOutputKey = 'm3u8';
+        }
+        if (empty($rOutputKey)) {
+            $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 INNER JOIN `devices` t2 ON t2.default_output = t1.access_output_id AND `device_key` = \'%s\'', $rDeviceKey);
         } else {
-            if (!empty($device_info['device_header'])) {
-                $data = str_replace(array('{BOUQUET_NAME}', '{USERNAME}', '{PASSWORD}', '{SERVER_URL}', '{OUTPUT_KEY}'), array(ipTV_lib::$settings['bouquet_name'], $user_info['username'], $user_info['password'], $domain_name, $output_key), $device_info['device_header']) . '';
+            $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 WHERE `output_key` = \'%s\'', $rOutputKey);
+        }
+        if ($ipTV_db->num_rows() > 0) {
+            $rCacheName = $rUserInfo['id'] . '_' . $rDeviceKey . '_' . $rOutputKey . '_' . implode('_', ($rTypeKey ?: array()));
+            $rOutputExt = $ipTV_db->get_col();
+            $rEncryptPlaylist = ($rUserInfo['is_restreamer'] ? ipTV_lib::$settings['encrypt_playlist_restreamer'] : ipTV_lib::$settings['encrypt_playlist']);
+            if ($rUserInfo['is_stalker']) {
+                $rEncryptPlaylist = false;
             }
-            if (!empty($device_info['device_conf'])) {
-                if (preg_match('/\\{URL\\#(.*?)\\}/', $device_info['device_conf'], $matches)) {
-                    $url_encoded_charts = str_split($matches[1]);
-                    $url_pattern = $matches[0];
-                } else {
-                    $url_encoded_charts = array();
-                    $url_pattern = '{URL}';
+            if (ipTV_lib::$settings['use_mdomain_in_lists'] == 1) {
+                $rDomainName = ipTV_lib::$StreamingServers[SERVER_ID]['site_url'];
+            } else {
+                list($host, $act) = explode(':', $_SERVER['HTTP_HOST']);
+                $rDomainName = ipTV_lib::$StreamingServers[SERVER_ID]['server_protocol'] . '://' . $host . ':' . ipTV_lib::$StreamingServers[SERVER_ID]['request_port'] . '/';
+            }
+            if ($rDomainName) {
+                $rRTMPRows = array();
+                if ($rOutputKey == 'rtmp') {
+                    $ipTV_db->query('SELECT t1.id,t2.server_id FROM `streams` t1 INNER JOIN `streams_sys` t2 ON t2.stream_id = t1.id WHERE t1.rtmp_output = 1');
+                    $rRTMPRows = $ipTV_db->get_rows(true, 'id', false, 'server_id');
                 }
-                foreach ($user_info['channels'] as $channel) {
-
-                    // test function
-                    if ($rEncryptPlaylist) {
-                        $rEncData = $channel['type_output'] . '/' . $user_info['username'] . '/' . $user_info['password'] . '/' . $uuid . '/' . $channel['id'];
-                        $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-
-                        $url = $domain_name . 'play/' . $rToken . '/';
-                    } else {
-                        $url = $domain_name . "{$channel["type_output"]}/{$user_info["username"]}/{$user_info["password"]}/{$uuid}/";
+                if (empty($rOutputExt)) {
+                    $rOutputExt = 'ts';
+                }
+                $ipTV_db->query('SELECT t1.*,t2.* FROM `devices` t1 LEFT JOIN `access_output` t2 ON t2.access_output_id = t1.default_output WHERE t1.device_key = \'%s\' LIMIT 1', $rDeviceKey);
+                if (0 >= $ipTV_db->num_rows()) {
+                    return false;
+                }
+                $rDeviceInfo = $ipTV_db->get_row();
+                if (strlen($rUserInfo['access_token']) == 32) {
+                    $rFilename = str_replace('{USERNAME}', $rUserInfo['access_token'], $rDeviceInfo['device_filename']);
+                } else {
+                    $rFilename = str_replace('{USERNAME}', $rUserInfo['username'], $rDeviceInfo['device_filename']);
+                }
+                if (!(0 < ipTV_lib::$settings['cache_playlists'] && !$rNoCache && file_exists(PLAYLIST_PATH . md5($rCacheName)))) {
+                    $rData = '';
+                    $rSeriesAllocation = $rSeriesEpisodes = $rSeriesInfo = array();
+                    $rUserInfo['episode_ids'] = array();
+                    if (count($rUserInfo['series_ids']) > 0) {
+                        $ipTV_db->query('SELECT * FROM `streams_series` WHERE `id` IN (' . implode(',', $rUserInfo['series_ids']) . ')');
+                        $rSeriesInfo = $ipTV_db->get_rows(true, 'id');
+                        if (count($rUserInfo['series_ids']) > 0) {
+                            $ipTV_db->query('SELECT stream_id, series_id, season_num, episode_num FROM `streams_episodes` WHERE series_id IN (' . implode(',', $rUserInfo['series_ids']) . ') ORDER BY FIELD(series_id,' . implode(',', $rUserInfo['series_ids']) . '), season_num ASC, episode_num ASC');
+                            foreach ($ipTV_db->get_rows(true, 'series_id', false) as $rSeriesID => $rEpisodes) {
+                                foreach ($rEpisodes as $rEpisode) {
+                                    $rSeriesEpisodes[$rEpisode['stream_id']] = array($rEpisode['season_num'], $rEpisode['episode_num']);
+                                    $rSeriesAllocation[$rEpisode['stream_id']] = $rSeriesID;
+                                    $rUserInfo['episode_ids'][] = $rEpisode['stream_id'];
+                                }
+                            }
+                        }
                     }
-                    // test function
-
-                    // $url = $domain_name . "{$channel["type_output"]}/{$user_info["username"]}/{$user_info["password"]}/";
-                    $icon = "";
-
-                    if ($channel["live"] == 0) {
-                        $url .= $channel["id"] . "." . $channel["container_extension"];
-                        $movie_propeties = json_decode($channel["movie_propeties"], true);
-
-                        if (!empty($movie_propeties["movie_image"])) {
-                            $icon = $movie_propeties["movie_image"];
+                    if (count($rUserInfo['episode_ids']) > 0) {
+                        $rUserInfo['channel_ids'] = array_merge($rUserInfo['channel_ids'], $rUserInfo['episode_ids']);
+                    }
+                    $rChannelIDs = array();
+                    $rAdded = false;
+                    if ($rTypeKey) {
+                        foreach ($rTypeKey as $rType) {
+                            switch ($rType) {
+                                case 'live':
+                                case 'created_live':
+                                    if (!$rAdded) {
+                                        $rChannelIDs = array_merge($rChannelIDs, $rUserInfo['live_ids']);
+                                        $rAdded = true;
+                                        break;
+                                    }
+                                    break;
+                                case 'movie':
+                                    $rChannelIDs = array_merge($rChannelIDs, $rUserInfo['vod_ids']);
+                                    break;
+                                case 'radio_streams':
+                                    $rChannelIDs = array_merge($rChannelIDs, $rUserInfo['radio_ids']);
+                                    break;
+                                case 'series':
+                                    $rChannelIDs = array_merge($rChannelIDs, $rUserInfo['episode_ids']);
+                                    break;
+                            }
                         }
                     } else {
-                        $url .= $channel["id"] . "." . $output_ext;
-                        $icon = $channel["stream_icon"];
+                        $rChannelIDs = $rUserInfo['channel_ids'];
                     }
-                    $esr_id = ($channel["live"] == 1 ? 1 : 4097);
-                    $sid = (!empty($channel["custom_sid"]) ? $channel["custom_sid"] : ":0:1:0:0:0:0:0:0:0:");
-                    $data .= "\n" . str_replace(array($url_pattern, "{ESR_ID}", "{SID}", "{CHANNEL_NAME}", "{CHANNEL_ID}", "{CATEGORY}", "{CHANNEL_ICON}"), array(str_replace($url_encoded_charts, array_map("urlencode", $url_encoded_charts), $url), $esr_id, $sid, $channel["stream_display_name"], $channel["channel_id"], $channel["category_name"], $icon), $device_info["device_conf"]) . "\r\n";
+                    if (in_array(ipTV_lib::$settings['channel_number_type'], array('bouquet_new', 'manual'))) {
+                        $rChannelIDs = ipTV_lib::sortChannels($rChannelIDs);
+                    }
+                    unset($rUserInfo['live_ids'], $rUserInfo['vod_ids'], $rUserInfo['radio_ids'], $rUserInfo['episode_ids'], $rUserInfo['channel_ids']);
+                    $rOutputFile = null;
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: application/octet-stream');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate');
+                    header('Pragma: public');
+                    if (strlen($rUserInfo['access_token']) == 32) {
+                        header('Content-Disposition: attachment; filename="' . str_replace('{USERNAME}', $rUserInfo['access_token'], $rDeviceInfo['device_filename']) . '"');
+                    } else {
+                        header('Content-Disposition: attachment; filename="' . str_replace('{USERNAME}', $rUserInfo['username'], $rDeviceInfo['device_filename']) . '"');
+                    }
+                    if (ipTV_lib::$settings['cache_playlists'] > 0) {
+                        $rOutputPath = PLAYLIST_PATH . md5($rCacheName) . '.write';
+                        $rOutputFile = fopen($rOutputPath, 'w');
+                    }
+                    if ($rDeviceKey == 'starlivev5') {
+                        $rOutput = array();
+                        $rOutput['iptvstreams_list'] = array();
+                        $rOutput['iptvstreams_list']['@version'] = 1;
+                        $rOutput['iptvstreams_list']['group'] = array();
+                        $rOutput['iptvstreams_list']['group']['name'] = 'IPTV';
+                        $rOutput['iptvstreams_list']['group']['channel'] = array();
+                        foreach (array_chunk($rChannelIDs, 1000) as $rBlockIDs) {
+                            if (ipTV_lib::$settings['playlist_from_mysql']) {
+                                $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
+                                $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.year,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
+                                $rRows = $ipTV_db->get_rows();
+                            } else {
+                                $rRows = array();
+                                foreach ($rBlockIDs as $rID) {
+                                    $rRows[] = unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rID)))['info'];
+                                }
+                            }
+                            foreach ($rRows as $rChannelInfo) {
+                                if (!$rTypeKey || in_array($rChannelInfo['type_output'], $rTypeKey)) {
+                                    if ($rChannelInfo['target_container']) {
+                                    } else {
+                                        $rChannelInfo['target_container'] = 'mp4';
+                                    }
+                                    $rProperties = (!is_array($rChannelInfo['movie_properties']) ? json_decode($rChannelInfo['movie_properties'], true) : $rChannelInfo['movie_properties']);
+                                    if ($rChannelInfo['type_key'] == 'series') {
+                                        $rSeriesID = $rSeriesAllocation[$rChannelInfo['id']];
+                                        $rChannelInfo['live'] = 0;
+                                        $rChannelInfo['stream_display_name'] = $rSeriesInfo[$rSeriesID]['title'] . ' S' . sprintf('%02d', $rSeriesEpisodes[$rChannelInfo['id']][0]) . 'E' . sprintf('%02d', $rSeriesEpisodes[$rChannelInfo['id']][1]);
+                                        $rChannelInfo['movie_properties'] = array('movie_image' => (!empty($rProperties['movie_image']) ? $rProperties['movie_image'] : $rSeriesInfo['cover']));
+                                        $rChannelInfo['type_output'] = 'series';
+                                        $rChannelInfo['category_id'] = $rSeriesInfo[$rSeriesID]['category_id'];
+                                    } else {
+                                        $rChannelInfo['stream_display_name'] = $rChannelInfo['stream_display_name'];
+                                    }
+                                    if (strlen($rUserInfo['access_token']) == 32) {
+                                        $rURL = $rDomainName . $rChannelInfo['type_output'] . '/' . $rUserInfo['access_token'] . '/';
+                                        if ($rChannelInfo['live'] == 0) {
+                                            $rURL .= $rChannelInfo['id'] . '.' . $rChannelInfo['target_container'];
+                                        } else {
+                                            $rURL .= $rChannelInfo['id'] . '.' . $rOutputExt;
+                                        }
+                                    } else {
+                                        if ($rEncryptPlaylist) {
+                                            $rEncData = $rChannelInfo['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/';
+                                            if ($rChannelInfo['live'] == 0) {
+                                                $rEncData .= $rChannelInfo['id'] . '/' . $rChannelInfo['target_container'];
+                                            } else {
+                                                $rEncData .= $rChannelInfo['id'] . '/' . $rOutputExt;
+                                            }
+                                            $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                            $rURL = $rDomainName . 'play/' . $rToken;
+                                            if ($rChannelInfo['live'] == 0) {
+                                                $rURL .= '#.' . $rChannelInfo['target_container'];
+                                            }
+                                        } else {
+                                            $rURL = $rDomainName . $rChannelInfo['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/';
+                                            if ($rChannelInfo['live'] == 0) {
+                                                $rURL .= $rChannelInfo['id'] . '.' . $rChannelInfo['target_container'];
+                                            } else {
+                                                $rURL .= $rChannelInfo['id'] . '.' . $rOutputExt;
+                                            }
+                                        }
+                                    }
+                                    if ($rChannelInfo['live'] == 0) {
+                                        if (!empty($rProperties['movie_image'])) {
+                                            $rIcon = $rProperties['movie_image'];
+                                        }
+                                    } else {
+                                        $rIcon = $rChannelInfo['stream_icon'];
+                                    }
+                                    $rChannel = array();
+                                    $rChannel['name'] = $rChannelInfo['stream_display_name'];
+                                    $rChannel['icon'] = $rIcon;
+                                    $rChannel['stream_url'] = $rURL;
+                                    $rChannel['stream_type'] = 0;
+                                    $rOutput['iptvstreams_list']['group']['channel'][] = $rChannel;
+                                }
+                            }
+                            unset($rRows);
+                        }
+                        $rData = json_encode((object) $rOutput);
+                    } else {
+                        if (!empty($rDeviceInfo['device_header'])) {
+                            $rAppend = ($rDeviceInfo['device_header'] == '#EXTM3U' ? "\n" . '#EXT-X-SESSION-DATA:DATA-ID="XtreamUI.' . str_replace('.', '_', SCRIPT_VERSION) . '"' : '');
+                            $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array('{BOUQUET_NAME}', '{USERNAME}', '{PASSWORD}', '{SERVER_URL}', '{OUTPUT_KEY}'), array(ipTV_lib::$settings['server_name'], $rUserInfo['username'], $rUserInfo['password'], $rDomainName, $rOutputKey), $rDeviceInfo['device_header'] . $rAppend)) . "\n";
+                            if ($rOutputFile) {
+                                fwrite($rOutputFile, $rData);
+                            }
+                            echo $rData;
+                            unset($rData);
+                        }
+                        if (!empty($rDeviceInfo['device_conf'])) {
+                            if (preg_match('/\\{URL\\#(.*?)\\}/', $rDeviceInfo['device_conf'], $rMatches)) {
+                                $rCharts = str_split($rMatches[1]);
+                                $rPattern = $rMatches[0];
+                            } else {
+                                $rCharts = array();
+                                $rPattern = '{URL}';
+                            }
+                            foreach (array_chunk($rChannelIDs, 1000) as $rBlockIDs) {
+                                if (ipTV_lib::$settings['playlist_from_mysql']) {
+                                    $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
+                                    $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.year,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live,t1.tv_archive_duration,t1.tv_archive_server_id FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
+                                    $rRows = $ipTV_db->get_rows();
+                                } else {
+                                    $rRows = array();
+                                    foreach ($rBlockIDs as $rID) {
+                                        $rRows[] = unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rID)))['info'];
+                                    }
+                                }
+                                foreach ($rRows as $rChannel) {
+                                    if (!empty($rTypeKey) && in_array($rChannel['type_output'], $rTypeKey)) {
+                                        if (!$rChannel['target_container']) {
+                                            $rChannel['target_container'] = 'mp4';
+                                        }
+                                        $rConfig = $rDeviceInfo['device_conf'];
+                                        if ($rDeviceInfo['device_key'] == 'm3u_plus') {
+                                            if (!$rChannel['live']) {
+                                                $rConfig = str_replace('tvg-id="{CHANNEL_ID}" ', '', $rConfig);
+                                            }
+                                            if (!$rEncryptPlaylist) {
+                                                $rConfig = str_replace('xui-id="{XUI_ID}" ', '', $rConfig);
+                                            }
+                                            if (0 < $rChannel['tv_archive_server_id'] && 0 < $rChannel['tv_archive_duration']) {
+                                                $rConfig = str_replace('#EXTINF:-1 ', '#EXTINF:-1 timeshift="' . intval($rChannel['tv_archive_duration']) . '" ', $rConfig);
+                                            }
+                                        }
+                                        $rProperties = (!is_array($rChannel['movie_properties']) ? json_decode($rChannel['movie_properties'], true) : $rChannel['movie_properties']);
+                                        if ($rChannel['type_key'] == 'series') {
+                                            $rSeriesID = $rSeriesAllocation[$rChannel['id']];
+                                            $rChannel['live'] = 0;
+                                            $rChannel['stream_display_name'] = $rSeriesInfo[$rSeriesID]['title'] . ' S' . sprintf('%02d', $rSeriesEpisodes[$rChannel['id']][0]) . 'E' . sprintf('%02d', $rSeriesEpisodes[$rChannel['id']][1]);
+                                            $rChannel['movie_properties'] = array('movie_image' => (!empty($rProperties['movie_image']) ? $rProperties['movie_image'] : $rSeriesInfo['cover']));
+                                            $rChannel['type_output'] = 'series';
+                                            $rChannel['category_id'] = $rSeriesInfo[$rSeriesID]['category_id'];
+                                        } else {
+                                            $rChannel['stream_display_name'] = $rChannel['stream_display_name'];
+                                        }
+                                        if ($rChannel['live'] == 0) {
+                                            if (strlen($rUserInfo['access_token']) == 32) {
+                                                $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['access_token'] . '/' . $rChannel['id'] . '.' . $rChannel['target_container'];
+                                            } else {
+                                                if ($rEncryptPlaylist) {
+                                                    $rEncData = $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'] . '/' . $rChannel['target_container'];
+                                                    $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                                    $rURL = $rDomainName . 'play/' . $rToken . '#.' . $rChannel['target_container'];
+                                                } else {
+                                                    $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'] . '.' . $rChannel['target_container'];
+                                                }
+                                            }
+                                            if (!empty($rProperties['movie_image'])) {
+                                                $rIcon = $rProperties['movie_image'];
+                                            }
+                                        } else {
+                                            if ($rOutputKey != 'rtmp' || !array_key_exists($rChannel['id'], $rRTMPRows)) {
+                                                if (strlen($rUserInfo['access_token']) == 32) {
+                                                    $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['access_token'] . '/' . $rChannel['id'] . '.' . $rOutputExt;
+                                                } else {
+                                                    if ($rEncryptPlaylist) {
+                                                        $rEncData = $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'];
+                                                        $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                                        $rURL = $rDomainName . 'play/' . $rToken . '/' . $rOutputExt;
+                                                    } else {
+                                                        $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'] . '.' . $rOutputExt;
+                                                    }
+                                                }
+                                            } else {
+                                                $rAvailableServers = array_values(array_keys($rRTMPRows[$rChannel['id']]));
+                                                if (in_array($rUserInfo['force_server_id'], $rAvailableServers)) {
+                                                    $rServerID = $rUserInfo['force_server_id'];
+                                                } else {
+                                                    if (ipTV_lib::$settings['rtmp_random'] == 1) {
+                                                        $rServerID = $rAvailableServers[array_rand($rAvailableServers, 1)];
+                                                    } else {
+                                                        $rServerID = $rAvailableServers[0];
+                                                    }
+                                                }
+                                                if (strlen($rUserInfo['access_token']) == 32) {
+                                                    $rURL = ipTV_lib::$StreamingServers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rUserInfo['access_token'];
+                                                } else {
+                                                    if ($rEncryptPlaylist) {
+                                                        $rEncData = $rUserInfo['username'] . '/' . $rUserInfo['password'];
+                                                        $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                                        $rURL = ipTV_lib::$StreamingServers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rToken;
+                                                    } else {
+                                                        $rURL = ipTV_lib::$StreamingServers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?username=' . $rUserInfo['username'] . '&password=' . $rUserInfo['password'];
+                                                    }
+                                                }
+                                            }
+                                            $rIcon = $rChannel['stream_icon'];
+                                        }
+                                        $rESRID = ($rChannel['live'] == 1 ? 1 : 4097);
+                                        $rSID = (!empty($rChannel['custom_sid']) ? $rChannel['custom_sid'] : ':0:1:0:0:0:0:0:0:0:');
+                                        $rCategoryID = json_decode($rChannel['category_id'], true);
+                                        if (isset(ipTV_lib::$categories[$rCategoryID])) {
+                                            $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array($rPattern, '{ESR_ID}', '{SID}', '{CHANNEL_NAME}', '{CHANNEL_ID}', '{XUI_ID}', '{CATEGORY}', '{CHANNEL_ICON}'), array(str_replace($rCharts, array_map('urlencode', $rCharts), $rURL), $rESRID, $rSID, $rChannel['stream_display_name'], $rChannel['channel_id'], $rChannel['id'], ipTV_lib::$categories[$rCategoryID]['category_name'], $rIcon), $rConfig)) . "\r\n";
+                                            if ($rOutputFile) {
+                                                fwrite($rOutputFile, $rData);
+                                            }
+                                            echo $rData;
+                                            unset($rData);
+                                            // if (stripos($rDeviceInfo['device_conf'], '{CATEGORY}') == false) {
+                                            //     break;
+                                            // }
+                                        }
+                                    }
+                                }
+                                unset($rRows);
+                            }
+                            $rData = trim(str_replace(array('&lt;', '&gt;'), array('<', '>'), $rDeviceInfo['device_footer']));
+                            if ($rOutputFile) {
+                                fwrite($rOutputFile, $rData);
+                            }
+                            echo $rData;
+                            unset($rData);
+                        }
+                    }
+                    if ($rOutputFile) {
+                        fclose($rOutputFile);
+                        rename(PLAYLIST_PATH . md5($rCacheName) . '.write', PLAYLIST_PATH . md5($rCacheName));
+                    }
+                    exit();
+                } else {
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: audio/mpegurl');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate');
+                    header('Pragma: public');
+                    header('Content-Disposition: attachment; filename="' . $rFilename . '"');
+                    header('Content-Length: ' . filesize(PLAYLIST_PATH . md5($rCacheName)));
+                    readfile(PLAYLIST_PATH . md5($rCacheName));
+                    exit();
                 }
-                $data .= $device_info['device_footer'];
-                $data = trim($data);
+            } else {
+                exit();
             }
+        } else {
+            return false;
         }
-        if ($force_download === true) {
-            header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Expires: 0');
-            header('cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Disposition: attachment; filename="' . str_replace('{USERNAME}', $user_info['username'], $device_info['device_filename']) . '"');
-            header('Content-Length: ' . strlen($data));
-            echo $data;
-            die;
-        }
-        return $data;
+    } else {
+        return false;
     }
-    return false;
 }
 function GetContainerExtension($target_container, $stalker_container_priority = false) {
     $tmp = json_decode($target_container, true);
@@ -778,5 +957,61 @@ function checkUpdate($currentVersion, $type = "main") {
         } else {
             return false;
         }
+    }
+}
+
+function startDownload($rType, $rUser, $rDownloadPID) {
+    $rFloodLimit = 2;
+    if ($rFloodLimit != 0) {
+        if (!$rUser['is_restreamer']) {
+            $rFile = FLOOD_TMP_PATH . $rUser['id'] . '_downloads';
+            if (file_exists($rFile) && time() - filemtime($rFile) < 10) {
+                $rFloodRow[$rType] = array();
+                foreach (json_decode(file_get_contents($rFile), true)[$rType] as $rPID) {
+                    if (ipTV_streaming::isProcessRunning($rPID, 'php-fpm') && $rPID != $rDownloadPID) {
+                        $rFloodRow[$rType][] = $rPID;
+                    }
+                }
+            } else {
+                $rFloodRow = array('epg' => array(), 'playlist' => array());
+            }
+            $rAllow = false;
+            if (count($rFloodRow[$rType]) >= $rFloodLimit) {
+            } else {
+                $rFloodRow[$rType][] = $rDownloadPID;
+                $rAllow = true;
+            }
+            file_put_contents($rFile, json_encode($rFloodRow), LOCK_EX);
+            return $rAllow;
+        } else {
+            return true;
+        }
+    } else {
+        return true;
+    }
+}
+
+function stopDownload($rType, $rUser, $rDownloadPID) {
+    $rFloodLimit = 2;
+    if ($rFloodLimit != 0) {
+        if (!$rUser['is_restreamer']) {
+            $rFile = FLOOD_TMP_PATH . $rUser['id'] . '_downloads';
+            if (file_exists($rFile)) {
+                $rFloodRow[$rType] = array();
+                foreach (json_decode(file_get_contents($rFile), true)[$rType] as $rPID) {
+                    if (!(ipTV_streaming::isProcessRunning($rPID, 'php-fpm') && $rPID != $rDownloadPID)) {
+                    } else {
+                        $rFloodRow[$rType][] = $rPID;
+                    }
+                }
+            } else {
+                $rFloodRow = array('epg' => array(), 'playlist' => array());
+            }
+            file_put_contents($rFile, json_encode($rFloodRow), LOCK_EX);
+        } else {
+            return null;
+        }
+    } else {
+        return null;
     }
 }

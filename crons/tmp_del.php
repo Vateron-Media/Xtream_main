@@ -5,6 +5,11 @@ if (@$argc) {
     cli_set_process_title('XtreamCodes[TMP Cleaner]');
     $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
     KillProcessCmd($unique_id);
+    foreach (scandir(PLAYLIST_PATH) as $rFile) {
+        if (0 < time() - filemtime(PLAYLIST_PATH . $rFile)) {
+            unlink(PLAYLIST_PATH . $rFile);
+        }
+    }
     $types = array('cloud_ips', 'new_rewrite', 'series_data.php');
     foreach (STREAM_TYPE as $connections) {
         $types[] = $connections . '_main.php';

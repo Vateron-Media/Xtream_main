@@ -10,6 +10,7 @@ class ipTV_lib {
     public static $customISP = array();
     public static $blockedISP = array();
     public static $blockedIPs = array();
+    public static $categories = array();
 
     public static function init() {
         global $_INFO;
@@ -34,6 +35,7 @@ class ipTV_lib {
         self::$StreamingServers = self::GetServers();
         self::$blockedISP = self::getBlockedISP();
         self::$blockedIPs = self::getBlockedIPs();
+        self::$categories = self::getCategories();
 
         if (FETCH_BOUQUETS) {
             self::$Bouquets = self::GetBouquets();
@@ -112,6 +114,21 @@ class ipTV_lib {
         self::setCache('bouquets', $rOutput);
         return $rOutput;
     }
+    public static function getCategories($rType = null) {
+		if (is_string($rType)) {
+			self::$ipTV_db->query('SELECT t1.* FROM `stream_categories` t1 WHERE t1.category_type = ? GROUP BY t1.id ORDER BY t1.cat_order ASC', $rType);
+			return (0 < self::$ipTV_db->num_rows() ? self::$ipTV_db->get_rows(true, 'id') : array());
+		}
+			$rCache = self::getCache('categories', 20);
+			if (!empty($rCache)) {
+				return $rCache;
+			}
+		
+		self::$ipTV_db->query('SELECT t1.* FROM `stream_categories` t1 ORDER BY t1.cat_order ASC');
+		$rCategories = (0 < self::$ipTV_db->num_rows() ? self::$ipTV_db->get_rows(true, 'id') : array());
+		self::setCache('categories', $rCategories);
+		return $rCategories;
+	}
     public static function getBlockedIPs() {
         $rCache = self::getCache('blocked_ips', 20);
         if (!empty($cache)) {
