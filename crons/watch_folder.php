@@ -82,7 +82,7 @@ if (($rResult) && ($rResult->num_rows > 0)) {
             $rFilePath = "s:" . intval($rRow["server_id"]) . ":" . $rFile;
             if (!in_array($rFilePath, $rStreamDatabase)) {
                 $rPathInfo = pathinfo($rFile);
-                $rImportArray = array("file" => $rFile, "stream_source" => array($rFilePath), "stream_icon" => "", "stream_display_name" => $rPathInfo["filename"], "movie_propeties" => array(), "target_container" => array($rPathInfo["extension"]));
+                $rImportArray = array("file" => $rFile, "stream_source" => array($rFilePath), "stream_icon" => "", "stream_display_name" => $rPathInfo["filename"], "movie_properties" => array(), "target_container" => array($rPathInfo["extension"]));
                 $rImportStreams[] = $rImportArray;
             }
         }
@@ -182,7 +182,7 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                             if (strlen($rMovieData["release_date"]) > 0) {
                                 $rImportArray["stream_display_name"] .= " (" . intval(substr($rMovieData["release_date"], 0, 4)) . ")";
                             }
-                            $rImportArray["movie_propeties"] = array("kinopoisk_url" => "https://www.themoviedb.org/movie/" . $rMovieData["id"], "tmdb_id" => $rMovieData["id"], "name" => $rMovieData["title"], "o_name" => $rMovieData["original_title"], "cover_big" => $rThumb, "movie_image" => $rThumb, "releasedate" => $rMovieData["release_date"], "episode_run_time" => $rMovieData["runtime"], "youtube_trailer" => $rMovieData["trailer"], "director" => join(", ", $rDirectors), "actors" => join(", ", $rCast), "cast" => join(", ", $rCast), "description" => $rMovieData["overview"], "plot" => $rMovieData["overview"], "age" => "", "mpaa_rating" => "", "rating_count_kinopoisk" => 0, "country" => $rCountry, "genre" => join(", ", $rGenres), "backdrop_path" => array($rBG), "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => $rMovieData["vote_average"]);
+                            $rImportArray["movie_properties"] = array("kinopoisk_url" => "https://www.themoviedb.org/movie/" . $rMovieData["id"], "tmdb_id" => $rMovieData["id"], "name" => $rMovieData["title"], "o_name" => $rMovieData["original_title"], "cover_big" => $rThumb, "movie_image" => $rThumb, "releasedate" => $rMovieData["release_date"], "episode_run_time" => $rMovieData["runtime"], "youtube_trailer" => $rMovieData["trailer"], "director" => join(", ", $rDirectors), "actors" => join(", ", $rCast), "cast" => join(", ", $rCast), "description" => $rMovieData["overview"], "plot" => $rMovieData["overview"], "age" => "", "mpaa_rating" => "", "rating_count_kinopoisk" => 0, "country" => $rCountry, "genre" => join(", ", $rGenres), "backdrop_path" => array($rBG), "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => $rMovieData["vote_average"]);
                             $rImportArray["read_native"] = $rWatchSettings["read_native"] ?: 1;
                             $rImportArray["movie_symlink"] = $rWatchSettings["movie_symlink"] ?: 1;
                             $rImportArray["transcode_profile_id"] = $rWatchSettings["transcode_profile_id"] ?: 0;
@@ -303,9 +303,9 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                                             $rImportArray["stream_display_name"] .= " - " . $rEpisode["name"];
                                         }
                                         $rSeconds = intval($rShowData["episode_run_time"][0]) * 60;
-                                        $rImportArray["movie_propeties"] = array("tmdb_id" => $rEpisode["id"], "releasedate" => $rEpisode["air_date"], "plot" => $rEpisode["overview"], "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "movie_image" => $rImage, "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => $rEpisode["vote_average"], "season" => $rReleaseSeason);
-                                        if (strlen($rImportArray["movie_propeties"]["movie_image"][0]) == 0) {
-                                            unset($rImportArray["movie_propeties"]["movie_image"]);
+                                        $rImportArray["movie_properties"] = array("tmdb_id" => $rEpisode["id"], "releasedate" => $rEpisode["air_date"], "plot" => $rEpisode["overview"], "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "movie_image" => $rImage, "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => $rEpisode["vote_average"], "season" => $rReleaseSeason);
+                                        if (strlen($rImportArray["movie_properties"]["movie_image"][0]) == 0) {
+                                            unset($rImportArray["movie_properties"]["movie_image"]);
                                         }
                                     }
                                 }

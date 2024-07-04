@@ -31,7 +31,7 @@ if (isset($_POST["submit_stream"])) {
     } else {
         $rRestart = false;
     }
-    $rArray["movie_propeties"] = array("type" => intval($_POST["channel_type"]));
+    $rArray["movie_properties"] = array("type" => intval($_POST["channel_type"]));
     if (intval($_POST["channel_type"]) == 0) {
         $playlist = generateSeriesPlaylist($_POST["series_no"]);
         if ($playlist["success"]) {
@@ -162,7 +162,7 @@ if (isset($_GET["id"])) {
     if ((!$rChannel) or ($rChannel["type"] <> 3)) {
         exit;
     }
-    $rProperties = json_decode($rChannel["movie_propeties"], True);
+    $rProperties = json_decode($rChannel["movie_properties"], True);
     if (!$rProperties) {
         if ($rChannel["series_no"] > 0) {
             $rProperties = array("type" => 0);

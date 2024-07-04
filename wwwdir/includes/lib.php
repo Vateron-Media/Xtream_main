@@ -58,10 +58,10 @@ class ipTV_lib {
         crontab_refresh();
     }
 
-    public static function GetDateUTCTimestamp($date) {
-        $utcDefaultTimezone = new DateTime("UTC", new DateTimeZone(date_default_timezone_get()));
-        $utcDate = new DateTime("UTC", new DateTimeZone($date));
-        return $utcDate->getTimestamp() - $utcDefaultTimezone->getTimestamp();
+    public static function getDiffTimezone($rTimezone) {
+        $rServerTZ = new DateTime('UTC', new DateTimeZone(date_default_timezone_get()));
+        $rUserTZ = new DateTime('UTC', new DateTimeZone($rTimezone));
+        return $rUserTZ->getTimestamp() - $rServerTZ->getTimestamp();
     }
 
     public static function calculateSegNumbers() {
@@ -115,20 +115,20 @@ class ipTV_lib {
         return $rOutput;
     }
     public static function getCategories($rType = null) {
-		if (is_string($rType)) {
-			self::$ipTV_db->query('SELECT t1.* FROM `stream_categories` t1 WHERE t1.category_type = ? GROUP BY t1.id ORDER BY t1.cat_order ASC', $rType);
-			return (0 < self::$ipTV_db->num_rows() ? self::$ipTV_db->get_rows(true, 'id') : array());
-		}
-			$rCache = self::getCache('categories', 20);
-			if (!empty($rCache)) {
-				return $rCache;
-			}
-		
-		self::$ipTV_db->query('SELECT t1.* FROM `stream_categories` t1 ORDER BY t1.cat_order ASC');
-		$rCategories = (0 < self::$ipTV_db->num_rows() ? self::$ipTV_db->get_rows(true, 'id') : array());
-		self::setCache('categories', $rCategories);
-		return $rCategories;
-	}
+        if (is_string($rType)) {
+            self::$ipTV_db->query('SELECT t1.* FROM `stream_categories` t1 WHERE t1.category_type = ? GROUP BY t1.id ORDER BY t1.cat_order ASC', $rType);
+            return (0 < self::$ipTV_db->num_rows() ? self::$ipTV_db->get_rows(true, 'id') : array());
+        }
+        $rCache = self::getCache('categories', 20);
+        if (!empty($rCache)) {
+            return $rCache;
+        }
+
+        self::$ipTV_db->query('SELECT t1.* FROM `stream_categories` t1 ORDER BY t1.cat_order ASC');
+        $rCategories = (0 < self::$ipTV_db->num_rows() ? self::$ipTV_db->get_rows(true, 'id') : array());
+        self::setCache('categories', $rCategories);
+        return $rCategories;
+    }
     public static function getBlockedIPs() {
         $rCache = self::getCache('blocked_ips', 20);
         if (!empty($cache)) {

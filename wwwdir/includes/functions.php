@@ -291,7 +291,7 @@ function truncateAttempts($rAttempts, $rFrequency, $rList = false) {
 }
 function GetEPGStream($stream_id, $from_now = false) {
     global $ipTV_db;
-    $ipTV_db->query('SELECT `type`,`movie_propeties`,`epg_id`,`channel_id` FROM `streams` WHERE `id` = \'%d\'', $stream_id);
+    $ipTV_db->query('SELECT `type`,`movie_properties`,`epg_id`,`channel_id` FROM `streams` WHERE `id` = \'%d\'', $stream_id);
     if ($ipTV_db->num_rows() > 0) {
         $data = $ipTV_db->get_row();
         if ($data['type'] != 2) {
@@ -302,7 +302,7 @@ function GetEPGStream($stream_id, $from_now = false) {
             }
             return $ipTV_db->get_rows();
         } else {
-            return json_decode($data['movie_propeties'], true);
+            return json_decode($data['movie_properties'], true);
         }
     }
     return array();
@@ -312,83 +312,7 @@ function GetTotalCPUsage() {
     $cores = intval(shell_exec('grep --count processor /proc/cpuinfo'));
     return intval($total_cpu / $cores);
 }
-function portal_auth($sn, $mac, $ver, $stb_type, $image_version, $device_id, $device_id2, $hw_version, $user_ip, $enable_debug_stalker, $req_type, $req_action) {
-    global $ipTV_db;
-    $mac = base64_encode(strtoupper(urldecode($mac)));
-    $verUpdate = false;
-    if (!$enable_debug_stalker && (!empty($ver) || !empty($stb_type) || !empty($image_version) || !empty($device_id) || !empty($device_id2) || !empty($hw_version))) {
-        $verUpdate = true;
-    }
-    if (!$enable_debug_stalker && !$verUpdate && $req_type != 'stb' && $req_action != 'set_fav' && file_exists(TMP_DIR . 'stalker_' . md5($mac))) {
-        $res = json_decode(file_get_contents(TMP_DIR . 'stalker_' . md5($mac)), true);
-        return empty($res) ? false : $res;
-    }
-    $ipTV_db->query('SELECT * FROM `mag_devices` t1 INNER JOIN `users` t2 ON t2.id = t1.user_id WHERE t1.`mac` = \'%s\' LIMIT 1', $mac);
-    if ($ipTV_db->num_rows() > 0) {
-        $userMag = $ipTV_db->get_row();
-        $userMag['allowed_ips'] = json_decode($userMag['allowed_ips'], true);
-        if ($userMag['admin_enabled'] == 0 || $userMag['enabled'] == 0) {
-            return false;
-        }
-        if (!empty($userMag['exp_date']) && time() > $userMag['exp_date']) {
-            return false;
-        }
-        if (!empty($userMag['allowed_ips']) && !in_array($user_ip, array_map('gethostbyname', $userMag['allowed_ips']))) {
-            return false;
-        }
-        if ($verUpdate) {
-            $ipTV_db->query('UPDATE `mag_devices` SET `ver` = \'%s\' WHERE `mag_id` = \'%d\'', $ver, $userMag['mag_id']);
-            // check Allowed STB Types
-            if (!empty(ipTV_lib::$settings['allowed_stb_types']) && !in_array(strtolower($stb_type), ipTV_lib::$settings['allowed_stb_types'])) {
-                return false;
-            }
-            if ($userMag['lock_device'] == 1 && !empty($userMag['sn']) && $userMag['sn'] !== $sn) {
-                return false;
-            }
-            if ($userMag['lock_device'] == 1 && !empty($userMag['device_id']) && $userMag['device_id'] !== $device_id) {
-                return false;
-            }
-            if ($userMag['lock_device'] == 1 && !empty($userMag['device_id2']) && $userMag['device_id2'] !== $device_id2) {
-                return false;
-            }
-            if ($userMag['lock_device'] == 1 && !empty($userMag['hw_version']) && $userMag['hw_version'] !== $hw_version) {
-                return false;
-            }
-            if (!empty(ipTV_lib::$settings['stalker_lock_images']) && !in_array($ver, ipTV_lib::$settings['stalker_lock_images'])) {
-                return false;
-            }
-            $geoip = new Reader(GEOIP2_FILENAME);
-            $geoip_country_code = $geoip->getWithPrefixLen($user_ip)[0]['registered_country']['iso_code'];
-            $geoip->close();
-            if (!empty($geoip_country_code)) {
-                $forced_country = !empty($userMag['forced_country']) ? true : false;
-                if ($forced_country && $userMag['forced_country'] != 'ALL' && $geoip_country_code != $userMag['forced_country'] || !$forced_country && !in_array('ALL', ipTV_lib::$settings['allow_countries']) && !in_array($geoip_country_code, ipTV_lib::$settings['allow_countries'])) {
-                    return false;
-                }
-            }
-            $ipTV_db->query('UPDATE `mag_devices` SET `ip` = \'%s\',`stb_type` = \'%s\',`sn` = \'%s\',`ver` = \'%s\',`image_version` = \'%s\',`device_id` = \'%s\',`device_id2` = \'%s\',`hw_version` = \'%s\' WHERE `mag_id` = \'%d\'', $user_ip, htmlentities($stb_type), htmlentities($sn), htmlentities($ver), htmlentities($image_version), htmlentities($device_id), htmlentities($device_id2), htmlentities($hw_version), $userMag['mag_id']);
-        }
-        $userMag['fav_channels'] = !empty($userMag['fav_channels']) ? json_decode($userMag['fav_channels'], true) : array();
-        if (empty($userMag['fav_channels']['live'])) {
-            $userMag['fav_channels']['live'] = array();
-        }
-        if (empty($userMag['fav_channels']['movie'])) {
-            $userMag['fav_channels']['movie'] = array();
-        }
-        if (empty($userMag['fav_channels']['radio_streams'])) {
-            $userMag['fav_channels']['radio_streams'] = array();
-        }
-        $userMag['get_profile_vars'] = $userMag;
-        unset($userMag['get_profile_vars']['use_embedded_settings'], $userMag['get_profile_vars']['mag_id'], $userMag['get_profile_vars']['user_id'], $userMag['get_profile_vars']['ver'], $userMag['get_profile_vars']['sn'], $userMag['get_profile_vars']['device_id'], $userMag['get_profile_vars']['device_id2'], $userMag['get_profile_vars']['spdif_mode'], $userMag['get_profile_vars']['mag_player'], $userMag['get_profile_vars']['fav_channels'], $userMag['get_profile_vars']['token'], $userMag['get_profile_vars']['lock_device'], $userMag['get_profile_vars']['member_id'], $userMag['get_profile_vars']['username'], $userMag['get_profile_vars']['exp_date'], $userMag['get_profile_vars']['admin_enabled'], $userMag['get_profile_vars']['enabled'], $userMag['get_profile_vars']['admin_notes'], $userMag['get_profile_vars']['reseller_notes'], $userMag['get_profile_vars']['bouquet'], $userMag['get_profile_vars']['max_connections'], $userMag['get_profile_vars']['is_restreamer'], $userMag['get_profile_vars']['allowed_ips'], $userMag['get_profile_vars']['allowed_ua'], $userMag['get_profile_vars']['is_trial'], $userMag['get_profile_vars']['created_at'], $userMag['get_profile_vars']['created_by'], $userMag['get_profile_vars']['pair_id'], $userMag['get_profile_vars']['is_mag'], $userMag['get_profile_vars']['is_e2'], $userMag['get_profile_vars']['force_server_id'], $userMag['get_profile_vars']['is_isplock'], $userMag['get_profile_vars']['as_number'], $userMag['get_profile_vars']['isp_desc'], $userMag['get_profile_vars']['forced_country'], $userMag['get_profile_vars']['is_stalker'], $userMag['get_profile_vars']['bypass_ua'], $userMag['get_profile_vars']['expires']);
-        $userMag['mag_player'] = trim($userMag['mag_player']);
-        file_put_contents(TMP_DIR . 'stalker_' . md5($mac), json_encode($userMag));
-        return $userMag;
-    } else {
-        file_put_contents(TMP_DIR . 'stalker_' . md5($mac), json_encode(array()));
-        return false;
-    }
-    return false;
-}
+
 function GetCategories($type = null) {
     global $ipTV_db;
     if (is_string($type)) {

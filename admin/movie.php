@@ -120,7 +120,7 @@ if (isset($_POST["submit_movie"])) {
         foreach ($rResults as $rResult) {
             if (!in_array($rResult["url"], $rStreamDatabase)) {
                 $rPathInfo = pathinfo($rResult["url"]);
-                $rImportArray = array("stream_source" => array($rResult["url"]), "stream_icon" => $rResult["tvg-logo"] ?: "", "stream_display_name" => $rResult["name"] ?: "", "movie_propeties" => array(), "async" => true, "target_container" => array($rPathInfo["extension"]));
+                $rImportArray = array("stream_source" => array($rResult["url"]), "stream_icon" => $rResult["tvg-logo"] ?: "", "stream_display_name" => $rResult["name"] ?: "", "movie_properties" => array(), "async" => true, "target_container" => array($rPathInfo["extension"]));
                 $rImportStreams[] = $rImportArray;
             }
         }
@@ -153,13 +153,13 @@ if (isset($_POST["submit_movie"])) {
                 $rFilePath = "s:" . intval($rParts[1]) . ":" . $rFile;
                 if (!in_array($rFilePath, $rStreamDatabase)) {
                     $rPathInfo = pathinfo($rFile);
-                    $rImportArray = array("stream_source" => array($rFilePath), "stream_icon" => "", "stream_display_name" => $rPathInfo["filename"], "movie_propeties" => array(), "async" => true, "target_container" => array($rPathInfo["extension"]));
+                    $rImportArray = array("stream_source" => array($rFilePath), "stream_icon" => "", "stream_display_name" => $rPathInfo["filename"], "movie_properties" => array(), "async" => true, "target_container" => array($rPathInfo["extension"]));
                     $rImportStreams[] = $rImportArray;
                 }
             }
         }
     } else {
-        $rImportArray = array("stream_source" => array($_POST["stream_source"]), "stream_icon" => $rArray["stream_icon"], "stream_display_name" => $rArray["stream_display_name"], "movie_propeties" => array(), "async" => false);
+        $rImportArray = array("stream_source" => array($_POST["stream_source"]), "stream_icon" => $rArray["stream_icon"], "stream_display_name" => $rArray["stream_display_name"], "movie_properties" => array(), "async" => false);
         if (strlen($_POST["tmdb_id"]) > 0) {
             $rTMDBURL = "https://www.themoviedb.org/movie/" . $_POST["tmdb_id"];
         } else {
@@ -170,9 +170,9 @@ if (isset($_POST["submit_movie"])) {
             $_POST["backdrop_path"] = downloadImage($_POST["backdrop_path"]);
         }
         $rSeconds = intval($_POST["episode_run_time"]) * 60;
-        $rImportArray["movie_propeties"] = array("tmdb_url" => $rTMDBURL, "tmdb_id" => $_POST["tmdb_id"], "name" => $rArray["stream_display_name"], "o_name" => $rArray["stream_display_name"], "cover_big" => $_POST["movie_image"], "movie_image" => $_POST["movie_image"], "releasedate" => $_POST["releasedate"], "episode_run_time" => $_POST["episode_run_time"], "youtube_trailer" => $_POST["youtube_trailer"], "director" => $_POST["director"], "actors" => $_POST["cast"], "cast" => $_POST["cast"], "description" => $_POST["plot"], "plot" => $_POST["plot"], "age" => "", "mpaa_rating" => "", "rating_count_kinopoisk" => 0, "country" => $_POST["country"], "genre" => $_POST["genre"], "backdrop_path" => array($_POST["backdrop_path"]), "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => $_POST["rating"]);
-        if (strlen($rImportArray["movie_propeties"]["backdrop_path"][0]) == 0) {
-            unset($rImportArray["movie_propeties"]["backdrop_path"]);
+        $rImportArray["movie_properties"] = array("tmdb_url" => $rTMDBURL, "tmdb_id" => $_POST["tmdb_id"], "name" => $rArray["stream_display_name"], "o_name" => $rArray["stream_display_name"], "cover_big" => $_POST["movie_image"], "movie_image" => $_POST["movie_image"], "releasedate" => $_POST["releasedate"], "episode_run_time" => $_POST["episode_run_time"], "youtube_trailer" => $_POST["youtube_trailer"], "director" => $_POST["director"], "actors" => $_POST["cast"], "cast" => $_POST["cast"], "description" => $_POST["plot"], "plot" => $_POST["plot"], "age" => "", "mpaa_rating" => "", "rating_count_kinopoisk" => 0, "country" => $_POST["country"], "genre" => $_POST["genre"], "backdrop_path" => array($_POST["backdrop_path"]), "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => $_POST["rating"]);
+        if (strlen($rImportArray["movie_properties"]["backdrop_path"][0]) == 0) {
+            unset($rImportArray["movie_properties"]["backdrop_path"]);
         }
         if (isset($_POST["edit"])) {
             $rImportStreams[] = $rImportArray;
@@ -300,7 +300,7 @@ if (isset($_GET["id"])) {
     if ((!$rMovie) or ($rMovie["type"] <> 2)) {
         exit;
     }
-    $rMovie["properties"] = json_decode($rMovie["movie_propeties"], True);
+    $rMovie["properties"] = json_decode($rMovie["movie_properties"], True);
     $rStreamSys = getStreamSys($_GET["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStreamSys[intval($rServer["id"])])) {

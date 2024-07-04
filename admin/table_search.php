@@ -1148,7 +1148,7 @@ if ($rType == "users") {
             } else if ($_GET["filter"] == 5) {
                 $rWhere[] = "`streams`.`direct_source` = 1";
             } else if ($_GET["filter"] == 6) {
-                $rWhere[] = "(`streams`.`movie_propeties` IS NULL OR `streams`.`movie_propeties` = '' OR `streams`.`movie_propeties` = '[]' OR `streams`.`movie_propeties` = '{}' OR `streams`.`movie_propeties` LIKE '%tmdb_id\":\"\"%')";
+                $rWhere[] = "(`streams`.`movie_properties` IS NULL OR `streams`.`movie_properties` = '' OR `streams`.`movie_properties` = '[]' OR `streams`.`movie_properties` = '{}' OR `streams`.`movie_properties` LIKE '%tmdb_id\":\"\"%')";
             }
         }
         if (strlen($_GET["category"]) > 0) {
@@ -1687,7 +1687,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         } else if ($_GET["filter"] == 5) {
             $rWhere[] = "`streams`.`direct_source` = 1";
         } else if ($_GET["filter"] == 6) {
-            $rWhere[] = "(`streams`.`movie_propeties` IS NULL OR `streams`.`movie_propeties` = '' OR `streams`.`movie_propeties` = '[]' OR `streams`.`movie_propeties` = '{}' OR `streams`.`movie_propeties` LIKE '%tmdb_id\":\"\"%')";
+            $rWhere[] = "(`streams`.`movie_properties` IS NULL OR `streams`.`movie_properties` = '' OR `streams`.`movie_properties` = '[]' OR `streams`.`movie_properties` = '{}' OR `streams`.`movie_properties` LIKE '%tmdb_id\":\"\"%')";
         }
     }
     if ($rOrder[$rOrderRow]) {

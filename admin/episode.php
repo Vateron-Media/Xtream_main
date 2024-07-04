@@ -142,7 +142,7 @@ if (isset($_POST["submit_stream"])) {
     $rRestartIDs = array();
     foreach ($rProcessArray as $rImportArray) {
         $rArray["stream_source"] = array($rImportArray["filename"]);
-        $rArray["movie_propeties"] = $rImportArray["properties"];
+        $rArray["movie_properties"] = $rImportArray["properties"];
         $rArray["stream_display_name"] = $rImportArray["name"];
         if (isset($rImportArray["target_container"])) {
             $rArray["target_container"] = $rImportArray["target_container"];
@@ -258,7 +258,7 @@ if (isset($_GET["id"])) {
         $rEpisode["episode"] = 0;
         $rEpisode["season"] = 0;
     }
-    $rEpisode["properties"] = json_decode($rEpisode["movie_propeties"], True);
+    $rEpisode["properties"] = json_decode($rEpisode["movie_properties"], True);
     $rStreamSys = getStreamSys($_GET["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStreamSys[intval($rServer["id"])])) {

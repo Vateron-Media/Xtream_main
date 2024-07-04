@@ -50,24 +50,24 @@ if (0 < $ipTV_db->num_rows()) {
                     $duration_secs = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
                     $resultCommand = ipTV_servers::RunCommandServer($data['server_id'], 'wc -c < ' . $fileURL, 'raw');
                     $bitrate = round($resultCommand[$data['server_id']] * 0.008 / $duration_secs);
-                    $movie_propeties = json_decode($data['movie_propeties'], true);
-                    if (!is_array($movie_propeties)) {
-                        $movie_propeties = array();
+                    $movie_properties = json_decode($data['movie_properties'], true);
+                    if (!is_array($movie_properties)) {
+                        $movie_properties = array();
                     }
-                    if (!isset($movie_propeties['duration_secs']) && $duration_secs != $movie_propeties['duration_secs']) {
-                        $movie_propeties['duration_secs'] = $duration_secs;
-                        $movie_propeties['duration'] = $duration;
+                    if (!isset($movie_properties['duration_secs']) && $duration_secs != $movie_properties['duration_secs']) {
+                        $movie_properties['duration_secs'] = $duration_secs;
+                        $movie_properties['duration'] = $duration;
                     }
-                    if (!isset($movie_propeties['video']) && $stream_info['codecs']['video']['codec_name'] != $movie_propeties['video']) {
-                        $movie_propeties['video'] = $stream_info['codecs']['video'];
+                    if (!isset($movie_properties['video']) && $stream_info['codecs']['video']['codec_name'] != $movie_properties['video']) {
+                        $movie_properties['video'] = $stream_info['codecs']['video'];
                     }
-                    if (!isset($movie_propeties['audio']) && $stream_info['codecs']['audio']['codec_name'] != $movie_propeties['audio']) {
-                        $movie_propeties['audio'] = $stream_info['codecs']['audio'];
+                    if (!isset($movie_properties['audio']) && $stream_info['codecs']['audio']['codec_name'] != $movie_properties['audio']) {
+                        $movie_properties['audio'] = $stream_info['codecs']['audio'];
                     }
-                    if (!isset($movie_propeties['bitrate']) && $bitrate != $movie_propeties['bitrate']) {
-                        $movie_propeties['bitrate'] = $bitrate;
+                    if (!isset($movie_properties['bitrate']) && $bitrate != $movie_properties['bitrate']) {
+                        $movie_properties['bitrate'] = $bitrate;
                     }
-                    $ipTV_db->query("UPDATE `streams` SET `movie_propeties` = '%s' WHERE `id` = '%d'", json_encode($movie_propeties), $data["stream_id"]);
+                    $ipTV_db->query("UPDATE `streams` SET `movie_properties` = '%s' WHERE `id` = '%d'", json_encode($movie_properties), $data["stream_id"]);
                     $ipTV_db->query("UPDATE `streams_sys` SET `bitrate` = '%d',`to_analyze` = 0,`stream_status` = 0,`stream_info` = '%s'  WHERE `server_stream_id` = '%d'", $bitrate, json_encode($stream_info), $data["server_stream_id"]);
                     echo "VALID\n";
                 } else {

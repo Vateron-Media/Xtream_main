@@ -432,6 +432,15 @@ class ipTV_streaming {
         }
         return false;
     }
+    public static function getAdultCategories() {
+		$rReturn = array();
+		foreach (ipTV_lib::$categories as $rCategory) {
+			if ($rCategory['is_adult']) {
+				$rReturn[] = intval($rCategory['id']);
+			}
+		}
+		return $rReturn;
+	}
     public static function GetMagInfo($mag_id = null, $mac = null, $get_ChannelIDS = false, $getBouquetInfo = false, $get_cons = false) {
         if (empty($mag_id)) {
             self::$ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mac` = \'%s\'', base64_encode($mac));

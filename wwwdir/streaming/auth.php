@@ -296,39 +296,43 @@ if ($rExtension) {
                 }
             }
 
-            if (($rUserInfo['is_stalker'] && in_array($rType, array('live', 'movie', 'series', 'timeshift')))) {
-                if ((empty(ipTV_lib::$request['stalker_key']) || $rExtension != 'ts')) {
-                    generateError('STALKER_INVALID_KEY');
-                }
+            //Testing is required on the mag set-top box, not on the emulator
 
-                $rStalkerKey = base64_decode(urldecode(ipTV_lib::$request['stalker_key']));
+            // if (($rUserInfo['is_stalker'] && in_array($rType, array('live', 'movie', 'series', 'timeshift')))) {
+            //     if ((empty(ipTV_lib::$request['stalker_key']) || $rExtension != 'ts')) {
+            //         generateError('STALKER_INVALID_KEY');
+            //     }
 
-                if ($rDecryptKey = ipTV_lib::mc_decrypt($rStalkerKey, md5(ipTV_lib::$settings['live_streaming_pass']))) {
-                    $rStalkerData = explode('=', $rDecryptKey);
+            //     $rStalkerKey = base64_decode(urldecode(ipTV_lib::$request['stalker_key']));
 
-                    if ($rStalkerData[2] != $streamID) {
-                        ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'STALKER_CHANNEL_MISMATCH', $userIP);
-                        generateError('STALKER_CHANNEL_MISMATCH');
-                    }
+            //     if ($rDecryptKey = ipTV_lib::mc_decrypt($rStalkerKey, md5(ipTV_lib::$settings['live_streaming_pass']))) {
+            //         $rStalkerData = explode('=', $rDecryptKey);
 
-                    if ($rStalkerData[1] != $userIP && ipTV_lib::$settings['restrict_same_ip']) {
-                        ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'STALKER_IP_MISMATCH', $userIP);
-                        generateError('STALKER_IP_MISMATCH');
-                    }
+            //         if ($rStalkerData[2] != $streamID) {
+            //             ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'STALKER_CHANNEL_MISMATCH', $userIP);
+            //             generateError('STALKER_CHANNEL_MISMATCH');
+            //         }
 
-                    $rCreateExpiration = 5;
+            //         if ($rStalkerData[1] != $userIP && ipTV_lib::$settings['restrict_same_ip']) {
+            //             ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'STALKER_IP_MISMATCH', $userIP);
+            //             generateError('STALKER_IP_MISMATCH');
+            //         }
 
-                    if ($rStalkerData[3] < time() - $rCreateExpiration) {
-                        ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'STALKER_KEY_EXPIRED', $userIP);
-                        generateError('STALKER_KEY_EXPIRED');
-                    }
+            //         $rCreateExpiration = 5;
 
-                    $rExternalDevice = $rStalkerData[0];
-                } else {
-                    ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'STALKER_DECRYPT_FAILED', $userIP);
-                    generateError('STALKER_DECRYPT_FAILED');
-                }
-            }
+            //         if ($rStalkerData[3] < time() - $rCreateExpiration) {
+            //             ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'STALKER_KEY_EXPIRED', $userIP);
+            //             generateError('STALKER_KEY_EXPIRED');
+            //         }
+
+            //         $rExternalDevice = $rStalkerData[0];
+            //     } else {
+            //         ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'STALKER_DECRYPT_FAILED', $userIP);
+            //         generateError('STALKER_DECRYPT_FAILED');
+            //     }
+            // }
+
+            // ------------------------------------------------------------------
 
             if (!in_array($rType, array('thumb', 'subtitle'))) {
                 if (!($rUserInfo['is_restreamer'] || in_array($userIP, ipTV_streaming::getAllowedIPs()))) {
@@ -466,7 +470,7 @@ if ($rExtension) {
 
                         $rToken = encryptData(json_encode($tokenData), ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
 
-                        header('Location: ' . $rURL . '/auth/' . $rToken);
+                        header('Location: ' . $rURL . '/sauth/' . $rToken);
 
                         exit();
                 }

@@ -119,7 +119,7 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                         $rTitle .= " (" . intval(substr($rMovieData["release_date"], 0, 4)) . ")";
                     }
                     $db->query("UPDATE `tmdb_async` SET `status` = 1 WHERE `id` = " . intval($rRow["id"]) . ";");
-                    $db->query("UPDATE `streams` SET `stream_display_name` = '" . $db->real_escape_string($rTitle) . "', `movie_propeties` = '" . $db->real_escape_string(json_encode($rProperties)) . "' WHERE `id` = " . intval($rRow["stream_id"]) . ";");
+                    $db->query("UPDATE `streams` SET `stream_display_name` = '" . $db->real_escape_string($rTitle) . "', `movie_properties` = '" . $db->real_escape_string(json_encode($rProperties)) . "' WHERE `id` = " . intval($rRow["stream_id"]) . ";");
                 } else {
                     $db->query("UPDATE `tmdb_async` SET `status` = -1 WHERE `id` = " . intval($rRow["id"]) . ";");
                 }
@@ -275,7 +275,7 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                                     }
                                 }
                                 $db->query("UPDATE `tmdb_async` SET `status` = 1 WHERE `id` = " . intval($rRow["id"]) . ";");
-                                $db->query("UPDATE `streams` SET `stream_display_name` = '" . $db->real_escape_string($rTitle) . "', `movie_propeties` = '" . $db->real_escape_string(json_encode($rProperties)) . "' WHERE `id` = " . intval($rRow["stream_id"]) . ";");
+                                $db->query("UPDATE `streams` SET `stream_display_name` = '" . $db->real_escape_string($rTitle) . "', `movie_properties` = '" . $db->real_escape_string(json_encode($rProperties)) . "' WHERE `id` = " . intval($rRow["stream_id"]) . ";");
                                 $db->query("UPDATE `series_episodes` SET `season_num` = " . intval($rReleaseSeason) . ", `sort` = " . intval($rReleaseEpisode) . " WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
                                 if (!in_array($rSeries["id"], $rUpdateSeries)) {
                                     $rUpdateSeries[] = $rSeries["id"];

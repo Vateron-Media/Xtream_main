@@ -10,6 +10,13 @@ if (@$argc) {
             unlink(PLAYLIST_PATH . $rFile);
         }
     }
+    foreach (array(TMP_DIR, DIVERGENCE_TMP_PATH, FLOOD_TMP_PATH, STALKER_TMP_PATH) as $rTmpPath) {
+        foreach (scandir($rTmpPath) as $rFile) {
+            if (600 <= time() - filemtime($rTmpPath . $rFile) && stripos($rFile, 'ministra_') === false) {
+                unlink($rTmpPath . $rFile);
+            }
+        }
+    }
     $types = array('cloud_ips', 'new_rewrite', 'series_data.php');
     foreach (STREAM_TYPE as $connections) {
         $types[] = $connections . '_main.php';
