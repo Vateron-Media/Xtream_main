@@ -1,55 +1,46 @@
 <?php
 
-if (@$argc) {
+if ($argc) {
+    register_shutdown_function('shutdown');
     require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
     cli_set_process_title('XtreamCodes[Server Checker]');
     $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
-    KillProcessCmd($unique_id);
-    $signal_receiver = intval(trim(shell_exec('ps aux | grep signal_receiver | grep -v grep | wc -l')));
-    if ($signal_receiver == 0) {
-        shell_exec(PHP_BIN . ' ' . IPTV_PANEL_DIR . 'tools/signal_receiver.php > /dev/null 2>/dev/null &');
-    }
-    $pipe_reader = intval(trim(shell_exec('ps aux | grep pipe_reader | grep -v grep | wc -l')));
-    if ($pipe_reader == 0) {
-        shell_exec(PHP_BIN . ' ' . IPTV_PANEL_DIR . 'tools/pipe_reader.php > /dev/null 2>/dev/null &');
-    }
-    $panel_monitor = intval(trim(shell_exec('ps aux | grep panel_monitor | grep -v grep | wc -l')));
-    if ($panel_monitor == 0) {
-        shell_exec(PHP_BIN . ' ' . IPTV_PANEL_DIR . 'tools/panel_monitor.php > /dev/null 2>/dev/null &');
-    }
-    $watchdog_data = intval(trim(shell_exec('ps aux | grep watchdog_data | grep -v grep | wc -l')));
-    if ($watchdog_data == 0) {
-        shell_exec(PHP_BIN . ' ' . IPTV_PANEL_DIR . 'tools/watchdog_data.php > /dev/null 2>/dev/null &');
-    }
-    $available = (int) trim(shell_exec('free | grep -c available'));
-    if ($available == 0) {
-        $total_ram = intval(shell_exec('/usr/bin/free -tk | grep -i Mem: | awk \'{print $2}\''));
-        $total_used = $total_ram - intval(shell_exec('/usr/bin/free -tk | grep -i Mem: | awk \'{print $4+$6+$7}\''));
-    } else {
-        $total_ram = intval(shell_exec('/usr/bin/free -tk | grep -i Mem: | awk \'{print $2}\''));
-        $total_used = $total_ram - intval(shell_exec('/usr/bin/free -tk | grep -i Mem: | awk \'{print $7}\''));
-    }
-    $cpu_cores = intval(shell_exec('lscpu | awk -F " : " \'/Core/ { c=$2; }; /Socket/ { print c*$2 }\' '));
-    $cpu_threads = intval(shell_exec('grep --count ^processor /proc/cpuinfo'));
-    $cpu_name = trim(shell_exec('cat /proc/cpuinfo | grep \'model name\' | uniq | awk -F: \'{print $2}\''));
-    $cpu_usage = intval(shell_exec('ps aux|awk \'NR > 0 { s +=$3 }; END {print s}\''));
-    $network_interface = ipTV_lib::$StreamingServers[SERVER_ID]['network_interface'];
-    $total_bytes_sent = $total_bytes_received = $speed = NULL;
-    if (!empty($network_interface)) {
-        $speed = file_get_contents('/sys/class/net/' . $network_interface . '/speed');
-        $bytes_sent_old = trim(file_get_contents('/sys/class/net/' . $network_interface . '/statistics/tx_bytes'));
-        $bytes_received_old = trim(file_get_contents('/sys/class/net/' . $network_interface . '/statistics/rx_bytes'));
-        sleep(1);
-        $bytes_sent_new = trim(file_get_contents('/sys/class/net/' . $network_interface . '/statistics/tx_bytes'));
-        $bytes_received_new = trim(file_get_contents('/sys/class/net/' . $network_interface . '/statistics/rx_bytes'));
-        $total_bytes_sent = round(($bytes_sent_new - $bytes_sent_old) / 1024 * 0, 2);
-        $total_bytes_received = round(($bytes_received_new - $bytes_received_old) / 1024 * 0, 2);
-    }
-    $total_running_streams = shell_exec('ps ax | grep -v grep | grep ffmpeg | grep -c ' . FFMPEG_PATH);
-    $server_hardware = array('total_ram' => $total_ram, 'total_used' => $total_used, 'cores' => $cpu_cores, 'threads' => $cpu_threads, 'kernel' => trim(shell_exec('uname -r')), 'total_running_streams' => $total_running_streams, 'cpu_name' => $cpu_name, 'cpu_usage' => (int) $cpu_usage / $cpu_threads, 'network_speed' => $speed, 'bytes_sent' => $total_bytes_sent, 'bytes_received' => $total_bytes_received);
-    $whitelist_ips = array_values(array_unique(array_map('trim', explode('\n', shell_exec('ip -4 addr | grep -oP \'(?<=inet\\s)\\d+(\\.\\d+){3}\'')))));
-    $ipTV_db->query('UPDATE `streaming_servers` SET `server_hardware` = \'%s\',`whitelist_ips` = \'%s\', `time_offset` = ' . intval(time()) . ' - UNIX_TIMESTAMP(), `script_version` = \'%s\' WHERE `id` = \'%d\'', json_encode($server_hardware), json_encode($whitelist_ips), SCRIPT_VERSION, SERVER_ID);
-    @unlink($unique_id);
+    ipTV_lib::check_cron($unique_id);
+    loadCron();
 } else {
     exit(0);
+}
+function loadCron() {
+    global $ipTV_db;
+    $rServers = ipTV_lib::getServers(true);
+    $rSignals = intval(trim(shell_exec('ps aux | grep \'Signal Receiver\' | grep -v grep | wc -l')));
+    if ($rSignals == 0) {
+        shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'signals.php > /dev/null 2>/dev/null &');
+    }
+    $rWatchdog = intval(trim(shell_exec('ps aux | grep \'Server WatchDog\' | grep -v grep | wc -l')));
+    if ($rWatchdog == 0) {
+        shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
+    }
+    $rStats = getStats();
+    $rWatchdog = json_decode($rServers[SERVER_ID]['watchdog_data'], true);
+    $rCPUAverage = ($rWatchdog['cpu_average_array'] ?: array());
+    if (count($rCPUAverage) > 0) {
+        $rStats['cpu'] = round(array_sum($rCPUAverage) / count($rCPUAverage), 2);
+    }
+    $rHardware = array('total_ram' => $rStats['total_mem'], 'total_used' => $rStats['total_mem_used'], 'cores' => $rStats['cpu_cores'], 'threads' => $rStats['cpu_cores'], 'kernel' => $rStats['kernel'], 'total_running_streams' => $rStats['total_running_streams'], 'cpu_name' => $rStats['cpu_name'], 'cpu_usage' => $rStats['cpu'], 'network_speed' => $rStats['network_speed'], 'bytes_sent' => $rStats['bytes_sent'], 'bytes_received' => $rStats['bytes_received']);
+    if (fsockopen($rServers[SERVER_ID]['server_ip'], $rServers[SERVER_ID]['http_broadcast_port'], $rErrNo, $rErrStr, 3) || fsockopen($rServers[SERVER_ID]['server_ip'], $rServers[SERVER_ID]['https_broadcast_port'], $rErrNo, $rErrStr, 3)) {
+        $rRemoteStatus = true;
+    } else {
+        $rRemoteStatus = false;
+    }
+    $rAddresses = array_values(array_unique(array_map('trim', explode("\n", shell_exec("ip -4 addr | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'")))));
+    $ipTV_db->query('UPDATE `streaming_servers` SET `remote_status` = \'%s\', `server_hardware` = \'%s\', `server_hardware` = \'%s\',`whitelist_ips` = \'%s\', `time_offset` = ' . intval(time()) . ' - UNIX_TIMESTAMP(), `script_version` = \'%s\' WHERE `id` = \'%s\'', $rRemoteStatus, json_encode($rHardware, JSON_UNESCAPED_UNICODE), json_encode($rHardware, JSON_UNESCAPED_UNICODE), json_encode($rAddresses, JSON_UNESCAPED_UNICODE), SCRIPT_VERSION, SERVER_ID);
+}
+function shutdown() {
+    global $ipTV_db;
+    global $unique_id;
+    if (is_object($ipTV_db)) {
+        $ipTV_db->close_mysql();
+    }
+    @unlink($unique_id);
 }

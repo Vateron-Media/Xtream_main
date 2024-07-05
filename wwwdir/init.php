@@ -84,7 +84,6 @@ define('CACHE_STREAMS', false);
 define('CACHE_STREAMS_TIME', 10);
 define('STREAM_TYPE', array('live', 'series', 'movie', 'created_live', 'radio_streams'));
 
-// require MAIN_DIR . 'iptv_xtream_codes/xfirewall.php';
 require IPTV_INCLUDES_PATH . 'functions.php';
 require IPTV_INCLUDES_PATH . 'lib.php';
 require IPTV_INCLUDES_PATH . 'mysql.php';

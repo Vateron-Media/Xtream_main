@@ -91,7 +91,7 @@ switch ($action) {
         break;
     case 'stats':
         $json = array();
-        $json['cpu'] = intval(GetTotalCPUsage());
+        $json['cpu'] = intval(getTotalCPU());
         $json['cpu_cores'] = intval(shell_exec('cat /proc/cpuinfo | grep "^processor" | wc -l'));
         $json['cpu_avg'] = intval(sys_getloadavg()[0] * 100 / $json['cpu_cores']);
         if ($json['cpu_avg'] > 100) {
@@ -102,7 +102,7 @@ switch ($action) {
         $json['total_mem_used'] = $json['total_mem'] - $json['total_mem_free'];
         $json['total_mem_used_percent'] = (int) $json['total_mem_used'] / $json['total_mem'] * 100;
         $json['total_disk_space'] = disk_total_space(IPTV_PANEL_DIR);
-        $json['uptime'] = get_boottime();
+        $json['uptime'] = getUptime();
         $json['total_running_streams'] = shell_exec('ps ax | grep -v grep | grep ffmpeg | grep -c ' . FFMPEG_PATH);
         $int = ipTV_lib::$StreamingServers[SERVER_ID]['network_interface'];
         $json['bytes_sent'] = 0;

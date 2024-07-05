@@ -299,7 +299,7 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
 
                 echo 'Cache updated!' . "\n";
                 file_put_contents(CACHE_TMP_PATH . 'cache_complete', time());
-                $ipTV_db->query('UPDATE `settings` SET `last_cache` = ?, `last_cache_taken` = ?;', time(), time() - $rStartTime);
+                $ipTV_db->query('UPDATE `settings` SET `last_cache` = \'%s\', `last_cache_taken` = \'%s\';', time(), time() - $rStartTime);
                 break;
         }
     } else {
@@ -474,10 +474,10 @@ function generateSeries($rStart, $rCount) {
 }
 function generateGroups() {
     global $ipTV_db;
-    $ipTV_db->query('SELECT `group_id` FROM `users_groups`;');
+    $ipTV_db->query('SELECT `group_id` FROM `member_groups`;');
     foreach ($ipTV_db->get_rows() as $rGroup) {
         $rBouquets = $rReturn = array();
-        $ipTV_db->query("SELECT * FROM `users_packages` WHERE JSON_CONTAINS(`groups`, ?, '\$');", $rGroup['group_id']);
+        $ipTV_db->query("SELECT * FROM `packages` WHERE JSON_CONTAINS(`groups`, '%s', '\$');", $rGroup['group_id']);
         foreach ($ipTV_db->get_rows() as $rRow) {
             foreach (json_decode($rRow['bouquets'], true) as $rID) {
                 if (!in_array($rID, $rBouquets)) {
@@ -510,7 +510,7 @@ function generateGroups() {
                 }
                 foreach (json_decode($rRow['bouquet_series'], true) as $rSeriesID) {
                     $rSeriesIDs[] = $rSeriesID;
-                    $ipTV_db->query('SELECT `stream_id` FROM `streams_episodes` WHERE `series_id` = ?;', $rSeriesID);
+                    $ipTV_db->query('SELECT `stream_id` FROM `streams_episodes` WHERE `series_id` = \'%s\';', $rSeriesID);
                     foreach ($ipTV_db->get_rows() as $rEpisode) {
                         $rStreamIDs[] = $rEpisode['stream_id'];
                     }
@@ -545,9 +545,9 @@ function generateLinesPerIP() {
     $rLinesPerIP = array(3600 => array(), 86400 => array(), 604800 => array(), 0 => array());
     foreach (array_keys($rLinesPerIP) as $rTime) {
         if (0 < $rTime) {
-            $ipTV_db->query('SELECT `lines_activity`.`user_id`, COUNT(DISTINCT(`lines_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `lines_activity` LEFT JOIN `users` ON `users`.`id` = `lines_activity`.`user_id` WHERE `date_start` >= ? AND `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 GROUP BY `lines_activity`.`user_id` ORDER BY `ip_count` DESC LIMIT 1000;', time() - $rTime);
+            $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `date_start` >= \'%s\' AND `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 GROUP BY `user_activity`.`user_id` ORDER BY `ip_count` DESC LIMIT 1000;', time() - $rTime);
         } else {
-            $ipTV_db->query('SELECT `lines_activity`.`user_id`, COUNT(DISTINCT(`lines_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `lines_activity` LEFT JOIN `users` ON `users`.`id` = `lines_activity`.`user_id` WHERE `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 GROUP BY `lines_activity`.`user_id` ORDER BY `ip_count` DESC LIMIT 1000;');
+            $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 GROUP BY `user_activity`.`user_id` ORDER BY `ip_count` DESC LIMIT 1000;');
         }
         foreach ($ipTV_db->get_rows() as $rRow) {
             $rLinesPerIP[$rTime][] = $rRow;
@@ -560,9 +560,9 @@ function generateTheftDetection() {
     $rTheftDetection = array(3600 => array(), 86400 => array(), 604800 => array(), 0 => array());
     foreach (array_keys($rTheftDetection) as $rTime) {
         if (0 < $rTime) {
-            $ipTV_db->query('SELECT `lines_activity`.`user_id`, COUNT(DISTINCT(`lines_activity`.`stream_id`)) AS `vod_count`, `users`.`username` FROM `lines_activity` LEFT JOIN `users` ON `users`.`id` = `lines_activity`.`user_id` WHERE `date_start` >= ? AND `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 AND `stream_id` IN (SELECT `id` FROM `streams` WHERE `type` IN (2,5)) GROUP BY `lines_activity`.`user_id` ORDER BY `vod_count` DESC LIMIT 1000;', time() - $rTime);
+            $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`stream_id`)) AS `vod_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `date_start` >= \'%s\' AND `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 AND `stream_id` IN (SELECT `id` FROM `streams` WHERE `type` IN (2,5)) GROUP BY `user_activity`.`user_id` ORDER BY `vod_count` DESC LIMIT 1000;', time() - $rTime);
         } else {
-            $ipTV_db->query('SELECT `lines_activity`.`user_id`, COUNT(DISTINCT(`lines_activity`.`stream_id`)) AS `vod_count`, `users`.`username` FROM `lines_activity` LEFT JOIN `users` ON `users`.`id` = `lines_activity`.`user_id` WHERE `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 AND `stream_id` IN (SELECT `id` FROM `streams` WHERE `type` IN (2,5)) GROUP BY `lines_activity`.`user_id` ORDER BY `vod_count` DESC LIMIT 1000;');
+            $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`stream_id`)) AS `vod_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 AND `stream_id` IN (SELECT `id` FROM `streams` WHERE `type` IN (2,5)) GROUP BY `user_activity`.`user_id` ORDER BY `vod_count` DESC LIMIT 1000;');
         }
         foreach ($ipTV_db->get_rows() as $rRow) {
             $rTheftDetection[$rTime][] = $rRow;

@@ -25,7 +25,7 @@ function loadCron() {
         $rQuery = rtrim($rQuery, ',');
         if (empty($rQuery)) {
         } else {
-            if ($ipTV_db->query('INSERT INTO `lines_activity` (`server_id`,`user_id`,`isp`,`external_device`,`stream_id`,`date_start`,`user_agent`,`user_ip`,`date_end`,`container`,`geoip_country_code`,`divergence`) VALUES ' . $rQuery)) {
+            if ($ipTV_db->query('INSERT INTO `user_activity` (`server_id`,`user_id`,`isp`,`external_device`,`stream_id`,`date_start`,`user_agent`,`user_ip`,`date_end`,`container`,`geoip_country_code`,`divergence`) VALUES ' . $rQuery)) {
                 $rFirstID = $ipTV_db->last_insert_id();
                 $i = 0;
                 while ($i < $rCount) {

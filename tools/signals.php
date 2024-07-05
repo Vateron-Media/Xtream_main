@@ -2,8 +2,8 @@
 if ($argc) {
     set_time_limit(0);
     require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
-    cli_set_process_title('XtreamCodes[XC Signal Receiver]');
-    shell_exec('kill $(ps aux | grep \'XC Signal Receiver\' | grep -v grep | grep -v ' . getmypid() . ' | awk \'{print $2}\')');
+    cli_set_process_title('XtreamCodes[Signal Receiver]');
+    shell_exec('kill $(ps aux | grep \'Signal Receiver\' | grep -v grep | grep -v ' . getmypid() . ' | awk \'{print $2}\')');
     $rMD5 = md5_file(__FILE__);
     while (true) {
         $ipTV_db->db_connect();

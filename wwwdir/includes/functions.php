@@ -8,27 +8,44 @@ function decrypt_config($data, $key) {
     }
     return $output;
 }
-function watchdogData() {
-    $json = array();
-    $json["cpu"] = intval(GetTotalCPUsage());
-    $json["cpu_cores"] = intval(shell_exec('cat /proc/cpuinfo | grep "^processor" | wc -l'));
-    $json["cpu_avg"] = intval(sys_getloadavg()[0] * 100 / $json["cpu_cores"]);
-    if ($json["cpu_avg"] > 100) {
-        $json["cpu_avg"] = 100;
+function getStats() {
+    $rJSON = array();
+    $rJSON['cpu'] = round(getTotalCPU(), 2);
+    $rJSON['cpu_cores'] = intval(shell_exec('cat /proc/cpuinfo | grep "^processor" | wc -l'));
+    $rJSON['cpu_avg'] = round((sys_getloadavg()[0] * 100) / (($rJSON['cpu_cores'] ?: 1)), 2);
+    $rJSON['cpu_name'] = trim(shell_exec("cat /proc/cpuinfo | grep 'model name' | uniq | awk -F: '{print \$2}'"));
+    if ($rJSON['cpu_avg'] > 100) {
+        $rJSON['cpu_avg'] = 100;
     }
-    $available = (int) trim(shell_exec("free | grep -c available"));
-    if ($available == 0) {
-        $json["total_mem"] = intval(shell_exec("/usr/bin/free -tk | grep -i Mem: | awk '{print \$2}'"));
-        $json["total_mem_free"] = intval(shell_exec("/usr/bin/free -tk | grep -i Mem: | awk '{print \$4+\$6+\$7}'"));
-    } else {
-        $json['total_mem'] = intval(shell_exec('/usr/bin/free -tk | grep -i Mem: | awk \'{print $2}\''));
-        $json['total_mem_free'] = intval(shell_exec('/usr/bin/free -tk | grep -i Mem: | awk \'{print $7}\''));
+    $rFree = explode("\n", trim(shell_exec('free')));
+    $rMemory = preg_split('/[\\s]+/', $rFree[1]);
+    $rTotalUsed = intval($rMemory[2]);
+    $rTotalRAM = intval($rMemory[1]);
+    $rJSON['total_mem'] = $rTotalRAM;
+    $rJSON['total_mem_free'] = $rTotalRAM - $rTotalUsed;
+    $rJSON['total_mem_used'] = $rTotalUsed + getTotalTmpfs();
+    $rJSON['total_mem_used_percent'] = round($rJSON['total_mem_used'] / $rJSON['total_mem'] * 100, 2);
+    $rJSON['total_disk_space'] = disk_total_space(IPTV_ROOT_PATH);
+    $rJSON['free_disk_space'] = disk_free_space(IPTV_ROOT_PATH);
+    $rJSON['kernel'] = trim(shell_exec('uname -r'));
+    $rJSON['uptime'] = getUptime();
+    $rJSON['total_running_streams'] = (int) trim(shell_exec('ps ax | grep -v grep | grep -c ffmpeg'));
+    $rJSON['bytes_sent'] = 0;
+    $rJSON['bytes_sent_total'] = 0;
+    $rJSON['bytes_received'] = 0;
+    $rJSON['bytes_received_total'] = 0;
+    $rJSON['network_speed'] = 0;
+    $rJSON['interfaces'] = getNetworkInterfaces();
+    $rJSON['network_speed'] = 0;
+    if ($rJSON['cpu'] > 100) {
+        $rJSON['cpu'] = 100;
     }
-    $json['total_mem_used'] = $json['total_mem'] - $json['total_mem_free'];
-    $json['total_mem_used_percent'] = (int) $json['total_mem_used'] / $json['total_mem'] * 100;
-    $json['total_disk_space'] = disk_total_space(IPTV_PANEL_DIR);
-    $json['uptime'] = get_boottime();
-    $json['total_running_streams'] = shell_exec('ps ax | grep -v grep | grep ffmpeg | grep -c ' . FFMPEG_PATH);
+    if ($rJSON['total_mem'] < $rJSON['total_mem_used']) {
+        $rJSON['total_mem_used'] = $rJSON['total_mem'];
+    }
+    if ($rJSON['total_mem_used_percent'] > 100) {
+        $rJSON['total_mem_used_percent'] = 100;
+    }
     $int = ipTV_lib::$StreamingServers[SERVER_ID]['network_interface'];
     $json['bytes_sent'] = 0;
     $json['bytes_received'] = 0;
@@ -43,8 +60,8 @@ function watchdogData() {
         $json['bytes_sent'] = $total_bytes_sent;
         $json['bytes_received'] = $total_bytes_received;
     }
-    $json['cpu_load_average'] = sys_getloadavg()[0];
-    return $json;
+    list($rJSON['cpu_load_average']) = sys_getloadavg();
+    return $rJSON;
 }
 function isMobileDevice() {
     $aMobileUA = array("/iphone/i" => "iPhone", "/ipod/i" => "iPod", "/ipad/i" => "iPad", "/android/i" => "Android", "/blackberry/i" => "BlackBerry", "/webos/i" => "Mobile");
@@ -307,10 +324,26 @@ function GetEPGStream($stream_id, $from_now = false) {
     }
     return array();
 }
-function GetTotalCPUsage() {
-    $total_cpu = intval(shell_exec('ps aux|awk \'NR > 0 { s +=$3 }; END {print s}\''));
-    $cores = intval(shell_exec('grep --count processor /proc/cpuinfo'));
-    return intval($total_cpu / $cores);
+function getTotalCPU() {
+    $rTotalLoad = 0;
+    exec('ps -Ao pid,pcpu', $processes);
+    foreach ($processes as $process) {
+        $cols = explode(' ', preg_replace('!\\s+!', ' ', trim($process)));
+        $rTotalLoad += floatval($cols[1]);
+    }
+    return $rTotalLoad / intval(shell_exec("grep -P '^processor' /proc/cpuinfo|wc -l"));
+}
+
+function getTotalTmpfs() {
+    $rTotal = 0;
+    exec('df | grep tmpfs', $rOutput);
+    foreach ($rOutput as $rLine) {
+        $rSplit = explode(' ', preg_replace('!\\s+!', ' ', $rLine));
+        if ($rSplit[0] = 'tmpfs') {
+            $rTotal += intval($rSplit[2]);
+        }
+    }
+    return $rTotal;
 }
 
 function GetCategories($type = null) {
@@ -752,12 +785,24 @@ function searchQuery($tableName, $columnName, $value) {
     }
     return false;
 }
-function get_boottime() {
-    if (file_exists('/proc/uptime') and is_readable('/proc/uptime')) {
-        $tmp = explode(' ', file_get_contents('/proc/uptime'));
-        return secondsToTime(intval($tmp[0]));
+function getUptime() {
+    if (!(file_exists('/proc/uptime') && is_readable('/proc/uptime'))) {
+        return '';
     }
-    return '';
+    $tmp = explode(' ', file_get_contents('/proc/uptime'));
+    return secondsToTime(intval($tmp[0]));
+}
+
+function getNetworkInterfaces() {
+    $rReturn = array();
+    exec('ls /sys/class/net/', $rOutput, $rReturnVar);
+    foreach ($rOutput as $rInterface) {
+        $rInterface = trim(rtrim($rInterface, ':'));
+        if ($rInterface != 'lo' && substr($rInterface, 0, 4) != 'bond') {
+            $rReturn[] = $rInterface;
+        }
+    }
+    return $rReturn;
 }
 function secondsToTime($inputSeconds) {
     $secondsInAMinute = 60;
