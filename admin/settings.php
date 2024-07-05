@@ -29,7 +29,7 @@ if (isset($_GET["panel_version"])) {
 
 if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rArray = getSettings();
-    foreach (array("disallow_empty_user_agents", "persistent_connections", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "new_sorting_bouquet", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "firewall", "use_mdomain_in_lists", "hash_lb", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup") as $rSetting) {
+    foreach (array("disallow_empty_user_agents", "persistent_connections", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "new_sorting_bouquet", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "use_mdomain_in_lists", "hash_lb", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup") as $rSetting) {
         if (isset($_POST[$rSetting])) {
             $rArray[$rSetting] = 1;
             unset($_POST[$rSetting]);
@@ -970,12 +970,6 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input name="disallow_2nd_ip_con" id="disallow_2nd_ip_con" type="checkbox" <?php if ($rSettings["disallow_2nd_ip_con"] == 1) {
                                                                                                                                                         echo "checked ";
                                                                                                                                                     } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                    <label class="col-md-4 col-form-label" for="firewall"><?= $_["enable_xc_firewall"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["enable_xtream_codes"] ?>" class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="firewall" id="firewall" type="checkbox" <?php if ($rSettings["firewall"] == 1) {
-                                                                                                                                    echo "checked ";
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">

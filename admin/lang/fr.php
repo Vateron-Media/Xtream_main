@@ -1309,7 +1309,6 @@ $_ = Array(
     "override_country_with_connected" => "Remplacer le pays par le premier pays connecté.",
     "disallow_2nd_ip_connection" => "Interdire la deuxième connexion IP",
     "disallow_connection" => "Interdire la connexion à partir dun IP différent lorsquune connexion est utilisée.",
-    "enable_xc_firewall" => "Activer le pare-feu",
     "enable_xtream_codes" => "Activez le pare-feu Xtream Codes.",
     "use_domain_in_lists" => "Utiliser le domaine dans les listes",
     "use_domaine_name" => "Utiliser le nom de domaine dans les listes.",

@@ -1188,7 +1188,6 @@ $_ = array(
    "override_country_with_connected" => "Переопределить страну с первым подключением.",
    "disallow_2nd_ip_connection" => "Запретить второе IP-соединение",
    "disallow_connection" => "Запретить подключение с другого IP-адреса, когда соединение используется.",
-   "enable_xc_firewall" => "Включить брандмауэр XC",
    "enable_xtream_codes" => "Включите брандмауэр Xtream Codes.",
    "use_domain_in_lists" => "Использовать домен в списках",
    "use_domaine_name" => "Используйте доменное имя в списках.",
