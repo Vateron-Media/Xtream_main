@@ -17,10 +17,8 @@ if ($argc) {
 function loadCron() {
     global $ipTV_db;
     $logFile = TMP_DIR . 'client_request.log';
-    if (!file_exists($logFile)) {
-    } else {
+    if (file_exists($logFile)) {
         $Query = rtrim(parseLogs($logFile), ',');
-
         if (!empty($Query)) {
             $ipTV_db->simple_query("INSERT INTO `client_logs` (`stream_id`,`user_id`,`client_status`,`query_string`,`user_agent`,`ip`,`extra_data`,`date`) VALUES " . $Query);
         }
@@ -46,8 +44,7 @@ function parseLogs($logFile) {
 function shutdown() {
     global $ipTV_db;
     global $identifier;
-    if (!is_object($ipTV_db)) {
-    } else {
+    if (is_object($ipTV_db)) {
         $ipTV_db->close_mysql();
     }
     @unlink($identifier);
