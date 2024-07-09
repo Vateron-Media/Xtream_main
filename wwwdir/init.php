@@ -46,6 +46,7 @@ define('CONS_TMP_PATH', TMP_DIR . 'opened_cons/');
 define('DIVERGENCE_TMP_PATH', TMP_DIR . 'divergence/');
 define('FLOOD_TMP_PATH', TMP_DIR . 'flood/');
 define('STALKER_TMP_PATH', TMP_DIR . 'stalker/');
+define('LOGS_TMP_PATH', TMP_DIR . 'logs/');
 // -------------------
 
 // CACHE FOLDERS
@@ -138,15 +139,14 @@ if (PHP_ERRORS) {
 
 function panelLog($rType, $rMessage, $rExtra = '', $rLine = 0) {
     $rData = array('type' => $rType, 'message' => $rMessage, 'extra' => $rExtra, 'line' => $rLine, 'time' => time());
-    file_put_contents(TMP_DIR . 'error_log.log', base64_encode(json_encode($rData)) . "\n", FILE_APPEND);
+    file_put_contents(LOGS_TMP_PATH . 'error_log.log', base64_encode(json_encode($rData)) . "\n", FILE_APPEND);
 }
 
 function generate404($rKill = true) {
     echo "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->";
     http_response_code(404);
 
-    if (!$rKill) {
-    } else {
+    if ($rKill) {
         exit();
     }
 }
@@ -177,12 +177,9 @@ function generateError($rError, $rKill = true, $rCode = null) {
 }
 
 function log_error($rErrNo, $rMessage, $rFile, $rLine, $rContext = null) {
-    if (!in_array($rErrNo, array(1, 2, 4))) {
-    } else {
-        if (!($rErrNo != 2 || stripos($rMessage, 'undefined variable') !== false || stripos($rMessage, 'undefined constant') !== false)) {
-        } else {
-            panellog(array(1 => 'error', 2 => 'warning', 4 => 'parse')[$rErrNo], $rMessage, $rFile, $rLine);
-        }
+    if (in_array($rErrNo, array(1, 2, 4))) {
+        $error = array(1 => 'error', 2 => 'warning', 4 => 'parse')[$rErrNo];
+        panellog($error, $rMessage, $rFile, $rLine);
     }
 }
 function log_exception($e) {
@@ -190,9 +187,7 @@ function log_exception($e) {
 }
 function log_fatal() {
     $rError = error_get_last();
-
-    if (!($rError !== null && $rError['type'] == 1)) {
-    } else {
+    if ($rError !== null && $rError['type'] == 1) {
         panellog('error', $rError['message'], $rError['file'], $rError['line']);
     }
 }

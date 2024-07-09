@@ -13,6 +13,10 @@ if ($argc) {
 function loadCron() {
     global $ipTV_db;
     $rServers = ipTV_lib::getServers(true);
+
+    #create all network stats
+    getNetworkStats();
+
     $rSignals = intval(trim(shell_exec('ps aux | grep \'Signal Receiver\' | grep -v grep | wc -l')));
     if ($rSignals == 0) {
         shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'signals.php > /dev/null 2>/dev/null &');
@@ -36,6 +40,35 @@ function loadCron() {
     $rAddresses = array_values(array_unique(array_map('trim', explode("\n", shell_exec("ip -4 addr | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'")))));
     $ipTV_db->query('UPDATE `streaming_servers` SET `remote_status` = \'%s\', `server_hardware` = \'%s\', `server_hardware` = \'%s\',`whitelist_ips` = \'%s\', `time_offset` = ' . intval(time()) . ' - UNIX_TIMESTAMP(), `script_version` = \'%s\' WHERE `id` = \'%s\'', $rRemoteStatus, json_encode($rHardware, JSON_UNESCAPED_UNICODE), json_encode($rHardware, JSON_UNESCAPED_UNICODE), json_encode($rAddresses, JSON_UNESCAPED_UNICODE), SCRIPT_VERSION, SERVER_ID);
 }
+
+function getNetworkStats() {
+    $interfaces_dir = '/sys/class/net/';
+    $interfaces = array_diff(scandir($interfaces_dir), array('..', '.'));
+
+    $network_stats = [];
+
+    foreach ($interfaces as $interface) {
+        $stats = [];
+        $stats['status'] = trim(file_get_contents($interfaces_dir . $interface . '/operstate'));
+        $stats['rx_packets'] = trim(file_get_contents($interfaces_dir . $interface . '/statistics/rx_packets'));
+        $stats['tx_packets'] = trim(file_get_contents($interfaces_dir . $interface . '/statistics/tx_packets'));
+        $bytesSentOld = trim(file_get_contents($interfaces_dir . $interface . '/statistics/tx_bytes'));
+        $bytesReceivedOld = trim(file_get_contents($interfaces_dir . $interface . '/statistics/rx_bytes'));
+        sleep(1);
+        $bytesSent = trim(file_get_contents($interfaces_dir . $interface . "/statistics/tx_bytes"));
+        $bytesReceived = trim(file_get_contents($interfaces_dir . $interface . "/statistics/rx_bytes"));
+        $total_bytes_sent = round(($bytesSent - $bytesSentOld) / 1024 * 0.0078125, 2);
+        $total_bytes_received = round(($bytesReceived - $bytesReceivedOld) / 1024 * 0.0078125, 2);
+        $stats['bytes_sent'] = $total_bytes_sent;
+        $stats['bytes_received'] = $total_bytes_received;
+
+        $network_stats[$interface] = $stats;
+    }
+
+    # write to file network
+    file_put_contents(LOGS_TMP_PATH . "network", json_encode($network_stats), LOCK_EX);
+}
+
 function shutdown() {
     global $ipTV_db;
     global $unique_id;

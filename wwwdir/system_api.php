@@ -90,35 +90,7 @@ switch ($action) {
         echo json_encode(SCRIPT_VERSION);
         break;
     case 'stats':
-        $json = array();
-        $json['cpu'] = intval(getTotalCPU());
-        $json['cpu_cores'] = intval(shell_exec('cat /proc/cpuinfo | grep "^processor" | wc -l'));
-        $json['cpu_avg'] = intval(sys_getloadavg()[0] * 100 / $json['cpu_cores']);
-        if ($json['cpu_avg'] > 100) {
-            $json['cpu_avg'] = 100;
-        }
-        $json['total_mem'] = intval(shell_exec('/usr/bin/free -tk | grep -i Mem: | awk \'{print $2}\''));
-        $json['total_mem_free'] = intval(shell_exec('/usr/bin/free -tk | grep -i Mem: | awk \'{print $4+$6+$7}\''));
-        $json['total_mem_used'] = $json['total_mem'] - $json['total_mem_free'];
-        $json['total_mem_used_percent'] = (int) $json['total_mem_used'] / $json['total_mem'] * 100;
-        $json['total_disk_space'] = disk_total_space(IPTV_PANEL_DIR);
-        $json['uptime'] = getUptime();
-        $json['total_running_streams'] = shell_exec('ps ax | grep -v grep | grep ffmpeg | grep -c ' . FFMPEG_PATH);
-        $int = ipTV_lib::$StreamingServers[SERVER_ID]['network_interface'];
-        $json['bytes_sent'] = 0;
-        $json['bytes_received'] = 0;
-        if (file_exists("/sys/class/net/{$int}/statistics/tx_bytes")) {
-            $bytes_sent_old = trim(file_get_contents("/sys/class/net/{$int}/statistics/tx_bytes"));
-            $bytes_received_old = trim(file_get_contents("/sys/class/net/{$int}/statistics/rx_bytes"));
-            sleep(1);
-            $bytes_sent_new = trim(file_get_contents("/sys/class/net/{$int}/statistics/tx_bytes"));
-            $bytes_received_new = trim(file_get_contents("/sys/class/net/{$int}/statistics/rx_bytes"));
-            $total_bytes_sent = round(($bytes_sent_new - $bytes_sent_old) / 1024 * 0.0078125, 2);
-            $total_bytes_received = round(($bytes_received_new - $bytes_received_old) / 1024 * 0.0078125, 2);
-            $json['bytes_sent'] = $total_bytes_sent;
-            $json['bytes_received'] = $total_bytes_received;
-        }
-        echo json_encode($json);
+        echo json_encode(getStats());
         die;
         break;
     case 'BackgroundCLI':

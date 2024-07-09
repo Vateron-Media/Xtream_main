@@ -313,7 +313,9 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
         echo 'Clearing old data...' . "\n";
         foreach (array(STREAMS_TMP_PATH, USER_TMP_PATH, SERIES_TMP_PATH) as $rTmpPath) {
             foreach (scandir($rTmpPath) as $rFile) {
-                unlink($rTmpPath . $rFile);
+                if (is_file($rTmpPath . $rFile)) {
+                    unlink($rTmpPath . $rFile);
+                }
             }
         }
         file_put_contents(CACHE_TMP_PATH . 'cache_complete', time());
@@ -581,8 +583,7 @@ function getChangedLines() {
     if ($ipTV_db->dbh && $ipTV_db->result) {
         if ($ipTV_db->num_rows() > 0) {
             foreach ($ipTV_db->get_rows() as $rRow) {
-                if (file_exists(USER_TMP_PATH . 'line_i_' . $rRow['id']) && ((filemtime(USER_TMP_PATH . 'line_i_' . $rRow['id']) ?: 0)) >= $rRow['updated']) {
-                } else {
+                if (!(file_exists(USER_TMP_PATH . 'line_i_' . $rRow['id']) && ((filemtime(USER_TMP_PATH . 'line_i_' . $rRow['id']) ?: 0)) >= $rRow['updated'])) {
                     $rReturn['changes'][] = $rRow['id'];
                 }
                 $cacheRevalidationCheck[] = $rRow['id'];

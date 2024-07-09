@@ -693,7 +693,7 @@ class ipTV_streaming {
         if (ipTV_lib::$settings['save_closed_connection'] != 0) {
             if ($server_id && $user_id && $streamID) {
                 $activity_id = array('user_id' => intval($user_id), 'stream_id' => intval($streamID), 'server_id' => intval($server_id), 'date_start' => intval($start), 'user_agent' => $user_agent, 'user_ip' => htmlentities($user_ip), 'date_end' => time(), 'container' => $extension, 'geoip_country_code' => $geoip_country_code, 'isp' => $isp, 'external_device' => htmlentities($external_device), 'divergence' => intval($rDivergence));
-                file_put_contents(TMP_DIR . 'connections', base64_encode(json_encode($activity_id)) . "\n", FILE_APPEND | LOCK_EX);
+                file_put_contents(LOGS_TMP_PATH . 'connections', base64_encode(json_encode($activity_id)) . "\n", FILE_APPEND | LOCK_EX);
             }
         } else {
             return null;
@@ -749,7 +749,7 @@ class ipTV_streaming {
         if (ipTV_lib::$settings['client_logs_save'] != 0 || $bypass) {
             $user_agent = (!empty($_SERVER['HTTP_USER_AGENT']) ? htmlentities($_SERVER['HTTP_USER_AGENT']) : '');
             $data = array('user_id' => $userID, 'stream_id' => $streamID, 'action' => $action, 'query_string' => htmlentities($_SERVER['QUERY_STRING']), 'user_agent' => $user_agent, 'user_ip' => $IP, 'time' => time(), 'extra_data' => $data);
-            file_put_contents(TMP_DIR . 'client_request.log', base64_encode(json_encode($data)) . "\n", FILE_APPEND);
+            file_put_contents(LOGS_TMP_PATH . 'client_request.log', base64_encode(json_encode($data)) . "\n", FILE_APPEND);
         } else {
             return null;
         }

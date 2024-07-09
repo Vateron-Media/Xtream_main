@@ -2,7 +2,7 @@
 set_time_limit(0);
 if ($argc) {
     register_shutdown_function('shutdown');
-    require str_replace('\\', '/', dirname($argv[0])) . '/../www/init.php';
+    require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
     cli_set_process_title('XtreamCodes[Activity]');
     $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
     ipTV_lib::check_cron($unique_id);
@@ -13,7 +13,7 @@ if ($argc) {
 
 function loadCron() {
     global $ipTV_db;
-    $rLogFile = TMP_DIR . 'connections';
+    $rLogFile = LOGS_TMP_PATH . 'connections';
     $rUpdateQuery = $rQuery = '';
     $rUpdates = array();
     $rCount = 0;
@@ -23,8 +23,7 @@ function loadCron() {
     }
     if ($rCount > 0) {
         $rQuery = rtrim($rQuery, ',');
-        if (empty($rQuery)) {
-        } else {
+        if (!empty($rQuery)) {
             if ($ipTV_db->query('INSERT INTO `user_activity` (`server_id`,`user_id`,`isp`,`external_device`,`stream_id`,`date_start`,`user_agent`,`user_ip`,`date_end`,`container`,`geoip_country_code`,`divergence`) VALUES ' . $rQuery)) {
                 $rFirstID = $ipTV_db->last_insert_id();
                 $i = 0;
@@ -67,8 +66,7 @@ function parseLog($rFile) {
 function shutdown() {
     global $ipTV_db;
     global $unique_id;
-    if (!is_object($ipTV_db)) {
-    } else {
+    if (is_object($ipTV_db)) {
         $ipTV_db->close_mysql();
     }
     @unlink($unique_id);

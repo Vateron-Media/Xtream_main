@@ -46,20 +46,15 @@ function getStats() {
     if ($rJSON['total_mem_used_percent'] > 100) {
         $rJSON['total_mem_used_percent'] = 100;
     }
-    $int = ipTV_lib::$StreamingServers[SERVER_ID]['network_interface'];
-    $json['bytes_sent'] = 0;
-    $json['bytes_received'] = 0;
-    if (file_exists("/sys/class/net/{$int}/statistics/tx_bytes")) {
-        $bytes_sent_old = trim(file_get_contents("/sys/class/net/{$int}/statistics/tx_bytes"));
-        $bytes_received_old = trim(file_get_contents("/sys/class/net/{$int}/statistics/rx_bytes"));
-        sleep(1);
-        $bytes_sent_new = trim(file_get_contents("/sys/class/net/{$int}/statistics/tx_bytes"));
-        $bytes_received_new = trim(file_get_contents("/sys/class/net/{$int}/statistics/rx_bytes"));
-        $total_bytes_sent = round(($bytes_sent_new - $bytes_sent_old) / 1024 * 0.0078125, 2);
-        $total_bytes_received = round(($bytes_received_new - $bytes_received_old) / 1024 * 0.0078125, 2);
-        $json['bytes_sent'] = $total_bytes_sent;
-        $json['bytes_received'] = $total_bytes_received;
+
+    $rJSON['network_info'] = getNetwork((ipTV_lib::$StreamingServers[SERVER_ID]['network_interface'] == 'auto' ? null : ipTV_lib::$StreamingServers[SERVER_ID]['network_interface']));
+    foreach ($rJSON['network_info'] as $rInterface => $rData) {
+        $rJSON['bytes_sent_total'] = (intval(trim(file_get_contents('/sys/class/net/' . $rInterface . '/statistics/tx_bytes'))) ?: 0);
+        $rJSON['bytes_received_total'] = (intval(trim(file_get_contents('/sys/class/net/' . $rInterface . '/statistics/tx_bytes'))) ?: 0);
+        $rJSON['bytes_sent'] += $rData['bytes_sent'];
+        $rJSON['bytes_received'] += $rData['bytes_received'];
     }
+
     list($rJSON['cpu_load_average']) = sys_getloadavg();
     return $rJSON;
 }
@@ -360,6 +355,9 @@ function UniqueID() {
 }
 function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey = null, $rNoCache = false) {
     global $ipTV_db;
+
+    $cache_playlists = 60;
+
     if (!empty($rDeviceKey)) {
         if ($rOutputKey == 'mpegts') {
             $rOutputKey = 'ts';
@@ -404,7 +402,7 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                 } else {
                     $rFilename = str_replace('{USERNAME}', $rUserInfo['username'], $rDeviceInfo['device_filename']);
                 }
-                if (!(0 < ipTV_lib::$settings['cache_playlists'] && !$rNoCache && file_exists(PLAYLIST_PATH . md5($rCacheName)))) {
+                if (!(0 < $cache_playlists && !$rNoCache && file_exists(PLAYLIST_PATH . md5($rCacheName)))) {
                     $rData = '';
                     $rSeriesAllocation = $rSeriesEpisodes = $rSeriesInfo = array();
                     $rUserInfo['episode_ids'] = array();
@@ -733,49 +731,32 @@ function GetContainerExtension($target_container, $stalker_container_priority = 
     return $target_container[0];
 }
 function crontab_refresh() {
-    if (!file_exists(TMP_DIR . 'crontab_refresh')) {
+    if (!file_exists(TMP_DIR . 'crontab')) {
+        $rJobs = array();
         $crons = scandir(CRON_PATH);
-        $jobs = array();
         foreach ($crons as $cron) {
-            $full_path = CRON_PATH . $cron;
-            if (is_file($full_path) && pathinfo($full_path, PATHINFO_EXTENSION) == "php") {
+            $rFullPath = CRON_PATH . $cron;
+            if (pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && is_file($rFullPath)) {
                 if ($cron != "epg.php") {
                     $time = "*/1 * * * *";
                 } else {
                     $time = "0 1 * * *";
                 }
-                $jobs[] = "{$time} " . PHP_BIN . " " . $full_path . " # Xtream-Codes IPTV Panel";
+                $rJobs[] = $time . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XtreamUI';
             }
         }
-        $crontab = trim(shell_exec("crontab -l"));
-
-        if (!empty($crontab)) {
-            $lines = explode("\n", $crontab);
-            $lines = array_map("trim", $lines);
-            if ($lines != $jobs) {
-                foreach ($lines as $index => $line) {
-                    if (stripos($line, CRON_PATH)) {
-                        unset($lines[$index]);
-                    }
-                }
-                $lines = array_values($lines); // reindex array
-                $lines = array_merge($lines, $jobs);
-            }
-            file_put_contents(TMP_DIR . "crontab_refresh", 1);
-            return true;
-        }
-        $lines = $jobs;
-        shell_exec("crontab -r");
-        $tmpfname = tempnam("/tmp", "crontab");
-        $handle = fopen($tmpfname, "w");
-        fwrite($handle, implode("\r\n", $lines) . "\r\n");
-        fclose($handle);
-        shell_exec("crontab {$tmpfname}");
-        @unlink($tmpfname);
-        file_put_contents(TMP_DIR . "crontab_refresh", 1);
-        return;
+        shell_exec('crontab -r');
+        $rTempName = tempnam('/tmp', 'crontab');
+        $rHandle = fopen($rTempName, 'w');
+        fwrite($rHandle, implode("\n", $rJobs) . "\n");
+        fclose($rHandle);
+        shell_exec('crontab -u 	xtreamcodes ' . $rTempName);
+        @unlink($rTempName);
+        file_put_contents(TMP_DIR . 'crontab', 1);
+        return true;
+    } else {
+        return false;
     }
-    return false;
 }
 function searchQuery($tableName, $columnName, $value) {
     global $ipTV_db;
@@ -804,6 +785,20 @@ function getNetworkInterfaces() {
     }
     return $rReturn;
 }
+
+function getNetwork($Interface = null) {
+    $Return = array();
+    if (file_exists(LOGS_TMP_PATH . 'network')) {
+        $Network = json_decode(file_get_contents(LOGS_TMP_PATH . 'network'), true);
+        foreach ($Network as $Key => $Line) {
+            if (!($Interface && $Key != $Interface) && !($Key == 'lo' || !$Interface && substr($Key, 0, 4) == 'bond')) {
+                $Return[$Key] = $Line;
+            }
+        }
+    }
+    return $Return;
+}
+
 function secondsToTime($inputSeconds) {
     $secondsInAMinute = 60;
     $secondsInAnHour = 60 * $secondsInAMinute;

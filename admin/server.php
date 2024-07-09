@@ -353,13 +353,6 @@ if ($rSettings["sidebar"]) { ?>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="network_interface">Network Interface</label>
-                                                                <!--<div class="col-md-2">
-                                                                <input type="text" class="form-control" id="network_interface" name="network_interface" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                                    echo htmlspecialchars($rServerArr["network_interface"]);
-                                                                                                                                                                } else {
-                                                                                                                                                                    echo "eth0";
-                                                                                                                                                                } ?>" required data-parsley-trigger="change">
-                                                            </div>-->
                                                                 <div class="col-md-2">
                                                                     <select name="network_interface" id="network_interface" class="form-control select2" data-toggle="select2">network interface
                                                                         <?php

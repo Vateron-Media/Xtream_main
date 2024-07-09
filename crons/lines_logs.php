@@ -16,7 +16,7 @@ if ($argc) {
 
 function loadCron() {
     global $ipTV_db;
-    $logFile = TMP_DIR . 'client_request.log';
+    $logFile = LOGS_TMP_PATH . 'client_request.log';
     if (file_exists($logFile)) {
         $Query = rtrim(parseLogs($logFile), ',');
         if (!empty($Query)) {

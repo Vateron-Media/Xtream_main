@@ -6,7 +6,6 @@ if ($argc) {
     shell_exec('kill $(ps aux | grep \'Signal Receiver\' | grep -v grep | grep -v ' . getmypid() . ' | awk \'{print $2}\')');
     $rMD5 = md5_file(__FILE__);
     while (true) {
-        $ipTV_db->db_connect();
         if ($ipTV_db->query('SELECT `signal_id`, `pid`, `rtmp` FROM `signals` WHERE `server_id` = \'%s\' AND `pid` IS NOT NULL ORDER BY `signal_id` ASC LIMIT 100', SERVER_ID)) {
             if ($ipTV_db->num_rows() > 0) {
                 $rIDs = array();
@@ -83,7 +82,6 @@ if ($argc) {
             }
             break;
         }
-        $ipTV_db->close_mysql();
     }
     if (is_object($ipTV_db)) {
         $ipTV_db->close_mysql();

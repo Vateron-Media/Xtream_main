@@ -43,7 +43,7 @@ if ($rUserInfo) {
     $rDeny = false;
 
     // if ($rUserInfo['bypass_ua'] == 0) {
-    //     if (XUI::checkBlockedUAs($rUserAgent, true)) {
+    //     if (checkBlockedUAs($rUserAgent, true)) {
     //         generateError('BLOCKED_USER_AGENT');
     //     }
     // }

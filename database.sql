@@ -721,8 +721,13 @@ CREATE TABLE IF NOT EXISTS `packages` (
 
 CREATE TABLE IF NOT EXISTS `panel_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `log_message` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `date` int(11) NOT NULL,
+  `type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pdo',
+  `log_message` longtext COLLATE utf8_unicode_ci,
+  `log_extra` longtext COLLATE utf8_unicode_ci,
+  `line` int(11) DEFAULT NULL,
+  `date` int(11) DEFAULT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `unique` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

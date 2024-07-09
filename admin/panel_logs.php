@@ -48,7 +48,11 @@ if ($rSettings["sidebar"]) { ?>
                                         <thead>
                                             <tr>
                                                 <th class="text-center"><?= $_["id"] ?> </th>
+                                                <th class="text-center"><?= $_["server_id"] ?> </th>
+                                                <th class="text-center"><?= $_["type"] ?> </th>
                                                 <th class="text-center"><?= $_["log_message"] ?> </th>
+                                                <th class="text-center"><?= $_["file_path"] ?> </th>
+                                                <th class="text-center"><?= $_["line"] ?> </th>
                                                 <th class="text-center"><?= $_["date"] ?> </th>
                                             </tr>
                                         </thead>
@@ -57,9 +61,14 @@ if ($rSettings["sidebar"]) { ?>
                                             ?>
                                                 <tr>
                                                     <td class="text-center"><?= $rPlog["id"] ?> </td>
+                                                    <td class="text-center"><?= $rPlog["server_id"] ?> </td>
+                                                    <td class="text-center"><?= $rPlog["type"] ?> </td>
                                                     <!-- <td><?= (strlen($rPlog["log_message"]) > 130 ? substr($rPlog["log_message"], 0, 130) . "..." : $rPlog["log_message"]) ?> </td> -->
                                                     <td><?= $rPlog["log_message"] ?> </td>
-                                                    <td class="text-center"><?= date("Y-m-d", $rPlog["date"]) ?> </td>
+                                                    <td class="text-center"><?= $rPlog["log_extra"] ?> </td>
+                                                    <td class="text-center"><?= $rPlog["line"] ?> </td>
+
+                                                    <td class="text-center"><?= date("Y-m-d H:i:s", $rPlog["date"]) ?> </td>
                                                 </tr>
                                             <?php } ?>
                                         </tbody>
