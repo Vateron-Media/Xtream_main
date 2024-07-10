@@ -115,7 +115,7 @@ include IPTV_INCLUDES_PATH . 'geo/Util.php';
 include IPTV_INCLUDES_PATH . 'geo/Metadata.php';
 include IPTV_INCLUDES_PATH . 'geo/InvalidDatabaseException.php';
 
-$FILES = array('clients_live.php', 'clients_movie.php', 'timeshift.php', 'admin_live.php', 'admin_movie.php', 'xmltv.php', 'panel_api.php', 'enigma2.php', 'portal.php', 'get.php');
+$FILES = array('live.php', 'clients_movie.php', 'timeshift.php', 'admin_live.php', 'admin_movie.php', 'xmltv.php', 'panel_api.php', 'enigma2.php', 'portal.php', 'get.php');
 
 if (empty($argc)) {
     if (!in_array(basename($_SERVER['SCRIPT_FILENAME']), $FILES)) {
