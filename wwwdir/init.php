@@ -17,7 +17,6 @@ define('IPTV_PANEL_DIR', MAIN_DIR . 'iptv_xtream_codes/');
 define('STREAMS_PATH', IPTV_PANEL_DIR . 'streams/');
 define('MOVIES_IMAGES', IPTV_PANEL_DIR . 'wwwdir/images/');
 define('ENIGMA2_PLUGIN_DIR', MOVIES_IMAGES . 'enigma2/');
-define('MOVIES_PATH', IPTV_PANEL_DIR . 'movies/');
 define('CREATED_CHANNELS', IPTV_PANEL_DIR . 'created_channels/');
 define('CRON_PATH', IPTV_PANEL_DIR . 'crons/');
 define('ASYNC_DIR', IPTV_PANEL_DIR . 'async_incs/');
@@ -59,6 +58,7 @@ define('SERIES_TMP_PATH', CACHE_TMP_PATH . 'series/');
 define('CONTENT_PATH', IPTV_PANEL_DIR . 'content/');
 define('PLAYLIST_PATH', CONTENT_PATH . 'playlists/');
 define('EPG_PATH', CONTENT_PATH . 'epg/');
+define('VOD_PATH', CONTENT_PATH . 'vod/');
 // -------------------
 
 // CONSTANTS VAR

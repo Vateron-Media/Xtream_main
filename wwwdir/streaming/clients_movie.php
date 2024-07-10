@@ -151,7 +151,7 @@ if ($user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, f
         }
         $total_bitrate = !empty($channel_info['bitrate']) ? $channel_info['bitrate'] * 125 : 0;
         $total_bitrate += $total_bitrate * ipTV_lib::$settings['vod_bitrate_plus'] * 0.01;
-        $movie_file = MOVIES_PATH . $stream_id . '.' . $extension;
+        $movie_file = VOD_PATH . $stream_id . '.' . $extension;
         if (file_exists($movie_file)) {
             $fp = @fopen($movie_file, 'rb');
             $size = filesize($movie_file);

@@ -32,7 +32,7 @@ function loadCron() {
                 exec('sudo rm -rf ' . SIGNALS_PATH . '*');
             }
         }
-        foreach (array(LOGS_TMP_PATH, STALKER_TMP_PATH, PLAYLIST_PATH, USER_TMP_PATH, MOVIES_IMAGES, CONS_TMP_PATH, CACHE_TMP_PATH, DIVERGENCE_TMP_PATH, STREAMS_TMP_PATH, SERIES_TMP_PATH, ENIGMA2_PLUGIN_DIR, FLOOD_TMP_PATH) as $rPath) {
+        foreach (array(LOGS_TMP_PATH, STALKER_TMP_PATH, PLAYLIST_PATH, USER_TMP_PATH, MOVIES_IMAGES, CONS_TMP_PATH, CACHE_TMP_PATH, DIVERGENCE_TMP_PATH, STREAMS_TMP_PATH, SERIES_TMP_PATH, ENIGMA2_PLUGIN_DIR, FLOOD_TMP_PATH, EPG_PATH, VOD_PATH) as $rPath) {
             if (!file_exists($rPath)) {
                 mkdir($rPath);
             }

@@ -43,7 +43,7 @@ if (0 < $ipTV_db->num_rows()) {
                     $data['target_container'] = array($data['target_container']);
                 }
                 $data['target_container'] = $data['target_container'][0];
-                $fileURL = MOVIES_PATH . $data['stream_id'] . '.' . $data['target_container'];
+                $fileURL = VOD_PATH . $data['stream_id'] . '.' . $data['target_container'];
                 if ($stream_info = ipTV_stream::analyzeStream($fileURL, $data['server_id'])) {
                     $duration = isset($stream_info['duration']) ? $stream_info['duration'] : 0;
                     sscanf($duration, '%d:%d:%d', $hours, $minutes, $seconds);

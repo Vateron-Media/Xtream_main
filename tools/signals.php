@@ -59,11 +59,11 @@ if ($argc) {
                                 unlink(CONS_TMP_PATH . $rCustomData['uuid']);
                                 break;
                             case 'delete_vod':
-                                exec('rm ' . MOVIES_PATH . intval($rCustomData['id']) . '.*');
+                                exec('rm ' . VOD_PATH . intval($rCustomData['id']) . '.*');
                                 break;
                             case 'delete_vods':
                                 foreach ($rCustomData['id'] as $rID) {
-                                    exec('rm ' . MOVIES_PATH . intval($rID) . '.*');
+                                    exec('rm ' . VOD_PATH . intval($rID) . '.*');
                                 }
                                 break;
                         }

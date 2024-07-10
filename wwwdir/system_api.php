@@ -22,8 +22,8 @@ switch ($action) {
             $stream_id = intval(ipTV_lib::$request['stream_id']);
             if (file_exists(STREAMS_PATH . $stream_id . '.errors')) {
                 echo file_get_contents(STREAMS_PATH . $stream_id . '.errors');
-            } else if (file_exists(MOVIES_PATH . $stream_id . '.errors')) {
-                echo file_get_contents(MOVIES_PATH . $stream_id . '.errors');
+            } else if (file_exists(VOD_PATH . $stream_id . '.errors')) {
+                echo file_get_contents(VOD_PATH . $stream_id . '.errors');
             } else {
             }
         }

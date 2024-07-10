@@ -32,7 +32,7 @@ if (ipTV_lib::$settings['use_buffer'] == 0) {
 if ($ipTV_db->num_rows() > 0) {
     $Fc8c2b91e5fde0dc817c47293478940a = $ipTV_db->get_row();
     $ipTV_db->close_mysql();
-    $E6dd23f358d554b9a74e3ae676bc8c9b = MOVIES_PATH . $stream_id . '.' . $extension;
+    $E6dd23f358d554b9a74e3ae676bc8c9b = VOD_PATH . $stream_id . '.' . $extension;
     if (file_exists($E6dd23f358d554b9a74e3ae676bc8c9b)) {
         switch ($extension) {
             case 'mp4':
