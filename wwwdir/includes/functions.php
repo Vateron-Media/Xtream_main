@@ -477,20 +477,12 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                         $rOutput['iptvstreams_list']['group']['name'] = 'IPTV';
                         $rOutput['iptvstreams_list']['group']['channel'] = array();
                         foreach (array_chunk($rChannelIDs, 1000) as $rBlockIDs) {
-                            if (ipTV_lib::$settings['playlist_from_mysql']) {
-                                $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
-                                $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.year,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
-                                $rRows = $ipTV_db->get_rows();
-                            } else {
-                                $rRows = array();
-                                foreach ($rBlockIDs as $rID) {
-                                    $rRows[] = unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rID)))['info'];
-                                }
-                            }
+                            $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
+                            $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
+                            $rRows = $ipTV_db->get_rows();
                             foreach ($rRows as $rChannelInfo) {
                                 if (!$rTypeKey || in_array($rChannelInfo['type_output'], $rTypeKey)) {
-                                    if ($rChannelInfo['target_container']) {
-                                    } else {
+                                    if (!$rChannelInfo['target_container']) {
                                         $rChannelInfo['target_container'] = 'mp4';
                                     }
                                     $rProperties = (!is_array($rChannelInfo['movie_properties']) ? json_decode($rChannelInfo['movie_properties'], true) : $rChannelInfo['movie_properties']);
@@ -570,16 +562,9 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                 $rPattern = '{URL}';
                             }
                             foreach (array_chunk($rChannelIDs, 1000) as $rBlockIDs) {
-                                if (ipTV_lib::$settings['playlist_from_mysql']) {
-                                    $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
-                                    $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.year,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live,t1.tv_archive_duration,t1.tv_archive_server_id FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
-                                    $rRows = $ipTV_db->get_rows();
-                                } else {
-                                    $rRows = array();
-                                    foreach ($rBlockIDs as $rID) {
-                                        $rRows[] = unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rID)))['info'];
-                                    }
-                                }
+                                $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
+                                $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live,t1.tv_archive_duration,t1.tv_archive_server_id FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
+                                $rRows = $ipTV_db->get_rows();
                                 foreach ($rRows as $rChannel) {
                                     if (!empty($rTypeKey) && in_array($rChannel['type_output'], $rTypeKey)) {
                                         if (!$rChannel['target_container']) {
@@ -666,15 +651,17 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                         $rCategoryID = json_decode($rChannel['category_id'], true);
                                         if (isset(ipTV_lib::$categories[$rCategoryID])) {
                                             $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array($rPattern, '{ESR_ID}', '{SID}', '{CHANNEL_NAME}', '{CHANNEL_ID}', '{XUI_ID}', '{CATEGORY}', '{CHANNEL_ICON}'), array(str_replace($rCharts, array_map('urlencode', $rCharts), $rURL), $rESRID, $rSID, $rChannel['stream_display_name'], $rChannel['channel_id'], $rChannel['id'], ipTV_lib::$categories[$rCategoryID]['category_name'], $rIcon), $rConfig)) . "\r\n";
-                                            if ($rOutputFile) {
-                                                fwrite($rOutputFile, $rData);
-                                            }
-                                            echo $rData;
-                                            unset($rData);
-                                            // if (stripos($rDeviceInfo['device_conf'], '{CATEGORY}') == false) {
-                                            //     break;
-                                            // }
+                                        } else {
+                                            $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array($rPattern, '{ESR_ID}', '{SID}', '{CHANNEL_NAME}', '{CHANNEL_ID}', '{XUI_ID}', '{CHANNEL_ICON}'), array(str_replace($rCharts, array_map('urlencode', $rCharts), $rURL), $rESRID, $rSID, $rChannel['stream_display_name'], $rChannel['channel_id'], $rChannel['id'], $rIcon), $rConfig)) . "\r\n";
                                         }
+                                        if ($rOutputFile) {
+                                            fwrite($rOutputFile, $rData);
+                                        }
+                                        echo $rData;
+                                        unset($rData);
+                                        // if (stripos($rDeviceInfo['device_conf'], '{CATEGORY}') == false) {
+                                        //     break;
+                                        // }
                                     }
                                 }
                                 unset($rRows);
@@ -773,7 +760,6 @@ function getUptime() {
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
     return secondsToTime(intval($tmp[0]));
 }
-
 function getNetworkInterfaces() {
     $rReturn = array();
     exec('ls /sys/class/net/', $rOutput, $rReturnVar);
@@ -785,7 +771,6 @@ function getNetworkInterfaces() {
     }
     return $rReturn;
 }
-
 function getNetwork($Interface = null) {
     $Return = array();
     if (file_exists(LOGS_TMP_PATH . 'network')) {

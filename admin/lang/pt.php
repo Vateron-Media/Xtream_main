@@ -1271,6 +1271,9 @@ $_ = array(
 	"auto_kick_users" => "Utilizadores do Auto-Kick",
 	"automatically_kick_users" => "Expulsar automaticamente os utilizadores que estão online por mais de X horas.",    "disallow_empty_user_agents" => "Não permitir UA vazia",
 	"disallow_empty_ua" => "Não autorizar Agente-Utilizador vazio",
+	"block_svp" => "Disallow Servers/VPN/Proxies",
+	"block_svp_desc" => "This setting will prevent users connected from Servers/VPN/Proxies to open connection to your Servers. No matter what you will select, the log about that action will be written below. Please note that Restreamers (Is Restreamer = Yes under Add/Edit User) are not affected by this setting and no log will be written.",
+
 	"dont_allow_connections_from_clients" => "Não permita ligações de clientes sem agente-utilizador.",
 	"client_prebuffer" => "Pré-compensador de clientes",
 	"how_much_data_will_be_sent_to_the_client_1" => "Quantos dados serão enviados para o cliente quando se conectar a um fluxo. Valores maiores criarão pré-buffers maiores.",

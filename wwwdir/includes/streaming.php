@@ -337,7 +337,6 @@ class ipTV_streaming {
         $userInfo['bouquet'] = json_decode($userInfo['bouquet'], true);
         $userInfo['allowed_ips'] = @array_filter(@array_map('trim', @json_decode($userInfo['allowed_ips'], true)));
         $userInfo['allowed_ua'] = @array_filter(@array_map('trim', @json_decode($userInfo['allowed_ua'], true)));
-        $userInfo['allowed_outputs'] = array_map('intval', json_decode($userInfo['allowed_outputs'], true));
         if (file_exists(TMP_DIR . 'user_output' . $userInfo["id"])) {
             $userInfo["output_formats"] = unserialize(file_get_contents(TMP_DIR . "user_output" . $userInfo["id"]));
         } else {
@@ -357,15 +356,8 @@ class ipTV_streaming {
                     $userInfo['con_isp_name'] = $ISPLock['isp'];
                     $userInfo['isp_asn'] = $ISPLock['autonomous_system_number'];
                     $userInfo['isp_violate'] = self::checkISP($userInfo['con_isp_name']);
-                    if (ipTV_lib::$settings['block_svp'] != 1) {
+                    if (ipTV_lib::$settings['block_svp'] = 1) {
                         $IspIsBlocked = self::checkIspIsBlocked($userInfo["con_isp_name"]);
-                        if ($userInfo["is_restreamer"] == 0 && ipTV_lib::$settings["block_svp"] == 1 && !empty($ISPLock["isp_info"]["is_server"])) {
-                            $userInfo["isp_is_server"] = $ISPLock["isp_info"]["is_server"];
-                        }
-
-                        if ($userInfo["isp_is_server"] == 1) {
-                            $userInfo["con_isp_type"] = $ISPLock["isp_info"]["type"];
-                        }
                         if ($IspIsBlocked !== false) {
                             $userInfo["isp_is_server"] = $IspIsBlocked == 1 ? 1 : 0;
                             $userInfo["con_isp_type"] = $userInfo["isp_is_server"] == 1 ? "Custom" : null;
@@ -380,7 +372,6 @@ class ipTV_streaming {
                 self::$ipTV_db->query('UPDATE `users` SET `isp_desc` = \'%s\', `as_number` = \'%s\' WHERE `id` = \'%s\'', $userInfo['con_isp_name'], $userInfo['isp_asn'], $userInfo['id']);
             }
         }
-
 
         if ($getChannelIDs) {
             $rLiveIDs = $rVODIDs = $rRadioIDs = $rCategoryIDs = $rChannelIDs = $rSeriesIDs = array();
@@ -433,14 +424,14 @@ class ipTV_streaming {
         return false;
     }
     public static function getAdultCategories() {
-		$rReturn = array();
-		foreach (ipTV_lib::$categories as $rCategory) {
-			if ($rCategory['is_adult']) {
-				$rReturn[] = intval($rCategory['id']);
-			}
-		}
-		return $rReturn;
-	}
+        $rReturn = array();
+        foreach (ipTV_lib::$categories as $rCategory) {
+            if ($rCategory['is_adult']) {
+                $rReturn[] = intval($rCategory['id']);
+            }
+        }
+        return $rReturn;
+    }
     public static function GetMagInfo($mag_id = null, $mac = null, $get_ChannelIDS = false, $getBouquetInfo = false, $get_cons = false) {
         if (empty($mag_id)) {
             self::$ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mac` = \'%s\'', base64_encode($mac));

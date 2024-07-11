@@ -43,11 +43,6 @@ if ($argc) {
             $rResult = $ipTV_db->query('UPDATE `streaming_servers` SET `watchdog_data` = \'%s\', `last_check_ago` = UNIX_TIMESTAMP(), `php_pids` = \'%s\' WHERE `id` = \'%s\';', json_encode($rStats, JSON_PARTIAL_OUTPUT_ON_ERROR), json_encode($rPHPPIDs), SERVER_ID);
 
             if ($rResult) {
-                if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
-                    $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
-                    $rTotalUsers = $ipTV_db->num_rows();
-                    $ipTV_db->query('UPDATE `settings` SET `total_users` = \'%s\';', $rTotalUsers);
-                }
                 sleep(2);
             } else {
                 echo 'Failed, break.' . "\n";

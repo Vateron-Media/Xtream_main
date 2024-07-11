@@ -1153,6 +1153,8 @@ $_ = array(
   "flood_ip_exclude" => "Flood IP Exclusions",
   "separate_each_ip" => "Separate each IP with a comma.",
   "disallow_empty_ua" => "Disallow Empty UA",
+  "block_svp" => "Disallow Servers/VPN/Proxies",
+  "block_svp_desc" => "This setting will prevent users connected from Servers/VPN/Proxies to open connection to your Servers. No matter what you will select, the log about that action will be written below. Please note that Restreamers (Is Restreamer = Yes under Add/Edit User) are not affected by this setting and no log will be written.",
   "dont_allow_connections_from_clients" => "Don't allow connections from clients with no user-agent.",
   "client_prebuffer" => "Client Prebuffer",
   "how_much_data_will_be_sent_to_the_client_1" => "How much data will be sent to the client when connecting to a stream. Larger values will create larger prebuffers.",

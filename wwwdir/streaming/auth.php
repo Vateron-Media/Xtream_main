@@ -67,46 +67,9 @@ if (!$rExtension && in_array($rType, array('movie', 'series', 'subtitle'))) {
 }
 
 if ($rExtension) {
-
-    if (!($streamID && (file_exists(STREAMS_TMP_PATH . 'stream_' . $streamID)))) {
+    if (!$streamID) {
         generateError('INVALID_STREAM_ID');
     }
-
-    if ((!ipTV_lib::$settings['show_not_on_air_video'] && file_exists(CACHE_TMP_PATH . 'servers'))) {
-        $rServers = unserialize(file_get_contents(CACHE_TMP_PATH . 'servers'));
-        $rStream = (unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . $streamID)) ?: null);
-        $rAvailableServers = array();
-
-        if ($rType == 'archive') {
-            if ((0 < $rStream['info']['tv_archive_duration'] && 0 < $rStream['info']['tv_archive_server_id'] && array_key_exists($rStream['info']['tv_archive_server_id'], $rServers) && $rServers[rStream['info']['tv_archive_server_id']]['server_online'])) {
-                $rAvailableServers[] = array($rStream['info']['tv_archive_server_id']);
-            }
-        } else {
-            if (($rStream['info']['direct_source'] == 1)) {
-                $rAvailableServers[] = $rServerID;
-            }
-
-            foreach ($rServers as $rServerID => $rServerInfo) {
-                if (array_key_exists($rServerID, $rStream['servers']) || $rServerInfo['server_online'] || $rServerInfo['server_type'] == 0) {
-                    if (isset($rStream['servers'][$rServerID])) {
-                        if ($rType == 'movie') {
-                            if (((!empty($rStream['servers'][$rServerID]['pid']) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && $rStream['servers'][$rServerID]['stream_status'] == 0 || $rStream['info']['direct_source'] == 1 && $rStream['info']['direct_proxy'] == 1) && ($rStream['info']['target_container'] == $rExtension || ($rExtension = 'srt')) && $rServerInfo['timeshift_only'] == 0)) {
-                                $rAvailableServers[] = $rServerID;
-                            }
-                        } else {
-                            if ((($rStream['servers'][$rServerID]['on_demand'] == 1 && $rStream['servers'][$rServerID]['stream_status'] != 1 || 0 < $rStream['servers'][$rServerID]['pid'] && $rStream['servers'][$rServerID]['stream_status'] == 0) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && (int) $rStream['servers'][$rServerID]['delay_available_at'] <= time() && $rServerInfo['timeshift_only'] == 0 || $rStream['info']['direct_source'] == 1 && $rStream['info']['direct_proxy'] == 1)) {
-                                $rAvailableServers[] = $rServerID;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (count($rAvailableServers) == 0) {
-            ipTV_streaming::ShowVideo($user_info["is_restreamer"], 'show_not_on_air_video', 'not_on_air_video_path', $rExtension);
-        }
-    }
-    // XTREAMUI::init(false);
 
 
     $ipTV_db->db_connect();

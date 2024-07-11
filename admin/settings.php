@@ -971,6 +971,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                                                                                                         echo "checked ";
                                                                                                                                                     } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                     </div>
+                                                                    <label class="col-md-4 col-form-label" for="block_svp"><?= $_["block_svp"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["block_svp_desc"] ?>" class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="block_svp" id="block_svp" type="checkbox" <?php if ($rSettings["block_svp"] == 1) {
+                                                                                                                                    echo "checked ";
+                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label" for="use_mdomain_in_lists"><?= $_["use_domain_in_lists"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["use_domaine_name"] ?>" class="mdi mdi-information"></i></label>

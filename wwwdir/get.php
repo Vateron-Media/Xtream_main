@@ -53,23 +53,19 @@ if ($rUserInfo) {
         generateError('EXPIRED');
     }
 
-    if (!($rUserInfo['is_mag'] || $rUserInfo['is_e2'])) {
-    } else {
+    if ($rUserInfo['is_mag'] || $rUserInfo['is_e2']) {
         generateError('DEVICE_NOT_ALLOWED');
     }
 
-    if ($rUserInfo['admin_enabled']) {
-    } else {
+    if (!$rUserInfo['admin_enabled']) {
         generateError('BANNED');
     }
 
-    if ($rUserInfo['enabled']) {
-    } else {
+    if (!$rUserInfo['enabled']) {
         generateError('DISABLED');
     }
 
-    if (!(empty($rUserAgent) && ipTV_lib::$settings['disallow_empty_user_agents'] == 1)) {
-    } else {
+    if (empty($rUserAgent) && ipTV_lib::$settings['disallow_empty_user_agents'] == 1) {
         generateError('EMPTY_USER_AGENT');
     }
 
@@ -98,13 +94,11 @@ if ($rUserInfo) {
         generateError('NOT_IN_ALLOWED_UAS');
     }
 
-    if ($rUserInfo['isp_violate'] != 1) {
-    } else {
+    if ($rUserInfo['isp_violate'] == 1) {
         generateError('ISP_BLOCKED');
     }
 
-    if ($rUserInfo['isp_is_server'] != 1 || $rUserInfo['is_restreamer']) {
-    } else {
+    if ($rUserInfo['isp_is_server'] == 1 && !$rUserInfo['is_restreamer']) {
         generateError('ASN_BLOCKED');
     }
 

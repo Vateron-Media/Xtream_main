@@ -1152,6 +1152,8 @@ $_ = array(
    "flood_ip_exclude" => "Исключения IP-адресов флуда",
    "separate_each_ip" => "Разделяйте каждый IP запятой.",
    "disallow_empty_ua" => "Запретить пустой UA",
+   "block_svp" => "Disallow Servers/VPN/Proxies",
+   "block_svp_desc" => "This setting will prevent users connected from Servers/VPN/Proxies to open connection to your Servers. No matter what you will select, the log about that action will be written below. Please note that Restreamers (Is Restreamer = Yes under Add/Edit User) are not affected by this setting and no log will be written.",
    "dont_allow_connections_from_clients" => "Не разрешайте подключения от клиентов без пользовательского агента.",
    "client_prebuffer" => "Клиентский пребуфер",
    "how_much_data_will_be_sent_to_the_client_1" => "Какой объем данных будет отправлен клиенту при подключении к потоку. ",

@@ -7,6 +7,7 @@ if ($argc) {
     ini_set('max_execution_time', 0);
     $rSplit = 10000;
     $rThreadCount = 10;
+    ipTV_lib::$settings = ipTV_lib::GetSettings();
     $rGroupStart = $rGroupMax = $rType = null;
     if (1 < count($argv)) {
         $rType = $argv[1];
