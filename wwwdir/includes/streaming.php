@@ -1093,7 +1093,6 @@ class ipTV_streaming {
         if ($rForceHTTP) {
             $rProtocol = 'http';
         } else {
-
             $rProtocol = ipTV_lib::$StreamingServers[$rServerID]['server_protocol'];
         }
         $rDomain = null;

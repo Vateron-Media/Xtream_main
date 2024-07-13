@@ -262,7 +262,7 @@ class ipTV_lib {
                 $url = $row["server_ip"];
             }
             $server_protocol = is_array(self::$settings["use_https"]) && in_array($row["id"], self::$settings["use_https"]) ? "https" : "http";
-            $http_port = $server_protocol == "http" ? $row["http_broadcast_port"] : $row["https_broadcast_port"];
+            $http_port = ($server_protocol == 'http' ? intval($row['http_broadcast_port']) : intval($row['https_broadcast_port']));
             $row["server_protocol"] = $server_protocol;
             $row["request_port"] = $http_port;
             $row["api_url"] = $server_protocol . "://" . $url . ":" . $http_port . "/system_api.php?password=" . ipTV_lib::$settings["live_streaming_pass"];
@@ -274,6 +274,7 @@ class ipTV_lib {
             $row["geoip_countries"] = empty($row["geoip_countries"]) ? array() : json_decode($row["geoip_countries"], true);
             $row["isp_names"] = empty($row["isp_names"]) ? array() : json_decode($row["isp_names"], true);
             $row["server_online"] = in_array($row["status"], $server_status) && time() - $row["last_check_ago"] <= 90 || SERVER_ID == $row["id"] ? true : false;
+            $rRow['domains'] = array('protocol' => $server_protocol, 'port' => $http_port, 'urls' => array_filter(array_map('escapeshellcmd', explode(',', $row['domain_name']))));
             unset($row["ssh_password"], $row["watchdog_data"], $row["last_check_ago"]);
             $servers[intval($row["id"])] = $row;
         }
