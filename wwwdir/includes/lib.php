@@ -11,7 +11,7 @@ class ipTV_lib {
     public static $blockedISP = array();
     public static $blockedIPs = array();
     public static $categories = array();
-
+    
     public static function init() {
         global $_INFO;
 
@@ -102,17 +102,17 @@ class ipTV_lib {
         if (!empty($rCache)) {
             return $rCache;
         }
-        $rOutput = array();
+        $output = array();
         self::$ipTV_db->query('SELECT *, IF(`bouquet_order` > 0, `bouquet_order`, 999) AS `order` FROM `bouquets` ORDER BY `order` ASC;');
         foreach (self::$ipTV_db->get_rows(true, 'id') as $rID => $rChannels) {
-            $rOutput[$rID]['streams'] = array_merge(json_decode($rChannels['bouquet_channels'], true), json_decode($rChannels['bouquet_movies'], true), json_decode($rChannels['bouquet_radios'], true));
-            $rOutput[$rID]['series'] = json_decode($rChannels['bouquet_series'], true);
-            $rOutput[$rID]['channels'] = json_decode($rChannels['bouquet_channels'], true);
-            $rOutput[$rID]['movies'] = json_decode($rChannels['bouquet_movies'], true);
-            $rOutput[$rID]['radios'] = json_decode($rChannels['bouquet_radios'], true);
+            $output[$rID]['streams'] = array_merge(json_decode($rChannels['bouquet_channels'], true), json_decode($rChannels['bouquet_movies'], true), json_decode($rChannels['bouquet_radios'], true));
+            $output[$rID]['series'] = json_decode($rChannels['bouquet_series'], true);
+            $output[$rID]['channels'] = json_decode($rChannels['bouquet_channels'], true);
+            $output[$rID]['movies'] = json_decode($rChannels['bouquet_movies'], true);
+            $output[$rID]['radios'] = json_decode($rChannels['bouquet_radios'], true);
         }
-        self::setCache('bouquets', $rOutput);
-        return $rOutput;
+        self::setCache('bouquets', $output);
+        return $output;
     }
     public static function getCategories($rType = null) {
         if (is_string($rType)) {
@@ -130,18 +130,18 @@ class ipTV_lib {
         return $rCategories;
     }
     public static function getBlockedIPs() {
-        $rCache = self::getCache('blocked_ips', 20);
+        $cache = self::getCache('blocked_ips', 20);
         if (!empty($cache)) {
-            return $rCache;
+            return $cache;
         }
 
-        $rOutput = array();
+        $output = array();
         self::$ipTV_db->query('SELECT `ip` FROM `blocked_ips`');
-        foreach (self::$ipTV_db->get_rows() as $rRow) {
-            $rOutput[] = $rRow['ip'];
+        foreach (self::$ipTV_db->get_rows() as $row) {
+            $output[] = $row['ip'];
         }
-        self::setCache('blocked_ips', $rOutput);
-        return $rOutput;
+        self::setCache('blocked_ips', $output);
+        return $output;
     }
     /** 
      * Retrieves the list of blocked ISPs from the cache or database. 
@@ -191,10 +191,10 @@ class ipTV_lib {
     }
     public static function sortChannels($rChannels) {
         if (0 < count($rChannels) && file_exists(CACHE_TMP_PATH . 'channel_order') && self::$settings['channel_number_type'] != 'bouquet') {
-            $rOrder = unserialize(file_get_contents(CACHE_TMP_PATH . 'channel_order'));
+            $order = unserialize(file_get_contents(CACHE_TMP_PATH . 'channel_order'));
             $rChannels = array_flip($rChannels);
             $rNewOrder = array();
-            foreach ($rOrder as $rID) {
+            foreach ($order as $rID) {
                 if (isset($rChannels[$rID])) {
                     $rNewOrder[] = $rID;
                 }
@@ -274,7 +274,7 @@ class ipTV_lib {
             $row["geoip_countries"] = empty($row["geoip_countries"]) ? array() : json_decode($row["geoip_countries"], true);
             $row["isp_names"] = empty($row["isp_names"]) ? array() : json_decode($row["isp_names"], true);
             $row["server_online"] = in_array($row["status"], $server_status) && time() - $row["last_check_ago"] <= 90 || SERVER_ID == $row["id"] ? true : false;
-            $rRow['domains'] = array('protocol' => $server_protocol, 'port' => $http_port, 'urls' => array_filter(array_map('escapeshellcmd', explode(',', $row['domain_name']))));
+            $row['domains'] = array('protocol' => $server_protocol, 'port' => $http_port, 'urls' => array_filter(array_map('escapeshellcmd', explode(',', $row['domain_name']))));
             unset($row["ssh_password"], $row["watchdog_data"], $row["last_check_ago"]);
             $servers[intval($row["id"])] = $row;
         }

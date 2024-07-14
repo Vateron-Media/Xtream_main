@@ -23,7 +23,7 @@ if (isset($_POST["submit_stream"])) {
         if (!hasPermissions("adv", "add_stream")) {
             exit;
         }
-        $rArray = array("type" => 1, "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 1, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "category_id" => 0, "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "custom_map" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 1, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 256000);
+        $rArray = array("type" => 1, "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 1, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "category_id" => array(), "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "custom_map" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 1, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 256000);
     }
     if ((isset($_POST["days_to_restart"])) && (preg_match("/^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/", $_POST["time_to_restart"]))) {
         $rTimeArray = array("days" => array(), "at" => $_POST["time_to_restart"]);
@@ -46,6 +46,7 @@ if (isset($_POST["submit_stream"])) {
     if (isset($_POST["custom_ffmpeg"])) {
         $rArray["custom_ffmpeg"] = $_POST["custom_ffmpeg"];
     }
+    $categoriesIDs = $_POST["category_id"];
     if (isset($_POST["custom_sid"])) {
         $rArray["custom_sid"] = $_POST["custom_sid"];
     }
@@ -215,6 +216,7 @@ if (isset($_POST["submit_stream"])) {
             foreach (array_keys($rImportStream) as $rKey) {
                 $rImportArray[$rKey] = $rImportStream[$rKey];
             }
+            $rImportArray['category_id'] = '[' . implode(',', array_map('intval', $categoriesIDs)) . ']';
             $rImportArray["order"] = getNextOrder();
             $rCols = "`" . ESC(implode('`,`', array_keys($rImportArray))) . "`";
             $rValues = null;
@@ -608,16 +610,12 @@ if ($rSettings["sidebar"]) { ?>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="category_id"><?= $_["category_name"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <select name="category_id" id="category_id" class="form-control" data-toggle="select2">
-                                                                        <?php foreach ($rCategories as $rCategory) { ?>
-                                                                            <option <?php if (isset($rStream)) {
-                                                                                        if (intval($rStream["category_id"]) == intval($rCategory["id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } else if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                        echo "selected ";
-                                                                                    } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
-                                                                        <?php } ?>
+                                                                    <select name="category_id[]" id="category_id" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose...">
+                                                                        <?php foreach (getCategories('live') as $rCategory) : ?>
+                                                                            <option <?php if (isset($rStream) && in_array(intval($rCategory['id']), json_decode($rStream['category_id'], true))) {
+                                                                                        echo 'selected ';
+                                                                                    } ?>value="<?php echo $rCategory['id']; ?>"><?php echo $rCategory['category_name']; ?></option>
+                                                                        <?php endforeach; ?>
                                                                     </select>
                                                                 </div>
                                                             </div>

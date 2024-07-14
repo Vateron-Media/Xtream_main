@@ -16,7 +16,7 @@ if (isset($_POST["submit_radio"])) {
         if (!hasPermissions("adv", "add_radio")) {
             exit;
         }
-        $rArray = array("type" => 4, "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 0, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "category_id" => 0, "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "custom_map" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 128000);
+        $rArray = array("type" => 4, "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 0, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "category_id" => array(), "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "custom_map" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 128000);
     }
     if ((isset($_POST["days_to_restart"])) && (preg_match("/^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/", $_POST["time_to_restart"]))) {
         $rTimeArray = array("days" => array(), "at" => $_POST["time_to_restart"]);
@@ -173,12 +173,12 @@ if (isset($_POST["submit_radio"])) {
                     APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rInsertID)));
                 }
                 foreach ($rBouquets as $rBouquet) {
-                    addToBouquet("stream", $rBouquet, $rInsertID);
+                    addToBouquet("radio", $rBouquet, $rInsertID);
                 }
                 if (isset($_POST["edit"])) {
                     foreach (getBouquets() as $rBouquet) {
                         if (!in_array($rBouquet["id"], $rBouquets)) {
-                            removeFromBouquet("stream", $rBouquet["id"], $rInsertID);
+                            removeFromBouquet("radio", $rBouquet["id"], $rInsertID);
                         }
                     }
                 }
@@ -411,7 +411,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <select name="bouquets[]" id="bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <option <?php if (isset($rStation)) {
-                                                                                        if (in_array($rStation["id"], json_decode($rBouquet["bouquet_channels"], True))) {
+                                                                                        if (in_array($rStation["id"], json_decode($rBouquet["bouquet_radios"], True))) {
                                                                                             echo "selected ";
                                                                                         }
                                                                                     } ?>value="<?= $rBouquet["id"] ?>"><?= htmlspecialchars($rBouquet["bouquet_name"]) ?></option>

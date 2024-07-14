@@ -17,7 +17,7 @@ if (isset($_POST["submit_radio"])) {
         }
     }
     if (isset($_POST["c_category_id"])) {
-        $rArray["category_id"] = intval($_POST["category_id"]);
+        $categoriesIDs = intval($_POST["category_id"]);
     }
     if (isset($_POST["c_custom_sid"])) {
         $rArray["custom_sid"] = $_POST["custom_sid"];
@@ -26,6 +26,7 @@ if (isset($_POST["submit_radio"])) {
     if (count($rStreamIDs) > 0) {
         foreach ($rStreamIDs as $rStreamID) {
             $rQueries = array();
+            $rArray["category_id"] = '[' . implode(',', array_map('intval', $categoriesIDs)) . ']';
             foreach ($rArray as $rKey => $rValue) {
                 $rQueries[] = "`" . ESC($rKey) . "` = '" . ESC($rValue) . "'";
             }
@@ -86,11 +87,11 @@ if (isset($_POST["submit_radio"])) {
             if (isset($_POST["c_bouquets"])) {
                 $rBouquets = $_POST["bouquets"];
                 foreach ($rBouquets as $rBouquet) {
-                    addToBouquet("stream", $rBouquet, $rStreamID);
+                    addToBouquet("radio", $rBouquet, $rStreamID);
                 }
                 foreach (getBouquets() as $rBouquet) {
                     if (!in_array($rBouquet["id"], $rBouquets)) {
-                        removeFromBouquet("stream", $rBouquet["id"], $rStreamID);
+                        removeFromBouquet("radio", $rBouquet["id"], $rStreamID);
                     }
                 }
             }

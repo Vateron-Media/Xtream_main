@@ -26,7 +26,7 @@ if (isset($_POST["submit_movie"])) {
         if (!hasPermissions("adv", "add_movie")) {
             exit;
         }
-        $rArray = array("movie_symlink" => 0, "type" => 2, "target_container" => array("mp4"), "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 1, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "movie_subtitles" => array(), "category_id" => 0, "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 256000);
+        $rArray = array("movie_symlink" => 0, "type" => 2, "target_container" => array("mp4"), "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 1, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "movie_subtitles" => array(), "category_id" => array(), "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 256000);
     }
     $rArray["stream_display_name"] = $_POST["stream_display_name"];
     if (strlen($_POST["movie_subtitles"]) > 0) {
@@ -39,7 +39,7 @@ if (isset($_POST["submit_movie"])) {
     if (isset($_POST["target_container"])) {
         $rArray["target_container"] = array($_POST["target_container"]);
     }
-    $rArray["category_id"] = $_POST["category_id"];
+    $categoriesIDs = $_POST["category_id"];
     if (isset($_POST["custom_sid"])) {
         $rArray["custom_sid"] = $_POST["custom_sid"];
     }
@@ -193,6 +193,7 @@ if (isset($_POST["submit_movie"])) {
             foreach (array_keys($rImportStream) as $rKey) {
                 $rImportArray[$rKey] = $rImportStream[$rKey];
             }
+            $rImportArray['category_id'] = '[' . implode(',', array_map('intval', $categoriesIDs)) . ']';
             $rImportArray["order"] = getNextOrder();
             $rSync = $rImportArray["async"];
             unset($rImportArray["async"]);
@@ -258,11 +259,11 @@ if (isset($_POST["submit_movie"])) {
                     $rRestartIDs[] = $rInsertID;
                 }
                 foreach ($rBouquets as $rBouquet) {
-                    addToBouquet("stream", $rBouquet, $rInsertID);
+                    addToBouquet("movie", $rBouquet, $rInsertID);
                 }
                 foreach (getBouquets() as $rBouquet) {
                     if (!in_array($rBouquet["id"], $rBouquets)) {
-                        removeFromBouquet("stream", $rBouquet["id"], $rInsertID);
+                        removeFromBouquet("movie", $rBouquet["id"], $rInsertID);
                     }
                 }
                 if ($rSync) {
@@ -566,16 +567,12 @@ if ($rSettings["sidebar"]) { ?>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="category_id"><?= $_["category_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="category_id" id="category_id" class="form-control" data-toggle="select2">
-                                                                        <?php foreach ($rCategories as $rCategory) { ?>
-                                                                            <option <?php if (isset($rMovie)) {
-                                                                                        if (intval($rMovie["category_id"]) == intval($rCategory["id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } else if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                        echo "selected ";
-                                                                                    } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
-                                                                        <?php } ?>
+                                                                    <select name="category_id[]" id="category_id" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose...">
+                                                                        <?php foreach (getCategories('movie') as $rCategory) : ?>
+                                                                            <option <?php if (isset($rMovie) && in_array(intval($rCategory['id']), json_decode($rMovie['category_id'], true))) {
+                                                                                        echo 'selected ';
+                                                                                    } ?>value="<?php echo $rCategory['id']; ?>"><?php echo $rCategory['category_name']; ?></option>
+                                                                        <?php endforeach; ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -585,7 +582,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <select name="bouquets[]" id="bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <option <?php if (isset($rMovie)) {
-                                                                                        if (in_array($rMovie["id"], json_decode($rBouquet["bouquet_channels"], True))) {
+                                                                                        if (in_array($rMovie["id"], json_decode($rBouquet["bouquet_movies"], True))) {
                                                                                             echo "selected ";
                                                                                         }
                                                                                     } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>

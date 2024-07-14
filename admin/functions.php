@@ -1169,6 +1169,10 @@ function addToBouquet($rType, $rBouquetID, $rID) {
     if ($rBouquet) {
         if ($rType == "stream") {
             $rColumn = "bouquet_channels";
+        } elseif ($rType == "movie") {
+            $rColumn = "bouquet_movies";
+        } elseif ($rType == "radio") {
+            $rColumn = "bouquet_radios";
         } else {
             $rColumn = "bouquet_series";
         }
@@ -1188,6 +1192,10 @@ function removeFromBouquet($rType, $rBouquetID, $rID) {
     if ($rBouquet) {
         if ($rType == "stream") {
             $rColumn = "bouquet_channels";
+        } elseif ($rType == "movie") {
+            $rColumn = "bouquet_movies";
+        } elseif ($rType == "radio") {
+            $rColumn = "bouquet_radios";
         } else {
             $rColumn = "bouquet_series";
         }

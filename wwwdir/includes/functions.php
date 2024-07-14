@@ -648,20 +648,29 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                         }
                                         $rESRID = ($rChannel['live'] == 1 ? 1 : 4097);
                                         $rSID = (!empty($rChannel['custom_sid']) ? $rChannel['custom_sid'] : ':0:1:0:0:0:0:0:0:0:');
-                                        $rCategoryID = json_decode($rChannel['category_id'], true);
-                                        if (isset(ipTV_lib::$categories[$rCategoryID])) {
-                                            $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array($rPattern, '{ESR_ID}', '{SID}', '{CHANNEL_NAME}', '{CHANNEL_ID}', '{XUI_ID}', '{CATEGORY}', '{CHANNEL_ICON}'), array(str_replace($rCharts, array_map('urlencode', $rCharts), $rURL), $rESRID, $rSID, $rChannel['stream_display_name'], $rChannel['channel_id'], $rChannel['id'], ipTV_lib::$categories[$rCategoryID]['category_name'], $rIcon), $rConfig)) . "\r\n";
+                                        $rCategoryIDs = json_decode($rChannel['category_id'], true);
+                                        if (count($rCategoryIDs) > 0) {
+                                            foreach ($rCategoryIDs as $rCategoryID) {
+                                                if (isset(ipTV_lib::$categories[$rCategoryID])) {
+                                                    $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array($rPattern, '{ESR_ID}', '{SID}', '{CHANNEL_NAME}', '{CHANNEL_ID}', '{XUI_ID}', '{CATEGORY}', '{CHANNEL_ICON}'), array(str_replace($rCharts, array_map('urlencode', $rCharts), $rURL), $rESRID, $rSID, $rChannel['stream_display_name'], $rChannel['channel_id'], $rChannel['id'], ipTV_lib::$categories[$rCategoryID]['category_name'], $rIcon), $rConfig)) . "\r\n";
+                                                    if ($rOutputFile) {
+                                                        fwrite($rOutputFile, $rData);
+                                                    }
+                                                    echo $rData;
+                                                    unset($rData);
+                                                    // if (stripos($rDeviceInfo['device_conf'], '{CATEGORY}') == false) {
+                                                    //     break;
+                                                    // }
+                                                }
+                                            }
                                         } else {
                                             $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array($rPattern, '{ESR_ID}', '{SID}', '{CHANNEL_NAME}', '{CHANNEL_ID}', '{XUI_ID}', '{CHANNEL_ICON}'), array(str_replace($rCharts, array_map('urlencode', $rCharts), $rURL), $rESRID, $rSID, $rChannel['stream_display_name'], $rChannel['channel_id'], $rChannel['id'], $rIcon), $rConfig)) . "\r\n";
+                                            if ($rOutputFile) {
+                                                fwrite($rOutputFile, $rData);
+                                            }
+                                            echo $rData;
+                                            unset($rData);
                                         }
-                                        if ($rOutputFile) {
-                                            fwrite($rOutputFile, $rData);
-                                        }
-                                        echo $rData;
-                                        unset($rData);
-                                        // if (stripos($rDeviceInfo['device_conf'], '{CATEGORY}') == false) {
-                                        //     break;
-                                        // }
                                     }
                                 }
                                 unset($rRows);
