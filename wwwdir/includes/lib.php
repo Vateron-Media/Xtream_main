@@ -11,7 +11,7 @@ class ipTV_lib {
     public static $blockedISP = array();
     public static $blockedIPs = array();
     public static $categories = array();
-    
+
     public static function init() {
         global $_INFO;
 
@@ -30,15 +30,15 @@ class ipTV_lib {
 
         $input = @self::parseIncomingRecursively($_GET, array());
         self::$request = @self::parseIncomingRecursively($_POST, $input);
-        self::$settings = self::GetSettings();
+        self::$settings = self::getSettings();
         date_default_timezone_set(self::$settings["default_timezone"]);
-        self::$StreamingServers = self::GetServers();
+        self::$StreamingServers = self::getServers();
         self::$blockedISP = self::getBlockedISP();
         self::$blockedIPs = self::getBlockedIPs();
         self::$categories = self::getCategories();
 
         if (FETCH_BOUQUETS) {
-            self::$Bouquets = self::GetBouquets();
+            self::$Bouquets = self::getBouquets();
         }
         self::$blockedUA = self::GetBlockedUserAgents();
         self::$customISP = self::GetIspAddon();
@@ -159,7 +159,7 @@ class ipTV_lib {
         self::setCache('blocked_isp', $output);
         return $output;
     }
-    public static function GetSettings() {
+    public static function getSettings() {
         $cache = self::getCache('settings', 20);
         if (!empty($cache)) {
             return $cache;
@@ -242,7 +242,7 @@ class ipTV_lib {
         }
         return null;
     }
-    public static function GetServers() {
+    public static function getServers() {
         $cache = self::getCache('servers', 20);
         if (!empty($cache)) {
             return $cache;

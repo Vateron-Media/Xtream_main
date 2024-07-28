@@ -47,8 +47,8 @@ if ($argc >= 1) {
         $ipTV_db->query("SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = '%d' AND t1.argument_id = t2.id", $stream_id);
         $Ec54d2818a814ae4c359a5fc4ffff2ee = $ipTV_db->get_rows();
         if (0 < $stream["delay_minutes"] && $stream["parent_id"] == 0) {
-            $stream_path = DELAY_STREAM;
-            $stream_m3u8_file_path = DELAY_STREAM . $stream_id . "_.m3u8";
+            $stream_path = DELAY_PATH;
+            $stream_m3u8_file_path = DELAY_PATH . $stream_id . "_.m3u8";
             $isDelayEnabled = true;
         } else {
             $isDelayEnabled = false;
@@ -60,7 +60,7 @@ if ($argc >= 1) {
                 $streamStatusCounter = RESTART_TAKE_CACHE + 1;
                 shell_exec("kill -9 " . $stream_pid);
                 shell_exec("rm -f " . STREAMS_PATH . $stream_id . "_*");
-                if ($isDelayEnabled && ipTV_streaming::CheckPidStreamExist($stream_delay_pid, $stream_id)) {
+                if ($isDelayEnabled && ipTV_streaming::isDelayRunning($stream_delay_pid, $stream_id)) {
                     shell_exec("kill -9 " . $stream_delay_pid);
                 }
                 usleep(50000);
@@ -120,7 +120,7 @@ if ($argc >= 1) {
                             }
                         }
                     }
-                    if ($isDelayEnabled && $stream["delay_available_at"] <= time() && !ipTV_streaming::CheckPidStreamExist($stream_delay_pid, $stream_id)) {
+                    if ($isDelayEnabled && $stream["delay_available_at"] <= time() && !ipTV_streaming::isDelayRunning($stream_delay_pid, $stream_id)) {
                         $stream_delay_pid = intval(shell_exec(PHP_BIN . " " . TOOLS_PATH . "delay.php " . $stream_id . " " . $stream["delay_minutes"] . " >/dev/null 2>/dev/null & echo \$!"));
                     }
                     sleep(1);
@@ -131,7 +131,7 @@ if ($argc >= 1) {
                 shell_exec("kill -9 " . $stream_pid);
                 usleep(50000);
             }
-            if (ipTV_streaming::CheckPidStreamExist($stream_delay_pid, $stream_id)) {
+            if (ipTV_streaming::isDelayRunning($stream_delay_pid, $stream_id)) {
                 shell_exec("kill -9 " . $stream_delay_pid);
                 usleep(50000);
             }
@@ -155,7 +155,7 @@ if ($argc >= 1) {
                 $stream_parent_id = $d76067cf9572f7a6691c85c12faf2a29["parent_id"];
                 $streamUrl = NULL;
                 if ($isDelayEnabled) {
-                    $stream_path = DELAY_STREAM;
+                    $stream_path = DELAY_PATH;
                 } else {
                     $stream_path = STREAMS_PATH;
                 }

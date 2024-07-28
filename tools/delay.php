@@ -39,7 +39,7 @@ function processM3uFile($m3uFile, &$segment_list, $total_segments) {
     $segments = [];
     if (!empty($segment_list)) {
         $first_segment = array_shift($segment_list);
-        unlink(DELAY_STREAM . $first_segment["file"]);
+        unlink(DELAY_PATH . $first_segment["file"]);
         for ($i = 0; !($i < $total_segments && $i < count($segment_list)); $i++) {
             $segments[] = $segment_list[$i];
         }
@@ -63,7 +63,7 @@ function getPlaylistSegments($playlist, $segment_count = 0) {
                     list($tag, $seconds) = explode(":", $line);
                     $seconds = rtrim($seconds, ",");
                     $file = trim(fgets($fp));
-                    if (file_exists(DELAY_STREAM . $file)) {
+                    if (file_exists(DELAY_PATH . $file)) {
                         $segments[] = ["seconds" => $seconds, "file" => $file];
                     }
                 }
@@ -93,13 +93,13 @@ if (@$argc) {
                 $delay_pid = file_exists(STREAMS_PATH . $stream_id . "_.pid") ? intval(file_get_contents(STREAMS_PATH . $stream_id . "_.pid")) : $stream_data["pid"];
 
                 $delay_m3u_file = STREAMS_PATH . $stream_id . "_.m3u8";
-                $m3uFile = DELAY_STREAM . $stream_id . "_.m3u8";
-                $playlistPath = DELAY_STREAM . $stream_id . "_.m3u8_old";
+                $m3uFile = DELAY_PATH . $stream_id . "_.m3u8";
+                $playlistPath = DELAY_PATH . $stream_id . "_.m3u8_old";
                 $D90a38f0f1d7f1bcd1b2eee088e76aca = $stream_data["delay_pid"];
                 $ipTV_db->query("UPDATE `streams_sys` SET delay_pid = '%d' WHERE stream_id = '%d' AND server_id = '%d'", getmypid(), $stream_id, SERVER_ID);
                 $ipTV_db->close_mysql();
                 $cleanup_minutes = $stream_data["delay_minutes"] + 5;
-                shell_exec("find " . DELAY_STREAM . $stream_id . "_*" . " -type f -cmin +" . $cleanup_minutes . " -delete");
+                shell_exec("find " . DELAY_PATH . $stream_id . "_*" . " -type f -cmin +" . $cleanup_minutes . " -delete");
                 $playlist_data = [];
                 $playlist_data = ["vars" => ["#EXTM3U" => "", "#EXT-X-VERSION" => 3, "#EXT-X-MEDIA-SEQUENCE" => "0", "#EXT-X-ALLOW-CACHE" => "YES", "#EXT-X-TARGETDURATION" => ipTV_lib::$SegmentsSettings["seg_time"]], "segments" => []];
                 $total_segments = intval(ipTV_lib::$SegmentsSettings["seg_list_size"]);
@@ -124,7 +124,7 @@ if (@$argc) {
                                 $playlistContent .= !empty($F825e5509b5b7d124881b85978e1cd5b) ? $Baee0c34e5755f1cfaa4159ea7e8702e . ":" . $F825e5509b5b7d124881b85978e1cd5b . "\n" : $Baee0c34e5755f1cfaa4159ea7e8702e . "\n";
                             }
                             foreach ($playlist_data["segments"] as $segment) {
-                                copy(DELAY_STREAM . $segment["file"], STREAMS_PATH . $segment["file"]);
+                                copy(DELAY_PATH . $segment["file"], STREAMS_PATH . $segment["file"]);
                                 $playlistContent .= "#EXTINF:" . $segment["seconds"] . ",\n" . $segment["file"] . "\n";
                             }
                             file_put_contents($delay_m3u_file, $playlistContent, LOCK_EX);

@@ -1,36 +1,54 @@
 #!/usr/bin/python2
-import paramiko, os, socket, time, json, urllib.request, urllib.error, urllib.parse
+import paramiko
+import os
+import socket
+import time
+import json
+import urllib.request
+import urllib.error
+import urllib.parse
 from config import decrypt
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
+
 # Status: 0 - Not Started       1 - Started         2 - Done
-    
+
+
 def getIP():
-    ip = urlopen('http://ip.42.pl/raw').read().decode()
+    ip = urlopen("http://ip.42.pl/raw").read().decode()
     return ip
+
 
 def getLanIP():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     return s.getsockname()[0]
 
-rDownloadURL = "https://raw.githubusercontent.com/NeySlim/xtreamui_mirror/master/balancer.py"
+
+rDownloadURL = (
+    "https://raw.githubusercontent.com/NeySlim/xtreamui_mirror/master/balancer.py"
+)
 rPath = "/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/"
 rConfig = decrypt()
 rIP = getIP()
 rTime = time.time()
+
 
 def writeDetails(rDetails):
     rFile = open("%s%d.json" % (rPath, int(rDetails["id"])), "w")
     rFile.write(json.dumps(rDetails))
     rFile.close()
 
+
 def installBalancer(rDetails):
     rDetails["status"] = 1
     writeDetails(rDetails)
     rClient = paramiko.SSHClient()
     rClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    try: rClient.connect(rDetails["host"], rDetails["port"], "root", rDetails["password"])
+    try:
+        rClient.connect(
+            rDetails["host"], rDetails["port"], "root", rDetails["password"]
+        )
     except:
         rDetails["status"] = 0
         writeDetails(rDetails)
@@ -38,44 +56,84 @@ def installBalancer(rDetails):
     try:
         rIn, rOut, rErr = rClient.exec_command("sudo apt-get install python -y")
         rStatus = rOut.channel.recv_exit_status()
-        rIn, rOut, rErr = rClient.exec_command("sudo wget -q \"%s\" -O \"/tmp/balancer.py\"" % rDownloadURL)
+        rIn, rOut, rErr = rClient.exec_command(
+            'sudo wget -q "%s" -O "/tmp/balancer.py"' % rDownloadURL
+        )
         rStatus = rOut.channel.recv_exit_status()
-        rIn, rOut, rErr = rClient.exec_command("sudo python /tmp/balancer.py \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" %d %d %d %d" % (rIP, rConfig["db_port"], rConfig["db_user"], rConfig["db_pass"], rConfig["db_name"], int(rDetails["id"]), int(rDetails["http_broadcast_port"]), int(rDetails["https_broadcast_port"]), int(rDetails["rtmp_port"])))
+        rIn, rOut, rErr = rClient.exec_command(
+            'sudo python /tmp/balancer.py "%s" "%s" "%s" "%s" "%s" %d %d %d %d'
+            % (
+                rIP,
+                rConfig["db_port"],
+                rConfig["db_user"],
+                rConfig["db_pass"],
+                rConfig["db_name"],
+                int(rDetails["id"]),
+                int(rDetails["http_broadcast_port"]),
+                int(rDetails["https_broadcast_port"]),
+                int(rDetails["rtmp_port"]),
+            )
+        )
         rStatus = rOut.channel.recv_exit_status()
-    except: pass
+    except:
+        pass
     rDetails["status"] = 2
-    try: os.remove("%s%d.json" % (rPath, int(rDetails["id"])))
-    except: writeDetails(rDetails)
+    try:
+        os.remove("%s%d.json" % (rPath, int(rDetails["id"])))
+    except:
+        writeDetails(rDetails)
     return True
+
 
 def restartServices(rDetails):
     rClient = paramiko.SSHClient()
     rClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    try: rClient.connect(rDetails["host"], rDetails["port"], "root", rDetails["password"])
-    except: return False
+    try:
+        rClient.connect(
+            rDetails["host"], rDetails["port"], "root", rDetails["password"]
+        )
+    except:
+        return False
     rClient.exec_command("sudo /home/xtreamcodes/iptv_xtream_codes/start_services.sh")
-    try: os.remove("%s%d.json" % (rPath, int(rDetails["id"])))
-    except: pass
+    try:
+        os.remove("%s%d.json" % (rPath, int(rDetails["id"])))
+    except:
+        pass
     return True
+
 
 def rebootServer(rDetails):
     rClient = paramiko.SSHClient()
     rClient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    try: rClient.connect(rDetails["host"], rDetails["port"], "root", rDetails["password"])
-    except: return False
+    try:
+        rClient.connect(
+            rDetails["host"], rDetails["port"], "root", rDetails["password"]
+        )
+    except:
+        return False
     rClient.exec_command("sudo reboot")
-    try: os.remove("%s%d.json" % (rPath, int(rDetails["id"])))
-    except: pass
+    try:
+        os.remove("%s%d.json" % (rPath, int(rDetails["id"])))
+    except:
+        pass
     return True
+
 
 if __name__ == "__main__":
     if rIP and rConfig:
         for rFile in os.listdir(rPath):
-            try: rDetails = json.loads(open(rPath + rFile).read())
-            except: rDetails = {"status": -1}
-            try: rType = rDetails["type"]
-            except: rType = None
-            if rType == "restart": restartServices(rDetails)
-            elif rType == "reboot": rebootServer(rDetails)
+            try:
+                rDetails = json.loads(open(rPath + rFile).read())
+            except:
+                rDetails = {"status": -1}
+            try:
+                rType = rDetails["type"]
+            except:
+                rType = None
+            if rType == "restart":
+                restartServices(rDetails)
+            elif rType == "reboot":
+                rebootServer(rDetails)
             else:
-                if rDetails["status"] == 0: installBalancer(rDetails)
+                if rDetails["status"] == 0:
+                    installBalancer(rDetails)

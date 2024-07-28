@@ -24,7 +24,6 @@ define('TOOLS_PATH', IPTV_PANEL_DIR . 'tools/');
 define('IPTV_CLIENT_AREA', IPTV_PANEL_DIR . 'wwwdir/client_area/');
 define('BIN_PATH', IPTV_PANEL_DIR . 'bin/');
 define('TV_ARCHIVE', IPTV_PANEL_DIR . 'tv_archive/');
-define('DELAY_STREAM', IPTV_PANEL_DIR . 'delay/');
 define('SIGNALS_PATH', IPTV_PANEL_DIR . 'signals/');
 define('IPTV_CLIENT_AREA_TEMPLATES_PATH', IPTV_CLIENT_AREA . 'templates/');
 // -------------------
@@ -59,6 +58,8 @@ define('CONTENT_PATH', IPTV_PANEL_DIR . 'content/');
 define('PLAYLIST_PATH', CONTENT_PATH . 'playlists/');
 define('EPG_PATH', CONTENT_PATH . 'epg/');
 define('VOD_PATH', CONTENT_PATH . 'vod/');
+define('CREATED_PATH', CONTENT_PATH . 'created/');
+define('DELAY_PATH', CONTENT_PATH . 'delayed/');
 // -------------------
 
 // CONSTANTS VAR

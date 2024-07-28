@@ -30,12 +30,12 @@ class ipTV_streaming {
         }
 
         $rIPs = array('127.0.0.1', $_SERVER['SERVER_ADDR']);
-        foreach (ipTV_lib::$StreamingServers as $rServerID => $rServerInfo) {
-            if (!empty($rServerInfo['whitelist_ips'])) {
-                $rIPs = array_merge($rIPs, json_decode($rServerInfo['whitelist_ips'], true));
+        foreach (ipTV_lib::$StreamingServers as $rServerID => $serverInfo) {
+            if (!empty($serverInfo['whitelist_ips'])) {
+                $rIPs = array_merge($rIPs, json_decode($serverInfo['whitelist_ips'], true));
             }
-            $rIPs[] = $rServerInfo['server_ip'];
-            foreach (explode(',', $rServerInfo['domain_name']) as $rIP) {
+            $rIPs[] = $serverInfo['server_ip'];
+            foreach (explode(',', $serverInfo['domain_name']) as $rIP) {
                 if (filter_var($rIP, FILTER_VALIDATE_IP)) {
                     $rIPs[] = $rIP;
                 }
@@ -141,16 +141,16 @@ class ipTV_streaming {
             } else {
 
                 if ($rStream['info']['direct_source'] == 0) {
-                    foreach (ipTV_lib::$StreamingServers as $rServerID => $rServerInfo) {
-                        if (array_key_exists($rServerID, $rStream['servers']) || $rServerInfo['server_online'] || $rServerInfo['server_type'] == 0) {
+                    foreach (ipTV_lib::$StreamingServers as $rServerID => $serverInfo) {
+                        if (array_key_exists($rServerID, $rStream['servers']) || $serverInfo['server_online'] || $serverInfo['server_type'] == 0) {
 
                             if (isset($rStream['servers'][$rServerID])) {
                                 if ($rType == 'movie') {
-                                    if ((!empty($rStream['servers'][$rServerID]['pid']) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && $rStream['servers'][$rServerID]['stream_status'] == 0 || $rStream['info']['direct_source'] == 1) && ($rStream['info']['target_container'] == $extension || ($extension = 'srt')) && $rServerInfo['timeshift_only'] == 0) {
+                                    if ((!empty($rStream['servers'][$rServerID]['pid']) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && $rStream['servers'][$rServerID]['stream_status'] == 0 || $rStream['info']['direct_source'] == 1) && ($rStream['info']['target_container'] == $extension || ($extension = 'srt')) && $serverInfo['timeshift_only'] == 0) {
                                         $rAvailableServers[] = $rServerID;
                                     }
                                 } else {
-                                    if (($rStream['servers'][$rServerID]['on_demand'] == 1 && $rStream['servers'][$rServerID]['stream_status'] != 1 || 0 < $rStream['servers'][$rServerID]['pid'] && $rStream['servers'][$rServerID]['stream_status'] == 0) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && (int) $rStream['servers'][$rServerID]['delay_available_at'] <= time() && $rServerInfo['timeshift_only'] == 0 || $rStream['info']['direct_source'] == 1) {
+                                    if (($rStream['servers'][$rServerID]['on_demand'] == 1 && $rStream['servers'][$rServerID]['stream_status'] != 1 || 0 < $rStream['servers'][$rServerID]['pid'] && $rStream['servers'][$rServerID]['stream_status'] == 0) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && (int) $rStream['servers'][$rServerID]['delay_available_at'] <= time() && $serverInfo['timeshift_only'] == 0 || $rStream['info']['direct_source'] == 1) {
                                         $rAvailableServers[] = $rServerID;
                                     }
                                 }
@@ -745,6 +745,14 @@ class ipTV_streaming {
             return null;
         }
     }
+    public static function StreamLog($rStreamID, $rServerID, $rAction, $rSource = '') {
+        if (ipTV_lib::$settings['save_restart_logs'] != 0) {
+            $rData = array('server_id' => $rServerID, 'stream_id' => $rStreamID, 'action' => $rAction, 'source' => $rSource, 'time' => time());
+            file_put_contents(LOGS_TMP_PATH . 'stream_log.log', base64_encode(json_encode($rData)) . "\n", FILE_APPEND);
+        } else {
+            return null;
+        }
+    }
     public static function GetSegmentsOfPlaylist($playlist, $prebuffer = 0, $segmentDuration = 10) {
         if (file_exists($playlist)) {
             $source = file_get_contents($playlist);
@@ -811,19 +819,19 @@ class ipTV_streaming {
             return false;
         }
     }
-    public static function generateHLS($rM3U8, $rUsername, $rPassword, $rStreamID, $rUUID, $rIP, $rIsHMAC = null, $rIdentifier = '', $rVideoCodec = 'h264', $rOnDemand = 0, $rServerID = null, $rProxyID = null) {
+    public static function generateHLS($rM3U8, $rUsername, $rPassword, $streamID, $rUUID, $rIP, $rIsHMAC = null, $rIdentifier = '', $rVideoCodec = 'h264', $rOnDemand = 0, $rServerID = null, $rProxyID = null) {
         if (file_exists($rM3U8)) {
             $rSource = file_get_contents($rM3U8);
             if ($rOnDemand) {
-                $rKeyToken = encryptData($rIP . '/' . $rStreamID, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                $rSource = "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"" . (($rProxyID ? '/' . md5($rProxyID . '_' . $rServerID . '_' . OPENSSL_EXTRA) : '')) . '/key/' . $rKeyToken . '",IV=0x' . bin2hex(file_get_contents(STREAMS_PATH . $rStreamID . '_.iv')) . "\n" . substr($rSource, 8, strlen($rSource) - 8);
+                $rKeyToken = encryptData($rIP . '/' . $streamID, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                $rSource = "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"" . (($rProxyID ? '/' . md5($rProxyID . '_' . $rServerID . '_' . OPENSSL_EXTRA) : '')) . '/key/' . $rKeyToken . '",IV=0x' . bin2hex(file_get_contents(STREAMS_PATH . $streamID . '_.iv')) . "\n" . substr($rSource, 8, strlen($rSource) - 8);
             }
             if (preg_match_all('/(.*?)\\.ts/', $rSource, $rMatches)) {
                 foreach ($rMatches[0] as $rMatch) {
                     if ($rIsHMAC) {
-                        $rToken = encryptData('HMAC#' . $rIsHMAC . '/' . $rIdentifier . '/' . $rIP . '/' . $rStreamID . '/' . $rMatch . '/' . $rUUID . '/' . SERVER_ID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                        $rToken = encryptData('HMAC#' . $rIsHMAC . '/' . $rIdentifier . '/' . $rIP . '/' . $streamID . '/' . $rMatch . '/' . $rUUID . '/' . SERVER_ID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                     } else {
-                        $rToken = encryptData($rUsername . '/' . $rPassword . '/' . $rIP . '/' . $rStreamID . '/' . $rMatch . '/' . $rUUID . '/' . SERVER_ID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                        $rToken = encryptData($rUsername . '/' . $rPassword . '/' . $rIP . '/' . $streamID . '/' . $rMatch . '/' . $rUUID . '/' . SERVER_ID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                     }
                     $rSource = str_replace($rMatch, (($rProxyID ? '/' . md5($rProxyID . '_' . $rServerID . '_' . OPENSSL_EXTRA) : '')) . '/hls/' . $rToken, $rSource);
                 }
@@ -895,7 +903,7 @@ class ipTV_streaming {
         }
         return false;
     }
-    public static function CheckPidStreamExist($PID, $streamID) {
+    public static function isDelayRunning($PID, $streamID) {
         if (empty($PID)) {
             return false;
         }
@@ -1117,9 +1125,9 @@ class ipTV_streaming {
             }
         }
     }
-    public static function getBouquetMap($rStreamID) {
+    public static function getBouquetMap($streamID) {
         $rBouquetMap = unserialize(file_get_contents(CACHE_TMP_PATH . 'bouquet_map'));
-        $rReturn = ($rBouquetMap[$rStreamID] ?: array());
+        $rReturn = ($rBouquetMap[$streamID] ?: array());
         unset($rBouquetMap);
         return $rReturn;
     }

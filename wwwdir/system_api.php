@@ -1,98 +1,92 @@
 <?php
 
+register_shutdown_function('shutdown');
 set_time_limit(0);
 require 'init.php';
+$rDeny = true;
+global $rDeny;
+
 if (empty(ipTV_lib::$request['password']) || ipTV_lib::$request['password'] != ipTV_lib::$settings['live_streaming_pass']) {
-    die;
+    generateError('INVALID_API_PASSWORD');
 }
-$user_ip = $_SERVER['REMOTE_ADDR'];
-if (!in_array($user_ip, ipTV_streaming::getAllowedIPsAdmin())) {
-    die(json_encode(array('main_fetch' => false)));
+
+unset(ipTV_lib::$request['password']);
+
+if (!in_array($rIP, ipTV_streaming::getAllowedIPs())) {
+    generateError('API_IP_NOT_ALLOWED');
 }
+
 header('Access-Control-Allow-Origin: *');
-$action = !empty(ipTV_lib::$request['action']) ? ipTV_lib::$request['action'] : '';
+$action = (!empty(ipTV_lib::$request['action']) ? ipTV_lib::$request['action'] : '');
+$rDeny = false;
+
 switch ($action) {
-    case 'reset_cache':
-        $reset = opcache_reset();
-        echo (int) $reset;
-        die;
-        break;
     case 'view_log':
-        if (!empty(ipTV_lib::$request['stream_id'])) {
-            $stream_id = intval(ipTV_lib::$request['stream_id']);
-            if (file_exists(STREAMS_PATH . $stream_id . '.errors')) {
-                echo file_get_contents(STREAMS_PATH . $stream_id . '.errors');
-            } else if (file_exists(VOD_PATH . $stream_id . '.errors')) {
-                echo file_get_contents(VOD_PATH . $stream_id . '.errors');
-            } else {
-            }
+        if (empty(ipTV_lib::$request['stream_id'])) {
+            break;
         }
-        die;
-        break;
+        $streamID = intval(ipTV_lib::$request['stream_id']);
+        if (file_exists(STREAMS_PATH . $streamID . '.errors')) {
+            echo file_get_contents(STREAMS_PATH . $streamID . '.errors');
+        } elseif (file_exists(VOD_PATH . $streamID . '.errors')) {
+            echo file_get_contents(VOD_PATH . $streamID . '.errors');
+        }
+        exit();
     case 'reload_epg':
         shell_exec(PHP_BIN . ' ' . CRON_PATH . 'epg.php >/dev/null 2>/dev/null &');
         break;
     case 'vod':
         if (!empty(ipTV_lib::$request['stream_ids']) && !empty(ipTV_lib::$request['function'])) {
-            $stream_ids = array_map('intval', ipTV_lib::$request['stream_ids']);
+            $streamIDs = array_map('intval', ipTV_lib::$request['stream_ids']);
             $function = ipTV_lib::$request['function'];
             switch ($function) {
                 case 'start':
-                    foreach ($stream_ids as $stream_id) {
-                        ipTV_stream::stopVODstream($stream_id);
-                        ipTV_stream::startVODstream($stream_id);
+                    foreach ($streamIDs as $streamID) {
+                        ipTV_stream::stopVODstream($streamID);
+                        ipTV_stream::startVODstream($streamID);
                         usleep(50000);
                     }
                     echo json_encode(array('result' => true));
-                    die;
-                    break;
+                    exit();
                 case 'stop':
-                    foreach ($stream_ids as $stream_id) {
-                        ipTV_stream::stopVODstream($stream_id);
+                    foreach ($streamIDs as $streamID) {
+                        ipTV_stream::stopVODstream($streamID);
                     }
                     echo json_encode(array('result' => true));
-                    die;
-                    break;
+                    exit();
             }
         }
-        break;
     case 'stream':
         if (!empty(ipTV_lib::$request['stream_ids']) && !empty(ipTV_lib::$request['function'])) {
-            $stream_ids = array_map('intval', ipTV_lib::$request['stream_ids']);
+            $streamIDs = array_map('intval', ipTV_lib::$request['stream_ids']);
             $function = ipTV_lib::$request['function'];
+
             switch ($function) {
                 case 'start':
-                    foreach ($stream_ids as $stream_id) {
-                        ipTV_stream::startMonitor($stream_id, true);
-                        usleep(50000);
+                    foreach ($streamIDs as $streamID) {
+                        if (ipTV_stream::startMonitor($streamID, true)) {
+                            usleep(50000);
+                        } else {
+                            echo json_encode(array('result' => false));
+                            exit();
+                        }
                     }
                     echo json_encode(array('result' => true));
-                    die;
-                    break;
+                    exit();
                 case 'stop':
-                    foreach ($stream_ids as $stream_id) {
-                        ipTV_stream::stopStream($stream_id, true);
+                    foreach ($streamIDs as $streamID) {
+                        ipTV_stream::stopStream($streamID, true);
                     }
                     echo json_encode(array('result' => true));
-                    die;
+                    exit();
+                default:
                     break;
             }
         }
-        break;
-    case 'getURL':
-        if (!empty($_REQUEST['url'])) {
-            $url = urldecode(base64_decode($_REQUEST['url']));
-            passthru("wget --no-check-certificate --user-agent \"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0\" --timeout=40 -O - \"{$url}\" -q 2>/dev/null");
-            die;
-        }
-        break;
-    case 'printVersion':
-        echo json_encode(SCRIPT_VERSION);
         break;
     case 'stats':
         echo json_encode(getStats());
-        die;
-        break;
+        exit();
     case 'BackgroundCLI':
         if (!empty(ipTV_lib::$request['cmds'])) {
             $cmds = ipTV_lib::$request['cmds'];
@@ -112,28 +106,6 @@ switch ($action) {
         }
         die;
         break;
-    case 'getDiskInfo':
-        $varlib = 0;
-        $xtreamcodes = 0;
-        $ram_free_space = 0;
-        $disk_free_space = disk_free_space('/var/lib');
-        if ($disk_free_space < 1000000000) {
-            $varlib = 1;
-        }
-        $disk_free_space = disk_free_space('/home/xtreamcodes');
-        if ($disk_free_space < 1000000000) {
-            $xtreamcodes = 1;
-        }
-        $ram_free_space = disk_free_space('/home/xtreamcodes/iptv_xtream_codes/streams');
-        if ($ram_free_space < 100000000) {
-            $ram_free_space = 1;
-        }
-        echo json_encode(array('varlib' => $varlib, 'xtreamcodes' => $xtreamcodes, 'ramdisk' => $ram_free_space));
-        die;
-        break;
-    case 'getCurrentTime':
-        echo json_encode(time());
-        break;
     case 'getDiff':
         if (!empty(ipTV_lib::$request['main_time'])) {
             $main_time = ipTV_lib::$request['main_time'];
@@ -142,23 +114,30 @@ switch ($action) {
         }
         break;
     case 'pidsAreRunning':
-        if (!empty(ipTV_lib::$request['pids']) && is_array(ipTV_lib::$request['pids']) && !empty(ipTV_lib::$request['program'])) {
-            $pids = array_map('intval', ipTV_lib::$request['pids']);
-            $ffmpeg_path = ipTV_lib::$request['program'];
-            $output = array();
-            foreach ($pids as $pid) {
-                $output[$pid] = false;
-                if (file_exists('/proc/' . $pid) && is_readable('/proc/' . $pid . '/exe') && basename(readlink('/proc/' . $pid . '/exe')) == basename($ffmpeg_path)) {
-                    $output[$pid] = true;
-                }
-            }
-            echo json_encode($output);
-            die;
+        if (empty(ipTV_lib::$request['pids']) && !is_array(ipTV_lib::$request['pids']) && empty(ipTV_lib::$request['program'])) {
+            break;
         }
-        break;
+
+        $PIDs = array_map('intval', ipTV_lib::$request['pids']);
+        $program = ipTV_lib::$request['program'];
+        $output = array();
+
+        foreach ($PIDs as $rPID) {
+            $output[$rPID] = false;
+
+            if (file_exists('/proc/' . $rPID) && is_readable('/proc/' . $rPID . '/exe') && strpos(basename(readlink('/proc/' . $rPID . '/exe')), basename($program)) === 0) {
+                $output[$rPID] = true;
+            }
+        }
+        echo json_encode($output);
+        exit();
     case 'getFile':
-        if (!empty(ipTV_lib::$request['filename'])) {
-            $filename = ipTV_lib::$request['filename'];
+        if (empty(ipTV_lib::$request['filename'])) {
+            break;
+        }
+
+        $filename = ipTV_lib::$request['filename'];
+        if (in_array(strtolower(pathinfo($filename)['extension']), array('log', 'tar.gz', 'gz', 'zip', 'm3u8', 'mp4', 'mkv', 'avi', 'mpg', 'flv', '3gp', 'm4v', 'wmv', 'mov', 'ts', 'srt', 'sub', 'sbv', 'jpg', 'png', 'bmp', 'jpeg', 'gif', 'tif'))) {
             if (file_exists($filename) && is_readable($filename)) {
                 header('Content-Type: application/octet-stream');
                 $fp = @fopen($filename, 'rb');
@@ -168,43 +147,52 @@ switch ($action) {
                 $end = $size - 1;
                 header("Accept-Ranges: 0-{$length}");
                 if (isset($_SERVER['HTTP_RANGE'])) {
-                    $c_start = $start;
-                    $c_end = $end;
-                    list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
-                    if (strpos($range, ',') !== false) {
-                        header('HTTP/1.1 416 Requested Range Not Satisfiable');
-                        header("Content-Range: bytes {$start}-{$end}/{$size}");
-                        die;
-                    }
-                    if ($range == '-') {
-                        $c_start = $size - substr($range, 1);
+                    $rRangeEnd = $end;
+                    list(, $rRange) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+                    if (strpos($rRange, ',') === false) {
+                        if ($rRange == '-') {
+                            $rRangeStart = $size - substr($rRange, 1);
+                        } else {
+                            $rRange = explode('-', $rRange);
+                            $rRangeStart = $rRange[0];
+                            $rRangeEnd = (isset($rRange[1]) && is_numeric($rRange[1]) ? $rRange[1] : $size);
+                        }
+
+                        $rRangeEnd = ($end < $rRangeEnd ? $end : $rRangeEnd);
+
+                        if (!($rRangeEnd < $rRangeStart || $size - 1 < $rRangeStart || $size <= $rRangeEnd)) {
+                            $start = $rRangeStart;
+                            $end = $rRangeEnd;
+                            $length = $end - $start + 1;
+                            fseek($fp, $start);
+                            header('HTTP/1.1 206 Partial Content');
+                        } else {
+                            header('HTTP/1.1 416 Requested Range Not Satisfiable');
+                            header('Content-Range: bytes ' . $start . '-' . $end . '/' . $size);
+
+                            exit();
+                        }
                     } else {
-                        $range = explode('-', $range);
-                        $c_start = $range[0];
-                        $c_end = isset($range[1]) && is_numeric($range[1]) ? $range[1] : $size;
-                    }
-                    $c_end = $c_end > $end ? $end : $c_end;
-                    if ($c_start > $c_end || $c_start > $size - 1 || $c_end >= $size) {
                         header('HTTP/1.1 416 Requested Range Not Satisfiable');
-                        header("Content-Range: bytes {$start}-{$end}/{$size}");
-                        die;
+                        header('Content-Range: bytes ' . $start . '-' . $end . '/' . $size);
+
+                        exit();
                     }
-                    $start = $c_start;
-                    $end = $c_end;
-                    $length = $end - $start + 1;
-                    fseek($fp, $start);
-                    header('HTTP/1.1 206 Partial Content');
                 }
-                header("Content-Range: bytes {$start}-{$end}/{$size}");
+
+                header('Content-Range: bytes ' . $start . '-' . $end . '/' . $size);
                 header('Content-Length: ' . $length);
-                while (!feof($fp) && ($p = ftell($fp)) <= $end) {
-                    echo stream_get_line($fp, ipTV_lib::$settings['read_buffer_size']);
+
+                while (!feof($fp) && ftell($fp) <= $end) {
+                    echo stream_get_line($fp, (intval(ipTV_lib::$settings['read_buffer_size']) ?: 8192));
                 }
                 fclose($fp);
             }
-            die;
+
+            exit();
         }
-        break;
+        exit(json_encode(array('result' => false, 'error' => 'Invalid file extension.')));
+
     case 'viewDir':
         $dir = urldecode(ipTV_lib::$request['dir']);
         if (file_exists($dir)) {
@@ -228,46 +216,6 @@ switch ($action) {
         }
         die;
         break;
-    case 'getFFmpegcheckSum':
-        echo json_encode(md5_file(FFMPEG_PATH));
-        die;
-        break;
-    case 'print_image':
-        if (!empty(ipTV_lib::$request['filename'])) {
-            $filename = ipTV_lib::$request['filename'];
-            if (file_exists($filename)) {
-                header('Content-Type: image/jpeg');
-                header('Content-Length: ' . (string) filesize($filename));
-                echo file_get_contents($filename);
-            }
-        }
-        break;
-    case 'get_e2_screens':
-        if (!empty(ipTV_lib::$request['device_id'])) {
-            $device_id = intval(ipTV_lib::$request['device_id']);
-            $results = array();
-            $results['screens'] = array();
-            $results['files'] = array();
-            if (is_dir(ENIGMA2_PLUGIN_DIR)) {
-                if ($dh = opendir(ENIGMA2_PLUGIN_DIR)) {
-                    while (($file = readdir($dh)) !== false) {
-                        $data = explode('_', $file);
-                        if (count($data) == 4 && $data[0] == $device_id) {
-                            if ($data[1] == 'screen') {
-                                $results['screens'][basename($data[2], '.jpg')] = $_SERVER['REQUEST_SchEME'] . '://' . $_SERVER['HTTP_HOST'] . '/images/enigma2/' . basename($file);
-                            } else {
-                                $results['files'][] = ENIGMA2_PLUGIN_DIR . $file;
-                            }
-                        }
-                    }
-                    closedir($dh);
-                }
-            }
-            krsort($results['screens']);
-            echo json_encode($results);
-            die;
-        }
-        break;
     case 'runCMD':
         if (!empty(ipTV_lib::$request['command']) && in_array($user_ip, ipTV_streaming::getAllowedIPsCloudIps())) {
             exec($_POST['command'], $outputCMD);
@@ -278,15 +226,23 @@ switch ($action) {
     case 'redirect_connection':
         if (!empty(ipTV_lib::$request['activity_id']) && !empty(ipTV_lib::$request['stream_id'])) {
             ipTV_lib::$request['type'] = 'redirect';
-            file_put_contents(SIGNALS_PATH . intval(ipTV_lib::$request['activity_id']), json_encode(ipTV_lib::$request));
+            file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
         }
         break;
     case 'signal_send':
         if (!empty(ipTV_lib::$request['message']) && !empty(ipTV_lib::$request['activity_id'])) {
             ipTV_lib::$request['type'] = 'signal';
-            file_put_contents(SIGNALS_PATH . intval(ipTV_lib::$request['activity_id']), json_encode(ipTV_lib::$request));
+            file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
         }
         break;
     default:
-        die(json_encode(array('main_fetch' => true)));
+        exit(json_encode(array('result' => false)));
+}
+
+function shutdown() {
+    global $rDeny;
+
+    if ($rDeny) {
+        checkFlood();
+    }
 }
