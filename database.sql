@@ -104,6 +104,38 @@ CREATE TABLE IF NOT EXISTS `bouquets` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `crontab` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `filename` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `time` varchar(128) COLLATE utf8_unicode_ci DEFAULT '* * * * *',
+  `enabled` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `enabled` (`enabled`),
+  KEY `filename` (`filename`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
+  (1, 'vod_cc_checker.php', '* * * * *', 1),
+	(2, 'lines_logs.php', '* * * * *', 1),
+	(3, 'epg.php', '0 0 * * *', 1),
+	(4, 'balancer.php', '* * * * *', 1),
+	(5, 'activity.php', '* * * * *', 1),
+	(6, 'servers_checker.php', '* * * * *', 1),
+	(7, 'setup_cache.php', '* * * * *', 1),
+	(8, 'stats.php', '0 * * * *', 1),
+	(9, 'errors.php', '* * * * *', 1),
+	(10, 'tmdb_async.php', '0 * * * *', 1),
+	(11, 'tmp_del.php', '* * * * *', 1),
+	(12, 'users_checker.php', '* * * * *', 1),
+	(13, 'vod_cc_series.php', '* * * * *', 1),
+	(14, 'kill_leaks.php', '* * * * *', 1),
+	(15, 'watch_folder.php', '*/5 * * * *', 1),
+	(16, 'auto_backups.php', '* * * * *', 1),
+	(17, 'live_checker.php', '* * * * *', 1),
+	(18, 'offline_cons.php', '0 0 * * *', 1),
+	(19, 'pid_monitor.php', '0 * * * *', 1),
+	(20, 'update.php', '0 0 * * *', 1),
+	(21, 'cache_engine.php', '*/5 * * * *', 1);
 --
 -- Table structure for table `client_logs`
 --
@@ -191,26 +223,6 @@ CREATE TABLE IF NOT EXISTS `credits_log` (
   KEY `target_id` (`target_id`),
   KEY `admin_id` (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cronjobs`
---
-
-CREATE TABLE IF NOT EXISTS `cronjobs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `run_per_mins` int(11) NOT NULL DEFAULT '1',
-  `run_per_hours` int(11) NOT NULL DEFAULT '0',
-  `enabled` int(11) NOT NULL DEFAULT '0',
-  `pid` int(11) NOT NULL DEFAULT '0',
-  `timestamp` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `enabled` (`enabled`),
-  KEY `filename` (`filename`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 

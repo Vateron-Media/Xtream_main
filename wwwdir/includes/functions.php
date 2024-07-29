@@ -727,18 +727,15 @@ function GetContainerExtension($target_container, $stalker_container_priority = 
     return $target_container[0];
 }
 function crontab_refresh() {
+    global $ipTV_db;
     if (!file_exists(TMP_DIR . 'crontab')) {
         $rJobs = array();
-        $crons = scandir(CRON_PATH);
-        foreach ($crons as $cron) {
-            $rFullPath = CRON_PATH . $cron;
-            if (pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && is_file($rFullPath)) {
-                if ($cron != "epg.php") {
-                    $time = "*/1 * * * *";
-                } else {
-                    $time = "0 1 * * *";
-                }
-                $rJobs[] = $time . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XtreamUI';
+        $ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
+        foreach ($ipTV_db->get_rows() as $rRow) {
+            $rFullPath = CRON_PATH . $rRow['filename'];
+            if (!(pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && file_exists($rFullPath))) {
+            } else {
+                $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XtreamUI';
             }
         }
         shell_exec('crontab -r');
@@ -746,7 +743,7 @@ function crontab_refresh() {
         $rHandle = fopen($rTempName, 'w');
         fwrite($rHandle, implode("\n", $rJobs) . "\n");
         fclose($rHandle);
-        shell_exec('crontab -u 	xtreamcodes ' . $rTempName);
+        shell_exec('crontab -u xtreamcodes ' . $rTempName);
         @unlink($rTempName);
         file_put_contents(TMP_DIR . 'crontab', 1);
         return true;
