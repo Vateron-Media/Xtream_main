@@ -1373,10 +1373,11 @@ function getItems($rTypes = array(), $rCategoryID = null, $rFav = null, $rOrderB
 
     if (!empty($rFav)) {
         $favoriteChannelIds = array();
-
         foreach ($rTypes as $rType) {
-            foreach ($rDevice['fav_channels'][$rType] as $rStreamID) {
-                $favoriteChannelIds[] = intval($rStreamID);
+            if (array_key_exists($rType, $rDevice['fav_channels'])) {
+                foreach ($rDevice['fav_channels'][$rType] as $rStreamID) {
+                    $favoriteChannelIds[] = intval($rStreamID);
+                }
             }
         }
         $rChannels = array_intersect($favoriteChannelIds, $rChannels);
@@ -1480,7 +1481,6 @@ function sortArrayStreamRating($a, $b) {
             } else {
                 $a = $a['movie_properties'];
             }
-
             if (!is_array($b['movie_properties'])) {
                 $b = json_decode($b['movie_properties'], true);
             } else {
@@ -1535,7 +1535,7 @@ function getDevice($rID = null, $rMAC = null) {
             $rDevice = $ipTV_db->get_row();
             $rUserInfo = ipTV_streaming::getUserInfo($rDevice['user_id'], null, null, true, false, $rIP);
             $rDevice = array_merge($rDevice, $rUserInfo);
-            $rDevice['allowed_ips'] = json_decode($rDevice['allowed_ips'], true);
+            // $rDevice['allowed_ips'] = json_decode($rDevice['allowed_ips'], true);
             $rDevice['fav_channels'] = (!empty($rDevice['fav_channels']) ? json_decode($rDevice['fav_channels'], true) : array());
 
             if (empty($rDevice['fav_channels']['live'])) {
@@ -1882,7 +1882,7 @@ function getStreams($rCategoryID = null, $rAll = false, $rFav = null, $rOrderBy 
 
         if (ipTV_lib::$request['p'] == 0 || !empty($rDevice['last_itv_id'])) {
             $rPosition = getitems(array('live', 'created_live'), $rCategoryID, $rFav, $rOrderBy, $rSearchBy, null, 0, 0, $rDevice['last_itv_id']);
-            if ($rPosition) {
+            if (!is_array($rPosition)) {
                 $rPage = floor(($rPosition - 1) / $rPageItems) + 1;
                 $rPosition = $rPosition - ($rPage - 1) * $rPageItems;
             } else {
