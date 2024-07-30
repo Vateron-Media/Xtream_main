@@ -29,23 +29,23 @@ class ipTV_streaming {
             return $rCache;
         }
 
-        $rIPs = array('127.0.0.1', $_SERVER['SERVER_ADDR']);
+        $IPs = array('127.0.0.1', $_SERVER['SERVER_ADDR']);
         foreach (ipTV_lib::$StreamingServers as $rServerID => $serverInfo) {
             if (!empty($serverInfo['whitelist_ips'])) {
-                $rIPs = array_merge($rIPs, json_decode($serverInfo['whitelist_ips'], true));
+                $IPs = array_merge($IPs, json_decode($serverInfo['whitelist_ips'], true));
             }
-            $rIPs[] = $serverInfo['server_ip'];
+            $IPs[] = $serverInfo['server_ip'];
             foreach (explode(',', $serverInfo['domain_name']) as $rIP) {
                 if (filter_var($rIP, FILTER_VALIDATE_IP)) {
-                    $rIPs[] = $rIP;
+                    $IPs[] = $rIP;
                 }
             }
         }
         if (!empty(ipTV_lib::$settings['allowed_ips_admin'])) {
-            $rIPs = array_merge($rIPs, explode(',', ipTV_lib::$settings['allowed_ips_admin']));
+            $IPs = array_merge($IPs, explode(',', ipTV_lib::$settings['allowed_ips_admin']));
         }
-        ipTV_lib::setCache('allowed_ips', $rIPs);
-        return array_unique($rIPs);
+        ipTV_lib::setCache('allowed_ips', $IPs);
+        return array_unique($IPs);
     }
     public static function getAllowedIPsCloudIps() {
         $ips = array("127.0.0.1", $_SERVER["SERVER_ADDR"]);
@@ -60,45 +60,36 @@ class ipTV_streaming {
         }
         return array_unique($ips);
     }
-    public static function getAllowedIPsAdmin($reg_users = false) {
-        if (!empty(self::$AllowedIPs)) {
-            return self::$AllowedIPs;
+    public function getAllowedIPsAdmin($rForce = false) {
+        if (!$rForce) {
+            $rCache = ipTV_lib::getCache('allowed_ips', 60);
+            if ($rCache !== false) {
+                return $rCache;
+            }
         }
-        $ips = array("127.0.0.1", $_SERVER["SERVER_ADDR"]);
-        foreach (ipTV_lib::$StreamingServers as $server_id => $server) {
-            if (!empty($server["whitelist_ips"])) {
-                $whitelist_ips = json_decode($server["whitelist_ips"], true);
+        $IPs = array('127.0.0.1', $_SERVER['SERVER_ADDR']);
+        foreach (ipTV_lib::$StreamingServers as $rServerInfo) {
+            if (!empty($rServerInfo['whitelist_ips'])) {
+                $whitelist_ips = json_decode($rServerInfo['whitelist_ips'], true);
                 if (is_array($whitelist_ips)) {
-                    $ips = array_merge($ips, $whitelist_ips);
+                    $IPs = array_merge($IPs, $whitelist_ips);
                 }
             }
-            $ips[] = $server["server_ip"];
-            $ips[] = $server["server_ip"];
-        }
-        if ($reg_users) {
-            if (!empty(ipTV_lib::$settings["allowed_ips_admin"])) {
-                $ips = array_merge($ips, explode(",", ipTV_lib::$settings["allowed_ips_admin"]));
+            $IPs[] = $rServerInfo['server_ip'];
+            if ($rServerInfo['private_ip']) {
+                $IPs[] = $rServerInfo['private_ip'];
             }
-            self::$ipTV_db->query("SELECT * FROM `xtream_main` WHERE id = 1");
-            $xtream_main = self::$ipTV_db->get_row();
-            if (!empty($xtream_main["root_ip"])) {
-                $ips[] = $xtream_main["root_ip"];
-            }
-            self::$ipTV_db->query('SELECT DISTINCT t1.`ip` FROM `reg_users` t1 INNER JOIN `member_groups` t2 ON t2.group_id = t1.member_group_id AND t2.is_admin = 1 AND t1.`last_login` >= \'%d\'', strtotime('-2 hour'));
-            $UsersIP = ipTV_lib::array_values_recursive(self::$ipTV_db->get_rows());
-            $ips = array_merge($ips, $UsersIP);
-        }
-        if (!file_exists(TMP_DIR . "cloud_ips") || time() - filemtime(TMP_DIR . "cloud_ips") >= 600) {
-            $contents = ipTV_lib::SimpleWebGet("http://xtream-codes.com/cloud_ips");
-            if (!empty($contents)) {
-                file_put_contents(TMP_DIR . "cloud_ips", $contents);
+            foreach (explode(',', $rServerInfo['domain_name']) as $rIP) {
+                if (filter_var($rIP, FILTER_VALIDATE_IP)) {
+                    $IPs[] = $rIP;
+                }
             }
         }
-        if (file_exists(TMP_DIR . "cloud_ips")) {
-            $ips = array_filter(array_merge($ips, array_map("trim", file(TMP_DIR . "cloud_ips"))));
+        if (!empty(ipTV_lib::$settings['allowed_ips_admin'])) {
+            $IPs = array_merge($IPs, explode(',', ipTV_lib::$settings['allowed_ips_admin']));
         }
-        self::$AllowedIPs = $ips;
-        return array_unique($ips);
+        ipTV_lib::setCache('allowed_ips', $IPs);
+        return array_unique($IPs);
     }
     public static function CloseAndTransfer($activity_id) {
         file_put_contents(CONS_TMP_PATH . $activity_id, 1);

@@ -1478,6 +1478,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `bypass_ua` tinyint(4) NOT NULL DEFAULT '0',
   `play_token` text COLLATE utf8_unicode_ci NOT NULL,
   `last_expiration_video` int(11) DEFAULT NULL,
+  `last_ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `last_activity` int(11) DEFAULT NULL,
+  `last_activity_array` MEDIUMTEXT NULL DEFAULT NULL,
   `access_token` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
@@ -1503,18 +1506,21 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 CREATE TABLE IF NOT EXISTS `user_activity` (
   `activity_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `stream_id` int(11) NOT NULL,
-  `server_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `stream_id` int(11) DEFAULT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `proxy_id` int(11) DEFAULT NULL,
   `user_agent` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `user_ip` varchar(39) COLLATE utf8_unicode_ci NOT NULL,
-  `container` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `date_start` int(11) NOT NULL,
+  `user_ip` varchar(39) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `container` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `date_start` int(11) DEFAULT NULL,
   `date_end` int(11) DEFAULT NULL,
-  `geoip_country_code` varchar(22) COLLATE utf8_unicode_ci NOT NULL,
-  `isp` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `external_device` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `divergence` int(11) DEFAULT NULL,
+  `geoip_country_code` varchar(22) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `isp` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `external_device` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `divergence` float DEFAULT '0',
+  `hmac_id` tinyint(4) DEFAULT NULL,
+  `hmac_identifier` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`activity_id`),
   KEY `user_id` (`user_id`),
   KEY `stream_id` (`stream_id`),
@@ -1528,7 +1534,6 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
   KEY `user_agent` (`user_agent`),
   KEY `isp` (`isp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 
 -- --------------------------------------------------------
 
@@ -1545,19 +1550,6 @@ CREATE TABLE IF NOT EXISTS `user_output` (
   KEY `access_output_id` (`access_output_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `xtream_main`
---
-
-CREATE TABLE IF NOT EXISTS `xtream_main` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `update_available` int(11) NOT NULL DEFAULT '0',
-  `root_ip` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

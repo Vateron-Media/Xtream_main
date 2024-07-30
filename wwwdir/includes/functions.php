@@ -969,4 +969,32 @@ function stopDownload($rType, $rUser, $rDownloadPID) {
     } else {
         return null;
     }
+    /** 
+     * Function to display the call stack, showing the sequence of function calls leading up to the current point in the code. 
+     * 
+     * This function retrieves the backtrace of the current execution point, excluding the current function call itself. 
+     * It then iterates through the backtrace array, extracting information such as function name, file, and line number for each call. 
+     * The extracted information is formatted and stored in an array, with each entry representing a function call in the call stack. 
+     * Finally, the formatted call stack information is concatenated into a string with newline characters and returned. 
+     * 
+     * @return string The formatted call stack information as a string with each function call entry on a new line. 
+     */
+    function display_call_stack() {
+        $trace = debug_backtrace();
+        $stack = array();
+
+        foreach ($trace as $index => $call) {
+            if ($index === 0) {
+                continue; // Skip the current function call
+            }
+
+            $function = isset($call['class']) ? $call['class'] . $call['type'] . $call['function'] : $call['function'];
+            $file = isset($call['file']) ? $call['file'] : '[internal function]';
+            $line = isset($call['line']) ? $call['line'] : '';
+
+            $stack[] = sprintf("#%d %s(%s:%d)", $index, $function, $file, $line);
+        }
+
+        return implode("\n", $stack) . "\n";
+    }
 }

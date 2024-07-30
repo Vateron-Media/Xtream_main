@@ -28,7 +28,7 @@ function loadCron() {
                 $rFirstID = $ipTV_db->last_insert_id();
                 $i = 0;
                 while ($i < $rCount) {
-                    $rUpdateQuery .= '(' . $rUpdates[$i][0] . ',' . $ipTV_db->escape($rUpdates[$i][1]) . ',' . ($rFirstID + $i) . ',' . $ipTV_db->escape($rUpdates[$i][2]) . '),';
+                    $rUpdateQuery .= '(' . $rUpdates[$i][0] . ',\'' . $ipTV_db->escape($rUpdates[$i][1]) . '\',' . ($rFirstID + $i) . ',' . json_encode($rUpdates[$i][2]) . '),';
                     $i++;
                 }
             }
@@ -53,7 +53,7 @@ function parseLog($rFile) {
                 if ($rLine['server_id'] && $rLine['user_id'] && $rLine['stream_id'] && $rLine['user_ip']) {
                     $rUpdates[] = array($rLine['user_id'], $rLine['user_ip'], json_encode(array('date_end' => $rLine['date_end'], 'stream_id' => $rLine['stream_id'])));
                     $rLine = array_map(array($ipTV_db, 'escape'), $rLine);
-                    $rQuery .= '(' . $rLine['server_id'] . ',' . $rLine['user_id'] . ',' . $rLine['isp'] . ',' . $rLine['external_device'] . ',' . $rLine['stream_id'] . ',' . $rLine['date_start'] . ',' . $rLine['user_agent'] . ',' . $rLine['user_ip'] . ',' . $rLine['date_end'] . ',' . $rLine['container'] . ',' . $rLine['geoip_country_code'] . ',' . $rLine['divergence'] . '),';
+                    $rQuery .= '(' . $rLine['server_id'] . ',' . $rLine['user_id'] . ',\'' . $rLine['isp'] . '\',\'' . $rLine['external_device'] . '\',' . $rLine['stream_id'] . ',' . $rLine['date_start'] . ',\'' . $rLine['user_agent'] . '\',\'' . $rLine['user_ip'] . '\',' . $rLine['date_end'] . ',\'' . $rLine['container'] . '\',\'' . $rLine['geoip_country_code'] . '\',' . $rLine['divergence'] . '),';
                     $rCount++;
                 }
                 break;
