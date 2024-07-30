@@ -660,7 +660,7 @@ if ($rType == "users") {
         exit;
     }
     $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`streams`.`id`", false, "`streams`.`stream_display_name`", "`streams_sys`.`current_source`", "`clients`", "`streams_sys`.`stream_started`", false, false, false, "`streams_sys`.`bitrate`");
+    $rOrder = array("`streams`.`id`", false, "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`clients`", "`streams_servers`.`stream_started`", false, false, false, "`streams_servers`.`bitrate`");
     if (strlen($_GET["order"][0]["column"]) > 0) {
         $rOrderRow = intval($_GET["order"][0]["column"]);
     } else {
@@ -670,23 +670,23 @@ if ($rType == "users") {
     $rWhere[] = "`streams`.`type` in (1,3)";
     if (isset($_GET["stream_id"])) {
         $rWhere[] = "`streams`.`id` = " . intval($_GET["stream_id"]);
-        $rOrderBy = "ORDER BY `streams_sys`.`server_stream_id` ASC";
+        $rOrderBy = "ORDER BY `streams_servers`.`server_stream_id` ASC";
     } else {
         if (strlen($_GET["search"]["value"]) > 0) {
             $rSearch = $_GET["search"]["value"];
-            $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_sys`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
+            $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_servers`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
         }
         if (strlen($_GET["filter"]) > 0) {
             if ($_GET["filter"] == 1) {
-                $rWhere[] = "(`streams_sys`.`monitor_pid` > 0 AND `streams_sys`.`pid` > 0)";
+                $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0)";
             } else if ($_GET["filter"] == 2) {
-                $rWhere[] = "((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 0)";
+                $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0)";
             } else if ($_GET["filter"] == 3) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_sys`.`monitor_pid` IS NULL OR `streams_sys`.`monitor_pid` <= 0) AND `streams_sys`.`on_demand` = 0)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
             } else if ($_GET["filter"] == 4) {
-                $rWhere[] = "((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` = 0)";
+                $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 0)";
             } else if ($_GET["filter"] == 5) {
-                $rWhere[] = "`streams_sys`.`on_demand` = 1";
+                $rWhere[] = "`streams_servers`.`on_demand` = 1";
             } else if ($_GET["filter"] == 6) {
                 $rWhere[] = "`streams`.`direct_source` = 1";
             } else if ($_GET["filter"] == 7) {
@@ -699,7 +699,7 @@ if ($rType == "users") {
             $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
         }
         if (strlen($_GET["server"]) > 0) {
-            $rWhere[] = "`streams_sys`.`server_id` = " . intval($_GET["server"]);
+            $rWhere[] = "`streams_servers`.`server_id` = " . intval($_GET["server"]);
         }
         if ($rOrder[$rOrderRow]) {
             $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
@@ -711,7 +711,7 @@ if ($rType == "users") {
     } else {
         $rWhereString = "";
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_sys`.`server_id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString};";
     $rResult = $db->query($rCountQuery);
     if (($rResult) && ($rResult->num_rows == 1)) {
         $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
@@ -720,7 +720,7 @@ if ($rType == "users") {
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT (SELECT COUNT(`id`) FROM `epg_data` WHERE `epg_data`.`epg_id` = `streams`.`epg_id` AND `epg_data`.`channel_id` = `streams`.`channel_id`) AS `count_epg`, `streams`.`id`, `streams`.`type`, `streams`.`stream_icon`, `streams`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams_sys`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_sys`.`pid`, `streams_sys`.`monitor_pid`, `streams_sys`.`stream_status`, `streams_sys`.`stream_started`, `streams_sys`.`stream_info`, `streams_sys`.`current_source`, `streams_sys`.`bitrate`, `streams_sys`.`progress_info`, `streams_sys`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_sys`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_sys`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT (SELECT COUNT(`id`) FROM `epg_data` WHERE `epg_data`.`epg_id` = `streams`.`epg_id` AND `epg_data`.`channel_id` = `streams`.`channel_id`) AS `count_epg`, `streams`.`id`, `streams`.`type`, `streams`.`stream_icon`, `streams`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $rResult = $db->query($rQuery);
         if (($rResult) && ($rResult->num_rows > 0)) {
             while ($rRow = $rResult->fetch_assoc()) {
@@ -905,9 +905,9 @@ if ($rType == "users") {
     }
     $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     if ($rPermissions["is_admin"]) {
-        $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`streams_sys`.`current_source`", "`clients`", "`streams_sys`.`stream_started`", false, "`streams_sys`.`bitrate`");
+        $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`clients`", "`streams_servers`.`stream_started`", false, "`streams_servers`.`bitrate`");
     } else {
-        $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`streams_sys`.`current_source`", "`streams_sys`.`bitrate`");
+        $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`streams_servers`.`bitrate`");
     }
     if (strlen($_GET["order"][0]["column"]) > 0) {
         $rOrderRow = intval($_GET["order"][0]["column"]);
@@ -918,23 +918,23 @@ if ($rType == "users") {
     $rWhere[] = "`streams`.`type` = 4";
     if (isset($_GET["stream_id"])) {
         $rWhere[] = "`streams`.`id` = " . intval($_GET["stream_id"]);
-        $rOrderBy = "ORDER BY `streams_sys`.`server_stream_id` ASC";
+        $rOrderBy = "ORDER BY `streams_servers`.`server_stream_id` ASC";
     } else {
         if (strlen($_GET["search"]["value"]) > 0) {
             $rSearch = $_GET["search"]["value"];
-            $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_sys`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
+            $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_servers`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
         }
         if (strlen($_GET["filter"]) > 0) {
             if ($_GET["filter"] == 1) {
-                $rWhere[] = "(`streams_sys`.`monitor_pid` > 0 AND `streams_sys`.`pid` > 0)";
+                $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0)";
             } else if ($_GET["filter"] == 2) {
-                $rWhere[] = "((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 0)";
+                $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0)";
             } else if ($_GET["filter"] == 3) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_sys`.`monitor_pid` IS NULL OR `streams_sys`.`monitor_pid` <= 0) AND `streams_sys`.`on_demand` = 0)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
             } else if ($_GET["filter"] == 4) {
-                $rWhere[] = "((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` = 0)";
+                $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 0)";
             } else if ($_GET["filter"] == 5) {
-                $rWhere[] = "`streams_sys`.`on_demand` = 1";
+                $rWhere[] = "`streams_servers`.`on_demand` = 1";
             } else if ($_GET["filter"] == 6) {
                 $rWhere[] = "`streams`.`direct_source` = 1";
             }
@@ -943,7 +943,7 @@ if ($rType == "users") {
             $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
         }
         if (strlen($_GET["server"]) > 0) {
-            $rWhere[] = "`streams_sys`.`server_id` = " . intval($_GET["server"]);
+            $rWhere[] = "`streams_servers`.`server_id` = " . intval($_GET["server"]);
         }
         if ($rOrder[$rOrderRow]) {
             $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
@@ -955,7 +955,7 @@ if ($rType == "users") {
     } else {
         $rWhereString = "";
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_sys`.`server_id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString};";
     $rResult = $db->query($rCountQuery);
     if (($rResult) && ($rResult->num_rows == 1)) {
         $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
@@ -964,7 +964,7 @@ if ($rType == "users") {
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `streams`.`id`, `streams`.`type`, `streams`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams_sys`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_sys`.`pid`, `streams_sys`.`monitor_pid`, `streams_sys`.`stream_status`, `streams_sys`.`stream_started`, `streams_sys`.`stream_info`, `streams_sys`.`current_source`, `streams_sys`.`bitrate`, `streams_sys`.`progress_info`, `streams_sys`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_sys`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_sys`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `streams`.`id`, `streams`.`type`, `streams`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $rResult = $db->query($rQuery);
         if (($rResult) && ($rResult->num_rows > 0)) {
             while ($rRow = $rResult->fetch_assoc()) {
@@ -1120,7 +1120,7 @@ if ($rType == "users") {
         exit;
     }
     $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`streams_sys`.`current_source`", "`streaming_servers`.`server_name`", "`clients`", "`streams_sys`.`stream_started`", false, false, "`streams_sys`.`bitrate`");
+    $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`streaming_servers`.`server_name`", "`clients`", "`streams_servers`.`stream_started`", false, false, "`streams_servers`.`bitrate`");
     if (strlen($_GET["order"][0]["column"]) > 0) {
         $rOrderRow = intval($_GET["order"][0]["column"]);
     } else {
@@ -1130,21 +1130,21 @@ if ($rType == "users") {
     $rWhere[] = "`streams`.`type` = 2";
     if (isset($_GET["stream_id"])) {
         $rWhere[] = "`streams`.`id` = " . intval($_GET["stream_id"]);
-        $rOrderBy = "ORDER BY `streams_sys`.`server_stream_id` ASC";
+        $rOrderBy = "ORDER BY `streams_servers`.`server_stream_id` ASC";
     } else {
         if (strlen($_GET["search"]["value"]) > 0) {
             $rSearch = $_GET["search"]["value"];
-            $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_sys`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
+            $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_servers`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
         }
         if (strlen($_GET["filter"]) > 0) {
             if ($_GET["filter"] == 1) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`pid` > 0 AND `streams_sys`.`to_analyze` = 0 AND `streams_sys`.`stream_status` <> 1)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 0 AND `streams_servers`.`stream_status` <> 1)";
             } else if ($_GET["filter"] == 2) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`pid` > 0 AND `streams_sys`.`to_analyze` = 1 AND `streams_sys`.`stream_status` <> 1)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 1 AND `streams_servers`.`stream_status` <> 1)";
             } else if ($_GET["filter"] == 3) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`stream_status` = 1)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`stream_status` = 1)";
             } else if ($_GET["filter"] == 4) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 1)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 1)";
             } else if ($_GET["filter"] == 5) {
                 $rWhere[] = "`streams`.`direct_source` = 1";
             } else if ($_GET["filter"] == 6) {
@@ -1155,7 +1155,7 @@ if ($rType == "users") {
             $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
         }
         if (strlen($_GET["server"]) > 0) {
-            $rWhere[] = "`streams_sys`.`server_id` = " . intval($_GET["server"]);
+            $rWhere[] = "`streams_servers`.`server_id` = " . intval($_GET["server"]);
         }
         if ($rOrder[$rOrderRow]) {
             $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
@@ -1167,7 +1167,7 @@ if ($rType == "users") {
     } else {
         $rWhereString = "";
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_sys`.`server_id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString};";
     $rResult = $db->query($rCountQuery);
     if (($rResult) && ($rResult->num_rows == 1)) {
         $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
@@ -1176,7 +1176,7 @@ if ($rType == "users") {
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `streams`.`id`, `streams_sys`.`to_analyze`, `streams`.`target_container`, `streams`.`stream_display_name`, `streams_sys`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_sys`.`pid`, `streams_sys`.`monitor_pid`, `streams_sys`.`stream_status`, `streams_sys`.`stream_started`, `streams_sys`.`stream_info`, `streams_sys`.`current_source`, `streams_sys`.`bitrate`, `streams_sys`.`progress_info`, `streams_sys`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_sys`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_sys`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `streams`.`id`, `streams_servers`.`to_analyze`, `streams`.`target_container`, `streams`.`stream_display_name`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $rResult = $db->query($rQuery);
         if (($rResult) && ($rResult->num_rows > 0)) {
             while ($rRow = $rResult->fetch_assoc()) {
@@ -1303,13 +1303,13 @@ if ($rType == "users") {
     }
     if (strlen($_GET["filter"]) > 0) {
         if ($_GET["filter"] == 1) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`pid` > 0 AND `streams_sys`.`to_analyze` = 0 AND `streams_sys`.`stream_status` <> 1)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 0 AND `streams_servers`.`stream_status` <> 1)";
         } else if ($_GET["filter"] == 2) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`pid` > 0 AND `streams_sys`.`to_analyze` = 1 AND `streams_sys`.`stream_status` <> 1)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 1 AND `streams_servers`.`stream_status` <> 1)";
         } else if ($_GET["filter"] == 3) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`stream_status` = 1)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`stream_status` = 1)";
         } else if ($_GET["filter"] == 4) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 1)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 1)";
         } else if ($_GET["filter"] == 5) {
             $rWhere[] = "`streams`.`direct_source` = 1";
         }
@@ -1323,7 +1323,7 @@ if ($rType == "users") {
     } else {
         $rWhereString = "";
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString};";
     $rResult = $db->query($rCountQuery);
     if (($rResult) && ($rResult->num_rows == 1)) {
         $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
@@ -1332,7 +1332,7 @@ if ($rType == "users") {
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `streams`.`id`, `streams`.`stream_display_name`, `series`.`title`, `streams`.`direct_source`, `streams_sys`.`to_analyze`, `streams_sys`.`pid` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `streams`.`id`, `streams`.`stream_display_name`, `series`.`title`, `streams`.`direct_source`, `streams_servers`.`to_analyze`, `streams_servers`.`pid` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $rResult = $db->query($rQuery);
         if (($rResult) && ($rResult->num_rows > 0)) {
             while ($rRow = $rResult->fetch_assoc()) {
@@ -1610,15 +1610,15 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     if (strlen($_GET["filter"]) > 0) {
         if ($_GET["filter"] == 1) {
-            $rWhere[] = "(`streams_sys`.`monitor_pid` > 0 AND `streams_sys`.`pid` > 0)";
+            $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0)";
         } else if ($_GET["filter"] == 2) {
-            $rWhere[] = "((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 0)";
+            $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0)";
         } else if ($_GET["filter"] == 3) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_sys`.`monitor_pid` IS NULL OR `streams_sys`.`monitor_pid` <= 0) AND `streams_sys`.`on_demand` = 0)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
         } else if ($_GET["filter"] == 4) {
-            $rWhere[] = "((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` = 0)";
+            $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 0)";
         } else if ($_GET["filter"] == 5) {
-            $rWhere[] = "`streams_sys`.`on_demand` = 1";
+            $rWhere[] = "`streams_servers`.`on_demand` = 1";
         } else if ($_GET["filter"] == 6) {
             $rWhere[] = "`streams`.`direct_source` = 1";
         }
@@ -1677,13 +1677,13 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     if (strlen($_GET["filter"]) > 0) {
         if ($_GET["filter"] == 1) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`pid` > 0 AND `streams_sys`.`to_analyze` = 0 AND `streams_sys`.`stream_status` <> 1)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 0 AND `streams_servers`.`stream_status` <> 1)";
         } else if ($_GET["filter"] == 2) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`pid` > 0 AND `streams_sys`.`to_analyze` = 1 AND `streams_sys`.`stream_status` <> 1)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 1 AND `streams_servers`.`stream_status` <> 1)";
         } else if ($_GET["filter"] == 3) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`stream_status` = 1)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`stream_status` = 1)";
         } else if ($_GET["filter"] == 4) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 1)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 1)";
         } else if ($_GET["filter"] == 5) {
             $rWhere[] = "`streams`.`direct_source` = 1";
         } else if ($_GET["filter"] == 6) {
@@ -1699,7 +1699,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     } else {
         $rWhereString = "";
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` {$rWhereString};";
     $rResult = $db->query($rCountQuery);
     if (($rResult) && ($rResult->num_rows == 1)) {
         $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
@@ -1708,7 +1708,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `streams`.`id`, `streams`.`stream_display_name`, `stream_categories`.`category_name`, `streams`.`direct_source`, `streams_sys`.`to_analyze`, `streams_sys`.`pid` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `streams`.`id`, `streams`.`stream_display_name`, `stream_categories`.`category_name`, `streams`.`direct_source`, `streams_servers`.`to_analyze`, `streams_servers`.`pid` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $rResult = $db->query($rQuery);
         if (($rResult) && ($rResult->num_rows > 0)) {
             while ($rRow = $rResult->fetch_assoc()) {
@@ -1752,15 +1752,15 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     if (strlen($_GET["filter"]) > 0) {
         if ($_GET["filter"] == 1) {
-            $rWhere[] = "(`streams_sys`.`monitor_pid` > 0 AND `streams_sys`.`pid` > 0)";
+            $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0)";
         } else if ($_GET["filter"] == 2) {
-            $rWhere[] = "((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 0)";
+            $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0)";
         } else if ($_GET["filter"] == 3) {
-            $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_sys`.`monitor_pid` IS NULL OR `streams_sys`.`monitor_pid` <= 0) AND `streams_sys`.`on_demand` = 0)";
+            $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
         } else if ($_GET["filter"] == 4) {
-            $rWhere[] = "((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` = 0)";
+            $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 0)";
         } else if ($_GET["filter"] == 5) {
-            $rWhere[] = "`streams_sys`.`on_demand` = 1";
+            $rWhere[] = "`streams_servers`.`on_demand` = 1";
         } else if ($_GET["filter"] == 6) {
             $rWhere[] = "`streams`.`direct_source` = 1";
         }
@@ -2384,7 +2384,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         exit;
     }
     $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`series`.`title`", "`streaming_servers`.`server_name`", "`clients`", "`streams_sys`.`stream_started`", false, false, "`streams_sys`.`bitrate`");
+    $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`series`.`title`", "`streaming_servers`.`server_name`", "`clients`", "`streams_servers`.`stream_started`", false, false, "`streams_servers`.`bitrate`");
     if (strlen($_GET["order"][0]["column"]) > 0) {
         $rOrderRow = intval($_GET["order"][0]["column"]);
     } else {
@@ -2394,21 +2394,21 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     $rWhere[] = "`streams`.`type` = 5";
     if (isset($_GET["stream_id"])) {
         $rWhere[] = "`streams`.`id` = " . intval($_GET["stream_id"]);
-        $rOrderBy = "ORDER BY `streams_sys`.`server_stream_id` ASC";
+        $rOrderBy = "ORDER BY `streams_servers`.`server_stream_id` ASC";
     } else {
         if (strlen($_GET["search"]["value"]) > 0) {
             $rSearch = $_GET["search"]["value"];
-            $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `series`.`title` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_sys`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
+            $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `series`.`title` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_servers`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
         }
         if (strlen($_GET["filter"]) > 0) {
             if ($_GET["filter"] == 1) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`pid` > 0 AND `streams_sys`.`to_analyze` = 0 AND `streams_sys`.`stream_status` <> 1)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 0 AND `streams_servers`.`stream_status` <> 1)";
             } else if ($_GET["filter"] == 2) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`pid` > 0 AND `streams_sys`.`to_analyze` = 1 AND `streams_sys`.`stream_status` <> 1)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 1 AND `streams_servers`.`stream_status` <> 1)";
             } else if ($_GET["filter"] == 3) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_sys`.`stream_status` = 1)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`stream_status` = 1)";
             } else if ($_GET["filter"] == 4) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 1)";
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 1)";
             } else if ($_GET["filter"] == 5) {
                 $rWhere[] = "`streams`.`direct_source` = 1";
             }
@@ -2417,7 +2417,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
             $rWhere[] = "`series`.`id` = " . intval($_GET["series"]);
         }
         if (strlen($_GET["server"]) > 0) {
-            $rWhere[] = "`streams_sys`.`server_id` = " . intval($_GET["server"]);
+            $rWhere[] = "`streams_servers`.`server_id` = " . intval($_GET["server"]);
         }
         if ($rOrder[$rOrderRow]) {
             $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
@@ -2429,7 +2429,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     } else {
         $rWhereString = "";
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_sys`.`server_id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString};";
     $rResult = $db->query($rCountQuery);
     if (($rResult) && ($rResult->num_rows == 1)) {
         $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
@@ -2438,7 +2438,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `streams`.`id`, `streams_sys`.`to_analyze`, `streams`.`target_container`, `streams`.`stream_display_name`, `streams_sys`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_sys`.`pid`, `streams_sys`.`monitor_pid`, `streams_sys`.`stream_status`, `streams_sys`.`stream_started`, `streams_sys`.`stream_info`, `streams_sys`.`current_source`, `streams_sys`.`bitrate`, `streams_sys`.`progress_info`, `streams_sys`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_sys`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients`, `series`.`title`, `series`.`id` AS `sid`, `series_episodes`.`season_num` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_sys`.`server_id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `streams`.`id`, `streams_servers`.`to_analyze`, `streams`.`target_container`, `streams`.`stream_display_name`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients`, `series`.`title`, `series`.`id` AS `sid`, `series_episodes`.`season_num` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $rResult = $db->query($rQuery);
         if (($rResult) && ($rResult->num_rows > 0)) {
             while ($rRow = $rResult->fetch_assoc()) {

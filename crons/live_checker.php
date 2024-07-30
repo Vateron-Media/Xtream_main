@@ -15,7 +15,7 @@ function loadCron() {
     $activePIDs = array();
     $streamIDs = array();
 
-    $ipTV_db->query("SELECT t2.stream_display_name, t1.stream_info, t1.stream_status, t1.progress_info, t1.stream_id, t1.monitor_pid, t1.on_demand, t1.server_stream_id, t1.pid, clients.online_clients, t2.tv_archive_pid FROM `streams_sys` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.direct_source = 0 INNER JOIN `streams_types` t3 ON t3.type_id = t2.type LEFT JOIN (SELECT stream_id, COUNT(*) AS online_clients FROM `lines_live` WHERE `server_id` = '%d' AND `hls_end` = 0 GROUP BY stream_id) AS clients ON clients.stream_id = t1.stream_id WHERE (t1.pid IS NOT NULL OR t1.stream_status <> 0 OR t1.to_analyze = 1) AND t1.server_id = '%d' AND t3.live = 1", SERVER_ID, SERVER_ID);
+    $ipTV_db->query("SELECT t2.stream_display_name, t1.stream_info, t1.stream_status, t1.progress_info, t1.stream_id, t1.monitor_pid, t1.on_demand, t1.server_stream_id, t1.pid, clients.online_clients, t2.tv_archive_pid FROM `streams_servers` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.direct_source = 0 INNER JOIN `streams_types` t3 ON t3.type_id = t2.type LEFT JOIN (SELECT stream_id, COUNT(*) AS online_clients FROM `lines_live` WHERE `server_id` = '%d' AND `hls_end` = 0 GROUP BY stream_id) AS clients ON clients.stream_id = t1.stream_id WHERE (t1.pid IS NOT NULL OR t1.stream_status <> 0 OR t1.to_analyze = 1) AND t1.server_id = '%d' AND t3.live = 1", SERVER_ID, SERVER_ID);
     if (0 < $ipTV_db->num_rows()) {
         $streams = $ipTV_db->get_rows();
         foreach ($streams as $stream) {
@@ -61,9 +61,9 @@ function loadCron() {
                         $streamInfo = $stream['stream_info'];
                     }
                     if ($stream['pid'] != $PID) {
-                        $ipTV_db->query("UPDATE `streams_sys` SET `pid` = '%d', `progress_info` = '%s', `stream_info` = '%s', `bitrate` = '%d', WHERE `server_stream_id` = '%d'", $PID, $Progress, $streamInfo, $Bitrate, $stream['server_stream_id']);
+                        $ipTV_db->query("UPDATE `streams_servers` SET `pid` = '%d', `progress_info` = '%s', `stream_info` = '%s', `bitrate` = '%d', WHERE `server_stream_id` = '%d'", $PID, $Progress, $streamInfo, $Bitrate, $stream['server_stream_id']);
                     } else {
-                        $ipTV_db->query("UPDATE `streams_sys` SET `progress_info` = '%s',`stream_info` = '%s', `bitrate` = '%d' WHERE `server_stream_id` = '%d'", $Progress, $streamInfo, $Bitrate, $stream['server_stream_id']);
+                        $ipTV_db->query("UPDATE `streams_servers` SET `progress_info` = '%s',`stream_info` = '%s', `bitrate` = '%d' WHERE `server_stream_id` = '%d'", $Progress, $streamInfo, $Bitrate, $stream['server_stream_id']);
                     }
                 }
                 echo "\n";
@@ -77,7 +77,7 @@ function loadCron() {
 
 
     // not checked code
-    // $ipTV_db->query('SELECT `streams`.`id` FROM `streams` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `streams`.`id` WHERE `streams`.`direct_source` = 1 AND `streams`.`direct_proxy` = 1 AND `streams_sys`.`server_id` = \'%s\' AND `streams_sys`.`pid` > 0;', SERVER_ID);
+    // $ipTV_db->query('SELECT `streams`.`id` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` WHERE `streams`.`direct_source` = 1 AND `streams`.`direct_proxy` = 1 AND `streams_servers`.`server_id` = \'%s\' AND `streams_servers`.`pid` > 0;', SERVER_ID);
     // if (0 < $ipTV_db->num_rows()) {
     //     foreach ($ipTV_db->get_rows() as $stream) {
     //         if (file_exists(STREAMS_PATH . $stream['id'] . '.analyse')) {
@@ -87,7 +87,7 @@ function loadCron() {
     //             }
     //             echo 'Stream ID: ' . $stream['id'] . "\n";
     //             echo 'Update Stream Information...' . "\n";
-    //             $ipTV_db->query('UPDATE `streams_sys` SET `bitrate` = '%d', `stream_info` = '%s' WHERE `stream_id` = \'%s\' AND `server_id` = \'%s\'', $Bitrate, json_encode($FFProbeOutput) $stream['id'], SERVER_ID);
+    //             $ipTV_db->query('UPDATE `streams_servers` SET `bitrate` = '%d', `stream_info` = '%s' WHERE `stream_id` = \'%s\' AND `server_id` = \'%s\'', $Bitrate, json_encode($FFProbeOutput) $stream['id'], SERVER_ID);
     //         }
     //         $UUIDs = array();
     //         $Connections = ipTV_streaming::getConnections(SERVER_ID, null, $stream['id']);
@@ -112,7 +112,7 @@ function loadCron() {
 
 
 
-    $ipTV_db->query("SELECT `stream_id` FROM `streams_sys` WHERE `on_demand` = 1 AND `server_id` = '%d';", SERVER_ID);
+    $ipTV_db->query("SELECT `stream_id` FROM `streams_servers` WHERE `on_demand` = 1 AND `server_id` = '%d';", SERVER_ID);
     $OnDemandIDs = array_keys($ipTV_db->get_rows(true, 'stream_id'));
     $Processes = shell_exec('ps aux | grep XtreamCodes');
     if (preg_match_all('/XtreamCodes\\[(.*)\\]/', $Processes, $Matches)) {

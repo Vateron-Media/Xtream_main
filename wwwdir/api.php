@@ -69,7 +69,7 @@ switch ($action) {
                 echo json_encode($output);
                 break;
             case 'offline':
-                $ipTV_db->query('SELECT t1.stream_status,t1.server_id,t1.stream_id FROM `streams_sys` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.type <> 2 WHERE t1.stream_status = 1');
+                $ipTV_db->query('SELECT t1.stream_status,t1.server_id,t1.stream_id FROM `streams_servers` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.type <> 2 WHERE t1.stream_status = 1');
                 $streamSys = $ipTV_db->get_rows(true, 'stream_id', false, 'server_id');
                 $output = array();
                 foreach ($streamSys as $stream_id => $server_id) {
@@ -78,7 +78,7 @@ switch ($action) {
                 echo json_encode($output);
                 break;
             case 'online':
-                $ipTV_db->query('SELECT t1.stream_status,t1.server_id,t1.stream_id FROM `streams_sys` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.type <> 2 WHERE t1.pid > 0 AND t1.stream_status = 0');
+                $ipTV_db->query('SELECT t1.stream_status,t1.server_id,t1.stream_id FROM `streams_servers` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.type <> 2 WHERE t1.pid > 0 AND t1.stream_status = 0');
                 $streamSys = $ipTV_db->get_rows(true, 'stream_id', false, 'server_id');
                 $output = array();
                 foreach ($streamSys as $stream_id => $server_id) {

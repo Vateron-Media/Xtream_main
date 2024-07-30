@@ -28,10 +28,10 @@ if ($argc >= 1) {
     cli_set_process_title('XtreamCodes[' . $stream_id . ']');
     require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
     set_time_limit(0);
-    $ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_sys` t2 ON t2.stream_id = t1.id AND t2.server_id = '%d' WHERE t1.id = '%d'", SERVER_ID, $stream_id);
+    $ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = '%d' WHERE t1.id = '%d'", SERVER_ID, $stream_id);
     if ($ipTV_db->num_rows() > 0) {
         $stream = $ipTV_db->get_row();
-        $ipTV_db->query("UPDATE `streams_sys` SET `monitor_pid` = '%d' WHERE `server_stream_id` = '%d'", getmypid(), $stream["server_stream_id"]);
+        $ipTV_db->query("UPDATE `streams_servers` SET `monitor_pid` = '%d' WHERE `server_stream_id` = '%d'", getmypid(), $stream["server_stream_id"]);
 
         $stream_pid = file_exists(STREAMS_PATH . $stream_id . "_.pid") ? intval(file_get_contents(STREAMS_PATH . $stream_id . "_.pid")) : $stream["pid"];
         $stream_auto_restart = json_decode($stream["auto_restart"], true);

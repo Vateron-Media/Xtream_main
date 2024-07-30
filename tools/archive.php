@@ -20,7 +20,7 @@ if (@$argc) {
         if (!file_exists(TV_ARCHIVE . $stream_id)) {
             mkdir(TV_ARCHIVE . $stream_id);
         }
-        $ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_sys` t2 ON t1.id = t2.stream_id AND t2.server_id = t1.tv_archive_server_id WHERE t1.`id` = '%d' AND t1.`tv_archive_server_id` = '%d' AND t1.`tv_archive_duration` > 0", $stream_id, SERVER_ID);
+        $ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t1.id = t2.stream_id AND t2.server_id = t1.tv_archive_server_id WHERE t1.`id` = '%d' AND t1.`tv_archive_server_id` = '%d' AND t1.`tv_archive_duration` > 0", $stream_id, SERVER_ID);
         if (0 >= $ipTV_db->num_rows()) {
         } else {
             $stream = $ipTV_db->get_row();

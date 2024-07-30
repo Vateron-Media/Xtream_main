@@ -106,7 +106,7 @@ class ipTV_streaming {
             $rStreamInfo = self::$ipTV_db->get_row();
             $rServers = array();
             if ($rStreamInfo['direct_source'] == 0) {
-                self::$ipTV_db->query('SELECT * FROM `streams_sys` WHERE `stream_id` = \'%s\'', $streamID);
+                self::$ipTV_db->query('SELECT * FROM `streams_servers` WHERE `stream_id` = \'%s\'', $streamID);
                 if (self::$ipTV_db->num_rows() > 0) {
                     $rServers = self::$ipTV_db->get_rows(true, 'server_id');
                 }
@@ -486,7 +486,7 @@ class ipTV_streaming {
     }
     public static function closeConnections($user_id, $rMaxConnections, $user_ip = null, $user_agent = null) {
 
-        self::$ipTV_db->query('SELECT `lines_live`.*, `on_demand` FROM `lines_live` LEFT JOIN `streams_sys` ON `streams_sys`.`stream_id` = `lines_live`.`stream_id` AND `streams_sys`.`server_id` = `lines_live`.`server_id` WHERE `lines_live`.`user_id` = \'%d\' AND `lines_live`.`hls_end` = 0 ORDER BY `lines_live`.`activity_id` ASC', $user_id);
+        self::$ipTV_db->query('SELECT `lines_live`.*, `on_demand` FROM `lines_live` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `lines_live`.`stream_id` AND `streams_servers`.`server_id` = `lines_live`.`server_id` WHERE `lines_live`.`user_id` = \'%d\' AND `lines_live`.`hls_end` = 0 ORDER BY `lines_live`.`activity_id` ASC', $user_id);
 
         $rConnectionCount = self::$ipTV_db->num_rows();
         $rToKill = $rConnectionCount - $rMaxConnections;
@@ -1074,7 +1074,7 @@ class ipTV_streaming {
         } else {
             $rExtra = 'WHERE ' . implode(' AND ', $rWhere);
         }
-        $rQuery = 'SELECT t2.*,t3.*,t5.bitrate,t1.*,t1.uuid AS `uuid` FROM `lines_live` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_sys` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id ' . $rExtra . ' ORDER BY t1.activity_id ASC';
+        $rQuery = 'SELECT t2.*,t3.*,t5.bitrate,t1.*,t1.uuid AS `uuid` FROM `lines_live` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_servers` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id ' . $rExtra . ' ORDER BY t1.activity_id ASC';
         self::$ipTV_db->query($rQuery);
         return self::$ipTV_db->get_rows(true, 'user_id', false);
     }

@@ -11,7 +11,7 @@ ini_set('max_execution_time', 0);
 if (isset($_POST["submit_streams"])) {
     $rStreams = json_decode($_POST["streams"], True);
     foreach ($rStreams as $rStream) {
-        $db->query("DELETE FROM `streams_sys` WHERE `stream_id` = " . intval($rStream) . ";");
+        $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStream) . ";");
         $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rStream) . ";");
     }
     $_STATUS = 0;
@@ -20,13 +20,13 @@ if (isset($_POST["submit_streams"])) {
 if (isset($_POST["submit_movies"])) {
     $rMovies = json_decode($_POST["movies"], True);
     foreach ($rMovies as $rMovie) {
-        $result = $db->query("SELECT `server_id` FROM `streams_sys` WHERE `stream_id` = " . intval($rMovie) . ";");
+        $result = $db->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
         if (($result) && ($result->num_rows > 0)) {
             while ($row = $result->fetch_assoc()) {
                 deleteMovieFile($row["server_id"], $rMovie);
             }
         }
-        $db->query("DELETE FROM `streams_sys` WHERE `stream_id` = " . intval($rMovie) . ";");
+        $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
         $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rMovie) . ";");
     }
     $_STATUS = 1;
@@ -50,13 +50,13 @@ if (isset($_POST["submit_series"])) {
         $rResult = $db->query("SELECT `stream_id` FROM `series_episodes` WHERE `series_id` = " . intval($rSerie) . ";");
         if (($rResult) && ($rResult->num_rows > 0)) {
             while ($rRow = $rResult->fetch_assoc()) {
-                $rResultB = $db->query("SELECT `server_id` FROM `streams_sys` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
+                $rResultB = $db->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
                 if (($rResultB) && ($rResultB->num_rows > 0)) {
                     while ($rRowB = $rResultB->fetch_assoc()) {
                         deleteMovieFile($rRowB["server_id"], $rRow["stream_id"]);
                     }
                 }
-                $db->query("DELETE FROM `streams_sys` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
+                $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
                 $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
             }
             $db->query("DELETE FROM `series_episodes` WHERE `series_id` = " . intval($rSerie) . ";");
@@ -69,14 +69,14 @@ if (isset($_POST["submit_series"])) {
 if (isset($_POST["submit_episodes"])) {
     $rEpisodes = json_decode($_POST["episodes"], True);
     foreach ($rEpisodes as $rEpisode) {
-        $result = $db->query("SELECT `server_id` FROM `streams_sys` WHERE `stream_id` = " . intval($rEpisode) . ";");
+        $result = $db->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rEpisode) . ";");
         if (($result) && ($result->num_rows > 0)) {
             while ($row = $result->fetch_assoc()) {
                 deleteMovieFile($row["server_id"], $rEpisode);
             }
         }
         $db->query("DELETE FROM `series_episodes` WHERE `stream_id` = " . intval($rEpisode) . ";");
-        $db->query("DELETE FROM `streams_sys` WHERE `stream_id` = " . intval($rEpisode) . ";");
+        $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rEpisode) . ";");
         $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rEpisode) . ";");
     }
     $_STATUS = 4;

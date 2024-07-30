@@ -386,7 +386,7 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                         $rQuery = "INSERT INTO `streams`(" . $db->real_escape_string($rCols) . ") VALUES(" . $rValues . ");";
                         if ($db->query($rQuery)) {
                             $rInsertID = $db->insert_id;
-                            $db->query("INSERT INTO `streams_sys`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . intval($rRow["server_id"]) . ", 0, 0);");
+                            $db->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . intval($rRow["server_id"]) . ", 0, 0);");
                             if ($rWatchSettings["auto_encode"]) {
                                 $rPost = array("action" => "vod", "sub" => "start", "stream_ids" => array($rInsertID));
                                 $rContext = stream_context_create(array(

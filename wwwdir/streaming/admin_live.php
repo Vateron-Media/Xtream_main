@@ -16,7 +16,7 @@ if (empty(ipTV_lib::$request["stream"]) || empty(ipTV_lib::$request["extension"]
 $password = ipTV_lib::$settings["live_streaming_pass"];
 $stream_id = intval(ipTV_lib::$request["stream"]);
 $extension = ipTV_lib::$request["extension"];
-$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_sys` t2 ON t2.stream_id = t1.id AND t2.server_id = \'%d\' WHERE t1.`id` = \'%d\'', SERVER_ID, $stream_id);
+$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = \'%d\' WHERE t1.`id` = \'%d\'', SERVER_ID, $stream_id);
 if (ipTV_lib::$settings["use_buffer"] == 0) {
     header("X-Accel-Buffering: no");
 }

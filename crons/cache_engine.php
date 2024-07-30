@@ -141,7 +141,7 @@ function getChangedStreams() {
     global $ipTV_db;
     $rReturn = array('changes' => array(), 'delete' => array());
     $rExisting = array();
-    $ipTV_db->query('SELECT `id`, GREATEST(IFNULL(UNIX_TIMESTAMP(`streams`.`updated`), 0), IFNULL(MAX(UNIX_TIMESTAMP(`streams_sys`.`updated`)), 0)) AS `updated` FROM `streams` LEFT JOIN `streams_sys` ON `streams`.`id` = `streams_sys`.`stream_id` GROUP BY `id`;');
+    $ipTV_db->query('SELECT `id`, GREATEST(IFNULL(UNIX_TIMESTAMP(`streams`.`updated`), 0), IFNULL(MAX(UNIX_TIMESTAMP(`streams_servers`.`updated`)), 0)) AS `updated` FROM `streams` LEFT JOIN `streams_servers` ON `streams`.`id` = `streams_servers`.`stream_id` GROUP BY `id`;');
     if ($ipTV_db->dbh && $ipTV_db->result) {
         if ($ipTV_db->num_rows() > 0) {
             foreach ($ipTV_db->get_rows() as $rRow) {
@@ -410,7 +410,7 @@ function generateStreams($rStart = null, $rCount = null, $cacheLockMechanism = a
                         $rStreamIDs[] = $rRow['id'];
                     }
                     if (count($rStreamIDs) > 0) {
-                        $ipTV_db->query('SELECT `stream_id`, `server_id`, `pid`, `to_analyze`, `stream_status`, `monitor_pid`, `on_demand`, `delay_available_at`, `bitrate`, `parent_id`, `on_demand`, `stream_info` FROM `streams_sys` WHERE `stream_id` IN (' . implode(',', $rStreamIDs) . ')');
+                        $ipTV_db->query('SELECT `stream_id`, `server_id`, `pid`, `to_analyze`, `stream_status`, `monitor_pid`, `on_demand`, `delay_available_at`, `bitrate`, `parent_id`, `on_demand`, `stream_info` FROM `streams_servers` WHERE `stream_id` IN (' . implode(',', $rStreamIDs) . ')');
                         if ($ipTV_db->result) {
                             if ($ipTV_db->num_rows() > 0) {
                                 foreach ($ipTV_db->get_rows() as $rRow) {

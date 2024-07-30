@@ -14,21 +14,21 @@ if (isset($_POST["replace_dns"])) {
     $rSource = $_POST["source_server"];
     $rReplacement = $_POST["replacement_server"];
     $rExisting = array();
-    $result = $db->query("SELECT `id` FROM `streams_sys` WHERE `server_id` = " . intval($rReplacement) . ";");
+    $result = $db->query("SELECT `id` FROM `streams_servers` WHERE `server_id` = " . intval($rReplacement) . ";");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             $rExisting[] = intval($row["id"]);
         }
     }
-    $result = $db->query("SELECT `id` FROM `streams_sys` WHERE `server_id` = " . intval($rSource) . ";");
+    $result = $db->query("SELECT `id` FROM `streams_servers` WHERE `server_id` = " . intval($rSource) . ";");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             if (in_array(intval($row["id"]), $rExisting)) {
-                $db->query("DELETE FROM `streams_sys` WHERE `id` = " . intval($row["id"]) . ";");
+                $db->query("DELETE FROM `streams_servers` WHERE `id` = " . intval($row["id"]) . ";");
             }
         }
     }
-    $db->query("UPDATE `streams_sys` SET `server_id` = " . intval($rReplacement) . " WHERE `server_id` = " . intval($rSource) . ";");
+    $db->query("UPDATE `streams_servers` SET `server_id` = " . intval($rReplacement) . " WHERE `server_id` = " . intval($rSource) . ";");
     $_STATUS = 2;
 } else if (isset($_POST["cleanup_streams"])) {
     $rStreams = getStreamList();
@@ -37,7 +37,7 @@ if (isset($_POST["replace_dns"])) {
         $rStreamArray[] = intval($rStream["id"]);
     }
     $rDelete = array();
-    $result = $db->query("SELECT `server_stream_id`, `stream_id` FROM `streams_sys`;");
+    $result = $db->query("SELECT `server_stream_id`, `stream_id` FROM `streams_servers`;");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             if (!in_array(intval($row["stream_id"]), $rStreamArray)) {
@@ -46,7 +46,7 @@ if (isset($_POST["replace_dns"])) {
         }
     }
     if (count($rDelete) > 0) {
-        $db->query("DELETE FROM `streams_sys` WHERE `server_stream_id` IN (" . join(",", $rDelete) . ");");
+        $db->query("DELETE FROM `streams_servers` WHERE `server_stream_id` IN (" . join(",", $rDelete) . ");");
     }
     $rDelete = array();
     $result = $db->query("SELECT `id`, `stream_id` FROM `client_logs`;");

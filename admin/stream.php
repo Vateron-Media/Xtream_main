@@ -246,7 +246,7 @@ if (isset($_POST["submit_stream"])) {
             if (isset($rInsertID)) {
                 $rStreamExists = array();
                 if (isset($_POST["edit"])) {
-                    $result = $db->query("SELECT `server_stream_id`, `server_id` FROM `streams_sys` WHERE `stream_id` = " . intval($rInsertID) . ";");
+                    $result = $db->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
                     if (($result) && ($result->num_rows > 0)) {
                         while ($row = $result->fetch_assoc()) {
                             $rStreamExists[intval($row["server_id"])] = intval($row["server_stream_id"]);
@@ -272,15 +272,15 @@ if (isset($_POST["submit_stream"])) {
                             }
 
                             if (isset($rStreamExists[$rServerID])) {
-                                $db->query("UPDATE `streams_sys` SET `parent_id` = " . $rParent . ", `on_demand` = " . $rOD . " WHERE `server_stream_id` = " . $rStreamExists[$rServerID] . ";");
+                                $db->query("UPDATE `streams_servers` SET `parent_id` = " . $rParent . ", `on_demand` = " . $rOD . " WHERE `server_stream_id` = " . $rStreamExists[$rServerID] . ";");
                             } else {
-                                $db->query("INSERT INTO `streams_sys`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", " . $rOD . ");");
+                                $db->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", " . $rOD . ");");
                             }
                         }
                     }
                     foreach ($rStreamExists as $rServerID => $rDBID) {
                         if (!in_array($rServerID, $rStreamsAdded)) {
-                            $db->query("DELETE FROM `streams_sys` WHERE `server_stream_id` = " . $rDBID . ";");
+                            $db->query("DELETE FROM `streams_servers` WHERE `server_stream_id` = " . $rDBID . ";");
                         }
                     }
                 }

@@ -375,7 +375,7 @@ function freeStreams($rServerID) {
 function getStreamPIDs($rServerID) {
     global $db;
     $return = array();
-    $result = $db->query("SELECT `streams`.`id`, `streams`.`stream_display_name`, `streams`.`type`, `streams_sys`.`pid`, `streams_sys`.`monitor_pid`, `streams_sys`.`delay_pid` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `streams_sys`.`server_id` = " . intval($rServerID) . ";");
+    $result = $db->query("SELECT `streams`.`id`, `streams`.`stream_display_name`, `streams`.`type`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`delay_pid` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `streams_servers`.`server_id` = " . intval($rServerID) . ";");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             foreach (array("pid", "monitor_pid", "delay_pid") as $rPIDType) {
@@ -982,7 +982,7 @@ function getStreamOptions($rID) {
 function getStreamSys($rID) {
     global $db;
     $return = array();
-    $result = $db->query("SELECT * FROM `streams_sys` WHERE `stream_id` = " . intval($rID) . ";");
+    $result = $db->query("SELECT * FROM `streams_servers` WHERE `stream_id` = " . intval($rID) . ";");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             $return[intval($row["server_id"])] = $row;

@@ -163,7 +163,7 @@ class ipTV_stream {
         shell_exec('rm -f ' . STREAMS_PATH . $streamID . '_*');
         if ($reset_stream_sys) {
             shell_exec('rm -f ' . DELAY_PATH . $streamID . '_*');
-            self::$ipTV_db->query('UPDATE `streams_sys` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0,`monitor_pid` = NULL WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
+            self::$ipTV_db->query('UPDATE `streams_servers` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0,`monitor_pid` = NULL WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
         }
         ipTV_streaming::updateStream($streamID);
     }
@@ -187,7 +187,7 @@ class ipTV_stream {
             } else {
                 $stream['stream_info']['target_container'] = array($stream['stream_info']['target_container']);
             }
-            self::$ipTV_db->query('SELECT * FROM `streams_sys` WHERE stream_id  = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
+            self::$ipTV_db->query('SELECT * FROM `streams_servers` WHERE stream_id  = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
             if (self::$ipTV_db->num_rows() > 0) {
                 $stream['server_info'] = self::$ipTV_db->get_row();
                 self::$ipTV_db->query('SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = \'%d\' AND t1.argument_id = t2.id', $streamID);
@@ -287,7 +287,7 @@ class ipTV_stream {
                 shell_exec($rFFMPEG);
                 file_put_contents(VOD_PATH . $streamID . '_.ffmpeg', $rFFMPEG);
                 $streamPID = intval(file_get_contents(VOD_PATH . $streamID . '_.pid'));
-                self::$ipTV_db->query('UPDATE `streams_sys` SET `to_analyze` = 1,`stream_started` = \'%d\',`stream_status` = 0,`pid` = \'%d\' WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', time(), $streamPID, $streamID, SERVER_ID);
+                self::$ipTV_db->query('UPDATE `streams_servers` SET `to_analyze` = 1,`stream_started` = \'%d\',`stream_status` = 0,`pid` = \'%d\' WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', time(), $streamPID, $streamID, SERVER_ID);
                 ipTV_streaming::updateStream($streamID);
                 return $streamPID;
             }
@@ -301,7 +301,7 @@ class ipTV_stream {
             posix_kill($pid, 9);
         }
         shell_exec('rm -f ' . VOD_PATH . $streamID . '.*');
-        self::$ipTV_db->query('UPDATE `streams_sys` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0 WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
+        self::$ipTV_db->query('UPDATE `streams_servers` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0 WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
     }
     static function startStream(int $streamID, &$streamStatusCounter2, $streamUrl = null) {
         ++$streamStatusCounter2;
@@ -317,7 +317,7 @@ class ipTV_stream {
             return false;
         }
         $stream['stream_info'] = self::$ipTV_db->get_row();
-        self::$ipTV_db->query('SELECT * FROM `streams_sys` WHERE stream_id  = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
+        self::$ipTV_db->query('SELECT * FROM `streams_servers` WHERE stream_id  = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
         if (self::$ipTV_db->num_rows() <= 0) {
             return false;
         }
@@ -378,7 +378,7 @@ class ipTV_stream {
         }
         if (empty($streamData)) {
             if ($stream["server_info"]["stream_status"] == 0 || $stream["server_info"]["to_analyze"] == 1 || $stream["server_info"]["pid"] != -1) {
-                self::$ipTV_db->query("UPDATE `streams_sys` SET `progress_info` = '',`to_analyze` = 0,`pid` = -1,`stream_status` = 1 WHERE `server_id` = '%d' AND `stream_id` = '%d'", SERVER_ID, $streamID);
+                self::$ipTV_db->query("UPDATE `streams_servers` SET `progress_info` = '',`to_analyze` = 0,`pid` = -1,`stream_status` = 1 WHERE `server_id` = '%d' AND `stream_id` = '%d'", SERVER_ID, $streamID);
             }
             return 0;
         }
@@ -499,7 +499,7 @@ class ipTV_stream {
         }
         $Dac1208baefb5d684938829a3a0e0bc6 = $stream["stream_info"]["delay_minutes"] > 0 && $stream["server_info"]["parent_id"] == 0 ? true : false;
         $delay_start_at = $Dac1208baefb5d684938829a3a0e0bc6 ? time() + $Dedb93a1e8822879d8790c1f2fc7d6f1 : 0;
-        self::$ipTV_db->query("UPDATE `streams_sys` SET `delay_available_at` = '%d',`to_analyze` = 0,`stream_started` = '%d',`stream_info` = '%s',`stream_status` = 0,`pid` = '%d',`progress_info` = '%s',`current_source` = '%s' WHERE `stream_id` = '%d' AND `server_id` = '%d'", $delay_start_at, time(), json_encode($streamData), $streamPid, json_encode(array()), $streamUrl, $streamID, SERVER_ID);
+        self::$ipTV_db->query("UPDATE `streams_servers` SET `delay_available_at` = '%d',`to_analyze` = 0,`stream_started` = '%d',`stream_info` = '%s',`stream_status` = 0,`pid` = '%d',`progress_info` = '%s',`current_source` = '%s' WHERE `stream_id` = '%d' AND `server_id` = '%d'", $delay_start_at, time(), json_encode($streamData), $streamPid, json_encode(array()), $streamUrl, $streamID, SERVER_ID);
         ipTV_streaming::updateStream($streamID);
         $streamPlaylist = !$Dac1208baefb5d684938829a3a0e0bc6 ? STREAMS_PATH . $streamID . "_.m3u8" : DELAY_PATH . $streamID . "_.m3u8";
         return array("main_pid" => $streamPid, "stream_source" => $ParseStreamUrl, "delay_enabled" => $Dac1208baefb5d684938829a3a0e0bc6, "parent_id" => $stream["server_info"]["parent_id"], "delay_start_at" => $delay_start_at, "playlist" => $streamPlaylist);

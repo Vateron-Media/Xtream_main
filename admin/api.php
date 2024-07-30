@@ -22,8 +22,8 @@ if (isset($_GET["action"])) {
                 echo APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
             } else if ($rSub == "delete") {
-                $db->query("DELETE FROM `streams_sys` WHERE `stream_id` = " . intval($rStreamID) . " AND `server_id` = " . intval($rServerID) . ";");
-                $result = $db->query("SELECT COUNT(`server_stream_id`) AS `count` FROM `streams_sys` WHERE `stream_id` = " . intval($rStreamID) . ";");
+                $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . " AND `server_id` = " . intval($rServerID) . ";");
+                $result = $db->query("SELECT COUNT(`server_stream_id`) AS `count` FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . ";");
                 if ($result->fetch_assoc()["count"] == 0) {
                     $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                 }
@@ -46,8 +46,8 @@ if (isset($_GET["action"])) {
                 echo APIRequest(array("action" => "vod", "sub" => $rSub, "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
             } else if ($rSub == "delete") {
-                $db->query("DELETE FROM `streams_sys` WHERE `stream_id` = " . intval($rStreamID) . " AND `server_id` = " . intval($rServerID) . ";");
-                $result = $db->query("SELECT COUNT(`server_stream_id`) AS `count` FROM `streams_sys` WHERE `stream_id` = " . intval($rStreamID) . ";");
+                $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . " AND `server_id` = " . intval($rServerID) . ";");
+                $result = $db->query("SELECT COUNT(`server_stream_id`) AS `count` FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . ";");
                 if ($result->fetch_assoc()["count"] == 0) {
                     $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                     deleteMovieFile($rServerID, $rStreamID);
@@ -71,8 +71,8 @@ if (isset($_GET["action"])) {
                 echo APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
             } else if ($rSub == "delete") {
-                $db->query("DELETE FROM `streams_sys` WHERE `stream_id` = " . intval($rStreamID) . " AND `server_id` = " . intval($rServerID) . ";");
-                $result = $db->query("SELECT COUNT(`server_stream_id`) AS `count` FROM `streams_sys` WHERE `stream_id` = " . intval($rStreamID) . ";");
+                $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . " AND `server_id` = " . intval($rServerID) . ";");
+                $result = $db->query("SELECT COUNT(`server_stream_id`) AS `count` FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . ";");
                 if ($result->fetch_assoc()["count"] == 0) {
                     $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                     $db->query("DELETE FROM `series_episodes` WHERE `stream_id` = " . intval($rStreamID) . ";");
@@ -365,7 +365,7 @@ if (isset($_GET["action"])) {
                 $rResult = $db->query("SELECT `stream_id` FROM `series_episodes` WHERE `series_id` = " . intval($rSeriesID) . ";");
                 if (($rResult) && ($rResult->num_rows > 0)) {
                     while ($rRow = $rResult->fetch_assoc()) {
-                        $db->query("DELETE FROM `streams_sys` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
+                        $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
                         $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
                         deleteMovieFile($rServerID, $rStreamID);
                     }
@@ -538,7 +538,7 @@ if (isset($_GET["action"])) {
             if ($rSub == "delete") {
                 if ($rServers[$_GET["server_id"]]["can_delete"] == 1) {
                     $db->query("DELETE FROM `streaming_servers` WHERE `id` = " . intval($rServerID) . ";");
-                    $db->query("DELETE FROM `streams_sys` WHERE `server_id` = " . intval($rServerID) . ";");
+                    $db->query("DELETE FROM `streams_servers` WHERE `server_id` = " . intval($rServerID) . ";");
                     echo json_encode(array("result" => True));
                     exit;
                 } else {
@@ -556,7 +556,7 @@ if (isset($_GET["action"])) {
                 exit;
             } else if ($rSub == "start") {
                 $rStreamIDs = array();
-                $rResult = $db->query("SELECT `stream_id` FROM `streams_sys` WHERE `server_id` = " . intval($rServerID) . " AND `on_demand` = 0;");
+                $rResult = $db->query("SELECT `stream_id` FROM `streams_servers` WHERE `server_id` = " . intval($rServerID) . " AND `on_demand` = 0;");
                 if (($rResult) && ($rResult->num_rows > 0)) {
                     while ($rRow = $rResult->fetch_assoc()) {
                         $rStreamIDs[] = intval($rRow["stream_id"]);
@@ -569,7 +569,7 @@ if (isset($_GET["action"])) {
                 exit;
             } else if ($rSub == "stop") {
                 $rStreamIDs = array();
-                $rResult = $db->query("SELECT `stream_id` FROM `streams_sys` WHERE `server_id` = " . intval($rServerID) . " AND `on_demand` = 0;");
+                $rResult = $db->query("SELECT `stream_id` FROM `streams_servers` WHERE `server_id` = " . intval($rServerID) . " AND `on_demand` = 0;");
                 if (($rResult) && ($rResult->num_rows > 0)) {
                     while ($rRow = $rResult->fetch_assoc()) {
                         $rStreamIDs[] = intval($rRow["stream_id"]);
@@ -752,11 +752,11 @@ if (isset($_GET["action"])) {
                 $return["online_users"] = $result->num_rows;
                 $result = $db->query("SELECT COUNT(`user_id`) AS `count` FROM `lines_live` GROUP BY `user_id`;");
                 $return["total_users"] = $result->num_rows;
-                $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `stream_status` <> 2 AND `type` IN (1,3);");
+                $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `stream_status` <> 2 AND `type` IN (1,3);");
                 $return["total_streams"] = $result->fetch_assoc()["count"];
-                $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `pid` > 0 AND `type` IN (1,3);");
+                $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `pid` > 0 AND `type` IN (1,3);");
                 $return["total_running_streams"] = $result->fetch_assoc()["count"];
-                $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `server_id` = " . $rServerID . " AND ((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 0);");
+                $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND ((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0);");
                 $return["offline_streams"] = $result->fetch_assoc()["count"];
                 $return["network_guaranteed_speed"] = $rServers[$rServerID]["network_guaranteed_speed"];
             } else {
@@ -772,11 +772,11 @@ if (isset($_GET["action"])) {
                     $rArray = array();
                     $result = $db->query("SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = " . $rServerID . ";");
                     $rArray["open_connections"] = $result->fetch_assoc()["count"];
-                    $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `stream_status` <> 2 AND `type` IN (1,3);");
+                    $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `stream_status` <> 2 AND `type` IN (1,3);");
                     $rArray["total_streams"] = $result->fetch_assoc()["count"];
-                    $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `pid` > 0 AND `type` IN (1,3);");
+                    $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `pid` > 0 AND `type` IN (1,3);");
                     $rArray["total_running_streams"] = $result->fetch_assoc()["count"];
-                    $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_sys` LEFT JOIN `streams` ON `streams`.`id` = `streams_sys`.`stream_id` WHERE `server_id` = " . $rServerID . " AND ((`streams_sys`.`monitor_pid` IS NOT NULL AND `streams_sys`.`monitor_pid` > 0) AND (`streams_sys`.`pid` IS NULL OR `streams_sys`.`pid` <= 0) AND `streams_sys`.`stream_status` <> 0);");
+                    $result = $db->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND ((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0);");
                     $rArray["offline_streams"] = $result->fetch_assoc()["count"];
                     $rArray["network_guaranteed_speed"] = $rServers[$rServerID]["network_guaranteed_speed"];
                     $result = $db->query("SELECT `user_id` FROM `lines_live` WHERE `server_id` = " . intval($rServerID) . " GROUP BY `user_id`;");

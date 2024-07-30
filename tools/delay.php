@@ -84,7 +84,7 @@ if (@$argc) {
         require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
         set_time_limit(0);
 
-        $ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_sys` t2 ON t2.stream_id = t1.id AND t2.server_id = '%d' WHERE t1.id = '%d'", SERVER_ID, $stream_id);
+        $ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = '%d' WHERE t1.id = '%d'", SERVER_ID, $stream_id);
 
         if ($ipTV_db->num_rows() > 0) {
             $stream_data = $ipTV_db->get_row();
@@ -96,7 +96,7 @@ if (@$argc) {
                 $m3uFile = DELAY_PATH . $stream_id . "_.m3u8";
                 $playlistPath = DELAY_PATH . $stream_id . "_.m3u8_old";
                 $D90a38f0f1d7f1bcd1b2eee088e76aca = $stream_data["delay_pid"];
-                $ipTV_db->query("UPDATE `streams_sys` SET delay_pid = '%d' WHERE stream_id = '%d' AND server_id = '%d'", getmypid(), $stream_id, SERVER_ID);
+                $ipTV_db->query("UPDATE `streams_servers` SET delay_pid = '%d' WHERE stream_id = '%d' AND server_id = '%d'", getmypid(), $stream_id, SERVER_ID);
                 $ipTV_db->close_mysql();
                 $cleanup_minutes = $stream_data["delay_minutes"] + 5;
                 shell_exec("find " . DELAY_PATH . $stream_id . "_*" . " -type f -cmin +" . $cleanup_minutes . " -delete");

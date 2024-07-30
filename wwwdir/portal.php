@@ -1431,9 +1431,9 @@ function getItems($rTypes = array(), $rCategoryID = null, $rFav = null, $rOrderB
             $ipTV_db->query("SELECT COUNT(`id`) AS `count` FROM `streams` " . $rWhereString . ";", ...$rWhereV);
             $rStreams["count"] = $ipTV_db->get_row()["count"];
             if ($rLimit) {
-                $A6d7047f2fda966c = "SELECT (SELECT `stream_info` FROM `streams_sys` WHERE `streams_sys`.`pid` IS NOT NULL AND `streams_sys`.`stream_id` = `streams`.`id` LIMIT 1) AS `stream_info`, `id`, `stream_display_name`, `movie_properties`, `target_container`, `added`, `category_id`, `channel_id`, `epg_id`, `tv_archive_duration`, `stream_icon`, `allow_record`, `type` FROM `streams` " . $rWhereString . " ORDER BY " . $rOrder . " LIMIT " . $rStart . ", " . $rLimit . ";";
+                $A6d7047f2fda966c = "SELECT (SELECT `stream_info` FROM `streams_servers` WHERE `streams_servers`.`pid` IS NOT NULL AND `streams_servers`.`stream_id` = `streams`.`id` LIMIT 1) AS `stream_info`, `id`, `stream_display_name`, `movie_properties`, `target_container`, `added`, `category_id`, `channel_id`, `epg_id`, `tv_archive_duration`, `stream_icon`, `allow_record`, `type` FROM `streams` " . $rWhereString . " ORDER BY " . $rOrder . " LIMIT " . $rStart . ", " . $rLimit . ";";
             } else {
-                $A6d7047f2fda966c = "SELECT (SELECT `stream_info` FROM `streams_sys` WHERE `streams_sys`.`pid` IS NOT NULL AND `streams_sys`.`stream_id` = `streams`.`id` LIMIT 1) AS `stream_info`, `id`, `stream_display_name`, `movie_properties`, `target_container`, `added`, `category_id`, `channel_id`, `epg_id`, `tv_archive_duration`, `stream_icon`, `allow_record`, `type` FROM `streams` " . $rWhereString . " ORDER BY " . $rOrder . ";";
+                $A6d7047f2fda966c = "SELECT (SELECT `stream_info` FROM `streams_servers` WHERE `streams_servers`.`pid` IS NOT NULL AND `streams_servers`.`stream_id` = `streams`.`id` LIMIT 1) AS `stream_info`, `id`, `stream_display_name`, `movie_properties`, `target_container`, `added`, `category_id`, `channel_id`, `epg_id`, `tv_archive_duration`, `stream_icon`, `allow_record`, `type` FROM `streams` " . $rWhereString . " ORDER BY " . $rOrder . ";";
             }
             $ipTV_db->query($A6d7047f2fda966c, ...$rWhereV);
             $rRows = $ipTV_db->get_rows();

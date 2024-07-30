@@ -1262,10 +1262,10 @@ CREATE TABLE IF NOT EXISTS `streams_seasons` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `streams_sys`
+-- Table structure for table `streams_servers`
 --
 
-CREATE TABLE IF NOT EXISTS `streams_sys` (
+CREATE TABLE IF NOT EXISTS `streams_servers` (
   `server_stream_id` int(11) NOT NULL AUTO_INCREMENT,
   `stream_id` int(11) NOT NULL,
   `server_id` int(11) NOT NULL,

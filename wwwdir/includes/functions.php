@@ -386,7 +386,7 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
             if ($rDomainName) {
                 $rRTMPRows = array();
                 if ($rOutputKey == 'rtmp') {
-                    $ipTV_db->query('SELECT t1.id,t2.server_id FROM `streams` t1 INNER JOIN `streams_sys` t2 ON t2.stream_id = t1.id WHERE t1.rtmp_output = 1');
+                    $ipTV_db->query('SELECT t1.id,t2.server_id FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id WHERE t1.rtmp_output = 1');
                     $rRTMPRows = $ipTV_db->get_rows(true, 'id', false, 'server_id');
                 }
                 if (empty($rOutputExt)) {

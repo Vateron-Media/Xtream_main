@@ -21,19 +21,19 @@ $rLive = explode("\n", trim(shell_exec("pgrep ffmpeg")));
 echo count($rLive) . " live processes found\n";
 // Collect required PID's
 $rPIDs = array();
-$result = $db->query("SELECT DISTINCT(`pid`) AS `pid` FROM `streams_sys` WHERE `pid` > 0 AND `pid` IS NOT NULL AND `server_id` = " . intval($_INFO["server_id"]) . ";");
+$result = $db->query("SELECT DISTINCT(`pid`) AS `pid` FROM `streams_servers` WHERE `pid` > 0 AND `pid` IS NOT NULL AND `server_id` = " . intval($_INFO["server_id"]) . ";");
 if (($result) && ($result->num_rows > 0)) {
     while ($row = $result->fetch_assoc()) {
         $rPIDs[] = $row["pid"];
     }
 }
-$result = $db->query("SELECT DISTINCT(`monitor_pid`) AS `pid` FROM `streams_sys` WHERE `monitor_pid` > 0 AND `monitor_pid` IS NOT NULL AND `server_id` = " . intval($_INFO["server_id"]) . ";");
+$result = $db->query("SELECT DISTINCT(`monitor_pid`) AS `pid` FROM `streams_servers` WHERE `monitor_pid` > 0 AND `monitor_pid` IS NOT NULL AND `server_id` = " . intval($_INFO["server_id"]) . ";");
 if (($result) && ($result->num_rows > 0)) {
     while ($row = $result->fetch_assoc()) {
         $rPIDs[] = $row["pid"];
     }
 }
-$result = $db->query("SELECT DISTINCT(`delay_pid`) AS `pid` FROM `streams_sys` WHERE `delay_pid` > 0 AND `delay_pid` IS NOT NULL AND `server_id` = " . intval($_INFO["server_id"]) . ";");
+$result = $db->query("SELECT DISTINCT(`delay_pid`) AS `pid` FROM `streams_servers` WHERE `delay_pid` > 0 AND `delay_pid` IS NOT NULL AND `server_id` = " . intval($_INFO["server_id"]) . ";");
 if (($result) && ($result->num_rows > 0)) {
     while ($row = $result->fetch_assoc()) {
         $rPIDs[] = $row["pid"];
