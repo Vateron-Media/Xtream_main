@@ -5,7 +5,7 @@ if ($argc) {
     register_shutdown_function('shutdown');
     require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
     cli_set_process_title('XtreamCodes[Users Parser]');
-    $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
+    $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
     ipTV_lib::check_cron($unique_id);
     $rSync = null;
     if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {

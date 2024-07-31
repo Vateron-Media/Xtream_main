@@ -350,7 +350,7 @@ function GetCategories($type = null) {
     }
     return $ipTV_db->num_rows() > 0 ? $ipTV_db->get_rows(true, 'id') : array();
 }
-function UniqueID() {
+function generateUniqueCode() {
     return substr(md5(ipTV_lib::$settings['unique_id']), 0, 15);
 }
 function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey = null, $rNoCache = false) {

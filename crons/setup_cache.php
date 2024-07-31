@@ -8,7 +8,7 @@ if ($argc) {
         $rStartup = true;
     }
     cli_set_process_title('XtreamCodes[Cache Builder]');
-    $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
+    $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
     ipTV_lib::check_cron($unique_id);
     loadCron();
 } else {

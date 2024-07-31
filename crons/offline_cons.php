@@ -20,7 +20,7 @@ set_time_limit(0);
 if (@$argc) {
     require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
     cli_set_process_title("XtreamCodes[Offline Cons Parser]");
-    $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
+    $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
     KillProcessCmd($unique_id);
     $connections = TMP_DIR . "offline_cons";
     $query = "";

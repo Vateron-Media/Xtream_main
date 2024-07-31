@@ -45,6 +45,7 @@ define('DIVERGENCE_TMP_PATH', TMP_DIR . 'divergence/');
 define('FLOOD_TMP_PATH', TMP_DIR . 'flood/');
 define('STALKER_TMP_PATH', TMP_DIR . 'stalker/');
 define('LOGS_TMP_PATH', TMP_DIR . 'logs/');
+define('CRONS_TMP_PATH', TMP_DIR . 'crons/');
 // -------------------
 
 // CACHE FOLDERS

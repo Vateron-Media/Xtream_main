@@ -5,7 +5,7 @@ if ($argc) {
     register_shutdown_function('shutdown');
     require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
     cli_set_process_title('XtreamCodes[Errors]');
-    $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
+    $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
     ipTV_lib::check_cron($unique_id);
     $rIgnoreErrors = array('the user-agent option is deprecated', 'last message repeated', 'deprecated', 'packets poorly interleaved', 'invalid timestamps', 'timescale not set', 'frame size not set', 'non-monotonous dts in output stream', 'invalid dts', 'no trailing crlf', 'failed to parse extradata', 'truncated', 'missing picture', 'non-existing pps', 'clipping', 'out of range', 'cannot use rename on non file protocol', 'end of file', 'stream ends prematurely');
     loadCron();

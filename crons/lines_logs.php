@@ -7,7 +7,7 @@ if ($argc) {
     register_shutdown_function('shutdown');
     require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
     cli_set_process_title('XtreamCodes[Lines Logs]');
-    $identifier = TMP_DIR . md5(UniqueID() . __FILE__);
+    $identifier = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
     ipTV_lib::check_cron($identifier);
     loadCron();
 } else {

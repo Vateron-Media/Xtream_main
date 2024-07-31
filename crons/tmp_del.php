@@ -5,7 +5,7 @@ if ($argc) {
     set_time_limit(0);
     require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
     cli_set_process_title('XtreamCodes[TMP Cleaner]');
-    $unique_id = TMP_DIR . md5(UniqueID() . __FILE__);
+    $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
     ipTV_lib::check_cron($unique_id);
     foreach (array(TMP_DIR, DIVERGENCE_TMP_PATH, FLOOD_TMP_PATH, STALKER_TMP_PATH, LOGS_TMP_PATH) as $tmpPath) {
         foreach (scandir($tmpPath) as $file) {
