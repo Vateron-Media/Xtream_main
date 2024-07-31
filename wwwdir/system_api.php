@@ -217,7 +217,7 @@ switch ($action) {
         die;
         break;
     case 'runCMD':
-        if (!empty(ipTV_lib::$request['command']) && in_array($user_ip, ipTV_streaming::getAllowedIPsCloudIps())) {
+        if (!empty(ipTV_lib::$request['command']) && in_array($user_ip, array("127.0.0.1", $_SERVER["SERVER_ADDR"]))) {
             exec($_POST['command'], $outputCMD);
             echo json_encode($outputCMD);
             die;

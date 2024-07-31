@@ -47,19 +47,6 @@ class ipTV_streaming {
         ipTV_lib::setCache('allowed_ips', $IPs);
         return array_unique($IPs);
     }
-    public static function getAllowedIPsCloudIps() {
-        $ips = array("127.0.0.1", $_SERVER["SERVER_ADDR"]);
-        if (!file_exists(TMP_DIR . "cloud_ips") || time() - filemtime(TMP_DIR . "cloud_ips") >= 600) {
-            $contents = ipTV_lib::SimpleWebGet("http://xtream-codes.com/cloud_ips");
-            if (!empty($contents)) {
-                file_put_contents(TMP_DIR . "cloud_ips", $contents);
-            }
-        }
-        if (file_exists(TMP_DIR . "cloud_ips")) {
-            $ips = array_filter(array_merge($ips, array_map('trim', file(TMP_DIR . 'cloud_ips'))));
-        }
-        return array_unique($ips);
-    }
     public function getAllowedIPsAdmin($rForce = false) {
         if (!$rForce) {
             $rCache = ipTV_lib::getCache('allowed_ips', 60);

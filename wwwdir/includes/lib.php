@@ -299,32 +299,6 @@ class ipTV_lib {
         }
         return false;
     }
-
-    public static function SimpleWebGet($url, $save_cache = false) {
-        if (file_exists(TMP_DIR . md5($url)) && time() - filemtime(TMP_DIR . md5($url)) <= 300) {
-            return false;
-        }
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        $res = curl_exec($ch);
-        $http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if ($http_code != 200) {
-            file_put_contents(TMP_DIR . md5($url), 0);
-            return false;
-        }
-        if (file_exists(TMP_DIR . md5($url))) {
-            unlink(TMP_DIR . md5($url));
-        }
-        return trim($res);
-    }
-
     /**
      * Makes multiple cURL requests to the specified URLs and returns the results.
      *
