@@ -12,7 +12,6 @@ if (isset($rAdminSettings["stats_pid"])) {
 	$db->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('stats_pid', " . intval($rPID) . ");");
 }
 
-checkTable("dashboard_statistics");
 $rAdminSettings = getAdminSettings();
 $rSettings = getSettings();
 
