@@ -107,7 +107,7 @@ define('DELAY_PATH', CONTENT_PATH . 'delayed/');
 // -------------------
 
 // CONSTANTS VAR
-define('SCRIPT_VERSION', '1.1.11');
+define('SCRIPT_VERSION', '1.2.0');
 define('IN_SCRIPT', true);
 define('SOFTWARE', 'iptv');
 define('FFMPEG_FONTS_PATH', SIGNALS_PATH . 'free-sans.ttf');
