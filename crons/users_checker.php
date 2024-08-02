@@ -31,22 +31,22 @@ function processDeletions($rDelete, $rDelStream = array()) {
     }
 
     foreach ($rDelete as $rServerID => $rConnections) {
-        if ($rServerID == SERVER_ID) {
-        } else {
+        if ($rServerID != SERVER_ID) {
             $rQuery = '';
             foreach ($rConnections as $rConnection) {
                 $rQuery .= '(' . $rServerID . ',1,' . $rTime . ',' . $ipTV_db->escape(json_encode(array('type' => 'delete_con', 'uuid' => $rConnection))) . '),';
             }
             $rQuery = rtrim($rQuery, ',');
-            if (empty($rQuery)) {
-            } else {
+            if (!empty($rQuery)) {
                 $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES ' . $rQuery . ';');
             }
         }
     }
     foreach ($rDelStream as $rStreamID => $rConnections) {
         foreach ($rConnections as $rConnection) {
-            @unlink(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
+            if (file_exists(CONS_TMP_PATH . $rStreamID . '/' . $rConnection)) {
+                @unlink(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
+            }
         }
     }
     return array();
@@ -128,8 +128,7 @@ function loadCron() {
                     $rActiveCount++;
                 }
             }
-            if (!(ipTV_lib::$StreamingServers[SERVER_ID]['is_main'] && 0 < $rMaxConnections && $rMaxConnections < $rActiveCount)) {
-            } else {
+            if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main'] && 0 < $rMaxConnections && $rMaxConnections < $rActiveCount) {
                 foreach ($rConnections as $rKey => $rConnection) {
                     if ($rConnection['hls_end']) {
                     } else {

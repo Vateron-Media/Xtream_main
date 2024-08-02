@@ -35,9 +35,9 @@ class ipTV_streaming {
                 $IPs = array_merge($IPs, json_decode($serverInfo['whitelist_ips'], true));
             }
             $IPs[] = $serverInfo['server_ip'];
-            foreach (explode(',', $serverInfo['domain_name']) as $rIP) {
-                if (filter_var($rIP, FILTER_VALIDATE_IP)) {
-                    $IPs[] = $rIP;
+            foreach (explode(',', $serverInfo['domain_name']) as $IP) {
+                if (filter_var($IP, FILTER_VALIDATE_IP)) {
+                    $IPs[] = $IP;
                 }
             }
         }
@@ -66,9 +66,9 @@ class ipTV_streaming {
             if ($rServerInfo['private_ip']) {
                 $IPs[] = $rServerInfo['private_ip'];
             }
-            foreach (explode(',', $rServerInfo['domain_name']) as $rIP) {
-                if (filter_var($rIP, FILTER_VALIDATE_IP)) {
-                    $IPs[] = $rIP;
+            foreach (explode(',', $rServerInfo['domain_name']) as $IP) {
+                if (filter_var($IP, FILTER_VALIDATE_IP)) {
+                    $IPs[] = $IP;
                 }
             }
         }
@@ -284,7 +284,7 @@ class ipTV_streaming {
         }
         return false;
     }
-    public static function GetUserInfo($userID = null, $username = null, $password = null, $getChannelIDs = false,  $getBouquetInfo = false, $rIP = '') {
+    public static function GetUserInfo($userID = null, $username = null, $password = null, $getChannelIDs = false,  $getBouquetInfo = false, $IP = '') {
         $userInfo = null;
 
         if (empty($password) && empty($userID) && strlen($username) == 32) {
@@ -307,8 +307,8 @@ class ipTV_streaming {
         if (!$userInfo) {
             return false;
         }
-        if (ipTV_lib::$settings['county_override_1st'] == 1 && empty($userInfo['forced_country']) && !empty($rIP) && $userInfo['max_connections'] == 1) {
-            $userInfo['forced_country'] = self::getIPInfo($rIP)['registered_country']['iso_code'];
+        if (ipTV_lib::$settings['county_override_1st'] == 1 && empty($userInfo['forced_country']) && !empty($IP) && $userInfo['max_connections'] == 1) {
+            $userInfo['forced_country'] = self::getIPInfo($IP)['registered_country']['iso_code'];
 
             self::$ipTV_db->query('UPDATE `users` SET `forced_country` = \'%s\' WHERE `id` = \'%s\'', $userInfo['forced_country'], $userInfo['id']);
         }
@@ -327,8 +327,8 @@ class ipTV_streaming {
         $userInfo['isp_violate'] = 0;
         $userInfo['isp_is_server'] = 0;
 
-        if (ipTV_lib::$settings['show_isps'] == 1 || !empty($rIP)) {
-            $ISPLock = self::getISP($rIP);
+        if (ipTV_lib::$settings['show_isps'] == 1 || !empty($IP)) {
+            $ISPLock = self::getISP($IP);
             if (is_array($ISPLock)) {
                 if (!empty($ISPLock['isp'])) {
                     $userInfo['con_isp_name'] = $ISPLock['isp'];
@@ -542,7 +542,6 @@ class ipTV_streaming {
                 $rActivityInfo = self::$ipTV_db->get_row();
             }
             if (is_array($rActivityInfo)) {
-
                 if ($rActivityInfo['container'] == 'rtmp') {
                     if ($rActivityInfo['server_id'] == SERVER_ID) {
                         shell_exec('wget --timeout=2 -O /dev/null -o /dev/null "' . ipTV_lib::$StreamingServers[SERVER_ID]['rtmp_mport_url'] . 'control/drop/client?clientid=' . intval($rActivityInfo['pid']) . '" >/dev/null 2>/dev/null &');
@@ -562,21 +561,24 @@ class ipTV_streaming {
                                 posix_kill(intval($rActivityInfo['pid']), 9);
                             }
                         } else {
-
                             self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(\'%s\',\'%s\',UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id']);
                         }
                     }
                 }
                 if ($rActivityInfo['server_id'] == SERVER_ID) {
-                    @unlink(CONS_TMP_PATH . $rActivityInfo['uuid']);
+                    if (file_exists(CONS_TMP_PATH . $rActivityInfo['uuid'])) {
+                        @unlink(CONS_TMP_PATH . $rActivityInfo['uuid']);
+                    }
                 }
                 if ($rRemove) {
                     if ($rActivityInfo['server_id'] == SERVER_ID) {
-                        @unlink(CONS_TMP_PATH . $rActivityInfo['stream_id'] . '/' . $rActivityInfo['uuid']);
+                        if (file_exists(CONS_TMP_PATH . $rActivityInfo['stream_id'] . '/' . $rActivityInfo['uuid'])) {
+                            @unlink(CONS_TMP_PATH . $rActivityInfo['stream_id'] . '/' . $rActivityInfo['uuid']);
+                        }
                     }
                     self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%s\'', $rActivityInfo['activity_id']);
                 }
-                self::SaveClosedConnection($rActivityInfo['server_id'], $rActivityInfo['user_id'], $rActivityInfo['stream_id'], $rActivityInfo['date_start'], $rActivityInfo['user_agent'], $rActivityInfo['user_ip'], $rActivityInfo['container'], $rActivityInfo['geoip_country_code'], $rActivityInfo['isp'], $rActivityInfo['external_device'], $rActivityInfo['divergence']);
+                self::writeOfflineActivity($rActivityInfo['server_id'], $rActivityInfo['user_id'], $rActivityInfo['stream_id'], $rActivityInfo['date_start'], $rActivityInfo['user_agent'], $rActivityInfo['user_ip'], $rActivityInfo['container'], $rActivityInfo['geoip_country_code'], $rActivityInfo['isp'], $rActivityInfo['external_device'], $rActivityInfo['divergence'], $rActivityInfo['hmac_id'], $rActivityInfo['hmac_identifier']);
                 return true;
             }
             return false;
@@ -641,7 +643,7 @@ class ipTV_streaming {
             if ($ActionUserActivityNow) {
                 self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
             }
-            self::SaveClosedConnection($activity_id['server_id'], $activity_id['user_id'], $activity_id['stream_id'], $activity_id['date_start'], $activity_id['user_agent'], $activity_id['user_ip'], $activity_id['container'], $activity_id['geoip_country_code'], $activity_id['isp'], $activity_id['external_device']);
+            self::writeOfflineActivity($activity_id['server_id'], $activity_id['user_id'], $activity_id['stream_id'], $activity_id['date_start'], $activity_id['user_agent'], $activity_id['user_ip'], $activity_id['container'], $activity_id['geoip_country_code'], $activity_id['isp'], $activity_id['external_device']);
             return true;
         }
     }
@@ -653,16 +655,16 @@ class ipTV_streaming {
         if (self::$ipTV_db->num_rows() > 0) {
             $activity_id = self::$ipTV_db->get_row();
             self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
-            self::SaveClosedConnection($activity_id['server_id'], $activity_id['user_id'], $activity_id['stream_id'], $activity_id['date_start'], $activity_id['user_agent'], $activity_id['user_ip'], $activity_id['container'], $activity_id['geoip_country_code'], $activity_id['isp'], $activity_id['external_device']);
+            self::writeOfflineActivity($activity_id['server_id'], $activity_id['user_id'], $activity_id['stream_id'], $activity_id['date_start'], $activity_id['user_agent'], $activity_id['user_ip'], $activity_id['container'], $activity_id['geoip_country_code'], $activity_id['isp'], $activity_id['external_device']);
             return true;
         }
         return false;
     }
-    public static function SaveClosedConnection($server_id, $user_id, $streamID, $start, $user_agent, $user_ip, $extension, $geoip_country_code, $isp, $external_device = '', $rDivergence = 0) {
+    public static function writeOfflineActivity($serverID, $userID, $streamID, $start, $userAgent, $IP, $rExtension, $GeoIP, $rISP, $rExternalDevice = '', $rDivergence = 0, $rIsHMAC = null, $rIdentifier = '') {
         if (ipTV_lib::$settings['save_closed_connection'] != 0) {
-            if ($server_id && $user_id && $streamID) {
-                $activity_id = array('user_id' => intval($user_id), 'stream_id' => intval($streamID), 'server_id' => intval($server_id), 'date_start' => intval($start), 'user_agent' => $user_agent, 'user_ip' => htmlentities($user_ip), 'date_end' => time(), 'container' => $extension, 'geoip_country_code' => $geoip_country_code, 'isp' => $isp, 'external_device' => htmlentities($external_device), 'divergence' => intval($rDivergence));
-                file_put_contents(LOGS_TMP_PATH . 'connections', base64_encode(json_encode($activity_id)) . "\n", FILE_APPEND | LOCK_EX);
+            if ($serverID && $userID && $streamID) {
+                $rActivityInfo = array('user_id' => intval($userID), 'stream_id' => intval($streamID), 'server_id' => intval($serverID), 'date_start' => intval($start), 'user_agent' => $userAgent, 'user_ip' => htmlentities($IP), 'date_end' => time(), 'container' => $rExtension, 'geoip_country_code' => $GeoIP, 'isp' => $rISP, 'external_device' => htmlentities($rExternalDevice), 'divergence' => intval($rDivergence), 'hmac_id' => $rIsHMAC, 'hmac_identifier' => $rIdentifier);
+                file_put_contents(LOGS_TMP_PATH . 'connections', base64_encode(json_encode($rActivityInfo)) . "\n", FILE_APPEND | LOCK_EX);
             }
         } else {
             return null;
@@ -797,19 +799,19 @@ class ipTV_streaming {
             return false;
         }
     }
-    public static function generateHLS($rM3U8, $rUsername, $rPassword, $streamID, $rUUID, $rIP, $rIsHMAC = null, $rIdentifier = '', $rVideoCodec = 'h264', $rOnDemand = 0, $rServerID = null, $rProxyID = null) {
+    public static function generateHLS($rM3U8, $rUsername, $rPassword, $streamID, $rUUID, $IP, $rIsHMAC = null, $rIdentifier = '', $rVideoCodec = 'h264', $rOnDemand = 0, $rServerID = null, $rProxyID = null) {
         if (file_exists($rM3U8)) {
             $rSource = file_get_contents($rM3U8);
             if ($rOnDemand) {
-                $rKeyToken = encryptData($rIP . '/' . $streamID, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                $rKeyToken = encryptData($IP . '/' . $streamID, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                 $rSource = "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"" . (($rProxyID ? '/' . md5($rProxyID . '_' . $rServerID . '_' . OPENSSL_EXTRA) : '')) . '/key/' . $rKeyToken . '",IV=0x' . bin2hex(file_get_contents(STREAMS_PATH . $streamID . '_.iv')) . "\n" . substr($rSource, 8, strlen($rSource) - 8);
             }
             if (preg_match_all('/(.*?)\\.ts/', $rSource, $rMatches)) {
                 foreach ($rMatches[0] as $rMatch) {
                     if ($rIsHMAC) {
-                        $rToken = encryptData('HMAC#' . $rIsHMAC . '/' . $rIdentifier . '/' . $rIP . '/' . $streamID . '/' . $rMatch . '/' . $rUUID . '/' . SERVER_ID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                        $rToken = encryptData('HMAC#' . $rIsHMAC . '/' . $rIdentifier . '/' . $IP . '/' . $streamID . '/' . $rMatch . '/' . $rUUID . '/' . SERVER_ID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                     } else {
-                        $rToken = encryptData($rUsername . '/' . $rPassword . '/' . $rIP . '/' . $streamID . '/' . $rMatch . '/' . $rUUID . '/' . SERVER_ID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                        $rToken = encryptData($rUsername . '/' . $rPassword . '/' . $IP . '/' . $streamID . '/' . $rMatch . '/' . $rUUID . '/' . SERVER_ID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                     }
                     $rSource = str_replace($rMatch, (($rProxyID ? '/' . md5($rProxyID . '_' . $rServerID . '_' . OPENSSL_EXTRA) : '')) . '/hls/' . $rToken, $rSource);
                 }

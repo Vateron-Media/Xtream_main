@@ -9,9 +9,11 @@ if ($argc) {
     ipTV_lib::check_cron($unique_id);
     foreach (array(TMP_DIR, CRONS_TMP_PATH, DIVERGENCE_TMP_PATH, FLOOD_TMP_PATH, STALKER_TMP_PATH, LOGS_TMP_PATH) as $tmpPath) {
         foreach (scandir($tmpPath) as $file) {
-            if (600 <= time() - filemtime($tmpPath . $file) && stripos($file, 'stalker_') === false) {
-                if (is_file($tmpPath . $file)) {
-                    unlink($tmpPath . $file);
+            if (file_exists($tmpPath . $file)) {
+                if (600 <= time() - filemtime($tmpPath . $file) && stripos($file, 'stalker_') === false) {
+                    if (is_file($tmpPath . $file)) {
+                        unlink($tmpPath . $file);
+                    }
                 }
             }
         }
