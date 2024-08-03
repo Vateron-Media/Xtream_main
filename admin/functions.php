@@ -12,6 +12,45 @@ function getScriptVer() {
     return $rVersion;
 }
 
+/**
+ * Determines if an update is needed based on the current version and the required version.
+ *
+ * This function compares two version strings, `currentVersion` and `requiredVersion`, 
+ * which are expected to be in a dot-separated format (e.g., "1.0.0"). It converts these 
+ * version strings into arrays of integers, then compares each part of the version numbers 
+ * to determine if the current version is less than the required version. 
+ * 
+ * If any part of the current version is less than the corresponding part of the required 
+ * version, the function returns true, indicating that an update is needed. If any part 
+ * of the current version is greater, it returns false, indicating that no update is needed. 
+ * If both versions are equal, it also returns false.
+ *
+ * @param string $currentVersion The current version string.
+ * @param string $requiredVersion The required version string to compare against.
+ * @return bool Returns true if an update is needed, false otherwise.
+ */
+function isUpdateNeeded($currentVersion, $requiredVersion) {
+    // Convert version strings to arrays of integers
+    $currentVersionArray = array_map('intval', explode('.', $currentVersion));
+    $requiredVersionArray = array_map('intval', explode('.', $requiredVersion));
+
+    // Compare each part of the version numbers
+    $length = max(count($currentVersionArray), count($requiredVersionArray));
+    for ($i = 0; $i < $length; $i++) {
+        $currentPart = $currentVersionArray[$i] ?? 0;
+        $requiredPart = $requiredVersionArray[$i] ?? 0;
+
+        if ($currentPart < $requiredPart) {
+            return true;
+        } elseif ($currentPart > $requiredPart) {
+            return false;
+        }
+    }
+
+    // Versions are equal
+    return false;
+}
+
 function XSS($rString, $rSQL = False) {
     global $rPurifier, $db;
     if ((is_null($rString)) or (strtoupper($rString) == 'NULL')) {
