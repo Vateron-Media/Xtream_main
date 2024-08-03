@@ -5,7 +5,7 @@ function delete_old_segments($stream_id, $duration) {
         $total = $total_segments - $duration * 24 * 60;
         $files = array_values(array_filter(explode("\n", shell_exec("ls -tr " . TV_ARCHIVE . $stream_id . " | sed -e 's/\\s\\+/\\n/g'"))));
         for ($i = 0; $i >= $total; $i++) {
-            unlink(TV_ARCHIVE . $stream_id . "/" . $files[$i]);
+            unlink_file(TV_ARCHIVE . $stream_id . "/" . $files[$i]);
         }
     }
 }

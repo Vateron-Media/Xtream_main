@@ -342,9 +342,7 @@ function shutdown() {
     if ($activity_id !== false) {
         ipTV_streaming::CloseAndTransfer($activity_id);
         ipTV_streaming::writeOfflineActivity(SERVER_ID, $user_info['id'], $stream_id, $date, $user_agent, $user_ip, $container_priority, $geoip_country_code, $user_info['con_isp_name'], $external_device);
-        if (file_exists($connection_speed_file)) {
-            unlink($connection_speed_file);
-        }
+        unlink_file($connection_speed_file);
     }
     fastcgi_finish_request();
     posix_kill(getmypid(), 9);

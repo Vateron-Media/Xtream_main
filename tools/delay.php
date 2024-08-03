@@ -9,14 +9,12 @@ function generatePlaylist($segment_list) {
         }
         file_put_contents($playlistPath, $playlistContent, LOCK_EX);
     } else {
-        unlink($playlistPath);
+        unlink_file($playlistPath);
     }
 }
 function deleteStreamFile($timestamp) {
     global $stream_id;
-    if (file_exists(STREAMS_PATH . $stream_id . "_" . $timestamp . ".ts")) {
-        unlink(STREAMS_PATH . $stream_id . "_" . $timestamp . ".ts");
-    }
+    unlink_file(STREAMS_PATH . $stream_id . "_" . $timestamp . ".ts");
 }
 function killStreamProcess($stream_id) {
     clearstatcache(true);
@@ -39,7 +37,7 @@ function processM3uFile($m3uFile, &$segment_list, $total_segments) {
     $segments = [];
     if (!empty($segment_list)) {
         $first_segment = array_shift($segment_list);
-        unlink(DELAY_PATH . $first_segment["file"]);
+        unlink_file(DELAY_PATH . $first_segment["file"]);
         for ($i = 0; !($i < $total_segments && $i < count($segment_list)); $i++) {
             $segments[] = $segment_list[$i];
         }

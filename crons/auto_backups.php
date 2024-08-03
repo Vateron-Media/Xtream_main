@@ -23,9 +23,7 @@ if ($bDoBackup) {
         if ((count($rBackups) > intval($rAdminSettings["backups_to_keep"])) && (intval($rAdminSettings["backups_to_keep"]) > 0)) {
             $rDelete = array_slice($rBackups, 0, count($rBackups) - intval($rAdminSettings["backups_to_keep"]));
             foreach ($rDelete as $rItem) {
-                if (file_exists(MAIN_DIR . "adtools/backups/" . $rItem["filename"])) {
-                    unlink(MAIN_DIR . "adtools/backups/" . $rItem["filename"]);
-                }
+                unlink_file(MAIN_DIR . "adtools/backups/" . $rItem["filename"]);
             }
         }
     }

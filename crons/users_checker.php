@@ -44,9 +44,7 @@ function processDeletions($rDelete, $rDelStream = array()) {
     }
     foreach ($rDelStream as $rStreamID => $rConnections) {
         foreach ($rConnections as $rConnection) {
-            if (file_exists(CONS_TMP_PATH . $rStreamID . '/' . $rConnection)) {
-                @unlink(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
-            }
+            unlink_file(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
         }
     }
     return array();

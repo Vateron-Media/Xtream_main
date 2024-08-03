@@ -17,7 +17,7 @@ class ipTV_streaming {
             $rOutput = SIGNALS_PATH . $signalData['activity_id'] . '_' . $segmentFile;
             shell_exec(FFMPEG_PATH . ' -copyts -vsync 0 -nostats -nostdin -hide_banner -loglevel quiet -y -i ' . escapeshellarg(STREAMS_PATH . $segmentFile) . ' -filter_complex "drawtext=fontfile=' . FFMPEG_FONTS_PATH . ":text='" . escapeshellcmd($signalData['message']) . "':fontsize=" . escapeshellcmd($signalData['font_size']) . ':x=' . intval($x) . ':y=' . intval($y) . ':fontcolor=' . escapeshellcmd($signalData['font_color']) . '" -map 0 -vcodec ' . $codec . ' -preset ultrafast -acodec copy -scodec copy -mpegts_flags +initial_discontinuity -mpegts_copyts 1 -f mpegts ' . escapeshellarg($rOutput));
             $data = file_get_contents($rOutput);
-            unlink($rOutput);
+            unlink_file($rOutput);
             return $data;
         }
         passthru(FFMPEG_PATH . ' -copyts -vsync 0 -nostats -nostdin -hide_banner -loglevel quiet -y -i ' . escapeshellarg(STREAMS_PATH . $segmentFile) . ' -filter_complex "drawtext=fontfile=' . FFMPEG_FONTS_PATH . ":text='" . escapeshellcmd($signalData['message']) . "':fontsize=" . escapeshellcmd($signalData['font_size']) . ':x=' . intval($x) . ':y=' . intval($y) . ':fontcolor=' . escapeshellcmd($signalData['font_color']) . '" -map 0 -vcodec ' . $codec . ' -preset ultrafast -acodec copy -scodec copy -mpegts_flags +initial_discontinuity -mpegts_copyts 1 -f mpegts -');
@@ -521,11 +521,11 @@ class ipTV_streaming {
         if (!empty($IDs)) {
             self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` IN (' . implode(',', array_map('intval', $IDs)) . ')');
             foreach ($rDelUUID as $rUUID) {
-                @unlink(CONS_TMP_PATH . $rUUID);
+                unlink_file(CONS_TMP_PATH . $rUUID);
             }
             foreach ($rDelSID as $streamID => $rUUIDs) {
                 foreach ($rUUIDs as $rUUID) {
-                    @unlink(CONS_TMP_PATH . $streamID . '/' . $rUUID);
+                    unlink_file(CONS_TMP_PATH . $streamID . '/' . $rUUID);
                 }
             }
         }
@@ -552,7 +552,7 @@ class ipTV_streaming {
                     if ($rActivityInfo['container'] == 'hls') {
                         if (!$rRemove && $rEnd && $rActivityInfo['hls_end'] == 0) {
                             self::$ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `activity_id` = \'%s\'', $rActivityInfo['activity_id']);
-                            @unlink(CONS_TMP_PATH . $rActivityInfo['stream_id'] . '/' . $rActivityInfo['uuid']);
+                            unlink_file(CONS_TMP_PATH . $rActivityInfo['stream_id'] . '/' . $rActivityInfo['uuid']);
                         }
                     } else {
                         if ($rActivityInfo['server_id'] == SERVER_ID) {
@@ -567,13 +567,13 @@ class ipTV_streaming {
                 }
                 if ($rActivityInfo['server_id'] == SERVER_ID) {
                     if (file_exists(CONS_TMP_PATH . $rActivityInfo['uuid'])) {
-                        @unlink(CONS_TMP_PATH . $rActivityInfo['uuid']);
+                        unlink_file(CONS_TMP_PATH . $rActivityInfo['uuid']);
                     }
                 }
                 if ($rRemove) {
                     if ($rActivityInfo['server_id'] == SERVER_ID) {
                         if (file_exists(CONS_TMP_PATH . $rActivityInfo['stream_id'] . '/' . $rActivityInfo['uuid'])) {
-                            @unlink(CONS_TMP_PATH . $rActivityInfo['stream_id'] . '/' . $rActivityInfo['uuid']);
+                            unlink_file(CONS_TMP_PATH . $rActivityInfo['stream_id'] . '/' . $rActivityInfo['uuid']);
                         }
                     }
                     self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%s\'', $rActivityInfo['activity_id']);

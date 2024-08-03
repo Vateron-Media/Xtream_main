@@ -133,7 +133,7 @@ function checkFlood($rIP = null) {
                                 $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%d\')', $rIP, 'FLOOD ATTACK', time());
                                 touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                             }
-                            unlink($rIPFile);
+                            unlink_file($rIPFile);
                             return null;
                         }
                     } else {
@@ -245,7 +245,7 @@ function checkBruteforce($rIP = null, $rMAC = null, $rUsername = null) {
                                         $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%s\')', $rIP, 'BRUTEFORCE ' . strtoupper($rFloodType) . ' ATTACK', time());
                                         touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                                     }
-                                    unlink($rIPFile);
+                                    unlink_file($rIPFile);
                                     return null;
                                 }
                             }
@@ -744,7 +744,7 @@ function crontab_refresh() {
         fwrite($rHandle, implode("\n", $rJobs) . "\n");
         fclose($rHandle);
         shell_exec('crontab -u xtreamcodes ' . $rTempName);
-        @unlink($rTempName);
+        unlink_file($rTempName);
         file_put_contents(TMP_DIR . 'crontab', 1);
         return true;
     } else {
@@ -996,5 +996,21 @@ function stopDownload($rType, $rUser, $rDownloadPID) {
         }
 
         return implode("\n", $stack) . "\n";
+    }
+
+    /**
+     * Deletes a file from the filesystem if it exists.
+     *
+     * This function checks if the specified file exists at the given file path. 
+     * If the file exists, it attempts to delete it using the `unlink` function.
+     *
+     * @param string $filePath The path to the file that needs to be deleted.
+     * @return void This function does not return a value. It performs the deletion 
+     *              operation and will not raise an error if the file does not exist.
+     */
+    function unlink_file($filePath) {
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
     }
 }

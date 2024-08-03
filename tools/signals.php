@@ -56,7 +56,7 @@ if ($argc) {
                                 }
                                 break;
                             case 'delete_con':
-                                unlink(CONS_TMP_PATH . $rCustomData['uuid']);
+                                unlink_file(CONS_TMP_PATH . $rCustomData['uuid']);
                                 break;
                             case 'delete_vod':
                                 exec('rm ' . VOD_PATH . intval($rCustomData['id']) . '.*');
