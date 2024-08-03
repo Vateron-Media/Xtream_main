@@ -50,7 +50,7 @@ class ipTV_streaming {
     public function getAllowedIPsAdmin($rForce = false) {
         if (!$rForce) {
             $rCache = ipTV_lib::getCache('allowed_ips', 60);
-            if ($rCache !== false) {
+            if (!empty($rCache)) {
                 return $rCache;
             }
         }
