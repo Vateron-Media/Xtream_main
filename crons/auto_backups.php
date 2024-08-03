@@ -23,7 +23,7 @@ if ($bDoBackup) {
         if ((count($rBackups) > intval($rAdminSettings["backups_to_keep"])) && (intval($rAdminSettings["backups_to_keep"]) > 0)) {
             $rDelete = array_slice($rBackups, 0, count($rBackups) - intval($rAdminSettings["backups_to_keep"]));
             foreach ($rDelete as $rItem) {
-                unlink_file(MAIN_DIR . "adtools/backups/" . $rItem["filename"]);
+                ipTV_lib::unlink_file(MAIN_DIR . "adtools/backups/" . $rItem["filename"]);
             }
         }
     }

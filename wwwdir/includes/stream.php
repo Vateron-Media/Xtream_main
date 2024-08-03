@@ -13,7 +13,7 @@ class ipTV_stream {
     static function deleteCache($sources) {
         if (!empty($sources)) {
             foreach ($sources as $source) {
-                unlink_file(STREAMS_PATH . md5($source));
+                ipTV_lib::unlink_file(STREAMS_PATH . md5($source));
             }
         } else {
             return null;
@@ -303,7 +303,7 @@ class ipTV_stream {
     }
     static function startStream(int $streamID, &$streamStatusCounter2, $streamUrl = null) {
         ++$streamStatusCounter2;
-        unlink_file(STREAMS_PATH . $streamID . '_.pid');
+        ipTV_lib::unlink_file(STREAMS_PATH . $streamID . '_.pid');
 
         $stream = array();
         self::$ipTV_db->query("SELECT * FROM `streams` t1

@@ -482,4 +482,20 @@ class ipTV_lib {
 
         return $rReturn;
     }
+
+    /**
+     * Deletes a file from the filesystem if it exists.
+     *
+     * This function checks if the specified file exists at the given file path. 
+     * If the file exists, it attempts to delete it using the `unlink` function.
+     *
+     * @param string $filePath The path to the file that needs to be deleted.
+     * @return void This function does not return a value. It performs the deletion 
+     *              operation and will not raise an error if the file does not exist.
+     */
+    public static function unlink_file($filePath) {
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+    }
 }

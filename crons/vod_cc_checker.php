@@ -3,7 +3,7 @@
 
 if ($argc) {
     register_shutdown_function('shutdown');
-    require str_replace('\\', '/', dirname($argv[0])) . '/../www/init.php';
+    require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
     cli_set_process_title('XtreamCodes[VOD CC Checker]');
     $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
     ipTV_lib::check_cron($unique_id);

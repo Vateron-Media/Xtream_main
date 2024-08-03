@@ -44,7 +44,7 @@ function processDeletions($rDelete, $rDelStream = array()) {
     }
     foreach ($rDelStream as $rStreamID => $rConnections) {
         foreach ($rConnections as $rConnection) {
-            unlink_file(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
+            ipTV_lib::unlink_file(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
         }
     }
     return array();

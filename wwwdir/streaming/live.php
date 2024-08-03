@@ -324,7 +324,7 @@ if ($rChannelInfo) {
                                 sleep(1);
                             }
                             ipTV_streaming::sendSignalFFMPEG($rSignalData, $rSegmentFile, $rVideoCodec ?: "h264");
-                            unlink_file(SIGNALS_PATH . $tokenData["uuid"]);
+                            unlink(SIGNALS_PATH . $tokenData["uuid"]);
                             $rCurrent++;
                         }
                     }
@@ -419,8 +419,8 @@ function shutdown() {
         }
         $ipTV_db->query("UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = '%s' WHERE `uuid` = '%s' AND `pid` = '%s';", time() - (int) ipTV_lib::$StreamingServers[SERVER_ID]["time_offset"], $tokenData["uuid"], $PID);
 
-        unlink_file(CONS_TMP_PATH . $tokenData["uuid"]);
-        unlink_file(CONS_TMP_PATH . $streamID . "/" . $tokenData["uuid"]);
+        ipTV_lib::unlink_file(CONS_TMP_PATH . $tokenData["uuid"]);
+        ipTV_lib::unlink_file(CONS_TMP_PATH . $streamID . "/" . $tokenData["uuid"]);
     }
     if (is_object($ipTV_db)) {
         $ipTV_db->close_mysql();
