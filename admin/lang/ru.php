@@ -640,6 +640,7 @@ $_ = array(
    "back_to_servers" => "Вернуться к Серверам",
    "load_balancer_installation" => "Установка балансировщика нагрузки",
    "server_ip" => "IP-адрес сервера",
+   "root_username" => "Root username",
    "root_password" => "Корневой пароль",
    "ssh_port" => "SSH-порт",
    "install_server" => "Установить сервер",

@@ -653,6 +653,7 @@ $_ = array(
   "load_balancer_installation" => "Installation de Load Balancer",
   "server_name" => "Nom du serveur",
   "server_ip" => "IP serveur",
+  "root_username" => "Root username",
   "root_password" => "Mot de passe root",
   "ssh_port" => "Port SSH",
   "install_server" => "Installer le serveur",

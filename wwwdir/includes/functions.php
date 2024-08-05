@@ -903,7 +903,7 @@ function checkUpdate($currentVersion, $type = "main") {
                 $hashNextVersion = $mainVersions[$currentIndex + 1]['md5'];
 
                 $version["version"] = $nextVersion;
-                $version["url"] = "https://github.com/Vateron-Media/Xtream_main/releases/download/" . $nextVersion . "/" . $type . "_xui.tar.gz";
+                $version["url"] = "https://github.com/Vateron-Media/Xtream_main/releases/download/v" . $nextVersion . "/" . $type . "_xui.tar.gz";
                 $version["md5"] = $hashNextVersion;
                 return $version;
             } else {

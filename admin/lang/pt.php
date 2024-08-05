@@ -655,6 +655,7 @@ $_ = array(
 	"load_balancer_installation" => "Instalação do Balanceador de Carga",
 	"server_name" => "Nome do Servidor",
 	"server_ip" => "IP do Servidor",
+	"root_username" => "Root username",
 	"root_password" => "Senha do Root",
 	"ssh_port" => "Porta SSH",
 	"install_server" => "Instalar Servidor",

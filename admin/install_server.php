@@ -39,12 +39,11 @@ if (isset($_POST["submit_server"])) {
         }
         $rQuery = "INSERT INTO `streaming_servers`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($db->query($rQuery)) {
-            $rServerID = intval($db->insert_id);
-            $rJSON = array("status" => 0, "port" => intval($_POST["ssh_port"]), "http_broadcast_port" => intval($rArray["http_broadcast_port"]), "https_broadcast_port" => intval($rArray["https_broadcast_port"]), "rtmp_port" => intval($rArray["rtmp_port"]), "host" => $_POST["server_ip"], "password" => $_POST["root_password"], "time" => intval(time()), "id" => $rServerID, "type" => "install");
-            file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-            startcmd();
+            $rInsertID = intval($db->insert_id);
+            $rCommand = '/home/xtreamcodes/iptv_xtream_codes/php/bin/php /home/xtreamcodes/iptv_xtream_codes/tools/balancer.php ' . intval($rInsertID) . ' ' . intval($_POST["ssh_port"]) . ' ' . escapeshellarg($_POST['root_username']) . ' ' . escapeshellarg($_POST['root_password']) . ' 80 443 ' . intval($rUpdateSysctl) . ' > "/home/xtreamcodes/iptv_xtream_codes/install/' . intval($rInsertID) . '.install" 2>/dev/null &';
+
+            shell_exec($rCommand);
             header("Location: ./servers.php");
-            startcmd();
         } else {
             $_STATUS = 2;
         }
@@ -116,6 +115,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <label class="col-md-4 col-form-label" for="server_ip"><?= $_["server_ip"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="server_ip" name="server_ip" value="" required data-parsley-trigger="change">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row mb-4">
+                                                                <label class="col-md-4 col-form-label" for="root_username"><?= $_["root_username"] ?></label>
+                                                                <div class="col-md-8">
+                                                                    <input type="text" class="form-control" id="root_username" name="root_username" value="" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">

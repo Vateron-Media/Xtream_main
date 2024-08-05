@@ -640,6 +640,7 @@ $_ = array(
   "back_to_servers" => "Back to Servers",
   "load_balancer_installation" => "Load Balancer Installation",
   "server_ip" => "Server IP",
+  "root_username" => "Root username",
   "root_password" => "Root Password",
   "ssh_port" => "SSH Port",
   "install_server" => "Install Server",

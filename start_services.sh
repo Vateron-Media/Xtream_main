@@ -11,8 +11,8 @@ sudo -u xtreamcodes /home/xtreamcodes/iptv_xtream_codes/php/bin/php /home/xtream
 chown -R xtreamcodes:xtreamcodes /sys/class/net
 chown -R xtreamcodes:xtreamcodes /home/xtreamcodes
 sleep 4
-/home/xtreamcodes/iptv_xtream_codes/nginx_rtmp/sbin/nginx_rtmp
-/home/xtreamcodes/iptv_xtream_codes/nginx/sbin/nginx
+sudo -u xtreamcodes /home/xtreamcodes/iptv_xtream_codes/nginx_rtmp/sbin/nginx_rtmp
+sudo -u xtreamcodes /home/xtreamcodes/iptv_xtream_codes/nginx/sbin/nginx
 /sbin/start-stop-daemon --start --quiet --pidfile /home/xtreamcodes/iptv_xtream_codes/php/VaiIb8.pid --exec /home/xtreamcodes/iptv_xtream_codes/php/sbin/php-fpm -- --daemonize --fpm-config /home/xtreamcodes/iptv_xtream_codes/php/etc/VaiIb8.conf
 /sbin/start-stop-daemon --start --quiet --pidfile /home/xtreamcodes/iptv_xtream_codes/php/JdlJXm.pid --exec /home/xtreamcodes/iptv_xtream_codes/php/sbin/php-fpm -- --daemonize --fpm-config /home/xtreamcodes/iptv_xtream_codes/php/etc/JdlJXm.conf
 /sbin/start-stop-daemon --start --quiet --pidfile /home/xtreamcodes/iptv_xtream_codes/php/CWcfSP.pid --exec /home/xtreamcodes/iptv_xtream_codes/php/sbin/php-fpm -- --daemonize --fpm-config /home/xtreamcodes/iptv_xtream_codes/php/etc/CWcfSP.conf
