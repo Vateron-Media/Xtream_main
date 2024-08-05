@@ -53,11 +53,11 @@ if (isset($_POST["submit_profile"])) {
         }
         if (isset($_POST['port_admin']) && $rPermissions["is_admin"] && $_POST['port_admin'] != $rSettings["port_admin"]) {
             $portadmin = $_POST["port_admin"];
-            exec("sed -i 's/listen " . $rSettings["port_admin"] . "/listen " . intval($_POST["port_admin"]) . "/g' /home/xtreamcodes/iptv_xtream_codes/nginx/conf/nginx.conf");
+            exec("sed -i 's/listen " . $rSettings["port_admin"] . "/listen " . intval($_POST["port_admin"]) . "/g' /home/xtreamcodes/nginx/conf/nginx.conf");
             if ($rSettings["is_ufw"] == 1) {
                 exec("sudo ufw allow " . intval($_POST["port_admin"]) . " && sudo ufw delete allow " . $rSettings["port_admin"] . "");
             }
-            exec("sudo /home/xtreamcodes/iptv_xtream_codes/nginx/sbin/nginx -s reload");
+            exec("sudo /home/xtreamcodes/nginx/sbin/nginx -s reload");
             sleep(1);
         } else {
             $portadmin = $rSettings["port_admin"];

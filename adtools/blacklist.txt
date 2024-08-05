@@ -1,1 +1,1 @@
-/home/xtreamcodes/iptv_xtream_codes/admin/*
+/home/xtreamcodes/admin/*

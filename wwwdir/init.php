@@ -72,7 +72,7 @@ define('IPTV_CLIENT_AREA_TEMPLATES_PATH', IPTV_CLIENT_AREA . 'templates/');
 // -------------------
 
 // BINARIES FILE
-define('PHP_BIN', '/home/xtreamcodes/iptv_xtream_codes/php/bin/php');
+define('PHP_BIN', '/home/xtreamcodes/php/bin/php');
 define('FFMPEG_PATH', file_exists(BIN_PATH . 'ffmpeg') ? BIN_PATH . 'ffmpeg' : '/usr/bin/ffmpeg');
 define('FFPROBE_PATH', file_exists(BIN_PATH . 'ffprobe') ? BIN_PATH . 'ffprobe' : '/usr/bin/ffprobe');
 define('YOUTUBE_PATH', BIN_PATH . 'youtube');

@@ -24,7 +24,7 @@ $rURL = "https://db-ip.com/demo/home.php?s=";
 
 if ((isset($_GET["ip"])) && (filter_var($_GET["ip"], FILTER_VALIDATE_IP))) {
 
-    //? CHECK IF EXIST MD5 API FOLDER "/home/xtreamcodes/iptv_xtream_codes/isp/data/"
+    //? CHECK IF EXIST MD5 API FOLDER "/home/xtreamcodes/isp/data/"
     if (!file_exists("./data/".md5($_GET["ip"]))) {
 
         //? GET INFO ABOUT THE IP WE WANNA TO CONSULT

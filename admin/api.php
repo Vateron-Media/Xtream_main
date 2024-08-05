@@ -933,7 +933,7 @@ if (isset($_GET["action"])) {
                 exit;
             }
             $db->query("TRUNCATE TABLE `epg_data`;");
-            sexec($_INFO["server_id"], "/home/xtreamcodes/iptv_xtream_codes/php/bin/php /home/xtreamcodes/iptv_xtream_codes/crons/epg.php");
+            sexec($_INFO["server_id"], "/home/xtreamcodes/php/bin/php /home/xtreamcodes/crons/epg.php");
             echo json_encode(array("result" => True));
             exit;
         case "tmdb_search":
@@ -1073,7 +1073,7 @@ if (isset($_GET["action"])) {
             if (isset($rServers[$rServerID])) {
                 $rServer = $rServers[$rServerID];
                 $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "restart");
-                file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
+                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
                 startcmd();
                 echo json_encode(array("result" => True));
                 exit;
@@ -1090,7 +1090,7 @@ if (isset($_GET["action"])) {
             if (isset($rServers[$rServerID])) {
                 $rServer = $rServers[$rServerID];
                 $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "reboot");
-                file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
+                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
                 startcmd();
                 echo json_encode(array("result" => True));
                 exit;
@@ -1107,7 +1107,7 @@ if (isset($_GET["action"])) {
             if (isset($rServers[$rServerID])) {
                 $rServer = $rServers[$rServerID];
                 $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "sreload");
-                file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
+                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
                 startcmd();
                 echo json_encode(array("result" => True));
                 exit;
@@ -1124,7 +1124,7 @@ if (isset($_GET["action"])) {
             if (isset($rServers[$rServerID])) {
                 $rServer = $rServers[$rServerID];
                 $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "breload");
-                file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
+                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
                 startcmd();
                 echo json_encode(array("result" => True));
                 exit;
@@ -1141,7 +1141,7 @@ if (isset($_GET["action"])) {
             if (isset($rServers[$rServerID])) {
                 $rServer = $rServers[$rServerID];
                 $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "fsremake");
-                file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
+                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
                 startcmd();
                 echo json_encode(array("result" => True));
                 exit;
@@ -1158,7 +1158,7 @@ if (isset($_GET["action"])) {
             if (isset($rServers[$rServerID])) {
                 $rServer = $rServers[$rServerID];
                 $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "fbremake");
-                file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
+                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
                 startcmd();
                 echo json_encode(array("result" => True));
                 exit;
@@ -1175,7 +1175,7 @@ if (isset($_GET["action"])) {
             if (isset($rServers[$rServerID])) {
                 $rServer = $rServers[$rServerID];
                 $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "urelease");
-                file_put_contents("/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
+                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
                 startcmd();
                 echo json_encode(array("result" => True));
                 exit;
@@ -1191,7 +1191,7 @@ if (isset($_GET["action"])) {
             set_time_limit(300);
             ini_set('max_execution_time', 300);
             ini_set('default_socket_timeout', 300);
-            echo shell_exec("/home/xtreamcodes/iptv_xtream_codes/bin/ffprobe -v quiet -probesize 4000000 -print_format json -show_format -show_streams \"" . $_GET["stream"] . "\"");
+            echo shell_exec("/home/xtreamcodes/bin/ffprobe -v quiet -probesize 4000000 -print_format json -show_format -show_streams \"" . $_GET["stream"] . "\"");
             exit;
         case "clear_logs":
             if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "reg_userlog")) && (!hasPermissions("adv", "client_request_log")) && (!hasPermissions("adv", "connection_logs")) && (!hasPermissions("adv", "stream_errors")) && (!hasPermissions("adv", "panel_errors")) && (!hasPermissions("adv", "credits_log")) && (!hasPermissions("adv", "folder_watch_settings")))) {

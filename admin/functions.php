@@ -1,5 +1,5 @@
 <?php
-include_once("/home/xtreamcodes/iptv_xtream_codes/admin/HTMLPurifier.standalone.php");
+include_once("/home/xtreamcodes/admin/HTMLPurifier.standalone.php");
 
 $rTimeout = 60;             // Seconds Timeout for Functions & Requests
 $rSQLTimeout = 5;           // Max execution time for MySQL queries.
@@ -94,9 +94,9 @@ function updatePanel() {
     global $db;
 
     $URL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/update_files/";
-    $ToolsPath = "/home/xtreamcodes/iptv_xtream_codes/tools/";
-    $PYToolsPath = "/home/xtreamcodes/iptv_xtream_codes/pytools3/";
-    $PHPPath = "/home/xtreamcodes/iptv_xtream_codes/php/bin/php";
+    $ToolsPath = "/home/xtreamcodes/tools/";
+    $PYToolsPath = "/home/xtreamcodes/pytools3/";
+    $PHPPath = "/home/xtreamcodes/php/bin/php";
 
     $PHPTools = ["update.php", "update_bd.php"];
     $PythonScrypt = "update.py";
@@ -124,7 +124,7 @@ function updateGeoLite2() {
         foreach ($fileNames as $key => $value) {
             $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/raw/main/{$value}");
             if (stripos($rFileData, "MaxMind.com") !== false) {
-                $rFilePath = "/home/xtreamcodes/iptv_xtream_codes/bin/maxmind/{$value}";
+                $rFilePath = "/home/xtreamcodes/bin/maxmind/{$value}";
                 exec("sudo chattr -i {$rFilePath}");
                 unlink($rFilePath);
                 file_put_contents($rFilePath, $rFileData);
@@ -203,7 +203,7 @@ ini_set('mysql.connect_timeout', $rSQLTimeout);
 ini_set('max_execution_time', $rTimeout);
 ini_set('default_socket_timeout', $rTimeout);
 
-define("MAIN_DIR", "/home/xtreamcodes/iptv_xtream_codes/");
+define("MAIN_DIR", "/home/xtreamcodes/");
 define("CONFIG_CRYPT_KEY", "5709650b0d7806074842c6de575025b1");
 
 require_once realpath(dirname(__FILE__)) . "/mobiledetect.php";
@@ -243,7 +243,7 @@ $nabilos = getRegisteredUserHash($_SESSION['hash']);
 if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos["default_lang"] . ".php"))) {
     include "./lang/" . $nabilos["default_lang"] . ".php";
 } else {
-    include "/home/xtreamcodes/iptv_xtream_codes/admin/lang/en.php";
+    include "/home/xtreamcodes/admin/lang/en.php";
 }
 
 $detect = new Mobile_Detect;
@@ -311,8 +311,8 @@ function sexec2($rServerID, $rCommand) {
     return  $loool;
 }
 function loadnginx($rServerID) {
-    sexec($rServerID, "sudo /home/xtreamcodes/iptv_xtream_codes/nginx/sbin/nginx -s reload");
-    sexec($rServerID, "sudo /home/xtreamcodes/iptv_xtream_codes/nginx_rtmp/sbin/nginx_rtmp -s reload");
+    sexec($rServerID, "sudo /home/xtreamcodes/nginx/sbin/nginx -s reload");
+    sexec($rServerID, "sudo /home/xtreamcodes/nginx_rtmp/sbin/nginx_rtmp -s reload");
 }
 function netnet($rServerID) {
     $ccc = sexec2($rServerID, "ls -1 /sys/class/net");
@@ -325,18 +325,18 @@ function netnet($rServerID) {
 function changePort($rServerID, $rType, $rOldPort, $rNewPort) {
     if ($rType == 0) {
         // HTTP
-        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/iptv_xtream_codes/nginx/conf/nginx.conf");
-        sexec($rServerID, "sed -i 's/:" . intval($rOldPort) . "/:" . intval($rNewPort) . "/g' /home/xtreamcodes/iptv_xtream_codes/nginx_rtmp/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/nginx/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's/:" . intval($rOldPort) . "/:" . intval($rNewPort) . "/g' /home/xtreamcodes/nginx_rtmp/conf/nginx.conf");
     } else if ($rType == 1) {
         // SSL
-        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . " ssl;/listen " . intval($rNewPort) . " ssl;/g' /home/xtreamcodes/iptv_xtream_codes/nginx/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . " ssl;/listen " . intval($rNewPort) . " ssl;/g' /home/xtreamcodes/nginx/conf/nginx.conf");
     } else if ($rType == 2) {
         // RTMP
-        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/iptv_xtream_codes/nginx_rtmp/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/nginx_rtmp/conf/nginx.conf");
     } else if ($rType == 3) {
         // ISP
-        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/iptv_xtream_codes/nginx/conf/nginx.conf");
-        sexec($rServerID, "sed -i 's|:" . intval($rOldPort) . "/api.php|:" . intval($rNewPort) . "/api.php|g' /home/xtreamcodes/iptv_xtream_codes/wwwdir/includes/streaming.php");
+        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/nginx/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's|:" . intval($rOldPort) . "/api.php|:" . intval($rNewPort) . "/api.php|g' /home/xtreamcodes/wwwdir/includes/streaming.php");
     }
     loadnginx($rServerID);
 }
@@ -487,7 +487,7 @@ function getBackups() {
 }
 
 function startcmd() {
-    echo shell_exec("nohup /usr/bin/python /home/xtreamcodes/iptv_xtream_codes/pytools/balancer.py 2>&1");
+    echo shell_exec("nohup /usr/bin/python /home/xtreamcodes/pytools/balancer.py 2>&1");
 }
 
 function tmdbParseRelease($Release) {
@@ -1942,9 +1942,9 @@ function forceSecurity() {
     $db->query("UPDATE `settings` SET `double_auth` = 1, `mag_security` = 1;");
 }
 
-if (file_exists("/home/xtreamcodes/iptv_xtream_codes/admin/.update")) {
-    unlink("/home/xtreamcodes/iptv_xtream_codes/admin/.update");
-    if (!file_exists("/home/xtreamcodes/iptv_xtream_codes/admin/.update")) {
+if (file_exists("/home/xtreamcodes/admin/.update")) {
+    unlink("/home/xtreamcodes/admin/.update");
+    if (!file_exists("/home/xtreamcodes/admin/.update")) {
         updateTables();
         forceSecurity();
     }

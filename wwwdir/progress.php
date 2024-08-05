@@ -12,7 +12,7 @@ foreach ($d76067cf9572f7a6691c85c12faf2a29 as $row) {
     list($E7cca48cfca85fc445419a32d7d8f973, $a1daec950dd361ae639ad3a57dc018c0) = explode("=", $row);
     $output[trim($E7cca48cfca85fc445419a32d7d8f973)] = trim($a1daec950dd361ae639ad3a57dc018c0);
 }
-$fp = fopen("/home/xtreamcodes/iptv_xtream_codes/streams/{$stream_id}_.progress", "w");
+$fp = fopen("/home/xtreamcodes/streams/{$stream_id}_.progress", "w");
 fwrite($fp, json_encode($output));
 fclose($fp);
 return;

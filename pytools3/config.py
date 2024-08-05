@@ -3,7 +3,7 @@ import json
 import os
 from itertools import cycle, zip
 
-rConfigPath = "/home/xtreamcodes/iptv_xtream_codes/config"
+rConfigPath = "/home/xtreamcodes/config"
 
 
 def doDecrypt():

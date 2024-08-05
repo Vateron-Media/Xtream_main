@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR, the PHP Extension and Application Repository
  *
@@ -26,8 +27,8 @@ define('PEAR_IGNORE_BACKTRACE', 1);
  */
 //the space is needed for windows include paths with trailing backslash
 // http://pear.php.net/bugs/bug.php?id=19482
-if ('/home/xtreamcodes/iptv_xtream_codes/php/lib/php ' != '@'.'include_path'.'@ ') {
-    ini_set('include_path', trim('/home/xtreamcodes/iptv_xtream_codes/php/lib/php '). PATH_SEPARATOR .  get_include_path());
+if ('/home/xtreamcodes/php/lib/php ' != '@' . 'include_path' . '@ ') {
+    ini_set('include_path', trim('/home/xtreamcodes/php/lib/php ') . PATH_SEPARATOR .  get_include_path());
     $raw = false;
 } else {
     // this is a raw, uninstalled pear, either a cvs checkout, or php distro
@@ -57,7 +58,7 @@ $all_commands = PEAR_Command::getCommands();
 // remove this next part when we stop supporting that crap-ass PHP 4.2
 if (!isset($_SERVER['argv']) && !isset($argv) && !isset($HTTP_SERVER_VARS['argv'])) {
     echo 'ERROR: either use the CLI php executable, ' .
-         'or set register_argc_argv=On in php.ini';
+        'or set register_argc_argv=On in php.ini';
     exit(1);
 }
 
@@ -95,12 +96,12 @@ $verbose = 1;
 
 foreach ($opts as $opt) {
     switch ($opt[0]) {
-    case 'c':
-        $pear_user_config = $opt[1];
-        break;
-    case 'C':
-        $pear_system_config = $opt[1];
-        break;
+        case 'c':
+            $pear_user_config = $opt[1];
+            break;
+        case 'C':
+            $pear_system_config = $opt[1];
+            break;
     }
 }
 
@@ -177,64 +178,56 @@ if ($raw) {
 foreach ($opts as $opt) {
     $param = !empty($opt[1]) ? $opt[1] : true;
     switch ($opt[0]) {
-    case 'd':
-        if ($param === true) {
-            die(
-                'Invalid usage of "-d" option, expected -d config_value=value, ' .
-                'received "-d"' . "\n"
-            );
-        }
-        $possible = explode('=', $param);
-        if (count($possible) != 2) {
-            die(
-                'Invalid usage of "-d" option, expected ' .
-                '-d config_value=value, received "' . $param . '"' . "\n"
-            );
-        }
-        list($key, $value) = explode('=', $param);
-        $config->set($key, $value, 'user');
-        break;
-    case 'D':
-        if ($param === true) {
-            die(
-                'Invalid usage of "-d" option, expected ' .
-                '-d config_value=value, received "-d"' . "\n"
-            );
-        }
-        $possible = explode('=', $param);
-        if (count($possible) != 2) {
-            die(
-                'Invalid usage of "-d" option, expected ' .
-                '-d config_value=value, received "' . $param . '"' . "\n"
-            );
-        }
-        list($key, $value) = explode('=', $param);
-        $config->set($key, $value, 'system');
-        break;
-    case 's':
-        $store_user_config = true;
-        break;
-    case 'S':
-        $store_system_config = true;
-        break;
-    case 'u':
-        $config->remove($param, 'user');
-        break;
-    case 'v':
-        $config->set('verbose', $config->get('verbose') + 1);
-        break;
-    case 'q':
-        $config->set('verbose', $config->get('verbose') - 1);
-        break;
-    case 'V':
-        usage(null, 'version');
-    case 'c':
-    case 'C':
-        break;
-    default:
-        // all non pear params goes to the command
-        $cmdopts[$opt[0]] = $param;
-        break;
+        case 'd':
+            if ($param === true) {
+                die('Invalid usage of "-d" option, expected -d config_value=value, ' .
+                    'received "-d"' . "\n");
+            }
+            $possible = explode('=', $param);
+            if (count($possible) != 2) {
+                die('Invalid usage of "-d" option, expected ' .
+                    '-d config_value=value, received "' . $param . '"' . "\n");
+            }
+            list($key, $value) = explode('=', $param);
+            $config->set($key, $value, 'user');
+            break;
+        case 'D':
+            if ($param === true) {
+                die('Invalid usage of "-d" option, expected ' .
+                    '-d config_value=value, received "-d"' . "\n");
+            }
+            $possible = explode('=', $param);
+            if (count($possible) != 2) {
+                die('Invalid usage of "-d" option, expected ' .
+                    '-d config_value=value, received "' . $param . '"' . "\n");
+            }
+            list($key, $value) = explode('=', $param);
+            $config->set($key, $value, 'system');
+            break;
+        case 's':
+            $store_user_config = true;
+            break;
+        case 'S':
+            $store_system_config = true;
+            break;
+        case 'u':
+            $config->remove($param, 'user');
+            break;
+        case 'v':
+            $config->set('verbose', $config->get('verbose') + 1);
+            break;
+        case 'q':
+            $config->set('verbose', $config->get('verbose') - 1);
+            break;
+        case 'V':
+            usage(null, 'version');
+        case 'c':
+        case 'C':
+            break;
+        default:
+            // all non pear params goes to the command
+            $cmdopts[$opt[0]] = $param;
+            break;
     }
 }
 
@@ -255,9 +248,9 @@ if ($fetype == 'Gtk2') {
     if (!$config->validConfiguration()) {
         PEAR::raiseError(
             "CRITICAL ERROR: no existing valid configuration files found in " .
-            "files '$pear_user_config' or '$pear_system_config', " .
-            "please copy an existing configuration file to one of these " .
-            "locations, or use the -c and -s options to create one"
+                "files '$pear_user_config' or '$pear_system_config', " .
+                "please copy an existing configuration file to one of these " .
+                "locations, or use the -c and -s options to create one"
         );
     }
     Gtk::main();
@@ -270,9 +263,9 @@ if ($fetype == 'Gtk2') {
         if (!$config->validConfiguration()) {
             PEAR::raiseError(
                 "CRITICAL ERROR: no existing valid configuration files found " .
-                "in files '$pear_user_config' or '$pear_system_config', " .
-                "please copy an existing configuration file to one of " .
-                "these locations, or use the -c and -s options to create one"
+                    "in files '$pear_user_config' or '$pear_system_config', " .
+                    "please copy an existing configuration file to one of " .
+                    "these locations, or use the -c and -s options to create one"
             );
         }
 
@@ -321,7 +314,8 @@ if ($fetype == 'Gtk2') {
 
         if (PEAR::isError($ok)) {
             PEAR::setErrorHandling(
-                PEAR_ERROR_CALLBACK, array($ui, "displayFatalError")
+                PEAR_ERROR_CALLBACK,
+                array($ui, "displayFatalError")
             );
             PEAR::raiseError($ok);
         }
@@ -338,8 +332,7 @@ if ($fetype == 'Gtk2') {
  *
  * @return void
  */
-function usage($error = null, $helpsubject = null)
-{
+function usage($error = null, $helpsubject = null) {
     global $progname, $all_commands;
     $stdout = fopen('php://stdout', 'w');
     if (PEAR::isError($error)) {
@@ -359,12 +352,12 @@ function usage($error = null, $helpsubject = null)
             $put .= sprintf($formatstr, $cmd, PEAR_Command::getDescription($cmd));
         }
         $put .=
-            "Usage: $progname [options] command [command-options] <parameters>\n".
-            "Type \"$progname help options\" to list all options.\n".
-            "Type \"$progname help shortcuts\" to list all command shortcuts.\n".
-            "Type \"$progname help version\" or ".
-            "\"$progname version\" to list version information.\n".
-            "Type \"$progname help <command>\" to get the help ".
+            "Usage: $progname [options] command [command-options] <parameters>\n" .
+            "Type \"$progname help options\" to list all options.\n" .
+            "Type \"$progname help shortcuts\" to list all command shortcuts.\n" .
+            "Type \"$progname help version\" or " .
+            "\"$progname version\" to list version information.\n" .
+            "Type \"$progname help <command>\" to get the help " .
             "for the specified command.";
     }
     fputs($stdout, "$put\n");
@@ -383,24 +376,23 @@ function usage($error = null, $helpsubject = null)
  *
  * @return void
  */
-function cmdHelp($command)
-{
+function cmdHelp($command) {
     global $progname, $all_commands, $config;
     if ($command == "options") {
         return
-        "Options:\n".
-        "     -v         increase verbosity level (default 1)\n".
-        "     -q         be quiet, decrease verbosity level\n".
-        "     -c file    find user configuration in `file'\n".
-        "     -C file    find system configuration in `file'\n".
-        "     -d foo=bar set user config variable `foo' to `bar'\n".
-        "     -D foo=bar set system config variable `foo' to `bar'\n".
-        "     -G         start in graphical (Gtk) mode\n".
-        "     -s         store user configuration\n".
-        "     -S         store system configuration\n".
-        "     -u foo     unset `foo' in the user configuration\n".
-        "     -h, -?     display help/usage (this message)\n".
-        "     -V         version information\n";
+            "Options:\n" .
+            "     -v         increase verbosity level (default 1)\n" .
+            "     -q         be quiet, decrease verbosity level\n" .
+            "     -c file    find user configuration in `file'\n" .
+            "     -C file    find system configuration in `file'\n" .
+            "     -d foo=bar set user config variable `foo' to `bar'\n" .
+            "     -D foo=bar set system config variable `foo' to `bar'\n" .
+            "     -G         start in graphical (Gtk) mode\n" .
+            "     -s         store user configuration\n" .
+            "     -S         store system configuration\n" .
+            "     -u foo     unset `foo' in the user configuration\n" .
+            "     -h, -?     display help/usage (this message)\n" .
+            "     -V         version information\n";
     } elseif ($command == "shortcuts") {
         $sc = PEAR_Command::getShortcuts();
         $ret = "Shortcuts:\n";
@@ -408,13 +400,11 @@ function cmdHelp($command)
             $ret .= sprintf("     %-8s %s\n", $s, $c);
         }
         return $ret;
-
     } elseif ($command == "version") {
-        return "PEAR Version: ".$GLOBALS['pear_package_version'].
-               "\nPHP Version: ".phpversion().
-               "\nZend Engine Version: ".zend_version().
-               "\nRunning on: ".php_uname();
-
+        return "PEAR Version: " . $GLOBALS['pear_package_version'] .
+            "\nPHP Version: " . phpversion() .
+            "\nZend Engine Version: " . zend_version() .
+            "\nRunning on: " . php_uname();
     } elseif ($help = PEAR_Command::getHelp($command)) {
         if (is_string($help)) {
             return "$progname $command [options] $help\n";
@@ -443,21 +433,21 @@ function cmdHelp($command)
  * @access public
  * @return boolean
  */
-function error_handler($errno, $errmsg, $file, $line)
-{
+function error_handler($errno, $errmsg, $file, $line) {
     if ($errno & E_STRICT) {
         return; // E_STRICT
     }
     if ($errno & E_DEPRECATED) {
         return; // E_DEPRECATED
     }
-    if (!(error_reporting() & $errno) &&
+    if (
+        !(error_reporting() & $errno) &&
         isset($GLOBALS['config']) &&
         $GLOBALS['config']->get('verbose') < 4
     ) {
         return false; // @silenced error, show all if debug is high enough
     }
-    $errortype = array (
+    $errortype = array(
         E_DEPRECATED  => 'Deprecated Warning',
         E_ERROR   =>  "Error",
         E_WARNING   =>  "Warning",

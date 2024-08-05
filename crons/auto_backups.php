@@ -1,5 +1,5 @@
 <?php
-include "/home/xtreamcodes/iptv_xtream_codes/admin/functions.php";
+include "/home/xtreamcodes/admin/functions.php";
 $bDoBackup = false;
 if (isset($rAdminSettings['automatic_backups']) && !empty($rAdminSettings['automatic_backups'])) {
     if ($rAdminSettings['automatic_backups'] == 'hourly' && $rAdminSettings['automatic_backups_check'] < (time() - 3600)) {

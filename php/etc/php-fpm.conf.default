@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;
 
 ; All relative paths in this configuration file are relative to PHP's install
-; prefix (/home/xtreamcodes/iptv_xtream_codes/php). This prefix can be dynamically changed by using the
+; prefix (/home/xtreamcodes/php). This prefix can be dynamically changed by using the
 ; '-p' argument from the command line.
 
 ;;;;;;;;;;;;;;;;;;
@@ -12,14 +12,14 @@
 
 [global]
 ; Pid file
-; Note: the default prefix is /home/xtreamcodes/iptv_xtream_codes/php/var
+; Note: the default prefix is /home/xtreamcodes/php/var
 ; Default Value: none
 ;pid = run/php-fpm.pid
 
 ; Error log file
 ; If it's set to "syslog", log is sent to syslogd instead of being written
 ; into a local file.
-; Note: the default prefix is /home/xtreamcodes/iptv_xtream_codes/php/var
+; Note: the default prefix is /home/xtreamcodes/php/var
 ; Default Value: log/php-fpm.log
 ;error_log = log/php-fpm.log
 
@@ -139,5 +139,5 @@
 ; file.
 ; Relative path can also be used. They will be prefixed by:
 ;  - the global prefix if it's been set (-p argument)
-;  - /home/xtreamcodes/iptv_xtream_codes/php otherwise
-include=/home/xtreamcodes/iptv_xtream_codes/php/etc/php-fpm.d/*.conf
+;  - /home/xtreamcodes/php otherwise
+include=/home/xtreamcodes/php/etc/php-fpm.d/*.conf

@@ -1,5 +1,5 @@
 <?php
-include "/home/xtreamcodes/iptv_xtream_codes/admin/functions.php";
+include "/home/xtreamcodes/admin/functions.php";
 
 $result = $db->query("SELECT `server_id`, `pid` FROM `lines_live` WHERE `user_id` = 0;");
 if (($result) && ($result->num_rows > 0)) {

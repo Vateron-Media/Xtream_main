@@ -1,7 +1,7 @@
 <?php
-include "/home/xtreamcodes/iptv_xtream_codes/admin/functions.php";
-include "/home/xtreamcodes/iptv_xtream_codes/admin/tmdb.php";
-include "/home/xtreamcodes/iptv_xtream_codes/admin/tmdb_release.php";
+include "/home/xtreamcodes/admin/functions.php";
+include "/home/xtreamcodes/admin/tmdb.php";
+include "/home/xtreamcodes/admin/tmdb_release.php";
 
 $rAdminSettings = getAdminSettings();
 $rSettings = getSettings();

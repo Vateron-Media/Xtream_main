@@ -146,8 +146,8 @@ class ipTV_stream {
         fclose($fp);
     }
     static function stopStream($streamID, $reset_stream_sys = false) {
-        if (file_exists("/home/xtreamcodes/iptv_xtream_codes/streams/{$streamID}.monitor")) {
-            $pid_stream_monitor = intval(file_get_contents("/home/xtreamcodes/iptv_xtream_codes/streams/{$streamID}.monitor"));
+        if (file_exists("/home/xtreamcodes/streams/{$streamID}.monitor")) {
+            $pid_stream_monitor = intval(file_get_contents("/home/xtreamcodes/streams/{$streamID}.monitor"));
             if (self::checkPID($pid_stream_monitor, "XtreamCodes[{$streamID}]")) {
                 posix_kill($pid_stream_monitor, 9);
             }

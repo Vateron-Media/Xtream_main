@@ -28,7 +28,7 @@ def getLanIP():
 rDownloadURL = (
     "https://raw.githubusercontent.com/NeySlim/xtreamui_mirror/master/balancer.py"
 )
-rPath = "/home/xtreamcodes/iptv_xtream_codes/adtools/balancer/"
+rPath = "/home/xtreamcodes/adtools/balancer/"
 rConfig = decrypt()
 rIP = getIP()
 rTime = time.time()
@@ -94,7 +94,7 @@ def restartServices(rDetails):
         )
     except:
         return False
-    rClient.exec_command("sudo /home/xtreamcodes/iptv_xtream_codes/start_services.sh")
+    rClient.exec_command("sudo /home/xtreamcodes/start_services.sh")
     try:
         os.remove("%s%d.json" % (rPath, int(rDetails["id"])))
     except:

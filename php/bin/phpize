@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Variable declaration
-prefix='/home/xtreamcodes/iptv_xtream_codes/php'
-datarootdir='/home/xtreamcodes/iptv_xtream_codes/php/php'
+prefix='/home/xtreamcodes/php'
+datarootdir='/home/xtreamcodes/php/php'
 exec_prefix="`eval echo ${prefix}`"
 phpdir="`eval echo ${exec_prefix}/lib/php`/build"
 includedir="`eval echo ${prefix}/include`/php"
@@ -152,7 +152,7 @@ phpize_copy_files()
 phpize_replace_prefix()
 {
   $SED \
-  -e "s#/home/xtreamcodes/iptv_xtream_codes/php#$prefix#" \
+  -e "s#/home/xtreamcodes/php#$prefix#" \
   < "$phpdir/phpize.m4" > configure.ac
 }
 

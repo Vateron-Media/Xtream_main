@@ -2,8 +2,8 @@
 
 function StopMonitorStream($stream_id) {
     clearstatcache(true);
-    if (file_exists('/home/xtreamcodes/iptv_xtream_codes/streams/' . $stream_id . '.monitor')) {
-        $pid = intval(file_get_contents('/home/xtreamcodes/iptv_xtream_codes/streams/' . $stream_id . '.monitor'));
+    if (file_exists('/home/xtreamcodes/streams/' . $stream_id . '.monitor')) {
+        $pid = intval(file_get_contents('/home/xtreamcodes/streams/' . $stream_id . '.monitor'));
     }
     if (!empty($pid)) {
         if (file_exists('/proc/' . $pid)) {
@@ -15,7 +15,7 @@ function StopMonitorStream($stream_id) {
             shell_exec('kill -SIGKILL `ps -ef | grep \'XtreamCodes\\[' . $stream_id . '\\]\' | grep -v grep | awk \'{print $2}\'`;');
         }
     }
-    file_put_contents('/home/xtreamcodes/iptv_xtream_codes/streams/' . $stream_id . '.monitor', getmypid());
+    file_put_contents('/home/xtreamcodes/streams/' . $stream_id . '.monitor', getmypid());
 }
 if (!@$argc) {
     die(0);

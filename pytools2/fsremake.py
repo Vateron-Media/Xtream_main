@@ -60,14 +60,14 @@ def prepare():
 def install():
     global rInstall, rPlat, rGeo
     rURL = rPlat
-    rNginx = "/home/xtreamcodes/iptv_xtream_codes/nginx/conf/nginx.conf"
-    rNginxRtmp = "/home/xtreamcodes/iptv_xtream_codes/nginx_rtmp/conf/nginx.conf"
-    rIni = "/home/xtreamcodes/iptv_xtream_codes/php/lib/php.ini"
-    rIsp = "/home/xtreamcodes/iptv_xtream_codes/wwwdir/includes/streaming.php"
-    if not "/home/xtreamcodes/iptv_xtream_codes/" in open("/etc/fstab").read():
+    rNginx = "/home/xtreamcodes/nginx/conf/nginx.conf"
+    rNginxRtmp = "/home/xtreamcodes/nginx_rtmp/conf/nginx.conf"
+    rIni = "/home/xtreamcodes/php/lib/php.ini"
+    rIsp = "/home/xtreamcodes/wwwdir/includes/streaming.php"
+    if not "/home/xtreamcodes/" in open("/etc/fstab").read():
         rFile = open("/etc/fstab", "a")
         rFile.write(
-            "tmpfs /home/xtreamcodes/iptv_xtream_codes/streams tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=90% 0 0\ntmpfs /home/xtreamcodes/iptv_xtream_codes/tmp tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=2G 0 0"
+            "tmpfs /home/xtreamcodes/streams tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=90% 0 0\ntmpfs /home/xtreamcodes/tmp tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=2G 0 0"
         )
         rFile.close()
     if not "/sbin/iptables, /usr/bin/chattr" in open("/etc/sudoers").read():
@@ -81,7 +81,7 @@ def install():
         os.system('cp "%s" "%s.xc"' % (rMod, rMod))
         rData = (
             "}".join(rPrevData.split("}")[:-1])
-            + "\n#ISP CONFIGURATION\n\n    server {\n        listen 8805;\n        root /home/xtreamcodes/iptv_xtream_codes/isp/;\n        location / {\n            allow 127.0.0.1;\n            deny all;\n        }\n        location ~ \.php$ {\n			limit_req zone=one burst=8;\n            try_files $uri =404;\n			fastcgi_index index.php;\n			fastcgi_pass php;\n			include fastcgi_params;\n			fastcgi_buffering on;\n			fastcgi_buffers 96 32k;\n			fastcgi_buffer_size 32k;\n			fastcgi_max_temp_file_size 0;\n			fastcgi_keep_conn on;\n			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;\n			fastcgi_param SCRIPT_NAME $fastcgi_script_name;\n        }\n    }\n}"
+            + "\n#ISP CONFIGURATION\n\n    server {\n        listen 8805;\n        root /home/xtreamcodes/isp/;\n        location / {\n            allow 127.0.0.1;\n            deny all;\n        }\n        location ~ \.php$ {\n			limit_req zone=one burst=8;\n            try_files $uri =404;\n			fastcgi_index index.php;\n			fastcgi_pass php;\n			include fastcgi_params;\n			fastcgi_buffering on;\n			fastcgi_buffers 96 32k;\n			fastcgi_buffer_size 32k;\n			fastcgi_max_temp_file_size 0;\n			fastcgi_keep_conn on;\n			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;\n			fastcgi_param SCRIPT_NAME $fastcgi_script_name;\n        }\n    }\n}"
         )
         rInx = open(rMod, "w")
         rInx.write(rData)
@@ -89,7 +89,7 @@ def install():
     if (
         not "api.xtream-codes.com"
         in open(
-            "/home/xtreamcodes/iptv_xtream_codes/wwwdir/includes/streaming.php"
+            "/home/xtreamcodes/wwwdir/includes/streaming.php"
         ).read()
     ):
         os.system('mv "%s" "%s.old"' % (rIsp, rIsp))
@@ -101,18 +101,18 @@ def install():
             % (rNginx, rNginx, rNginxRtmp, rNginxRtmp, rIni, rIni)
         )
         os.system(
-            "chattr -i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb"
+            "chattr -i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb"
         )
-        os.system("umount -l /home/xtreamcodes/iptv_xtream_codes/streams")
-        os.system("umount -l /home/xtreamcodes/iptv_xtream_codes/tmp")
+        os.system("umount -l /home/xtreamcodes/streams")
+        os.system("umount -l /home/xtreamcodes/tmp")
         os.system(
             'tar -zxvf "/tmp/xtreamcodes.tar.gz" -C "/home/xtreamcodes/" > /dev/null'
         )
         os.system(
-            "rm /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb"
+            "rm /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb"
         )
         os.system(
-            'wget -q -O "/home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb" "%s"'
+            'wget -q -O "/home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb" "%s"'
             % rGeo
         )
         os.system("chown -R xtreamcodes:xtreamcodes /home/xtreamcodes/")
@@ -122,9 +122,9 @@ def install():
             % (rNginx, rNginx, rNginxRtmp, rNginxRtmp, rIni, rIni)
         )
         os.system("chmod -R 777 /home/xtreamcodes/")
-        # os.system("chattr +i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb")
+        # os.system("chattr +i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb")
         os.system(
-            "rm /home/xtreamcodes/iptv_xtream_codes/adtools/backups/* 2>/dev/null"
+            "rm /home/xtreamcodes/adtools/backups/* 2>/dev/null"
         )
         os.system(
             "sudo wget http://xtream-ui.mine.nu/Update/youtube-dl -O /usr/local/bin/youtube-dl"
@@ -134,14 +134,14 @@ def install():
             os.remove("/tmp/xtreamcodes.tar.gz")
         except:
             pass
-    if os.path.exists("/home/xtreamcodes/iptv_xtream_codes/database.sql"):
-        os.system("rm /home/xtreamcodes/iptv_xtream_codes/database.sql")
+    if os.path.exists("/home/xtreamcodes/database.sql"):
+        os.system("rm /home/xtreamcodes/database.sql")
     if (
         not "/home/xtreamcodes 2>/dev/null"
-        in open("/home/xtreamcodes/iptv_xtream_codes/start_services.sh").read()
+        in open("/home/xtreamcodes/start_services.sh").read()
     ):
         os.system(
-            "sed -i 's|chown -R xtreamcodes:xtreamcodes /home/xtreamcodes|chown -R xtreamcodes:xtreamcodes /home/xtreamcodes 2>/dev/null|g' /home/xtreamcodes/iptv_xtream_codes/start_services.sh"
+            "sed -i 's|chown -R xtreamcodes:xtreamcodes /home/xtreamcodes|chown -R xtreamcodes:xtreamcodes /home/xtreamcodes 2>/dev/null|g' /home/xtreamcodes/start_services.sh"
         )
     if not "api.xtream-codes.com" in open("/etc/hosts").read():
         os.system('echo "127.0.0.1    api.xtream-codes.com" >> /etc/hosts')
@@ -155,7 +155,7 @@ def install():
         os.system("rm /etc/init.d/xtreamcodes")
         rStart = open("/etc/init.d/xtreamcodes", "w")
         rStart.write(
-            "#!/bin/bash\n### BEGIN INIT INFO\n# Provides:          xtreamcodes\n# Required-Start:    $all\n# Required-Stop:\n# Default-Start:     2 3 4 5\n# Default-Stop:\n# Short-Description: Run /etc/init.d/xtreamcodes if it exist\n### END INIT INFO\nsleep 1\n/home/xtreamcodes/iptv_xtream_codes/start_services.sh > /dev/null"
+            "#!/bin/bash\n### BEGIN INIT INFO\n# Provides:          xtreamcodes\n# Required-Start:    $all\n# Required-Stop:\n# Default-Start:     2 3 4 5\n# Default-Stop:\n# Short-Description: Run /etc/init.d/xtreamcodes if it exist\n### END INIT INFO\nsleep 1\n/home/xtreamcodes/start_services.sh > /dev/null"
         )
         rStart.close()
         os.system("chmod 777 /etc/init.d/xtreamcodes")
@@ -174,10 +174,10 @@ def encrypt(
     rPort=7999,
 ):
     try:
-        os.remove("/home/xtreamcodes/iptv_xtream_codes/config")
+        os.remove("/home/xtreamcodes/config")
     except:
         pass
-    rf = open("/home/xtreamcodes/iptv_xtream_codes/config", "wb")
+    rf = open("/home/xtreamcodes/config", "wb")
     rf.write(
         "".join(
             chr(ord(c) ^ ord(k))
@@ -194,39 +194,39 @@ def encrypt(
 
 
 def start():
-    rIspOK = "/home/xtreamcodes/iptv_xtream_codes/wwwdir/includes/streaming.php"
+    rIspOK = "/home/xtreamcodes/wwwdir/includes/streaming.php"
     os.system("rm /usr/bin/ffmpeg")
     os.system("rm /usr/bin/ffprobe")
     os.system("apt-get install unzip e2fsprogs python-paramiko -y")
     os.system(
-        "chattr -i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb"
+        "chattr -i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb"
     )
     os.system(
         'wget "https://bitbucket.org/le_lio/assets/raw/master/release_22f.zip" -O /tmp/update.zip -o /dev/null'
     )
     os.system("unzip /tmp/update.zip -d /tmp/update/ >/dev/null")
-    os.system("rm -rf /home/xtreamcodes/iptv_xtream_codes/crons")
-    os.system("rm -rf /home/xtreamcodes/iptv_xtream_codes/php/etc")
+    os.system("rm -rf /home/xtreamcodes/crons")
+    os.system("rm -rf /home/xtreamcodes/php/etc")
     os.system(
-        "cp -rf /tmp/update/XtreamUI-master/* /home/xtreamcodes/iptv_xtream_codes/ 2>/dev/null"
+        "cp -rf /tmp/update/XtreamUI-master/* /home/xtreamcodes/ 2>/dev/null"
     )
     os.system("rm -rf /tmp/update/XtreamUI-master")
     os.system("rm /tmp/update.zip")
     os.system("rm -rf /tmp/update")
     os.system(
-        "wget http://xtream-ui.mine.nu/GeoLite2-City.mmdb -O /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb -o /dev/null"
+        "wget http://xtream-ui.mine.nu/GeoLite2-City.mmdb -O /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb -o /dev/null"
     )
     os.system("chown -R xtreamcodes:xtreamcodes /home/xtreamcodes")
     os.system(
         "find /home/xtreamcodes/ -type d -not \( -name .update -prune \) -exec chmod -R 777 {} + "
     )
-    # os.system('chattr +i /home/xtreamcodes/iptv_xtream_codes/bin/maxmind/GeoLite2-City.mmdb')
-    os.system("ln -s /home/xtreamcodes/iptv_xtream_codes/bin/ffmpeg /usr/bin/")
+    # os.system('chattr +i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb')
+    os.system("ln -s /home/xtreamcodes/bin/ffmpeg /usr/bin/")
     if os.path.exists(
-        "/home/xtreamcodes/iptv_xtream_codes/wwwdir/includes/streaming.php.xc"
+        "/home/xtreamcodes/wwwdir/includes/streaming.php.xc"
     ):
         os.system('mv "%s.xc" "%s"' % (rIspOK, rIspOK))
-    os.system("/home/xtreamcodes/iptv_xtream_codes/start_services.sh")
+    os.system("/home/xtreamcodes/start_services.sh")
 
 
 if __name__ == "__main__":
