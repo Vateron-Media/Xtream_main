@@ -28,7 +28,7 @@ function loadCron() {
                         unlink($rTmpPath . $rFile);
                     }
                 }
-                exec('sudo rm -rf ' . TMP_DIR . '*');
+                exec('sudo rm -rf ' . TMP_PATH . '*');
                 exec('sudo rm -rf ' . SIGNALS_PATH . '*');
             }
         }

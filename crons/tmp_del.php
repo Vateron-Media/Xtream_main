@@ -7,7 +7,7 @@ if ($argc) {
     cli_set_process_title('XtreamCodes[TMP Cleaner]');
     $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
     ipTV_lib::check_cron($unique_id);
-    foreach (array(TMP_DIR, CRONS_TMP_PATH, DIVERGENCE_TMP_PATH, FLOOD_TMP_PATH, STALKER_TMP_PATH, LOGS_TMP_PATH) as $tmpPath) {
+    foreach (array(TMP_PATH, CRONS_TMP_PATH, DIVERGENCE_TMP_PATH, FLOOD_TMP_PATH, STALKER_TMP_PATH, LOGS_TMP_PATH) as $tmpPath) {
         foreach (scandir($tmpPath) as $file) {
             if (file_exists($tmpPath . $file)) {
                 if (600 <= time() - filemtime($tmpPath . $file) && stripos($file, 'stalker_') === false) {

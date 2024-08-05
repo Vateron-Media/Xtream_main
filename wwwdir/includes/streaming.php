@@ -83,8 +83,8 @@ class ipTV_streaming {
     }
     public static function getStreamData($streamID) {
         if (CACHE_STREAMS) {
-            if (file_exists(TMP_DIR . $streamID . "_cacheStream") && time() - filemtime(TMP_DIR . $streamID . "_cacheStream") <= CACHE_STREAMS_TIME) {
-                return unserialize(file_get_contents(TMP_DIR . $streamID . "_cacheStream"));
+            if (file_exists(TMP_PATH . $streamID . "_cacheStream") && time() - filemtime(TMP_PATH . $streamID . "_cacheStream") <= CACHE_STREAMS_TIME) {
+                return unserialize(file_get_contents(TMP_PATH . $streamID . "_cacheStream"));
             }
         }
         $rOutput = array();
@@ -102,7 +102,7 @@ class ipTV_streaming {
             $rOutput['info'] = $rStreamInfo;
             $rOutput['servers'] = $rServers;
             if (CACHE_STREAMS) {
-                file_put_contents(TMP_DIR . $streamID . "_cacheStream", serialize($rOutput), LOCK_EX);
+                file_put_contents(TMP_PATH . $streamID . "_cacheStream", serialize($rOutput), LOCK_EX);
             }
         }
         return (!empty($rOutput) ? $rOutput : false);
@@ -315,12 +315,12 @@ class ipTV_streaming {
         $userInfo['bouquet'] = json_decode($userInfo['bouquet'], true);
         $userInfo['allowed_ips'] = @array_filter(@array_map('trim', @json_decode($userInfo['allowed_ips'], true)));
         $userInfo['allowed_ua'] = @array_filter(@array_map('trim', @json_decode($userInfo['allowed_ua'], true)));
-        if (file_exists(TMP_DIR . 'user_output' . $userInfo["id"])) {
-            $userInfo["output_formats"] = unserialize(file_get_contents(TMP_DIR . "user_output" . $userInfo["id"]));
+        if (file_exists(TMP_PATH . 'user_output' . $userInfo["id"])) {
+            $userInfo["output_formats"] = unserialize(file_get_contents(TMP_PATH . "user_output" . $userInfo["id"]));
         } else {
             self::$ipTV_db->query("SELECT * FROM `access_output` t1 INNER JOIN `user_output` t2 ON t1.access_output_id = t2.access_output_id WHERE t2.user_id = '%d'", $userInfo["id"]);
             $userInfo["output_formats"] = self::$ipTV_db->get_rows(true, "output_key");
-            file_put_contents(TMP_DIR . 'user_output' . $userInfo["id"], serialize($userInfo["output_formats"]), LOCK_EX);
+            file_put_contents(TMP_PATH . 'user_output' . $userInfo["id"], serialize($userInfo["output_formats"]), LOCK_EX);
         }
 
         $userInfo['con_isp_name'] = null;
@@ -385,13 +385,13 @@ class ipTV_streaming {
         return $userInfo;
     }
     public static function CategoriesBouq($category_id, $bouquets) {
-        if (!file_exists(TMP_DIR . 'categories_bouq')) {
+        if (!file_exists(TMP_PATH . 'categories_bouq')) {
             return true;
         }
         if (!is_array($bouquets)) {
             $bouquets = json_decode($bouquets, true);
         }
-        $output = unserialize(file_get_contents(TMP_DIR . 'categories_bouq'));
+        $output = unserialize(file_get_contents(TMP_PATH . 'categories_bouq'));
         foreach ($bouquets as $bouquet) {
             if (isset($output[$bouquet])) {
                 if (in_array($category_id, $output[$bouquet])) {
@@ -839,7 +839,7 @@ class ipTV_streaming {
         }
     }
     public static function checkIsCracked($user_ip) {
-        $user_ip_file = TMP_DIR . md5($user_ip . 'cracked');
+        $user_ip_file = TMP_PATH . md5($user_ip . 'cracked');
         if (file_exists($user_ip_file)) {
             $contents = intval(file_get_contents($user_ip_file));
             return $contents == 1 ? true : false;

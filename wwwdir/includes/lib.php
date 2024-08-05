@@ -184,8 +184,8 @@ class ipTV_lib {
     }
     public static function seriesData() {
         $output = array();
-        if (file_exists(TMP_DIR . "series_data.php")) {
-            include TMP_DIR . "series_data.php";
+        if (file_exists(TMP_PATH . "series_data.php")) {
+            include TMP_PATH . "series_data.php";
         }
         return $output;
     }
@@ -207,8 +207,8 @@ class ipTV_lib {
     }
     public static function movieProperties($stream_id) {
         $movie_properties = array();
-        if (file_exists(TMP_DIR . $stream_id . "_cache_properties")) {
-            $movie_properties = unserialize(file_get_contents(TMP_DIR . $stream_id . "_cache_properties"));
+        if (file_exists(TMP_PATH . $stream_id . "_cache_properties")) {
+            $movie_properties = unserialize(file_get_contents(TMP_PATH . $stream_id . "_cache_properties"));
         }
         return isset($movie_properties) && is_array($movie_properties) ? $movie_properties : array();
     }

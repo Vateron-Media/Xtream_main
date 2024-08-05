@@ -81,14 +81,14 @@ define('GEOIP2ISP_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ISP.mmdb');
 // -------------------
 
 // TEMP FOLDERS
-define('TMP_DIR', IPTV_PANEL_DIR . 'tmp/');
-define('CACHE_TMP_PATH', TMP_DIR . 'cache/');
-define('CONS_TMP_PATH', TMP_DIR . 'opened_cons/');
-define('DIVERGENCE_TMP_PATH', TMP_DIR . 'divergence/');
-define('FLOOD_TMP_PATH', TMP_DIR . 'flood/');
-define('STALKER_TMP_PATH', TMP_DIR . 'stalker/');
-define('LOGS_TMP_PATH', TMP_DIR . 'logs/');
-define('CRONS_TMP_PATH', TMP_DIR . 'crons/');
+define('TMP_PATH', IPTV_PANEL_DIR . 'tmp/');
+define('CACHE_TMP_PATH', TMP_PATH . 'cache/');
+define('CONS_TMP_PATH', TMP_PATH . 'opened_cons/');
+define('DIVERGENCE_TMP_PATH', TMP_PATH . 'divergence/');
+define('FLOOD_TMP_PATH', TMP_PATH . 'flood/');
+define('STALKER_TMP_PATH', TMP_PATH . 'stalker/');
+define('LOGS_TMP_PATH', TMP_PATH . 'logs/');
+define('CRONS_TMP_PATH', TMP_PATH . 'crons/');
 // -------------------
 
 // CACHE FOLDERS

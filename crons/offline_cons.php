@@ -22,7 +22,7 @@ if (@$argc) {
     cli_set_process_title("XtreamCodes[Offline Cons Parser]");
     $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
     KillProcessCmd($unique_id);
-    $connections = TMP_DIR . "offline_cons";
+    $connections = TMP_PATH . "offline_cons";
     $query = "";
     if (file_exists($connections)) {
         userActivityQueryData($connections, $query);
