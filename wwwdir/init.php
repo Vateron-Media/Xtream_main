@@ -168,6 +168,7 @@ if (empty($argc)) {
 }
 
 define('PHP_ERRORS', $DEBUG);
+ini_set("error_log", LOGS_TMP_PATH . "php.log");
 set_error_handler('log_error');
 set_exception_handler('log_exception');
 register_shutdown_function('log_fatal');
