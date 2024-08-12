@@ -113,42 +113,45 @@ class Epg {
 }
 
 
-
-if (@$argc) {
-    shell_exec("kill -9 `ps -ef | grep 'XtreamCodes\\[EPG\\]' | grep -v grep | awk '{print \$2}'`;");
-    require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
-    cli_set_process_title("XtreamCodes[EPG]");
-    $ipTV_db->query("SELECT * FROM `epg`");
-    foreach ($ipTV_db->get_rows() as $row) {
-        $dataEPG = new Epg($row["epg_file"]);
-        if ($dataEPG->validEpg) {
-            $ipTV_db->query("UPDATE `epg` SET `data` = '%s' WHERE `id` = '%d'", json_encode($dataEPG->getData()), $row["id"]);
-            $dataEPG = NULL;
-        }
-    }
-    $ipTV_db->query("SELECT DISTINCT(t1.`epg_id`),t2.* FROM `streams` t1 INNER JOIN `epg` t2 ON t2.id = t1.epg_id WHERE t1.`epg_id` IS NOT NULL");
-    $epgs = $ipTV_db->get_rows();
-    foreach ($epgs as $epg) {
-        if ($epg["days_keep"] == 0) {
-            $ipTV_db->query("DELETE FROM `epg_data` WHERE `epg_id` = '%d'", $epg["epg_id"]);
-        }
-        $dataEPG = new Epg($epg["epg_file"]);
-        if ($dataEPG->validEpg) {
-            $ipTV_db->query("SELECT t1.`channel_id`, t1.`epg_lang`, last_row.start FROM `streams` t1 LEFT JOIN ( SELECT channel_id, MAX(`start`) as start FROM epg_data WHERE epg_id = '%d' GROUP BY channel_id ) last_row ON last_row.channel_id = t1.channel_id WHERE `epg_id` = '%d';", $epg["epg_id"], $epg["epg_id"]);
-            $chanel_id = $ipTV_db->get_rows(true, "channel_id");
-            $programmes = $dataEPG->getProgrammes($epg["epg_id"], $chanel_id);
-            $id = 0;
-            while ($id < count($programmes)) {
-                $ipTV_db->query("INSERT INTO `epg_data` (`epg_id`,`channel_id`,`start`,`end`,`lang`,`title`,`description`) VALUES " . $programmes[$id]);
-                $id++;
+if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+    if (@$argc) {
+        shell_exec("kill -9 `ps -ef | grep 'XtreamCodes\\[EPG\\]' | grep -v grep | awk '{print \$2}'`;");
+        require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+        cli_set_process_title("XtreamCodes[EPG]");
+        $ipTV_db->query("SELECT * FROM `epg`");
+        foreach ($ipTV_db->get_rows() as $row) {
+            $dataEPG = new Epg($row["epg_file"]);
+            if ($dataEPG->validEpg) {
+                $ipTV_db->query("UPDATE `epg` SET `data` = '%s' WHERE `id` = '%d'", json_encode($dataEPG->getData()), $row["id"]);
+                $dataEPG = NULL;
             }
-            $ipTV_db->query("UPDATE `epg` SET `last_updated` = '%d' WHERE `id` = '%d'", time(), $epg["epg_id"]);
         }
-        if (0 < $epg["days_keep"]) {
-            $ipTV_db->query("DELETE FROM `epg_data` WHERE `epg_id` = '%d' AND `start` < '%s'", $epg["epg_id"], date("Y-m-d H:i:00", strtotime("-" . $epg["days_keep"] . " days")));
+        $ipTV_db->query("SELECT DISTINCT(t1.`epg_id`),t2.* FROM `streams` t1 INNER JOIN `epg` t2 ON t2.id = t1.epg_id WHERE t1.`epg_id` IS NOT NULL");
+        $epgs = $ipTV_db->get_rows();
+        foreach ($epgs as $epg) {
+            if ($epg["days_keep"] == 0) {
+                $ipTV_db->query("DELETE FROM `epg_data` WHERE `epg_id` = '%d'", $epg["epg_id"]);
+            }
+            $dataEPG = new Epg($epg["epg_file"]);
+            if ($dataEPG->validEpg) {
+                $ipTV_db->query("SELECT t1.`channel_id`, t1.`epg_lang`, last_row.start FROM `streams` t1 LEFT JOIN ( SELECT channel_id, MAX(`start`) as start FROM epg_data WHERE epg_id = '%d' GROUP BY channel_id ) last_row ON last_row.channel_id = t1.channel_id WHERE `epg_id` = '%d';", $epg["epg_id"], $epg["epg_id"]);
+                $chanel_id = $ipTV_db->get_rows(true, "channel_id");
+                $programmes = $dataEPG->getProgrammes($epg["epg_id"], $chanel_id);
+                $id = 0;
+                while ($id < count($programmes)) {
+                    $ipTV_db->query("INSERT INTO `epg_data` (`epg_id`,`channel_id`,`start`,`end`,`lang`,`title`,`description`) VALUES " . $programmes[$id]);
+                    $id++;
+                }
+                $ipTV_db->query("UPDATE `epg` SET `last_updated` = '%d' WHERE `id` = '%d'", time(), $epg["epg_id"]);
+            }
+            if (0 < $epg["days_keep"]) {
+                $ipTV_db->query("DELETE FROM `epg_data` WHERE `epg_id` = '%d' AND `start` < '%s'", $epg["epg_id"], date("Y-m-d H:i:00", strtotime("-" . $epg["days_keep"] . " days")));
+            }
         }
+        $ipTV_db->query("DELETE n1 FROM `epg_data` n1, `epg_data` n2 WHERE n1.id < n2.id AND n1.epg_id = n2.epg_id AND n1.channel_id = n2.channel_id AND n1.start = n2.start AND n1.title = n2.title");
+    } else {
+        exit(0);
     }
-    $ipTV_db->query("DELETE n1 FROM `epg_data` n1, `epg_data` n2 WHERE n1.id < n2.id AND n1.epg_id = n2.epg_id AND n1.channel_id = n2.channel_id AND n1.start = n2.start AND n1.title = n2.title");
 } else {
-    exit(0);
+    exit('Please run as XtreamCodes!' . "\n");
 }

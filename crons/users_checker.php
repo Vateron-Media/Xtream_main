@@ -1,23 +1,27 @@
 <?php
-set_time_limit(0);
-ini_set('memory_limit', -1);
-if ($argc) {
-    register_shutdown_function('shutdown');
-    require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-    cli_set_process_title('XtreamCodes[Users Parser]');
-    $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-    ipTV_lib::check_cron($unique_id);
-    $rSync = null;
-    if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
-        ipTV_lib::$StreamingServers = ipTV_lib::getServers(true);
-        $rPHPPIDs = array();
-        foreach (ipTV_lib::$StreamingServers as $rServer) {
-            $rPHPPIDs[$rServer['id']] = (array_map('intval', json_decode($rServer['php_pids'], true)) ?: array());
+if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+    set_time_limit(0);
+    ini_set('memory_limit', -1);
+    if ($argc) {
+        register_shutdown_function('shutdown');
+        require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+        cli_set_process_title('XtreamCodes[Users Parser]');
+        $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+        ipTV_lib::check_cron($unique_id);
+        $rSync = null;
+        if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
+            ipTV_lib::$StreamingServers = ipTV_lib::getServers(true);
+            $rPHPPIDs = array();
+            foreach (ipTV_lib::$StreamingServers as $rServer) {
+                $rPHPPIDs[$rServer['id']] = (array_map('intval', json_decode($rServer['php_pids'], true)) ?: array());
+            }
         }
+        loadCron();
+    } else {
+        exit(0);
     }
-    loadCron();
 } else {
-    exit(0);
+    exit('Please run as XtreamCodes!' . "\n");
 }
 function processDeletions($rDelete, $rDelStream = array()) {
     global $ipTV_db;

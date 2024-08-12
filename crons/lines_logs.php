@@ -1,19 +1,21 @@
 <?php
 
 //cron lines log
-
-set_time_limit(0);
-if ($argc) {
-    register_shutdown_function('shutdown');
-    require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-    cli_set_process_title('XtreamCodes[Lines Logs]');
-    $identifier = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-    ipTV_lib::check_cron($identifier);
-    loadCron();
+if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+    set_time_limit(0);
+    if ($argc) {
+        register_shutdown_function('shutdown');
+        require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+        cli_set_process_title('XtreamCodes[Lines Logs]');
+        $identifier = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+        ipTV_lib::check_cron($identifier);
+        loadCron();
+    } else {
+        exit(0);
+    }
 } else {
-    exit(0);
+    exit('Please run as XtreamCodes!' . "\n");
 }
-
 function loadCron() {
     global $ipTV_db;
     $logFile = LOGS_TMP_PATH . 'client_request.log';

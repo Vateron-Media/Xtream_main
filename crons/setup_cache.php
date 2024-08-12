@@ -1,18 +1,22 @@
 <?php
-if ($argc) {
-    register_shutdown_function('shutdown');
-    require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-    ini_set('memory_limit', -1);
-    $rStartup = false;
-    if (count($argv) == 2) {
-        $rStartup = true;
+if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+    if ($argc) {
+        register_shutdown_function('shutdown');
+        require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+        ini_set('memory_limit', -1);
+        $rStartup = false;
+        if (count($argv) == 2) {
+            $rStartup = true;
+        }
+        cli_set_process_title('XtreamCodes[Cache Builder]');
+        $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+        ipTV_lib::check_cron($unique_id);
+        loadCron();
+    } else {
+        exit(0);
     }
-    cli_set_process_title('XtreamCodes[Cache Builder]');
-    $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-    ipTV_lib::check_cron($unique_id);
-    loadCron();
 } else {
-    exit(0);
+    exit('Please run as XtreamCodes!' . "\n");
 }
 function loadCron() {
     global $ipTV_db;

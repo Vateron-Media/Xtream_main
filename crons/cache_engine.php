@@ -1,30 +1,34 @@
 <?php
-if ($argc) {
-    $PID = getmypid();
-    register_shutdown_function('shutdown');
-    require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-    ini_set('memory_limit', -1);
-    ini_set('max_execution_time', 0);
-    $rSplit = 10000;
-    $rThreadCount = 10;
-    ipTV_lib::$settings = ipTV_lib::getSettings();
-    $rGroupStart = $rGroupMax = $rType = null;
-    if (1 < count($argv)) {
-        $rType = $argv[1];
-        if ($rType == 'streams_update' || $rType == 'lines_update') {
-            $rUpdateIDs = array_map('intval', explode(',', $argv[2]));
-        } else {
-            if (count($argv) > 2) {
-                $rGroupStart = intval($argv[2]);
-                $rGroupMax = intval($argv[3]);
+if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+    if ($argc) {
+        $PID = getmypid();
+        register_shutdown_function('shutdown');
+        require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+        ini_set('memory_limit', -1);
+        ini_set('max_execution_time', 0);
+        $rSplit = 10000;
+        $rThreadCount = 10;
+        ipTV_lib::$settings = ipTV_lib::getSettings();
+        $rGroupStart = $rGroupMax = $rType = null;
+        if (1 < count($argv)) {
+            $rType = $argv[1];
+            if ($rType == 'streams_update' || $rType == 'lines_update') {
+                $rUpdateIDs = array_map('intval', explode(',', $argv[2]));
+            } else {
+                if (count($argv) > 2) {
+                    $rGroupStart = intval($argv[2]);
+                    $rGroupMax = intval($argv[3]);
+                }
             }
+        } else {
+            shell_exec("kill -9 \$(ps aux | grep 'cache_engine' | grep -v grep | grep -v " . $PID . " | awk '{print \$2}')");
         }
+        loadCron($rType, $rGroupStart, $rGroupMax);
     } else {
-        shell_exec("kill -9 \$(ps aux | grep 'cache_engine' | grep -v grep | grep -v " . $PID . " | awk '{print \$2}')");
+        exit(0);
     }
-    loadCron($rType, $rGroupStart, $rGroupMax);
 } else {
-    exit(0);
+    exit('Please run as XtreamCodes!' . "\n");
 }
 class Thread {
     public $process = null;

@@ -16,6 +16,7 @@ function userActivityQueryData($connections, &$query) {
     return $query;
 }
 
+
 set_time_limit(0);
 if (@$argc) {
     require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
