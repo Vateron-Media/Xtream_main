@@ -606,7 +606,7 @@ class ipTV_stream {
                 $Platforms = array('livestream.com', 'ustream.tv', 'twitch.tv', 'vimeo.com', 'facebook.com', 'dailymotion.com', 'cnn.com', 'edition.cnn.com', 'youtube.com', 'youtu.be');
                 $Host = str_ireplace('www.', '', parse_url($URL, PHP_URL_HOST));
                 if (in_array($Host, $Platforms)) {
-                    $URLs = trim(shell_exec(YOUTUBE_PATH . ' ' . escapeshellarg($URL) . ' -q --get-url --skip-download -f best'));
+                    $URLs = trim(shell_exec('python3 ' . YOUTUBE_PATH . ' ' . escapeshellarg($URL) . ' -q --get-url --skip-download -f best'));
                     list($URL) = explode("\n", $URLs);
                 }
             }

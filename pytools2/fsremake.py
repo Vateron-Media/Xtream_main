@@ -62,7 +62,7 @@ def install():
     rURL = rPlat
     rNginx = "/home/xtreamcodes/nginx/conf/nginx.conf"
     rNginxRtmp = "/home/xtreamcodes/nginx_rtmp/conf/nginx.conf"
-    rIni = "/home/xtreamcodes/php/lib/php.ini"
+    rIni = "/home/xtreamcodes/bin/php/lib/php.ini"
     rIsp = "/home/xtreamcodes/wwwdir/includes/streaming.php"
     if not "/home/xtreamcodes/" in open("/etc/fstab").read():
         rFile = open("/etc/fstab", "a")
@@ -88,9 +88,7 @@ def install():
         rInx.close()
     if (
         not "api.xtream-codes.com"
-        in open(
-            "/home/xtreamcodes/wwwdir/includes/streaming.php"
-        ).read()
+        in open("/home/xtreamcodes/wwwdir/includes/streaming.php").read()
     ):
         os.system('mv "%s" "%s.old"' % (rIsp, rIsp))
     else:
@@ -100,20 +98,15 @@ def install():
             'mv "%s" "%s.xc" && mv "%s" "%s.xc" && mv "%s" "%s.xc"'
             % (rNginx, rNginx, rNginxRtmp, rNginxRtmp, rIni, rIni)
         )
-        os.system(
-            "chattr -i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb"
-        )
+        os.system("chattr -i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb")
         os.system("umount -l /home/xtreamcodes/streams")
         os.system("umount -l /home/xtreamcodes/tmp")
         os.system(
             'tar -zxvf "/tmp/xtreamcodes.tar.gz" -C "/home/xtreamcodes/" > /dev/null'
         )
+        os.system("rm /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb")
         os.system(
-            "rm /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb"
-        )
-        os.system(
-            'wget -q -O "/home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb" "%s"'
-            % rGeo
+            'wget -q -O "/home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb" "%s"' % rGeo
         )
         os.system("chown -R xtreamcodes:xtreamcodes /home/xtreamcodes/")
         os.system("mount -a")
@@ -123,9 +116,7 @@ def install():
         )
         os.system("chmod -R 777 /home/xtreamcodes/")
         # os.system("chattr +i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb")
-        os.system(
-            "rm /home/xtreamcodes/adtools/backups/* 2>/dev/null"
-        )
+        os.system("rm /home/xtreamcodes/adtools/backups/* 2>/dev/null")
         os.system(
             "sudo wget http://xtream-ui.mine.nu/Update/youtube-dl -O /usr/local/bin/youtube-dl"
         )
@@ -198,18 +189,14 @@ def start():
     os.system("rm /usr/bin/ffmpeg")
     os.system("rm /usr/bin/ffprobe")
     os.system("apt-get install unzip e2fsprogs python-paramiko -y")
-    os.system(
-        "chattr -i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb"
-    )
+    os.system("chattr -i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb")
     os.system(
         'wget "https://bitbucket.org/le_lio/assets/raw/master/release_22f.zip" -O /tmp/update.zip -o /dev/null'
     )
     os.system("unzip /tmp/update.zip -d /tmp/update/ >/dev/null")
     os.system("rm -rf /home/xtreamcodes/crons")
-    os.system("rm -rf /home/xtreamcodes/php/etc")
-    os.system(
-        "cp -rf /tmp/update/XtreamUI-master/* /home/xtreamcodes/ 2>/dev/null"
-    )
+    os.system("rm -rf /home/xtreamcodes/bin/php/etc")
+    os.system("cp -rf /tmp/update/XtreamUI-master/* /home/xtreamcodes/ 2>/dev/null")
     os.system("rm -rf /tmp/update/XtreamUI-master")
     os.system("rm /tmp/update.zip")
     os.system("rm -rf /tmp/update")
@@ -222,9 +209,7 @@ def start():
     )
     # os.system('chattr +i /home/xtreamcodes/bin/maxmind/GeoLite2-City.mmdb')
     os.system("ln -s /home/xtreamcodes/bin/ffmpeg /usr/bin/")
-    if os.path.exists(
-        "/home/xtreamcodes/wwwdir/includes/streaming.php.xc"
-    ):
+    if os.path.exists("/home/xtreamcodes/wwwdir/includes/streaming.php.xc"):
         os.system('mv "%s.xc" "%s"' % (rIspOK, rIspOK))
     os.system("/home/xtreamcodes/start_services.sh")
 

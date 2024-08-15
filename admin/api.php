@@ -933,7 +933,7 @@ if (isset($_GET["action"])) {
                 exit;
             }
             $db->query("TRUNCATE TABLE `epg_data`;");
-            sexec($_INFO["server_id"], "/home/xtreamcodes/php/bin/php /home/xtreamcodes/crons/epg.php");
+            sexec($_INFO["server_id"], "/home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/crons/epg.php");
             echo json_encode(array("result" => True));
             exit;
         case "tmdb_search":

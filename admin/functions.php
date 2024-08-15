@@ -96,7 +96,7 @@ function updatePanel() {
     $URL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/update_files/";
     $ToolsPath = "/home/xtreamcodes/tools/";
     $PYToolsPath = "/home/xtreamcodes/pytools3/";
-    $PHPPath = "/home/xtreamcodes/php/bin/php";
+    $PHPPath = "/home/xtreamcodes/bin/php/bin/php";
 
     $PHPTools = ["update.php", "update_bd.php"];
     $PythonScrypt = "update.py";
