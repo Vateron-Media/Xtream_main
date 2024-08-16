@@ -311,8 +311,8 @@ function sexec2($rServerID, $rCommand) {
     return  $loool;
 }
 function loadnginx($rServerID) {
-    sexec($rServerID, "sudo /home/xtreamcodes/nginx/sbin/nginx -s reload");
-    sexec($rServerID, "sudo /home/xtreamcodes/nginx_rtmp/sbin/nginx_rtmp -s reload");
+    sexec($rServerID, "sudo /home/xtreamcodes/bin/nginx/sbin/nginx -s reload");
+    sexec($rServerID, "sudo /home/xtreamcodes/bin/nginx_rtmp/sbin/nginx_rtmp -s reload");
 }
 function netnet($rServerID) {
     $ccc = sexec2($rServerID, "ls -1 /sys/class/net");
@@ -325,17 +325,17 @@ function netnet($rServerID) {
 function changePort($rServerID, $rType, $rOldPort, $rNewPort) {
     if ($rType == 0) {
         // HTTP
-        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/nginx/conf/nginx.conf");
-        sexec($rServerID, "sed -i 's/:" . intval($rOldPort) . "/:" . intval($rNewPort) . "/g' /home/xtreamcodes/nginx_rtmp/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/bin/nginx/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's/:" . intval($rOldPort) . "/:" . intval($rNewPort) . "/g' /home/xtreamcodes/bin/nginx_rtmp/conf/nginx.conf");
     } else if ($rType == 1) {
         // SSL
-        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . " ssl;/listen " . intval($rNewPort) . " ssl;/g' /home/xtreamcodes/nginx/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . " ssl;/listen " . intval($rNewPort) . " ssl;/g' /home/xtreamcodes/bin/nginx/conf/nginx.conf");
     } else if ($rType == 2) {
         // RTMP
-        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/nginx_rtmp/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/bin/nginx_rtmp/conf/nginx.conf");
     } else if ($rType == 3) {
         // ISP
-        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/nginx/conf/nginx.conf");
+        sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/bin/nginx/conf/nginx.conf");
         sexec($rServerID, "sed -i 's|:" . intval($rOldPort) . "/api.php|:" . intval($rNewPort) . "/api.php|g' /home/xtreamcodes/wwwdir/includes/streaming.php");
     }
     loadnginx($rServerID);

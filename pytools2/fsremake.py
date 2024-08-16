@@ -60,8 +60,8 @@ def prepare():
 def install():
     global rInstall, rPlat, rGeo
     rURL = rPlat
-    rNginx = "/home/xtreamcodes/nginx/conf/nginx.conf"
-    rNginxRtmp = "/home/xtreamcodes/nginx_rtmp/conf/nginx.conf"
+    rNginx = "/home/xtreamcodes/bin/nginx/conf/nginx.conf"
+    rNginxRtmp = "/home/xtreamcodes/bin/nginx_rtmp/conf/nginx.conf"
     rIni = "/home/xtreamcodes/bin/php/lib/php.ini"
     rIsp = "/home/xtreamcodes/wwwdir/includes/streaming.php"
     if not "/home/xtreamcodes/" in open("/etc/fstab").read():
