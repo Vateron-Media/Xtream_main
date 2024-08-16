@@ -6,7 +6,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_server"))) {
 }
 
 if (isset($_POST["submit_server"])) {
-    $rArray = array("server_name" => "", "domain_name" => "", "server_ip" => "", "vpn_ip" => "", "diff_time_main" => 0, "http_broadcast_port" => 25461, "total_clients" => 1000, "system_os" => "", "network_interface" => "", "status" => 3, "enable_geoip" => 0, "can_delete" => 1, "rtmp_port" => 25462, "enable_isp" => 0, "boost_fpm" => 0, "network_guaranteed_speed" => 1000, "https_broadcast_port" => 25463, "whitelist_ips" => array(), "timeshift_only" => 0);
+    $rArray = array("server_name" => "", "domain_name" => "", "server_ip" => "", "vpn_ip" => "", "diff_time_main" => 0, "http_broadcast_port" => 25461, "total_clients" => 1000, "system_os" => "", "network_interface" => "", "status" => 3, "enable_geoip" => 0, "can_delete" => 1, "rtmp_port" => 25462, "enable_isp" => 0, "network_guaranteed_speed" => 1000, "https_broadcast_port" => 25463, "whitelist_ips" => array(), "timeshift_only" => 0);
     if ((strlen($_POST["server_name"]) == 0) or (strlen($_POST["server_ip"]) == 0) or (strlen($_POST["ssh_port"]) == 0) or (strlen($_POST["http_broadcast_port"]) == 0) or (strlen($_POST["https_broadcast_port"]) == 0) or (strlen($_POST["rtmp_port"]) == 0) or (strlen($_POST["root_password"]) == 0)) {
         $_STATUS = 1;
     }
