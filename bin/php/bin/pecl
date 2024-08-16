@@ -4,10 +4,10 @@
 if test "x$PHP_PEAR_PHP_BIN" != "x"; then
   PHP="$PHP_PEAR_PHP_BIN"
 else
-  if test "/home/xtreamcodes/php/bin/php" = '@'php_bin'@'; then
+  if test "/home/xtreamcodes/bin/php/bin/php" = '@'php_bin'@'; then
     PHP=php
   else
-    PHP="/home/xtreamcodes/php/bin/php"
+    PHP="/home/xtreamcodes/bin/php/bin/php"
   fi
 fi
 
@@ -16,12 +16,12 @@ if test "x$PHP_PEAR_INSTALL_DIR" != "x"; then
   INCDIR=$PHP_PEAR_INSTALL_DIR
   INCARG="-d include_path=$PHP_PEAR_INSTALL_DIR"
 else
-  if test "/home/xtreamcodes/php/lib/php" = '@'php_dir'@'; then
+  if test "/home/xtreamcodes/bin/php/lib/php" = '@'php_dir'@'; then
     INCDIR=`dirname $0`
     INCARG=""
   else
-    INCDIR="/home/xtreamcodes/php/lib/php"
-    INCARG="-d include_path=/home/xtreamcodes/php/lib/php"
+    INCDIR="/home/xtreamcodes/bin/php/lib/php"
+    INCARG="-d include_path=/home/xtreamcodes/bin/php/lib/php"
   fi
 fi
 

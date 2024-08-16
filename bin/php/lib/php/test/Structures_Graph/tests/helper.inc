@@ -1,5 +1,5 @@
 <?php
-if ('/home/xtreamcodes/php/lib/php' == '@'.'php_dir'.'@') {
+if ('/home/xtreamcodes/bin/php/lib/php' == '@'.'php_dir'.'@') {
     // This package hasn't been installed.
     // Adjust path to ensure includes find files in working directory.
     set_include_path(dirname(dirname(__FILE__))

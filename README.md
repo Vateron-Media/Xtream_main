@@ -40,3 +40,16 @@
 | type | Type playlist |
 | output | stream type (hls or m3u) |
 | key | type of content (live, movie, radio_streams, series) |
+
+
+# Run panel
+
+```
+sudo sh /home/xtreamcodes/service.sh {start|stop|restart|reload}
+```
+| Parameter |description |
+| :---:   | :---: |
+| start | Start panel |
+| stop | Stop panel |
+| restart | Restart panel |
+| reload | Restart Nginx |

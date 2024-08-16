@@ -1,4 +1,7 @@
-chmod -R 0777 /home/xtreamcodes
+chmod -R 0777 /home/xtreamcodes/bin
+chmod 0755 /home/xtreamcodes/status
+chmod a+x /home/xtreamcodes/status
+chmod 0755 /home/xtreamcodes/service.sh
 sudo find /home/xtreamcodes/admin/ -type f -exec chmod 644 {} \;
 sudo find /home/xtreamcodes/admin/ -type d -exec chmod 755 {} \;
 sudo find /home/xtreamcodes/wwwdir/ -type f -exec chmod 644 {} \;

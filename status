@@ -1,0 +1,180 @@
+#!/home/xtreamcodes/bin/php/bin/php
+<?php
+
+if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
+	set_time_limit(0);
+
+	if ($argc) {
+		$rFirstRun = false;
+
+		if (isset($argv[1])) {
+			$rFirstRun = true;
+		}
+
+		require str_replace('\\', '/', dirname($argv[0])) . '/wwwdir/init.php';
+		ini_set('display_startup_errors', 1);
+		ini_set('display_errors', 1);
+
+		if (!$rFirstRun) {
+			echo "\n" . 'Status' . "\n" . '------------------------------' . "\n";
+
+			if (isrunning()) {
+				echo 'XtreamCodes is running.' . "\n\n";
+			} else {
+				echo 'XtreamCodes is not running.' . "\n\n";
+			}
+		} else {
+			echo "\n";
+		}
+
+		$rServers = ServerInfo();
+
+		shell_exec('sudo chmod 0771 ' . MAIN_DIR . 'bin/daemons.sh');
+		shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'config');
+
+		$rFile = file('/etc/systemd/system.conf');
+		$db731ba4eed35cdc = false;
+		$f4e6be426cb0f059 = false;
+
+		for ($i = 0; $i < count($rFile); $i++) {
+			if (substr($rFile[$i], 0, 19) == 'DefaultLimitNOFILE=') {
+				$db731ba4eed35cdc = true;
+			}
+
+			if (substr($rFile[$i], 0, 23) == 'DefaultLimitNOFILESoft=') {
+				$f4e6be426cb0f059 = true;
+			}
+		}
+
+		if (!($db731ba4eed35cdc && $f4e6be426cb0f059)) {
+			echo 'Configuration' . "\n" . '------------------------------' . "\n";
+			echo 'Increasing file limit... You need to reboot your system!' . "\n\n";
+
+			if (!$db731ba4eed35cdc) {
+				shell_exec('sudo echo "' . "\n" . 'DefaultLimitNOFILE=1048576" >> "/etc/systemd/system.conf"');
+				shell_exec('sudo echo "' . "\n" . 'DefaultLimitNOFILE=1048576" >> "/etc/systemd/user.conf"');
+			}
+
+			if (!$f4e6be426cb0f059) {
+				shell_exec('sudo echo "' . "\n" . 'DefaultLimitNOFILESoft=1048576" >> "/etc/systemd/system.conf"');
+				shell_exec('sudo echo "' . "\n" . 'DefaultLimitNOFILESoft=1048576" >> "/etc/systemd/user.conf"');
+			}
+		}
+
+		if (!$rFirstRun || $rServers[SERVER_ID]['is_main']) {
+			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 0 WHERE `id` <> \'%s\';', SERVER_ID);
+			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 1 WHERE `id` = \'%s\';', SERVER_ID);
+
+			if (stripos(ipTV_lib::$settings['server_name'], 'xtream') !== false || stripos(ipTV_lib::$settings['server_name'], 'zapx') !== false || stripos(ipTV_lib::$settings['server_name'], 'streamcreed') !== false) {
+				$ipTV_db->query("UPDATE `settings` SET `server_name` = 'XtreamCodes';");
+			}
+
+			echo 'Servers' . "\n" . '------------------------------' . "\n";
+			$rOffline = 0;
+
+			foreach ($rServers as $rServerID => $rServer) {
+				if ($rServerID != SERVER_ID) {
+					if (!$rServer['server_online'] && $rServer['enabled'] && $rServer['status'] != 3 && $rServer['status'] != 5) {
+						echo 'Server #' . $rServerID . ' - ' . $rServer['server_ip'] . ' - Down since: ' . (($rServer['last_check_ago'] ? date('Y-m-d H:i:s', $rServer['last_check_ago']) : 'Always')) . "\n";
+						$rOffline++;
+					}
+				}
+			}
+
+			if ($rOffline == 0) {
+				echo 'All servers are Online and reporting back to XtreamCodes!' . "\n\n";
+			} else {
+				echo "\n";
+			}
+
+			echo 'Installed Version: ' . $rServers[SERVER_ID]['SCRIPT_VERSION'] . "\n" . '------------------------------' . "\n";
+			$Df0cfbe079756478 = 0;
+
+			foreach ($rServers as $rServerID => $rServer) {
+				if ($rServerID != SERVER_ID) {
+					if ($rServer['server_type'] == 0 && $rServer['SCRIPT_VERSION'] && $rServer['SCRIPT_VERSION'] != $rServers[SERVER_ID]['SCRIPT_VERSION']) {
+						echo 'Server #' . $rServerID . ' - ' . $rServer['server_ip'] . ' - Running v' . $rServer['SCRIPT_VERSION'] . "\n";
+						$Df0cfbe079756478++;
+					}
+				}
+			}
+
+			if ($Df0cfbe079756478 == 0) {
+				echo 'All servers are up to date!' . "\n\n";
+			} else {
+				echo "\n";
+			}
+		}
+
+		$ipTV_db->query('UPDATE `streaming_servers` SET `SCRIPT_VERSION` = \'%s\' WHERE `id` = \'%s\';', SCRIPT_VERSION, SERVER_ID);
+	} else {
+		exit(0);
+	}
+} else {
+	exit('Please run as root!' . "\n");
+}
+
+function isrunning() {
+	$rNginx = 0;
+	exec('ps -fp $(pgrep -u xtreamcodes 2>/dev/null) 2>/dev/null', $rOutput, $rReturnVar);
+
+	foreach ($rOutput as $rProcess) {
+		$rSplit = explode(' ', preg_replace('!\\s+!', ' ', trim($rProcess)));
+
+		if (!($rSplit[8] == 'nginx:' && $rSplit[9] == 'master')) {
+		} else {
+			$rNginx++;
+		}
+	}
+
+	return 0 < $rNginx;
+}
+
+function ServerInfo() {
+	global $ipTV_db;
+	$ipTV_db->query('SELECT * FROM `streaming_servers`');
+	$rServers = array();
+	$rOnlineStatus = array(1);
+
+	foreach ($ipTV_db->get_rows() as $rRow) {
+		if (empty($rRow['domain_name'])) {
+			$rURL = escapeshellcmd($rRow['server_ip']);
+		} else {
+			$rURL = str_replace(array('http://', '/', 'https://'), '', escapeshellcmd(explode(',', $rRow['domain_name'])[0]));
+		}
+
+		if ($rRow['enable_https'] == 1) {
+			$rProtocol = 'https';
+		} else {
+			$rProtocol = 'http';
+		}
+
+		$rPort = ($rProtocol == 'http' ? intval($rRow['http_broadcast_port']) : intval($rRow['https_broadcast_port']));
+		$rRow['site_url'] = $rProtocol . '://' . $rURL . ':' . $rPort . '/';
+
+		if ($rRow['server_type'] == 1) {
+			$rLastCheckTime = 180;
+		} else {
+			$rLastCheckTime = 90;
+		}
+
+		$rRow['server_online'] = $rRow['enabled'] && in_array($rRow['status'], $rOnlineStatus) && time() - $rRow['last_check_ago'] <= $rLastCheckTime || SERVER_ID == $rRow['id'];
+		$rServers[intval($rRow['id'])] = $rRow;
+	}
+
+	return $rServers;
+}
+
+function generateString($rLength = 10) {
+	$rCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789qwertyuiopasdfghjklzxcvbnm';
+	$rString = '';
+	$rMax = strlen($rCharacters) - 1;
+	$i = 0;
+
+	while ($i < $rLength) {
+		$rString .= $rCharacters[rand(0, $rMax)];
+		$i++;
+	}
+
+	return $rString;
+}
