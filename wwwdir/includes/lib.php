@@ -79,6 +79,7 @@ class ipTV_lib {
         $output = array();
         self::$ipTV_db->query("SELECT id,isp,blocked FROM `isp_addon`");
         $output = self::$ipTV_db->get_rows();
+        self::setCache('customisp', $output);
         return $output;
     }
 
@@ -90,6 +91,7 @@ class ipTV_lib {
         $output = array();
         self::$ipTV_db->query("SELECT id,exact_match,LOWER(user_agent) as blocked_ua FROM `blocked_user_agents`");
         $output = self::$ipTV_db->get_rows(true, "id");
+        self::setCache('uagents', $output);
         return $output;
     }
     /** 
@@ -180,6 +182,7 @@ class ipTV_lib {
             $output["bouquet_name"] = str_replace(" ", "_", $output["bouquet_name"]);
         }
         $output["api_ips"] = explode(",", $output["api_ips"]);
+        self::setCache('settings', $output);
         return $output;
     }
     public static function seriesData() {
@@ -278,6 +281,8 @@ class ipTV_lib {
             unset($row["ssh_password"], $row["watchdog_data"], $row["last_check_ago"]);
             $servers[intval($row["id"])] = $row;
         }
+        self::setCache('servers', $servers);
+
         return $servers;
     }
 

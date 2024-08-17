@@ -131,10 +131,10 @@ if ($rExtension) {
                 $rUserInfo = array('id' => null, 'is_restreamer' => 0, 'force_server_id' => 0, 'con_isp_name' => null, 'max_connections' => $rMaxConnections);
 
                 if (ipTV_lib::$settings['show_isps']) {
-                    $rISPLock = ipTV_streaming::getISP($userIP);
+                    $ISPLock = ipTV_streaming::getISP($userIP);
 
-                    if (is_array($rISPLock)) {
-                        $rUserInfo['con_isp_name'] = $rISPLock['isp'];
+                    if (is_array($ISPLock)) {
+                        $rUserInfo['con_isp_name'] = $ISPLock["isp_info"]["description"];
                     }
                 }
             }

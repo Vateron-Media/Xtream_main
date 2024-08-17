@@ -330,12 +330,16 @@ class ipTV_streaming {
         if (ipTV_lib::$settings['show_isps'] == 1 || !empty($IP)) {
             $ISPLock = self::getISP($IP);
             if (is_array($ISPLock)) {
-                if (!empty($ISPLock['isp'])) {
-                    $userInfo['con_isp_name'] = $ISPLock['isp'];
-                    $userInfo['isp_asn'] = $ISPLock['autonomous_system_number'];
-                    $userInfo['isp_violate'] = self::checkISP($userInfo['con_isp_name']);
-                    if (ipTV_lib::$settings['block_svp'] = 1) {
+                if (!empty($ISPLock["isp_info"]["description"])) {
+                    $userInfo["con_isp_name"] = $ISPLock["isp_info"]["description"];
+                    if (ipTV_lib::$settings['block_svp'] == 1) {
                         $IspIsBlocked = self::checkIspIsBlocked($userInfo["con_isp_name"]);
+                        if ($userInfo["is_restreamer"] == 0 && ipTV_lib::$settings["block_svp"] == 1 && !empty($ISPLock["isp_info"]["is_server"])) {
+                            $userInfo["isp_is_server"] = $ISPLock["isp_info"]["is_server"];
+                        }
+                        if ($userInfo["isp_is_server"] == 1) {
+                            $userInfo["con_isp_type"] = $ISPLock["isp_info"]["type"];
+                        }
                         if ($IspIsBlocked !== false) {
                             $userInfo["isp_is_server"] = $IspIsBlocked == 1 ? 1 : 0;
                             $userInfo["con_isp_type"] = $userInfo["isp_is_server"] == 1 ? "Custom" : null;
@@ -1017,18 +1021,29 @@ class ipTV_streaming {
     }
     public static function getISP($user_ip) {
         if (!empty($user_ip)) {
-            $rResponse = (file_exists(USER_TMP_PATH . md5($user_ip) . '_isp') ? json_decode(file_get_contents(USER_TMP_PATH . md5($user_ip) . '_isp'), true) : null);
-            if (is_array($rResponse)) {
-            } else {
-                $geoip_country_code = new Reader(GEOIP2COUNTRY_FILENAME);
-                $rResponse = $geoip_country_code->get($user_ip);
-                $geoip_country_code->close();
-                if (!is_array($rResponse)) {
-                } else {
-                    file_put_contents(USER_TMP_PATH . md5($user_ip) . '_isp', json_encode($rResponse));
+            if (file_exists(USER_TMP_PATH . md5($user_ip) . '_isp')) {
+                return unserialize(file_get_contents(USER_TMP_PATH . md5($user_ip) . '_isp'));
+            }
+            if ((isset($user_ip)) && (filter_var($user_ip, FILTER_VALIDATE_IP))) {
+                $rData = json_decode(file_get_contents("https://db-ip.com/demo/home.php?s=" . $user_ip), True);
+
+                if (strlen($rData["demoInfo"]["isp"]) > 0) {
+                    $json = array(
+                        "isp_info" => array(
+                            "as_number" => $rData["demoInfo"]["asNumber"],
+                            "description" => $rData["demoInfo"]["isp"],
+                            "type" => $rData["demoInfo"]["usageType"],
+                            "ip" => $rData["demoInfo"]["ipAddress"],
+                            "country_code" => $rData["demoInfo"]["countryCode"],
+                            "country_name" => $rData["demoInfo"]["countryName"],
+                            "is_server" => $rData["demoInfo"]["usageType"] != "consumer" ? true : false
+                            // note: if api is not returning correct usagetype, try another isp api source.
+                        )
+                    );
+                    file_put_contents(USER_TMP_PATH . md5($user_ip) . '_isp', serialize($json));
                 }
             }
-            return $rResponse;
+            return $json;
         }
         return false;
     }

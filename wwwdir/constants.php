@@ -49,10 +49,6 @@ $rErrorCodes = array(
     'NO_SERVERS_AVAILABLE' => 'No servers are currently available for this stream.'
 );
 
-if (basename(__FILE__) != basename($_SERVER['SCRIPT_FILENAME'])) {
-    generate404();
-}
-
 @ini_set('user_agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:9.0) Gecko/20100101 Firefox/9.0');
 @ini_set('default_socket_timeout', 5);
 
@@ -141,9 +137,9 @@ if (!$argc) {
     if (empty($rIP) || !file_exists(FLOOD_TMP_PATH . 'block_' . $rIP)) {
         define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
         if (file_exists(CACHE_TMP_PATH . 'settings')) {
-            $rData = file_get_contents(CACHE_TMP_PATH . 'settings');
-            $rSettings = unserialize($rData);
-            $rShowErrors = (isset($rSettings['debug_show_errors']) ? $rSettings['debug_show_errors'] : false);
+            $data = file_get_contents(CACHE_TMP_PATH . 'settings');
+            $settings = unserialize($data);
+            $showErrors = (isset($settings['debug_show_errors']) ? $settings['debug_show_errors'] : false);
         }
     } else {
         http_response_code(403);
@@ -187,8 +183,8 @@ function log_fatal() {
 }
 
 function panelLog($rType, $rMessage, $rExtra = '', $rLine = 0) {
-    $rData = array('type' => $rType, 'message' => $rMessage, 'extra' => $rExtra, 'line' => $rLine, 'time' => time());
-    file_put_contents(LOGS_TMP_PATH . 'error_log.log', base64_encode(json_encode($rData)) . "\n", FILE_APPEND);
+    $data = array('type' => $rType, 'message' => $rMessage, 'extra' => $rExtra, 'line' => $rLine, 'time' => time());
+    file_put_contents(LOGS_TMP_PATH . 'error_log.log', base64_encode(json_encode($data)) . "\n", FILE_APPEND);
 }
 
 function generateError($rError, $rKill = true, $rCode = null) {
