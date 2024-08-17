@@ -77,8 +77,11 @@ define('PHP_BIN', '/home/xtreamcodes/bin/php/bin/php');
 define('FFMPEG_PATH', file_exists(BIN_PATH . 'ffmpeg') ? BIN_PATH . 'ffmpeg' : '/usr/bin/ffmpeg');
 define('FFPROBE_PATH', file_exists(BIN_PATH . 'ffprobe') ? BIN_PATH . 'ffprobe' : '/usr/bin/ffprobe');
 define('YOUTUBE_PATH', BIN_PATH . 'youtube');
-define('GEOIP2_FILENAME', BIN_PATH . 'maxmind/GeoLite2-Country.mmdb');
-define('GEOIP2ISP_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ISP.mmdb');
+define('GEOIP2COUNTRY_FILENAME', BIN_PATH . 'maxmind/GeoLite2-Country.mmdb');
+define('GEOIP2ASN_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ASN.mmdb');
+define('GEOIP2CITY_FILENAME', BIN_PATH . 'maxmind/GeoLite2-City.mmdb');
+
+
 // -------------------
 
 // TEMP FOLDERS

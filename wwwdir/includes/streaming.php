@@ -964,7 +964,7 @@ class ipTV_streaming {
     public static function getIPInfo($user_ip) {
         if (!empty($user_ip)) {
             if (!file_exists(USER_TMP_PATH . md5($user_ip) . '_geo2')) {
-                $geoip_country_code = new Reader(GEOIP2_FILENAME);
+                $geoip_country_code = new Reader(GEOIP2COUNTRY_FILENAME);
                 $rResponse = $geoip_country_code->get($user_ip);
                 $geoip_country_code->close();
                 if ($rResponse) {
@@ -1020,7 +1020,7 @@ class ipTV_streaming {
             $rResponse = (file_exists(USER_TMP_PATH . md5($user_ip) . '_isp') ? json_decode(file_get_contents(USER_TMP_PATH . md5($user_ip) . '_isp'), true) : null);
             if (is_array($rResponse)) {
             } else {
-                $geoip_country_code = new Reader(GEOIP2_FILENAME);
+                $geoip_country_code = new Reader(GEOIP2COUNTRY_FILENAME);
                 $rResponse = $geoip_country_code->get($user_ip);
                 $geoip_country_code->close();
                 if (!is_array($rResponse)) {
