@@ -338,7 +338,7 @@ if ($rSettings["sidebar"]) { ?>
                                 $rInfos = array(); //json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/infos.json", false, $rContext), True);
                                 $rGeoLite2 = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/status.json", false, $rContext), True);
                                 ?>
-                                <?php if (version_compare($rGeoLite2["version"], $rAdminSettings["geolite2_version"])) { ?>
+                                <?php if (isUpdateNeeded($rAdminSettings["geolite2_version"], $rGeoLite2["version"])) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -346,7 +346,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["a_new_version_of_GeoLite2"] ?> (<?= $rGeoLite2["version"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?geolite2"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
-                                <?php if (version_compare($rUpdatePanel["main"], getScriptVer())) { ?>
+                                <?php if (isUpdateNeeded(getScriptVer(), $rUpdatePanel["main"])) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
