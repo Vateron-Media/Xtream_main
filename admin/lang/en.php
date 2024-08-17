@@ -1451,4 +1451,5 @@ $_ = array(
   "oldValue" => "oldValue",
   "width" => "width",
   "width:" => "width:",
+  "debug_show_errors" => "Enable debug panel logging",
 );

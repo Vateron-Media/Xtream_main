@@ -29,7 +29,7 @@ if (isset($_GET["panel_version"])) {
 
 if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rArray = getSettings();
-    foreach (array("disallow_empty_user_agents", "persistent_connections", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "new_sorting_bouquet", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "use_mdomain_in_lists", "hash_lb", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup") as $rSetting) {
+    foreach (array("disallow_empty_user_agents", "persistent_connections", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "new_sorting_bouquet", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "use_mdomain_in_lists", "hash_lb", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup", "debug_show_errors") as $rSetting) {
         if (isset($_POST[$rSetting])) {
             $rArray[$rSetting] = 1;
             unset($_POST[$rSetting]);
@@ -692,6 +692,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <label class="col-md-4 col-form-label" for="alternate_scandir"><?= $_["alternate_scandir_method"] ?> (Cloud) <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["use_an_alternate_method"] ?>" class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="alternate_scandir" id="alternate_scandir" type="checkbox" <?php if ($rAdminSettings["alternate_scandir"] == 1) {
+                                                                                                                                                    echo "checked ";
+                                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label" for="debug_show_errors"><?= $_["debug_show_errors"] ?></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="debug_show_errors" id="debug_show_errors" type="checkbox" <?php if ($rSettings["debug_show_errors"] == 1) {
                                                                                                                                                     echo "checked ";
                                                                                                                                                 } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                     </div>

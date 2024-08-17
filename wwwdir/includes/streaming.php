@@ -927,7 +927,7 @@ class ipTV_streaming {
         return false;
     }
     public static function ShowVideo($is_restreamer = 0, $video_id_setting, $video_path_id, $extension = 'ts') {
-        global $DEBUG;
+        global $showErrors;
         if ($is_restreamer == 0 && ipTV_lib::$settings[$video_id_setting] == 1) {
             if ($extension == 'm3u8') {
                 $extm3u = '#EXTM3U
@@ -948,7 +948,7 @@ class ipTV_streaming {
                 die;
             }
         }
-        if ($DEBUG) {
+        if ($showErrors) {
             print_r($video_id_setting);
         } else {
             http_response_code(403);

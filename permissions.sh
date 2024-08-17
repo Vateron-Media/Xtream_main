@@ -1,3 +1,4 @@
+chown xtreamcodes:xtreamcodes -R /home/xtreamcodes > /dev/null
 chmod -R 0777 /home/xtreamcodes/bin
 chmod 0755 /home/xtreamcodes/status
 chmod a+x /home/xtreamcodes/status
