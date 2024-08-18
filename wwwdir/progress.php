@@ -1,7 +1,7 @@
 <?php
 
 ignore_user_abort(true);
-require 'constants.php';
+require_once 'constants.php';
 $post = trim(file_get_contents('php://input'));
 
 if ($_SERVER['REMOTE_ADDR'] != '127.0.0.1' || empty($_GET['stream_id']) || empty($post)) {

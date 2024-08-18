@@ -20,11 +20,8 @@ if (isset($_GET["geolite2"])) {
 }
 
 if (isset($_GET["panel_version"])) {
-    if (updatePanel()) {
-        $_STATUS = 5;
-    } else {
-        $_STATUS = 4;
-    }
+    updatePanel($_GET["panel_version"], getScriptVer());
+    $_STATUS = getServerStatus();
 }
 
 if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
@@ -351,7 +348,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        A new version (<?= $rUpdatePanel["main"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?panel_version"><?= $_["click_here_to_update"] ?></a>
+                                        A new version (<?= $rUpdatePanel["main"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?panel_version=<?= $rUpdatePanel["main"] ?>"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
                                 <div class="card">

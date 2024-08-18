@@ -66,6 +66,7 @@ define('IPTV_CLIENT_AREA', MAIN_DIR . 'wwwdir/client_area/');
 define('BIN_PATH', MAIN_DIR . 'bin/');
 define('SIGNALS_PATH', MAIN_DIR . 'signals/');
 define('IPTV_CLIENT_AREA_TEMPLATES_PATH', IPTV_CLIENT_AREA . 'templates/');
+define('UPDATE_PATH', MAIN_DIR . 'update/');
 // -------------------
 
 // BINARIES FILE
@@ -131,26 +132,20 @@ define('CACHE_STREAMS', false);
 define('CACHE_STREAMS_TIME', 10);
 define('STREAM_TYPE', array('live', 'series', 'movie', 'created_live', 'radio_streams'));
 
-if (!$argc) {
-    $rIP = $_SERVER['REMOTE_ADDR'];
-
-    if (empty($rIP) || !file_exists(FLOOD_TMP_PATH . 'block_' . $rIP)) {
-        define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
-        if (file_exists(CACHE_TMP_PATH . 'settings')) {
-            $data = file_get_contents(CACHE_TMP_PATH . 'settings');
-            $settings = unserialize($data);
-            $showErrors = (isset($settings['debug_show_errors']) ? $settings['debug_show_errors'] : false);
-        }
-    } else {
-        http_response_code(403);
-
-        exit();
+$rIP = $_SERVER['REMOTE_ADDR'];
+if (empty($rIP) || !file_exists(FLOOD_TMP_PATH . 'block_' . $rIP)) {
+    define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
+    if (file_exists(CACHE_TMP_PATH . 'settings')) {
+        $data = file_get_contents(CACHE_TMP_PATH . 'settings');
+        $settings = unserialize($data);
+        $showErrors = (isset($settings['debug_show_errors']) ? $settings['debug_show_errors'] : false);
     }
+} else {
+    http_response_code(403);
+    exit();
 }
 
-
 define('PHP_ERRORS', $showErrors);
-ini_set("error_log", LOGS_TMP_PATH . "php.log");
 set_error_handler('log_error');
 set_exception_handler('log_exception');
 register_shutdown_function('log_fatal');

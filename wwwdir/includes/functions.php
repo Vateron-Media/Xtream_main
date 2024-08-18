@@ -880,40 +880,6 @@ function generateUUID($key = null) {
 
     return $uuid;
 }
-/** 
- * Function to check for updates based on the current version provided. 
- * 
- * @param string $currentVersion The current version to compare against 
- * @return array|bool Returns an array with the next version information (version, url, md5) if an update is available, otherwise returns false 
- */
-function checkUpdate($currentVersion, $type = "main") {
-    $rURL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json";
-    $rData = json_decode(file_get_contents($rURL), True);
-
-    if ($rData[$type]) {
-        if (version_compare($rData[$type], $currentVersion)) {
-            $mainVersions = $rData["main_versions"];
-
-            // Find the index of the current version
-            $currentIndex = array_search($currentVersion, array_column($mainVersions, 'version'));
-
-            if ($currentIndex !== false && $currentIndex < count($mainVersions) - 1) {
-                // Get the next version
-                $nextVersion = $mainVersions[$currentIndex + 1]['version'];
-                $hashNextVersion = $mainVersions[$currentIndex + 1]['md5'];
-
-                $version["version"] = $nextVersion;
-                $version["url"] = "https://github.com/Vateron-Media/Xtream_main/releases/download/v" . $nextVersion . "/" . $type . "_xui.tar.gz";
-                $version["md5"] = $hashNextVersion;
-                return $version;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-}
 
 function startDownload($rType, $rUser, $rDownloadPID) {
     $rFloodLimit = 2;

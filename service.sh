@@ -25,7 +25,6 @@ start() {
   sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/tools/signals.php >/dev/null 2>/dev/null &
   sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/tools/watchdog.php >/dev/null 2>/dev/null &
   echo 'Running in foreground...'
-  sleep infinity
 }
 
 

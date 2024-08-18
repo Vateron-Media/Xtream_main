@@ -90,28 +90,50 @@ function sortArrayByArray(array $rArray, array $rSort) {
     return $rOrdered + $rArray;
 }
 
-function updatePanel() {
+function updatePanel($updVersion, $curentVersion) {
     global $db;
+    if ($updVersion == $curentVersion) {
+        return;
+    }
+    $updatePath = "/home/xtreamcodes/updates/";
+    $URL = "https://github.com/Vateron-Media/Xtream_main/releases/download/v{$updVersion}/update.tar.gz";
 
-    $URL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/update_files/";
-    $ToolsPath = "/home/xtreamcodes/tools/";
-    $PYToolsPath = "/home/xtreamcodes/pytools3/";
-    $PHPPath = "/home/xtreamcodes/bin/php/bin/php";
-
-    $PHPTools = ["update.php", "update_bd.php"];
-    $PythonScrypt = "update.py";
-
-    foreach ($PHPTools as $value) {
-        $data1 = file_get_contents($URL . $value);
-        file_put_contents($ToolsPath . $value, $data1);
-        exec("sudo chmod 644 {$ToolsPath}{$value}");
+    # make dir
+    if (!file_exists($updatePath)) {
+        mkdir($updatePath);
     }
 
-    $data2 = file_get_contents($URL . $PythonScrypt);
-    file_put_contents($PYToolsPath . $PythonScrypt, $data2);
-    exec("sudo chmod 644 {$PYToolsPath}{$PythonScrypt}");
+    $data = file_get_contents($URL);
+    file_put_contents($updatePath . "update.tar.gz", $data);
 
-    shell_exec('sudo ' . $PHPPath . ' ' . $ToolsPath . '/update.php "update" 2>&1 &');
+    # make dir
+    if (!file_exists($updatePath . "update_tmp")) {
+        mkdir($updatePath . "update_tmp");
+    }
+
+    $phar = new PharData($updatePath . 'update.tar.gz');
+    $phar->extractTo($updatePath . 'update_tmp/', null, true);
+
+    $files = scandir($updatePath . 'update_tmp/updates');
+    foreach ($files as $file) {
+        if ($file != '.' && $file != '..') {
+            copy($updatePath . 'update_tmp/updates/' . $file, $updatePath . $file);
+        }
+    }
+
+    if (file_exists($updatePath . "update.tar.gz")) {
+        unlink($updatePath . "update.tar.gz");
+    }
+
+    $db->query('UPDATE `streaming_servers` SET `status` = 5 WHERE `is_main` = 1;');
+
+    $rCommand = '/usr/bin/python3 ' . $updatePath . 'update.py > /dev/null 2>&1 &';
+    shell_exec($rCommand);
+    sleep(1);
+    #remove folder update
+    if (file_exists($updatePath)) {
+        rrmdir($updatePath);
+    }
 }
 
 function updateGeoLite2() {
@@ -1982,5 +2004,45 @@ if (isset($_SESSION['hash'])) {
             $db->query("UPDATE `streaming_servers` SET `status` = 1 WHERE `id` = " . intval($rServer["id"]) . ";");
             $rServers[intval($rServer["id"])]["status"] = 1;
         }
+    }
+}
+function getServerStatus() {
+    global $db;
+    $rResult = $db->query("SELECT `status` FROM `streaming_servers` WHERE `is_main` = 1;");
+    if ($rResult->num_rows > 0) {
+        return $rResult->fetch_assoc()['status'];
+    }
+}
+
+/**
+ * Recursively removes a directory and all of its contents.
+ *
+ * This function takes a directory path as an argument and deletes all files and 
+ * subdirectories within that directory. It first checks if the specified path 
+ * is a directory. If it is, it scans the directory for its contents and iterates 
+ * through each item. For each item, it checks if it is a directory or a file. 
+ * If it is a directory, the function calls itself recursively to remove the 
+ * subdirectory. If it is a file, it deletes the file. Once all contents are 
+ * removed, the function deletes the original directory.
+ *
+ * @param string $dir The path to the directory to be removed.
+ * 
+ * @return void
+ *
+ * @throws ErrorException If the specified path is not a directory or if an 
+ *                        error occurs during file or directory deletion.
+ */
+function rrmdir($dir) {
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (filetype($dir . "/" . $object) == "dir")
+                    rrmdir($dir . "/" . $object);
+                else unlink($dir . "/" . $object);
+            }
+        }
+        reset($objects);
+        rmdir($dir);
     }
 }
