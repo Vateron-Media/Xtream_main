@@ -90,13 +90,14 @@ function sortArrayByArray(array $rArray, array $rSort) {
     return $rOrdered + $rArray;
 }
 
-function updatePanel($updVersion, $curentVersion) {
+function updatePanel($updateVersion, $curentVersion) {
     global $db;
-    if ($updVersion == $curentVersion) {
+    $nextVersion = getNextVersionUpdate($curentVersion, $updateVersion);
+    if (!$nextVersion) {
         return;
     }
     $updatePath = "/home/xtreamcodes/updates/";
-    $URL = "https://github.com/Vateron-Media/Xtream_main/releases/download/v{$updVersion}/update.tar.gz";
+    $URL = "https://github.com/Vateron-Media/Xtream_main/releases/download/v{$nextVersion}/update.tar.gz";
 
     # make dir
     if (!file_exists($updatePath)) {
@@ -2044,5 +2045,34 @@ function rrmdir($dir) {
         }
         reset($objects);
         rmdir($dir);
+    }
+}
+
+function getNextVersionUpdate($curentVersion, $updateVersion) {
+    $context = stream_context_create(
+        array(
+            "http" => array(
+                "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+            )
+        )
+    );
+    $URLTagsRelease = "https://api.github.com/repos/Vateron-Media/Xtream_main/git/refs/tags";
+    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), True);
+
+    $versions = [];
+    foreach ($tags as $value) {
+        $latestTag = $value['ref'];
+        $latestTag = str_replace("refs/tags/", "", $latestTag);
+        $versions[] = $latestTag;
+    }
+
+    #get key in array versions
+    $CurentKey = array_search($curentVersion, $versions);
+    $UpdKey = array_search($updateVersion, $versions);
+
+    if ($CurentKey < $UpdKey) {
+        return $versions[$CurentKey + 1];
+    } else {
+        return false;
     }
 }
