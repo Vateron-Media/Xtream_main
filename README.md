@@ -4,10 +4,10 @@
 <img src="https://img.shields.io/github/license/Vateron-Media/Xtream_main" alt="Xtream_main license" />
 </a>
 <a href="https://github.com/Vateron-Media/Xtream_main/fork" target="blank">
-<img src="https://img.shields.io/github/forks/Vateron-Media/Xtream_main?style=plastic" alt="Xtream_main forks"/>
+<img src="https://img.shields.io/github/forks/Vateron-Media/Xtream_main?style=flat" alt="Xtream_main forks"/>
 </a>
 <a href="https://github.com/Vateron-Media/Xtream_main/stargazers" target="blank">
-<img src="https://img.shields.io/github/stars/Vateron-Media/Xtream_main?style=plastic" alt="Xtream_main stars"/>
+<img src="https://img.shields.io/github/stars/Vateron-Media/Xtream_main?style=flat" alt="Xtream_main stars"/>
 </a>
 <a href="https://github.com/Vateron-Media/Xtream_main/issues" target="blank">
 <img src="https://img.shields.io/github/issues/Vateron-Media/Xtream_main" alt="Xtream_main issues"/>
