@@ -1,6 +1,6 @@
 <?php
 set_time_limit(0);
-if ($argc && count($argv) == 2) {
+if ($argc) {
     register_shutdown_function('shutdown');
     require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
     loadcli();
