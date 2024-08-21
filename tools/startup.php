@@ -14,7 +14,7 @@ if ($argc) {
         exec('sudo ' . MAIN_DIR . 'status 1');
     }
     if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
-        exec('sudo crontab -l', $rOutput);
+        // exec('sudo crontab -l', $rOutput);
         if (!$rFixCron) {
             exec('sudo -u xtreamcodes ' . PHP_BIN . ' ' . CRON_PATH . 'setup_cache.php 1', $rOutput);
             if (file_exists(CRON_PATH . 'cache_engine.php') || !file_exists(CACHE_TMP_PATH . 'cache_complete')) {

@@ -16,8 +16,8 @@ start() {
   fi
   echo 'Starting XtreamCodes...'
   sudo chown -R xtreamcodes:xtreamcodes /sys/class/net
-  sudo chown -R xtreamcodes:xtreamcodes /home/xtreamcodes/streams
-  sudo chown -R xtreamcodes:xtreamcodes /home/xtreamcodes/tmp
+  sudo chown -R xtreamcodes:xtreamcodes $SCRIPT/content/streams
+  sudo chown -R xtreamcodes:xtreamcodes $SCRIPT/tmp
   sudo -u xtreamcodes $SCRIPT/bin/nginx/sbin/nginx >/dev/null 2>/dev/null
   sudo -u xtreamcodes $SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp >/dev/null 2>/dev/null
   sudo -u xtreamcodes $SCRIPT/bin/daemons.sh

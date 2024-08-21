@@ -30,7 +30,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 		$rServers = ServerInfo();
 
 		shell_exec('sudo chmod 0771 ' . MAIN_DIR . 'bin/daemons.sh');
-		shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'config');
+		// shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'config');
 
 		$rFile = file('/etc/systemd/system.conf');
 		$db731ba4eed35cdc = false;

@@ -110,7 +110,7 @@ define('VOD_PATH', CONTENT_PATH . 'vod/');
 // -------------------
 
 // CONSTANTS VAR
-define('SCRIPT_VERSION', '1.2.0');
+define('SCRIPT_VERSION', '1.2.1');
 define('IN_SCRIPT', true);
 define('SOFTWARE', 'iptv');
 define('FFMPEG_FONTS_PATH', SIGNALS_PATH . 'free-sans.ttf');

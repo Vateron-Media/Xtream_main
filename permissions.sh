@@ -1,5 +1,6 @@
 chown xtreamcodes:xtreamcodes -R /home/xtreamcodes > /dev/null
 chmod -R 0777 /home/xtreamcodes/bin
+chmod 0755 /home/xtreamcodes/bin/php/*.pid
 chmod 0755 /home/xtreamcodes/status
 chmod a+x /home/xtreamcodes/status
 chmod 0755 /home/xtreamcodes/service.sh
