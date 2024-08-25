@@ -1,5 +1,4 @@
-chmod -R 0777 /home/xtreamcodes/bin
-chmod -R 0777 /home/xtreamcodes/tmp
+chmod -R 0777 /home/xtreamcodes/
 chmod 0755 /home/xtreamcodes/bin/php/*.pid
 chmod 0755 /home/xtreamcodes/status
 chmod a+x /home/xtreamcodes/status
