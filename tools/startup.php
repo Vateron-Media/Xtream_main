@@ -14,7 +14,30 @@ if ($argc) {
         exec('sudo ' . MAIN_DIR . 'status 1');
     }
     if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
-        // exec('sudo crontab -l', $rOutput);
+        $rCrons = array();
+        if (file_exists(CRON_PATH . 'root_signals.php')) {
+            $rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_signals.php # XtreamCodes';
+        }
+        $rWrite = false;
+        exec('sudo crontab -l', $rOutput);
+        foreach ($rCrons as $rCron) {
+            if (!in_array($rCron, $rOutput)) {
+                $rOutput[] = $rCron;
+                $rWrite = true;
+            }
+        }
+        if ($rWrite) {
+            $rCronFile = tempnam(TMP_PATH, 'crontab');
+            file_put_contents($rCronFile, implode("\n", $rOutput) . "\n");
+            exec('sudo chattr -i /var/spool/cron/crontabs/root');
+            exec('sudo crontab -r');
+            exec('sudo crontab ' . $rCronFile);
+            exec('sudo chattr +i /var/spool/cron/crontabs/root');
+            echo 'Crontab installed' . "\n";
+        } else {
+            echo 'Crontab already installed' . "\n";
+        }
+
         if (!$rFixCron) {
             exec('sudo -u xtreamcodes ' . PHP_BIN . ' ' . CRON_PATH . 'setup_cache.php 1', $rOutput);
             if (file_exists(CRON_PATH . 'cache_engine.php') || !file_exists(CACHE_TMP_PATH . 'cache_complete')) {

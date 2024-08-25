@@ -1747,6 +1747,19 @@ INSERT INTO `watch_settings` (`read_native`, `movie_symlink`, `auto_encode`, `tr
 (1, 1, 0, 0, 3600, 80, 0);
 COMMIT;
 
+CREATE TABLE IF NOT EXISTS `mysql_syslog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `error` longtext COLLATE utf8_unicode_ci,
+  `username` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ip` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `database` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `date` int(11) DEFAULT NULL,
+  `server_id` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

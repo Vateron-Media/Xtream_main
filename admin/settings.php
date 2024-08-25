@@ -20,8 +20,9 @@ if (isset($_GET["geolite2"])) {
 }
 
 if (isset($_GET["panel_version"])) {
-    updatePanel($_GET["panel_version"], getScriptVer());
-    $_STATUS = getServerStatus();
+    $db->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . ESC(json_encode(array('action' => 'update'))) . "`;");
+    $db->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . ESC($_INFO["server_id"]) . "', '" . ESC(time()) . "', '" . ESC(json_encode(array('action' => 'update'))) . "');");
+    $_STATUS = 5;
 }
 
 if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
@@ -320,7 +321,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        THE PANEL IS UPDATED...
+                                        XtreamCodes is currently waiting to be updated... Your server will become unavailable once the process begins.
                                     </div>
                                 <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -348,7 +349,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        A new version (<?= $rUpdatePanel["main"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?panel_version=<?= $rUpdatePanel["main"] ?>"><?= $_["click_here_to_update"] ?></a>
+                                        A new version (<?= $rUpdatePanel["main"] ?>) <?= $_["is_available"] ?> <a href="./settings.php?panel_version"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
                                 <div class="card">

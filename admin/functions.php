@@ -90,52 +90,7 @@ function sortArrayByArray(array $rArray, array $rSort) {
     return $rOrdered + $rArray;
 }
 
-function updatePanel($updateVersion, $curentVersion) {
-    global $db;
-    $nextVersion = getNextVersionUpdate($curentVersion, $updateVersion);
-    if (!$nextVersion) {
-        return;
-    }
-    $updatePath = "/home/xtreamcodes/updates/";
-    $URL = "https://github.com/Vateron-Media/Xtream_main/releases/download/v{$nextVersion}/update.tar.gz";
 
-    # make dir
-    if (!file_exists($updatePath)) {
-        mkdir($updatePath);
-    }
-
-    $data = file_get_contents($URL);
-    file_put_contents($updatePath . "update.tar.gz", $data);
-
-    # make dir
-    if (!file_exists($updatePath . "update_tmp")) {
-        mkdir($updatePath . "update_tmp");
-    }
-
-    $phar = new PharData($updatePath . 'update.tar.gz');
-    $phar->extractTo($updatePath . 'update_tmp/', null, true);
-
-    $files = scandir($updatePath . 'update_tmp/updates');
-    foreach ($files as $file) {
-        if ($file != '.' && $file != '..') {
-            copy($updatePath . 'update_tmp/updates/' . $file, $updatePath . $file);
-        }
-    }
-
-    if (file_exists($updatePath . "update.tar.gz")) {
-        unlink($updatePath . "update.tar.gz");
-    }
-
-    $db->query('UPDATE `streaming_servers` SET `status` = 5 WHERE `is_main` = 1;');
-
-    $rCommand = '/usr/bin/python3 ' . $updatePath . 'update.py > /dev/null 2>&1 &';
-    shell_exec($rCommand);
-    sleep(1);
-    #remove folder update
-    if (file_exists($updatePath)) {
-        rrmdir($updatePath);
-    }
-}
 
 function updateGeoLite2() {
     global $rAdminSettings;
@@ -2045,34 +2000,5 @@ function rrmdir($dir) {
         }
         reset($objects);
         rmdir($dir);
-    }
-}
-
-function getNextVersionUpdate($curentVersion, $updateVersion) {
-    $context = stream_context_create(
-        array(
-            "http" => array(
-                "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
-            )
-        )
-    );
-    $URLTagsRelease = "https://api.github.com/repos/Vateron-Media/Xtream_main/git/refs/tags";
-    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), True);
-
-    $versions = [];
-    foreach ($tags as $value) {
-        $latestTag = $value['ref'];
-        $latestTag = str_replace("refs/tags/", "", $latestTag);
-        $versions[] = $latestTag;
-    }
-
-    #get key in array versions
-    $CurentKey = array_search($curentVersion, $versions);
-    $UpdKey = array_search($updateVersion, $versions);
-
-    if ($CurentKey < $UpdKey) {
-        return $versions[$CurentKey + 1];
-    } else {
-        return false;
     }
 }
