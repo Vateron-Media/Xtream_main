@@ -95,7 +95,8 @@ $rAdvPermissions = array(
     array("episodes", $_["permission_episodes"], $_["permission_episodes_text"]),
     array("edit_tprofile", $_["permission_edit_tprofile"], $_["permission_edit_tprofile_text"]),
     array("folder_watch_add", $_["permission_folder_watch_add"], $_["permission_folder_watch_add_text"]),
-    array("panel_errors", $_["permission_panel_errors"], $_["permission_panel_errors_text"])
+    array("panel_errors", $_["permission_panel_errors"], $_["permission_panel_errors_text"]),
+    array("system_logs", $_["permission_system_logs"], $_["permission_system_logs_text"])
 );
 
 if (isset($_POST["submit_group"])) {

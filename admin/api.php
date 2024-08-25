@@ -1210,7 +1210,7 @@ if (isset($_GET["action"])) {
                 echo json_encode(array("result" => False));
                 exit;
             }
-            if (in_array($_GET["type"], array("client_logs", "stream_logs", "user_activity", "credits_log", "reg_userlog", "panel_logs"))) {
+            if (in_array($_GET["type"], array("client_logs", "stream_logs", "user_activity", "credits_log", "reg_userlog", "panel_logs", "mysql_syslog"))) {
                 if ($_GET["type"] == "user_activity") {
                     $rColumn = "date_start";
                 } else {

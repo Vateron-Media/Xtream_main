@@ -872,6 +872,18 @@ function getPanelLogs() {
     return $return;
 }
 
+function getSystemLogs() {
+    global $db;
+    $return = array();
+    $result = $db->query("SELECT * FROM `mysql_syslog` ORDER BY `id` ASC;");
+    if (($result) && ($result->num_rows > 0)) {
+        while ($row = $result->fetch_assoc()) {
+            $return[] = $row;
+        }
+    }
+    return $return;
+}
+
 //##########
 function getBlockedLogins() {
     global $db;
