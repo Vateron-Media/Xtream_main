@@ -90,6 +90,7 @@ define('FLOOD_TMP_PATH', TMP_PATH . 'flood/');
 define('STALKER_TMP_PATH', TMP_PATH . 'stalker/');
 define('LOGS_TMP_PATH', TMP_PATH . 'logs/');
 define('CRONS_TMP_PATH', TMP_PATH . 'crons/');
+define('SIGNALS_TMP_PATH', TMP_PATH . 'signals/');
 // -------------------
 
 // CACHE FOLDERS
@@ -107,6 +108,7 @@ define('PLAYLIST_PATH', CONTENT_PATH . 'playlists/');
 define('STREAMS_PATH', CONTENT_PATH . 'streams/');
 define('TV_ARCHIVE', CONTENT_PATH . 'tv_archive/');
 define('VOD_PATH', CONTENT_PATH . 'vod/');
+define('CREATED_PATH', CONTENT_PATH . 'created/');
 // -------------------
 
 // CONSTANTS VAR
@@ -119,6 +121,7 @@ define('CONFIG_CRYPT_KEY', '5709650b0d7806074842c6de575025b1');
 define('OPENSSL_EXTRA', '5gd46z5s4fg6sd8f4gs6');
 define('RESTART_TAKE_CACHE', 5);
 define('TOTAL_SAVES_DROP', 6);
+define('MONITOR_CALLS', 3);
 // -------------------
 
 if (!defined('USE_CACHE')) {
