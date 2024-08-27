@@ -67,6 +67,7 @@ define('BIN_PATH', MAIN_DIR . 'bin/');
 define('SIGNALS_PATH', MAIN_DIR . 'signals/');
 define('IPTV_CLIENT_AREA_TEMPLATES_PATH', IPTV_CLIENT_AREA . 'templates/');
 define('UPDATE_PATH', MAIN_DIR . 'update/');
+define('CONFIG_PATH', MAIN_DIR . 'config/');
 // -------------------
 
 // BINARIES FILE

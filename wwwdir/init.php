@@ -11,13 +11,13 @@ require IPTV_ROOT_PATH . 'langs/English.php';
 $_INFO = array();
 
 if (file_exists(MAIN_DIR . 'config')) {
-    $_INFO = json_decode(decrypt_config(base64_decode(file_get_contents(MAIN_DIR . 'config')), CONFIG_CRYPT_KEY), true);
+    $_INFO = parse_ini_file(CONFIG_PATH . 'config.ini');
     define('SERVER_ID', $_INFO['server_id']);
 } else {
     die('no config found');
 }
 
-$ipTV_db = new ipTV_db($_INFO['db_user'], $_INFO['db_pass'], $_INFO['db_name'], $_INFO['host'], $_INFO['db_port'], empty($_INFO['pconnect']) ? false : true, false);
+$ipTV_db = new ipTV_db($_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['hostname'], $_INFO['port'], empty($_INFO['pconnect']) ? false : true, false);
 
 ipTV_lib::$ipTV_db = &$ipTV_db;
 ipTV_streaming::$ipTV_db = &$ipTV_db;

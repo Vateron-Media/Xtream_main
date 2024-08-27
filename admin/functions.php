@@ -183,6 +183,7 @@ ini_set('default_socket_timeout', $rTimeout);
 
 define("MAIN_DIR", "/home/xtreamcodes/");
 define("CONFIG_CRYPT_KEY", "5709650b0d7806074842c6de575025b1");
+define("CONFIG_PATH", MAIN_DIR . "config/");
 
 require_once realpath(dirname(__FILE__)) . "/mobiledetect.php";
 require_once realpath(dirname(__FILE__)) . "/gauth.php";
@@ -206,8 +207,8 @@ function xor_parse($data, $key) {
     return $output;
 }
 
-$_INFO = json_decode(xor_parse(base64_decode(file_get_contents(MAIN_DIR . "config")), CONFIG_CRYPT_KEY), True);
-if (!$db = new mysqli($_INFO["host"], $_INFO["db_user"], $_INFO["db_pass"], $_INFO["db_name"], $_INFO["db_port"])) {
+$_INFO = parse_ini_file(CONFIG_PATH . 'config.ini');
+if (!$db = new mysqli($_INFO["hostname"], $_INFO["username"], $_INFO["password"], $_INFO["database"], $_INFO["port"])) {
     exit("No MySQL connection!");
 }
 $db->set_charset("utf8");

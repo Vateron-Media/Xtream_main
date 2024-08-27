@@ -12,8 +12,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         return $output;
     }
 
-    $_INFO = json_decode(xor_parse(base64_decode(file_get_contents(MAIN_DIR . "config")), CONFIG_CRYPT_KEY), True);
-    if (!$db = new mysqli($_INFO["host"], $_INFO["db_user"], $_INFO["db_pass"], $_INFO["db_name"], $_INFO["db_port"])) {
+    $_INFO = parse_ini_file(CONFIG_PATH . 'config.ini');
+    if (!$db = new mysqli($_INFO['hostname'], $_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['port'])) {
         exit("No MySQL connection!");
     }
 

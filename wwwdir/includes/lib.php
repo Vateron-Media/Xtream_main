@@ -47,12 +47,12 @@ class ipTV_lib {
             $_INFO["pconnect"] = null;
         }
 
-        if (self::$StreamingServers[SERVER_ID]["persistent_connections"] != $_INFO["pconnect"]) {
-            $_INFO["pconnect"] = self::$StreamingServers[SERVER_ID]["persistent_connections"];
-            if (!empty($_INFO) && is_array($_INFO) && !empty($_INFO["db_user"])) {
-                file_put_contents(MAIN_DIR . "config", base64_encode(decrypt_config(json_encode($_INFO), CONFIG_CRYPT_KEY)), LOCK_EX);
-            }
-        }
+        // if (self::$StreamingServers[SERVER_ID]["persistent_connections"] != $_INFO["pconnect"]) {
+        //     $_INFO["pconnect"] = self::$StreamingServers[SERVER_ID]["persistent_connections"];
+        //     if (!empty($_INFO) && is_array($_INFO) && !empty($_INFO["db_user"])) {
+        //         file_put_contents(MAIN_DIR . "config", base64_encode(decrypt_config(json_encode($_INFO), CONFIG_CRYPT_KEY)), LOCK_EX);
+        //     }
+        // }
 
         self::$SegmentsSettings = self::calculateSegNumbers();
         crontab_refresh();
