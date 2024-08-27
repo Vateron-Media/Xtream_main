@@ -1254,13 +1254,13 @@ if (isset($_GET["action"])) {
             } else if ($rSub == "restore") {
                 $rBackup = pathinfo($_GET["filename"])["filename"];
                 $rFilename = MAIN_DIR . "adtools/backups/" . $rBackup . ".sql";
-                $rCommand = "mysql -u " . $_INFO["db_user"] . " -p" . $_INFO["db_pass"] . " -P " . $_INFO["db_port"] . " " . $_INFO["db_name"] . " < \"" . $rFilename . "\"";
+                $rCommand = "mysql -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " < \"" . $rFilename . "\"";
                 $rRet = shell_exec($rCommand);
                 echo json_encode(array("result" => True));
                 exit;
             } else if ($rSub == "backup") {
                 $rFilename = MAIN_DIR . "adtools/backups/backup_" . date("Y-m-d_H:i:s") . ".sql";
-                $rCommand = "mysqldump -u " . $_INFO["db_user"] . " -p" . $_INFO["db_pass"] . " -P " . $_INFO["db_port"] . " " . $_INFO["db_name"] . " --ignore-table=xtream_iptvpro.user_activity --ignore-table=xtream_iptvpro.stream_logs --ignore-table=xtream_iptvpro.panel_logs --ignore-table=xtream_iptvpro.client_logs --ignore-table=xtream_iptvpro.epg_data > \"" . $rFilename . "\"";
+                $rCommand = "mysqldump -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " --ignore-table=xtream_iptvpro.user_activity --ignore-table=xtream_iptvpro.stream_logs --ignore-table=xtream_iptvpro.panel_logs --ignore-table=xtream_iptvpro.client_logs --ignore-table=xtream_iptvpro.epg_data > \"" . $rFilename . "\"";
                 $rRet = shell_exec($rCommand);
                 if (file_exists($rFilename)) {
                     $rBackups = getBackups();

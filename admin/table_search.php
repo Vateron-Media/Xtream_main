@@ -2561,7 +2561,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 1, "recordsFiltered" => 1, "data" => array($_INFO["host"], $_INFO["db_user"], $_INFO["db_pass"], $_INFO["db_name"], $_INFO["db_port"]));
+    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 1, "recordsFiltered" => 1, "data" => array($_INFO['hostname'], $_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['port']));
     echo json_encode($rReturn);
     exit;
 } else if ($rType == "watch_output") {

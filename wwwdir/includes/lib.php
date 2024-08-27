@@ -49,7 +49,7 @@ class ipTV_lib {
 
         // if (self::$StreamingServers[SERVER_ID]["persistent_connections"] != $_INFO["pconnect"]) {
         //     $_INFO["pconnect"] = self::$StreamingServers[SERVER_ID]["persistent_connections"];
-        //     if (!empty($_INFO) && is_array($_INFO) && !empty($_INFO["db_user"])) {
+        //     if (!empty($_INFO) && is_array($_INFO) && !empty($_INFO['username'])) {
         //         file_put_contents(MAIN_DIR . "config", base64_encode(decrypt_config(json_encode($_INFO), CONFIG_CRYPT_KEY)), LOCK_EX);
         //     }
         // }
