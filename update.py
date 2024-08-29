@@ -7,7 +7,7 @@ PHPDir = baseDir + "bin/php/bin/php"
 
 if __name__ == "__main__":
     # stop xtreamcodes
-    os.system(f"sudo sh {baseDir}service.sh stop")
+    os.system("sudo systemctl stop xtreamcodes")
     # move update files
     os.system(f"rsync -a {baseDir}update/ {baseDir}")
     # add permissions
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # Transferring control further
     os.system("sudo %s %stools/update.php post-update" % (PHPDir, baseDir))
     # start xtreamcodes
-    os.system(f"sudo sh {baseDir}service.sh start")
+    os.system("sudo systemctl start xtreamcodes")
     # remove update_tmp
     os.system(f"rm -rf {baseDir}update/")
     sys.exit(1)
