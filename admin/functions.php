@@ -94,13 +94,23 @@ function sortArrayByArray(array $rArray, array $rSort) {
 
 function updateGeoLite2() {
     global $rAdminSettings;
-    $rURL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/status.json";
-    $rData = json_decode(file_get_contents($rURL), True);
-    if ($rData["version"]) {
+    $context = stream_context_create(
+        array(
+            "http" => array(
+                "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+            )
+        )
+    );
+    $URLTagsRelease = "https://api.github.com/repos/Vateron-Media/Xtream_Update/git/refs/tags";
+    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), True);
+    $latestTag = $tags[0]['ref'];
+    $rGeoLite2_version = str_replace("refs/tags/", "", $latestTag);
+
+    if ($rGeoLite2_version) {
         $fileNames = ["GeoLite2-City.mmdb", "GeoLite2-Country.mmdb", "GeoLite2-ASN.mmdb"];
         $checker = [false, false, false];
         foreach ($fileNames as $key => $value) {
-            $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/raw/main/{$value}");
+            $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/releases/download/{$rGeoLite2_version}/{$value}");
             if (stripos($rFileData, "MaxMind.com") !== false) {
                 $rFilePath = "/home/xtreamcodes/bin/maxmind/{$value}";
                 exec("sudo chattr -i {$rFilePath}");
@@ -114,7 +124,7 @@ function updateGeoLite2() {
             }
         }
         if ($checker[0] && $checker[1] && $checker[2]) {
-            $rAdminSettings["geolite2_version"] = $rData["version"];
+            $rAdminSettings["geolite2_version"] = $rGeoLite2_version;
             writeAdminSettings();
             return true;
         } else {
