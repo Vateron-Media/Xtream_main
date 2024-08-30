@@ -1,6 +1,12 @@
 #!/home/xtreamcodes/bin/php/bin/php
 <?php
 
+
+# os.system(
+#     "sudo mysql -u root%s -e \"USE xtream_iptvpro; UPDATE 'streaming_servers' SET 'server_ip'='%s', 'system_os'='%s', 'network_interface' = 'auto' WHERE 'id'=1\" > /dev/null"
+#     % (rExtra, getIP(), getVersion())
+# )
+
 if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 	set_time_limit(0);
 
@@ -59,6 +65,14 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 				shell_exec('sudo echo "' . "\n" . 'DefaultLimitNOFILESoft=1048576" >> "/etc/systemd/system.conf"');
 				shell_exec('sudo echo "' . "\n" . 'DefaultLimitNOFILESoft=1048576" >> "/etc/systemd/user.conf"');
 			}
+		}
+
+		if ($rFirstRun) {
+			$socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+			socket_connect($socket, '8.8.8.8', 80);
+			$name = socket_getsockname($socket, $addr, $port);
+			socket_close($socket);
+			$ipTV_db->query('UPDATE `streaming_servers` SET `server_ip`=\'%s\', `network_interface` = \'auto\' WHERE `id`=\'%s\';', $addr,  SERVER_ID);
 		}
 
 		if (!$rFirstRun || $rServers[SERVER_ID]['is_main']) {
