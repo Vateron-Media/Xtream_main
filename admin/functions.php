@@ -192,7 +192,6 @@ ini_set('max_execution_time', $rTimeout);
 ini_set('default_socket_timeout', $rTimeout);
 
 define("MAIN_DIR", "/home/xtreamcodes/");
-define("CONFIG_CRYPT_KEY", "5709650b0d7806074842c6de575025b1");
 define("CONFIG_PATH", MAIN_DIR . "config/");
 
 require_once realpath(dirname(__FILE__)) . "/mobiledetect.php";

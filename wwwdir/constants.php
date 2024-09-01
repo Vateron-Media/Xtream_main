@@ -78,8 +78,6 @@ define('YOUTUBE_PATH', BIN_PATH . 'yt-dlp');
 define('GEOIP2COUNTRY_FILENAME', BIN_PATH . 'maxmind/GeoLite2-Country.mmdb');
 define('GEOIP2ASN_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ASN.mmdb');
 define('GEOIP2CITY_FILENAME', BIN_PATH . 'maxmind/GeoLite2-City.mmdb');
-
-
 // -------------------
 
 // TEMP FOLDERS
@@ -112,14 +110,9 @@ define('VOD_PATH', CONTENT_PATH . 'vod/');
 
 // CONSTANTS VAR
 define('SCRIPT_VERSION', '1.2.3');
-define('IN_SCRIPT', true);
-define('SOFTWARE', 'iptv');
-define('FFMPEG_FONTS_PATH', SIGNALS_PATH . 'free-sans.ttf');
-define('KEY_CRYPT', 'dd2dbe5c8087454e7f3e341d728c3940');
-define('CONFIG_CRYPT_KEY', '5709650b0d7806074842c6de575025b1');
+define('FFMPEG_FONTS_PATH', BIN_PATH . 'free-sans.ttf');
 define('OPENSSL_EXTRA', '5gd46z5s4fg6sd8f4gs6');
 define('RESTART_TAKE_CACHE', 5);
-define('TOTAL_SAVES_DROP', 6);
 // -------------------
 
 if (!defined('USE_CACHE')) {
