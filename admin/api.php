@@ -1132,40 +1132,6 @@ if (isset($_GET["action"])) {
             startcmd();
             echo json_encode(array("result" => False));
             exit;
-        case "fremake_server":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
-                echo json_encode(array("result" => False));
-                exit;
-            }
-            $rServerID = intval($_GET["server_id"]);
-            if (isset($rServers[$rServerID])) {
-                $rServer = $rServers[$rServerID];
-                $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "fsremake");
-                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-                startcmd();
-                echo json_encode(array("result" => True));
-                exit;
-            }
-            startcmd();
-            echo json_encode(array("result" => False));
-            exit;
-        case "fremake_balancer":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
-                echo json_encode(array("result" => False));
-                exit;
-            }
-            $rServerID = intval($_GET["server_id"]);
-            if (isset($rServers[$rServerID])) {
-                $rServer = $rServers[$rServerID];
-                $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "fbremake");
-                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-                startcmd();
-                echo json_encode(array("result" => True));
-                exit;
-            }
-            startcmd();
-            echo json_encode(array("result" => False));
-            exit;
         case "update_release":
             if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
                 echo json_encode(array("result" => False));

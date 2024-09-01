@@ -177,16 +177,10 @@ if ($rSettings["sidebar"]) { ?>
                                     <div class="col-md-6">
                                         <input id="remake_server_ssh" type="submit" class="btn btn-warning" value="<?= $_["remake_server"] ?>" style="width:100%" /></p>
                                     </div>
-                                    <div class="col-md-6">
-                                        <input id="fremake_server_ssh" type="submit" class="btn btn-warning" value="<?= $_["fremake_server"] ?>" style="width:100%" /></p>
-                                    </div>
                                 </div>
                                 <div class="form-group row mb-4">
                                     <div class="col-md-6">
                                         <input id="remake_balancer_ssh" type="submit" class="btn btn-success" value="<?= $_["remake_balancer"] ?>" style="width:100%" /></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input id="fremake_balancer_ssh" type="submit" class="btn btn-success" value="<?= $_["fremake_balancer"] ?>" style="width:100%" />
                                     </div>
                                 </div>
                                 <!--<div class="form-group row mb-4">
@@ -311,32 +305,6 @@ if ($rSettings["sidebar"]) { ?>
                         $.getJSON("./api.php?action=remake_balancer&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function(data) {
                             if (data.result === true) {
                                 $.toast("balancer will be remaked shortly.");
-                            } else {
-                                $.toast("An error occured while processing your request.");
-                            }
-                            $("#root_password").val("");
-                            $("#ssh_port").val("22");
-                            $(".bs-server-modal-center").data("id", "");
-                        });
-                    });
-                    $("#fremake_server_ssh").click(function() {
-                        $(".bs-server-modal-center").modal("hide");
-                        $.getJSON("./api.php?action=fremake_server&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function(data) {
-                            if (data.result === true) {
-                                $.toast("Server will be full remaked shortly.");
-                            } else {
-                                $.toast("An error occured while processing your request.");
-                            }
-                            $("#root_password").val("");
-                            $("#ssh_port").val("22");
-                            $(".bs-server-modal-center").data("id", "");
-                        });
-                    });
-                    $("#fremake_balancer_ssh").click(function() {
-                        $(".bs-server-modal-center").modal("hide");
-                        $.getJSON("./api.php?action=fremake_balancer&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function(data) {
-                            if (data.result === true) {
-                                $.toast("Balancer will be full remaked shortly.");
                             } else {
                                 $.toast("An error occured while processing your request.");
                             }
