@@ -45,7 +45,7 @@
 # Run panel
 
 ```
-sudo sh /home/xtreamcodes/service.sh {start|stop|restart|reload}
+sudo systemctl start xtreamcodes
 ```
 | Parameter |description |
 | :---:   | :---: |
@@ -53,3 +53,8 @@ sudo sh /home/xtreamcodes/service.sh {start|stop|restart|reload}
 | stop | Stop panel |
 | restart | Restart panel |
 | reload | Restart Nginx |
+
+Panel Status
+```
+sudo systemctl status xtreamcodes.service 
+```

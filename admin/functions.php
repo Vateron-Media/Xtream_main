@@ -90,62 +90,27 @@ function sortArrayByArray(array $rArray, array $rSort) {
     return $rOrdered + $rArray;
 }
 
-function updatePanel($updateVersion, $curentVersion) {
-    global $db;
-    $nextVersion = getNextVersionUpdate($curentVersion, $updateVersion);
-    if (!$nextVersion) {
-        return;
-    }
-    $updatePath = "/home/xtreamcodes/updates/";
-    $URL = "https://github.com/Vateron-Media/Xtream_main/releases/download/v{$nextVersion}/update.tar.gz";
 
-    # make dir
-    if (!file_exists($updatePath)) {
-        mkdir($updatePath);
-    }
-
-    $data = file_get_contents($URL);
-    file_put_contents($updatePath . "update.tar.gz", $data);
-
-    # make dir
-    if (!file_exists($updatePath . "update_tmp")) {
-        mkdir($updatePath . "update_tmp");
-    }
-
-    $phar = new PharData($updatePath . 'update.tar.gz');
-    $phar->extractTo($updatePath . 'update_tmp/', null, true);
-
-    $files = scandir($updatePath . 'update_tmp/updates');
-    foreach ($files as $file) {
-        if ($file != '.' && $file != '..') {
-            copy($updatePath . 'update_tmp/updates/' . $file, $updatePath . $file);
-        }
-    }
-
-    if (file_exists($updatePath . "update.tar.gz")) {
-        unlink($updatePath . "update.tar.gz");
-    }
-
-    $db->query('UPDATE `streaming_servers` SET `status` = 5 WHERE `is_main` = 1;');
-
-    $rCommand = '/usr/bin/python3 ' . $updatePath . 'update.py > /dev/null 2>&1 &';
-    shell_exec($rCommand);
-    sleep(1);
-    #remove folder update
-    if (file_exists($updatePath)) {
-        rrmdir($updatePath);
-    }
-}
 
 function updateGeoLite2() {
     global $rAdminSettings;
-    $rURL = "https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/status.json";
-    $rData = json_decode(file_get_contents($rURL), True);
-    if ($rData["version"]) {
+    $context = stream_context_create(
+        array(
+            "http" => array(
+                "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+            )
+        )
+    );
+    $URLTagsRelease = "https://api.github.com/repos/Vateron-Media/Xtream_Update/git/refs/tags";
+    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), True);
+    $latestTag = $tags[0]['ref'];
+    $rGeoLite2_version = str_replace("refs/tags/", "", $latestTag);
+
+    if ($rGeoLite2_version) {
         $fileNames = ["GeoLite2-City.mmdb", "GeoLite2-Country.mmdb", "GeoLite2-ASN.mmdb"];
         $checker = [false, false, false];
         foreach ($fileNames as $key => $value) {
-            $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/raw/main/{$value}");
+            $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/releases/download/{$rGeoLite2_version}/{$value}");
             if (stripos($rFileData, "MaxMind.com") !== false) {
                 $rFilePath = "/home/xtreamcodes/bin/maxmind/{$value}";
                 exec("sudo chattr -i {$rFilePath}");
@@ -159,7 +124,7 @@ function updateGeoLite2() {
             }
         }
         if ($checker[0] && $checker[1] && $checker[2]) {
-            $rAdminSettings["geolite2_version"] = $rData["version"];
+            $rAdminSettings["geolite2_version"] = $rGeoLite2_version;
             writeAdminSettings();
             return true;
         } else {
@@ -227,7 +192,7 @@ ini_set('max_execution_time', $rTimeout);
 ini_set('default_socket_timeout', $rTimeout);
 
 define("MAIN_DIR", "/home/xtreamcodes/");
-define("CONFIG_CRYPT_KEY", "5709650b0d7806074842c6de575025b1");
+define("CONFIG_PATH", MAIN_DIR . "config/");
 
 require_once realpath(dirname(__FILE__)) . "/mobiledetect.php";
 require_once realpath(dirname(__FILE__)) . "/gauth.php";
@@ -251,8 +216,8 @@ function xor_parse($data, $key) {
     return $output;
 }
 
-$_INFO = json_decode(xor_parse(base64_decode(file_get_contents(MAIN_DIR . "config")), CONFIG_CRYPT_KEY), True);
-if (!$db = new mysqli($_INFO["host"], $_INFO["db_user"], $_INFO["db_pass"], $_INFO["db_name"], $_INFO["db_port"])) {
+$_INFO = parse_ini_file(CONFIG_PATH . 'config.ini');
+if (!$db = new mysqli($_INFO["hostname"], $_INFO["username"], $_INFO["password"], $_INFO["database"], $_INFO["port"])) {
     exit("No MySQL connection!");
 }
 $db->set_charset("utf8");
@@ -909,6 +874,18 @@ function getPanelLogs() {
     global $db;
     $return = array();
     $result = $db->query("SELECT * FROM `panel_logs` ORDER BY `id` ASC;");
+    if (($result) && ($result->num_rows > 0)) {
+        while ($row = $result->fetch_assoc()) {
+            $return[] = $row;
+        }
+    }
+    return $return;
+}
+
+function getSystemLogs() {
+    global $db;
+    $return = array();
+    $result = $db->query("SELECT * FROM `mysql_syslog` ORDER BY `id` ASC;");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             $return[] = $row;
@@ -2045,34 +2022,5 @@ function rrmdir($dir) {
         }
         reset($objects);
         rmdir($dir);
-    }
-}
-
-function getNextVersionUpdate($curentVersion, $updateVersion) {
-    $context = stream_context_create(
-        array(
-            "http" => array(
-                "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
-            )
-        )
-    );
-    $URLTagsRelease = "https://api.github.com/repos/Vateron-Media/Xtream_main/git/refs/tags";
-    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), True);
-
-    $versions = [];
-    foreach ($tags as $value) {
-        $latestTag = $value['ref'];
-        $latestTag = str_replace("refs/tags/", "", $latestTag);
-        $versions[] = $latestTag;
-    }
-
-    #get key in array versions
-    $CurentKey = array_search($curentVersion, $versions);
-    $UpdKey = array_search($updateVersion, $versions);
-
-    if ($CurentKey < $UpdKey) {
-        return $versions[$CurentKey + 1];
-    } else {
-        return false;
     }
 }

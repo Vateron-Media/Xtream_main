@@ -351,7 +351,7 @@
                                 </ul>
                             </li>
 							<?php }
-							if ((hasPermissions("adv", "add_user")) OR (hasPermissions("adv", "users")) OR (hasPermissions("adv", "mass_edit_users")) OR (hasPermissions("adv", "mng_regusers")) OR (hasPermissions("adv", "add_reguser")) OR (hasPermissions("adv", "credits_log")) OR (hasPermissions("adv", "panel_errors")) OR (hasPermissions("adv", "client_request_log")) OR (hasPermissions("adv", "reg_userlog"))OR (hasPermissions("adv", "live_connections")) OR (hasPermissions("adv", "connection_logs")) OR (hasPermissions("adv", "stream_errors")) OR (hasPermissions("adv", "manage_events"))) { ?>
+							if ((hasPermissions("adv", "add_user")) OR (hasPermissions("adv", "users")) OR (hasPermissions("adv", "mass_edit_users")) OR (hasPermissions("adv", "mng_regusers")) OR (hasPermissions("adv", "add_reguser")) OR (hasPermissions("adv", "credits_log")) OR (hasPermissions("adv", "panel_errors")) OR (hasPermissions("adv", "client_request_log")) OR (hasPermissions("adv", "reg_userlog"))OR (hasPermissions("adv", "live_connections")) OR (hasPermissions("adv", "connection_logs")) OR (hasPermissions("adv", "stream_errors")) OR (hasPermissions("adv", "manage_events")) OR (hasPermissions("adv", "system_logs"))) { ?>
 							<li>
                                 <a href="#"> <i class="mdi mdi-information-outline mdi-18px text-danger"></i><span><?=$_["logs"]?> </span><span class="arrow-rigth"></span></a>
                                 <ul class="nav-second-level" aria-expanded="false">
@@ -365,6 +365,9 @@
 									if (hasPermissions("adv", "panel_errors")) { ?>
                                     <li><a href="./panel_logs.php"><span class="mdi mdi-file-document-outline mdi-18px"> <?=$_["panel_logs"]?></a></li>
 									<?php }
+                                    if (hasPermissions("adv", "system_logs")) { ?>
+                                        <li><a href="./system_logs.php"><span class="mdi mdi-file-document-outline mdi-18px"> <?=$_["system_logs"]?></a></li>
+                                        <?php } 
 									if (hasPermissions("adv", "credits_log")) { ?>
                                     <li><a href="./credit_logs.php"><span class="mdi mdi-credit-card-multiple mdi-18px"> <?=$_["credit_logs"]?></a></li>
 									<?php }

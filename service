@@ -3,7 +3,7 @@
 SCRIPT=/home/xtreamcodes
 USER=$(whoami)
 
-if [ $USER != "root" ]]; then
+if [ $USER != "root" ]; then
   echo "Please run as root!"
   exit 0
 fi
@@ -21,10 +21,12 @@ start() {
   sudo -u xtreamcodes $SCRIPT/bin/nginx/sbin/nginx >/dev/null 2>/dev/null
   sudo -u xtreamcodes $SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp >/dev/null 2>/dev/null
   sudo -u xtreamcodes $SCRIPT/bin/daemons.sh
+  sudo -u xtreamcodes $SCRIPT/permissions.sh >/dev/null 2>/dev/null &
   sudo $SCRIPT/bin/php/bin/php $SCRIPT/tools/startup.php
   sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/tools/signals.php >/dev/null 2>/dev/null &
   sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/tools/watchdog.php >/dev/null 2>/dev/null &
   echo 'Running in foreground...'
+  sleep infinity
 }
 
 
@@ -49,7 +51,7 @@ restart() {
 
 reload() {
   pids=$(pgrep -u xtreamcodes nginx | wc -l)
-  if [ $pids = 0 ]]; then
+  if [ $pids = 0 ]; then
     echo 'XtreamCodes is not running'
     return 1
   fi

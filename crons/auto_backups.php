@@ -15,7 +15,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     }
     if ($bDoBackup) {
         $rFilename = MAIN_DIR . "adtools/backups/backup_" . date("Y-m-d_H:i:s") . ".sql";
-        $rCommand = "mysqldump -u " . $_INFO["db_user"] . " -p" . $_INFO["db_pass"] . " -P " . $_INFO["db_port"] . " " . $_INFO["db_name"] . " --ignore-table=xtream_iptvpro.user_activity --ignore-table=xtream_iptvpro.stream_logs --ignore-table=xtream_iptvpro.panel_logs --ignore-table=xtream_iptvpro.client_logs --ignore-table=xtream_iptvpro.epg_data > \"" . $rFilename . "\"";
+        $rCommand = "mysqldump -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " --ignore-table=xtream_iptvpro.user_activity --ignore-table=xtream_iptvpro.stream_logs --ignore-table=xtream_iptvpro.panel_logs --ignore-table=xtream_iptvpro.client_logs --ignore-table=xtream_iptvpro.epg_data > \"" . $rFilename . "\"";
         $rRet = shell_exec($rCommand);
         if (file_exists($rFilename)) {
             $rAdminSettings['automatic_backups_check'] = time();

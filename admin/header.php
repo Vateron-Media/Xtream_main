@@ -354,7 +354,7 @@
                                 </ul>
                             </li>
                             <?php }
-							if ((hasPermissions("adv", "add_user")) OR (hasPermissions("adv", "users")) OR (hasPermissions("adv", "mass_edit_users")) OR (hasPermissions("adv", "mng_regusers")) OR (hasPermissions("adv", "add_reguser")) OR (hasPermissions("adv", "credits_log")) OR (hasPermissions("adv", "panel_errors"))  OR (hasPermissions("adv", "client_request_log")) OR (hasPermissions("adv", "reg_userlog"))OR (hasPermissions("adv", "live_connections")) OR (hasPermissions("adv", "connection_logs")) OR (hasPermissions("adv", "stream_errors")) OR (hasPermissions("adv", "manage_events"))) { ?>
+							if ((hasPermissions("adv", "add_user")) OR (hasPermissions("adv", "users")) OR (hasPermissions("adv", "mass_edit_users")) OR (hasPermissions("adv", "mng_regusers")) OR (hasPermissions("adv", "add_reguser")) OR (hasPermissions("adv", "credits_log")) OR (hasPermissions("adv", "panel_errors"))  OR (hasPermissions("adv", "client_request_log")) OR (hasPermissions("adv", "reg_userlog"))OR (hasPermissions("adv", "live_connections")) OR (hasPermissions("adv", "connection_logs")) OR (hasPermissions("adv", "stream_errors")) OR (hasPermissions("adv", "manage_events"))OR (hasPermissions("adv", "system_logs"))) { ?>
 							<li class="has-submenu">
                                 <a href="#"> <i class="mdi mdi-information-outline mdi-18px text-danger"></i><?=$_["logs"]?> <div class="arrow-down"></div></a>
                                 <ul class="submenu">
@@ -364,6 +364,9 @@
 									if (hasPermissions("adv", "panel_errors")) { ?>
                                     <li><a href="./panel_logs.php"><span class="mdi mdi-file-document-outline mdi-18px"> <?=$_["panel_logs"]?></a></li><p>
 									<?php }
+                                    if (hasPermissions("adv", "system_logs")) { ?>
+                                    <li><a href="./system_logs.php"><span class="mdi mdi-file-document-outline mdi-18px"> <?=$_["system_logs"]?></a></li><p>
+                                    <?php }
 									if (hasPermissions("adv", "connection_logs")) { ?>
                                     <li><a href="./user_activity.php"><span class="mdi mdi-file-document-outline mdi-18px"> <?=$_["activity_logs"]?></a></li><p>
                                     <li><a href="./user_ips.php"><span class="mdi mdi-ip mdi-18px"> <?=$_["line_ip_usage"]?></a></li><p>
@@ -382,7 +385,7 @@
 									<?php }
 									if (hasPermissions("adv", "manage_events")) { ?>
                                     <li><a href="./mag_events.php"><span class="mdi mdi-message-outline mdi-18px"> <?=$_["mag_event_logs"]?></a></li>
-									<?php } ?>
+									<?php }  ?>
                                 </ul>
                             </li>
 							<?php } 
