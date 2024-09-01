@@ -120,8 +120,6 @@ define('KEY_CRYPT', 'dd2dbe5c8087454e7f3e341d728c3940');
 define('CONFIG_CRYPT_KEY', '5709650b0d7806074842c6de575025b1');
 define('OPENSSL_EXTRA', '5gd46z5s4fg6sd8f4gs6');
 define('RESTART_TAKE_CACHE', 5);
-define('TOTAL_SAVES_DROP', 6);
-define('MONITOR_CALLS', 3);
 // -------------------
 
 if (!defined('USE_CACHE')) {
