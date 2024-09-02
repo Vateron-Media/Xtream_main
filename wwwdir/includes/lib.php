@@ -66,6 +66,11 @@ class ipTV_lib {
 
     public static function calculateSegNumbers() {
         $segments_settings = array();
+
+        #seg_type = 0  // -f hls
+        #seg_type = 1  // -f segment
+
+        $segments_settings['seg_type'] = 1;
         $segments_settings["seg_time"] = 10;
         $segments_settings["seg_list_size"] = 6;
         return $segments_settings;

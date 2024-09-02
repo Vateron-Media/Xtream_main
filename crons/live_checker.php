@@ -51,9 +51,9 @@ function loadCron() {
                     if (file_exists(STREAMS_PATH . $stream["stream_id"] . '_.progress')) {
                         $Progress = file_get_contents(STREAMS_PATH . $stream["stream_id"] . '_.progress');
                         unlink(STREAMS_PATH . $stream['stream_id'] . '_.progress');
-                        // if ($stream['fps_restart']) {
-                        //     file_put_contents(STREAMS_PATH . $stream['stream_id'] . '_.progress_check', $Progress);
-                        // }
+                        if ($stream['fps_restart']) {
+                            file_put_contents(STREAMS_PATH . $stream['stream_id'] . '_.progress_check', $Progress);
+                        }
                     } else {
                         $Progress = $stream['progress_info'];
                     }
