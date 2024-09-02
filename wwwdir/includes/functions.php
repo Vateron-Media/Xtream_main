@@ -733,8 +733,7 @@ function crontab_refresh() {
         $ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
         foreach ($ipTV_db->get_rows() as $rRow) {
             $rFullPath = CRON_PATH . $rRow['filename'];
-            if (!(pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && file_exists($rFullPath))) {
-            } else {
+            if (pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && file_exists($rFullPath)) {
                 $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XtreamUI';
             }
         }
