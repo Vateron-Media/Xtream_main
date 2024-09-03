@@ -14,10 +14,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
 } else {
     exit('Please run as XtreamCodes!' . "\n");
 }
-
 function loadCron() {
     global $ipTV_db;
-    $rLogFile = LOGS_TMP_PATH . 'connections';
+    $rLogFile = LOGS_TMP_PATH . 'activity';
     $rUpdateQuery = $rQuery = '';
     $rUpdates = array();
     $rCount = 0;
@@ -57,7 +56,7 @@ function parseLog($rFile) {
                 if ($rLine['server_id'] && $rLine['user_id'] && $rLine['stream_id'] && $rLine['user_ip']) {
                     $rUpdates[] = array($rLine['user_id'], $rLine['user_ip'], json_encode(array('date_end' => $rLine['date_end'], 'stream_id' => $rLine['stream_id'])));
                     $rLine = array_map(array($ipTV_db, 'escape'), $rLine);
-                    $rQuery .= '(' . $rLine['server_id'] . ',' . $rLine['user_id'] . ',\'' . $rLine['isp'] . '\',\'' . $rLine['external_device'] . '\',' . $rLine['stream_id'] . ',' . $rLine['date_start'] . ',\'' . $rLine['user_agent'] . '\',\'' . $rLine['user_ip'] . '\',' . $rLine['date_end'] . ',\'' . $rLine['container'] . '\',\'' . $rLine['geoip_country_code'] . '\',' . $rLine['divergence'] . '),';
+                    $rQuery .= '(' . $rLine['server_id'] . ',' . $rLine['user_id'] . ',\'' . $rLine['isp'] . '\',\'' . $rLine['external_device'] . '\',' . $rLine['stream_id'] . ',' . $rLine['date_start'] . ',\'' . $rLine['user_agent'] . '\',\'' . $rLine['user_ip'] . '\',' . $rLine['date_end'] . ',\'' . $rLine['container'] . '\',\'' . $rLine['geoip_country_code'] . '\',' . $rLine['divergence'] . ',' . $rLine['hmac_id'] . ',' . $rLine['hmac_identifier'] . '),';
                     $rCount++;
                 }
                 break;
