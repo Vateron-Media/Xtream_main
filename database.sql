@@ -241,7 +241,7 @@ INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
 (4, 'balancer.php', '* * * * *', 1),
 (5, 'activity.php', '* * * * *', 1),
 (6, 'servers_checker.php', '* * * * *', 1),
-(7, 'setup_cache.php', '* * * * *', 1),
+(7, 'cache.php', '* * * * *', 1),
 (8, 'stats.php', '0 * * * *', 1),
 (9, 'errors.php', '* * * * *', 1),
 (10, 'tmdb_async.php', '0 * * * *', 1),
