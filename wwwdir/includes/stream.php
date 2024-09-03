@@ -123,40 +123,6 @@ class ipTV_stream {
         shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'monitor.php ' . intval($streamID) . ' ' . intval($rRestart) . ' >/dev/null 2>/dev/null &');
         return true;
     }
-    public static function stopStream($streamID, $stop = false) {
-        if (file_exists(STREAMS_PATH . $streamID . '_.monitor')) {
-            $monitor = intval(file_get_contents(STREAMS_PATH . $streamID . '_.monitor'));
-        } else {
-            self::$ipTV_db->query('SELECT `monitor_pid` FROM `streams_servers` WHERE `server_id` = \'%d\' AND `stream_id` = \'%d\' LIMIT 1;', SERVER_ID, $streamID);
-            $monitor = intval(self::$ipTV_db->get_row()['monitor_pid']);
-        }
-        if ($monitor > 0) {
-            if (self::checkPID($monitor, "XtreamCodes[{$streamID}]") && is_numeric($monitor) && 0 < $monitor) {
-                posix_kill($monitor, 9);
-            }
-        }
-        if (file_exists(STREAMS_PATH . $streamID . '_.pid')) {
-            $PID = intval(file_get_contents(STREAMS_PATH . $streamID . '_.pid'));
-        } else {
-            self::$ipTV_db->query('SELECT `pid` FROM `streams_servers` WHERE `server_id` = ? AND `stream_id` = ? LIMIT 1;', SERVER_ID, $streamID);
-            $PID = intval(self::$ipTV_db->get_row()['pid']);
-        }
-        if ($PID > 0) {
-            if (self::checkPID($PID, "XtreamCodes[{$streamID}]") && is_numeric($PID) && 0 < $PID) {
-                posix_kill($PID, 9);
-            }
-        }
-        if (file_exists(SIGNALS_TMP_PATH . 'queue_' . intval($streamID))) {
-            unlink(SIGNALS_TMP_PATH . 'queue_' . intval($streamID));
-        }
-        ipTV_streaming::streamLog($streamID, SERVER_ID, 'STREAM_STOP');
-        shell_exec('rm -f ' . STREAMS_PATH . intval($streamID) . '_*');
-        if ($stop) {
-            shell_exec('rm -f ' . DELAY_PATH . intval($streamID) . '_*');
-            self::$ipTV_db->query('UPDATE `streams_servers` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0,`monitor_pid` = NULL WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
-            ipTV_streaming::updateStream($streamID);
-        }
-    }
     static function checkPID($pid, $search) {
         if (file_exists('/proc/' . $pid)) {
             $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
@@ -599,6 +565,40 @@ class ipTV_stream {
         ipTV_streaming::updateStream($streamID);
         $playlist = (!$rDelayEnabled ? STREAMS_PATH . $streamID . '_.m3u8' : DELAY_PATH . $streamID . '_.m3u8');
         return array('main_pid' => $pID, 'stream_source' => $rRealSource, 'delay_enabled' => $rDelayEnabled, 'parent_id' => $stream['server_info']['parent_id'], 'delay_start_at' => $rDelayStartAt, 'playlist' => $playlist, 'transcode' => $stream['stream_info']['enable_transcode'], 'offset' => $rOffset);
+    }
+    public static function stopStream($streamID, $stop = false) {
+        if (file_exists(STREAMS_PATH . $streamID . '_.monitor')) {
+            $monitor = intval(file_get_contents(STREAMS_PATH . $streamID . '_.monitor'));
+        } else {
+            self::$ipTV_db->query('SELECT `monitor_pid` FROM `streams_servers` WHERE `server_id` = \'%d\' AND `stream_id` = \'%d\' LIMIT 1;', SERVER_ID, $streamID);
+            $monitor = intval(self::$ipTV_db->get_row()['monitor_pid']);
+        }
+        if ($monitor > 0) {
+            if (self::checkPID($monitor, "XtreamCodes[{$streamID}]") && is_numeric($monitor) && 0 < $monitor) {
+                posix_kill($monitor, 9);
+            }
+        }
+        if (file_exists(STREAMS_PATH . $streamID . '_.pid')) {
+            $PID = intval(file_get_contents(STREAMS_PATH . $streamID . '_.pid'));
+        } else {
+            self::$ipTV_db->query('SELECT `pid` FROM `streams_servers` WHERE `server_id` = \'%d\' AND `stream_id` = \'%d\' LIMIT 1;', SERVER_ID, $streamID);
+            $PID = intval(self::$ipTV_db->get_row()['pid']);
+        }
+        if ($PID > 0) {
+            if (self::checkPID($PID, "XtreamCodes[{$streamID}]") && is_numeric($PID) && 0 < $PID) {
+                posix_kill($PID, 9);
+            }
+        }
+        if (file_exists(SIGNALS_TMP_PATH . 'queue_' . intval($streamID))) {
+            unlink(SIGNALS_TMP_PATH . 'queue_' . intval($streamID));
+        }
+        ipTV_streaming::streamLog($streamID, SERVER_ID, 'STREAM_STOP');
+        shell_exec('rm -f ' . STREAMS_PATH . intval($streamID) . '_*');
+        if ($stop) {
+            shell_exec('rm -f ' . DELAY_PATH . intval($streamID) . '_*');
+            self::$ipTV_db->query('UPDATE `streams_servers` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0,`monitor_pid` = NULL WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
+            ipTV_streaming::updateStream($streamID);
+        }
     }
     public static function customOrder($a, $b) {
         if (substr($a, 0, 3) == '-i ') {

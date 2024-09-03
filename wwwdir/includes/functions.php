@@ -1,13 +1,5 @@
 <?php
 
-function decrypt_config($data, $key) {
-    $index = 0;
-    $output = '';
-    foreach (str_split($data) as $char) {
-        $output .= chr(ord($char) ^ ord($key[$index++ % strlen($key)]));
-    }
-    return $output;
-}
 function getStats() {
     $rJSON = array();
     $rJSON['cpu'] = round(getTotalCPU(), 2);
@@ -66,11 +58,6 @@ function isMobileDevice() {
         }
     }
     return false;
-}
-function epg_search($array, $key, $value) {
-    $results = array();
-    formatArrayResults($array, $key, $value, $results);
-    return $results;
 }
 function formatArrayResults($array, $key, $value, &$results) {
     if (!is_array($array)) {
@@ -328,7 +315,6 @@ function getTotalCPU() {
     }
     return $rTotalLoad / intval(shell_exec("grep -P '^processor' /proc/cpuinfo|wc -l"));
 }
-
 function getTotalTmpfs() {
     $rTotal = 0;
     exec('df | grep tmpfs', $rOutput);
@@ -340,7 +326,6 @@ function getTotalTmpfs() {
     }
     return $rTotal;
 }
-
 function GetCategories($type = null) {
     global $ipTV_db;
     if (is_string($type)) {
@@ -788,7 +773,6 @@ function getNetwork($Interface = null) {
     }
     return $Return;
 }
-
 function secondsToTime($inputSeconds) {
     $secondsInAMinute = 60;
     $secondsInAnHour = 60 * $secondsInAMinute;
@@ -824,7 +808,6 @@ function secondsToTime($inputSeconds) {
 function encryptData($rData, $decryptionKey, $rDeviceID) {
     return base64url_encode(openssl_encrypt($rData, 'aes-256-cbc', md5(sha1($rDeviceID) . $decryptionKey), OPENSSL_RAW_DATA, substr(md5(sha1($decryptionKey)), 0, 16)));
 }
-
 /** 
  * Decrypts the provided data using AES-256-CBC decryption with a given decryption key and device ID. 
  *  
@@ -864,22 +847,6 @@ function base64url_decode($rData) {
  * @param string|null $key The key used to generate the UUID. If not provided, a random 16-byte key is generated.
  * @return string The generated UUID with the specified length.
  */
-function generateUUID($key = null) {
-    if ($key === null) {
-        $key = random_bytes(16); // Generate a random 16-byte key
-    }
-
-    $data = openssl_random_pseudo_bytes(16, $crytoStrong);
-    assert($data !== false && $crytoStrong === true);
-
-    $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // Set version to 0100
-    $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // Set bits 6-7 to 10
-
-    $uuid = vsprintf('%s%s-%s-%s-%s%s', str_split(bin2hex($key . $data), 4));
-
-    return $uuid;
-}
-
 function startDownload($rType, $rUser, $rDownloadPID) {
     $rFloodLimit = 2;
     if ($rFloodLimit != 0) {
@@ -910,7 +877,6 @@ function startDownload($rType, $rUser, $rDownloadPID) {
         return true;
     }
 }
-
 function stopDownload($rType, $rUser, $rDownloadPID) {
     $rFloodLimit = 2;
     if ($rFloodLimit != 0) {

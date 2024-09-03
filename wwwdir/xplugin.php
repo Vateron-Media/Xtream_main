@@ -71,40 +71,35 @@ if (!empty($page)) {
         $result = array();
         if ($ipTV_db->num_rows() > 0) {
             $device = $ipTV_db->get_row();
-            if ('message' == $device['key']) {
-                $result['message'] = array();
-                $result['message']['title'] = $device['command2'];
-                $result['message']['message'] = $device['command'];
-            }
-            if ('ssh' == $device['key']) {
-                $result['ssh'] = $device['command'];
-            }
-            if ('screen' == $device['key']) {
-                $result['screen'] = '1';
-            }
-            if ('reboot_gui' == $device['key']) {
-                $result['reboot_gui'] = 1;
-            }
-            if ('reboot' == $device['key']) {
-                $result['reboot'] = 1;
-            }
-            if ('update' == $device['key']) {
-                $result['update'] = $device['command'];
-            }
-            if ('block_ssh' == $device['key']) {
-                $result['block_ssh'] = (int) $device['type'];
-            }
-            if ('block_telnet' == $device['key']) {
-                $result['block_telnet'] = (int) $device['type'];
-            }
-            if ('block_ftp' == $device['key']) {
-                $result['block_ftp'] = (int) $device['type'];
-            }
-            if ('block_all' == $device['key']) {
-                $result['block_all'] = (int) $device['type'];
-            }
-            if ('block_plugin' == $device['key']) {
-                $result['block_plugin'] = (int) $device['type'];
+            switch ($device['key']) {
+                case 'message':
+                    $result['message'] = array(
+                        'title' => $device['command2'],
+                        'message' => $device['command']
+                    );
+                    break;
+                case 'ssh':
+                    $result['ssh'] = $device['command'];
+                    break;
+                case 'screen':
+                    $result['screen'] = '1';
+                    break;
+                case 'reboot_gui':
+                    $result['reboot_gui'] = 1;
+                    break;
+                case 'reboot':
+                    $result['reboot'] = 1;
+                    break;
+                case 'update':
+                    $result['update'] = $device['command'];
+                    break;
+                case 'block_ssh':
+                case 'block_telnet':
+                case 'block_ftp':
+                case 'block_all':
+                case 'block_plugin':
+                    $result[$device['key']] = (int) $device['type'];
+                    break;
             }
             $ipTV_db->query('DELETE FROM enigma2_actions where id = \'%d\'', $device['id']);
         }

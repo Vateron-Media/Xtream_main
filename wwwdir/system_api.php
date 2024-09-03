@@ -105,7 +105,6 @@ switch ($action) {
             echo json_encode($output);
         }
         die;
-        break;
     case 'getDiff':
         if (!empty(ipTV_lib::$request['main_time'])) {
             $main_time = ipTV_lib::$request['main_time'];
@@ -215,7 +214,6 @@ switch ($action) {
             }
         }
         die;
-        break;
     case 'runCMD':
         if (!empty(ipTV_lib::$request['command']) && in_array($user_ip, array("127.0.0.1", $_SERVER["SERVER_ADDR"]))) {
             exec($_POST['command'], $outputCMD);

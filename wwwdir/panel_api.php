@@ -33,7 +33,6 @@ if (!empty(ipTV_lib::$request["username"]) && !empty(ipTV_lib::$request["passwor
                     echo json_encode(array());
                     die;
                 }
-                break;
             default:
                 $categories = GetCategories();
                 $url = empty(ipTV_lib::$StreamingServers[SERVER_ID]["domain_name"]) ? ipTV_lib::$StreamingServers[SERVER_ID]["server_ip"] : ipTV_lib::$StreamingServers[SERVER_ID]["domain_name"];

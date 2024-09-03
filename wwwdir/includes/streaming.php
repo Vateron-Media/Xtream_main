@@ -1,7 +1,6 @@
 <?php
 class ipTV_streaming {
     public static $ipTV_db;
-    public static $AllowedIPs = array();
     public static function RtmpIps() {
         self::$ipTV_db->query("SELECT `ip` FROM `rtmp_ips`");
         return array_merge(array("127.0.0.1"), array_map("gethostbyname", ipTV_lib::array_values_recursive(self::$ipTV_db->get_rows())));
@@ -47,7 +46,7 @@ class ipTV_streaming {
         ipTV_lib::setCache('allowed_ips', $IPs);
         return array_unique($IPs);
     }
-    public function getAllowedIPsAdmin($rForce = false) {
+    public static function getAllowedIPsAdmin($rForce = false) {
         if (!$rForce) {
             $rCache = ipTV_lib::getCache('allowed_ips', 60);
             if (!empty($rCache)) {
@@ -270,19 +269,6 @@ class ipTV_streaming {
         }
         file_put_contents(CACHE_TMP_PATH . "servers_capacity", json_encode($rRows), LOCK_EX);
         return $rRows;
-    }
-    public static function checkStreamExistInBouquet($streamID, $connections = array(), $type = "movie") {
-        if ($type == "movie") {
-            return in_array($streamID, $connections);
-        }
-        if ($type == "series") {
-            $query = "SELECT series_id FROM `series_episodes` WHERE `stream_id` = '%d' LIMIT 1";
-            self::$ipTV_db->query($query, $streamID);
-            if (self::$ipTV_db->num_rows() <= 0) {
-                return in_array(self::$ipTV_db->get_col(), $connections);
-            }
-        }
-        return false;
     }
     public static function GetUserInfo($userID = null, $username = null, $password = null, $getChannelIDs = false,  $getBouquetInfo = false, $IP = '') {
         $userInfo = null;
@@ -560,8 +546,7 @@ class ipTV_streaming {
                         }
                     } else {
                         if ($rActivityInfo['server_id'] == SERVER_ID) {
-                            if (!($rActivityInfo['pid'] != getmypid() && is_numeric($rActivityInfo['pid']) && 0 < $rActivityInfo['pid'])) {
-                            } else {
+                            if ($rActivityInfo['pid'] != getmypid() && is_numeric($rActivityInfo['pid']) && 0 < $rActivityInfo['pid']) {
                                 posix_kill(intval($rActivityInfo['pid']), 9);
                             }
                         } else {
@@ -774,29 +759,6 @@ class ipTV_streaming {
             if (preg_match_all('/(.*?)\\.ts/', $source, $matches)) {
                 foreach ($matches[0] as $match) {
                     $source = str_replace($match, "/streaming/admin_live.php?password={$password}&extension=m3u8&segment={$match}&stream={$streamID}", $source);
-                }
-                return $source;
-            }
-            return false;
-        }
-    }
-    /** 
-     * Generates a playlist with authentication tokens for the given M3U8 file and user credentials. 
-     * 
-     * @param string $M3U8 The path to the M3U8 file. 
-     * @param string $username The username for authentication. Default is an empty string. 
-     * @param string $password The password for authentication. 
-     * @param string $uuid The UUID for authentication. 
-     * @param int $streamID The stream ID for authentication. 
-     * @return string|bool The modified playlist with authentication tokens or false if the M3U8 file does not exist. 
-     */
-    public static function GeneratePlayListWithAuthentication($M3U8, $username = '', $password = '', $uuid = '', $streamID) {
-        if (file_exists($M3U8)) {
-            $source = file_get_contents($M3U8);
-            if (preg_match_all('/(.*?)\\.ts/', $source, $matches)) {
-                foreach ($matches[0] as $match) {
-                    $token = md5($match . $username . $uuid . ipTV_lib::$settings['crypt_load_balancing'] . filesize(STREAMS_PATH . $match));
-                    $source = str_replace($match, "/hls/{$username}/{$password}/{$uuid}/{$streamID}/{$token}/{$match}", $source);
                 }
                 return $source;
             }
@@ -1047,14 +1009,6 @@ class ipTV_streaming {
         }
         return false;
     }
-    public static function checkISP($conISP) {
-        foreach (ipTV_lib::$blockedISP as $ISP) {
-            if (strtolower($conISP) == strtolower($ISP['isp'])) {
-                return intval($ISP['blocked']);
-            }
-        }
-        return 0;
-    }
     public static function checkIspIsBlocked($con_isp_name) {
         foreach (ipTV_lib::$customISP as $isp) {
             if (strtolower($con_isp_name) == strtolower($isp['isp'])) {
@@ -1065,17 +1019,14 @@ class ipTV_streaming {
     }
     public static function getConnections($server_id = null, $user_id = null, $streamID = null) {
         $rWhere = array();
-        if (empty($server_id)) {
-        } else {
+        if (!empty($server_id)) {
             $rWhere[] = 't1.server_id = ' . intval($server_id);
         }
-        if (empty($user_id)) {
-        } else {
+        if (!empty($user_id)) {
             $rWhere[] = 't1.user_id = ' . intval($user_id);
         }
         $rExtra = '';
-        if (0 >= count($rWhere)) {
-        } else {
+        if (count($rWhere) > 0) {
             $rExtra = 'WHERE ' . implode(' AND ', $rWhere);
         }
         $rQuery = 'SELECT t2.*,t3.*,t5.bitrate,t1.*,t1.uuid AS `uuid` FROM `lines_live` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_servers` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id ' . $rExtra . ' ORDER BY t1.activity_id ASC';

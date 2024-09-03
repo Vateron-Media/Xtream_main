@@ -42,13 +42,16 @@ function loadCron() {
             }
         }
 
-        ipTV_lib::setCache('settings', ipTV_lib::$settings);
-        ipTV_lib::setCache('bouquets', ipTV_lib::$Bouquets);
-        ipTV_lib::setCache('servers', ipTV_lib::$StreamingServers);
-        ipTV_lib::setCache('blocked_ua', ipTV_lib::$blockedUA);
-        ipTV_lib::setCache('customisp', ipTV_lib::$customISP);
-        ipTV_lib::setCache('uagents', ipTV_lib::$blockedUA);
-        ipTV_lib::setCache('blocked_ips', ipTV_lib::$blockedIPs);
+        ipTV_lib::setCache('settings', ipTV_lib::getSettings(true));
+        ipTV_lib::setCache('bouquets', ipTV_lib::getBouquets(true));
+        $rServers = ipTV_lib::getServers(true);
+        unset($rServers['php_pids']);
+        ipTV_lib::setCache('servers', $rServers);
+        ipTV_lib::setCache('blocked_ua', ipTV_lib::GetBlockedUserAgents(true));
+        ipTV_lib::setCache('customisp', ipTV_lib::GetIspAddon(true));
+        ipTV_lib::setCache('blocked_ips', ipTV_lib::getBlockedIPs(true));
+        ipTV_lib::setCache('blocked_isp', ipTV_lib::getBlockedISP(true));
+        ipTV_lib::setCache('categories', ipTV_lib::getCategories(null, true));
 
 
         if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
