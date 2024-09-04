@@ -235,26 +235,24 @@ CREATE TABLE IF NOT EXISTS `crontab` (
 --
 
 INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
-(1, 'vod_cc_checker.php', '* * * * *', 1),
-(2, 'lines_logs.php', '* * * * *', 1),
-(3, 'epg.php', '0 0 * * *', 1),
-(4, 'balancer.php', '* * * * *', 1),
-(5, 'activity.php', '* * * * *', 1),
-(6, 'servers.php', '* * * * *', 1),
-(7, 'cache.php', '* * * * *', 1),
-(8, 'stats.php', '0 * * * *', 1),
-(9, 'errors.php', '* * * * *', 1),
-(10, 'tmdb_async.php', '0 * * * *', 1),
-(11, 'tmp_del.php', '* * * * *', 1),
-(12, 'users_checker.php', '* * * * *', 1),
-(13, 'vod_cc_series.php', '* * * * *', 1),
-(14, 'kill_leaks.php', '* * * * *', 1),
-(15, 'watch_folder.php', '*/5 * * * *', 1),
-(16, 'auto_backups.php', '* * * * *', 1),
-(17, 'streams.php', '* * * * *', 1),
-(19, 'pid_monitor.php', '0 * * * *', 1),
-(20, 'update.php', '0 0 * * *', 1),
-(21, 'cache_engine.php', '*/5 * * * *', 1);
+(1, 'activity.php', '* * * * *', 1),
+(2, 'auto_backups.php', '* * * * *', 1),
+(3, 'cache_engine.php', '*/5 * * * *', 1);
+(4, 'cache.php', '* * * * *', 1),
+(5, 'epg.php', '0 0 * * *', 1),
+(6, 'errors.php', '* * * * *', 1),
+(7, 'kill_leaks.php', '* * * * *', 1),
+(8, 'lines_logs.php', '* * * * *', 1),
+(9, 'pid_monitor.php', '0 * * * *', 1),
+(10, 'servers.php', '* * * * *', 1),
+(11, 'stats.php', '0 * * * *', 1),
+(12, 'streams.php', '* * * * *', 1),
+(13, 'tmdb_async.php', '0 * * * *', 1),
+(14, 'tmp.php', '* * * * *', 1),
+(15, 'users.php', '* * * * *', 1),
+(16, 'vod_cc_series.php', '* * * * *', 1),
+(17, 'vod.php', '* * * * *', 1),
+(18, 'watch_folder.php', '*/5 * * * *', 1),
 
 -- --------------------------------------------------------
 
