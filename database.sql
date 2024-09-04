@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS `crontab` (
 INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
 (1, 'activity.php', '* * * * *', 1),
 (2, 'auto_backups.php', '* * * * *', 1),
-(3, 'cache_engine.php', '*/5 * * * *', 1);
+(3, 'cache_engine.php', '*/5 * * * *', 1),
 (4, 'cache.php', '* * * * *', 1),
 (5, 'epg.php', '0 0 * * *', 1),
 (6, 'errors.php', '* * * * *', 1),
@@ -252,7 +252,7 @@ INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
 (15, 'users.php', '* * * * *', 1),
 (16, 'vod_cc_series.php', '* * * * *', 1),
 (17, 'vod.php', '* * * * *', 1),
-(18, 'watch_folder.php', '*/5 * * * *', 1),
+(18, 'watch_folder.php', '*/5 * * * *', 1);
 
 -- --------------------------------------------------------
 
