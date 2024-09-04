@@ -1,9 +1,5 @@
 <?php
 
-$enable_cache = 1;
-$kill_rogue_ffmpeg = 1;
-$fps_delay = 600;
-
 function checkRunning($streamID) {
     clearstatcache(true);
     if (file_exists(STREAMS_PATH . $streamID . '_.monitor')) {
@@ -40,7 +36,7 @@ if (($ipTV_db->num_rows() <= 0)) {
 $streamInfo = $ipTV_db->get_row();
 $ipTV_db->query('UPDATE `streams_servers` SET `monitor_pid` = \'%d\' WHERE `server_stream_id` = \'%d\'', getmypid(), $streamInfo['server_stream_id']);
 
-if ($enable_cache) {
+if (ENABLE_CACHE) {
     ipTV_streaming::updateStream($streamID);
 }
 
@@ -95,7 +91,7 @@ if (ipTV_streaming::isStreamRunning($rPID, $streamID)) {
 } else {
     file_put_contents(STREAMS_PATH . $streamID . '_.monitor', getmypid());
 }
-if ($kill_rogue_ffmpeg) {
+if (KILL_ROQUE_FFMPEG) {
     exec('ps aux | grep -v grep | grep \'/' . $streamID . '_.m3u8\' | awk \'{print $2}\'', $rFFMPEG);
     foreach ($rFFMPEG as $roguePID) {
         if ((is_numeric($roguePID) && (0 < intval($roguePID)) && (intval($roguePID) != intval($rPID)))) {
@@ -163,7 +159,7 @@ if (true) {
             file_put_contents(STREAMS_PATH . $streamID . '_.monitor', getmypid());
         }
     }
-    if (!(($streamInfo['fps_restart'] == 1) && ($fps_delay < (time() - $startedTime)) && file_exists(STREAMS_PATH . $streamID . '_.progress_check'))) {
+    if (!(($streamInfo['fps_restart'] == 1) && (FPS_DELLAY < (time() - $startedTime)) && file_exists(STREAMS_PATH . $streamID . '_.progress_check'))) {
         goto label298;
     }
     echo 'Checking FPS...' . "\n";
@@ -324,7 +320,7 @@ if ((is_numeric($rPID) && (0 < $rPID) && ipTV_streaming::isStreamRunning($rPID, 
     shell_exec('kill -9 ' . intval($rPID));
 }
 $ipTV_db->query('UPDATE `streams_servers` SET `pid` = null, `stream_status` = 1 WHERE `server_stream_id` = \'%d\';', $streamInfo['server_stream_id']);
-if ($enable_cache) {
+if (ENABLE_CACHE) {
     ipTV_streaming::updateStream($streamID);
 }
 echo 'Sleep for ' . ipTV_lib::$settings['stream_fail_sleep'] . ' seconds...';
@@ -467,7 +463,7 @@ if (!$ea6de21e70c530a9 && $streamInfo['stream_info'] && $streamInfo['on_demand']
 } else {
     $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = \'%d\', `bitrate` = \'%d\', `stream_status` = 0 WHERE `server_stream_id` = \'%d\'', $streamInfo['stream_info'], intval($rBitrate), $streamInfo['server_stream_id']);
 }
-if ($enable_cache) {
+if (ENABLE_CACHE) {
     ipTV_streaming::updateStream($streamID);
 }
 echo 'End start process' . "\n";

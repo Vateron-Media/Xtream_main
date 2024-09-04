@@ -118,6 +118,16 @@ define('RESTART_TAKE_CACHE', 5);
 define('MONITOR_CALLS', 3);
 // -------------------
 
+// Temporary variables that should be added to the panel settings
+define('ENABLE_CACHE', true);
+define('FPS_DELLAY', 600);
+define('KILL_ROQUE_FFMPEG', true);
+define('PROBE_EXTRA_WAIT', 7);
+define('FFMPEG_WARNINGS', true);
+define('SEG_DELETE_THRESHOLD', 4);
+define('IGNORE_KEYFRAMES', 0);
+// -------------------
+
 if (!defined('USE_CACHE')) {
     define('USE_CACHE', true);
 }

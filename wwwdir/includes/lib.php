@@ -590,4 +590,15 @@ class ipTV_lib {
             unlink($filePath);
         }
     }
+    public static function isRunning() {
+        $rNginx = 0;
+        exec('ps -fp $(pgrep -u xtreamcodes)', $rOutput, $rReturnVar);
+        foreach ($rOutput as $rProcess) {
+            $rSplit = explode(' ', preg_replace('!\\s+!', ' ', trim($rProcess)));
+            if ($rSplit[8] == 'nginx:' && $rSplit[9] == 'master') {
+                $rNginx++;
+            }
+        }
+        return $rNginx > 0;
+    }
 }
