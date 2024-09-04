@@ -252,7 +252,6 @@ INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
 (15, 'watch_folder.php', '*/5 * * * *', 1),
 (16, 'auto_backups.php', '* * * * *', 1),
 (17, 'streams.php', '* * * * *', 1),
-(18, 'offline_cons.php', '0 0 * * *', 1),
 (19, 'pid_monitor.php', '0 * * * *', 1),
 (20, 'update.php', '0 0 * * *', 1),
 (21, 'cache_engine.php', '*/5 * * * *', 1);
