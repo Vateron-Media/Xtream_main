@@ -1,7 +1,5 @@
 <?php
 if ($argc) {
-    $cache_playlists = 60;
-
     set_time_limit(0);
     require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
     cli_set_process_title('XtreamCodes[TMP Cleaner]');
@@ -19,7 +17,7 @@ if ($argc) {
         }
     }
     foreach (scandir(PLAYLIST_PATH) as $file) {
-        if ($cache_playlists < time() - filemtime(PLAYLIST_PATH . $file)) {
+        if (CACHE_PLAYLIST < time() - filemtime(PLAYLIST_PATH . $file)) {
             if (is_file(PLAYLIST_PATH . $file)) {
                 unlink(PLAYLIST_PATH . $file);
             }

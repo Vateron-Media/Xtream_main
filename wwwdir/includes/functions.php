@@ -340,9 +340,6 @@ function generateUniqueCode() {
 }
 function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey = null, $rNoCache = false) {
     global $ipTV_db;
-
-    $cache_playlists = 60;
-
     if (!empty($rDeviceKey)) {
         if ($rOutputKey == 'mpegts') {
             $rOutputKey = 'ts';
@@ -387,7 +384,7 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                 } else {
                     $rFilename = str_replace('{USERNAME}', $rUserInfo['username'], $rDeviceInfo['device_filename']);
                 }
-                if (!(0 < $cache_playlists && !$rNoCache && file_exists(PLAYLIST_PATH . md5($rCacheName)))) {
+                if (!(0 < CACHE_PLAYLIST && !$rNoCache && file_exists(PLAYLIST_PATH . md5($rCacheName)))) {
                     $rData = '';
                     $rSeriesAllocation = $rSeriesEpisodes = $rSeriesInfo = array();
                     $rUserInfo['episode_ids'] = array();

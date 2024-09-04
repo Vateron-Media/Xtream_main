@@ -126,6 +126,7 @@ define('PROBE_EXTRA_WAIT', 7);
 define('FFMPEG_WARNINGS', true);
 define('SEG_DELETE_THRESHOLD', 4);
 define('IGNORE_KEYFRAMES', 0);
+define('CACHE_PLAYLIST',60);
 // -------------------
 
 if (!defined('USE_CACHE')) {
