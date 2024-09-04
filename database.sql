@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `crontab` (
   PRIMARY KEY (`id`),
   KEY `enabled` (`enabled`),
   KEY `filename` (`filename`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `crontab`
