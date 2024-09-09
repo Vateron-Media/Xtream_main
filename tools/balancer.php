@@ -21,7 +21,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
             $rInstallDir = BIN_PATH . 'install/';
             $lastVersion = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json", false, $rContext), True);
 
-            $rPackages = array(
+            $rPackages = [
                 "cpufrequtils",
                 "iproute2",
                 "python",
@@ -53,7 +53,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 "libzip5",
                 "mariadb-server",
                 "rsync",
-            );
+            ];
             $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $rUpdate['sub'] . '/sub_xui.tar.gz';
 
             file_put_contents($rInstallDir . $rServerID . '.json', json_encode(array('root_username' => $rUsername, 'root_password' => $rPassword, 'ssh_port' => $rPort)));
@@ -87,14 +87,6 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     runCommand($rConn, 'wget -q -O "/tmp/sub_xui.tar.gz" ' . $rInstallFiles);
                     runCommand($rConn, 'sudo tar -zxvf "/tmp/sub_xui.tar.gz" -C "' . MAIN_DIR . '"');
                     runCommand($rConn, 'sudo rm -f "/tmp/sub_xui.tar.gz"');
-
-
-
-
-
-
-
-
                     if (stripos(runCommand($rConn, 'sudo cat /etc/fstab')['output'], STREAMS_PATH) == false) {
                         echo 'Adding ramdisk mounts' . "\n";
                         runCommand($rConn, 'sudo echo "tmpfs ' . STREAMS_PATH . ' tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=90% 0 0" >> /etc/fstab');
@@ -118,62 +110,28 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                             runCommand($rConn, 'sudo touch ' . CONFIG_PATH . 'sysctl.on');
                         }
                     }
-
                     echo 'Generating configuration file' . "\n";
-                    $rMasterConfig = parse_ini_file(CONFIG_PATH . 'config.ini');
+                    // $rMasterConfig = parse_ini_file(CONFIG_PATH . 'config.ini');
 
-                    $rNewConfig = '; XtreamCodes Configuration' . "\n" . '; -----------------' . "\n" . '; Your username and password will be encrypted and' . "\n" . "; saved to the 'credentials' file in this folder" . "\n" . '; automatically.' . "\n" . ';' . "\n" . '; To change your username or password, modify BOTH' . "\n" . '; below and XUI will read and re-encrypt them.' . "\n\n" . '[XUI]' . "\n" . 'hostname    =   "' . XUI::$rServers[SERVER_ID]['server_ip'] . '"' . "\n" . 'database    =   "xtreamcodes"' . "\n" . 'port        =   ' . intval(XUI::$rConfig['port']) . "\n" . 'server_id   =   ' . $rServerID . "\n" . 'is_lb       =   1' . "\n\n" . '[Encrypted]' . "\n" . 'username    =   ""' . "\n" . 'password    =   ""';
-
+                    $rNewConfig = '; XtreamCodes Configuration' . "\n" . '; -----------------' . "\n" . '; Your username and password will be encrypted and' . "\n" . "; saved to the 'credentials' file in this folder" . "\n" . '; automatically.' . "\n" . ';' . "\n" . '; To change your username or password, modify BOTH' . "\n" . '; below and XtreamCodes will read and re-encrypt them.' . "\n\n" . '[XtreamCodes]' . "\n" . 'hostname    =   "' . ipTV_lib::$StreamingServers[SERVER_ID]['server_ip']  . '"' . "\n" . 'database    =   "xtreamcodes"' . "\n" . 'port        =   ' . intval($_INFO['port']) . "\n" . 'server_id   =   ' . $rServerID . "\n" . 'is_lb       =   1' . "\n\n" . '[Encrypted]' . "\n" . 'username    =   ""' . "\n" . 'password    =   ""';
                     file_put_contents(TMP_PATH . 'config_' . $rServerID, $rNewConfig);
                     sendfile($rConn, TMP_PATH . 'config_' . $rServerID, CONFIG_PATH . 'config.ini');
                     echo 'Installing service' . "\n";
                     runCommand($rConn, 'sudo rm /etc/systemd/system/xtreamcodes.service');
-                    $rSystemd = '[Unit]' . "\n" . 'SourcePath=/home/xtreamcodes/service' . "\n" . 'Description=XtreamCodes Service' . "\n" . 'After=network.target' . "\n" . 'StartLimitIntervalSec=0' . "\n\n" . '[Service]' . "\n" . 'Type=simple' . "\n" . 'User=root' . "\n" . 'Restart=always' . "\n" . 'RestartSec=1' . "\n" . 'ExecStart=/bin/bash /home/xtreamcodes/service start' . "\n" . 'ExecRestart=/bin/bash /home/xtreamcodes/service restart' . "\n" . 'ExecStop=/bin/bash /home/xtreamcodes/service stop' . "\n\n" . '[Install]' . "\n" . 'WantedBy=multi-user.target';
+                    $rSystemd = '[Unit]' . "\n" . 'SourcePath=/home/xtreamcodes/service' . "\n" . 'Description=XtreamCodes Service' . "\n" . 'After=network.target' . "\n" . 'StartLimitIntervalSec=0' . "\n\n" . '[Service]' . "\n" . 'Type=simple' . "\n" . 'User=root' . "\n" . 'Restart=always' . "\n" . 'RestartSec=1' . "\n" . 'ExecStart=/bin/bash /home/xtreamcodes/service start' . "\n" . 'ExecReload=/bin/bash /home/xtreamcodes/service restart' . "\n" . 'ExecStop=/bin/bash /home/xtreamcodes/service stop' . "\n\n" . '[Install]' . "\n" . 'WantedBy=multi-user.target';
                     file_put_contents(TMP_PATH . 'systemd_' . $rServerID, $rSystemd);
-                    sendfile($rConn, TMP_PATH . 'systemd_' . $rServerID, '/etc/systemd/system/xuione.service');
-                    runCommand($rConn, 'sudo chmod +x /etc/systemd/system/xuione.service');
-                    runCommand($rConn, 'sudo rm /etc/init.d/xuione');
+                    sendfile($rConn, TMP_PATH . 'systemd_' . $rServerID, '/etc/systemd/system/xtreamcodes.service');
+                    runCommand($rConn, 'sudo chmod +x /etc/systemd/system/xtreamcodes.service');
                     runCommand($rConn, 'sudo systemctl daemon-reload');
-                    runCommand($rConn, 'sudo systemctl enable xuione');
-
-                    sendfile($rConn, CONFIG_PATH . 'credentials', CONFIG_PATH . 'credentials');
-                    sendfile($rConn, MAIN_DIR . 'bin/nginx/conf/custom.conf', MAIN_DIR . 'bin/nginx/conf/custom.conf');
-                    sendfile($rConn, MAIN_DIR . 'bin/nginx/conf/realip_cdn.conf', MAIN_DIR . 'bin/nginx/conf/realip_cdn.conf');
-                    sendfile($rConn, MAIN_DIR . 'bin/nginx/conf/realip_cloudflare.conf', MAIN_DIR . 'bin/nginx/conf/realip_cloudflare.conf');
-                    sendfile($rConn, MAIN_DIR . 'bin/nginx/conf/realip_xui.conf', MAIN_DIR . 'bin/nginx/conf/realip_xui.conf');
-                    runCommand($rConn, 'sudo echo "" > "/home/xtreamcodes/bin/nginx/conf/limit.conf"');
-                    runCommand($rConn, 'sudo echo "" > "/home/xtreamcodes/bin/nginx/conf/limit_queue.conf"');
-                    $rIP = '127.0.0.1:' . ipTV_lib::$StreamingServers[$rServerID]['http_broadcast_port'];
-                    runCommand($rConn, 'sudo echo "on_play http://' . $rIP . '/stream/rtmp; on_publish http://' . $rIP . '/stream/rtmp; on_play_done http://' . $rIP . '/stream/rtmp;" > "/home/xtreamcodes/bin/nginx_rtmp/conf/live.conf"');
+                    runCommand($rConn, 'sudo systemctl enable xtreamcodes');
                     $rServices = (intval(runCommand($rConn, 'sudo cat /proc/cpuinfo | grep "^processor" | wc -l')['output']) ?: 4);
-                    runCommand($rConn, 'sudo rm ' . MAIN_DIR . 'bin/php/etc/*.conf');
-                    $rNewScript = '#! /bin/bash' . "\n";
-                    $rNewBalance = 'upstream php {' . "\n" . '    least_conn;' . "\n";
-                    $rTemplate = file_get_contents(MAIN_DIR . 'bin/php/etc/template');
-                    foreach (range(1, $rServices) as $i) {
-                        $rNewScript .= 'start-stop-daemon --start --quiet --pidfile ' . MAIN_DIR . 'bin/php/sockets/' . $i . '.pid --exec ' . MAIN_DIR . 'bin/php/sbin/php-fpm -- --daemonize --fpm-config ' . MAIN_DIR . 'bin/php/etc/' . $i . '.conf' . "\n";
-                        $rNewBalance .= '    server unix:' . MAIN_DIR . 'bin/php/sockets/' . $i . '.sock;' . "\n";
-                        $rTmpPath = TMP_PATH . md5(time() . $i . '.conf');
-                        file_put_contents($rTmpPath, str_replace('#PATH#', MAIN_DIR, str_replace('#ID#', $i, $rTemplate)));
-                        sendfile($rConn, $rTmpPath, MAIN_DIR . 'bin/php/etc/' . $i . '.conf');
-                    }
-                    $rNewBalance .= '}';
-                    $rTmpPath = TMP_PATH . md5(time() . 'daemons.sh');
-                    file_put_contents($rTmpPath, $rNewScript);
-                    sendfile($rConn, $rTmpPath, MAIN_DIR . 'bin/daemons.sh');
-                    $rTmpPath = TMP_PATH . md5(time() . 'balance.conf');
-                    file_put_contents($rTmpPath, $rNewBalance);
-                    sendfile($rConn, $rTmpPath, MAIN_DIR . 'bin/nginx/conf/balance.conf');
                     runCommand($rConn, 'sudo chmod +x ' . MAIN_DIR . 'bin/daemons.sh');
-
                     $rSystemConf = runCommand($rConn, 'sudo cat "/etc/systemd/system.conf"')['output'];
-                    if (strpos($rSystemConf, 'DefaultLimitNOFILE=1048576') !== false) {
-                    } else {
+                    if (strpos($rSystemConf, 'DefaultLimitNOFILE=1048576') === false) {
                         runCommand($rConn, 'sudo echo "' . "\n" . 'DefaultLimitNOFILE=1048576" >> "/etc/systemd/system.conf"');
                         runCommand($rConn, 'sudo echo "' . "\n" . 'DefaultLimitNOFILE=1048576" >> "/etc/systemd/user.conf"');
                     }
-                    if (strpos($rSystemConf, 'nDefaultLimitNOFILESoft=1048576') !== false) {
-                    } else {
+                    if (strpos($rSystemConf, 'nDefaultLimitNOFILESoft=1048576') === false) {
                         runCommand($rConn, 'sudo echo "' . "\n" . 'DefaultLimitNOFILESoft=1048576" >> "/etc/systemd/system.conf"');
                         runCommand($rConn, 'sudo echo "' . "\n" . 'DefaultLimitNOFILESoft=1048576" >> "/etc/systemd/user.conf"');
                     }
@@ -185,8 +143,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     runCommand($rConn, 'sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'tmp');
                     runCommand($rConn, 'sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'content/streams');
                     runCommand($rConn, 'sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR);
+                    runCommand($rConn, 'sleep 2 && sudo ' . MAIN_DIR . 'permissions.sh > /dev/null');
                     echo 'Installation complete! Starting XtreamCodes' . "\n";
-                    runCommand($rConn, 'sudo service xuione restart');
+                    runCommand($rConn, 'sudo systemctl start xtreamcodes');
                     runCommand($rConn, 'sudo ' . MAIN_DIR . 'status 1');
                     runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . TOOLS_PATH . 'startup.php');
                     runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . CRON_PATH . 'servers.php');
@@ -212,6 +171,31 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     }
 } else {
     exit('Please run as XtreamCodes!' . "\n");
+}
+function sendFile($rConn, $rPath, $rOutput, $rWarn = false) {
+    $rMD5 = md5_file($rPath);
+    ssh2_scp_send($rConn, $rPath, $rOutput);
+    $rOutMD5 = trim(explode(' ', runCommand($rConn, 'md5sum "' . $rOutput . '"')['output'])[0]);
+    if ($rMD5 == $rOutMD5) {
+        return true;
+    }
+    if ($rWarn) {
+        echo 'Failed to write using SCP, reverting to SFTP transfer... This will be take significantly longer!' . "\n";
+    }
+    $rSFTP = ssh2_sftp($rConn);
+    $rSuccess = true;
+    $rStream = @fopen('ssh2.sftp://' . $rSFTP . $rOutput, 'wb');
+    try {
+        $rData = @file_get_contents($rPath);
+        if (@fwrite($rStream, $rData) === false) {
+            $rSuccess = false;
+        }
+        fclose($rStream);
+    } catch (Exception $e) {
+        $rSuccess = false;
+        fclose($rStream);
+    }
+    return $rSuccess;
 }
 function runCommand($rConn, $rCommand) {
     $rStream = ssh2_exec($rConn, $rCommand);
