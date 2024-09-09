@@ -173,16 +173,6 @@ if ($rSettings["sidebar"]) { ?>
                                         <input id="reboot_server_ssh" type="submit" class="btn btn-primary" value="<?= $_["reboot_server"] ?>" style="width:100%" /></p>
                                     </div>
                                 </div>
-                                <div class="form-group row mb-4">
-                                    <div class="col-md-6">
-                                        <input id="remake_server_ssh" type="submit" class="btn btn-warning" value="<?= $_["remake_server"] ?>" style="width:100%" /></p>
-                                    </div>
-                                </div>
-                                <div class="form-group row mb-4">
-                                    <div class="col-md-6">
-                                        <input id="remake_balancer_ssh" type="submit" class="btn btn-success" value="<?= $_["remake_balancer"] ?>" style="width:100%" /></p>
-                                    </div>
-                                </div>
                                 <!--<div class="form-group row mb-4">
 							<div class="col-md-6 mx-auto">
 								<input id="update_release_ssh" type="submit" class="btn btn-danger" value="<?= $_["update_release"] ?>" style="width:100%" />
@@ -281,32 +271,6 @@ if ($rSettings["sidebar"]) { ?>
                                 $.toast("<?= $_["server_will_be_restarted_shortly"] ?>");
                             } else {
                                 $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                            }
-                            $("#root_password").val("");
-                            $("#ssh_port").val("22");
-                            $(".bs-server-modal-center").data("id", "");
-                        });
-                    });
-                    $("#remake_server_ssh").click(function() {
-                        $(".bs-server-modal-center").modal("hide");
-                        $.getJSON("./api.php?action=remake_server&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function(data) {
-                            if (data.result === true) {
-                                $.toast("main will be remaked shortly.");
-                            } else {
-                                $.toast("An error occured while processing your request.");
-                            }
-                            $("#root_password").val("");
-                            $("#ssh_port").val("22");
-                            $(".bs-server-modal-center").data("id", "");
-                        });
-                    });
-                    $("#remake_balancer_ssh").click(function() {
-                        $(".bs-server-modal-center").modal("hide");
-                        $.getJSON("./api.php?action=remake_balancer&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function(data) {
-                            if (data.result === true) {
-                                $.toast("balancer will be remaked shortly.");
-                            } else {
-                                $.toast("An error occured while processing your request.");
                             }
                             $("#root_password").val("");
                             $("#ssh_port").val("22");

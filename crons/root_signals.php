@@ -51,8 +51,7 @@ function loadCron() {
         if (count($rRows) > 0) {
             foreach ($rRows as $rRow) {
                 $rData = json_decode($rRow['custom_data'], true);
-                if (!$rRow['signal_id']) {
-                } else {
+                if ($rRow['signal_id']) {
                     $ipTV_db->query('DELETE FROM `signals` WHERE `signal_id` = \'%s\';', $rRow['signal_id']);
                 }
                 switch ($rData['action']) {
@@ -61,6 +60,12 @@ function loadCron() {
                         $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'REBOOT', 'System rebooted on request.', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
                         $ipTV_db->close_mysql();
                         shell_exec('sudo reboot');
+                        break;
+                    case 'restart_services':
+                        echo 'Restarting services...' . "\n";
+                        $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'RESTART', 'XtreamCodes services restarted on request.', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+                        shell_exec('sudo systemctl stop xtreamcodes');
+                        shell_exec('sudo systemctl start xtreamcodes');
                         break;
                     case 'reload_nginx':
                         echo 'Reloading nginx...' . "\n";

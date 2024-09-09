@@ -1071,15 +1071,10 @@ if (isset($_GET["action"])) {
             }
             $rServerID = intval($_GET["server_id"]);
             if (isset($rServers[$rServerID])) {
-                $rServer = $rServers[$rServerID];
-                $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "restart");
-                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-                startcmd();
-                echo json_encode(array("result" => True));
-                exit;
+                $db->query("INSERT INTO `signals`(`server_id`, `custom_data`, `time`) VALUES('" . ESC($rServerID) . "', '" . ESC(json_encode(array('action' => 'restart_services'))) . "', '" . ESC(time()) . "');");
+                echo json_encode(array('result' => true));
             }
-            startcmd();
-            echo json_encode(array("result" => False));
+            echo json_encode(array('result' => false));
             exit;
         case "reboot_server":
             if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
@@ -1088,67 +1083,28 @@ if (isset($_GET["action"])) {
             }
             $rServerID = intval($_GET["server_id"]);
             if (isset($rServers[$rServerID])) {
-                $rServer = $rServers[$rServerID];
-                $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "reboot");
-                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-                startcmd();
-                echo json_encode(array("result" => True));
-                exit;
+                $db->query("INSERT INTO `signals`(`server_id`, `custom_data`, `time`) VALUES('" . ESC($rServerID) . "', '" . ESC(json_encode(array('action' => 'reboot'))) . "', '" . ESC(time()) . "');");
+                echo json_encode(array('result' => true));
             }
-            startcmd();
-            echo json_encode(array("result" => False));
+            echo json_encode(array('result' => false));
             exit;
-        case "remake_server":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
-                echo json_encode(array("result" => False));
-                exit;
-            }
-            $rServerID = intval($_GET["server_id"]);
-            if (isset($rServers[$rServerID])) {
-                $rServer = $rServers[$rServerID];
-                $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "sreload");
-                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-                startcmd();
-                echo json_encode(array("result" => True));
-                exit;
-            }
-            startcmd();
-            echo json_encode(array("result" => False));
-            exit;
-        case "remake_balancer":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
-                echo json_encode(array("result" => False));
-                exit;
-            }
-            $rServerID = intval($_GET["server_id"]);
-            if (isset($rServers[$rServerID])) {
-                $rServer = $rServers[$rServerID];
-                $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "breload");
-                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-                startcmd();
-                echo json_encode(array("result" => True));
-                exit;
-            }
-            startcmd();
-            echo json_encode(array("result" => False));
-            exit;
-        case "update_release":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
-                echo json_encode(array("result" => False));
-                exit;
-            }
-            $rServerID = intval($_GET["server_id"]);
-            if (isset($rServers[$rServerID])) {
-                $rServer = $rServers[$rServerID];
-                $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "urelease");
-                file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-                startcmd();
-                echo json_encode(array("result" => True));
-                exit;
-                startcmd();
-            }
-            echo json_encode(array("result" => False));
-            exit;
+            // case "update_release":
+            //     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
+            //         echo json_encode(array("result" => False));
+            //         exit;
+            //     }
+            //     $rServerID = intval($_GET["server_id"]);
+            //     if (isset($rServers[$rServerID])) {
+            //         $rServer = $rServers[$rServerID];
+            //         $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "urelease");
+            //         file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
+            //         startcmd();
+            //         echo json_encode(array("result" => True));
+            //         exit;
+            //         startcmd();
+            //     }
+            //     echo json_encode(array("result" => False));
+            //     exit;
         case "map_stream":
             if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_stream")) && (!hasPermissions("adv", "edit_stream")))) {
                 echo json_encode(array("result" => False));
@@ -1204,48 +1160,48 @@ if (isset($_GET["action"])) {
             }
             echo json_encode(array("result" => True));
             exit;
-        case "backup":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
-                echo json_encode(array("result" => False));
-                exit;
-            }
-            $rSub = $_GET["sub"];
-            if ($rSub == "delete") {
-                $rBackup = pathinfo($_GET["filename"])["filename"];
-                if (file_exists(MAIN_DIR . "adtools/backups/" . $rBackup . ".sql")) {
-                    unlink(MAIN_DIR . "adtools/backups/" . $rBackup . ".sql");
-                }
-                echo json_encode(array("result" => True));
-                exit;
-            } else if ($rSub == "restore") {
-                $rBackup = pathinfo($_GET["filename"])["filename"];
-                $rFilename = MAIN_DIR . "adtools/backups/" . $rBackup . ".sql";
-                $rCommand = "mysql -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " < \"" . $rFilename . "\"";
-                $rRet = shell_exec($rCommand);
-                echo json_encode(array("result" => True));
-                exit;
-            } else if ($rSub == "backup") {
-                $rFilename = MAIN_DIR . "adtools/backups/backup_" . date("Y-m-d_H:i:s") . ".sql";
-                $rCommand = "mysqldump -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " --ignore-table=xtream_iptvpro.user_activity --ignore-table=xtream_iptvpro.stream_logs --ignore-table=xtream_iptvpro.panel_logs --ignore-table=xtream_iptvpro.client_logs --ignore-table=xtream_iptvpro.epg_data > \"" . $rFilename . "\"";
-                $rRet = shell_exec($rCommand);
-                if (file_exists($rFilename)) {
-                    $rBackups = getBackups();
-                    if ((count($rBackups) > intval($rAdminSettings["backups_to_keep"])) && (intval($rAdminSettings["backups_to_keep"]) > 0)) {
-                        $rDelete = array_slice($rBackups, 0, count($rBackups) - intval($rAdminSettings["backups_to_keep"]));
-                        foreach ($rDelete as $rItem) {
-                            if (file_exists(MAIN_DIR . "adtools/backups/" . $rItem["filename"])) {
-                                unlink(MAIN_DIR . "adtools/backups/" . $rItem["filename"]);
-                            }
-                        }
-                    }
-                    echo json_encode(array("result" => True, "data" => array("filename" => pathinfo($rFilename)["filename"] . ".sql", "timestamp" => filemtime($rFilename), "date" => date("Y-m-d H:i:s", filemtime($rFilename)))));
-                    exit;
-                }
-                echo json_encode(array("result" => True));
-                exit;
-            }
-            echo json_encode(array("result" => False));
-            exit;
+            // case "backup":
+            //     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
+            //         echo json_encode(array("result" => False));
+            //         exit;
+            //     }
+            //     $rSub = $_GET["sub"];
+            //     if ($rSub == "delete") {
+            //         $rBackup = pathinfo($_GET["filename"])["filename"];
+            //         if (file_exists(MAIN_DIR . "adtools/backups/" . $rBackup . ".sql")) {
+            //             unlink(MAIN_DIR . "adtools/backups/" . $rBackup . ".sql");
+            //         }
+            //         echo json_encode(array("result" => True));
+            //         exit;
+            //     } else if ($rSub == "restore") {
+            //         $rBackup = pathinfo($_GET["filename"])["filename"];
+            //         $rFilename = MAIN_DIR . "adtools/backups/" . $rBackup . ".sql";
+            //         $rCommand = "mysql -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " < \"" . $rFilename . "\"";
+            //         $rRet = shell_exec($rCommand);
+            //         echo json_encode(array("result" => True));
+            //         exit;
+            //     } else if ($rSub == "backup") {
+            //         $rFilename = MAIN_DIR . "adtools/backups/backup_" . date("Y-m-d_H:i:s") . ".sql";
+            //         $rCommand = "mysqldump -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " --ignore-table=xtream_iptvpro.user_activity --ignore-table=xtream_iptvpro.stream_logs --ignore-table=xtream_iptvpro.panel_logs --ignore-table=xtream_iptvpro.client_logs --ignore-table=xtream_iptvpro.epg_data > \"" . $rFilename . "\"";
+            //         $rRet = shell_exec($rCommand);
+            //         if (file_exists($rFilename)) {
+            //             $rBackups = getBackups();
+            //             if ((count($rBackups) > intval($rAdminSettings["backups_to_keep"])) && (intval($rAdminSettings["backups_to_keep"]) > 0)) {
+            //                 $rDelete = array_slice($rBackups, 0, count($rBackups) - intval($rAdminSettings["backups_to_keep"]));
+            //                 foreach ($rDelete as $rItem) {
+            //                     if (file_exists(MAIN_DIR . "adtools/backups/" . $rItem["filename"])) {
+            //                         unlink(MAIN_DIR . "adtools/backups/" . $rItem["filename"]);
+            //                     }
+            //                 }
+            //             }
+            //             echo json_encode(array("result" => True, "data" => array("filename" => pathinfo($rFilename)["filename"] . ".sql", "timestamp" => filemtime($rFilename), "date" => date("Y-m-d H:i:s", filemtime($rFilename)))));
+            //             exit;
+            //         }
+            //         echo json_encode(array("result" => True));
+            //         exit;
+            //     }
+            //     echo json_encode(array("result" => False));
+            //     exit;
             /* 
          case "send_event":
             if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "manage_events"))) { echo json_encode(Array("result" => False)); exit; }
