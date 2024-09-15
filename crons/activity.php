@@ -56,7 +56,7 @@ function parseLog($rFile) {
                 if ($rLine['server_id'] && $rLine['user_id'] && $rLine['stream_id'] && $rLine['user_ip']) {
                     $rUpdates[] = array($rLine['user_id'], $rLine['user_ip'], json_encode(array('date_end' => $rLine['date_end'], 'stream_id' => $rLine['stream_id'])));
                     $rLine = array_map(array($ipTV_db, 'escape'), $rLine);
-                    $rQuery .= '(' . $rLine['server_id'] . ',' . $rLine['user_id'] . ',\'' . $rLine['isp'] . '\',\'' . $rLine['external_device'] . '\',' . $rLine['stream_id'] . ',' . $rLine['date_start'] . ',\'' . $rLine['user_agent'] . '\',\'' . $rLine['user_ip'] . '\',' . $rLine['date_end'] . ',\'' . $rLine['container'] . '\',\'' . $rLine['geoip_country_code'] . '\',' . $rLine['divergence'] . ',' . $rLine['hmac_id'] . ',' . $rLine['hmac_identifier'] . '),';
+                    $rQuery .= '(' . $rLine['server_id'] . ',' . $rLine['user_id'] . ',\'' . $rLine['isp'] . '\',\'' . $rLine['external_device'] . '\',' . $rLine['stream_id'] . ',' . $rLine['date_start'] . ',\'' . $rLine['user_agent'] . '\',\'' . $rLine['user_ip'] . '\',' . $rLine['date_end'] . ',\'' . $rLine['container'] . '\',\'' . $rLine['geoip_country_code'] . '\',' . $rLine['divergence'] . '),';
                     $rCount++;
                 }
                 break;

@@ -11,7 +11,6 @@ if (empty($rSettings['live_streaming_pass'])) {
 }
 
 $rVideoCodec = 'h264';
-$rIsHMAC = null;
 
 if (isset($_GET['token'])) {
     $rOffset = 0;
@@ -37,14 +36,7 @@ if (isset($_GET['token'])) {
                 }
             } else {
                 $rType = 'LIVE';
-
-                if (substr($rTokenArray[0], 0, 5) == 'HMAC#') {
-                    $rIsHMAC = intval(explode('#', $rTokenArray[0])[1]);
-                    $rIdentifier = $rTokenArray[1];
-                } else {
-                    list($rUsername, $rPassword) = $rTokenArray;
-                }
-
+                list($rUsername, $rPassword) = $rTokenArray;
                 $rUserIP = $rTokenArray[2];
                 $rStreamID = intval($rTokenArray[3]);
                 $rSegmentID = basename($rTokenArray[4]);

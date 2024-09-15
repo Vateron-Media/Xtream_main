@@ -28,13 +28,8 @@ if (isset(ipTV_lib::$request['token'])) {
         generateError('TOKEN_EXPIRED');
     }
 
-    if (isset($rTokenData['hmac_id'])) {
-        $rIsHMAC = $rTokenData['hmac_id'];
-        $rIdentifier = $rTokenData['identifier'];
-    } else {
-        $rUsername = $rTokenData['username'];
-        $rPassword = $rTokenData['password'];
-    }
+    $rUsername = $rTokenData['username'];
+    $rPassword = $rTokenData['password'];
 
     $streamID = intval($rTokenData['stream_id']);
     $rExtension = $rTokenData['extension'];
@@ -75,11 +70,7 @@ if ($rChannelInfo) {
         $rConnection = $ipTV_db->get_row();
     } else {
         if (!empty($_SERVER['HTTP_RANGE'])) {
-            if (!$rIsHMAC) {
-                $ipTV_db->query('SELECT `server_id`, `activity_id`, `pid`, `user_ip` FROM `lines_live` WHERE `user_id` = \'%s\' AND `container` = \'%s\' AND `user_agent` = \'%s\' AND `stream_id` = \'%s\';', $rUserInfo['id'], 'VOD', $rUserAgent, $streamID);
-            } else {
-                $ipTV_db->query('SELECT `server_id`, `activity_id`, `pid`, `user_ip` FROM `lines_live` WHERE `hmac_id` = \'%s\' AND `hmac_identifier` = \'%s\' AND `container` = \'%s\' AND `user_agent` = \'%s\' AND `stream_id` = \'%s\';', $rIsHMAC, $rIdentifier, 'VOD', $rUserAgent, $streamID);
-            }
+            $ipTV_db->query('SELECT `server_id`, `activity_id`, `pid`, `user_ip` FROM `lines_live` WHERE `user_id` = \'%s\' AND `container` = \'%s\' AND `user_agent` = \'%s\' AND `stream_id` = \'%s\';', $rUserInfo['id'], 'VOD', $rUserAgent, $streamID);
 
             if (0 < $ipTV_db->num_rows()) {
                 $rConnection = $ipTV_db->get_row();
@@ -92,12 +83,7 @@ if ($rChannelInfo) {
         if (!(file_exists(CONS_TMP_PATH . $rTokenData['uuid']) || ($activityStart + $rCreateExpiration) - intval(ipTV_lib::$StreamingServers[SERVER_ID]['time_offset']) >= time())) {
             generateError('TOKEN_EXPIRED');
         }
-
-        if (!$rIsHMAC) {
-            $rResult = $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');', $rUserInfo['id'], $streamID, $serverID, $rUserAgent, $IP, 'VOD', $rPID, $rTokenData['uuid'], $activityStart, $rCountryCode, $rUserInfo['con_isp_name']);
-        } else {
-            $rResult = $ipTV_db->query('INSERT INTO `lines_live` (`hmac_id`,`hmac_identifier`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')', $rIsHMAC, $rIdentifier, $streamID, $serverID, $rUserAgent, $IP, 'VOD', $rPID, $rTokenData['uuid'], $activityStart, $rCountryCode, $rUserInfo['con_isp_name']);
-        }
+        $rResult = $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');', $rUserInfo['id'], $streamID, $serverID, $rUserAgent, $IP, 'VOD', $rPID, $rTokenData['uuid'], $activityStart, $rCountryCode, $rUserInfo['con_isp_name']);
     } else {
         $IPMatch = (ipTV_lib::$settings['ip_subnet_match'] ? implode('.', array_slice(explode('.', $rConnection['user_ip']), 0, -1)) == implode('.', array_slice(explode('.', $IP), 0, -1)) : $rConnection['user_ip'] == $IP);
 
@@ -122,7 +108,7 @@ if ($rChannelInfo) {
         generateError('LINE_CREATE_FAIL');
     }
 
-    ipTV_streaming::validateConnections($rUserInfo, $rIsHMAC, $rIdentifier, $IP, $rUserAgent);
+    ipTV_streaming::validateConnections($rUserInfo, $IP, $rUserAgent);
 
     $ipTV_db->close_mysql();
 

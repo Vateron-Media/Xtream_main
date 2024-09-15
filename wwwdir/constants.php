@@ -126,7 +126,12 @@ define('PROBE_EXTRA_WAIT', 7);
 define('FFMPEG_WARNINGS', true);
 define('SEG_DELETE_THRESHOLD', 4);
 define('IGNORE_KEYFRAMES', 0);
-define('CACHE_PLAYLIST',60);
+define('CACHE_PLAYLIST', 60);
+define('CREATE_EXPIRATION', 5);
+define('ON_DEMAND_WAIT_TIME', 20);
+define('ON_DEMAND_INSTANT_OFF', false);
+define('SEGMENT_WAIT_TIME', 20);
+define('MONITOR_CONNECTION_STATUS', true);
 // -------------------
 
 if (!defined('USE_CACHE')) {

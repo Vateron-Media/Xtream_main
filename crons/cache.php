@@ -63,13 +63,6 @@ function loadCron() {
             // }
             // file_put_contents(CACHE_TMP_PATH . 'output_formats', serialize($rOutputFormats));
 
-            $rHMACKeys = array();
-            $ipTV_db->query('SELECT `id`, `key` FROM `hmac_keys` WHERE `enabled` = 1;');
-            foreach ($ipTV_db->get_rows() as $rRow) {
-                $rHMACKeys[] = $rRow;
-            }
-            file_put_contents(CACHE_TMP_PATH . 'hmac_keys', serialize($rHMACKeys));
-
             // $rRTMPIPs = array();
             // $ipTV_db->query('SELECT `ip`, `password`, `push`, `pull` FROM `rtmp_ips`');
             // foreach ($ipTV_db->get_rows() as $rRow) {

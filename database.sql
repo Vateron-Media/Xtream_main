@@ -422,20 +422,6 @@ CREATE TABLE IF NOT EXISTS `epg_data` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hmac_keys`
---
-
-CREATE TABLE IF NOT EXISTS `hmac_keys` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `key` varchar(64) DEFAULT NULL,
-  `notes` varchar(1024) DEFAULT NULL,
-  `enabled` tinyint(4) DEFAULT 1,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `isp_addon`
 --
 
@@ -1610,8 +1596,6 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
   `isp` varchar(255) DEFAULT NULL,
   `external_device` varchar(255) DEFAULT NULL,
   `divergence` float DEFAULT 0,
-  `hmac_id` tinyint(4) DEFAULT NULL,
-  `hmac_identifier` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`activity_id`),
   KEY `user_id` (`user_id`),
   KEY `stream_id` (`stream_id`),
