@@ -330,9 +330,8 @@ function changePort($rServerID, $rType, $rOldPort, $rNewPort) {
 }
 
 function getPIDs($rServerID) {
-    global $rAdminSettings;
     $rReturn = array();
-    $rFilename = tempnam(MAIN_DIR . 'tmp/', 'proc_');
+    $rFilename = MAIN_DIR . 'tmp/proc_' . substr(md5(microtime() . rand(0, 9999)), 0, 20) . '.log';
     $rCommand = "ps aux >> " . $rFilename;
     sexec($rServerID, $rCommand);
     $rData = "";
@@ -358,7 +357,7 @@ function getPIDs($rServerID) {
 
 function getFreeSpace($rServerID) {
     $rReturn = array();
-    $rFilename = tempnam(MAIN_DIR . 'tmp/', 'fs_');
+    $rFilename = MAIN_DIR . 'tmp/fs_' . substr(md5(microtime() . rand(0, 9999)), 0, 20) . '.log';
     $rCommand = "df -h >> " . $rFilename;
     sexec($rServerID, $rCommand);
     $rData = SystemAPIRequest($rServerID, array('action' => 'getFile', 'filename' => $rFilename));
@@ -375,7 +374,7 @@ function getFreeSpace($rServerID) {
 
 function remoteCMD($rServerID, $rCommand) {
     $rReturn = array();
-    $rFilename = tempnam(MAIN_DIR . 'tmp/', 'cmd_');
+    $rFilename = MAIN_DIR . 'tmp/cmd_' . substr(md5(microtime() . rand(0, 9999)), 0, 20) . '.log';
     sexec($rServerID, $rCommand . " >> " . $rFilename);
     $rData = "";
     $rI = 3;
@@ -504,7 +503,7 @@ function listDir($rServerID, $rDirectory, $rAllowed = null) {
         }
     } else {
         if ($rAdminSettings["alternate_scandir"]) {
-            $rFilename = tempnam(MAIN_DIR . 'tmp/', 'ls_');
+            $rFilename = MAIN_DIR . 'tmp/ls_' . substr(md5(microtime() . rand(0, 9999)), 0, 20) . '.log';
             $rCommand = "ls -cm -f --group-directories-first --indicator-style=slash \"" . escapeshellcmd($rDirectory) . "\" >> " . $rFilename;
             sexec($rServerID, $rCommand);
             $rData = "";
