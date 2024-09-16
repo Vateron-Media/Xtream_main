@@ -1,6 +1,7 @@
 <?php
 if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     define("MAIN_DIR", "/home/xtreamcodes/");
+    define('CONFIG_PATH', MAIN_DIR . 'config/');
 
     function xor_parse($data, $key) {
         $i = 0;
