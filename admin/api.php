@@ -539,6 +539,8 @@ if (isset($_GET["action"])) {
                 if ($rServers[$_GET["server_id"]]["can_delete"] == 1) {
                     $db->query("DELETE FROM `streaming_servers` WHERE `id` = " . intval($rServerID) . ";");
                     $db->query("DELETE FROM `streams_servers` WHERE `server_id` = " . intval($rServerID) . ";");
+                    // drop user mysql 
+                    $db->query("DROP USER 'lb_" . $_GET["server_id"] . "'@'" . $rServers[$_GET["server_id"]]["server_ip"] . "';");
                     echo json_encode(array("result" => True));
                     exit;
                 } else {

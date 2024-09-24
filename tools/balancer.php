@@ -1,7 +1,7 @@
 <?php
 if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc && $argc >= 5) {
-        $rServerID = intval($argv[2]);
+        $rServerID = intval($argv[1]);
         if ($rServerID != 0) {
             shell_exec("kill -9 `ps -ef | grep 'XtreamCodes Install\\[" . $rServerID . "\\]' | grep -v grep | awk '{print \$2}'`;");
             set_time_limit(0);
@@ -11,12 +11,11 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
             unlink(CACHE_TMP_PATH . 'servers');
             ipTV_lib::$StreamingServers = ipTV_lib::getServers();
             $rPort = intval($argv[2]);
-            list(,,,, $rUsername, $rPassword) = $argv;
+            $rUsername = $argv[3];
+            $rPassword = $argv[4];
             $rHTTPPort = (empty($argv[5]) ? 80 : intval($argv[5]));
             $rHTTPSPort = (empty($argv[6]) ? 443 : intval($argv[6]));
             $rUpdateSysctl = (empty($argv[7]) ? 0 : intval($argv[7]));
-            $rPrivateIP = (empty($argv[8]) ? 0 : intval($argv[8]));
-            $rParentIDs = (empty($argv[9]) ? array() : json_decode($argv[9], true));
             $rSysCtl = '# XtreamCodes' . PHP_EOL . PHP_EOL . 'net.ipv4.tcp_congestion_control = bbr' . PHP_EOL . 'net.core.default_qdisc = fq' . PHP_EOL . 'net.ipv4.tcp_rmem = 8192 87380 134217728' . PHP_EOL . 'net.ipv4.udp_rmem_min = 16384' . PHP_EOL . 'net.core.rmem_default = 262144' . PHP_EOL . 'net.core.rmem_max = 268435456' . PHP_EOL . 'net.ipv4.tcp_wmem = 8192 65536 134217728' . PHP_EOL . 'net.ipv4.udp_wmem_min = 16384' . PHP_EOL . 'net.core.wmem_default = 262144' . PHP_EOL . 'net.core.wmem_max = 268435456' . PHP_EOL . 'net.core.somaxconn = 1000000' . PHP_EOL . 'net.core.netdev_max_backlog = 250000' . PHP_EOL . 'net.core.optmem_max = 65535' . PHP_EOL . 'net.ipv4.tcp_max_tw_buckets = 1440000' . PHP_EOL . 'net.ipv4.tcp_max_orphans = 16384' . PHP_EOL . 'net.ipv4.ip_local_port_range = 2000 65000' . PHP_EOL . 'net.ipv4.tcp_no_metrics_save = 1' . PHP_EOL . 'net.ipv4.tcp_slow_start_after_idle = 0' . PHP_EOL . 'net.ipv4.tcp_fin_timeout = 15' . PHP_EOL . 'net.ipv4.tcp_keepalive_time = 300' . PHP_EOL . 'net.ipv4.tcp_keepalive_probes = 5' . PHP_EOL . 'net.ipv4.tcp_keepalive_intvl = 15' . PHP_EOL . 'fs.file-max=20970800' . PHP_EOL . 'fs.nr_open=20970800' . PHP_EOL . 'fs.aio-max-nr=20970800' . PHP_EOL . 'net.ipv4.tcp_timestamps = 1' . PHP_EOL . 'net.ipv4.tcp_window_scaling = 1' . PHP_EOL . 'net.ipv4.tcp_mtu_probing = 1' . PHP_EOL . 'net.ipv4.route.flush = 1' . PHP_EOL . 'net.ipv6.route.flush = 1';
             $rInstallDir = BIN_PATH . 'install/';
             $lastVersion = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json", false, $rContext), True);
@@ -54,7 +53,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 "mariadb-server",
                 "rsync",
             ];
-            $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $rUpdate['sub'] . '/sub_xui.tar.gz';
+            $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $lastVersion['sub'] . '/sub_xui.tar.gz';
 
             file_put_contents($rInstallDir . $rServerID . '.json', json_encode(array('root_username' => $rUsername, 'root_password' => $rPassword, 'ssh_port' => $rPort)));
 
@@ -84,6 +83,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     runCommand($rConn, 'sudo mkdir ' . MAIN_DIR);
                     // runCommand($rConn, 'sudo rm -rf ' . BIN_PATH);
 
+                    echo 'Download and install panel' . "\n";
                     runCommand($rConn, 'wget -q -O "/tmp/sub_xui.tar.gz" ' . $rInstallFiles);
                     runCommand($rConn, 'sudo tar -zxvf "/tmp/sub_xui.tar.gz" -C "' . MAIN_DIR . '"');
                     runCommand($rConn, 'sudo rm -f "/tmp/sub_xui.tar.gz"');
@@ -113,7 +113,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     echo 'Generating configuration file' . "\n";
                     // $rMasterConfig = parse_ini_file(CONFIG_PATH . 'config.ini');
 
-                    $rNewConfig = '; XtreamCodes Configuration' . "\n" . '; -----------------' . "\n" . '; Your username and password will be encrypted and' . "\n" . "; saved to the 'credentials' file in this folder" . "\n" . '; automatically.' . "\n" . ';' . "\n" . '; To change your username or password, modify BOTH' . "\n" . '; below and XtreamCodes will read and re-encrypt them.' . "\n\n" . '[XtreamCodes]' . "\n" . 'hostname    =   "' . ipTV_lib::$StreamingServers[SERVER_ID]['server_ip']  . '"' . "\n" . 'database    =   "xtreamcodes"' . "\n" . 'port        =   ' . intval($_INFO['port']) . "\n" . 'server_id   =   ' . $rServerID . "\n" . 'is_lb       =   1' . "\n\n" . '[Encrypted]' . "\n" . 'username    =   ""' . "\n" . 'password    =   ""';
+                    $rNewConfig = '; XtreamCodes Configuration' . "\n" . '; -----------------' . "\n" . '; Your username and password will be encrypted and' . "\n" . "; saved to the 'credentials' file in this folder" . "\n" . '; automatically.' . "\n" . ';' . "\n" . '; To change your username or password, modify BOTH' . "\n" . '; below and XtreamCodes will read and re-encrypt them.' . "\n\n" . '[XtreamCodes]' . "\n" . 'hostname    =   "' . ipTV_lib::$StreamingServers[SERVER_ID]['server_ip']  . '"' . "\n" . 'database    =   "xtream_iptvpro"' . "\n" . 'port        =   ' . intval($_INFO['port']) . "\n" . 'server_id   =   ' . $rServerID . "\n" . 'is_lb       =   1' . "\n\n" . '[Encrypted]' . "\n" . 'username    =   "lb_' . $rServerID . '"' . "\n" . 'password    =   ""';
                     file_put_contents(TMP_PATH . 'config_' . $rServerID, $rNewConfig);
                     sendfile($rConn, TMP_PATH . 'config_' . $rServerID, CONFIG_PATH . 'config.ini');
                     echo 'Installing service' . "\n";
@@ -124,6 +124,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     runCommand($rConn, 'sudo chmod +x /etc/systemd/system/xtreamcodes.service');
                     runCommand($rConn, 'sudo systemctl daemon-reload');
                     runCommand($rConn, 'sudo systemctl enable xtreamcodes');
+                    runCommand($rConn, 'sudo echo "listen ' . $rHTTPPort . ';" > "/home/xtreamcodes/bin/nginx/conf/ports/http.conf"');
+                    runCommand($rConn, 'sudo echo "listen ' . $rHTTPSPort . ' ssl;" > "/home/xtreamcodes/bin/nginx/conf/ports/https.conf"');
                     $rServices = (intval(runCommand($rConn, 'sudo cat /proc/cpuinfo | grep "^processor" | wc -l')['output']) ?: 4);
                     runCommand($rConn, 'sudo chmod +x ' . MAIN_DIR . 'bin/daemons.sh');
                     $rSystemConf = runCommand($rConn, 'sudo cat "/etc/systemd/system.conf"')['output'];

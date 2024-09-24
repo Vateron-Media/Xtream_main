@@ -348,9 +348,6 @@ if ($rSettings["sidebar"]) { ?>
                                 $rContext = stream_context_create(array('http' => array('timeout' => 3)));
                                 $rUpdatePanel = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json", false, $rContext), True);
                                 $rInfos = array(); //json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/infos.json", false, $rContext), True);
-
-
-
                                 ?>
                                 <?php if (isUpdateNeeded($rAdminSettings["geolite2_version"], $rGeoLite2)) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">

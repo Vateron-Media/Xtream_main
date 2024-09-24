@@ -6,7 +6,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_server"))) {
 }
 
 if (isset($_POST["submit_server"])) {
-    $rArray = array("server_name" => "", "domain_name" => "", "server_ip" => "", "vpn_ip" => "", "diff_time_main" => 0, "http_broadcast_port" => 25461, "total_clients" => 1000, "system_os" => "", "network_interface" => "", "status" => 3, "enable_geoip" => 0, "can_delete" => 1, "rtmp_port" => 25462, "enable_isp" => 0, "network_guaranteed_speed" => 1000, "https_broadcast_port" => 25463, "whitelist_ips" => array(), "timeshift_only" => 0);
+    $rArray = array("server_name" => "", "domain_name" => "", "server_ip" => "", "vpn_ip" => "", "diff_time_main" => 0, "http_broadcast_port" => 25461, "total_clients" => 1000, "system_os" => "", "network_interface" => "auto", "status" => 3, "enable_geoip" => 0, "can_delete" => 1, "rtmp_port" => 25462, "enable_isp" => 0, "network_guaranteed_speed" => 1000, "https_broadcast_port" => 25463, "whitelist_ips" => array(), "timeshift_only" => 0);
     if ((strlen($_POST["server_name"]) == 0) or (strlen($_POST["server_ip"]) == 0) or (strlen($_POST["ssh_port"]) == 0) or (strlen($_POST["http_broadcast_port"]) == 0) or (strlen($_POST["https_broadcast_port"]) == 0) or (strlen($_POST["rtmp_port"]) == 0) or (strlen($_POST["root_password"]) == 0)) {
         $_STATUS = 1;
     }
@@ -40,7 +40,13 @@ if (isset($_POST["submit_server"])) {
         $rQuery = "INSERT INTO `streaming_servers`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($db->query($rQuery)) {
             $rInsertID = intval($db->insert_id);
-            $rCommand = '/home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/tools/balancer.php ' . intval($rInsertID) . ' ' . intval($_POST["ssh_port"]) . ' ' . escapeshellarg($_POST['root_username']) . ' ' . escapeshellarg($_POST['root_password']) . ' 80 443 ' . intval($rUpdateSysctl) . ' > "/home/xtreamcodes/install/' . intval($rInsertID) . '.install" 2>/dev/null &';
+            //Create user and add permisions
+            $userBD = "lb_" . intval($rInsertID);
+            $db->query("CREATE USER `" . $userBD . "`@`" . $rArray["server_ip"] . "`;");
+            $db->query("GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO `" . $userBD . "`@`" . $rArray["server_ip"] . "` WITH GRANT OPTION;");
+            $db->query("FLUSH PRIVILEGES;");
+            // Run lb installer
+            $rCommand = '/home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/tools/balancer.php ' . intval($rInsertID) . ' ' . intval($_POST["ssh_port"]) . ' ' . escapeshellarg($_POST['root_username']) . ' ' . escapeshellarg($_POST['root_password']) . ' '  . $rArray["http_broadcast_port"] . ' ' . $rArray["https_broadcast_port"] . ' ' . intval($rUpdateSysctl) . ' > "/home/xtreamcodes/install/' . intval($rInsertID) . '.install" 2>/dev/null &';
 
             shell_exec($rCommand);
             header("Location: ./servers.php");
