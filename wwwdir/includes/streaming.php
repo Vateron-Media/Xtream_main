@@ -1026,8 +1026,8 @@ class ipTV_streaming {
             $rProtocol = ipTV_lib::$StreamingServers[$rServerID]['server_protocol'];
         }
         $rDomain = null;
-        if (0 < strlen($_SERVER['HTTP_HOST']) && in_array(strtolower($_SERVER['HTTP_HOST']), array_map('strtolower', ipTV_lib::$StreamingServers[$rServerID]['domains']['urls']))) {
-            $rDomain = $_SERVER['HTTP_HOST'];
+        if (0 < strlen(HOST) && in_array(strtolower(HOST), array_map('strtolower', ipTV_lib::$StreamingServers[$rServerID]['domains']['urls']))) {
+            $rDomain = HOST;
         } else {
             if (ipTV_lib::$StreamingServers[$rServerID]['random_ip'] && 0 < count(ipTV_lib::$StreamingServers[$rServerID]['domains']['urls'])) {
                 $rDomain = ipTV_lib::$StreamingServers[$rServerID]['domains']['urls'][array_rand(ipTV_lib::$StreamingServers[$rServerID]['domains']['urls'])];

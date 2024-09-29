@@ -572,8 +572,6 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                             $rChannel['movie_properties'] = array('movie_image' => (!empty($rProperties['movie_image']) ? $rProperties['movie_image'] : $rSeriesInfo['cover']));
                                             $rChannel['type_output'] = 'series';
                                             $rChannel['category_id'] = $rSeriesInfo[$rSeriesID]['category_id'];
-                                        } else {
-                                            $rChannel['stream_display_name'] = $rChannel['stream_display_name'];
                                         }
                                         if ($rChannel['live'] == 0) {
                                             if (strlen($rUserInfo['access_token']) == 32) {
@@ -605,6 +603,7 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                                 }
                                             } else {
                                                 $rAvailableServers = array_values(array_keys($rRTMPRows[$rChannel['id']]));
+
                                                 if (in_array($rUserInfo['force_server_id'], $rAvailableServers)) {
                                                     $rServerID = $rUserInfo['force_server_id'];
                                                 } else {

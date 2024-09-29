@@ -90,7 +90,7 @@ class ipTV_stream {
         $streamProbesize = abs(intval(ipTV_lib::$settings['probesize']));
         $timeout = intval($streamMaxAnalyze / 1000000) + 5;
         $command = "{$dir}/usr/bin/timeout {$timeout}s " . FFPROBE_PATH . " -probesize {$streamProbesize} -analyzeduration {$streamMaxAnalyze} " . implode(' ', $options) . " -i \"{$InputFileUrl}\" -v quiet -print_format json -show_streams -show_format";
-        $result = ipTV_servers::RunCommandServer($serverId, $command, 'raw', $timeout * 2, $timeout * 2);
+        $result = ipTV_servers::RunCommandServer($serverId, $command, 'raw');
         return self::parseFFProbe(json_decode($result[$serverId], true));
     }
     public static function parseFFProbe($data) {
