@@ -708,7 +708,7 @@ function GetContainerExtension($target_container, $stalker_container_priority = 
     }
     return $target_container[0];
 }
-function crontab_refresh() {
+function generateCron() {
     global $ipTV_db;
     if (!file_exists(TMP_PATH . 'crontab')) {
         $rJobs = array();

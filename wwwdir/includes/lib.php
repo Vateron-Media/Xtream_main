@@ -55,7 +55,7 @@ class ipTV_lib {
         // }
 
         self::$SegmentsSettings = self::calculateSegNumbers();
-        crontab_refresh();
+        generateCron();
     }
     public static function getDiffTimezone($rTimezone) {
         $rServerTZ = new DateTime('UTC', new DateTimeZone(date_default_timezone_get()));
@@ -293,9 +293,9 @@ class ipTV_lib {
         $servers = array();
         $server_status = array(1, 3);
         foreach (self::$ipTV_db->get_rows() as $row) {
-            if ((!empty($row["vpn_ip"]) && inet_pton($row["vpn_ip"]) !== false)) {
+            if (!empty($row["vpn_ip"]) && inet_pton($row["vpn_ip"]) !== false) {
                 $url = $row["vpn_ip"];
-            } else if (!empty($row["domain_name"])) {
+            } elseif (!empty($row["domain_name"])) {
                 $url = str_replace(array("http://", "/", "https://"), '', $row["domain_name"]);
             } else {
                 $url = $row["server_ip"];
