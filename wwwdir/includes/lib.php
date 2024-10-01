@@ -208,9 +208,9 @@ class ipTV_lib {
         }
         $output = array();
         self::$ipTV_db->query("SELECT * FROM `settings`");
-        $rows = self::$ipTV_db->get_row();
-        foreach ($rows as $key => $val) {
-            $output[$key] = $val;
+        $rows = self::$ipTV_db->get_rows();
+        foreach ($rows as $val) {
+            $output[$val['name']] = $val['value'];
         }
         $output["allow_countries"] = json_decode($output["allow_countries"], true);
         $output["allowed_stb_types"] = @array_map("strtolower", json_decode($output["allowed_stb_types"], true));
@@ -224,6 +224,19 @@ class ipTV_lib {
         $output["api_ips"] = explode(",", $output["api_ips"]);
         self::setCache('settings', $output);
         return $output;
+    }
+    /**
+     * Set the application settings.
+     *
+     * @param array $settings An associative array of setting names and values.
+     *
+     * @return void
+     */
+    public static function setSettings(array $settings) {
+        foreach ($settings as $key => $value) {
+            self::$ipTV_db->query("UPDATE `settings` SET `value` = ? WHERE `name` = ?", $value, $key);
+        }
+        self::getSettings(true);
     }
     /**
      * Retrieves stream categories from the database.

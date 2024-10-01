@@ -248,19 +248,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
             $rArray[$rKey] = $rValue;
         }
     }
-    $rValues = array();
-    foreach ($rArray as $rKey => $rValue) {
-        if (is_array($rValue)) {
-            $rValue = json_encode($rValue);
-        }
-        if (is_null($rValue)) {
-            $rValues[] = '`' . ESC($rKey) . '` = NULL';
-        } else {
-            $rValues[] = '`' . ESC($rKey) . '` = \'' . ESC($rValue) . '\'';
-        }
-    }
-    $rQuery = "UPDATE `settings` SET " . join(", ", $rValues) . ";";
-    if ($db->query($rQuery)) {
+    if (setSettings($rArray)) {
         $_STATUS = 0;
     } else {
         $_STATUS = 1;

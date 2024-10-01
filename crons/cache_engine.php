@@ -304,7 +304,7 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
 
                 echo 'Cache updated!' . "\n";
                 file_put_contents(CACHE_TMP_PATH . 'cache_complete', time());
-                $ipTV_db->query('UPDATE `settings` SET `last_cache` = \'%s\', `last_cache_taken` = \'%s\';', time(), time() - $rStartTime);
+                ipTV_lib::setSettings(["last_cache" => time(), "last_cache_taken" => time() - $rStartTime]);
                 break;
         }
     } else {

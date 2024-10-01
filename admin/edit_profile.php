@@ -62,7 +62,7 @@ if (isset($_POST["submit_profile"])) {
         } else {
             $portadmin = $rSettings["port_admin"];
         }
-        $db->query("UPDATE `settings` SET `port_admin` = '" . ESC($portadmin) . "';");
+        setSettings(["port_admin" => $portadmin]);
         $db->query("UPDATE `reg_users` SET `password` = '" . ESC($rPassword) . "', `email` = '" . ESC($rEmail) . "', `reseller_dns` = '" . ESC($rDNS) . "', `default_lang` = '" . ESC($bob) . "', `dark_mode` = " . intval($rDarkMode) . ", `sidebar` = " . intval($rSidebar) . ", `expanded_sidebar` = " . intval($rExpanded) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
         $rUserInfo = getRegisteredUser($rUserInfo["id"]);
         $rAdminSettings["dark_mode"] = $rUserInfo["dark_mode"];

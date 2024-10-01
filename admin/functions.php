@@ -168,8 +168,24 @@ function getAdminSettings() {
 
 function getSettings() {
     global $db;
-    $result = $db->query("SELECT * FROM `settings` LIMIT 1;");
-    return $result->fetch_assoc();
+    $result = $db->query("SELECT * FROM `settings`;");
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    foreach ($data as $value) {
+        $return[$value["name"]] = $value["value"];
+    }
+    return $return;
+}
+function setSettings(array $settings) {
+    global $db;
+    foreach ($settings as $key => $value) {
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+        if (!$db->query("UPDATE `settings` SET `value` = '" . ESC($value) . "' WHERE `name` = '" . ESC($key) . "'")) {
+            return false;
+        }
+    }
+    return true;
 }
 
 if (session_status() == PHP_SESSION_NONE) {
@@ -199,9 +215,9 @@ require_once realpath(dirname(__FILE__)) . "/gauth.php";
 
 function getTimezone() {
     global $db;
-    $result = $db->query("SELECT `default_timezone` FROM `settings`;");
+    $result = $db->query("SELECT * FROM `settings`WHERE name='default_timezone'");
     if ((isset($result)) && ($result->num_rows == 1)) {
-        return XSS($result->fetch_assoc()["default_timezone"]);
+        return XSS($result->fetch_assoc()["value"]);
     } else {
         return "Europe/London";
     }
@@ -1936,9 +1952,8 @@ function updateTMDbCategories() {
 
 function forceSecurity() {
     global $db;
-    $db->query("UPDATE `settings` SET `double_auth` = 1, `mag_security` = 1;");
+    setSettings(["double_auth" => 1, "mag_security" => 1]);
     $db->query("UPDATE `admin_settings` SET `pass_length` = 8 WHERE `pass_length` < 8;");
-    $db->query("UPDATE `settings` SET `double_auth` = 1, `mag_security` = 1;");
 }
 
 if (file_exists("/home/xtreamcodes/admin/.update")) {

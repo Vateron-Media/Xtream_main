@@ -80,7 +80,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 1 WHERE `id` = \'%s\';', SERVER_ID);
 
 			if (stripos(ipTV_lib::$settings['server_name'], 'xtream') !== false || stripos(ipTV_lib::$settings['server_name'], 'zapx') !== false || stripos(ipTV_lib::$settings['server_name'], 'streamcreed') !== false) {
-				$ipTV_db->query("UPDATE `settings` SET `server_name` = 'XtreamCodes';");
+				ipTV_lib::setSettings(["server_name" => "XtreamCodes"]);
 			}
 
 			echo 'Servers' . "\n" . '------------------------------' . "\n";
