@@ -707,30 +707,6 @@ function GetContainerExtension($target_container, $stalker_container_priority = 
     }
     return $target_container[0];
 }
-function generateCron() {
-    global $ipTV_db;
-    if (!file_exists(TMP_PATH . 'crontab')) {
-        $rJobs = array();
-        $ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
-        foreach ($ipTV_db->get_rows() as $rRow) {
-            $rFullPath = CRON_PATH . $rRow['filename'];
-            if (pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && file_exists($rFullPath)) {
-                $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XtreamUI';
-            }
-        }
-        shell_exec('crontab -r');
-        $rTempName = tempnam('/tmp', 'crontab');
-        $rHandle = fopen($rTempName, 'w');
-        fwrite($rHandle, implode("\n", $rJobs) . "\n");
-        fclose($rHandle);
-        shell_exec('crontab -u xtreamcodes ' . $rTempName);
-        @unlink($rTempName);
-        file_put_contents(TMP_PATH . 'crontab', 1);
-        return true;
-    } else {
-        return false;
-    }
-}
 function searchQuery($tableName, $columnName, $value) {
     global $ipTV_db;
     $ipTV_db->query("SELECT * FROM `{$tableName}` WHERE `{$columnName}` = '%s'", $value);
