@@ -25,15 +25,14 @@ function getScriptVer() {
  * of the current version is greater, it returns false, indicating that no update is needed. 
  * If both versions are equal, it also returns false.
  *
- * @param string $currentVersion The current version string.
  * @param string $requiredVersion The required version string to compare against.
+ * @param string $currentVersion The current version string.
  * @return bool Returns true if an update is needed, false otherwise.
  */
-function isUpdateNeeded($currentVersion, $requiredVersion) {
+function isUpdateNeeded(string $requiredVersion, string $currentVersion): bool {
     // Convert version strings to arrays of integers
     $currentVersionArray = array_map('intval', explode('.', $currentVersion));
     $requiredVersionArray = array_map('intval', explode('.', $requiredVersion));
-
     // Compare each part of the version numbers
     $length = max(count($currentVersionArray), count($requiredVersionArray));
     for ($i = 0; $i < $length; $i++) {

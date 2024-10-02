@@ -345,7 +345,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["a_new_version_of_GeoLite2"] ?> (<?= $rGeoLite2 ?>) <?= $_["is_available"] ?> <a href="./settings.php?geolite2"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
-                                <?php if (isUpdateNeeded(getScriptVer(), $rUpdatePanel["main"])) { ?>
+                                <?php if (isUpdateNeeded($rUpdatePanel["main"], getScriptVer())) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
