@@ -624,7 +624,7 @@ class ipTV_lib {
             foreach ($ipTV_db->get_rows() as $rRow) {
                 $rFullPath = CRON_PATH . $rRow['filename'];
                 if (pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && file_exists($rFullPath)) {
-                    $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XtreamUI';
+                    $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XtreamCodes';
                 }
             }
             shell_exec('crontab -r');
