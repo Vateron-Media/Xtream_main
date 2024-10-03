@@ -234,7 +234,7 @@ class ipTV_lib {
      */
     public static function setSettings(array $settings) {
         foreach ($settings as $key => $value) {
-            self::$ipTV_db->query("UPDATE `settings` SET `value` = ? WHERE `name` = ?", $value, $key);
+            self::$ipTV_db->query("UPDATE `settings` SET `value` = '%s' WHERE `name` = '%s'", $value, $key);
         }
         self::getSettings(true);
     }
