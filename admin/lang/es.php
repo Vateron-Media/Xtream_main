@@ -1712,4 +1712,6 @@ $_ = array(
 	"width" => "el ancho",
 	"width:" => "el ancho:",
 	"debug_show_errors" => "Enable debug panel logging",
+	"security" => "Security",
+
 );

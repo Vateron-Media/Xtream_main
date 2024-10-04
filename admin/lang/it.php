@@ -1717,4 +1717,6 @@ $_ = array(
 	"width" => "larghezza",
 	"width:" => "larghezza:",
 	"debug_show_errors" => "Enable debug panel logging",
+	"security" => "Security",
+
 );

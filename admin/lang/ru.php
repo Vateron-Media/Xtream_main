@@ -1456,4 +1456,6 @@ $_ = array(
    "width:" => "ширина:",
    "you_need_at_least_one" => "Для создания канала необходим хотя бы один профиль транскодирования.",
    "debug_show_errors" => "Enable debug panel logging",
+   "security" => "Security",
+
 );

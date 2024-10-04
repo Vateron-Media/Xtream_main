@@ -1455,4 +1455,5 @@ $_ = array(
   "width" => "width",
   "width:" => "width:",
   "debug_show_errors" => "Enable debug panel logging",
+  "security" => "Security",
 );
