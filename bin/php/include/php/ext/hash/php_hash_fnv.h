@@ -29,38 +29,39 @@
 
 #define PHP_FNV_64_PRIME ((uint64_t)0x100000001b3ULL)
 
-
 /*
  * hash types
  */
-enum php_fnv_type {
-	PHP_FNV_NONE  = 0,	/* invalid FNV hash type */
-	PHP_FNV0_32   = 1,	/* FNV-0 32 bit hash */
-	PHP_FNV1_32   = 2,	/* FNV-1 32 bit hash */
-	PHP_FNV1a_32  = 3,	/* FNV-1a 32 bit hash */
-	PHP_FNV0_64   = 4,	/* FNV-0 64 bit hash */
-	PHP_FNV1_64   = 5,	/* FNV-1 64 bit hash */
-	PHP_FNV1a_64  = 6,	/* FNV-1a 64 bit hash */
+enum php_fnv_type
+{
+  PHP_FNV_NONE = 0, /* invalid FNV hash type */
+  PHP_FNV0_32 = 1,  /* FNV-0 32 bit hash */
+  PHP_FNV1_32 = 2,  /* FNV-1 32 bit hash */
+  PHP_FNV1a_32 = 3, /* FNV-1a 32 bit hash */
+  PHP_FNV0_64 = 4,  /* FNV-0 64 bit hash */
+  PHP_FNV1_64 = 5,  /* FNV-1 64 bit hash */
+  PHP_FNV1a_64 = 6, /* FNV-1a 64 bit hash */
 };
 
-typedef struct {
-	uint32_t state;
+typedef struct
+{
+  uint32_t state;
 } PHP_FNV132_CTX;
 
-typedef struct {
-	uint64_t state;
+typedef struct
+{
+  uint64_t state;
 } PHP_FNV164_CTX;
-
 
 PHP_HASH_API void PHP_FNV132Init(PHP_FNV132_CTX *context);
 PHP_HASH_API void PHP_FNV132Update(PHP_FNV132_CTX *context, const unsigned char *input, unsigned int inputLen);
 PHP_HASH_API void PHP_FNV1a32Update(PHP_FNV132_CTX *context, const unsigned char *input, unsigned int inputLen);
-PHP_HASH_API void PHP_FNV132Final(unsigned char digest[16], PHP_FNV132_CTX * context);
+PHP_HASH_API void PHP_FNV132Final(unsigned char digest[16], PHP_FNV132_CTX *context);
 
 PHP_HASH_API void PHP_FNV164Init(PHP_FNV164_CTX *context);
 PHP_HASH_API void PHP_FNV164Update(PHP_FNV164_CTX *context, const unsigned char *input, unsigned int inputLen);
 PHP_HASH_API void PHP_FNV1a64Update(PHP_FNV164_CTX *context, const unsigned char *input, unsigned int inputLen);
-PHP_HASH_API void PHP_FNV164Final(unsigned char digest[16], PHP_FNV164_CTX * context);
+PHP_HASH_API void PHP_FNV164Final(unsigned char digest[16], PHP_FNV164_CTX *context);
 
 static uint32_t fnv_32_buf(void *buf, size_t len, uint32_t hval, int alternate);
 static uint64_t fnv_64_buf(void *buf, size_t len, uint64_t hval, int alternate);

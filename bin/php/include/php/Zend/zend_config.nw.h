@@ -20,7 +20,6 @@
 #ifndef ZEND_CONFIG_NW_H
 #define ZEND_CONFIG_NW_H
 
-
 #include <string.h>
 #include <float.h>
 
@@ -43,11 +42,11 @@ typedef unsigned int uint;
 /* #define HAVE_STDIOSTR_H 1 */
 #define HAVE_CLASS_ISTDIOSTREAM
 #define istdiostream stdiostream
-#define HAVE_STDARG_H	1
-#define HAVE_DLFCN_H	1
+#define HAVE_STDARG_H 1
+#define HAVE_DLFCN_H 1
 /* #define HAVE_LIBDL 1 */
-#define HAVE_SNPRINTF	1
-#define HAVE_VSNPRINTF	1
+#define HAVE_SNPRINTF 1
+#define HAVE_VSNPRINTF 1
 
 /*
 #define snprintf _snprintf

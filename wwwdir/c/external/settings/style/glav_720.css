@@ -1,10 +1,10 @@
-<!--
-* {
+< !-- * {
     margin: 0;
     padding: 0;
 }
 
-html, body {
+html,
+body {
     overflow: hidden;
     font-family: "Myriad Pro";
     color: #FFF;
@@ -132,4 +132,3 @@ a {
     border-width: 0 20px;
     -webkit-border-image: url(720/btn_act.png) 0 20 0 20 stretch stretch;
 }
-

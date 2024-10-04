@@ -25,7 +25,7 @@
     and the ext/standard/sha1.h file can be reduced to:
         #define PHP_HASH_SHA1_NOT_IN_CORE
         #include "ext/hash/php_hash_sha.h"
-	Don't forget to remove md5() and md5_file() entries from basic_functions.c
+   Don't forget to remove md5() and md5_file() entries from basic_functions.c
  */
 
 #include "ext/standard/md5.h"
@@ -57,10 +57,11 @@
  */
 
 /* MD5 context. */
-typedef struct {
-	uint32_t state[4];				/* state (ABCD) */
-	uint32_t count[2];				/* number of bits, modulo 2^64 (lsb first) */
-	unsigned char buffer[64];	/* input buffer */
+typedef struct
+{
+   uint32_t state[4];        /* state (ABCD) */
+   uint32_t count[2];        /* number of bits, modulo 2^64 (lsb first) */
+   unsigned char buffer[64]; /* input buffer */
 } PHP_MD5_CTX;
 
 PHP_HASH_API void make_digest(char *md5str, unsigned char *digest);
@@ -73,10 +74,11 @@ PHP_NAMED_FUNCTION(php_if_md5_file);
 #endif /* PHP_HASH_MD5_NOT_IN_CORE */
 
 /* MD4 context */
-typedef struct {
-	uint32_t state[4];
-	uint32_t count[2];
-	unsigned char buffer[64];
+typedef struct
+{
+   uint32_t state[4];
+   uint32_t count[2];
+   unsigned char buffer[64];
 } PHP_MD4_CTX;
 
 PHP_HASH_API void PHP_MD4Init(PHP_MD4_CTX *);
@@ -84,11 +86,12 @@ PHP_HASH_API void PHP_MD4Update(PHP_MD4_CTX *context, const unsigned char *, uns
 PHP_HASH_API void PHP_MD4Final(unsigned char[16], PHP_MD4_CTX *);
 
 /* MD2 context */
-typedef struct {
-	unsigned char state[48];
-	unsigned char checksum[16];
-	unsigned char buffer[16];
-	char in_buffer;
+typedef struct
+{
+   unsigned char state[48];
+   unsigned char checksum[16];
+   unsigned char buffer[16];
+   char in_buffer;
 } PHP_MD2_CTX;
 
 PHP_HASH_API void PHP_MD2Init(PHP_MD2_CTX *context);

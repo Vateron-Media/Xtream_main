@@ -47,7 +47,8 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="channel_order.php">
-                                                <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-success waves-effect waves-light btn-sm">
                                                     <?= $_["simple"] ?>
                                                 </button>
                                             </a>
@@ -69,13 +70,16 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./channel_order_alt.php" method="POST" id="channel_order_form">
-                                        <input type="hidden" id="stream_order_array" name="stream_order_array" value="" />
+                                        <input type="hidden" id="stream_order_array" name="stream_order_array"
+                                            value="" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#order-stream" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#order-stream" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-play mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["manual_ordering"] ?></span>
+                                                        <span
+                                                            class="d-none d-sm-inline"><?= $_["manual_ordering"] ?></span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -87,28 +91,44 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?= $_["bouquet_order_alt_sort_text"] ?>
                                                             </p>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="select_category"><?= $_["select_category"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="select_category"><?= $_["select_category"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="select_category" id="select_category" class="form-control select2" data-toggle="select2">>
+                                                                    <select name="select_category" id="select_category"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">>
                                                                         <?php foreach (getCategories() as $rCategory) { ?>
-                                                                            <option value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                            <option value="<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <select multiple id="sort_stream" class="form-control" style="min-height:400px;"></select>
+                                                            <select multiple id="sort_stream" class="form-control"
+                                                                style="min-height:400px;"></select>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0 add-margin-top-20">
                                                         <li class="list-inline-item">
-                                                            <a href="javascript: void(0);" onClick="MoveUp()" class="btn btn-purple"><i class="mdi mdi-chevron-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveDown()" class="btn btn-purple"><i class="mdi mdi-chevron-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveTop()" class="btn btn-pink"><i class="mdi mdi-chevron-triple-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveBottom()" class="btn btn-pink"><i class="mdi mdi-chevron-triple-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="AtoZ()" class="btn btn-info"><?= $_["a_to_z"] ?></a>
+                                                            <a href="javascript: void(0);" onClick="MoveUp()"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveDown()"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveTop()"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveBottom()"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="AtoZ()"
+                                                                class="btn btn-info"><?= $_["a_to_z"] ?></a>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <button type="submit" class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
                                                         </li>
                                                     </ul>
                                                 </div>

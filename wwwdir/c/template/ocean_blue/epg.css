@@ -8,7 +8,8 @@
     background-position: 0 -36px;
 }*/
 
-#epg .active_row_bg, #epg .blue_row_bg[active="active"]{
+#epg .active_row_bg,
+#epg .blue_row_bg[active="active"] {
     position: absolute;
     left: 49px;
     top: 92px;
@@ -19,7 +20,8 @@
     width: 632px;
 }
 
-#epg .name_block, #epg .active_name_block{
+#epg .name_block,
+#epg .active_name_block {
     font-size: 20px;
     width: 129px;
     text-overflow: ellipsis;
@@ -28,31 +30,33 @@
     margin: 2px 9px 0 3px;
 }
 
-#epg .active_name_block, #epg .blue_row_bg[active="active"] .name_block{
+#epg .active_name_block,
+#epg .blue_row_bg[active="active"] .name_block {
     padding-left: 3px;
 }
 
-#epg .blue_row_bg[active="active"] .name_block{
+#epg .blue_row_bg[active="active"] .name_block {
     font-size: 22px;
     color: #002864;
     text-shadow: none;
 }
 
-#epg .epg_container_block{
+#epg .epg_container_block {
     width: 449px;
     text-overflow: ellipsis;
     float: left;
 }
 
-#epg .number_block{
+#epg .number_block {
     margin-top: 5px;
 }
 
-#epg .active_number_block, #epg .blue_row_bg[active="active"] .number_block{
+#epg .active_number_block,
+#epg .blue_row_bg[active="active"] .number_block {
     margin: 0 0 0 4px;
 }
 
-#epg .blue_row_bg[active="active"] .number_block{
+#epg .blue_row_bg[active="active"] .number_block {
     width: 34px;
     height: 27px;
     background-image: url("i/mb_icons.png");
@@ -62,13 +66,14 @@
     padding-top: 4px;
 }
 
-#epg .active_epg_container_block, #epg .blue_row_bg[active="active"] .epg_container_block{
+#epg .active_epg_container_block,
+#epg .blue_row_bg[active="active"] .epg_container_block {
     width: 449px;
     text-overflow: ellipsis;
     float: left;
 }
 
-#epg .program{
+#epg .program {
     font-size: 18px;
     float: left;
     text-shadow: #122946 0 -1px 0;
@@ -78,50 +83,51 @@
     position: relative;
 }
 
-#epg .program .marks{
+#epg .program .marks {
     position: absolute;
     top: 0;
     left: 0;
 }
 
-#epg .program .marks div{
+#epg .program .marks div {
     float: left;
     margin: 1px 0 0 1px;
 }
 
-#epg .program .marks .mark_memo{
+#epg .program .marks .mark_memo {
     height: 8px;
     width: 8px;
     /*background-color: #0c0;*/
     background-image: url("i/epg_green_mark.png");
 }
 
-#epg .program .marks .mark_rec{
+#epg .program .marks .mark_rec {
     height: 8px;
     width: 8px;
     background-image: url("i/epg_red_mark.png");
 }
 
-#epg .program .marks .mark_archive{
+#epg .program .marks .mark_archive {
     height: 8px;
     width: 8px;
     background-image: url("i/epg_orange_mark.png");
 }
 
-#epg .blue_row_bg .program{
+#epg .blue_row_bg .program {
     color: #bcc7d6;
     text-shadow: #0f385a 1px 2px 0;
 }
 
-#epg .active_row_bg .program, #epg .blue_row_bg[active="active"] .program{
+#epg .active_row_bg .program,
+#epg .blue_row_bg[active="active"] .program {
     color: #284b82;
 }
 
-#epg .program_txt{
+#epg .program_txt {
     padding: 4px 2px 0 2px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space:pre;
+    white-space: pre;
     text-shadow: #0f385a 1px 2px 0;
     /*font-family: "Myriad Pro Cond", sans-serif;*/
 }
@@ -130,50 +136,53 @@
     text-shadow: none;
 }
 
-#epg .program_separator{
+#epg .program_separator {
     float: left;
     background-image: url("i/tv_table_separator.png");
     width: 2px;
     height: 30px;
 }
 
-#epg .program .larr{
+#epg .program .larr {
     background-image: url("i/tv_table_arrows.png");
     height: 34px;
     width: 10px;
     float: left;
 }
 
-#epg .blue_row_bg .program .larr{
+#epg .blue_row_bg .program .larr {
     background-position: 0 -36px;
 }
 
-#epg .active_row_bg .program .larr, #epg .blue_row_bg[active="active"] .program .larr{
+#epg .active_row_bg .program .larr,
+#epg .blue_row_bg[active="active"] .program .larr {
     background-position: 0 -1px;
 }
 
-#epg .program .rarr{
+#epg .program .rarr {
     background-image: url("i/tv_table_arrows.png");
     height: 34px;
     width: 10px;
     float: right;
 }
 
-#epg .blue_row_bg .program .rarr{
+#epg .blue_row_bg .program .rarr {
     background-position: 11px -36px;
 }
 
-#epg .active_row_bg .program .rarr, #epg .blue_row_bg[active="active"] .program .rarr{
+#epg .active_row_bg .program .rarr,
+#epg .blue_row_bg[active="active"] .program .rarr {
     background-position: 12px -1px;
 }
 
-#epg .program[rel="active"]{
+#epg .program[rel="active"] {
     background-image: url("i/tv_table_focus.png");
     background-position: 0 -1px;
     color: #000;
 }
 
-.active_epg_container_block > .program:last-child, .epg_container_block > .program:last-child{
+.active_epg_container_block>.program:last-child,
+.epg_container_block>.program:last-child {
     -webkit-border-top-right-radius: 7px;
     -webkit-border-bottom-right-radius: 7px;
     -moz-border-radius-topright: 7px;
@@ -182,7 +191,7 @@
     border-bottom-right-radius: 7px;
 }
 
-#epg .program_info{
+#epg .program_info {
     position: absolute;
     bottom: 60px;
     left: 49px;
@@ -196,12 +205,12 @@
     padding: 0 5px;
 }
 
-#epg .program_info .time{
+#epg .program_info .time {
     color: #cfeafe;
     font-weight: bold;
 }
 
-#epg .on_date{
+#epg .on_date {
     position: absolute;
     top: 72px;
     right: 495px;
@@ -210,36 +219,37 @@
     color: #fff;
 }
 
-#epg .time_mark{
+#epg .time_mark {
     position: absolute;
     top: 72px;
     color: #fff;
 }
 
-#epg .mark-1{
+#epg .mark-1 {
     left: 230px;
 }
 
-#epg .mark-2{
+#epg .mark-2 {
     left: 380px;
 }
 
-#epg .mark-3{
+#epg .mark-3 {
     left: 530px;
 }
 
-#epg .mark-4{
+#epg .mark-4 {
     right: 38px;
 }
 
-#epg .live_line_container{
+#epg .live_line_container {
     position: absolute;
     top: 92px;
-    left: 231px; /* 231px-678px */
+    left: 231px;
+    /* 231px-678px */
     width: 447px;
 }
 
-#epg .live_line{
+#epg .live_line {
     position: absolute;
     background-color: rgba(227, 147, 34, 0.4);
     width: 4px;

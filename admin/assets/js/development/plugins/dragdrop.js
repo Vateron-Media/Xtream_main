@@ -72,7 +72,7 @@
 		}
 
 		var base = this;
-		var	opts;
+		var opts;
 		var editor;
 		var handleFile;
 		var container;
@@ -140,7 +140,7 @@
 		}
 
 		function handleDragOver(e) {
-			var dt    = e.dataTransfer;
+			var dt = e.dataTransfer;
 			var files = dt.files.length || !dt.items ? dt.files : dt.items;
 
 			for (var i = 0; i < files.length; i++) {
@@ -155,7 +155,7 @@
 		}
 
 		function handleDrop(e) {
-			var dt    = e.dataTransfer;
+			var dt = e.dataTransfer;
 			var files = dt.files.length || !dt.items ? dt.files : dt.items;
 
 			hideCover();
@@ -183,7 +183,7 @@
 
 			cover = container.appendChild(sceditor.dom.parseHTML(
 				'<div class="sceditor-dnd-cover" style="display: none">' +
-					'<p>' + editor._('Drop files here') + '</p>' +
+				'<p>' + editor._('Drop files here') + '</p>' +
 				'</div>'
 			).firstChild);
 

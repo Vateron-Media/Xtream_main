@@ -1,4 +1,4 @@
-#image_viewer{
+#image_viewer {
     position: absolute;
     top: 0;
     left: 0;
@@ -6,7 +6,7 @@
     height: 576px;
 }
 
-#image_viewer .image_block{
+#image_viewer .image_block {
     position: absolute;
     top: 0;
     left: 0;
@@ -16,12 +16,12 @@
     background-position: center;
 }
 
-#image_viewer .image{
+#image_viewer .image {
     display: block;
     margin: 0 auto;
 }
 
-#image_viewer .label{
+#image_viewer .label {
     position: absolute;
     top: 30px;
     left: 40px;

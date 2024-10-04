@@ -8,18 +8,16 @@
  *
  * @link https://pear.php.net/bugs/bug.php?id=18343
  */
-class Bug18343Tests extends AbstractUnitTests
-{
+class Bug18343Tests extends AbstractUnitTests {
     private $tagArray = array(
-        "qname"      => "install",
+        "qname" => "install",
         "attributes" => array(
-            "as"    => "Horde/Feed/fixtures/lexicon/http-p.moreover.com-cgi-local-page%2Fo=rss&s=Newsweek",
-            "name"  => "test/Horde/Feed/fixtures/lexicon/http-p.moreover.com-cgi-local-page%2Fo=rss&s=Newsweek",
+            "as" => "Horde/Feed/fixtures/lexicon/http-p.moreover.com-cgi-local-page%2Fo=rss&s=Newsweek",
+            "name" => "test/Horde/Feed/fixtures/lexicon/http-p.moreover.com-cgi-local-page%2Fo=rss&s=Newsweek",
         )
     );
 
-    public function getFlagsToTest()
-    {
+    public function getFlagsToTest() {
         new XML_Util(); // for constants to be declared
 
         return array(
@@ -36,11 +34,10 @@ class Bug18343Tests extends AbstractUnitTests
     /**
      * @dataProvider getFlagsToTest()
      */
-    public function testCreateTagFromArrayForBug18343($key, $flag)
-    {
+    public function testCreateTagFromArrayForBug18343($key, $flag) {
         // all flags for the candidate input should return the same result
         $expected =
-<<< EOF
+            <<<EOF
 <install as="Horde/Feed/fixtures/lexicon/http-p.moreover.com-cgi-local-page%2Fo=rss&amp;s=Newsweek" name="test/Horde/Feed/fixtures/lexicon/http-p.moreover.com-cgi-local-page%2Fo=rss&amp;s=Newsweek" />
 EOF;
         $this->assertEquals($expected, XML_Util::createTagFromArray($this->tagArray, $flag), "Failed bugcheck for $key.");

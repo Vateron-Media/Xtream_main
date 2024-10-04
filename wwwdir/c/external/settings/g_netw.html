@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <script>
         var debug = 1;
@@ -90,13 +91,13 @@
                         } else tcur = parent.t('Static IP');
                     } else tcup = parent.t("No config");
                     menuT = [['text', parent.t('Current configuration'), tcur],
-                        ['text', parent.t('Current status'), ''],
-                        ['text', parent.t('Link status:'), parent.stb.GetLanLinkStatus() ? parent.t("UP") : parent.t("Down")],
-                        ['text', parent.t('MAC address:'), parent.stb.GetDeviceMacAddress()],
-                        ['text', parent.t('IP address:'), parent.stb.RDir('IPAddress')],
-                        ['text', parent.t('Network mask:'), parent.stb.RDir('IPMask')],
-                        ['text', parent.t('Gateway(s):'), (tt == '' ? 'n/a' : tt.replace(/\r\n|\r|\n/g, ', '))],
-                        ['text', parent.t('DNS server(s):'), (tt1 == '' ? 'n/a' : tt1.replace(/\r\n|\r|\n/g, ', '))]];
+                    ['text', parent.t('Current status'), ''],
+                    ['text', parent.t('Link status:'), parent.stb.GetLanLinkStatus() ? parent.t("UP") : parent.t("Down")],
+                    ['text', parent.t('MAC address:'), parent.stb.GetDeviceMacAddress()],
+                    ['text', parent.t('IP address:'), parent.stb.RDir('IPAddress')],
+                    ['text', parent.t('Network mask:'), parent.stb.RDir('IPMask')],
+                    ['text', parent.t('Gateway(s):'), (tt == '' ? 'n/a' : tt.replace(/\r\n|\r|\n/g, ', '))],
+                    ['text', parent.t('DNS server(s):'), (tt1 == '' ? 'n/a' : tt1.replace(/\r\n|\r|\n/g, ', '))]];
                     mid = 10;
                     init();
                     break;
@@ -111,11 +112,11 @@
                     }
                     var tip = parent.stb.GetPppoeIp();
                     menuT = [['text', parent.t('Current configuration'), tcur],
-                        ['text', parent.t('Current status'), ''],
-                        ['text', parent.t('Link status:'), parent.stb.GetPppoeLinkStatus() ? parent.t("UP") : parent.t("Down")],
-                        ['text', parent.t('IP address:'), tip == "" ? "n/a" : tip],
-                        ['text', parent.t('Gateway(s):'), (tt == '' ? 'n/a' : tt.replace(/\r\n|\r|\n/g, ', '))],
-                        ['text', parent.t('DNS server(s):'), (tt1 == '' ? 'n/a' : tt1.replace(/\r\n|\r|\n/g, ', '))]];
+                    ['text', parent.t('Current status'), ''],
+                    ['text', parent.t('Link status:'), parent.stb.GetPppoeLinkStatus() ? parent.t("UP") : parent.t("Down")],
+                    ['text', parent.t('IP address:'), tip == "" ? "n/a" : tip],
+                    ['text', parent.t('Gateway(s):'), (tt == '' ? 'n/a' : tt.replace(/\r\n|\r|\n/g, ', '))],
+                    ['text', parent.t('DNS server(s):'), (tt1 == '' ? 'n/a' : tt1.replace(/\r\n|\r|\n/g, ', '))]];
                     init();
                     break;
                 case 3:
@@ -126,12 +127,12 @@
                     var tmac = parent.stb.GetNetworkWifiMac();
                     var tip = parent.stb.RDir('WiFi_ip');
                     menuT = [['text', parent.t('Current configuration'), tcur],
-                        ['text', parent.t('Current status'), ''],
-                        ['text', parent.t('Link status:'), parent.stb.GetWifiLinkStatus() ? parent.t("UP") : parent.t("Down")],
-                        ['text', parent.t('MAC address:'), tmac == '' ? 'n/a' : tmac],
-                        ['text', parent.t('IP address:'), tip == '' ? 'n/a' : tip],
-                        ['text', parent.t('Gateway(s):'), (tt == '' ? 'n/a' : tt.replace(/\r\n|\r|\n/g, ', '))],
-                        ['text', parent.t('DNS server(s):'), (tt1 == '' ? 'n/a' : tt1.replace(/\r\n|\r|\n/g, ', '))]];
+                    ['text', parent.t('Current status'), ''],
+                    ['text', parent.t('Link status:'), parent.stb.GetWifiLinkStatus() ? parent.t("UP") : parent.t("Down")],
+                    ['text', parent.t('MAC address:'), tmac == '' ? 'n/a' : tmac],
+                    ['text', parent.t('IP address:'), tip == '' ? 'n/a' : tip],
+                    ['text', parent.t('Gateway(s):'), (tt == '' ? 'n/a' : tt.replace(/\r\n|\r|\n/g, ', '))],
+                    ['text', parent.t('DNS server(s):'), (tt1 == '' ? 'n/a' : tt1.replace(/\r\n|\r|\n/g, ', '))]];
                     init();
                     break;
                 case 4:
@@ -314,96 +315,99 @@
     <script type="text/javascript" src="../../speedtest.js"></script>
     <script type="text/javascript" src="../../traceroute.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 <body onload="onLoad()" onkeydown="pressKey(event);">
-<div align="center" id="menu_buttons" style="display:block;">
+    <div align="center" id="menu_buttons" style="display:block;">
 
-</div>
-<div id="blueback" class="check" style="display:none;">
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td colspan="2"><span id="t1" class="list_head"></span>
+    </div>
+    <div id="blueback" class="check" style="display:none;">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td colspan="2"><span id="t1" class="list_head"></span>
+                    <div style="height:2px; background:#FFF; width:100%; margin:5px 0;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><span id="t11" class="item_name"></span></td>
+            </tr>
+            <td colspan="2"><span id="t2" class="list_head"></span>
                 <div style="height:2px; background:#FFF; width:100%; margin:5px 0;"></div>
+                <span id="t21"></span>
             </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><span id="t11" class="item_name"></span></td>
-        </tr>
-        <td colspan="2"><span id="t2" class="list_head"></span>
-            <div style="height:2px; background:#FFF; width:100%; margin:5px 0;"></div>
-            <span id="t21"></span></td>
-        </tr>
-        <tr>
-            <td align="right">
-                <div id="t3" class="list_head"></div>
-            </td>
-            <td><span id="t31" class="item_name"></span></td>
-        </tr>
-        <tr>
-            <td align="right">
-                <div id="t4" class="list_head"></div>
-            </td>
-            <td><span id="t41" class="item_name"></span></td>
-        </tr>
-        <tr>
-            <td align="right">
-                <div id="t5" class="list_head"></div>
-            </td>
-            <td><span id="t51" class="item_name"></span></td>
-        </tr>
-        <tr>
-            <td align="right">
-                <div id="t6" class="list_head"></div>
-            </td>
-            <td><span id="t61" class="item_name"></span></td>
-        </tr>
-        <tr>
-            <td align="right">
-                <div id="t7" class="list_head"></div>
-            </td>
-            <td><span id="t71" class="item_name"></span></td>
-        </tr>
-        <tr>
-            <td align="right">
-                <div id="t8" class="list_head"></div>
-            </td>
-            <td><span id="t81" class="item_name"></span></td>
-        </tr>
-    </table>
-</div>
-<div id="blueback" class="check" style="display:none;">
-    <table class="nsp" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td align="right">
-                <div id="tt1" class="list_head"></div>
-            </td>
-            <td width="50%"><span id="tt11" class="item_name"></span></td>
-        </tr>
-        <tr>
-            <td align="right">
-                <div id="tt2" class="list_head"></div>
-            </td>
-            <td><span id="tt21" class="item_name"></span></td>
-        </tr>
-        <tr>
-            <td align="right">
-                <div id="tt3" class="list_head"></div>
-            </td>
-            <td><span id="tt31" class="item_name"></span></td>
-        </tr>
-    </table>
-</div>
-<div id="blueback" class="check" style="display:none;">
-    <table id="tracert_result_head" width="95%" border="0" cellpadding="0" cellspacing="0">
-
-    </table>
-    <div id="tracert_result">
-        <table width="100%" class="tracert_result" border="0" cellpadding="0" cellspacing="0">
-
+            </tr>
+            <tr>
+                <td align="right">
+                    <div id="t3" class="list_head"></div>
+                </td>
+                <td><span id="t31" class="item_name"></span></td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <div id="t4" class="list_head"></div>
+                </td>
+                <td><span id="t41" class="item_name"></span></td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <div id="t5" class="list_head"></div>
+                </td>
+                <td><span id="t51" class="item_name"></span></td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <div id="t6" class="list_head"></div>
+                </td>
+                <td><span id="t61" class="item_name"></span></td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <div id="t7" class="list_head"></div>
+                </td>
+                <td><span id="t71" class="item_name"></span></td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <div id="t8" class="list_head"></div>
+                </td>
+                <td><span id="t81" class="item_name"></span></td>
+            </tr>
         </table>
     </div>
-</div>
-<div id="footer">
-    <input id="i5" type="button" value="" onClick="backH();"/>
-</div>
+    <div id="blueback" class="check" style="display:none;">
+        <table class="nsp" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="right">
+                    <div id="tt1" class="list_head"></div>
+                </td>
+                <td width="50%"><span id="tt11" class="item_name"></span></td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <div id="tt2" class="list_head"></div>
+                </td>
+                <td><span id="tt21" class="item_name"></span></td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <div id="tt3" class="list_head"></div>
+                </td>
+                <td><span id="tt31" class="item_name"></span></td>
+            </tr>
+        </table>
+    </div>
+    <div id="blueback" class="check" style="display:none;">
+        <table id="tracert_result_head" width="95%" border="0" cellpadding="0" cellspacing="0">
+
+        </table>
+        <div id="tracert_result">
+            <table width="100%" class="tracert_result" border="0" cellpadding="0" cellspacing="0">
+
+            </table>
+        </div>
+    </div>
+    <div id="footer">
+        <input id="i5" type="button" value="" onClick="backH();" />
+    </div>
 </body>
+
 </html>

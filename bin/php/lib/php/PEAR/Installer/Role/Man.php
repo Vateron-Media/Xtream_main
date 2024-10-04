@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Installer_Role_Man
  *
@@ -24,5 +25,5 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.10.0
  */
-class PEAR_Installer_Role_Man extends PEAR_Installer_Role_Common {}
-?>
+class PEAR_Installer_Role_Man extends PEAR_Installer_Role_Common {
+}

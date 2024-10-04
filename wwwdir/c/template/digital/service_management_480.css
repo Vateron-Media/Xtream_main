@@ -1,9 +1,9 @@
-#service_management .description_block{
+#service_management .description_block {
     display: none !important;
 }
 
 #service_management .subscribed_str_block,
-#service_management .not_subscribed_str_block{
+#service_management .not_subscribed_str_block {
     position: absolute;
     right: -3px;
     top: 0;
@@ -14,22 +14,22 @@
     font-size: 16px;
 }
 
-#service_management .subscribed_str_block{
+#service_management .subscribed_str_block {
     background: url("i_480/mb_table.png") 102px -25px;
     color: #626262;
 }
 
-#service_management .not_subscribed_str_block{
+#service_management .not_subscribed_str_block {
     background: url("i_480/mb_table.png") 102px -75px;
     color: #fff;
 }
 
-#service_management .active_name_block{
+#service_management .active_name_block {
     margin-top: 0;
     margin-left: 2px;
 }
 
-#service_management .active_description_block{
+#service_management .active_description_block {
     color: #fff;
     font-size: 17px;
     line-height: 18px;
@@ -43,7 +43,7 @@
 }
 
 .active_subscribed_str_block,
-.active_not_subscribed_str_block{
+.active_not_subscribed_str_block {
     position: absolute;
     right: 11px;
     top: 4px;
@@ -60,6 +60,6 @@
     color: #ffc528;
 }
 
-#package_info .info-block{
+#package_info .info-block {
     margin-bottom: 10px;
 }

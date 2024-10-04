@@ -107,7 +107,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./streams.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_streams"] ?> </li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_streams"] ?> </li>
                                         </a>
                                     </ol>
                                 </div>
@@ -145,42 +146,56 @@ if ($rSettings["sidebar"]) { ?>
                                     <div id="basicwizard">
                                         <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                             <li class="nav-item">
-                                                <a href="#dns-replacement" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                <a href="#dns-replacement" data-toggle="tab"
+                                                    class="nav-link rounded-0 pt-2 pb-2">
                                                     <i class="mdi mdi-dns mr-1"></i>
-                                                    <span class="d-none d-sm-inline"><?= $_["dns_eeplacement"] ?> </span>
+                                                    <span class="d-none d-sm-inline"><?= $_["dns_eeplacement"] ?>
+                                                    </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="#move-streams" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                <a href="#move-streams" data-toggle="tab"
+                                                    class="nav-link rounded-0 pt-2 pb-2">
                                                     <i class="mdi mdi-folder-move mr-1"></i>
                                                     <span class="d-none d-sm-inline"><?= $_["move_streams"] ?> </span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="#cleanup" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                <a href="#cleanup" data-toggle="tab"
+                                                    class="nav-link rounded-0 pt-2 pb-2">
                                                     <i class="mdi mdi-wrench mr-1"></i>
-                                                    <span class="d-none d-sm-inline"><?= $_["bouquet_order"] ?> <?= $_["cleanup"] ?> </span>
+                                                    <span class="d-none d-sm-inline"><?= $_["bouquet_order"] ?>
+                                                        <?= $_["cleanup"] ?> </span>
                                                 </a>
                                             </li>
                                         </ul>
                                         <div class="tab-content b-0 mb-0 pt-0">
                                             <div class="tab-pane" id="dns-replacement">
-                                                <form action="./stream_tools.php" method="POST" id="tools_form" data-parsley-validate="">
+                                                <form action="./stream_tools.php" method="POST" id="tools_form"
+                                                    data-parsley-validate="">
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <p class="sub-header">
                                                                 <?= $_["the_dns_replacement"] ?>
                                                             </p>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="old_dns"><?= $_["old_dns"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="old_dns"><?= $_["old_dns"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="old_dns" name="old_dns" value="" placeholder="http://example.com" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control" id="old_dns"
+                                                                        name="old_dns" value=""
+                                                                        placeholder="http://example.com" required
+                                                                        data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="new_dns"><?= $_["new_dns"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="new_dns"><?= $_["new_dns"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="new_dns" name="new_dns" value="" placeholder="http://newdns.com" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control" id="new_dns"
+                                                                        name="new_dns" value=""
+                                                                        placeholder="http://newdns.com" required
+                                                                        data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -188,39 +203,58 @@ if ($rSettings["sidebar"]) { ?>
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item">
                                                             <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox" class="custom-control-input" id="confirmReplace">
-                                                                <label class="custom-control-label" for="confirmReplace"><?= $_["i_confirm_remplace"] ?> </label>
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    id="confirmReplace">
+                                                                <label class="custom-control-label"
+                                                                    for="confirmReplace"><?= $_["i_confirm_remplace"] ?>
+                                                                </label>
                                                             </div>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <input disabled name="replace_dns" id="replace_dns" type="submit" class="btn btn-primary" value="<?= $_["replace_dns"] ?>" />
+                                                            <input disabled name="replace_dns" id="replace_dns"
+                                                                type="submit" class="btn btn-primary"
+                                                                value="<?= $_["replace_dns"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </form>
                                             </div>
                                             <div class="tab-pane" id="move-streams">
-                                                <form action="./stream_tools.php" method="POST" id="tools_form" data-parsley-validate="">
+                                                <form action="./stream_tools.php" method="POST" id="tools_form"
+                                                    data-parsley-validate="">
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <p class="sub-header">
                                                                 <?= $_["this_tool_will_allow_you"] ?>
                                                             </p>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="source_server"><?= $_["source_server"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="source_server"><?= $_["source_server"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <select name="source_server" id="source_server" class="form-control select2" data-toggle="select2">
+                                                                    <select name="source_server" id="source_server"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach ($rServers as $rServer) { ?>
-                                                                            <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?></option>
+                                                                            <option value="<?= $rServer["id"] ?>">
+                                                                                <?= $rServer["server_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="replacement_server"><?= $_["replacement_server"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="replacement_server"><?= $_["replacement_server"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <select name="replacement_server" id="replacement_server" class="form-control select2" data-toggle="select2">
+                                                                    <select name="replacement_server"
+                                                                        id="replacement_server"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach ($rServers as $rServer) { ?>
-                                                                            <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?></option>
+                                                                            <option value="<?= $rServer["id"] ?>">
+                                                                                <?= $rServer["server_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -230,18 +264,24 @@ if ($rSettings["sidebar"]) { ?>
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item">
                                                             <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox" class="custom-control-input" id="confirmReplace2">
-                                                                <label class="custom-control-label" for="confirmReplace2"><?= $_["i_confirm_move"] ?> </label>
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    id="confirmReplace2">
+                                                                <label class="custom-control-label"
+                                                                    for="confirmReplace2"><?= $_["i_confirm_move"] ?>
+                                                                </label>
                                                             </div>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <input disabled name="move_streams" id="move_streams" type="submit" class="btn btn-primary" value="<?= $_["move_streams"] ?>" />
+                                                            <input disabled name="move_streams" id="move_streams"
+                                                                type="submit" class="btn btn-primary"
+                                                                value="<?= $_["move_streams"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </form>
                                             </div>
                                             <div class="tab-pane" id="cleanup">
-                                                <form action="./stream_tools.php" method="POST" id="tools_form" data-parsley-validate="">
+                                                <form action="./stream_tools.php" method="POST" id="tools_form"
+                                                    data-parsley-validate="">
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <p class="sub-header">
@@ -252,12 +292,17 @@ if ($rSettings["sidebar"]) { ?>
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item">
                                                             <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox" class="custom-control-input" id="confirmReplace3">
-                                                                <label class="custom-control-label" for="confirmReplace3"><?= $_["i_confirm_clean"] ?> </label>
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    id="confirmReplace3">
+                                                                <label class="custom-control-label"
+                                                                    for="confirmReplace3"><?= $_["i_confirm_clean"] ?>
+                                                                </label>
                                                             </div>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <input disabled name="cleanup_streams" id="cleanup_streams" type="submit" class="btn btn-primary" value="<?= $_["cleanup"] ?>" />
+                                                            <input disabled name="cleanup_streams" id="cleanup_streams"
+                                                                type="submit" class="btn btn-primary"
+                                                                value="<?= $_["cleanup"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </form>

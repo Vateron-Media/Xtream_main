@@ -241,11 +241,13 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./streams.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_streams"] ?> </li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_streams"] ?> </li>
                                         </a>
                                     </ol>
                                 </div>
-                                <h4 class="page-title"><?= $_["mass_edit_streams"] ?> <small id="selected_count"></small></h4>
+                                <h4 class="page-title"><?= $_["mass_edit_streams"] ?> <small
+                                        id="selected_count"></small></h4>
                             </div>
                         </div>
                     </div>
@@ -275,25 +277,30 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#stream-selection" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-selection" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-play mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["streams"] ?> </span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#stream-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?> </span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#auto-restart" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#auto-restart" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-clock-outline mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["auto_restart"] ?> </span>
+                                                        <span class="d-none d-sm-inline"><?= $_["auto_restart"] ?>
+                                                        </span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#load-balancing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#load-balancing" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-server-network mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["servers"] ?> </span>
                                                     </a>
@@ -303,34 +310,44 @@ if ($rSettings["sidebar"]) { ?>
                                                 <div class="tab-pane" id="stream-selection">
                                                     <div class="row">
                                                         <div class="col-md-4 col-6">
-                                                            <input type="text" class="form-control" id="stream_search" value="" placeholder="<?= $_["search_streams"] ?>">
+                                                            <input type="text" class="form-control" id="stream_search"
+                                                                value="" placeholder="<?= $_["search_streams"] ?>">
                                                         </div>
                                                         <div class="col-md-4 col-6">
-                                                            <select id="category_search" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["all_categories"] ?> </option>
+                                                            <select id="category_search" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["all_categories"] ?>
+                                                                </option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
                                                                                                                 echo " selected";
-                                                                                                            } ?>><?= $rCategory["category_name"] ?></option>
+                                                                                                            } ?>><?= $rCategory["category_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
-                                                        <label class="col-md-1 col-2 col-form-label text-center" for="show_entries"><?= $_["show"] ?> </label>
+                                                        <label class="col-md-1 col-2 col-form-label text-center"
+                                                            for="show_entries"><?= $_["show"] ?> </label>
                                                         <div class="col-md-2 col-8">
-                                                            <select id="show_entries" class="form-control" data-toggle="select2">
+                                                            <select id="show_entries" class="form-control"
+                                                                data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                                 echo " selected";
-                                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                            } ?> value="<?= $rShow ?>">
+                                                                        <?= $rShow ?></option>
                                                                     <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <button type="button" class="btn btn-info waves-effect waves-light" onClick="toggleStreams()">
+                                                            <button type="button"
+                                                                class="btn btn-info waves-effect waves-light"
+                                                                onClick="toggleStreams()">
                                                                 <i class="mdi mdi-selection"></i>
                                                             </button>
                                                         </div>
-                                                        <table id="datatable-mass" class="table table-hover table-borderless mb-0">
+                                                        <table id="datatable-mass"
+                                                            class="table table-hover table-borderless mb-0">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th class="text-center"><?= $_["id"] ?> </th>
@@ -349,174 +366,284 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?= $_["mass_edit_info"] ?>
                                                             </p>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="category_id" name="c_category_id">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="category_id" name="c_category_id">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="category_id"><?= $_["category_name"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="category_id"><?= $_["category_name"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <select disabled name="category_id" id="category_id" class="form-control" data-toggle="select2">
+                                                                    <select disabled name="category_id" id="category_id"
+                                                                        class="form-control" data-toggle="select2">
                                                                         <?php foreach ($rCategories as $rCategory) { ?>
-                                                                            <option value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                            <option value="<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="bouquets" name="c_bouquets">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="bouquets" name="c_bouquets">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="bouquets"><?= $_["select_bouquets"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="bouquets"><?= $_["select_bouquets"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <select disabled name="bouquets[]" id="bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                    <select disabled name="bouquets[]" id="bouquets"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
-                                                                            <option value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                            <option value="<?= $rBouquet["id"] ?>">
+                                                                                <?= $rBouquet["bouquet_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="gen_timestamps" data-type="switch" name="c_gen_timestamps">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="gen_timestamps" data-type="switch"
+                                                                        name="c_gen_timestamps">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="gen_timestamps"><?= $_["generate_pts"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="gen_timestamps"><?= $_["generate_pts"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input name="gen_timestamps" id="gen_timestamps" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="gen_timestamps" id="gen_timestamps"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="read_native"><?= $_["native_frames"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="read_native"><?= $_["native_frames"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input name="read_native" id="read_native" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="read_native" id="read_native"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="read_native" data-type="switch" name="c_read_native">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="read_native" data-type="switch"
+                                                                        name="c_read_native">
                                                                     <label></label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="stream_all" data-type="switch" name="c_stream_all">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="stream_all" data-type="switch"
+                                                                        name="c_stream_all">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="stream_all"><?= $_["stream_all_codecs"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="stream_all"><?= $_["stream_all_codecs"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input name="stream_all" id="stream_all" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="stream_all" id="stream_all"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="allow_record"><?= $_["allow_recording"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="allow_record"><?= $_["allow_recording"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input name="allow_record" id="allow_record" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="allow_record" id="allow_record"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="allow_record" data-type="switch" name="c_allow_record">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="allow_record" data-type="switch"
+                                                                        name="c_allow_record">
                                                                     <label></label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="rtmp_output" data-type="switch" name="c_rtmp_output">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="rtmp_output" data-type="switch"
+                                                                        name="c_rtmp_output">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="rtmp_output"><?= $_["allow_rtmp_output"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="rtmp_output"><?= $_["allow_rtmp_output"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input name="rtmp_output" id="rtmp_output" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="rtmp_output" id="rtmp_output"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="direct_source"><?= $_["direct_source"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="direct_source"><?= $_["direct_source"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input name="direct_source" id="direct_source" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="direct_source" id="direct_source"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="direct_source" data-type="switch" name="c_direct_source">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="direct_source" data-type="switch"
+                                                                        name="c_direct_source">
                                                                     <label></label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="custom_sid" name="c_custom_sid">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="custom_sid" name="c_custom_sid">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="custom_sid"><?= $_["custom_channel_sid"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="custom_sid"><?= $_["custom_channel_sid"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" disabled class="form-control" id="custom_sid" name="custom_sid" value="">
+                                                                    <input type="text" disabled class="form-control"
+                                                                        id="custom_sid" name="custom_sid" value="">
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="delay_minutes"><?= $_["minute_delay"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="delay_minutes"><?= $_["minute_delay"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" disabled class="form-control" id="delay_minutes" name="delay_minutes" value="0">
+                                                                    <input type="text" disabled class="form-control"
+                                                                        id="delay_minutes" name="delay_minutes"
+                                                                        value="0">
                                                                 </div>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="delay_minutes" name="c_delay_minutes">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="delay_minutes"
+                                                                        name="c_delay_minutes">
                                                                     <label></label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="custom_ffmpeg" name="c_custom_ffmpeg">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="custom_ffmpeg"
+                                                                        name="c_custom_ffmpeg">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="custom_ffmpeg"><?= $_["custom_ffmpeg_command"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="custom_ffmpeg"><?= $_["custom_ffmpeg_command"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" disabled class="form-control" id="custom_ffmpeg" name="custom_ffmpeg" value="">
+                                                                    <input type="text" disabled class="form-control"
+                                                                        id="custom_ffmpeg" name="custom_ffmpeg"
+                                                                        value="">
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="probesize_ondemand"><?= $_["on_demand_probesize"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="probesize_ondemand"><?= $_["on_demand_probesize"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" disabled class="form-control" id="probesize_ondemand" name="probesize_ondemand" value="128000">
+                                                                    <input type="text" disabled class="form-control"
+                                                                        id="probesize_ondemand"
+                                                                        name="probesize_ondemand" value="128000">
                                                                 </div>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="probesize_ondemand" name="c_probesize_ondemand">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="probesize_ondemand"
+                                                                        name="c_probesize_ondemand">
                                                                     <label></label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="user_agent" name="c_user_agent">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="user_agent" name="c_user_agent">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="user_agent"><?= $_["user_agent"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="user_agent"><?= $_["user_agent"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" disabled class="form-control" id="user_agent" name="user_agent" value="<?php echo htmlspecialchars($rStreamArguments["user_agent"]["argument_default_value"]); ?>">
+                                                                    <input type="text" disabled class="form-control"
+                                                                        id="user_agent" name="user_agent"
+                                                                        value="<?php echo htmlspecialchars($rStreamArguments["user_agent"]["argument_default_value"]); ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="http_proxy" name="c_http_proxy">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="http_proxy" name="c_http_proxy">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="http_proxy"><?= $_["http_proxy"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="http_proxy"><?= $_["http_proxy"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" disabled class="form-control" id="http_proxy" name="http_proxy" value="<?php echo htmlspecialchars($rStreamArguments["proxy"]["argument_default_value"]); ?>">
+                                                                    <input type="text" disabled class="form-control"
+                                                                        id="http_proxy" name="http_proxy"
+                                                                        value="<?php echo htmlspecialchars($rStreamArguments["proxy"]["argument_default_value"]); ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="cookie" name="c_cookie">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="cookie" name="c_cookie">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="cookie"><?= $_["cookie"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="cookie"><?= $_["cookie"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" disabled class="form-control" id="cookie" name="cookie" value="<?php echo htmlspecialchars($rStreamArguments["cookie"]["argument_default_value"]); ?>">
+                                                                    <input type="text" disabled class="form-control"
+                                                                        id="cookie" name="cookie"
+                                                                        value="<?php echo htmlspecialchars($rStreamArguments["cookie"]["argument_default_value"]); ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="headers" name="c_headers">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="headers" name="c_headers">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="headers"><?= $_["headers"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="headers"><?= $_["headers"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" disabled class="form-control" id="headers" name="headers" value="<?php echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]); ?>">
+                                                                    <input type="text" disabled class="form-control"
+                                                                        id="headers" name="headers"
+                                                                        value="<?php echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]); ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="transcode_profile_id" name="c_transcode_profile_id">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="transcode_profile_id"
+                                                                        name="c_transcode_profile_id">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="transcode_profile_id"><?= $_["transcoding_profile"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="transcode_profile_id"><?= $_["transcoding_profile"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <select name="transcode_profile_id" disabled id="transcode_profile_id" class="form-control" data-toggle="select2">
-                                                                        <option selected value="0"><?= $_["transcoding_disabled"] ?> </option>
+                                                                    <select name="transcode_profile_id" disabled
+                                                                        id="transcode_profile_id" class="form-control"
+                                                                        data-toggle="select2">
+                                                                        <option selected value="0">
+                                                                            <?= $_["transcoding_disabled"] ?> </option>
                                                                         <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
-                                                                            <option value="<?= $rProfile["profile_id"] ?>"><?= $rProfile["profile_name"] ?></option>
+                                                                            <option value="<?= $rProfile["profile_id"] ?>">
+                                                                                <?= $rProfile["profile_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -525,10 +652,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?> </a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?> </a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -537,28 +666,46 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="days_to_restart" name="c_days_to_restart">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="days_to_restart"
+                                                                        name="c_days_to_restart">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="days_to_restart"><?= $_["days_to_restart"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="days_to_restart"><?= $_["days_to_restart"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
                                                                     <?php $rAutoRestart = array("days" => array(), "at" => "06:00"); ?>
-                                                                    <select disabled id="days_to_restart" name="days_to_restart[]" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                    <select disabled id="days_to_restart"
+                                                                        name="days_to_restart[]"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach (array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday") as $rDay) { ?>
-                                                                            <option value="<?= $rDay ?>"><?= $rDay ?></option>
+                                                                            <option value="<?= $rDay ?>"><?= $rDay ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <div class="col-md-1"></div>
-                                                                <label class="col-md-3 col-form-label" for="time_to_restart"><?= $_["time_to_restart"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="time_to_restart"><?= $_["time_to_restart"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <div class="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
-                                                                        <input disabled id="time_to_restart" name="time_to_restart" type="text" class="form-control" value="<?= $rAutoRestart["at"] ?>">
+                                                                    <div class="input-group clockpicker"
+                                                                        data-placement="top" data-align="top"
+                                                                        data-autoclose="true">
+                                                                        <input disabled id="time_to_restart"
+                                                                            name="time_to_restart" type="text"
+                                                                            class="form-control"
+                                                                            value="<?= $rAutoRestart["at"] ?>">
                                                                         <div class="input-group-append">
-                                                                            <span class="input-group-text"><i class="mdi mdi-clock-outline"></i></span>
+                                                                            <span class="input-group-text"><i
+                                                                                    class="mdi mdi-clock-outline"></i></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -567,10 +714,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?> </a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?> </a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -578,63 +727,96 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" data-name="on_demand" class="activate" name="c_server_tree" id="c_server_tree">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" data-name="on_demand"
+                                                                        class="activate" name="c_server_tree"
+                                                                        id="c_server_tree">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="server_tree"><?= $_["server_tree"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="server_tree"><?= $_["server_tree"] ?> </label>
                                                                 <div class="col-md-8">
                                                                     <div id="server_tree"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <div class="col-md-1"></div>
-                                                                <label class="col-md-3 col-form-label" for="on_demand"><?= $_["on_demand"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="on_demand"><?= $_["on_demand"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <select disabled id="on_demand" name="on_demand[]" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                    <select disabled id="on_demand" name="on_demand[]"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach ($rServers as $rServerItem) { ?>
-                                                                            <option value="<?= $rServerItem["id"] ?>"><?= $rServerItem["server_name"] ?></option>
+                                                                            <option value="<?= $rServerItem["id"] ?>">
+                                                                                <?= $rServerItem["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="tv_archive_server_id" name="c_tv_archive_server_id">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="tv_archive_server_id"
+                                                                        name="c_tv_archive_server_id">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="tv_archive_server_id"><?= $_["timeshift_server"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="tv_archive_server_id"><?= $_["timeshift_server"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <select disabled name="tv_archive_server_id" id="tv_archive_server_id" class="form-control" data-toggle="select2">
-                                                                        <option value=""><?= $_["timeshift_disabled"] ?> </option>
+                                                                    <select disabled name="tv_archive_server_id"
+                                                                        id="tv_archive_server_id" class="form-control"
+                                                                        data-toggle="select2">
+                                                                        <option value=""><?= $_["timeshift_disabled"] ?>
+                                                                        </option>
                                                                         <?php foreach ($rServers as $rServer) { ?>
-                                                                            <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?></option>
+                                                                            <option value="<?= $rServer["id"] ?>">
+                                                                                <?= $rServer["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="tv_archive_duration" name="c_tv_archive_duration">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="tv_archive_duration"
+                                                                        name="c_tv_archive_duration">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="tv_archive_duration"><?= $_["timeshift_days"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="tv_archive_duration"><?= $_["timeshift_days"] ?>
+                                                                </label>
                                                                 <div class="col-md-3">
-                                                                    <input disabled type="text" class="form-control" id="tv_archive_duration" name="tv_archive_duration" value="0" />
+                                                                    <input disabled type="text" class="form-control"
+                                                                        id="tv_archive_duration"
+                                                                        name="tv_archive_duration" value="0" />
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="restart_on_edit"><?= $_["restart_on_edit"] ?> </label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="restart_on_edit"><?= $_["restart_on_edit"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input name="restart_on_edit" id="restart_on_edit" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" checked />
+                                                                    <input name="restart_on_edit" id="restart_on_edit"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd"
+                                                                        checked />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?> </a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_stream" type="submit" class="btn btn-primary" value="<?= $_["edit_streams"] ?>" />
+                                                            <input name="submit_stream" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?= $_["edit_streams"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

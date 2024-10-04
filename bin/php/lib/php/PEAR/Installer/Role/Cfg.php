@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Installer_Role_Cfg
  *
@@ -23,8 +24,7 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.7.0
  */
-class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common
-{
+class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common {
     /**
      * @var PEAR_Installer
      */
@@ -44,8 +44,7 @@ class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common
      * @param array file attributes
      * @param string file name
      */
-    function setup(&$installer, $pkg, $atts, $file)
-    {
+    function setup(&$installer, $pkg, $atts, $file) {
         $this->installer = &$installer;
         $reg = &$this->installer->config->getRegistry();
         $package = $reg->getPackage($pkg->getPackage(), $pkg->getChannel());
@@ -57,8 +56,7 @@ class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common
         }
     }
 
-    function processInstallation($pkg, $atts, $file, $tmp_path, $layer = null)
-    {
+    function processInstallation($pkg, $atts, $file, $tmp_path, $layer = null) {
         $test = parent::processInstallation($pkg, $atts, $file, $tmp_path, $layer);
         if (@file_exists($test[2]) && @file_exists($test[3])) {
             $md5 = md5_file($test[2]);
@@ -77,7 +75,7 @@ class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common
                     $newloc = System::mktemp(array('-d'));
                     if (!$newloc || PEAR::isError($newloc)) {
                         PEAR::popErrorHandling();
-                        return PEAR::raiseError('Could not save existing configuration file '.
+                        return PEAR::raiseError('Could not save existing configuration file ' .
                             $old . ', unable to install.  Please set temp_dir ' .
                             'configuration variable to a writeable location and try again');
                     }
@@ -88,7 +86,7 @@ class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common
                 $temp_file = $newloc . DIRECTORY_SEPARATOR . uniqid('savefile');
                 if (!@copy($old, $temp_file)) {
                     PEAR::popErrorHandling();
-                    return PEAR::raiseError('Could not save existing configuration file '.
+                    return PEAR::raiseError('Could not save existing configuration file ' .
                         $old . ', unable to install.  Please set temp_dir ' .
                         'configuration variable to a writeable location and try again');
                 }

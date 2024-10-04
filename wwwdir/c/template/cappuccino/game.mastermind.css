@@ -1,4 +1,4 @@
-.guess_block{
+.guess_block {
     color: #5a3807;
     font-size: 20px;
     margin: 3px 0 0 13px;
@@ -10,7 +10,7 @@
     width: 60px;
 }
 
-.active_guess_block{
+.active_guess_block {
     font-size: 22px;
     color: #fff;
     margin: 8px 25px 0 14px;
@@ -21,7 +21,7 @@
     width: 62px;
 }
 
-.score_block{
+.score_block {
     color: #5a3807;
     font-size: 20px;
     margin: 3px 15px 0 3px;
@@ -32,7 +32,7 @@
     float: right;
 }
 
-.active_score_block{
+.active_score_block {
     font-size: 22px;
     color: #fff;
     margin: 8px 25px 16px 4px;
@@ -43,13 +43,13 @@
     width: 62px;
 }
 
-.mastermind_field{
+.mastermind_field {
     position: absolute;
     top: 230px;
     left: 350px;
 }
 
-.mastermind_field div{
+.mastermind_field div {
     float: left;
     width: 60px;
     height: 82px;
@@ -68,11 +68,11 @@
     border: 2px solid #A06100;
 }
 
-.mastermind_field .active{
+.mastermind_field .active {
     border: 2px solid #fff;
 }
 
-.place_block{
+.place_block {
     background-image: url("i/mb_icons.png");
     background-position: -92px 0px;
     width: 34px;
@@ -86,13 +86,13 @@
     overflow: hidden;
 }
 
-.active_place_block{
+.active_place_block {
     width: 34px;
     height: 29px;
     background-image: url("i/mb_icons.png");
     background-position: -92px -21px;
     margin: 6px 2px 0 0;
-    float:left;
+    float: left;
     font-size: 22px;
     color: #5A3807;
     text-align: center;
@@ -101,7 +101,7 @@
     padding-top: 2px;
 }
 
-.sum_points_block{
+.sum_points_block {
     color: #5A3807;
     font-size: 20px;
     margin: 3px 15px 0 3px;
@@ -112,7 +112,7 @@
     float: right;
 }
 
-.active_sum_points_block{
+.active_sum_points_block {
     font-size: 22px;
     color: #fff;
     margin: 8px 35px 0 0;
@@ -122,19 +122,20 @@
     float: right;
 }
 
-#mastermind_rating .name_block, #mastermind_rating .active_name_block{
+#mastermind_rating .name_block,
+#mastermind_rating .active_name_block {
     float: left;
 }
 
-.mastermind_rules_txt{
-    position:absolute;
-	left: 50px;
-	top: 73px;
-	width: 606px;
-	height: 410px;
-	background-image: url("i/25alfa_20.png");
-	padding: 5px;
-	-moz-border-radius: 10px;
+.mastermind_rules_txt {
+    position: absolute;
+    left: 50px;
+    top: 73px;
+    width: 606px;
+    height: 410px;
+    background-image: url("i/25alfa_20.png");
+    padding: 5px;
+    -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     color: #fff;
     font-size: 18px;

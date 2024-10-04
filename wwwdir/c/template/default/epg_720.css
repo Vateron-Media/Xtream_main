@@ -10,7 +10,8 @@
 }
 */
 
-#epg .active_row_bg, #epg .blue_row_bg[active="active"]{
+#epg .active_row_bg,
+#epg .blue_row_bg[active="active"] {
     position: absolute;
     left: 70px;
     top: 92px;
@@ -21,7 +22,8 @@
     width: 1141px;
 }
 
-#epg .name_block, #epg .active_name_block{
+#epg .name_block,
+#epg .active_name_block {
     font-size: 26px;
     width: 280px;
     text-overflow: ellipsis;
@@ -30,33 +32,35 @@
     margin: 7px 6px 0 3px;
 }
 
-#epg .number_block{
+#epg .number_block {
     margin: 6px 0 0 4px;
     background-position: -112px 0;
     width: 44px;
 }
 
-#epg .active_name_block, #epg .blue_row_bg[active="active"] .name_block{
+#epg .active_name_block,
+#epg .blue_row_bg[active="active"] .name_block {
     padding-left: 3px;
 }
 
-#epg .blue_row_bg[active="active"] .name_block{
+#epg .blue_row_bg[active="active"] .name_block {
     font-size: 26px;
     color: #002864;
     text-shadow: #fff 0 1px 0;
 }
 
-#epg .epg_container_block{
+#epg .epg_container_block {
     width: 799px;
     text-overflow: ellipsis;
     float: left;
 }
 
-#epg .active_number_block, #epg .blue_row_bg[active="active"] .number_block{
+#epg .active_number_block,
+#epg .blue_row_bg[active="active"] .number_block {
     margin: 3px 0 0 4px;
 }
 
-#epg .blue_row_bg[active="active"] .number_block{
+#epg .blue_row_bg[active="active"] .number_block {
     width: 44px;
     height: 34px;
     background-image: url("i_720/mb_icons.png");
@@ -66,13 +70,14 @@
     padding-top: 4px;
 }
 
-#epg .active_epg_container_block, #epg .blue_row_bg[active="active"] .epg_container_block{
+#epg .active_epg_container_block,
+#epg .blue_row_bg[active="active"] .epg_container_block {
     width: 799px;
     text-overflow: ellipsis;
     float: left;
 }
 
-#epg .program{
+#epg .program {
     font-size: 24px;
     float: left;
     text-shadow: #122946 0 -1px 0;
@@ -82,96 +87,100 @@
     position: relative;
 }
 
-#epg .program .marks{
+#epg .program .marks {
     position: absolute;
     top: 2px;
     left: 1px;
 }
 
-#epg .program .marks div{
+#epg .program .marks div {
     float: left;
     margin: 1px 0 0 1px;
 }
 
-#epg .program .marks .mark_memo{
+#epg .program .marks .mark_memo {
     height: 8px;
     width: 8px;
     /*background-color: #0c0;*/
     background-image: url("i_720/epg_green_mark.png");
 }
 
-#epg .program .marks .mark_rec{
+#epg .program .marks .mark_rec {
     height: 8px;
     width: 8px;
     background-image: url("i_720/epg_red_mark.png");
 }
 
-#epg .program .marks .mark_archive{
+#epg .program .marks .mark_archive {
     height: 8px;
     width: 8px;
     background-image: url("i_720/epg_orange_mark.png");
 }
 
-#epg .blue_row_bg .program{
+#epg .blue_row_bg .program {
     color: #bcc7d6;
 }
 
-#epg .active_row_bg .program, #epg .blue_row_bg[active="active"] .program{
+#epg .active_row_bg .program,
+#epg .blue_row_bg[active="active"] .program {
     color: #284b82;
 }
 
-#epg .program_txt{
+#epg .program_txt {
     padding: 8px 2px 0 2px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space:pre;
+    white-space: pre;
     font-family: "Myriad Pro Cond", sans-serif;
 }
 
-#epg .program_separator{
+#epg .program_separator {
     float: left;
     background-image: url("i_720/tv_table_separator.png");
     width: 2px;
     height: 43px;
 }
 
-#epg .program .larr{
+#epg .program .larr {
     background-image: url("i_720/tv_table_arrows.png");
     height: 43px;
     width: 12px;
     float: left;
 }
 
-#epg .blue_row_bg .program .larr{
+#epg .blue_row_bg .program .larr {
     background-position: 0 -46px;
 }
 
-#epg .active_row_bg .program .larr, #epg .blue_row_bg[active="active"] .program .larr{
+#epg .active_row_bg .program .larr,
+#epg .blue_row_bg[active="active"] .program .larr {
     background-position: 0 -1px;
 }
 
-#epg .program .rarr{
+#epg .program .rarr {
     background-image: url("i_720/tv_table_arrows.png");
     height: 43px;
     width: 12px;
     float: right;
 }
 
-#epg .blue_row_bg .program .rarr{
+#epg .blue_row_bg .program .rarr {
     background-position: 12px -46px;
 }
 
-#epg .active_row_bg .program .rarr, #epg .blue_row_bg[active="active"] .program .rarr{
+#epg .active_row_bg .program .rarr,
+#epg .blue_row_bg[active="active"] .program .rarr {
     background-position: 12px -1px;
 }
 
-#epg .program[rel="active"]{
+#epg .program[rel="active"] {
     background-image: url("i_720/tv_table_focus.png");
     background-position: 0 -1px;
     color: #000;
 }
 
-.active_epg_container_block > .program:last-child, .epg_container_block > .program:last-child{
+.active_epg_container_block>.program:last-child,
+.epg_container_block>.program:last-child {
     -webkit-border-top-right-radius: 7px;
     -webkit-border-bottom-right-radius: 7px;
     -moz-border-radius-topright: 7px;
@@ -180,7 +189,7 @@
     border-bottom-right-radius: 7px;
 }
 
-#epg .program_info{
+#epg .program_info {
     position: absolute;
     bottom: 77px;
     left: 70px;
@@ -194,16 +203,16 @@
     padding: 0 5px;
 }
 
-#epg[overlay_mode="1"] .program_info{
+#epg[overlay_mode="1"] .program_info {
     text-shadow: #000 1px 1px 2px;
 }
 
-#epg .program_info .time{
+#epg .program_info .time {
     color: #cfeafe;
     font-weight: bold;
 }
 
-#epg .on_date{
+#epg .on_date {
     position: absolute;
     top: 70px;
     right: 876px;
@@ -213,45 +222,45 @@
     font-size: 20px;
 }
 
-#epg[overlay_mode="1"] .on_date{
+#epg[overlay_mode="1"] .on_date {
     text-shadow: #000 1px 1px 2px;
 }
 
-#epg .time_mark{
+#epg .time_mark {
     position: absolute;
     top: 68px;
     color: #fff;
     font-size: 20px;
 }
 
-#epg[overlay_mode="1"] .time_mark{
+#epg[overlay_mode="1"] .time_mark {
     text-shadow: #000 1px 1px 2px;
 }
 
-#epg .mark-1{
+#epg .mark-1 {
     left: 409px;
 }
 
-#epg .mark-2{
+#epg .mark-2 {
     left: 676px;
 }
 
-#epg .mark-3{
+#epg .mark-3 {
     left: 943px;
 }
 
-#epg .mark-4{
+#epg .mark-4 {
     right: 70px;
 }
 
-#epg .live_line_container{
+#epg .live_line_container {
     position: absolute;
     top: 92px;
     left: 410px;
     width: 800px;
 }
 
-#epg .live_line{
+#epg .live_line {
     position: absolute;
     background-color: rgba(255, 0, 0, 0.4);
     width: 2px;

@@ -99,9 +99,9 @@
                 network_status.refresh()
             }
         },
-        {"label": get_word('empty'), "cmd": ''},
-        {"label": get_word('empty'), "cmd": ''},
-        {"label": get_word('empty'), "cmd": ''}
+        { "label": get_word('empty'), "cmd": '' },
+        { "label": get_word('empty'), "cmd": '' },
+        { "label": get_word('empty'), "cmd": '' }
     ]);
 
     network_status.init_header_path(get_word('network_status_title'));

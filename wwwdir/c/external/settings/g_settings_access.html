@@ -1,11 +1,12 @@
 <html>
+
 <head>
     <script type="text/javascript" language="JavaScript">
         var iid = 1;
         var mid = 10;
         read = new Object();
         var pread = ["1", "2", "3"];
-        read = {'result': {'1': '', '2': '', '3': ''}};
+        read = { 'result': { '1': '', '2': '', '3': '' } };
         var menuT = [['input', parent.t('New password:')], ['input', parent.t('Confirm password:')]];
         var mid = menuT.length + 2;
 
@@ -59,22 +60,24 @@
     <script language="JavaScript" src="js/pres.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
+
 <body onload="onLoad()" onkeydown="pressKey(event);">
-<div id="blueback">
-    <table class="nsp" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td align="right"><span id="t1"></span></td>
-            <td><input type="password" id="i1">
-        </tr>
-        <tr>
-            <td align="right"><span id="t2"></span></td>
-            <td><input type="password" id="i2" value=""></td>
-        </tr>
-    </table>
-</div>
-<div id="footer">
-    <input id="i4" type="button" value="" onClick="back();"/>
-    <input id="i3" type="button" value="" onClick="submit();"/>
-</div>
+    <div id="blueback">
+        <table class="nsp" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="right"><span id="t1"></span></td>
+                <td><input type="password" id="i1">
+            </tr>
+            <tr>
+                <td align="right"><span id="t2"></span></td>
+                <td><input type="password" id="i2" value=""></td>
+            </tr>
+        </table>
+    </div>
+    <div id="footer">
+        <input id="i4" type="button" value="" onClick="back();" />
+        <input id="i3" type="button" value="" onClick="submit();" />
+    </div>
 </body>
+
 </html>

@@ -20,10 +20,11 @@
 #ifndef ZEND_LLIST_H
 #define ZEND_LLIST_H
 
-typedef struct _zend_llist_element {
-	struct _zend_llist_element *next;
-	struct _zend_llist_element *prev;
-	char data[1]; /* Needs to always be last in the struct */
+typedef struct _zend_llist_element
+{
+   struct _zend_llist_element *next;
+   struct _zend_llist_element *prev;
+   char data[1]; /* Needs to always be last in the struct */
 } zend_llist_element;
 
 typedef void (*llist_dtor_func_t)(void *);
@@ -32,17 +33,18 @@ typedef void (*llist_apply_with_args_func_t)(void *data, int num_args, va_list a
 typedef void (*llist_apply_with_arg_func_t)(void *data, void *arg);
 typedef void (*llist_apply_func_t)(void *);
 
-typedef struct _zend_llist {
-	zend_llist_element *head;
-	zend_llist_element *tail;
-	size_t count;
-	size_t size;
-	llist_dtor_func_t dtor;
-	unsigned char persistent;
-	zend_llist_element *traverse_ptr;
+typedef struct _zend_llist
+{
+   zend_llist_element *head;
+   zend_llist_element *tail;
+   size_t count;
+   size_t size;
+   llist_dtor_func_t dtor;
+   unsigned char persistent;
+   zend_llist_element *traverse_ptr;
 } zend_llist;
 
-typedef zend_llist_element* zend_llist_position;
+typedef zend_llist_element *zend_llist_position;
 
 BEGIN_EXTERN_C()
 ZEND_API void zend_llist_init(zend_llist *l, size_t size, llist_dtor_func_t dtor, unsigned char persistent);

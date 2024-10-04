@@ -1,10 +1,10 @@
-<!--
-* {
+< !-- * {
     margin: 0;
     padding: 0;
 }
 
-html, body {
+html,
+body {
     overflow: hidden;
     font-family: "Myriad Pro";
     color: #fff;
@@ -162,23 +162,22 @@ a {
     left: -9999px;
 }
 
-#blueback input[type="checkbox"] + label {
+#blueback input[type="checkbox"]+label {
     background: url(720/checkbox.png) 0 0 no-repeat;
     padding: 23px 0 23px 46px;
     display: block;
     margin: 4px 10px;
 }
 
-#blueback input[type="checkbox"]:focus + label {
+#blueback input[type="checkbox"]:focus+label {
     background: url(720/checkbox_act.png) 0 0 no-repeat;
 }
 
-#blueback input[type="checkbox"]:checked + label {
+#blueback input[type="checkbox"]:checked+label {
     background-position: 0 -64px;
 }
 
-#blueback input[type="checkbox"]:checked:focus + label {
-}
+#blueback input[type="checkbox"]:checked:focus+label {}
 
 #blueback input[type=text] {
     position: relative;
@@ -327,8 +326,7 @@ a {
     -webkit-border-image: url(720/select_act.png) 0 34 0 8 stretch stretch;
 }
 
-#ch {
-}
+#ch {}
 
 #ch1 {
     height: 80px;
@@ -342,7 +340,8 @@ a {
     position: relative;
     height: 46px;
     width: 600px;
-    margin: 4px 0 4px 10px;;
+    margin: 4px 0 4px 10px;
+    ;
     background: none;
     font-family: "Myriad Pro";
     font-size: 22px;
@@ -410,7 +409,8 @@ a {
     position: relative;
     height: 46px;
     width: 600px;
-    margin: 10px 0 10px 10px;;
+    margin: 10px 0 10px 10px;
+    ;
     background: none;
     font-family: "Myriad Pro";
     font-size: 30px;
@@ -647,14 +647,14 @@ a {
     padding-right: 15px;
 }
 
-#tracert_result_head td, #tracert_result td {
+#tracert_result_head td,
+#tracert_result td {
     width: 25%;
 }
 
-#tracert_result_head td:first-of-type, #tracert_result td:first-of-type {
+#tracert_result_head td:first-of-type,
+#tracert_result td:first-of-type {
     width: 50%;
 }
 
 -->
-
-

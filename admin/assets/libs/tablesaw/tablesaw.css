@@ -19,7 +19,7 @@
   border: 1px solid #ccc;
   border-radius: .25em;
   background: none;
-  box-shadow: 0 1px 0 rgba(255,255,255,1);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 1);
   color: #4a4a4a;
   cursor: pointer;
   display: inline-block;
@@ -48,7 +48,7 @@ a.tablesaw-btn {
   background-color: #ddd;
 }
 
-@supports (box-shadow: none ) {
+@supports (box-shadow: none) {
   .tablesaw-btn:focus {
     background-color: #fff;
     outline: none;
@@ -285,7 +285,7 @@ a.tablesaw-btn {
   background: transparent;
 }
 
-.tablesaw-bar-section ~ table {
+.tablesaw-bar-section~table {
   clear: both;
 }
 
@@ -505,7 +505,7 @@ a.tablesaw-btn {
   /* More in skin.css */
 }
 
-.tablesaw-overflow > .tablesaw {
+.tablesaw-overflow>.tablesaw {
   margin-top: 2px;
   /* sortable focus rings are clipped */
 }
@@ -556,6 +556,7 @@ a.tablesaw-btn {
 /* Hide all prioritized columns by default */
 
 @media only all {
+
   .tablesaw-columntoggle th.tablesaw-priority-6,
   .tablesaw-columntoggle td.tablesaw-priority-6,
   .tablesaw-columntoggle th.tablesaw-priority-5,
@@ -592,6 +593,7 @@ a.tablesaw-btn {
 /* Show priority 1 at 320px (20em x 16px) */
 
 @media (min-width: 20em) {
+
   .tablesaw-columntoggle th.tablesaw-priority-1,
   .tablesaw-columntoggle td.tablesaw-priority-1 {
     display: table-cell;
@@ -601,6 +603,7 @@ a.tablesaw-btn {
 /* Show priority 2 at 480px (30em x 16px) */
 
 @media (min-width: 30em) {
+
   .tablesaw-columntoggle th.tablesaw-priority-2,
   .tablesaw-columntoggle td.tablesaw-priority-2 {
     display: table-cell;
@@ -610,6 +613,7 @@ a.tablesaw-btn {
 /* Show priority 3 at 640px (40em x 16px) */
 
 @media (min-width: 40em) {
+
   .tablesaw-columntoggle th.tablesaw-priority-3,
   .tablesaw-columntoggle td.tablesaw-priority-3 {
     display: table-cell;
@@ -623,6 +627,7 @@ a.tablesaw-btn {
 /* Show priority 4 at 800px (50em x 16px) */
 
 @media (min-width: 50em) {
+
   .tablesaw-columntoggle th.tablesaw-priority-4,
   .tablesaw-columntoggle td.tablesaw-priority-4 {
     display: table-cell;
@@ -632,6 +637,7 @@ a.tablesaw-btn {
 /* Show priority 5 at 960px (60em x 16px) */
 
 @media (min-width: 60em) {
+
   .tablesaw-columntoggle th.tablesaw-priority-5,
   .tablesaw-columntoggle td.tablesaw-priority-5 {
     display: table-cell;
@@ -641,6 +647,7 @@ a.tablesaw-btn {
 /* Show priority 6 at 1,120px (70em x 16px) */
 
 @media (min-width: 70em) {
+
   .tablesaw-columntoggle th.tablesaw-priority-6,
   .tablesaw-columntoggle td.tablesaw-priority-6 {
     display: table-cell;
@@ -663,14 +670,14 @@ a.tablesaw-btn {
   }
 }
 
-.tablesaw-columntoggle-popup .tablesaw-btn-group > label {
+.tablesaw-columntoggle-popup .tablesaw-btn-group>label {
   display: block;
   padding: .2em 0;
   white-space: nowrap;
   cursor: default;
 }
 
-.tablesaw-columntoggle-popup .tablesaw-btn-group > label input {
+.tablesaw-columntoggle-popup .tablesaw-btn-group>label input {
   margin-right: .8em;
 }
 

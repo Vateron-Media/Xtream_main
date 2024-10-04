@@ -1,22 +1,18 @@
 <?php
 
-class ReverseEntitiesTests extends AbstractUnitTests
-{
-    protected function getSimpleData()
-    {
+class ReverseEntitiesTests extends AbstractUnitTests {
+    protected function getSimpleData() {
         return 'This string contains &lt; &amp; &gt;.';
     }
 
-    protected function getUtf8Data()
-    {
+    protected function getUtf8Data() {
         return 'This data contains special chars like &lt;, &gt;, &amp; and &quot; as well as &auml;, &ouml;, &szlig;, &agrave; and &ecirc;';
     }
 
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForSimpleData()
-    {
+    public function testReverseEntitiesForSimpleData() {
         $expected = "This string contains < & >.";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getSimpleData()));
     }
@@ -24,8 +20,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForSimpleDataWithInvalidOptionReturnsOriginalData()
-    {
+    public function testReverseEntitiesForSimpleDataWithInvalidOptionReturnsOriginalData() {
         $expected = "This string contains &lt; &amp; &gt;.";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getSimpleData(), 'INVALID_OPTION'));
     }
@@ -33,8 +28,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForSimpleDataWithEntitiesXml()
-    {
+    public function testReverseEntitiesForSimpleDataWithEntitiesXml() {
         $expected = "This string contains < & >.";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getSimpleData(), XML_UTIL_ENTITIES_XML));
     }
@@ -42,8 +36,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForSimpleDataWithEntitiesXmlAndEncoding()
-    {
+    public function testReverseEntitiesForSimpleDataWithEntitiesXmlAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This string contains < & >.";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getSimpleData(), XML_UTIL_ENTITIES_XML), $encoding);
@@ -52,8 +45,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForUtf8DataWithEntitiesXmlAndEncoding()
-    {
+    public function testReverseEntitiesForUtf8DataWithEntitiesXmlAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This data contains special chars like <, >, & and \" as well as &auml;, &ouml;, &szlig;, &agrave; and &ecirc;";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getUtf8Data(), XML_UTIL_ENTITIES_XML), $encoding);
@@ -62,8 +54,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForSimpleDataWithEntitiesXmlRequired()
-    {
+    public function testReverseEntitiesForSimpleDataWithEntitiesXmlRequired() {
         $expected = "This string contains < & &gt;.";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getSimpleData(), XML_UTIL_ENTITIES_XML_REQUIRED));
     }
@@ -71,8 +62,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForSimpleDataWithEntitiesXmlRequiredAndEncoding()
-    {
+    public function testReverseEntitiesForSimpleDataWithEntitiesXmlRequiredAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This string contains < & &gt;.";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getSimpleData(), XML_UTIL_ENTITIES_XML_REQUIRED, $encoding));
@@ -81,8 +71,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForUtf8DataWithEntitiesXmlRequiredAndEncoding()
-    {
+    public function testReverseEntitiesForUtf8DataWithEntitiesXmlRequiredAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This data contains special chars like <, &gt;, & and \" as well as &auml;, &ouml;, &szlig;, &agrave; and &ecirc;";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getUtf8Data(), XML_UTIL_ENTITIES_XML_REQUIRED, $encoding));
@@ -91,8 +80,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForSimpleDataWithEntitiesHtml()
-    {
+    public function testReverseEntitiesForSimpleDataWithEntitiesHtml() {
         $expected = "This string contains < & >.";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getSimpleData(), XML_UTIL_ENTITIES_HTML));
     }
@@ -100,8 +88,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForSimpleDataWithEntitiesHtmlAndEncoding()
-    {
+    public function testReverseEntitiesForSimpleDataWithEntitiesHtmlAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This string contains < & >.";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getSimpleData(), XML_UTIL_ENTITIES_HTML, $encoding));
@@ -110,8 +97,7 @@ class ReverseEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::reverseEntities()
      */
-    public function testReverseEntitiesForUtf8DataWithEntitiesHtmlAndEncoding()
-    {
+    public function testReverseEntitiesForUtf8DataWithEntitiesHtmlAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This data contains special chars like <, >, & and \" as well as ä, ö, ß, à and ê";
         $this->assertEquals($expected, XML_Util::reverseEntities($this->getUtf8Data(), XML_UTIL_ENTITIES_HTML, $encoding));

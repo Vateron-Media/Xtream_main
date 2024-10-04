@@ -31,7 +31,8 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="flood_login.php?flush">
-                                                <button type="button" class="btn btn-danger waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-danger waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-trash-can"></i> Flush IP's
                                                 </button>
                                             </a>
@@ -66,7 +67,10 @@ if ($rSettings["sidebar"]) { ?>
                                                     <td><?= $rIP["username"] ?></td>
                                                     <td class="text-center"><?= $rIP["dateadded"] ?></td>
                                                     <td class="text-center">
-                                                        <button type="button" class="btn btn-outline-danger waves-effect waves-light btn-xs" onClick="api(<?= $rIP["id"] ?>, 'delete');"><i class="mdi mdi-close"></i></button>
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger waves-effect waves-light btn-xs"
+                                                            onClick="api(<?= $rIP["id"] ?>, 'delete');"><i
+                                                                class="mdi mdi-close"></i></button>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

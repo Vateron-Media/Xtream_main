@@ -20,7 +20,6 @@
 #ifndef MYSQLND_PLUGIN_H
 #define MYSQLND_PLUGIN_H
 
-
 void mysqlnd_plugin_subsystem_init(void);
 void mysqlnd_plugin_subsystem_end(void);
 
@@ -28,8 +27,7 @@ void mysqlnd_register_builtin_authentication_plugins(void);
 
 void mysqlnd_example_plugin_register(void);
 
-#endif	/* MYSQLND_PLUGIN_H */
-
+#endif /* MYSQLND_PLUGIN_H */
 
 /*
  * Local variables:

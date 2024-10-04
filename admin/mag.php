@@ -104,7 +104,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./mags.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_mag"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_mag"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
@@ -141,7 +142,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#mag-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#mag-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
@@ -155,19 +157,26 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?= $_["device_info"] ?>
                                                             </p>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="mac"><?= $_["mac_address"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="mac"><?= $_["mac_address"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="mac" name="mac" value="<?php if (isset($rMagArr)) {
-                                                                                                                                            echo htmlspecialchars(base64_decode($rMagArr["mac"]));
-                                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control" id="mac"
+                                                                        name="mac" value="<?php if (isset($rMagArr)) {
+                                                                                                echo htmlspecialchars(base64_decode($rMagArr["mac"]));
+                                                                                            } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="paired_user"><?= $_["paired_user"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="paired_user"><?= $_["paired_user"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select id="paired_user" name="paired_user" class="form-control" data-toggle="select2">
+                                                                    <select id="paired_user" name="paired_user"
+                                                                        class="form-control" data-toggle="select2">
                                                                         <?php if (isset($rMagArr)) { ?>
-                                                                            <option value="<?= $rMagArr["paired_user"] ?>" selected="selected"><?= $rMagArr["username"] ?></option>
+                                                                            <option value="<?= $rMagArr["paired_user"] ?>"
+                                                                                selected="selected">
+                                                                                <?= $rMagArr["username"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -176,11 +185,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_mag" type="submit" class="btn btn-primary" value="<?php if (isset($rMagArr)) {
-                                                                                                                                        echo $_["edit"];
-                                                                                                                                    } else {
-                                                                                                                                        echo $_["add"];
-                                                                                                                                    } ?>" />
+                                                            <input name="submit_mag" type="submit"
+                                                                class="btn btn-primary" value="<?php if (isset($rMagArr)) {
+                                                                                                    echo $_["edit"];
+                                                                                                } else {
+                                                                                                    echo $_["add"];
+                                                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

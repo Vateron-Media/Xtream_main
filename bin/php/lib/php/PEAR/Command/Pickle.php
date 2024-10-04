@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Pickle (pickle command)
  *
@@ -31,8 +32,7 @@ require_once 'PEAR/Command/Common.php';
  * @since      Class available since Release 1.4.1
  */
 
-class PEAR_Command_Pickle extends PEAR_Command_Common
-{
+class PEAR_Command_Pickle extends PEAR_Command_Common {
     var $commands = array(
         'pickle' => array(
             'summary' => 'Build PECL Package',
@@ -42,12 +42,12 @@ class PEAR_Command_Pickle extends PEAR_Command_Common
                 'nocompress' => array(
                     'shortopt' => 'Z',
                     'doc' => 'Do not gzip the package file'
-                    ),
+                ),
                 'showname' => array(
                     'shortopt' => 'n',
                     'doc' => 'Print the name of the packaged file.',
-                    ),
                 ),
+            ),
             'doc' => '[descfile]
 Creates a PECL package from its package2.xml file.
 
@@ -67,16 +67,15 @@ will cause pickle to fail, and output an error message.  If your package2.xml
 uses any of these features, you are best off using PEAR_PackageFileManager to
 generate both package.xml.
 '
-            ),
-        );
+        ),
+    );
 
     /**
      * PEAR_Command_Package constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 
@@ -85,8 +84,7 @@ generate both package.xml.
      *
      * @return PEAR_Packager
      */
-    function &getPackager()
-    {
+    function &getPackager() {
         if (!class_exists('PEAR_Packager')) {
             require_once 'PEAR/Packager.php';
         }
@@ -103,8 +101,7 @@ generate both package.xml.
      * @param string|null $tmpdir
      * @return PEAR_PackageFile
      */
-    function &getPackageFile($config, $debug = false)
-    {
+    function &getPackageFile($config, $debug = false) {
         if (!class_exists('PEAR_Common')) {
             require_once 'PEAR/Common.php';
         }
@@ -120,8 +117,7 @@ generate both package.xml.
         return $a;
     }
 
-    function doPackage($command, $options, $params)
-    {
+    function doPackage($command, $options, $params) {
         $this->output = '';
         $pkginfofile = isset($params[0]) ? $params[0] : 'package2.xml';
         $packager = &$this->getPackager();
@@ -143,8 +139,7 @@ generate both package.xml.
         return true;
     }
 
-    function _convertPackage($packagexml)
-    {
+    function _convertPackage($packagexml) {
         $pkg = &$this->getPackageFile($this->config);
         $pf2 = &$pkg->fromPackageFile($packagexml, PEAR_VALIDATE_NORMAL);
         if (!is_a($pf2, 'PEAR_PackageFile_v2')) {
@@ -157,54 +152,60 @@ generate both package.xml.
         $pf->setConfig($this->config);
         if ($pf2->getPackageType() != 'extsrc' && $pf2->getPackageType() != 'zendextsrc') {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", is not an extension source package.  Using a PEAR_PackageFileManager-based ' .
-            'script is an option');
+                '", is not an extension source package.  Using a PEAR_PackageFileManager-based ' .
+                'script is an option');
         }
 
         if (is_array($pf2->getUsesRole())) {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", contains custom roles.  Using a PEAR_PackageFileManager-based script or ' .
-            'the convert command is an option');
+                '", contains custom roles.  Using a PEAR_PackageFileManager-based script or ' .
+                'the convert command is an option');
         }
 
         if (is_array($pf2->getUsesTask())) {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", contains custom tasks.  Using a PEAR_PackageFileManager-based script or ' .
-            'the convert command is an option');
+                '", contains custom tasks.  Using a PEAR_PackageFileManager-based script or ' .
+                'the convert command is an option');
         }
 
         $deps = $pf2->getDependencies();
         if (isset($deps['group'])) {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", contains dependency groups.  Using a PEAR_PackageFileManager-based script ' .
-            'or the convert command is an option');
+                '", contains dependency groups.  Using a PEAR_PackageFileManager-based script ' .
+                'or the convert command is an option');
         }
 
-        if (isset($deps['required']['subpackage']) ||
-              isset($deps['optional']['subpackage'])) {
+        if (
+            isset($deps['required']['subpackage']) ||
+            isset($deps['optional']['subpackage'])
+        ) {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", contains subpackage dependencies.  Using a PEAR_PackageFileManager-based  '.
-            'script is an option');
+                '", contains subpackage dependencies.  Using a PEAR_PackageFileManager-based  ' .
+                'script is an option');
         }
 
         if (isset($deps['required']['os'])) {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", contains os dependencies.  Using a PEAR_PackageFileManager-based  '.
-            'script is an option');
+                '", contains os dependencies.  Using a PEAR_PackageFileManager-based  ' .
+                'script is an option');
         }
 
         if (isset($deps['required']['arch'])) {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", contains arch dependencies.  Using a PEAR_PackageFileManager-based  '.
-            'script is an option');
+                '", contains arch dependencies.  Using a PEAR_PackageFileManager-based  ' .
+                'script is an option');
         }
 
         $pf->setPackage($pf2->getPackage());
         $pf->setSummary($pf2->getSummary());
         $pf->setDescription($pf2->getDescription());
         foreach ($pf2->getMaintainers() as $maintainer) {
-            $pf->addMaintainer($maintainer['role'], $maintainer['handle'],
-                $maintainer['name'], $maintainer['email']);
+            $pf->addMaintainer(
+                $maintainer['role'],
+                $maintainer['handle'],
+                $maintainer['name'],
+                $maintainer['email']
+            );
         }
 
         $pf->setVersion($pf2->getVersion());
@@ -225,22 +226,24 @@ generate both package.xml.
             foreach ($deps['required']['package'] as $dep) {
                 if (!isset($dep['channel'])) {
                     return $this->raiseError('Cannot safely convert "' . $packagexml . '"' .
-                    ' contains uri-based dependency on a package.  Using a ' .
-                    'PEAR_PackageFileManager-based script is an option');
+                        ' contains uri-based dependency on a package.  Using a ' .
+                        'PEAR_PackageFileManager-based script is an option');
                 }
 
-                if ($dep['channel'] != 'pear.php.net'
+                if (
+                    $dep['channel'] != 'pear.php.net'
                     && $dep['channel'] != 'pecl.php.net'
-                    && $dep['channel'] != 'doc.php.net') {
+                    && $dep['channel'] != 'doc.php.net'
+                ) {
                     return $this->raiseError('Cannot safely convert "' . $packagexml . '"' .
-                    ' contains dependency on a non-standard channel package.  Using a ' .
-                    'PEAR_PackageFileManager-based script is an option');
+                        ' contains dependency on a non-standard channel package.  Using a ' .
+                        'PEAR_PackageFileManager-based script is an option');
                 }
 
                 if (isset($dep['conflicts'])) {
                     return $this->raiseError('Cannot safely convert "' . $packagexml . '"' .
-                    ' contains conflicts dependency.  Using a ' .
-                    'PEAR_PackageFileManager-based script is an option');
+                        ' contains conflicts dependency.  Using a ' .
+                        'PEAR_PackageFileManager-based script is an option');
                 }
 
                 if (isset($dep['exclude'])) {
@@ -265,8 +268,8 @@ generate both package.xml.
             foreach ($deps['required']['extension'] as $dep) {
                 if (isset($dep['conflicts'])) {
                     return $this->raiseError('Cannot safely convert "' . $packagexml . '"' .
-                    ' contains conflicts dependency.  Using a ' .
-                    'PEAR_PackageFileManager-based script is an option');
+                        ' contains conflicts dependency.  Using a ' .
+                        'PEAR_PackageFileManager-based script is an option');
                 }
 
                 if (isset($dep['exclude'])) {
@@ -291,16 +294,18 @@ generate both package.xml.
             foreach ($deps['optional']['package'] as $dep) {
                 if (!isset($dep['channel'])) {
                     return $this->raiseError('Cannot safely convert "' . $packagexml . '"' .
-                    ' contains uri-based dependency on a package.  Using a ' .
-                    'PEAR_PackageFileManager-based script is an option');
+                        ' contains uri-based dependency on a package.  Using a ' .
+                        'PEAR_PackageFileManager-based script is an option');
                 }
 
-                if ($dep['channel'] != 'pear.php.net'
+                if (
+                    $dep['channel'] != 'pear.php.net'
                     && $dep['channel'] != 'pecl.php.net'
-                    && $dep['channel'] != 'doc.php.net') {
+                    && $dep['channel'] != 'doc.php.net'
+                ) {
                     return $this->raiseError('Cannot safely convert "' . $packagexml . '"' .
-                    ' contains dependency on a non-standard channel package.  Using a ' .
-                    'PEAR_PackageFileManager-based script is an option');
+                        ' contains dependency on a non-standard channel package.  Using a ' .
+                        'PEAR_PackageFileManager-based script is an option');
                 }
 
                 if (isset($dep['exclude'])) {
@@ -338,11 +343,11 @@ generate both package.xml.
         }
 
         $contents = $pf2->getContents();
-        $release  = $pf2->getReleases();
+        $release = $pf2->getReleases();
         if (isset($releases[0])) {
             return $this->raiseError('Cannot safely process "' . $packagexml . '" contains '
-            . 'multiple extsrcrelease/zendextsrcrelease tags.  Using a PEAR_PackageFileManager-based script ' .
-            'or the convert command is an option');
+                . 'multiple extsrcrelease/zendextsrcrelease tags.  Using a PEAR_PackageFileManager-based script ' .
+                'or the convert command is an option');
         }
 
         if ($configoptions = $pf2->getConfigureOptions()) {
@@ -354,12 +359,14 @@ generate both package.xml.
 
         if (isset($release['filelist']['ignore'])) {
             return $this->raiseError('Cannot safely process "' . $packagexml . '" contains '
-            . 'ignore tags.  Using a PEAR_PackageFileManager-based script or the convert' .
-            ' command is an option');
+                . 'ignore tags.  Using a PEAR_PackageFileManager-based script or the convert' .
+                ' command is an option');
         }
 
-        if (isset($release['filelist']['install']) &&
-              !isset($release['filelist']['install'][0])) {
+        if (
+            isset($release['filelist']['install']) &&
+            !isset($release['filelist']['install'][0])
+        ) {
             $release['filelist']['install'] = array($release['filelist']['install']);
         }
 
@@ -384,8 +391,8 @@ generate both package.xml.
                 foreach ($processFile as $name => $task) {
                     if ($name != $pf2->getTasksNs() . ':replace') {
                         return $this->raiseError('Cannot safely process "' . $packagexml .
-                        '" contains tasks other than replace.  Using a ' .
-                        'PEAR_PackageFileManager-based script is an option.');
+                            '" contains tasks other than replace.  Using a ' .
+                            'PEAR_PackageFileManager-based script is an option.');
                     }
                     $file['attribs']['replace'][] = $task;
                 }
@@ -393,8 +400,8 @@ generate both package.xml.
 
             if (!in_array($file['attribs']['role'], PEAR_Common::getFileRoles())) {
                 return $this->raiseError('Cannot safely convert "' . $packagexml .
-                '", contains custom roles.  Using a PEAR_PackageFileManager-based script ' .
-                'or the convert command is an option');
+                    '", contains custom roles.  Using a PEAR_PackageFileManager-based script ' .
+                    'or the convert command is an option');
             }
 
             if (isset($release['filelist']['install'])) {

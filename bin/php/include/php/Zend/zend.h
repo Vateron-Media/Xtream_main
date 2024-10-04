@@ -39,14 +39,14 @@
 #include "zend_smart_string_public.h"
 #include "zend_signal.h"
 
-#define HANDLE_BLOCK_INTERRUPTIONS()		ZEND_SIGNAL_BLOCK_INTERRUPTIONS()
-#define HANDLE_UNBLOCK_INTERRUPTIONS()		ZEND_SIGNAL_UNBLOCK_INTERRUPTIONS()
+#define HANDLE_BLOCK_INTERRUPTIONS() ZEND_SIGNAL_BLOCK_INTERRUPTIONS()
+#define HANDLE_UNBLOCK_INTERRUPTIONS() ZEND_SIGNAL_UNBLOCK_INTERRUPTIONS()
 
 #define INTERNAL_FUNCTION_PARAMETERS zend_execute_data *execute_data, zval *return_value
 #define INTERNAL_FUNCTION_PARAM_PASSTHRU execute_data, return_value
 
-#define USED_RET() \
-	(!EX(prev_execute_data) || \
+#define USED_RET()                                                \
+	(!EX(prev_execute_data) ||                                    \
 	 !ZEND_USER_CODE(EX(prev_execute_data)->func->common.type) || \
 	 (EX(prev_execute_data)->opline->result_type != IS_UNUSED))
 
@@ -67,13 +67,13 @@
 ZEND_TSRMLS_CACHE_EXTERN()
 
 #ifdef HAVE_NORETURN
-# ifdef ZEND_NORETURN_ALIAS
+#ifdef ZEND_NORETURN_ALIAS
 ZEND_COLD void zend_error_noreturn(int type, const char *format, ...) ZEND_NORETURN ZEND_ATTRIBUTE_FORMAT(printf, 2, 3);
-# else
-ZEND_API ZEND_COLD ZEND_NORETURN void zend_error_noreturn(int type, const char *format, ...) ZEND_ATTRIBUTE_FORMAT(printf, 2, 3);
-# endif
 #else
-# define zend_error_noreturn zend_error
+ZEND_API ZEND_COLD ZEND_NORETURN void zend_error_noreturn(int type, const char *format, ...) ZEND_ATTRIBUTE_FORMAT(printf, 2, 3);
+#endif
+#else
+#define zend_error_noreturn zend_error
 #endif
 
 struct _zend_serialize_data;
@@ -82,32 +82,36 @@ struct _zend_unserialize_data;
 typedef struct _zend_serialize_data zend_serialize_data;
 typedef struct _zend_unserialize_data zend_unserialize_data;
 
-typedef struct _zend_trait_method_reference {
+typedef struct _zend_trait_method_reference
+{
 	zend_string *method_name;
 	zend_string *class_name;
 } zend_trait_method_reference;
 
-typedef struct _zend_trait_precedence {
+typedef struct _zend_trait_precedence
+{
 	zend_trait_method_reference trait_method;
 	uint32_t num_excludes;
 	zend_string *exclude_class_names[1];
 } zend_trait_precedence;
 
-typedef struct _zend_trait_alias {
+typedef struct _zend_trait_alias
+{
 	zend_trait_method_reference trait_method;
 
 	/**
-	* name for method to be added
-	*/
+	 * name for method to be added
+	 */
 	zend_string *alias;
 
 	/**
-	* modifiers to be set on trait method
-	*/
+	 * modifiers to be set on trait method
+	 */
 	uint32_t modifiers;
 } zend_trait_alias;
 
-struct _zend_class_entry {
+struct _zend_class_entry
+{
 	char type;
 	zend_string *name;
 	struct _zend_class_entry *parent;
@@ -141,12 +145,13 @@ struct _zend_class_entry {
 	zend_class_iterator_funcs *iterator_funcs_ptr;
 
 	/* handlers */
-	union {
-		zend_object* (*create_object)(zend_class_entry *class_type);
+	union
+	{
+		zend_object *(*create_object)(zend_class_entry *class_type);
 		int (*interface_gets_implemented)(zend_class_entry *iface, zend_class_entry *class_type); /* a class implements this interface */
 	};
 	zend_object_iterator *(*get_iterator)(zend_class_entry *ce, zval *object, int by_ref);
-	union _zend_function *(*get_static_method)(zend_class_entry *ce, zend_string* method);
+	union _zend_function *(*get_static_method)(zend_class_entry *ce, zend_string *method);
 
 	/* serializer callbacks */
 	int (*serialize)(zval *object, unsigned char **buffer, size_t *buf_len, zend_serialize_data *data);
@@ -160,21 +165,25 @@ struct _zend_class_entry {
 	zend_trait_alias **trait_aliases;
 	zend_trait_precedence **trait_precedences;
 
-	union {
-		struct {
+	union
+	{
+		struct
+		{
 			zend_string *filename;
 			uint32_t line_start;
 			uint32_t line_end;
 			zend_string *doc_comment;
 		} user;
-		struct {
+		struct
+		{
 			const struct _zend_function_entry *builtin_functions;
 			struct _zend_module_entry *module;
 		} internal;
 	} info;
 };
 
-typedef struct _zend_utility_functions {
+typedef struct _zend_utility_functions
+{
 	void (*error_function)(int type, const char *error_filename, const uint32_t error_lineno, const char *format, va_list args) ZEND_ATTRIBUTE_PTR_FORMAT(printf, 4, 0);
 	size_t (*printf_function)(const char *format, ...) ZEND_ATTRIBUTE_PTR_FORMAT(printf, 1, 2);
 	size_t (*write_function)(const char *str, size_t str_length);
@@ -190,7 +199,8 @@ typedef struct _zend_utility_functions {
 	zend_string *(*resolve_path_function)(const char *filename, size_t filename_len);
 } zend_utility_functions;
 
-typedef struct _zend_utility_values {
+typedef struct _zend_utility_values
+{
 	char *import_use_extension;
 	uint32_t import_use_extension_length;
 	zend_bool html_errors;
@@ -198,23 +208,28 @@ typedef struct _zend_utility_values {
 
 typedef int (*zend_write_func_t)(const char *str, size_t str_length);
 
-#define zend_bailout()		_zend_bailout(__FILE__, __LINE__)
+#define zend_bailout() _zend_bailout(__FILE__, __LINE__)
 
-#define zend_try												\
-	{															\
-		JMP_BUF *__orig_bailout = EG(bailout);					\
-		JMP_BUF __bailout;										\
-																\
-		EG(bailout) = &__bailout;								\
-		if (SETJMP(__bailout)==0) {
-#define zend_catch												\
-		} else {												\
-			EG(bailout) = __orig_bailout;
-#define zend_end_try()											\
-		}														\
-		EG(bailout) = __orig_bailout;							\
+#define zend_try                               \
+	{                                          \
+		JMP_BUF *__orig_bailout = EG(bailout); \
+		JMP_BUF __bailout;                     \
+                                               \
+		EG(bailout) = &__bailout;              \
+		if (SETJMP(__bailout) == 0)            \
+		{
+#define zend_catch \
+	}              \
+	else           \
+	{              \
+		EG(bailout) = __orig_bailout;
+#define zend_end_try()            \
+	}                             \
+	EG(bailout) = __orig_bailout; \
 	}
-#define zend_first_try		EG(bailout)=NULL;	zend_try
+#define zend_first_try  \
+	EG(bailout) = NULL; \
+	zend_try
 
 BEGIN_EXTERN_C()
 int zend_startup(zend_utility_functions *utility_functions, char **extensions);
@@ -258,11 +273,11 @@ ZEND_API void free_estring(char **str_p);
 END_EXTERN_C()
 
 /* output support */
-#define ZEND_WRITE(str, str_len)		zend_write((str), (str_len))
-#define ZEND_WRITE_EX(str, str_len)		write_func((str), (str_len))
-#define ZEND_PUTS(str)					zend_write((str), strlen((str)))
-#define ZEND_PUTS_EX(str)				write_func((str), strlen((str)))
-#define ZEND_PUTC(c)					zend_write(&(c), 1)
+#define ZEND_WRITE(str, str_len) zend_write((str), (str_len))
+#define ZEND_WRITE_EX(str, str_len) write_func((str), (str_len))
+#define ZEND_PUTS(str) zend_write((str), strlen((str)))
+#define ZEND_PUTS_EX(str) write_func((str), strlen((str)))
+#define ZEND_PUTC(c) zend_write(&(c), 1)
 
 BEGIN_EXTERN_C()
 extern ZEND_API size_t (*zend_printf)(const char *format, ...) ZEND_ATTRIBUTE_PTR_FORMAT(printf, 1, 2);
@@ -305,31 +320,33 @@ ZEND_API zval *zend_get_configuration_directive(zend_string *name);
 END_EXTERN_C()
 
 /* Messages for applications of Zend */
-#define ZMSG_FAILED_INCLUDE_FOPEN		1L
-#define ZMSG_FAILED_REQUIRE_FOPEN		2L
-#define ZMSG_FAILED_HIGHLIGHT_FOPEN		3L
-#define ZMSG_MEMORY_LEAK_DETECTED		4L
-#define ZMSG_MEMORY_LEAK_REPEATED		5L
-#define ZMSG_LOG_SCRIPT_NAME			6L
-#define ZMSG_MEMORY_LEAKS_GRAND_TOTAL	7L
+#define ZMSG_FAILED_INCLUDE_FOPEN 1L
+#define ZMSG_FAILED_REQUIRE_FOPEN 2L
+#define ZMSG_FAILED_HIGHLIGHT_FOPEN 3L
+#define ZMSG_MEMORY_LEAK_DETECTED 4L
+#define ZMSG_MEMORY_LEAK_REPEATED 5L
+#define ZMSG_LOG_SCRIPT_NAME 6L
+#define ZMSG_MEMORY_LEAKS_GRAND_TOTAL 7L
 
-typedef enum {
+typedef enum
+{
 	EH_NORMAL = 0,
 	EH_THROW
 } zend_error_handling_t;
 
-typedef struct {
-	zend_error_handling_t  handling;
-	zend_class_entry       *exception;
-	zval                   user_handler;
+typedef struct
+{
+	zend_error_handling_t handling;
+	zend_class_entry *exception;
+	zval user_handler;
 } zend_error_handling;
 
 ZEND_API void zend_save_error_handling(zend_error_handling *current);
 ZEND_API void zend_replace_error_handling(zend_error_handling_t error_handling, zend_class_entry *exception_class, zend_error_handling *current);
 ZEND_API void zend_restore_error_handling(zend_error_handling *saved);
 
-#define DEBUG_BACKTRACE_PROVIDE_OBJECT (1<<0)
-#define DEBUG_BACKTRACE_IGNORE_ARGS    (1<<1)
+#define DEBUG_BACKTRACE_PROVIDE_OBJECT (1 << 0)
+#define DEBUG_BACKTRACE_IGNORE_ARGS (1 << 1)
 
 #include "zend_object_handlers.h"
 #include "zend_operators.h"

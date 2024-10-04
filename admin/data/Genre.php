@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  This class handles all the data you can get from a Genre
  *
@@ -48,4 +49,3 @@ class Genre {
         return $this->_data['id'];
     }
 }
-?>

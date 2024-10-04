@@ -33,7 +33,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body" style="overflow-x:auto;">
                                     <div class="form-group row mb-4">
                                         <div class="col-md-7">
-                                            <input type="text" class="form-control" id="log_search" value="" placeholder="<?= $_["search_logs"] ?>">
+                                            <input type="text" class="form-control" id="log_search" value=""
+                                                placeholder="<?= $_["search_logs"] ?>">
                                         </div>
                                         <div class="col-md-3">
                                             <select id="range" class="form-control" data-toggle="select2">

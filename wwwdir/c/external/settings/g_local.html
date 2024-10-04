@@ -1,4 +1,5 @@
 <html>
+
 <head>
 
     <script>
@@ -26,7 +27,7 @@
 
         function loadCity(id) {
 
-            parent.load({"type": "stb", "action": "get_cities", "country_id": id},
+            parent.load({ "type": "stb", "action": "get_cities", "country_id": id },
                 function (city) {
                     maxIn = 0;
                     index = 0;
@@ -61,7 +62,7 @@
         }
 
         function onLoad() {
-            parent.load({"type": "stb", "action": "get_locales"},
+            parent.load({ "type": "stb", "action": "get_locales" },
                 function (langv) {
                     var options = '';
                     for (var il in langv) {
@@ -75,7 +76,7 @@
                     document.getElementById("i1").innerHTML = options;
                 });
 
-            parent.load({"type": "stb", "action": "get_countries"},
+            parent.load({ "type": "stb", "action": "get_countries" },
                 function (locales) {
                     var dlo = document.getElementById("i2");
                     var sel = true;
@@ -92,7 +93,7 @@
                     if (sel) loadCity(dlo[dlo.selectedIndex].value);
                 });
 
-            parent.load({"type": "stb", "action": "get_timezones"},
+            parent.load({ "type": "stb", "action": "get_timezones" },
                 function (timezon) {
                     var dl = document.getElementById("i4");
                     var options = '';
@@ -129,7 +130,7 @@
 
         function pressKeyH(e) {
             ec = e.keyCode;
-//parent.stb.Debug('key='+ec);
+            //parent.stb.Debug('key='+ec);
             if (!block) switch (ec) {
                 case 9:
                 case 116:
@@ -254,11 +255,11 @@
         function searchCity() {
             if (block) {
                 parent.load({
-                        "type": "stb",
-                        "action": "search_cities",
-                        "search": document.getElementById('i3').value,
-                        "country_id": document.getElementById('i2').value
-                    },
+                    "type": "stb",
+                    "action": "search_cities",
+                    "search": document.getElementById('i3').value,
+                    "country_id": document.getElementById('i2').value
+                },
                     function (city) {
                         var html = '';
                         goInd = 0;
@@ -331,7 +332,7 @@
             }, function (result) {
                 if (!result) parent.erMes(parent.t('Saving error'), "i" + iid); else parent.rebut = true;
                 back();
-                parent.stb.SendEventToPortal(JSON.stringify({"type": "settings", "refresh_weather": true}));
+                parent.stb.SendEventToPortal(JSON.stringify({ "type": "settings", "refresh_weather": true }));
             });
         }
 
@@ -360,44 +361,46 @@
     </script>
     <script language="JavaScript" src="js/pres.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<body onload="onLoad()" onkeydown="pressKeyH(event);">
-<div id="blueback">
-    <div id="list_array"></div>
-    <table class="nsl1" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td align="right"><span id="t1"></span></td>
-            <td width="50%">
-                <div class="sub_select"><select id="i1"></select></div>
-        </tr>
-        <tr>
-            <td align="right"><span id="t2"></span></td>
-            <td>
-                <div class="sub_select"><select id="i2" onChange="loadCity(this.value)"></select></div>
-            </td>
-        </tr>
-        <tr>
-            <td align="right"><span id="t3"></span></td>
-            <td><input id="i3" type="text" readonly class="arrow" onChange="searchCity()"/>
-            </td>
-        </tr>
-        <tr>
-            <td align="right"><span id="t4"></span>
-            <td>
-                <div class="sub_select"><select id="i4"></select></div>
-            </td>
-        </tr>
-        <tr>
-            <td align="right"><span id="t5"></span>
-            <td>
-                <div class="sub_select"><select id="i5"></select></div>
-            </td>
-        </tr>
-    </table>
 
-</div>
-<div id="footer">
-    <input id="i7" type="button" value="" onClick="back();"/>
-    <input id="i6" type="button" value="" onClick="submit();"/>
-</div>
+<body onload="onLoad()" onkeydown="pressKeyH(event);">
+    <div id="blueback">
+        <div id="list_array"></div>
+        <table class="nsl1" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="right"><span id="t1"></span></td>
+                <td width="50%">
+                    <div class="sub_select"><select id="i1"></select></div>
+            </tr>
+            <tr>
+                <td align="right"><span id="t2"></span></td>
+                <td>
+                    <div class="sub_select"><select id="i2" onChange="loadCity(this.value)"></select></div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><span id="t3"></span></td>
+                <td><input id="i3" type="text" readonly class="arrow" onChange="searchCity()" />
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><span id="t4"></span>
+                <td>
+                    <div class="sub_select"><select id="i4"></select></div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><span id="t5"></span>
+                <td>
+                    <div class="sub_select"><select id="i5"></select></div>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div id="footer">
+        <input id="i7" type="button" value="" onClick="back();" />
+        <input id="i6" type="button" value="" onClick="submit();" />
+    </div>
 </body>
+
 </html>

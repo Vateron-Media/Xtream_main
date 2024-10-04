@@ -31,12 +31,14 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="ips.php?flush">
-                                                <button type="button" class="btn btn-danger waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-danger waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-trash-can"></i> <?= $_["flush_ips"] ?>
                                                 </button>
                                             </a>
                                             <a href="ip.php">
-                                                <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-success waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-plus"></i> <?= $_["block_ip_address"] ?>
                                                 </button>
                                             </a>
@@ -73,7 +75,10 @@ if ($rSettings["sidebar"]) { ?>
                                                     <td class="text-center"><?= date("Y-m-d", $rIP["date"]) ?></td>
                                                     <td class="text-center"><?= $rIP["attempts_blocked"] ?></td>
                                                     <td class="text-center">
-                                                        <button type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rIP["id"] ?>, 'delete');"><i class="mdi mdi-close"></i></button>
+                                                        <button type="button"
+                                                            class="btn btn-light waves-effect waves-light btn-xs"
+                                                            onClick="api(<?= $rIP["id"] ?>, 'delete');"><i
+                                                                class="mdi mdi-close"></i></button>
                                                     </td>
                                                 </tr>
                                             <?php } ?>

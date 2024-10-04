@@ -102,7 +102,7 @@ sclub_info.prototype.init = function () {
 
     this.full_info = create_block_element('mb_hidden_overflow', info_container);
 
-    this.scrollbar = new scrollbar(info_container, this.full_info, {"height": 350});
+    this.scrollbar = new scrollbar(info_container, this.full_info, { "height": 350 });
 
     info_container.insertBefore(this.scrollbar.dom_obj, this.full_info);
 

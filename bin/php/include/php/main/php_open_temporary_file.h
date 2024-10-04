@@ -19,8 +19,8 @@
 #ifndef PHP_OPEN_TEMPORARY_FILE_H
 #define PHP_OPEN_TEMPORARY_FILE_H
 
-#define PHP_TMP_FILE_OPEN_BASEDIR_CHECK (1<<0)
-#define PHP_TMP_FILE_SILENT (1<<1)
+#define PHP_TMP_FILE_OPEN_BASEDIR_CHECK (1 << 0)
+#define PHP_TMP_FILE_SILENT (1 << 1)
 
 BEGIN_EXTERN_C()
 PHPAPI FILE *php_open_temporary_file(const char *dir, const char *pfx, zend_string **opened_path_p);

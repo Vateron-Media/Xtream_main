@@ -3,18 +3,16 @@ require '../autoload.php';
 
 $free = 0;
 
-if (shell_exec('cat /proc/meminfo'))
-{
-    $free    = shell_exec('grep MemFree /proc/meminfo | awk \'{print $2}\'');
+if (shell_exec('cat /proc/meminfo')) {
+    $free = shell_exec('grep MemFree /proc/meminfo | awk \'{print $2}\'');
     $buffers = shell_exec('grep Buffers /proc/meminfo | awk \'{print $2}\'');
-    $cached  = shell_exec('grep Cached /proc/meminfo | awk \'{print $2}\'');
+    $cached = shell_exec('grep Cached /proc/meminfo | awk \'{print $2}\'');
 
-    $free = (int)$free + (int)$buffers + (int)$cached;
+    $free = (int) $free + (int) $buffers + (int) $cached;
 }
 
 // Total
-if (!($total = shell_exec('grep MemTotal /proc/meminfo | awk \'{print $2}\'')))
-{
+if (!($total = shell_exec('grep MemTotal /proc/meminfo | awk \'{print $2}\''))) {
     $total = 0;
 }
 
@@ -28,10 +26,10 @@ if ($total > 0)
 
 
 $datas = array(
-    'used'          => Misc::getSize($used * 1024),
-    'free'          => Misc::getSize($free * 1024),
-    'total'         => Misc::getSize($total * 1024),
-    'percent_used'  => $percent_used,
+    'used' => Misc::getSize($used * 1024),
+    'free' => Misc::getSize($free * 1024),
+    'total' => Misc::getSize($total * 1024),
+    'percent_used' => $percent_used,
 );
 
 echo json_encode($datas);

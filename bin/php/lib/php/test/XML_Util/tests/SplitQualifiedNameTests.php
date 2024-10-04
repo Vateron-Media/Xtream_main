@@ -1,12 +1,10 @@
 <?php
 
-class SplitQualifiedNameTests extends AbstractUnitTests
-{
+class SplitQualifiedNameTests extends AbstractUnitTests {
     /**
      * @covers XML_Util::splitQualifiedName()
      */
-    public function testSplitQualifiedNameWithoutNamespace()
-    {
+    public function testSplitQualifiedNameWithoutNamespace() {
         $original = "xslt:stylesheet";
         $expected = array(
             'namespace' => 'xslt',
@@ -18,8 +16,7 @@ class SplitQualifiedNameTests extends AbstractUnitTests
     /**
      * @covers XML_Util::splitQualifiedName()
      */
-    public function testSplitQualifiedNameWithNamespace()
-    {
+    public function testSplitQualifiedNameWithNamespace() {
         $original = "stylesheet";
         $namespace = "myNs";
         $expected = array(

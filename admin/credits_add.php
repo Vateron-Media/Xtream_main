@@ -60,7 +60,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./reg_users.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_subresellers"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_subresellers"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
@@ -95,9 +96,11 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#user-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#user-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["transfer_details"] ?></span>
+                                                        <span
+                                                            class="d-none d-sm-inline"><?= $_["transfer_details"] ?></span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -105,27 +108,44 @@ if ($rSettings["sidebar"]) { ?>
                                                 <div class="tab-pane" id="user-details">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="alert alert-danger" role="alert" id="no-credits" style="display:none;">
-                                                                <i class="mdi mdi-block-helper mr-2"></i> <?= $_["transfer_fail"] ?>
+                                                            <div class="alert alert-danger" role="alert" id="no-credits"
+                                                                style="display:none;">
+                                                                <i class="mdi mdi-block-helper mr-2"></i>
+                                                                <?= $_["transfer_fail"] ?>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-8 col-form-label" for="credits"><?= $_["credits_to_transfer"] ?></label>
+                                                                <label class="col-md-8 col-form-label"
+                                                                    for="credits"><?= $_["credits_to_transfer"] ?></label>
                                                                 <div class="col-md-4">
-                                                                    <input type="text" class="form-control" onkeypress="return isNumberKey(event)" id="credits" name="credits" value="0" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        onkeypress="return isNumberKey(event)"
+                                                                        id="credits" name="credits" value="0" required
+                                                                        data-parsley-trigger="change">
                                                                 </div>
-                                                                <table class="table" id="credits-cost" style="margin-top:30px;">
+                                                                <table class="table" id="credits-cost"
+                                                                    style="margin-top:30px;">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th class="text-center"><?= $_["total_credits"] ?></th>
-                                                                            <th class="text-center"><?= $_["purchase_cost"] ?></th>
-                                                                            <th class="text-center"><?= $_["remaining_credits"] ?></th>
+                                                                            <th class="text-center">
+                                                                                <?= $_["total_credits"] ?>
+                                                                            </th>
+                                                                            <th class="text-center">
+                                                                                <?= $_["purchase_cost"] ?>
+                                                                            </th>
+                                                                            <th class="text-center">
+                                                                                <?= $_["remaining_credits"] ?>
+                                                                            </th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
                                                                         <tr>
-                                                                            <td class="text-center"><?= number_format($rUserInfo["credits"], 2) ?></td>
-                                                                            <td class="text-center" id="cost_credits"></td>
-                                                                            <td class="text-center" id="remaining_credits"></td>
+                                                                            <td class="text-center">
+                                                                                <?= number_format($rUserInfo["credits"], 2) ?>
+                                                                            </td>
+                                                                            <td class="text-center" id="cost_credits">
+                                                                            </td>
+                                                                            <td class="text-center"
+                                                                                id="remaining_credits"></td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -134,7 +154,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_credits" type="submit" class="btn btn-primary purchase" value="<?= $_["purchase"] ?>" />
+                                                            <input name="submit_credits" type="submit"
+                                                                class="btn btn-primary purchase"
+                                                                value="<?= $_["purchase"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

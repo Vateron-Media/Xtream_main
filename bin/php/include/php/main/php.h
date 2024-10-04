@@ -41,17 +41,17 @@
 
 /* Operating system family definition */
 #ifdef PHP_WIN32
-# define PHP_OS_FAMILY			"Windows"
+#define PHP_OS_FAMILY "Windows"
 #elif defined(BSD) || defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
-# define PHP_OS_FAMILY			"BSD"
+#define PHP_OS_FAMILY "BSD"
 #elif defined(__APPLE__) || defined(__MACH__)
-# define PHP_OS_FAMILY			"Darwin"
+#define PHP_OS_FAMILY "Darwin"
 #elif defined(__sun__)
-# define PHP_OS_FAMILY			"Solaris"
+#define PHP_OS_FAMILY "Solaris"
 #elif defined(__linux__)
-# define PHP_OS_FAMILY			"Linux"
+#define PHP_OS_FAMILY "Linux"
 #else
-# define PHP_OS_FAMILY			"Unknown"
+#define PHP_OS_FAMILY "Unknown"
 #endif
 
 /* PHP's DEBUG value must match Zend's ZEND_DEBUG value */
@@ -59,68 +59,68 @@
 #define PHP_DEBUG ZEND_DEBUG
 
 #ifdef PHP_WIN32
-#	include "tsrm_win32.h"
-#	ifdef PHP_EXPORTS
-#		define PHPAPI __declspec(dllexport)
-#	else
-#		define PHPAPI __declspec(dllimport)
-#	endif
-#	define PHP_DIR_SEPARATOR '\\'
-#	define PHP_EOL "\r\n"
+#include "tsrm_win32.h"
+#ifdef PHP_EXPORTS
+#define PHPAPI __declspec(dllexport)
 #else
-#	if defined(__GNUC__) && __GNUC__ >= 4
-#		define PHPAPI __attribute__ ((visibility("default")))
-#	else
-#		define PHPAPI
-#	endif
-#	define THREAD_LS
-#	define PHP_DIR_SEPARATOR '/'
-#	define PHP_EOL "\n"
+#define PHPAPI __declspec(dllimport)
+#endif
+#define PHP_DIR_SEPARATOR '\\'
+#define PHP_EOL "\r\n"
+#else
+#if defined(__GNUC__) && __GNUC__ >= 4
+#define PHPAPI __attribute__((visibility("default")))
+#else
+#define PHPAPI
+#endif
+#define THREAD_LS
+#define PHP_DIR_SEPARATOR '/'
+#define PHP_EOL "\n"
 #endif
 
 /* Windows specific defines */
 #ifdef PHP_WIN32
-# define PHP_PROG_SENDMAIL		"Built in mailer"
-# define HAVE_DECLARED_TIMEZONE
-# define WIN32_LEAN_AND_MEAN
-# define NOOPENFILE
+#define PHP_PROG_SENDMAIL "Built in mailer"
+#define HAVE_DECLARED_TIMEZONE
+#define WIN32_LEAN_AND_MEAN
+#define NOOPENFILE
 
-# include <io.h>
-# include <malloc.h>
-# include <direct.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <stdarg.h>
-# include <sys/types.h>
-# include <process.h>
+#include <io.h>
+#include <malloc.h>
+#include <direct.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <sys/types.h>
+#include <process.h>
 
 typedef int uid_t;
 typedef int gid_t;
-typedef char * caddr_t;
+typedef char *caddr_t;
 typedef unsigned int uint;
 typedef unsigned long ulong;
 typedef int pid_t;
 
-# ifndef PHP_DEBUG
-#  ifdef inline
-#   undef inline
-#  endif
-#  define inline		__inline
-# endif
+#ifndef PHP_DEBUG
+#ifdef inline
+#undef inline
+#endif
+#define inline __inline
+#endif
 
-# define M_TWOPI        (M_PI * 2.0)
-# define off_t			_off_t
+#define M_TWOPI (M_PI * 2.0)
+#define off_t _off_t
 
-# define lstat(x, y)	php_sys_lstat(x, y)
-# define chdir(path)	_chdir(path)
-# define mkdir(a, b)	_mkdir(a)
-# define rmdir(a)		_rmdir(a)
-# define getpid			_getpid
-# define php_sleep(t)	SleepEx(t*1000, TRUE)
+#define lstat(x, y) php_sys_lstat(x, y)
+#define chdir(path) _chdir(path)
+#define mkdir(a, b) _mkdir(a)
+#define rmdir(a) _rmdir(a)
+#define getpid _getpid
+#define php_sleep(t) SleepEx(t * 1000, TRUE)
 
-# ifndef getcwd
-#  define getcwd(a, b)	_getcwd(a, b)
-# endif
+#ifndef getcwd
+#define getcwd(a, b) _getcwd(a, b)
+#endif
 #endif
 
 #if HAVE_ASSERT_H
@@ -133,7 +133,7 @@ typedef int pid_t;
 #endif
 #include <assert.h>
 #else /* HAVE_ASSERT_H */
-#define assert(expr) ((void) (0))
+#define assert(expr) ((void)(0))
 #endif /* HAVE_ASSERT_H */
 
 #define APACHE 0
@@ -159,17 +159,17 @@ typedef int pid_t;
  * src_size is the number of bytes excluding the NUL of src
  */
 
-#define PHP_STRLCPY(dst, src, size, src_size)	\
-	{											\
-		size_t php_str_len;						\
-												\
-		if (src_size >= size)					\
-			php_str_len = size - 1;				\
-		else									\
-			php_str_len = src_size;				\
-		memcpy(dst, src, php_str_len);			\
-		dst[php_str_len] = '\0';				\
-	}
+#define PHP_STRLCPY(dst, src, size, src_size) \
+    {                                         \
+        size_t php_str_len;                   \
+                                              \
+        if (src_size >= size)                 \
+            php_str_len = size - 1;           \
+        else                                  \
+            php_str_len = src_size;           \
+        memcpy(dst, src, php_str_len);        \
+        dst[php_str_len] = '\0';              \
+    }
 
 #ifndef HAVE_STRLCPY
 BEGIN_EXTERN_C()
@@ -206,11 +206,11 @@ END_EXTERN_C()
 #endif
 
 #ifndef HAVE_SOCKLEN_T
-# ifdef PHP_WIN32
+#ifdef PHP_WIN32
 typedef int socklen_t;
-# else
+#else
 typedef unsigned int socklen_t;
-# endif
+#endif
 #endif
 
 #define CREATE_MUTEX(a, b)
@@ -231,9 +231,9 @@ typedef unsigned int socklen_t;
 #if HAVE_STDARG_H
 #include <stdarg.h>
 #else
-# if HAVE_SYS_VARARGS_H
-# include <sys/varargs.h>
-# endif
+#if HAVE_SYS_VARARGS_H
+#include <sys/varargs.h>
+#endif
 #endif
 
 #include "php_stdint.h"
@@ -243,14 +243,14 @@ typedef unsigned int socklen_t;
 #include "zend_stack.h"
 
 #if STDC_HEADERS
-# include <string.h>
+#include <string.h>
 #else
-# ifndef HAVE_MEMCPY
-#  define memcpy(d, s, n)	bcopy((s), (d), (n))
-# endif
-# ifndef HAVE_MEMMOVE
-#  define memmove(d, s, n)	bcopy ((s), (d), (n))
-# endif
+#ifndef HAVE_MEMCPY
+#define memcpy(d, s, n) bcopy((s), (d), (n))
+#endif
+#ifndef HAVE_MEMMOVE
+#define memmove(d, s, n) bcopy((s), (d), (n))
+#endif
 #endif
 
 #ifndef HAVE_STRERROR
@@ -258,12 +258,12 @@ char *strerror(int);
 #endif
 
 #if HAVE_PWD_H
-# ifdef PHP_WIN32
+#ifdef PHP_WIN32
 #include "win32/param.h"
-# else
+#else
 #include <pwd.h>
 #include <sys/param.h>
-# endif
+#endif
 #endif
 
 #if HAVE_LIMITS_H
@@ -275,7 +275,7 @@ char *strerror(int);
 #endif
 
 #ifndef LONG_MIN
-#define LONG_MIN (- LONG_MAX - 1)
+#define LONG_MIN (-LONG_MAX - 1)
 #endif
 
 #ifndef INT_MAX
@@ -283,7 +283,7 @@ char *strerror(int);
 #endif
 
 #ifndef INT_MIN
-#define INT_MIN (- INT_MAX - 1)
+#define INT_MIN (-INT_MAX - 1)
 #endif
 
 /* double limits */
@@ -308,19 +308,19 @@ END_EXTERN_C()
 #define PHP_MIME_TYPE "application/x-httpd-php"
 
 /* macros */
-#define STR_PRINT(str)	((str)?(str):"")
+#define STR_PRINT(str) ((str) ? (str) : "")
 
 #ifndef MAXPATHLEN
-# ifdef PHP_WIN32
-#  include "win32/ioutil.h"
-#  define MAXPATHLEN PHP_WIN32_IOUTIL_MAXPATHLEN
-# elif PATH_MAX
-#  define MAXPATHLEN PATH_MAX
-# elif defined(MAX_PATH)
-#  define MAXPATHLEN MAX_PATH
-# else
-#  define MAXPATHLEN 256    /* Should be safe for any weird systems that do not define it */
-# endif
+#ifdef PHP_WIN32
+#include "win32/ioutil.h"
+#define MAXPATHLEN PHP_WIN32_IOUTIL_MAXPATHLEN
+#elif PATH_MAX
+#define MAXPATHLEN PATH_MAX
+#elif defined(MAX_PATH)
+#define MAXPATHLEN MAX_PATH
+#else
+#define MAXPATHLEN 256 /* Should be safe for any weird systems that do not define it */
+#endif
 #endif
 
 #define php_ignore_value(x) ZEND_IGNORE_VALUE(x)
@@ -330,7 +330,7 @@ END_EXTERN_C()
 #define PHP_SLEEP_NON_VOID
 #define php_sleep sleep
 extern char **environ;
-#endif	/* !defined(PHP_WIN32) */
+#endif /* !defined(PHP_WIN32) */
 
 #ifdef PHP_PWRITE_64
 ssize_t pwrite(int, void *, size_t, off64_t);
@@ -344,7 +344,7 @@ BEGIN_EXTERN_C()
 void phperror(char *error);
 PHPAPI size_t php_write(void *buf, size_t size);
 PHPAPI size_t php_printf(const char *format, ...) PHP_ATTRIBUTE_FORMAT(printf, 1,
-		2);
+                                                                       2);
 PHPAPI int php_get_module_initialized(void);
 #ifdef HAVE_SYSLOG_H
 #include "php_syslog.h"
@@ -363,7 +363,7 @@ END_EXTERN_C()
 BEGIN_EXTERN_C()
 static inline ZEND_ATTRIBUTE_DEPRECATED void php_set_error_handling(error_handling_t error_handling, zend_class_entry *exception_class)
 {
-	zend_replace_error_handling(error_handling, exception_class, NULL);
+    zend_replace_error_handling(error_handling, exception_class, NULL);
 }
 static inline ZEND_ATTRIBUTE_DEPRECATED void php_std_error_handling() {}
 
@@ -371,11 +371,11 @@ PHPAPI ZEND_COLD void php_verror(const char *docref, const char *params, int typ
 
 /* PHPAPI void php_error(int type, const char *format, ...); */
 PHPAPI ZEND_COLD void php_error_docref0(const char *docref, int type, const char *format, ...)
-	PHP_ATTRIBUTE_FORMAT(printf, 3, 4);
+    PHP_ATTRIBUTE_FORMAT(printf, 3, 4);
 PHPAPI ZEND_COLD void php_error_docref1(const char *docref, const char *param1, int type, const char *format, ...)
-	PHP_ATTRIBUTE_FORMAT(printf, 4, 5);
+    PHP_ATTRIBUTE_FORMAT(printf, 4, 5);
 PHPAPI ZEND_COLD void php_error_docref2(const char *docref, const char *param1, const char *param2, int type, const char *format, ...)
-	PHP_ATTRIBUTE_FORMAT(printf, 5, 6);
+    PHP_ATTRIBUTE_FORMAT(printf, 5, 6);
 #ifdef PHP_WIN32
 PHPAPI ZEND_COLD void php_win32_docref2_from_error(DWORD error, const char *param1, const char *param2);
 #endif
@@ -403,64 +403,61 @@ PHPAPI char *php_get_current_user(void);
 END_EXTERN_C()
 
 /* PHP-named Zend macro wrappers */
-#define PHP_FN					ZEND_FN
-#define PHP_MN					ZEND_MN
-#define PHP_NAMED_FUNCTION		ZEND_NAMED_FUNCTION
-#define PHP_FUNCTION			ZEND_FUNCTION
-#define PHP_METHOD  			ZEND_METHOD
+#define PHP_FN ZEND_FN
+#define PHP_MN ZEND_MN
+#define PHP_NAMED_FUNCTION ZEND_NAMED_FUNCTION
+#define PHP_FUNCTION ZEND_FUNCTION
+#define PHP_METHOD ZEND_METHOD
 
 #define PHP_RAW_NAMED_FE ZEND_RAW_NAMED_FE
-#define PHP_NAMED_FE	ZEND_NAMED_FE
-#define PHP_FE			ZEND_FE
-#define PHP_DEP_FE      ZEND_DEP_FE
-#define PHP_FALIAS		ZEND_FALIAS
-#define PHP_DEP_FALIAS	ZEND_DEP_FALIAS
-#define PHP_ME          ZEND_ME
-#define PHP_MALIAS      ZEND_MALIAS
+#define PHP_NAMED_FE ZEND_NAMED_FE
+#define PHP_FE ZEND_FE
+#define PHP_DEP_FE ZEND_DEP_FE
+#define PHP_FALIAS ZEND_FALIAS
+#define PHP_DEP_FALIAS ZEND_DEP_FALIAS
+#define PHP_ME ZEND_ME
+#define PHP_MALIAS ZEND_MALIAS
 #define PHP_ABSTRACT_ME ZEND_ABSTRACT_ME
-#define PHP_ME_MAPPING  ZEND_ME_MAPPING
-#define PHP_FE_END      ZEND_FE_END
+#define PHP_ME_MAPPING ZEND_ME_MAPPING
+#define PHP_FE_END ZEND_FE_END
 
-#define PHP_MODULE_STARTUP_N	ZEND_MODULE_STARTUP_N
-#define PHP_MODULE_SHUTDOWN_N	ZEND_MODULE_SHUTDOWN_N
-#define PHP_MODULE_ACTIVATE_N	ZEND_MODULE_ACTIVATE_N
-#define PHP_MODULE_DEACTIVATE_N	ZEND_MODULE_DEACTIVATE_N
-#define PHP_MODULE_INFO_N		ZEND_MODULE_INFO_N
+#define PHP_MODULE_STARTUP_N ZEND_MODULE_STARTUP_N
+#define PHP_MODULE_SHUTDOWN_N ZEND_MODULE_SHUTDOWN_N
+#define PHP_MODULE_ACTIVATE_N ZEND_MODULE_ACTIVATE_N
+#define PHP_MODULE_DEACTIVATE_N ZEND_MODULE_DEACTIVATE_N
+#define PHP_MODULE_INFO_N ZEND_MODULE_INFO_N
 
-#define PHP_MODULE_STARTUP_D	ZEND_MODULE_STARTUP_D
-#define PHP_MODULE_SHUTDOWN_D	ZEND_MODULE_SHUTDOWN_D
-#define PHP_MODULE_ACTIVATE_D	ZEND_MODULE_ACTIVATE_D
-#define PHP_MODULE_DEACTIVATE_D	ZEND_MODULE_DEACTIVATE_D
-#define PHP_MODULE_INFO_D		ZEND_MODULE_INFO_D
+#define PHP_MODULE_STARTUP_D ZEND_MODULE_STARTUP_D
+#define PHP_MODULE_SHUTDOWN_D ZEND_MODULE_SHUTDOWN_D
+#define PHP_MODULE_ACTIVATE_D ZEND_MODULE_ACTIVATE_D
+#define PHP_MODULE_DEACTIVATE_D ZEND_MODULE_DEACTIVATE_D
+#define PHP_MODULE_INFO_D ZEND_MODULE_INFO_D
 
 /* Compatibility macros */
-#define PHP_MINIT		ZEND_MODULE_STARTUP_N
-#define PHP_MSHUTDOWN	ZEND_MODULE_SHUTDOWN_N
-#define PHP_RINIT		ZEND_MODULE_ACTIVATE_N
-#define PHP_RSHUTDOWN	ZEND_MODULE_DEACTIVATE_N
-#define PHP_MINFO		ZEND_MODULE_INFO_N
-#define PHP_GINIT		ZEND_GINIT
-#define PHP_GSHUTDOWN	ZEND_GSHUTDOWN
+#define PHP_MINIT ZEND_MODULE_STARTUP_N
+#define PHP_MSHUTDOWN ZEND_MODULE_SHUTDOWN_N
+#define PHP_RINIT ZEND_MODULE_ACTIVATE_N
+#define PHP_RSHUTDOWN ZEND_MODULE_DEACTIVATE_N
+#define PHP_MINFO ZEND_MODULE_INFO_N
+#define PHP_GINIT ZEND_GINIT
+#define PHP_GSHUTDOWN ZEND_GSHUTDOWN
 
-#define PHP_MINIT_FUNCTION		ZEND_MODULE_STARTUP_D
-#define PHP_MSHUTDOWN_FUNCTION	ZEND_MODULE_SHUTDOWN_D
-#define PHP_RINIT_FUNCTION		ZEND_MODULE_ACTIVATE_D
-#define PHP_RSHUTDOWN_FUNCTION	ZEND_MODULE_DEACTIVATE_D
-#define PHP_MINFO_FUNCTION		ZEND_MODULE_INFO_D
-#define PHP_GINIT_FUNCTION		ZEND_GINIT_FUNCTION
-#define PHP_GSHUTDOWN_FUNCTION	ZEND_GSHUTDOWN_FUNCTION
+#define PHP_MINIT_FUNCTION ZEND_MODULE_STARTUP_D
+#define PHP_MSHUTDOWN_FUNCTION ZEND_MODULE_SHUTDOWN_D
+#define PHP_RINIT_FUNCTION ZEND_MODULE_ACTIVATE_D
+#define PHP_RSHUTDOWN_FUNCTION ZEND_MODULE_DEACTIVATE_D
+#define PHP_MINFO_FUNCTION ZEND_MODULE_INFO_D
+#define PHP_GINIT_FUNCTION ZEND_GINIT_FUNCTION
+#define PHP_GSHUTDOWN_FUNCTION ZEND_GSHUTDOWN_FUNCTION
 
-#define PHP_MODULE_GLOBALS		ZEND_MODULE_GLOBALS
-
+#define PHP_MODULE_GLOBALS ZEND_MODULE_GLOBALS
 
 /* Output support */
 #include "main/php_output.h"
 
-
 #include "php_streams.h"
 #include "php_memory_streams.h"
 #include "fopen_wrappers.h"
-
 
 /* Virtual current working directory support */
 #include "zend_virtual_cwd.h"
@@ -468,7 +465,7 @@ END_EXTERN_C()
 #include "zend_constants.h"
 
 /* connection status states */
-#define PHP_CONNECTION_NORMAL  0
+#define PHP_CONNECTION_NORMAL 0
 #define PHP_CONNECTION_ABORTED 1
 #define PHP_CONNECTION_TIMEOUT 2
 
@@ -485,7 +482,7 @@ END_EXTERN_C()
 #else
 #ifdef CRAY2
 #define XtOffset(p_type, field) \
-    (sizeof(int)*((unsigned int)&(((p_type)NULL)->field)))
+    (sizeof(int) * ((unsigned int)&(((p_type)NULL)->field)))
 
 #else /* !CRAY2 */
 
@@ -493,10 +490,10 @@ END_EXTERN_C()
 
 #endif /* !CRAY2 */
 #endif /* __STDC__ */
-#else /* ! (CRAY || __arm) */
+#else  /* ! (CRAY || __arm) */
 
 #define XtOffset(p_type, field) \
-    ((zend_long) (((char *) (&(((p_type)NULL)->field))) - ((char *) NULL)))
+    ((zend_long)(((char *)(&(((p_type)NULL)->field))) - ((char *)NULL)))
 
 #endif /* !CRAY */
 #endif /* ! XtOffset */
@@ -505,7 +502,7 @@ END_EXTERN_C()
 #ifdef offsetof
 #define XtOffsetOf(s_type, field) offsetof(s_type, field)
 #else
-#define XtOffsetOf(s_type, field) XtOffset(s_type*, field)
+#define XtOffsetOf(s_type, field) XtOffset(s_type *, field)
 #endif
 #endif /* !XtOffsetOf */
 

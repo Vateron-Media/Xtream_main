@@ -29,14 +29,16 @@ if ($rSettings["sidebar"]) { ?>
                                         <li>
                                             <?php if (hasPermissions("adv", "mng_regusers")) { ?>
                                                 <a href="reg_users.php">
-                                                    <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-info waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-account-group"></i> <?= $_["registered_users"] ?>
                                                     </button>
                                                 </a>
                                             <?php }
                                             if (hasPermissions("adv", "subreseller")) { ?>
                                                 <a href="subreseller_setup.php">
-                                                    <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-primary waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-plus"></i> <?= $_["setup_access"] ?>
                                                     </button>
                                                 </a>
@@ -72,8 +74,14 @@ if ($rSettings["sidebar"]) { ?>
                                                     <td class="text-center">
                                                         <?php if (hasPermissions("adv", "subreseller")) { ?>
                                                             <div class="btn-group">
-                                                                <a href="./subreseller_setup.php?id=<?= $rItem["id"] ?>"><button type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
-                                                                <button type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rItem["id"] ?>, 'delete');"><i class="mdi mdi-close"></i></button>
+                                                                <a href="./subreseller_setup.php?id=<?= $rItem["id"] ?>"><button
+                                                                        type="button"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                            class="mdi mdi-pencil-outline"></i></button></a>
+                                                                <button type="button"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs"
+                                                                    onClick="api(<?= $rItem["id"] ?>, 'delete');"><i
+                                                                        class="mdi mdi-close"></i></button>
                                                             </div>
                                                         <?php } else {
                                                             echo "--";

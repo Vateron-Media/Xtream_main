@@ -1,4 +1,5 @@
 <?php
+
 /**
  * package.xml parsing class, package.xml version 2.0
  *
@@ -28,20 +29,17 @@ require_once 'PEAR/PackageFile/v2.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
-class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
-{
+class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser {
     var $_config;
     var $_logger;
     var $_registry;
 
-    function setConfig(&$c)
-    {
+    function setConfig(&$c) {
         $this->_config = &$c;
         $this->_registry = &$c->getRegistry();
     }
 
-    function setLogger(&$l)
-    {
+    function setLogger(&$l) {
         $this->_logger = &$l;
     }
     /**
@@ -51,8 +49,7 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
      * @return string
      * @access private
      */
-    function _unIndent($str)
-    {
+    function _unIndent($str) {
         // remove leading newlines
         $str = preg_replace('/^[\r\n]+/', '', $str);
         // find whitespace at the beginning of the first line
@@ -76,8 +73,7 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
      * @param string $data
      * @param string $element element name
      */
-    function postProcess($data, $element)
-    {
+    function postProcess($data, $element) {
         if ($element == 'notes') {
             return trim($this->_unIndent($data));
         }
@@ -92,8 +88,7 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
      *               a subclass
      * @return PEAR_PackageFile_v2
      */
-    function parse($data, $file = null, $archive = false, $class = 'PEAR_PackageFile_v2')
-    {
+    function parse($data, $file = null, $archive = false, $class = 'PEAR_PackageFile_v2') {
         if (PEAR::isError($err = parent::parse($data))) {
             return $err;
         }

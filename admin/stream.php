@@ -413,20 +413,23 @@ if ($rSettings["sidebar"]) { ?>
                                             <a href="./streams.php<?php if (isset($_GET["category"])) {
                                                                         echo "?category=" . $_GET["category"];
                                                                     } ?>">
-                                                <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-primary waves-effect waves-light btn-sm">
                                                     <?= $_["permission_streams"] ?>
                                                 </button>
                                             </a>
                                             <?php if (!isset($rStream)) {
                                                 if (!isset($_GET["import"])) { ?>
                                                     <a href="./stream.php?import">
-                                                        <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                        <button type="button"
+                                                            class="btn btn-info waves-effect waves-light btn-sm">
                                                             <?= $_["import_m3u"] ?>
                                                         </button>
                                                     </a>
                                                 <?php } else { ?>
                                                     <a href="./stream.php">
-                                                        <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                        <button type="button"
+                                                            class="btn btn-info waves-effect waves-light btn-sm">
                                                             <?= $_["add_single"] ?>
                                                         </button>
                                                     </a>
@@ -495,7 +498,8 @@ if ($rSettings["sidebar"]) { ?>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td colspan="9" class="text-center"><?= $_["loading_stream_information"] ?> </td>
+                                                    <td colspan="9" class="text-center">
+                                                        <?= $_["loading_stream_information"] ?> </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -510,7 +514,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             echo "?import";
                                                                         } else if (isset($_GET["id"])) {
                                                                             echo "?id=" . $_GET["id"];
-                                                                        } ?>" method="POST" id="stream_form" data-parsley-validate="">
+                                                                        } ?>" method="POST" id="stream_form"
+                                        data-parsley-validate="">
                                         <?php if (isset($rStream["id"])) { ?>
                                             <input type="hidden" name="edit" value="<?= $rStream["id"] ?>" />
                                         <?php } ?>
@@ -518,41 +523,48 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#stream-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?> </span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#advanced-options" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#advanced-options" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-folder-alert-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["advanced"] ?> </span>
                                                     </a>
                                                 </li>
                                                 <?php if (!isset($_GET["import"])) { ?>
                                                     <li class="nav-item">
-                                                        <a href="#stream-map" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#stream-map" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-map mr-1"></i>
                                                             <span class="d-none d-sm-inline"><?= $_["map"] ?> </span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
                                                 <li class="nav-item">
-                                                    <a href="#auto-restart" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#auto-restart" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-clock-outline mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["auto_restart"] ?> </span>
+                                                        <span class="d-none d-sm-inline"><?= $_["auto_restart"] ?>
+                                                        </span>
                                                     </a>
                                                 </li>
                                                 <?php if (!isset($_GET["import"])) { ?>
                                                     <li class="nav-item">
-                                                        <a href="#epg-options" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#epg-options" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-television-guide mr-1"></i>
                                                             <span class="d-none d-sm-inline"><?= $_["epg"] ?> </span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
                                                 <li class="nav-item">
-                                                    <a href="#load-balancing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#load-balancing" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-server-network mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["servers"] ?> </span>
                                                     </a>
@@ -564,11 +576,17 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="col-12">
                                                             <?php if (!isset($_GET["import"])) { ?>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="stream_display_name"><?= $_["stream_name"] ?> </label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="stream_display_name"><?= $_["stream_name"] ?>
+                                                                    </label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="stream_display_name" name="stream_display_name" value="<?php if (isset($rStream)) {
-                                                                                                                                                                                echo htmlspecialchars($rStream["stream_display_name"]);
-                                                                                                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                        <input type="text" class="form-control"
+                                                                            id="stream_display_name"
+                                                                            name="stream_display_name"
+                                                                            value="<?php if (isset($rStream)) {
+                                                                                        echo htmlspecialchars($rStream["stream_display_name"]);
+                                                                                    } ?>"
+                                                                            required data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
                                                                 <span class="streams">
@@ -586,14 +604,32 @@ if ($rSettings["sidebar"]) { ?>
                                                                         $i++
                                                                     ?>
                                                                         <div class="form-group row mb-4 stream-url">
-                                                                            <label class="col-md-4 col-form-label" for="stream_source"> <?= $_["stream_url"] ?> </label>
+                                                                            <label class="col-md-4 col-form-label"
+                                                                                for="stream_source"> <?= $_["stream_url"] ?>
+                                                                            </label>
                                                                             <div class="col-md-8 input-group">
-                                                                                <input type="text" id="stream_source" name="stream_source[]" class="form-control" value="<?= htmlspecialchars($rStreamSource) ?>">
+                                                                                <input type="text" id="stream_source"
+                                                                                    name="stream_source[]" class="form-control"
+                                                                                    value="<?= htmlspecialchars($rStreamSource) ?>">
                                                                                 <div class="input-group-append">
-                                                                                    <button class="btn btn-info waves-effect waves-light" onClick="moveUp(this);" type="button"><i class="mdi mdi-chevron-up"></i></button>
-                                                                                    <button class="btn btn-info waves-effect waves-light" onClick="moveDown(this);" type="button"><i class="mdi mdi-chevron-down"></i></button>
-                                                                                    <button class="btn btn-primary waves-effect waves-light" onClick="addStream();" type="button"><i class="mdi mdi-plus"></i></button>
-                                                                                    <button class="btn btn-danger waves-effect waves-light" onClick="removeStream(this);" type="button"><i class="mdi mdi-close"></i></button>
+                                                                                    <button
+                                                                                        class="btn btn-info waves-effect waves-light"
+                                                                                        onClick="moveUp(this);" type="button"><i
+                                                                                            class="mdi mdi-chevron-up"></i></button>
+                                                                                    <button
+                                                                                        class="btn btn-info waves-effect waves-light"
+                                                                                        onClick="moveDown(this);"
+                                                                                        type="button"><i
+                                                                                            class="mdi mdi-chevron-down"></i></button>
+                                                                                    <button
+                                                                                        class="btn btn-primary waves-effect waves-light"
+                                                                                        onClick="addStream();" type="button"><i
+                                                                                            class="mdi mdi-plus"></i></button>
+                                                                                    <button
+                                                                                        class="btn btn-danger waves-effect waves-light"
+                                                                                        onClick="removeStream(this);"
+                                                                                        type="button"><i
+                                                                                            class="mdi mdi-close"></i></button>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -601,61 +637,82 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </span>
                                                             <?php } else { ?>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="m3u_file"><?= $_["m3u"] ?> </label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="m3u_file"><?= $_["m3u"] ?> </label>
                                                                     <div class="col-md-8">
                                                                         <input type="file" id="m3u_file" name="m3u_file" />
                                                                     </div>
                                                                 </div>
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="category_id"><?= $_["category_name"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="category_id"><?= $_["category_name"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <select name="category_id[]" id="category_id" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose...">
-                                                                        <?php foreach (getCategories('live') as $rCategory) : ?>
+                                                                    <select name="category_id[]" id="category_id"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="Choose...">
+                                                                        <?php foreach (getCategories('live') as $rCategory): ?>
                                                                             <option <?php if (isset($rStream) && in_array(intval($rCategory['id']), json_decode($rStream['category_id'], true))) {
                                                                                         echo 'selected ';
-                                                                                    } ?>value="<?php echo $rCategory['id']; ?>"><?php echo $rCategory['category_name']; ?></option>
+                                                                                    } ?>value="<?php echo $rCategory['id']; ?>">
+                                                                                <?php echo $rCategory['category_name']; ?>
+                                                                            </option>
                                                                         <?php endforeach; ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="bouquets"><?= $_["add_to_bouquets"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="bouquets"><?= $_["add_to_bouquets"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <select name="bouquets[]" id="bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                    <select name="bouquets[]" id="bouquets"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <option <?php if (isset($rStream)) {
                                                                                         if (in_array($rStream["id"], json_decode($rBouquet["bouquet_channels"], True))) {
                                                                                             echo "selected ";
                                                                                         }
-                                                                                    } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                                    } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                <?= $rBouquet["bouquet_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <?php if (!isset($_GET["import"])) { ?>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="stream_icon"><?= $_["stream_logo_url"] ?> </label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="stream_icon"><?= $_["stream_logo_url"] ?>
+                                                                    </label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="stream_icon" name="stream_icon" value="<?php if (isset($rStream)) {
-                                                                                                                                                                echo htmlspecialchars($rStream["stream_icon"]);
-                                                                                                                                                            } ?>">
+                                                                        <input type="text" class="form-control"
+                                                                            id="stream_icon" name="stream_icon"
+                                                                            value="<?php if (isset($rStream)) {
+                                                                                        echo htmlspecialchars($rStream["stream_icon"]);
+                                                                                    } ?>">
                                                                     </div>
                                                                 </div>
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="notes"><?= $_["notes"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="notes"><?= $_["notes"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <textarea id="notes" name="notes" class="form-control" rows="3" placeholder=""><?php if (isset($rStream)) {
-                                                                                                                                                        echo htmlspecialchars($rStream["notes"]);
-                                                                                                                                                    } ?></textarea>
+                                                                    <textarea id="notes" name="notes"
+                                                                        class="form-control" rows="3"
+                                                                        placeholder=""><?php if (isset($rStream)) {
+                                                                                            echo htmlspecialchars($rStream["notes"]);
+                                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?> </a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -663,150 +720,250 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="gen_timestamps"><?= $_["generate_pts"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Allow FFmpeg to generate presentation timestamps for you to achieve better synchronization with the stream codecs. In some streams this can cause de-sync." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="gen_timestamps"><?= $_["generate_pts"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Allow FFmpeg to generate presentation timestamps for you to achieve better synchronization with the stream codecs. In some streams this can cause de-sync."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="gen_timestamps" id="gen_timestamps" type="checkbox" <?php if (isset($rStream)) {
-                                                                                                                                            if ($rStream["gen_timestamps"] == 1) {
-                                                                                                                                                echo "checked ";
-                                                                                                                                            }
-                                                                                                                                        } else {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="gen_timestamps" id="gen_timestamps"
+                                                                        type="checkbox" <?php if (isset($rStream)) {
+                                                                                            if ($rStream["gen_timestamps"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } else {
+                                                                                            echo "checked ";
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="read_native"><?= $_["native_frames"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="You should always read live streams as non-native frames. However if you are streaming static video files, set this to true otherwise the encoding process will fail." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="read_native"><?= $_["native_frames"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="You should always read live streams as non-native frames. However if you are streaming static video files, set this to true otherwise the encoding process will fail."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="read_native" id="read_native" type="checkbox" <?php if (isset($rStream)) {
-                                                                                                                                    if ($rStream["read_native"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    }
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="stream_all"><?= $_["stream_all_codecs"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="This option will stream all codecs from your stream. Some streams have more than one audio/video/subtitles channels." class="mdi mdi-information"></i></label>
-                                                                <div class="col-md-2">
-                                                                    <input name="stream_all" id="stream_all" type="checkbox" <?php if (isset($rStream)) {
-                                                                                                                                    if ($rStream["stream_all"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    }
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <label class="col-md-4 col-form-label" for="allow_record"><?= $_["allow_recording"] ?> </label>
-                                                                <div class="col-md-2">
-                                                                    <input name="allow_record" id="allow_record" type="checkbox" <?php if (isset($rStream)) {
-                                                                                                                                        if ($rStream["allow_record"] == 1) {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        }
-                                                                                                                                    } else {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="read_native" id="read_native"
+                                                                        type="checkbox" <?php if (isset($rStream)) {
+                                                                                            if ($rStream["read_native"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="rtmp_output"><?= $_["allow_rtmp_output"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Enable RTMP output for this channel." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="stream_all"><?= $_["stream_all_codecs"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="This option will stream all codecs from your stream. Some streams have more than one audio/video/subtitles channels."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="rtmp_output" id="rtmp_output" type="checkbox" <?php if (isset($rStream)) {
-                                                                                                                                    if ($rStream["rtmp_output"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    }
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="stream_all" id="stream_all"
+                                                                        type="checkbox" <?php if (isset($rStream)) {
+                                                                                            if ($rStream["stream_all"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="direct_source"><?= $_["direct_source"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Don't run source through Xtream Codes, just redirect instead." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="allow_record"><?= $_["allow_recording"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input name="direct_source" id="direct_source" type="checkbox" <?php if (isset($rStream)) {
-                                                                                                                                        if ($rStream["direct_source"] == 1) {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        }
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="custom_sid"><?= $_["custom_channel_sid"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Here you can specify the SID of the channel in order to work with the epg on the enigma2 devices. You have to specify the code with the ':' but without the first number, 1 or 4097 . Example: if we have this code:  '1:0:1:13f:157c:13e:820000:0:0:0:2097' then you have to add on this field:  ':0:1:13f:157c:13e:820000:0:0:0:" class="mdi mdi-information"></i></label>
-                                                                <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="custom_sid" name="custom_sid" value="<?php if (isset($rStream)) {
-                                                                                                                                                            echo htmlspecialchars($rStream["custom_sid"]);
-                                                                                                                                                        } ?>">
-                                                                </div>
-                                                                <label class="col-md-4 col-form-label" for="delay_minutes"><?= $_["minute_delay"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Delay stream by X minutes. Will not work with on demand streams." class="mdi mdi-information"></i></label>
-                                                                <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="delay_minutes" name="delay_minutes" value="<?php if (isset($rStream)) {
-                                                                                                                                                                echo $rStream["delay_minutes"];
-                                                                                                                                                            } else {
-                                                                                                                                                                echo "0";
-                                                                                                                                                            } ?>">
+                                                                    <input name="allow_record" id="allow_record"
+                                                                        type="checkbox" <?php if (isset($rStream)) {
+                                                                                            if ($rStream["allow_record"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } else {
+                                                                                            echo "checked ";
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="custom_ffmpeg"><?= $_["custom_ffmpeg_command"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="In this field you can write your own custom FFmpeg command. Please note that this command will be placed after the input and before the output. If the command you will specify here is about to do changes in the output video or audio, it may require to transcode the stream. In this case, you have to use and change at least the Video/Audio Codecs using the transcoding attributes below. The custom FFmpeg command will only be used by the server(s) that take the stream from the Source." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="rtmp_output"><?= $_["allow_rtmp_output"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Enable RTMP output for this channel."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="custom_ffmpeg" name="custom_ffmpeg" value="<?php if (isset($rStream)) {
-                                                                                                                                                                echo htmlspecialchars($rStream["custom_ffmpeg"]);
-                                                                                                                                                            } ?>">
+                                                                    <input name="rtmp_output" id="rtmp_output"
+                                                                        type="checkbox" <?php if (isset($rStream)) {
+                                                                                            if ($rStream["rtmp_output"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="probesize_ondemand"><?= $_["on_demand_probesize"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Adjustable probesize for ondemand streams. Adjust this setting if you experience issues with no audio." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="direct_source"><?= $_["direct_source"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Don't run source through Xtream Codes, just redirect instead."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="probesize_ondemand" name="probesize_ondemand" value="<?php if (isset($rStream)) {
-                                                                                                                                                                            echo $rStream["probesize_ondemand"];
-                                                                                                                                                                        } else {
-                                                                                                                                                                            echo "128000";
-                                                                                                                                                                        } ?>">
+                                                                    <input name="direct_source" id="direct_source"
+                                                                        type="checkbox" <?php if (isset($rStream)) {
+                                                                                            if ($rStream["direct_source"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="user_agent"><?= $_["user_agent"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="custom_sid"><?= $_["custom_channel_sid"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Here you can specify the SID of the channel in order to work with the epg on the enigma2 devices. You have to specify the code with the ':' but without the first number, 1 or 4097 . Example: if we have this code:  '1:0:1:13f:157c:13e:820000:0:0:0:2097' then you have to add on this field:  ':0:1:13f:157c:13e:820000:0:0:0:"
+                                                                        class="mdi mdi-information"></i></label>
+                                                                <div class="col-md-2">
+                                                                    <input type="text" class="form-control"
+                                                                        id="custom_sid" name="custom_sid"
+                                                                        value="<?php if (isset($rStream)) {
+                                                                                    echo htmlspecialchars($rStream["custom_sid"]);
+                                                                                } ?>">
+                                                                </div>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="delay_minutes"><?= $_["minute_delay"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Delay stream by X minutes. Will not work with on demand streams."
+                                                                        class="mdi mdi-information"></i></label>
+                                                                <div class="col-md-2">
+                                                                    <input type="text" class="form-control"
+                                                                        id="delay_minutes" name="delay_minutes"
+                                                                        value="<?php if (isset($rStream)) {
+                                                                                    echo $rStream["delay_minutes"];
+                                                                                } else {
+                                                                                    echo "0";
+                                                                                } ?>">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row mb-4">
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="custom_ffmpeg"><?= $_["custom_ffmpeg_command"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="In this field you can write your own custom FFmpeg command. Please note that this command will be placed after the input and before the output. If the command you will specify here is about to do changes in the output video or audio, it may require to transcode the stream. In this case, you have to use and change at least the Video/Audio Codecs using the transcoding attributes below. The custom FFmpeg command will only be used by the server(s) that take the stream from the Source."
+                                                                        class="mdi mdi-information"></i></label>
+                                                                <div class="col-md-2">
+                                                                    <input type="text" class="form-control"
+                                                                        id="custom_ffmpeg" name="custom_ffmpeg"
+                                                                        value="<?php if (isset($rStream)) {
+                                                                                    echo htmlspecialchars($rStream["custom_ffmpeg"]);
+                                                                                } ?>">
+                                                                </div>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="probesize_ondemand"><?= $_["on_demand_probesize"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Adjustable probesize for ondemand streams. Adjust this setting if you experience issues with no audio."
+                                                                        class="mdi mdi-information"></i></label>
+                                                                <div class="col-md-2">
+                                                                    <input type="text" class="form-control"
+                                                                        id="probesize_ondemand"
+                                                                        name="probesize_ondemand"
+                                                                        value="<?php if (isset($rStream)) {
+                                                                                    echo $rStream["probesize_ondemand"];
+                                                                                } else {
+                                                                                    echo "128000";
+                                                                                } ?>">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row mb-4">
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="user_agent"><?= $_["user_agent"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="user_agent" name="user_agent" value="<?php if (isset($rStreamOptions[1])) {
-                                                                                                                                                            echo htmlspecialchars($rStreamOptions[1]["value"]);
-                                                                                                                                                        } else {
-                                                                                                                                                            echo htmlspecialchars($rStreamArguments["user_agent"]["argument_default_value"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="user_agent" name="user_agent"
+                                                                        value="<?php if (isset($rStreamOptions[1])) {
+                                                                                    echo htmlspecialchars($rStreamOptions[1]["value"]);
+                                                                                } else {
+                                                                                    echo htmlspecialchars($rStreamArguments["user_agent"]["argument_default_value"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="http_proxy"><?= $_["http_proxy"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Format: ip:port" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="http_proxy"><?= $_["http_proxy"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title="" data-original-title="Format: ip:port"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="http_proxy" name="http_proxy" value="<?php if (isset($rStreamOptions[2])) {
-                                                                                                                                                            echo htmlspecialchars($rStreamOptions[2]["value"]);
-                                                                                                                                                        } else {
-                                                                                                                                                            echo htmlspecialchars($rStreamArguments["proxy"]["argument_default_value"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="http_proxy" name="http_proxy"
+                                                                        value="<?php if (isset($rStreamOptions[2])) {
+                                                                                    echo htmlspecialchars($rStreamOptions[2]["value"]);
+                                                                                } else {
+                                                                                    echo htmlspecialchars($rStreamArguments["proxy"]["argument_default_value"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="cookie"><?= $_["cookie"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Format: key=value;" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="cookie"><?= $_["cookie"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Format: key=value;"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="cookie" name="cookie" value="<?php if (isset($rStreamOptions[17])) {
-                                                                                                                                                    echo htmlspecialchars($rStreamOptions[17]["value"]);
-                                                                                                                                                } else {
-                                                                                                                                                    echo htmlspecialchars($rStreamArguments["cookie"]["argument_default_value"]);
-                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control" id="cookie"
+                                                                        name="cookie"
+                                                                        value="<?php if (isset($rStreamOptions[17])) {
+                                                                                    echo htmlspecialchars($rStreamOptions[17]["value"]);
+                                                                                } else {
+                                                                                    echo htmlspecialchars($rStreamArguments["cookie"]["argument_default_value"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="headers"><?= $_["headers"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="FFmpeg -headers command." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="headers"><?= $_["headers"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="FFmpeg -headers command."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="headers" name="headers" value="<?php if (isset($rStreamOptions[19])) {
-                                                                                                                                                    echo htmlspecialchars($rStreamOptions[19]["value"]);
-                                                                                                                                                } else {
-                                                                                                                                                    echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]);
-                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control" id="headers"
+                                                                        name="headers"
+                                                                        value="<?php if (isset($rStreamOptions[19])) {
+                                                                                    echo htmlspecialchars($rStreamOptions[19]["value"]);
+                                                                                } else {
+                                                                                    echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="transcode_profile_id"><?= $_["transcoding_profile"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_7"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="transcode_profile_id"><?= $_["transcoding_profile"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["episode_tooltip_7"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="transcode_profile_id" id="transcode_profile_id" class="form-control" data-toggle="select2">
+                                                                    <select name="transcode_profile_id"
+                                                                        id="transcode_profile_id" class="form-control"
+                                                                        data-toggle="select2">
                                                                         <option <?php if (isset($rStream)) {
                                                                                     if (intval($rStream["transcode_profile_id"]) == 0) {
                                                                                         echo "selected ";
                                                                                     }
-                                                                                } ?>value="0"><?= $_["transcoding_disabled"] ?></option>
+                                                                                } ?>value="0">
+                                                                            <?= $_["transcoding_disabled"] ?></option>
                                                                         <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
                                                                             <option <?php if (isset($rStream)) {
                                                                                         if (intval($rStream["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
                                                                                             echo "selected ";
                                                                                         }
-                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>"><?= $rProfile["profile_name"] ?></option>
+                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>">
+                                                                                <?= $rProfile["profile_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -815,10 +972,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?> </a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?> </a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -827,20 +986,28 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-3 col-form-label" for="custom_map"><?= $_["custom_map"] ?> </label>
+                                                                    <label class="col-md-3 col-form-label"
+                                                                        for="custom_map"><?= $_["custom_map"] ?> </label>
                                                                     <div class="col-md-9 input-group">
-                                                                        <input type="text" class="form-control" id="custom_map" name="custom_map" value="<?php if (isset($rStream)) {
-                                                                                                                                                                echo htmlspecialchars($rStream["custom_map"]);
-                                                                                                                                                            } ?>">
+                                                                        <input type="text" class="form-control"
+                                                                            id="custom_map" name="custom_map"
+                                                                            value="<?php if (isset($rStream)) {
+                                                                                        echo htmlspecialchars($rStream["custom_map"]);
+                                                                                    } ?>">
                                                                         <div class="input-group-append">
-                                                                            <button class="btn btn-primary waves-effect waves-light" id="load_maps" type="button"><i class="mdi mdi-magnify"></i></button>
+                                                                            <button
+                                                                                class="btn btn-primary waves-effect waves-light"
+                                                                                id="load_maps" type="button"><i
+                                                                                    class="mdi mdi-magnify"></i></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="alert alert-warning bg-warning text-white border-0" role="alert">
+                                                                <div class="alert alert-warning bg-warning text-white border-0"
+                                                                    role="alert">
                                                                     <?= $_["custom_maps_are_advanced"] ?>
                                                                 </div>
-                                                                <table id="datatable-map" class="table table-borderless mb-0">
+                                                                <table id="datatable-map"
+                                                                    class="table table-borderless mb-0">
                                                                     <thead class="bg-light">
                                                                         <tr>
                                                                             <th>#</th>
@@ -854,10 +1021,12 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?> </a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["prev"] ?> </a>
                                                             </li>
                                                             <li class="next list-inline-item float-right">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?> </a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["next"] ?> </a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -866,7 +1035,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="days_to_restart"><?= $_["days_to_restart"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="days_to_restart"><?= $_["days_to_restart"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
                                                                     <?php
                                                                     $rAutoRestart = array("days" => array(), "at" => "06:00");
@@ -881,7 +1052,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                             }
                                                                         }
                                                                     } ?>
-                                                                    <select id="days_to_restart" name="days_to_restart[]" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose_"] ?>">
+                                                                    <select id="days_to_restart"
+                                                                        name="days_to_restart[]"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose_"] ?>">
                                                                         <?php foreach (array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday") as $rDay) { ?>
                                                                             <option value="<?= $rDay ?>" <?php if (in_array($rDay, $rAutoRestart["days"])) {
                                                                                                                 echo " selected";
@@ -891,12 +1066,20 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="time_to_restart"><?= $_["time_to_restart"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="time_to_restart"><?= $_["time_to_restart"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <div class="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
-                                                                        <input id="time_to_restart" name="time_to_restart" type="text" class="form-control" value="<?= $rAutoRestart["at"] ?>">
+                                                                    <div class="input-group clockpicker"
+                                                                        data-placement="top" data-align="top"
+                                                                        data-autoclose="true">
+                                                                        <input id="time_to_restart"
+                                                                            name="time_to_restart" type="text"
+                                                                            class="form-control"
+                                                                            value="<?= $rAutoRestart["at"] ?>">
                                                                         <div class="input-group-append">
-                                                                            <span class="input-group-text"><i class="mdi mdi-clock-outline"></i></span>
+                                                                            <span class="input-group-text"><i
+                                                                                    class="mdi mdi-clock-outline"></i></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -905,10 +1088,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?> </a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?> </a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -917,44 +1102,54 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="epg_id"><?= $_["epg_source"] ?> </label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="epg_id"><?= $_["epg_source"] ?> </label>
                                                                     <div class="col-md-8">
-                                                                        <select name="epg_id" id="epg_id" class="form-control" data-toggle="select2">
+                                                                        <select name="epg_id" id="epg_id"
+                                                                            class="form-control" data-toggle="select2">
                                                                             <option <?php if (isset($rStream)) {
                                                                                         if (intval($rStream["epg_id"]) == 0) {
                                                                                             echo "selected ";
                                                                                         }
-                                                                                    } ?>value="0"><?= $_["no_epg"] ?> </option>
+                                                                                    } ?>value="0">
+                                                                                <?= $_["no_epg"] ?> </option>
                                                                             <?php foreach ($rEPGSources as $rEPG) { ?>
                                                                                 <option <?php if (isset($rStream)) {
                                                                                             if (intval($rStream["epg_id"]) == $rEPG["id"]) {
                                                                                                 echo "selected ";
                                                                                             }
-                                                                                        } ?>value="<?= $rEPG["id"] ?>"><?= $rEPG["epg_name"] ?></option>
+                                                                                        } ?>value="<?= $rEPG["id"] ?>">
+                                                                                    <?= $rEPG["epg_name"] ?></option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="channel_id"><?= $_["epg_channel_id"] ?> </label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="channel_id"><?= $_["epg_channel_id"] ?>
+                                                                    </label>
                                                                     <div class="col-md-8">
-                                                                        <select name="channel_id" id="channel_id" class="form-control" data-toggle="select2">
+                                                                        <select name="channel_id" id="channel_id"
+                                                                            class="form-control" data-toggle="select2">
                                                                             <?php if (isset($rStream)) {
-                                                                                foreach ((array)json_decode($rEPGSources[intval($rStream["epg_id"])]["data"], True) as $rKey => $rEPGChannel) { ?>
+                                                                                foreach ((array) json_decode($rEPGSources[intval($rStream["epg_id"])]["data"], True) as $rKey => $rEPGChannel) { ?>
                                                                                     <option value="<?= $rKey ?>" <?php if ($rStream["channel_id"] == $rKey) {
                                                                                                                         echo " selected";
-                                                                                                                    } ?>><?= $rEPGChannel["display_name"] ?></option>
+                                                                                                                    } ?>>
+                                                                                        <?= $rEPGChannel["display_name"] ?></option>
                                                                             <?php }
                                                                             } ?>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="epg_lang"><?= $_["epg_language"] ?> </label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="epg_lang"><?= $_["epg_language"] ?> </label>
                                                                     <div class="col-md-8">
-                                                                        <select name="epg_lang" id="epg_lang" class="form-control" data-toggle="select2">
+                                                                        <select name="epg_lang" id="epg_lang"
+                                                                            class="form-control" data-toggle="select2">
                                                                             <?php if (isset($rStream)) {
-                                                                                foreach ((array)json_decode($rEPGSources[intval($rStream["epg_id"])]["data"], True)[$rStream["channel_id"]]["langs"] as $rID => $rLang) { ?>
+                                                                                foreach ((array) json_decode($rEPGSources[intval($rStream["epg_id"])]["data"], True)[$rStream["channel_id"]]["langs"] as $rID => $rLang) { ?>
                                                                                     <option value="<?= $rLang ?>" <?php if ($rStream["epg_lang"] == $rLang) {
                                                                                                                         echo " selected";
                                                                                                                     } ?>><?= $rLang ?></option>
@@ -967,10 +1162,12 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?> </a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["prev"] ?> </a>
                                                             </li>
                                                             <li class="next list-inline-item float-right">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?> </a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["next"] ?> </a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -979,63 +1176,88 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="servers"><?= $_["server_tree"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="servers"><?= $_["server_tree"] ?> </label>
                                                                 <div class="col-md-8">
                                                                     <div id="server_tree"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="on_demand"><?= $_["on_demand"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="on_demand"><?= $_["on_demand"] ?> </label>
                                                                 <div class="col-md-8">
-                                                                    <select id="on_demand" name="on_demand[]" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["bouquet_order"] ?>Choose ...">
+                                                                    <select id="on_demand" name="on_demand[]"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["bouquet_order"] ?>Choose ...">
                                                                         <?php foreach ($rServers as $rServerItem) { ?>
                                                                             <option value="<?= $rServerItem["id"] ?>" <?php if (in_array($rServerItem["id"], $rOnDemand)) {
                                                                                                                             echo " selected";
-                                                                                                                        } ?>><?= $rServerItem["server_name"] ?></option>
+                                                                                                                        } ?>>
+                                                                                <?= $rServerItem["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="tv_archive_server_id"><?= $_["timeshift_server"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="tv_archive_server_id"><?= $_["timeshift_server"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <select name="tv_archive_server_id" id="tv_archive_server_id" class="form-control" data-toggle="select2">
-                                                                        <option value="0"><?= $_["timeshift_disabled"] ?> </option>
+                                                                    <select name="tv_archive_server_id"
+                                                                        id="tv_archive_server_id" class="form-control"
+                                                                        data-toggle="select2">
+                                                                        <option value="0">
+                                                                            <?= $_["timeshift_disabled"] ?> </option>
                                                                         <?php foreach ($rServers as $rServer) { ?>
                                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($rStream)) && ($rStream["tv_archive_server_id"] == $rServer["id"])) {
                                                                                                                         echo " selected";
-                                                                                                                    } ?>><?= $rServer["server_name"] ?></option>
+                                                                                                                    } ?>>
+                                                                                <?= $rServer["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="tv_archive_duration"><?= $_["timeshift_days"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="tv_archive_duration"><?= $_["timeshift_days"] ?>
+                                                                </label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="tv_archive_duration" name="tv_archive_duration" value="<?php if (isset($rStream)) {
-                                                                                                                                                                            echo $rStream["tv_archive_duration"];
-                                                                                                                                                                        } else {
-                                                                                                                                                                            echo "0";
-                                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="tv_archive_duration"
+                                                                        name="tv_archive_duration"
+                                                                        value="<?php if (isset($rStream)) {
+                                                                                    echo $rStream["tv_archive_duration"];
+                                                                                } else {
+                                                                                    echo "0";
+                                                                                } ?>">
                                                                     </select>
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="restart_on_edit"><?php if (isset($rStream["id"])) { ?><?= $_["restart_on_edit"] ?> <?php } else { ?><?= $_["start_stream_now"] ?> <?php } ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="restart_on_edit"><?php if (isset($rStream["id"])) { ?><?= $_["restart_on_edit"] ?>
+                                                                <?php } else { ?> <?= $_["start_stream_now"] ?>
+                                                                <?php } ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="restart_on_edit" id="restart_on_edit" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="restart_on_edit" id="restart_on_edit"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?> </a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?> </a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_stream" type="submit" class="btn btn-primary" value="<?php if (isset($rStream["id"])) {
-                                                                                                                                            echo $_["edit"];
-                                                                                                                                        } else {
-                                                                                                                                            echo $_["add"];
-                                                                                                                                        } ?>" />
+                                                            <input name="submit_stream" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?php if (isset($rStream["id"])) {
+                                                                            echo $_["edit"];
+                                                                        } else {
+                                                                            echo $_["add"];
+                                                                        } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

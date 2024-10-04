@@ -391,8 +391,8 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                                 $rPost = array("action" => "vod", "sub" => "start", "stream_ids" => array($rInsertID));
                                 $rContext = stream_context_create(array(
                                     'http' => array(
-                                        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                                        'method'  => 'POST',
+                                        'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                                        'method' => 'POST',
                                         'content' => http_build_query($rPost)
                                     )
                                 ));

@@ -1,7 +1,7 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +-----------------------------------------------------------------------------+
-// | Copyright (c) 2003 Sérgio Gonçalves Carvalho                                |
+// | Copyright (c) 2003 Sï¿½rgio Gonï¿½alves Carvalho                                |
 // +-----------------------------------------------------------------------------+
 // | This file is part of Structures_Graph.                                      |
 // |                                                                             |
@@ -20,7 +20,7 @@
 // | Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA                    |
 // | 02111-1307 USA                                                              |
 // +-----------------------------------------------------------------------------+
-// | Author: Sérgio Carvalho <sergio.carvalho@portugalmail.com>                  |
+// | Author: Sï¿½rgio Carvalho <sergio.carvalho@portugalmail.com>                  |
 // +-----------------------------------------------------------------------------+
 //
 /**
@@ -45,13 +45,12 @@ define('STRUCTURES_GRAPH_ERROR_GENERIC', 100);
  * directional, and can be traveled only one way. In an undirected graph, arcs
  * are bidirectional, and can be traveled both ways.
  *
- * @author    Sérgio Carvalho <sergio.carvalho@portugalmail.com> 
- * @copyright (c) 2004 by Sérgio Carvalho
+ * @author    Sï¿½rgio Carvalho <sergio.carvalho@portugalmail.com> 
+ * @copyright (c) 2004 by Sï¿½rgio Carvalho
  * @package   Structures_Graph
  */
 /* }}} */
-class Structures_Graph
-{
+class Structures_Graph {
     /**
      * List of node objects in this graph
      * @access private
@@ -71,8 +70,7 @@ class Structures_Graph
      * @param boolean $directed Set to true if the graph is directed.
      *                          Set to false if it is not directed.
      */
-    public function __construct($directed = true)
-    {
+    public function __construct($directed = true) {
         $this->_directed = $directed;
     }
 
@@ -84,8 +82,7 @@ class Structures_Graph
      *
      * @return void
      */
-    public function Structures_Graph($directed = true)
-    {
+    public function Structures_Graph($directed = true) {
         $this->__construct($directed);
     }
 
@@ -94,9 +91,8 @@ class Structures_Graph
      *
      * @return boolean true if the graph is directed
      */
-    public function isDirected()
-    {
-        return (boolean) $this->_directed;
+    public function isDirected() {
+        return (bool) $this->_directed;
     }
 
     /**
@@ -106,13 +102,12 @@ class Structures_Graph
      *
      * @return void
      */
-    public function addNode(&$newNode)
-    {
+    public function addNode(&$newNode) {
         // We only add nodes
         if (!is_a($newNode, 'Structures_Graph_Node')) {
             return Pear::raiseError(
                 'Structures_Graph::addNode received an object that is not'
-                . ' a Structures_Graph_Node',
+                    . ' a Structures_Graph_Node',
                 STRUCTURES_GRAPH_ERROR_GENERIC
             );
         }
@@ -140,12 +135,12 @@ class Structures_Graph
             if ($referenceIsEqualFlag) {
                 return Pear::raiseError(
                     'Structures_Graph::addNode received an object that is'
-                    . ' a duplicate for this dataset',
+                        . ' a duplicate for this dataset',
                     STRUCTURES_GRAPH_ERROR_GENERIC
                 );
             }
         }
-        $this->_nodes[] =& $newNode;
+        $this->_nodes[] = &$newNode;
         $newNode->setGraph($this);
     }
 
@@ -157,8 +152,7 @@ class Structures_Graph
      * @return void
      * @todo   This is unimplemented
      */
-    public function removeNode(&$node)
-    {
+    public function removeNode(&$node) {
     }
 
     /**
@@ -168,9 +162,7 @@ class Structures_Graph
      * @return array The set of nodes in this graph
      * @see    Structures_Graph_Manipulator_TopologicalSorter
      */
-    public function &getNodes()
-    {
+    public function &getNodes() {
         return $this->_nodes;
     }
 }
-?>

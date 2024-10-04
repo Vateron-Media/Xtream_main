@@ -1,4 +1,4 @@
-.guess_block{
+.guess_block {
     color: #5a3807;
     font-size: 26px;
     margin: 5px 0 0 13px;
@@ -10,7 +10,7 @@
     width: 65px;
 }
 
-.active_guess_block{
+.active_guess_block {
     font-size: 26px;
     color: #fff;
     margin: 11px 25px 0 14px;
@@ -21,7 +21,7 @@
     width: 70px;
 }
 
-.score_block{
+.score_block {
     color: #5a3807;
     font-size: 26px;
     margin: 5px 20px 0 3px;
@@ -32,7 +32,7 @@
     float: right;
 }
 
-.active_score_block{
+.active_score_block {
     font-size: 26px;
     color: #fff;
     margin: 11px 30px 16px 4px;
@@ -43,13 +43,13 @@
     /*width: 62px;*/
 }
 
-.mastermind_field{
+.mastermind_field {
     position: absolute;
     top: 291px;
     left: 729px;
 }
 
-.mastermind_field div{
+.mastermind_field div {
     float: left;
     width: 70px;
     height: 90px;
@@ -69,11 +69,11 @@
     padding: 15px 0 0 0;
 }
 
-.mastermind_field .active{
+.mastermind_field .active {
     border: 2px solid #fff;
 }
 
-.place_block{
+.place_block {
     background-image: url("i_720/mb_icons.png");
     background-position: -112px 0;
     width: 44px;
@@ -87,13 +87,13 @@
     overflow: hidden;
 }
 
-.active_place_block{
+.active_place_block {
     width: 44px;
     height: 33px;
     background-image: url("i_720/mb_icons.png");
     background-position: -112px -31px;
     margin: 8px 2px 0 0;
-    float:left;
+    float: left;
     font-size: 24px;
     color: #5A3807;
     text-align: center;
@@ -102,7 +102,7 @@
     padding-top: 2px;
 }
 
-.sum_points_block{
+.sum_points_block {
     color: #5A3807;
     font-size: 24px;
     margin: 3px 15px 0 3px;
@@ -113,7 +113,7 @@
     float: right;
 }
 
-.active_sum_points_block{
+.active_sum_points_block {
     font-size: 24px;
     color: #fff;
     margin: 10px 40px 0 0;
@@ -123,19 +123,20 @@
     float: right;
 }
 
-#mastermind_rating .name_block, #mastermind_rating .active_name_block{
+#mastermind_rating .name_block,
+#mastermind_rating .active_name_block {
     float: left;
 }
 
-.mastermind_rules_txt{
+.mastermind_rules_txt {
     position: absolute;
-	left: 70px;
-	top: 83px;
-	width: 1100px;
-	height: 510px;
-	background-image: url("i_720/25alfa_20.png");
-	padding: 10px;
-	-moz-border-radius: 10px;
+    left: 70px;
+    top: 83px;
+    width: 1100px;
+    height: 510px;
+    background-image: url("i_720/25alfa_20.png");
+    padding: 10px;
+    -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     color: #fff;
     font-size: 24px;

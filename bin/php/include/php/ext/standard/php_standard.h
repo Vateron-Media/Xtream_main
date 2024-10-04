@@ -67,7 +67,6 @@
 PHP_MINIT_FUNCTION(standard_filters);
 PHP_MSHUTDOWN_FUNCTION(standard_filters);
 
-
 /*
  * Local variables:
  * tab-width: 4

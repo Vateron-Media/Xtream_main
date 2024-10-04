@@ -1,4 +1,4 @@
-.dir_block{
+.dir_block {
     width: 34px;
     height: 30px;
     float: left;
@@ -7,7 +7,7 @@
     background-position: -156px 0;
 }
 
-.back_block{
+.back_block {
     width: 34px;
     height: 30px;
     float: left;
@@ -16,25 +16,25 @@
     background-position: -190px 0;
 }
 
-.active_dir_block{
+.active_dir_block {
     width: 34px;
     height: 39px;
     margin: 6px 2px 0 0;
-    float:left;
+    float: left;
     background-image: url("i_720/mb_icons.png");
     background-position: -156px -29px;
 }
 
-.active_back_block{
+.active_back_block {
     width: 34px;
     height: 39px;
     margin: 6px 2px 0 0;
-    float:left;
+    float: left;
     background-image: url("i_720/mb_icons.png");
     background-position: -190px -29px;
 }
 
-#media_browser .playing_block{
+#media_browser .playing_block {
     width: 34px;
     height: 30px;
     float: left;
@@ -43,16 +43,16 @@
     background-position: 0 0;
 }
 
-#media_browser .active_playing_block{
+#media_browser .active_playing_block {
     width: 34px;
     height: 39px;
     margin: 6px 2px 0 0;
-    float:left;
+    float: left;
     background-image: url("i_720/mb_player.png");
     background-position: 0 -29px;
 }
 
-#media_browser .paused_block{
+#media_browser .paused_block {
     width: 34px;
     height: 30px;
     float: left;
@@ -61,28 +61,29 @@
     background-position: -34px 0;
 }
 
-#media_browser .active_paused_block{
+#media_browser .active_paused_block {
     width: 34px;
     height: 39px;
     margin: 6px 2px 0 0;
-    float:left;
+    float: left;
     background-image: url("i_720/mb_player.png");
     background-position: -34px -29px;
 }
 
-#media_browser .seek_bar_block{
+#media_browser .seek_bar_block {
     display: none;
 }
 
-#media_browser .active_row_bg[status="playing"] .active_name_block, #media_browser .playing .active_name_block{
+#media_browser .active_row_bg[status="playing"] .active_name_block,
+#media_browser .playing .active_name_block {
     margin-top: 4px;
 }
 
-#media_browser .active_row_bg .active_seek_bar_block{
+#media_browser .active_row_bg .active_seek_bar_block {
     display: none;
 }
 
-#media_browser .active_row_bg[status="playing"] .active_seek_bar_block{
+#media_browser .active_row_bg[status="playing"] .active_seek_bar_block {
     display: block;
     height: 4px;
     width: 1097px;
@@ -93,16 +94,16 @@
     overflow: hidden;
 }
 
-#media_browser .seek_bar_inner{
+#media_browser .seek_bar_inner {
     height: 4px;
     width: 0;
     background-color: #202020;
 }
 
-#media_browser .mb_header_first{
+#media_browser .mb_header_first {
     width: 1000px;
 }
 
-#network_folder{
+#network_folder {
     margin-top: -198px;
 }

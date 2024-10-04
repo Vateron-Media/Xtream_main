@@ -10,15 +10,13 @@ if (count($Config->get('ping:hosts')) > 0)
 else
     $hosts = array('google.com', 'wikipedia.org');
 
-foreach ($hosts as $host)
-{
-    exec('/bin/ping -qc 1 '.$host.' | awk -F/ \'/^rtt/ { print $5 }\'', $result);
+foreach ($hosts as $host) {
+    exec('/bin/ping -qc 1 ' . $host . ' | awk -F/ \'/^rtt/ { print $5 }\'', $result);
 
-    if (!isset($result[0]))
-    {
+    if (!isset($result[0])) {
         $result[0] = 0;
     }
-    
+
     $datas[] = array(
         'host' => $host,
         'ping' => $result[0],

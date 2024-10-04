@@ -1,10 +1,11 @@
 <html>
+
 <head>
     <script>
         var iid = 3;
         var menuT = [['select', parent.t('Authentication:'), "open", parent.t("Open"), "shared", parent.t("Shared key"), "wep_auto", parent.t("Auto open/share"), "wpapsk", parent.t("WPA PSK"), "wpa2psk", parent.t("WPA2 PSK")],
-            ['select', parent.t('Encoding:'), "none", parent.t("NONE"), "wep", parent.t("WEP"), "tkip", parent.t("TKIP"), "aes", parent.t("AES")],
-            ['input', parent.t('Key or Passphrase:')]];
+        ['select', parent.t('Encoding:'), "none", parent.t("NONE"), "wep", parent.t("WEP"), "tkip", parent.t("TKIP"), "aes", parent.t("AES")],
+        ['input', parent.t('Key or Passphrase:')]];
         var mid = menuT.length + 2;
         var pread = ["wifi_auth", "wifi_enc", "wifi_psk", "wifi_wep_key1"];
         var tread = '{"varList":["' + pread[0] + '"';
@@ -115,7 +116,7 @@
                     case 26:
                         if (hex.test(t)) parent.wset += ',"wifi_psk":"","wifi_wep_key1":"' + t + '","wifi_wep_key2":"' + t + '","wifi_wep_key3":"' + t + '","wifi_wep_key4":"' + t + '"'; else erm += "No correct";
                         break;
-                    default :
+                    default:
                         erm += "No correct length";
                 }
             }
@@ -183,41 +184,43 @@
     </script>
     <script language="JavaScript" src="js/pres.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 <body onload="onLoad()" onkeydown="pressKey(event);">
-<div id="blueback">
-    <table class="nsp1" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td align="right"><span id="info2"></span></td>
-            <td width="10"><span id="info1"></span></td>
-        </tr>
-        <tr>
-            <td align="right"><span id="t1"></span></td>
-            <td width="10">
-                <div class="sub_select"><select id="i1"></select></div>
-            </td>
-        </tr>
-        <tr>
-            <td align="right"><span id="t2"></span></td>
-            <td width="10">
-                <div class="sub_select"><select id="i2" onChange="dsel(this.value)"></select></div>
-            </td>
-        </tr>
-        <tr>
-            <td align="right"><span id="t3"></span></td>
-            <td width="10"><input id="i3" maxlenght="63" class="chb" type="password"/></td>
-        </tr>
-        <tr>
-            <td align="right"></td>
-            <td width="10"><input id="te" class="chb" type="button" onClick="parent.nextMenu('nsw_wap.html');"/></td>
-        </tr>
-    </table>
+    <div id="blueback">
+        <table class="nsp1" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="right"><span id="info2"></span></td>
+                <td width="10"><span id="info1"></span></td>
+            </tr>
+            <tr>
+                <td align="right"><span id="t1"></span></td>
+                <td width="10">
+                    <div class="sub_select"><select id="i1"></select></div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><span id="t2"></span></td>
+                <td width="10">
+                    <div class="sub_select"><select id="i2" onChange="dsel(this.value)"></select></div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><span id="t3"></span></td>
+                <td width="10"><input id="i3" maxlenght="63" class="chb" type="password" /></td>
+            </tr>
+            <tr>
+                <td align="right"></td>
+                <td width="10"><input id="te" class="chb" type="button" onClick="parent.nextMenu('nsw_wap.html');" />
+                </td>
+            </tr>
+        </table>
 
-</div>
-<div id="footer">
-    <input id="i5" type="button" value="" class="chb"
-           onClick="parent.wset='{';parent.wifi_ssid.length=0;parent.nextMenu('g_nets.html');"/>
-    <input id="i4" type="button" value="" class="chb" onClick="submit();"/>
-</div>
+    </div>
+    <div id="footer">
+        <input id="i5" type="button" value="" class="chb"
+            onClick="parent.wset='{';parent.wifi_ssid.length=0;parent.nextMenu('g_nets.html');" />
+        <input id="i4" type="button" value="" class="chb" onClick="submit();" />
+    </div>
 </body>
-</html>
 
+</html>

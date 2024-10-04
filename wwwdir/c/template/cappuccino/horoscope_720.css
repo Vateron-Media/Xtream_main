@@ -1,9 +1,9 @@
-.horoscope_menu{
+.horoscope_menu {
     margin: 470px 0 0 211px;
     list-style: none;
 }
 
-.horoscope_menu li{
+.horoscope_menu li {
     display: block;
     float: left;
     margin: 0 182px 0 0;
@@ -11,7 +11,7 @@
     height: 121px;
 }
 
-.horoscope_common_info{
+.horoscope_common_info {
     position: absolute;
     top: 110px;
     left: 70px;
@@ -25,7 +25,7 @@
     font-size: 24px;
 }
 
-.horoscope_info{
+.horoscope_info {
     position: absolute;
     bottom: 294px;
     left: 70px;
@@ -39,11 +39,11 @@
     font-size: 24px;
 }
 
-.horoscope_info span{
+.horoscope_info span {
     color: #99a8b5;
 }
 
-.horoscope_left_arrow{
+.horoscope_left_arrow {
     position: absolute;
     bottom: 124px;
     left: 0;
@@ -52,7 +52,7 @@
     background-image: url("i_720/mm_hor_left.png");
 }
 
-.horoscope_right_arrow{
+.horoscope_right_arrow {
     position: absolute;
     bottom: 124px;
     right: 10px;

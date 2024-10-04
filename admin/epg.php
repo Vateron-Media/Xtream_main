@@ -78,7 +78,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./epgs.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_epgs"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_epgs"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
@@ -119,16 +120,19 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#category-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#category-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <?php if (isset($rEPGArr)) { ?>
                                                     <li class="nav-item">
-                                                        <a href="#view-channels" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#view-channels" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-play mr-1"></i>
-                                                            <span class="d-none d-sm-inline"><?= $_["view_channels"] ?></span>
+                                                            <span
+                                                                class="d-none d-sm-inline"><?= $_["view_channels"] ?></span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
@@ -138,40 +142,47 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="epg_name"><?= $_["epg_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="epg_name"><?= $_["epg_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="epg_name" name="epg_name" value="<?php if (isset($rEPGArr)) {
-                                                                                                                                                        echo htmlspecialchars($rEPGArr["epg_name"]);
-                                                                                                                                                    } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="epg_name" name="epg_name" value="<?php if (isset($rEPGArr)) {
+                                                                                                                    echo htmlspecialchars($rEPGArr["epg_name"]);
+                                                                                                                } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="epg_file"><?= $_["source"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="epg_file"><?= $_["source"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="epg_file" name="epg_file" value="<?php if (isset($rEPGArr)) {
-                                                                                                                                                        echo htmlspecialchars($rEPGArr["epg_file"]);
-                                                                                                                                                    } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="epg_file" name="epg_file" value="<?php if (isset($rEPGArr)) {
+                                                                                                                    echo htmlspecialchars($rEPGArr["epg_file"]);
+                                                                                                                } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="days_keep"><?= $_["days_to_keep"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="days_keep"><?= $_["days_to_keep"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="days_keep" name="days_keep" value="<?php if (isset($rEPGArr)) {
-                                                                                                                                                        echo htmlspecialchars($rEPGArr["days_keep"]);
-                                                                                                                                                    } else {
-                                                                                                                                                        echo "7";
-                                                                                                                                                    } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="days_keep" name="days_keep" value="<?php if (isset($rEPGArr)) {
+                                                                                                                    echo htmlspecialchars($rEPGArr["days_keep"]);
+                                                                                                                } else {
+                                                                                                                    echo "7";
+                                                                                                                } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_epg" type="submit" class="btn btn-primary" value="<?php if (isset($rEPGArr)) {
-                                                                                                                                        echo $_["edit"];
-                                                                                                                                    } else {
-                                                                                                                                        echo $_["add"];
-                                                                                                                                    } ?>" />
+                                                            <input name="submit_epg" type="submit"
+                                                                class="btn btn-primary" value="<?php if (isset($rEPGArr)) {
+                                                                                                    echo $_["edit"];
+                                                                                                } else {
+                                                                                                    echo $_["add"];
+                                                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

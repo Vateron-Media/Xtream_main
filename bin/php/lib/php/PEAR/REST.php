@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_REST
  *
@@ -32,14 +33,12 @@ require_once 'PEAR/Proxy.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
-class PEAR_REST
-{
+class PEAR_REST {
     var $config;
     var $_options;
 
-    function __construct(&$config, $options = array())
-    {
-        $this->config   = &$config;
+    function __construct(&$config, $options = array()) {
+        $this->config = &$config;
         $this->_options = $options;
     }
 
@@ -54,8 +53,7 @@ class PEAR_REST
      *                    parsed using PEAR_XMLParser
      * @return string|array
      */
-    function retrieveCacheFirst($url, $accept = false, $forcestring = false, $channel = false)
-    {
+    function retrieveCacheFirst($url, $accept = false, $forcestring = false, $channel = false) {
         $cachefile = $this->config->get('cache_dir') . DIRECTORY_SEPARATOR .
             md5($url) . 'rest.cachefile';
 
@@ -74,8 +72,7 @@ class PEAR_REST
      *                    parsed using PEAR_XMLParser
      * @return string|array
      */
-    function retrieveData($url, $accept = false, $forcestring = false, $channel = false)
-    {
+    function retrieveData($url, $accept = false, $forcestring = false, $channel = false) {
         $cacheId = $this->getCacheId($url);
         if ($ret = $this->useLocalCache($url, $cacheId)) {
             return $ret;
@@ -110,13 +107,13 @@ class PEAR_REST
         }
 
         if (is_array($file)) {
-            $headers      = $file[2];
+            $headers = $file[2];
             $lastmodified = $file[1];
-            $content      = $file[0];
+            $content = $file[0];
         } else {
-            $headers      = array();
+            $headers = array();
             $lastmodified = false;
-            $content      = $file;
+            $content = $file;
         }
 
         if ($forcestring) {
@@ -132,9 +129,9 @@ class PEAR_REST
             $content_type = explode(";", $headers['content-type']);
             $content_type = $content_type[0];
             switch ($content_type) {
-                case 'text/xml' :
-                case 'application/xml' :
-                case 'text/plain' :
+                case 'text/xml':
+                case 'application/xml':
+                case 'text/plain':
                     if ($content_type === 'text/plain') {
                         $check = substr($content, 0, 5);
                         if ($check !== '<?xml') {
@@ -151,8 +148,8 @@ class PEAR_REST
                             $err->getMessage());
                     }
                     $content = $parser->getData();
-                case 'text/html' :
-                default :
+                case 'text/html':
+                default:
                     // use it as a string
             }
         } else {
@@ -170,8 +167,7 @@ class PEAR_REST
         return $content;
     }
 
-    function useLocalCache($url, $cacheid = null)
-    {
+    function useLocalCache($url, $cacheid = null) {
         if (!is_array($cacheid)) {
             $cacheid = $this->getCacheId($url);
         }
@@ -190,8 +186,7 @@ class PEAR_REST
      *
      * @return bool|mixed
      */
-    function getCacheId($url)
-    {
+    function getCacheId($url) {
         $cacheidfile = $this->config->get('cache_dir') . DIRECTORY_SEPARATOR .
             md5($url) . 'rest.cacheid';
 
@@ -203,8 +198,7 @@ class PEAR_REST
         return $ret;
     }
 
-    function getCache($url)
-    {
+    function getCache($url) {
         $cachefile = $this->config->get('cache_dir') . DIRECTORY_SEPARATOR .
             md5($url) . 'rest.cachefile';
 
@@ -222,16 +216,15 @@ class PEAR_REST
      * @param bool   if true, then the cache id file should be regenerated to
      *               trigger a new time-to-live value
      */
-    function saveCache($url, $contents, $lastmodified, $nochange = false, $cacheid = null)
-    {
-        $cache_dir   = $this->config->get('cache_dir');
-        $d           = $cache_dir . DIRECTORY_SEPARATOR . md5($url);
+    function saveCache($url, $contents, $lastmodified, $nochange = false, $cacheid = null) {
+        $cache_dir = $this->config->get('cache_dir');
+        $d = $cache_dir . DIRECTORY_SEPARATOR . md5($url);
         $cacheidfile = $d . 'rest.cacheid';
-        $cachefile   = $d . 'rest.cachefile';
+        $cachefile = $d . 'rest.cachefile';
 
         if (!is_dir($cache_dir)) {
             if (System::mkdir(array('-p', $cache_dir)) === false) {
-              return PEAR::raiseError("The value of config option cache_dir ($cache_dir) is not a directory and attempts to create the directory failed.");
+                return PEAR::raiseError("The value of config option cache_dir ($cache_dir) is not a directory and attempts to create the directory failed.");
             }
         }
 
@@ -247,7 +240,7 @@ class PEAR_REST
         }
 
         $idData = serialize(array(
-            'age'        => time(),
+            'age' => time(),
             'lastChange' => ($nochange ? $cacheid['lastChange'] : $lastmodified),
         ));
 
@@ -261,7 +254,7 @@ class PEAR_REST
         $result = $this->saveCacheFile($cachefile, serialize($contents));
         if (PEAR::isError($result)) {
             if (file_exists($cacheidfile)) {
-              @unlink($cacheidfile);
+                @unlink($cacheidfile);
             }
 
             return $result;
@@ -270,8 +263,7 @@ class PEAR_REST
         return true;
     }
 
-    function saveCacheFile($file, $contents)
-    {
+    function saveCacheFile($file, $contents) {
         $len = strlen($contents);
 
         $cachefile_fp = @fopen($file, 'xb'); // x is the O_CREAT|O_EXCL mode
@@ -287,14 +279,14 @@ class PEAR_REST
             }
 
             if (OS_WINDOWS) {
-                $not_symlink     = !is_link($file); // see bug #18834
+                $not_symlink = !is_link($file); // see bug #18834
             } else {
                 $cachefile_lstat = lstat($file);
                 $cachefile_fstat = fstat($cachefile_fp);
-                $not_symlink     = $cachefile_lstat['mode'] == $cachefile_fstat['mode']
-                                   && $cachefile_lstat['ino']  == $cachefile_fstat['ino']
-                                   && $cachefile_lstat['dev']  == $cachefile_fstat['dev']
-                                   && $cachefile_fstat['nlink'] === 1;
+                $not_symlink = $cachefile_lstat['mode'] == $cachefile_fstat['mode']
+                    && $cachefile_lstat['ino'] == $cachefile_fstat['ino']
+                    && $cachefile_lstat['dev'] == $cachefile_fstat['dev']
+                    && $cachefile_fstat['nlink'] === 1;
             }
 
             if ($not_symlink) {
@@ -335,8 +327,7 @@ class PEAR_REST
      *
      * @access public
      */
-    function downloadHttp($url, $lastmodified = null, $accept = false, $channel = false)
-    {
+    function downloadHttp($url, $lastmodified = null, $accept = false, $channel = false) {
         static $redirect = 0;
         // always reset , so we are clean case of error
         $wasredirect = $redirect;
@@ -351,15 +342,15 @@ class PEAR_REST
             return PEAR::raiseError('Cannot download from non-URL "' . $url . '"');
         }
 
-        $host   = isset($info['host']) ? $info['host'] : null;
-        $port   = isset($info['port']) ? $info['port'] : null;
-        $path   = isset($info['path']) ? $info['path'] : null;
+        $host = isset($info['host']) ? $info['host'] : null;
+        $port = isset($info['port']) ? $info['port'] : null;
+        $path = isset($info['path']) ? $info['path'] : null;
         $schema = (isset($info['scheme']) && $info['scheme'] == 'https') ? 'https' : 'http';
 
         $proxy = new PEAR_Proxy($this->config);
 
         if (empty($port)) {
-            $port = (isset($info['scheme']) && $info['scheme'] == 'https')  ? 443 : 80;
+            $port = (isset($info['scheme']) && $info['scheme'] == 'https') ? 443 : 80;
         }
 
         if ($proxy->isProxyConfigured() && $schema === 'http') {
@@ -416,12 +407,12 @@ class PEAR_REST
         fwrite($fp, $request);
 
         $headers = array();
-        $reply   = 0;
+        $reply = 0;
         while ($line = trim(fgets($fp, 1024))) {
             if (preg_match('/^([^:]+):\s+(.*)\s*\\z/', $line, $matches)) {
                 $headers[strtolower($matches[1])] = trim($matches[2]);
             } elseif (preg_match('|^HTTP/1.[01] ([0-9]{3}) |', $line, $matches)) {
-                $reply = (int)$matches[1];
+                $reply = (int) $matches[1];
                 if ($reply == 304 && ($lastmodified || ($lastmodified === false))) {
                     return false;
                 }

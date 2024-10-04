@@ -1,4 +1,4 @@
-.singer_block{
+.singer_block {
     color: #0a5104;
     font-size: 20px;
     margin: 3px 0 0 3px;
@@ -10,7 +10,7 @@
     float: left;
 }
 
-.active_singer_block{
+.active_singer_block {
     font-size: 22px;
     color: #fff;
     margin-top: 8px;

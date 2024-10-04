@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Auth (build command)
  *
@@ -34,8 +35,7 @@ require_once 'PEAR/Command/Common.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
-class PEAR_Command_Build extends PEAR_Command_Common
-{
+class PEAR_Command_Build extends PEAR_Command_Common {
     var $commands = array(
         'build' => array(
             'summary' => 'Build an Extension From C Source',
@@ -46,25 +46,23 @@ class PEAR_Command_Build extends PEAR_Command_Common
                     'shortopt' => 'D',
                     'arg' => 'OPTION1=VALUE[ OPTION2=VALUE]',
                     'doc' => 'space-delimited list of configure options',
-                    ),
                 ),
+            ),
             'doc' => '[package.xml]
 Builds one or more extensions contained in a package.'
-            ),
-        );
+        ),
+    );
 
     /**
      * PEAR_Command_Build constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 
-    function doBuild($command, $options, $params)
-    {
+    function doBuild($command, $options, $params) {
         require_once 'PEAR/Builder.php';
         if (sizeof($params) < 1) {
             $params[0] = 'package.xml';
@@ -81,10 +79,11 @@ Builds one or more extensions contained in a package.'
         return true;
     }
 
-    function buildCallback($what, $data)
-    {
-        if (($what == 'cmdoutput' && $this->debug > 1) ||
-            ($what == 'output' && $this->debug > 0)) {
+    function buildCallback($what, $data) {
+        if (
+            ($what == 'cmdoutput' && $this->debug > 1) ||
+            ($what == 'output' && $this->debug > 0)
+        ) {
             $this->ui->outputData(rtrim($data), 'build');
         }
     }

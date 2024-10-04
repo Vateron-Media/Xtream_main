@@ -1,10 +1,11 @@
 <html>
+
 <head>
     <script>
         var iid = 1;
         var menuT = [['select', parent.t('Stereo Out Mode:'), "STEREO", parent.t("Stereo"), "MONO", parent.t("Mono"), "MONO_LEFT", parent.t("Mono Left"), "MONO_RIGHT", parent.t("Mono Right"), "LT_RT", parent.t("Lt/Rt")],
-            ['select', parent.t('SPDIF Mode:'), "1", parent.t("PCM"), "2", parent.t("Bitstream")],
-            ['select', parent.t('HDMI Audio:'), "PCM", parent.t("PCM"), "SPDIF", parent.t("SPDIF")]];
+        ['select', parent.t('SPDIF Mode:'), "1", parent.t("PCM"), "2", parent.t("Bitstream")],
+        ['select', parent.t('HDMI Audio:'), "PCM", parent.t("PCM"), "SPDIF", parent.t("SPDIF")]];
         var mid = menuT.length + 2;
         var pread = ["audio_stereo_out_mode", "audio_spdif_mode", "audio_hdmi_audio_mode"];
         var tread = '{"varList":["' + pread[0] + '"';
@@ -46,7 +47,7 @@
                 parent.prof.spdif_mode = t;
                 pr = true;
                 parent.stb.SetupSPdif(t);
-                parent.load({"type": "stb", "action": "set_spdif_mode", "spdif_mode": t}, function (result) {
+                parent.load({ "type": "stb", "action": "set_spdif_mode", "spdif_mode": t }, function (result) {
                     if (!result) {
                         erm += parent.t('Saving error');
                     }
@@ -115,33 +116,35 @@
     </script>
     <script language="JavaScript" src="js/pres.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<body onload="onLoad()" onkeydown="pressKey(event);">
-<div id="blueback">
-    <table class="nsp" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td align="right"><span id="t1"></span>
-            <td>
-                <div class="sub_select"><select id="i1" onChange="SSM(this.value)"></select></div>
-            </td>
-        </tr>
-        <tr>
-            <td align="right"><span id="t2"></span>
-            <td>
-                <div class="sub_select"><select id="i2"></select></div>
-            </td>
-        </tr>
-        <tr>
-            <td align="right"><span id="t3"></span>
-            <td>
-                <div class="sub_select"><select id="i3"></select></div>
-            </td>
-        </tr>
-    </table>
 
-</div>
-<div id="footer">
-    <input id="i5" type="button" value="" onClick="backUp();"/>
-    <input id="i4" type="button" value="" onClick="submit();"/>
-</div>
+<body onload="onLoad()" onkeydown="pressKey(event);">
+    <div id="blueback">
+        <table class="nsp" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="right"><span id="t1"></span>
+                <td>
+                    <div class="sub_select"><select id="i1" onChange="SSM(this.value)"></select></div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><span id="t2"></span>
+                <td>
+                    <div class="sub_select"><select id="i2"></select></div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><span id="t3"></span>
+                <td>
+                    <div class="sub_select"><select id="i3"></select></div>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div id="footer">
+        <input id="i5" type="button" value="" onClick="backUp();" />
+        <input id="i4" type="button" value="" onClick="submit();" />
+    </div>
 </body>
+
 </html>

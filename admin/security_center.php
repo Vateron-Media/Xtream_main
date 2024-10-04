@@ -29,13 +29,16 @@ if ($rSettings["sidebar"]) { ?>
                                             <?php }
                                             if (!$detect->isMobile()) { ?>
                                                 <a href="javascript:location.reload();">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-refresh"></i> Refresh
                                                     </button>
                                                 </a>
                                             <?php } else { ?>
-                                                <a href="javascript:location.reload();" onClick="toggleAuto();" style="margin-right:10px;">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
+                                                <a href="javascript:location.reload();" onClick="toggleAuto();"
+                                                    style="margin-right:10px;">
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-refresh"></i> Refresh
                                                     </button>
                                                 </a>
@@ -55,7 +58,8 @@ if ($rSettings["sidebar"]) { ?>
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body" style="overflow-x:auto;">
-                                    <table id="datatable" class="table table-bordered table-hover table-sm table-striped font-normal">
+                                    <table id="datatable"
+                                        class="table table-bordered table-hover table-sm table-striped font-normal">
                                         <thead>
                                             <tr>
                                                 <th class="text-center">User ID</th>
@@ -74,7 +78,8 @@ if ($rSettings["sidebar"]) { ?>
                                             <?php foreach (getSecurityCenter() as $rIP) {
                                             ?>
                                                 <tr id="ip-<?= $rIP["id"] ?>">
-                                                    <td class="text-center"><a href="./user.php?id=<?= $rIP["id"] ?>"><?= $rIP["id"] ?></td>
+                                                    <td class="text-center"><a
+                                                            href="./user.php?id=<?= $rIP["id"] ?>"><?= $rIP["id"] ?></td>
                                                     <!--<td class="text-center"><?= $rIP["FROM_BASE64(mac)"] ?></td>-->
                                                     <td class="text-center"><?php
                                                                             $MAG_or_M3U = $rIP["FROM_BASE64(mac)"];
@@ -95,7 +100,10 @@ if ($rSettings["sidebar"]) { ?>
                                                     <td class="text-center"><?= $rIP["max_connections"] ?></td>
                                                     <td class="text-center"><?= $rIP["active_connections"] ?></td>
                                                     <td class="text-center"><?= $rIP["total_active_connections"] ?></td>
-                                                    <td class="text-center"><a href="./user.php?id=<?= $rIP["id"] ?>"><button type="button" class="btn btn-outline-danger waves-effect waves-light btn-xs"><i class="far fa-eye"></i></button></a></td>
+                                                    <td class="text-center"><a
+                                                            href="./user.php?id=<?= $rIP["id"] ?>"><button type="button"
+                                                                class="btn btn-outline-danger waves-effect waves-light btn-xs"><i
+                                                                    class="far fa-eye"></i></button></a></td>
                                                     <!--<td class="text-center"><?php
                                                                                 if ($rIP["is_restreamer"] > 0) {
                                                                                     echo '<i class="text-success fas fa-check fa-lg"></i>';
@@ -122,7 +130,8 @@ if ($rSettings["sidebar"]) { ?>
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body" style="overflow-x:auto;">
-                                    <table id="datatable2" class="table table-bordered table-hover table-sm table-striped font-normal">
+                                    <table id="datatable2"
+                                        class="table table-bordered table-hover table-sm table-striped font-normal">
                                         <thead>
                                             <tr>
                                                 <th class="text-center">User ID</th>
@@ -141,7 +150,9 @@ if ($rSettings["sidebar"]) { ?>
                                             <?php foreach (getLeakedLines() as $rIP) {
                                             ?>
                                                 <tr id="ip-<?= $rIP["id"] ?>">
-                                                    <td class="text-center"><a href="./user.php?id=<?= $rIP["user_id"] ?>"><?= $rIP["user_id"] ?></td>
+                                                    <td class="text-center"><a
+                                                            href="./user.php?id=<?= $rIP["user_id"] ?>"><?= $rIP["user_id"] ?>
+                                                    </td>
                                                     <!--<td class="text-center"><?= $rIP["FROM_BASE64(mac)"] ?></td>-->
                                                     <td class="text-center"><?php
                                                                             $MAG_or_M3U = $rIP["FROM_BASE64(mac)"];
@@ -158,10 +169,18 @@ if ($rSettings["sidebar"]) { ?>
                                                                             ?></td>
                                                     <!--<td class="text-center"><?= $rIP["username"] ?></td>-->
                                                     <!--<td class="text-center"><?= $rIP["password"] ?></td>-->
-                                                    <td class="text-center"><?= $rIP["GROUP_CONCAT(DISTINCT container)"] ?></td>
-                                                    <td class="text-center"><?= $rIP["GROUP_CONCAT(DISTINCT geoip_country_code)"] ?></td>
-                                                    <td class="text-center"><?= $rIP["GROUP_CONCAT(DISTINCT user_ip)"] ?></td>
-                                                    <td class="text-center"><a href="./user.php?id=<?= $rIP["user_id"] ?>"><button type="button" class="btn btn-outline-danger waves-effect waves-light btn-xs"><i class="far fa-eye"></i></button></a></td>
+                                                    <td class="text-center"><?= $rIP["GROUP_CONCAT(DISTINCT container)"] ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?= $rIP["GROUP_CONCAT(DISTINCT geoip_country_code)"] ?>
+                                                    </td>
+                                                    <td class="text-center"><?= $rIP["GROUP_CONCAT(DISTINCT user_ip)"] ?>
+                                                    </td>
+                                                    <td class="text-center"><a
+                                                            href="./user.php?id=<?= $rIP["user_id"] ?>"><button
+                                                                type="button"
+                                                                class="btn btn-outline-danger waves-effect waves-light btn-xs"><i
+                                                                    class="far fa-eye"></i></button></a></td>
                                                     <!--<td class="text-center"><?php
                                                                                 if ($rIP["is_restreamer"] > 0) {
                                                                                     echo '<i class="text-success fas fa-check fa-lg"></i>';

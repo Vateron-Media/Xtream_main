@@ -3,30 +3,35 @@
     transform: rotate(360deg);
   }
 }
+
 @-o-keyframes dtb-spinner {
   100% {
     -o-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
+
 @-ms-keyframes dtb-spinner {
   100% {
     -ms-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
+
 @-webkit-keyframes dtb-spinner {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
+
 @-moz-keyframes dtb-spinner {
   100% {
     -moz-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
+
 div.dt-button-info {
   position: fixed;
   top: 50%;
@@ -41,6 +46,7 @@ div.dt-button-info {
   text-align: center;
   z-index: 21;
 }
+
 div.dt-button-info h2 {
   padding: 0.5em;
   margin: 0;
@@ -48,7 +54,8 @@ div.dt-button-info h2 {
   border-bottom: 1px solid #ddd;
   background-color: #f3f3f3;
 }
-div.dt-button-info > div {
+
+div.dt-button-info>div {
   padding: 1em;
 }
 
@@ -67,6 +74,7 @@ ul.dt-button-collection.dropdown-menu {
   -o-column-gap: 8px;
   column-gap: 8px;
 }
+
 ul.dt-button-collection.dropdown-menu.fixed {
   position: fixed;
   top: 50%;
@@ -74,19 +82,24 @@ ul.dt-button-collection.dropdown-menu.fixed {
   margin-left: -75px;
   border-radius: 0;
 }
+
 ul.dt-button-collection.dropdown-menu.fixed.two-column {
   margin-left: -150px;
 }
+
 ul.dt-button-collection.dropdown-menu.fixed.three-column {
   margin-left: -225px;
 }
+
 ul.dt-button-collection.dropdown-menu.fixed.four-column {
   margin-left: -300px;
 }
-ul.dt-button-collection.dropdown-menu > * {
+
+ul.dt-button-collection.dropdown-menu>* {
   -webkit-column-break-inside: avoid;
   break-inside: avoid;
 }
+
 ul.dt-button-collection.dropdown-menu.two-column {
   width: 300px;
   padding-bottom: 1px;
@@ -96,6 +109,7 @@ ul.dt-button-collection.dropdown-menu.two-column {
   -o-column-count: 2;
   column-count: 2;
 }
+
 ul.dt-button-collection.dropdown-menu.three-column {
   width: 450px;
   padding-bottom: 1px;
@@ -105,6 +119,7 @@ ul.dt-button-collection.dropdown-menu.three-column {
   -o-column-count: 3;
   column-count: 3;
 }
+
 ul.dt-button-collection.dropdown-menu.four-column {
   width: 600px;
   padding-bottom: 1px;
@@ -114,6 +129,7 @@ ul.dt-button-collection.dropdown-menu.four-column {
   -o-column-count: 4;
   column-count: 4;
 }
+
 ul.dt-button-collection.dropdown-menu .dt-button {
   border-radius: 0;
 }
@@ -125,6 +141,7 @@ ul.dt-button-collection {
   -o-column-gap: 8px;
   column-gap: 8px;
 }
+
 ul.dt-button-collection.fixed {
   position: fixed;
   top: 50%;
@@ -132,19 +149,24 @@ ul.dt-button-collection.fixed {
   margin-left: -75px;
   border-radius: 0;
 }
+
 ul.dt-button-collection.fixed.two-column {
   margin-left: -150px;
 }
+
 ul.dt-button-collection.fixed.three-column {
   margin-left: -225px;
 }
+
 ul.dt-button-collection.fixed.four-column {
   margin-left: -300px;
 }
-ul.dt-button-collection > * {
+
+ul.dt-button-collection>* {
   -webkit-column-break-inside: avoid;
   break-inside: avoid;
 }
+
 ul.dt-button-collection.two-column {
   width: 300px;
   padding-bottom: 1px;
@@ -154,6 +176,7 @@ ul.dt-button-collection.two-column {
   -o-column-count: 2;
   column-count: 2;
 }
+
 ul.dt-button-collection.three-column {
   width: 450px;
   padding-bottom: 1px;
@@ -163,6 +186,7 @@ ul.dt-button-collection.three-column {
   -o-column-count: 3;
   column-count: 3;
 }
+
 ul.dt-button-collection.four-column {
   width: 600px;
   padding-bottom: 1px;
@@ -172,13 +196,17 @@ ul.dt-button-collection.four-column {
   -o-column-count: 4;
   column-count: 4;
 }
+
 ul.dt-button-collection .dt-button {
   border-radius: 0;
 }
+
 ul.dt-button-collection.fixed {
   max-width: none;
 }
-ul.dt-button-collection.fixed:before, ul.dt-button-collection.fixed:after {
+
+ul.dt-button-collection.fixed:before,
+ul.dt-button-collection.fixed:after {
   display: none;
 }
 
@@ -198,15 +226,18 @@ div.dt-button-background {
     text-align: center;
     margin-bottom: 0.5em;
   }
+
   div.dt-buttons a.btn {
     float: none;
   }
 }
+
 div.dt-buttons button.btn.processing,
 div.dt-buttons div.btn.processing,
 div.dt-buttons a.btn.processing {
   color: rgba(0, 0, 0, 0.2);
 }
+
 div.dt-buttons button.btn.processing:after,
 div.dt-buttons div.btn.processing:after,
 div.dt-buttons a.btn.processing:after {

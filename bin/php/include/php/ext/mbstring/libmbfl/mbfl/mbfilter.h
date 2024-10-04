@@ -128,7 +128,7 @@
  * convenience macros
  */
 #ifndef MIN
-#define MIN(a,b) ((a)<(b)?(a):(b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
 /*
@@ -136,15 +136,16 @@
  */
 typedef struct _mbfl_buffer_converter mbfl_buffer_converter;
 
-struct _mbfl_buffer_converter {
-	mbfl_convert_filter *filter1;
-	mbfl_convert_filter *filter2;
-	mbfl_memory_device device;
-	const mbfl_encoding *from;
-	const mbfl_encoding *to;
+struct _mbfl_buffer_converter
+{
+    mbfl_convert_filter *filter1;
+    mbfl_convert_filter *filter2;
+    mbfl_memory_device device;
+    const mbfl_encoding *from;
+    const mbfl_encoding *to;
 };
 
-MBFLAPI extern mbfl_buffer_converter * mbfl_buffer_converter_new(const mbfl_encoding *from, const mbfl_encoding *to, size_t buf_initsz);
+MBFLAPI extern mbfl_buffer_converter *mbfl_buffer_converter_new(const mbfl_encoding *from, const mbfl_encoding *to, size_t buf_initsz);
 MBFLAPI extern void mbfl_buffer_converter_delete(mbfl_buffer_converter *convd);
 MBFLAPI extern void mbfl_buffer_converter_reset(mbfl_buffer_converter *convd);
 MBFLAPI extern int mbfl_buffer_converter_illegal_mode(mbfl_buffer_converter *convd, int mode);
@@ -153,9 +154,9 @@ MBFLAPI extern int mbfl_buffer_converter_strncat(mbfl_buffer_converter *convd, c
 MBFLAPI extern int mbfl_buffer_converter_feed(mbfl_buffer_converter *convd, mbfl_string *string);
 MBFLAPI extern int mbfl_buffer_converter_feed2(mbfl_buffer_converter *convd, mbfl_string *string, size_t *loc);
 MBFLAPI extern int mbfl_buffer_converter_flush(mbfl_buffer_converter *convd);
-MBFLAPI extern mbfl_string * mbfl_buffer_converter_getbuffer(mbfl_buffer_converter *convd, mbfl_string *result);
-MBFLAPI extern mbfl_string * mbfl_buffer_converter_result(mbfl_buffer_converter *convd, mbfl_string *result);
-MBFLAPI extern mbfl_string * mbfl_buffer_converter_feed_result(mbfl_buffer_converter *convd, mbfl_string *string, mbfl_string *result);
+MBFLAPI extern mbfl_string *mbfl_buffer_converter_getbuffer(mbfl_buffer_converter *convd, mbfl_string *result);
+MBFLAPI extern mbfl_string *mbfl_buffer_converter_result(mbfl_buffer_converter *convd, mbfl_string *result);
+MBFLAPI extern mbfl_string *mbfl_buffer_converter_feed_result(mbfl_buffer_converter *convd, mbfl_string *string, mbfl_string *result);
 MBFLAPI extern size_t mbfl_buffer_illegalchars(mbfl_buffer_converter *convd);
 
 /*
@@ -163,24 +164,23 @@ MBFLAPI extern size_t mbfl_buffer_illegalchars(mbfl_buffer_converter *convd);
  */
 typedef struct _mbfl_encoding_detector mbfl_encoding_detector;
 
-struct _mbfl_encoding_detector {
-	mbfl_identify_filter **filter_list;
-	int filter_list_size;
-	int strict;
+struct _mbfl_encoding_detector
+{
+    mbfl_identify_filter **filter_list;
+    int filter_list_size;
+    int strict;
 };
 
-MBFLAPI extern mbfl_encoding_detector * mbfl_encoding_detector_new(const mbfl_encoding **elist, int elistsz, int strict);
+MBFLAPI extern mbfl_encoding_detector *mbfl_encoding_detector_new(const mbfl_encoding **elist, int elistsz, int strict);
 MBFLAPI extern void mbfl_encoding_detector_delete(mbfl_encoding_detector *identd);
 MBFLAPI extern int mbfl_encoding_detector_feed(mbfl_encoding_detector *identd, mbfl_string *string);
 MBFLAPI extern const mbfl_encoding *mbfl_encoding_detector_judge(mbfl_encoding_detector *identd);
-
 
 /*
  * encoding converter
  */
 MBFLAPI extern mbfl_string *
 mbfl_convert_encoding(mbfl_string *string, mbfl_string *result, const mbfl_encoding *toenc);
-
 
 /*
  * identify encoding
@@ -189,8 +189,9 @@ MBFLAPI extern const mbfl_encoding *
 mbfl_identify_encoding(mbfl_string *string, const mbfl_encoding **elist, int elistsz, int strict);
 
 /* Lengths -1 through -16 are reserved for error return values */
-static inline int mbfl_is_error(size_t len) {
-	return len >= (size_t) -16;
+static inline int mbfl_is_error(size_t len)
+{
+    return len >= (size_t)-16;
 }
 
 /*
@@ -220,7 +221,7 @@ mbfl_substr_count(mbfl_string *haystack, mbfl_string *needle);
 /*
  * If specified as length, the substr until the end of the string is taken.
  */
-#define MBFL_SUBSTR_UNTIL_END ((size_t) -1)
+#define MBFL_SUBSTR_UNTIL_END ((size_t) - 1)
 
 /*
  * substr
@@ -249,7 +250,7 @@ mbfl_strimwidth(mbfl_string *string, mbfl_string *marker, mbfl_string *result, s
 /*
  * MIME header encode
  */
-struct mime_header_encoder_data;	/* forward declaration */
+struct mime_header_encoder_data; /* forward declaration */
 
 MBFLAPI extern struct mime_header_encoder_data *
 mime_header_encoder_new(
@@ -277,7 +278,7 @@ mbfl_mime_header_encode(
 /*
  * MIME header decode
  */
-struct mime_header_decoder_data;	/* forward declaration */
+struct mime_header_decoder_data; /* forward declaration */
 
 MBFLAPI extern struct mime_header_decoder_data *
 mime_header_decoder_new(const mbfl_encoding *outcode);
@@ -309,4 +310,4 @@ mbfl_html_numeric_entity(mbfl_string *string, mbfl_string *result, int *convmap,
 MBFLAPI extern mbfl_string *
 mbfl_ja_jp_hantozen(mbfl_string *string, mbfl_string *result, int mode);
 
-#endif	/* MBFL_MBFILTER_H */
+#endif /* MBFL_MBFILTER_H */

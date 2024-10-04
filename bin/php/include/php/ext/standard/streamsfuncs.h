@@ -17,9 +17,9 @@
 */
 
 /* Flags for stream_socket_client */
-#define PHP_STREAM_CLIENT_PERSISTENT	1
-#define PHP_STREAM_CLIENT_ASYNC_CONNECT	2
-#define PHP_STREAM_CLIENT_CONNECT		4
+#define PHP_STREAM_CLIENT_PERSISTENT 1
+#define PHP_STREAM_CLIENT_ASYNC_CONNECT 2
+#define PHP_STREAM_CLIENT_CONNECT 4
 
 PHP_FUNCTION(stream_socket_client);
 PHP_FUNCTION(stream_socket_server);

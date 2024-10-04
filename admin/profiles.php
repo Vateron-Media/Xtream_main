@@ -28,7 +28,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <ol class="breadcrumb m-0">
                                             <li>
                                                 <a href="profile.php">
-                                                    <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-plus"></i> <?= $_["add_profile"] ?>
                                                     </button>
                                                 </a>
@@ -61,12 +62,19 @@ if ($rSettings["sidebar"]) { ?>
                                                 <tr id="profile-<?= $rProfile["profile_id"] ?>">
                                                     <td class="text-center"><?= $rProfile["profile_id"] ?></td>
                                                     <td><?= $rProfile["profile_name"] ?></td>
-                                                    <td><?= (strlen($rProfile["profile_options"]) > 100 ? substr($rProfile["profile_options"], 0, 100) . "..." : $rProfile["profile_options"]) ?></td>
+                                                    <td><?= (strlen($rProfile["profile_options"]) > 100 ? substr($rProfile["profile_options"], 0, 100) . "..." : $rProfile["profile_options"]) ?>
+                                                    </td>
                                                     <td class="text-center">
                                                         <?php if (hasPermissions("adv", "edit_tprofile")) { ?>
                                                             <div class="btn-group">
-                                                                <a href="./profile.php?id=<?= $rProfile["profile_id"] ?>"><button type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
-                                                                <button type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rProfile["profile_id"] ?>, 'delete');"><i class="mdi mdi-close"></i></button>
+                                                                <a href="./profile.php?id=<?= $rProfile["profile_id"] ?>"><button
+                                                                        type="button"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                            class="mdi mdi-pencil-outline"></i></button></a>
+                                                                <button type="button"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs"
+                                                                    onClick="api(<?= $rProfile["profile_id"] ?>, 'delete');"><i
+                                                                        class="mdi mdi-close"></i></button>
                                                             </div>
                                                         <?php } else {
                                                             echo "--";

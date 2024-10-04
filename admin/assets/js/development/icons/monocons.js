@@ -70,8 +70,8 @@
 				if (command in icons) {
 					nodes[command] = sceditor.dom.parseHTML(
 						'<svg xmlns="http://www.w3.org/2000/svg" ' +
-							'viewbox="0 0 16 16" unselectable="on">' +
-								icons[command] +
+						'viewbox="0 0 16 16" unselectable="on">' +
+						icons[command] +
 						'</svg>'
 					).firstChild;
 

@@ -33,31 +33,37 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="#" onClick="clearFilters();">
-                                                <button type="button" class="btn btn-warning waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-warning waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-filter-remove"></i>
                                                 </button>
                                             </a>
                                             <a href="#" onClick="changeZoom();">
-                                                <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-info waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-magnify"></i>
                                                 </button>
                                             </a>
                                             <?php if (!$detect->isMobile()) { ?>
                                                 <a href="#" onClick="toggleAuto();">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-refresh"></i> <span class="auto-text"><?= $_["auto_refresh"] ?></span>
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
+                                                        <i class="mdi mdi-refresh"></i> <span
+                                                            class="auto-text"><?= $_["auto_refresh"] ?></span>
                                                     </button>
                                                 </a>
                                             <?php } else { ?>
                                                 <a href="javascript:location.reload();" onClick="toggleAuto();">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
                                                     </button>
                                                 </a>
                                             <?php }
                                             if (hasPermissions("adv", "add_episode")) { ?>
                                                 <a href="#" onClick="showModal()">
-                                                    <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-plus"></i> <?= $_["add_episode"] ?>
                                                     </button>
                                                 </a>
@@ -78,7 +84,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <div class="form-group row mb-4">
                                             <?php if ($rPermissions["is_reseller"]) { ?>
                                                 <div class="col-md-3">
-                                                    <input type="text" class="form-control" id="episodes_search" value="" placeholder="<?= $_["search_episodes"] ?>...">
+                                                    <input type="text" class="form-control" id="episodes_search" value=""
+                                                        placeholder="<?= $_["search_episodes"] ?>...">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <select id="episodes_server" class="form-control" data-toggle="select2">
@@ -100,9 +107,11 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
-                                                <label class="col-md-1 col-form-label text-center" for="episodes_show_entries"><?= $_["show"] ?></label>
+                                                <label class="col-md-1 col-form-label text-center"
+                                                    for="episodes_show_entries"><?= $_["show"] ?></label>
                                                 <div class="col-md-2">
-                                                    <select id="episodes_show_entries" class="form-control" data-toggle="select2">
+                                                    <select id="episodes_show_entries" class="form-control"
+                                                        data-toggle="select2">
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
@@ -112,7 +121,8 @@ if ($rSettings["sidebar"]) { ?>
                                                 </div>
                                             <?php } else { ?>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" id="episodes_search" value="" placeholder="<?= $_["search_episodes"] ?>...">
+                                                    <input type="text" class="form-control" id="episodes_search" value=""
+                                                        placeholder="<?= $_["search_episodes"] ?>...">
                                                 </div>
                                                 <div class="col-md-3">
                                                     <select id="episodes_server" class="form-control" data-toggle="select2">
@@ -144,9 +154,11 @@ if ($rSettings["sidebar"]) { ?>
                                                         <option value="5"><?= $_["direct"] ?></option>
                                                     </select>
                                                 </div>
-                                                <label class="col-md-1 col-form-label text-center" for="episodes_show_entries"><?= $_["show"] ?></label>
+                                                <label class="col-md-1 col-form-label text-center"
+                                                    for="episodes_show_entries"><?= $_["show"] ?></label>
                                                 <div class="col-md-1">
-                                                    <select id="episodes_show_entries" class="form-control" data-toggle="select2">
+                                                    <select id="episodes_show_entries" class="form-control"
+                                                        data-toggle="select2">
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
@@ -157,7 +169,8 @@ if ($rSettings["sidebar"]) { ?>
                                             <?php } ?>
                                         </div>
                                     </form>
-                                    <table id="datatable-streampage" class="table table-hover dt-responsive nowrap font-normal">
+                                    <table id="datatable-streampage"
+                                        class="table table-hover dt-responsive nowrap font-normal">
                                         <thead>
                                             <tr>
                                                 <th class="text-center"><?= $_["id"] ?></th>
@@ -181,7 +194,8 @@ if ($rSettings["sidebar"]) { ?>
                     <!-- end row-->
                     </div> <!-- end container -->
                 </div>
-                <div class="modal fade addModal" role="dialog" aria-labelledby="addLabel" aria-hidden="true" style="display: none;" data-username="" data-password="">
+                <div class="modal fade addModal" role="dialog" aria-labelledby="addLabel" aria-hidden="true"
+                    style="display: none;" data-username="" data-password="">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -199,8 +213,14 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="col-12 add-margin-top-20">
                                     <div class="input-group">
                                         <div class="input-group-append" style="width:100%">
-                                            <button style="width:50%" class="btn btn-success waves-effect waves-light" type="button" onClick="addEpisode();"><i class="mdi mdi-plus-circle-outline"></i> <?= $_["add_episode"] ?></button>
-                                            <button style="width:50%" class="btn btn-info waves-effect waves-light" type="button" onClick="addEpisodes();"><i class="mdi mdi-plus-circle-multiple-outline"></i> <?= $_["multiple_episodes"] ?></button>
+                                            <button style="width:50%" class="btn btn-success waves-effect waves-light"
+                                                type="button" onClick="addEpisode();"><i
+                                                    class="mdi mdi-plus-circle-outline"></i>
+                                                <?= $_["add_episode"] ?></button>
+                                            <button style="width:50%" class="btn btn-info waves-effect waves-light"
+                                                type="button" onClick="addEpisodes();"><i
+                                                    class="mdi mdi-plus-circle-multiple-outline"></i>
+                                                <?= $_["multiple_episodes"] ?></button>
                                         </div>
                                     </div>
                                 </div>

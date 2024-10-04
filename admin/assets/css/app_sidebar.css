@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700|Work+Sans:400,500,600");
+
 html {
     position: relative;
     min-height: 100%;
@@ -339,25 +340,31 @@ body {
     .username {
         display: none;
     }
+
     body {
         overflow-x: hidden;
         padding-bottom: 80px;
     }
+
     .left-side-menu {
         display: none;
         z-index: 10 !important;
     }
+
     .sidebar-enable .left-side-menu {
         display: block;
     }
+
     .content-page,
     .enlarged .content-page {
         margin-left: 0 !important;
         padding: 0 10px;
     }
+
     .pro-user-name {
         display: none;
     }
+
     .logo-box {
         display: none;
     }
@@ -769,7 +776,7 @@ body {
     font-size: 1.25rem;
     margin: 0;
     line-height: 75px;
-    color: #ffffff;	
+    color: #ffffff;
 }
 
 .page-title-box .page-title-right {
@@ -800,7 +807,7 @@ body {
     left: 240px;
     background-size: cover;
     background-position: center;
-    background:#3d454e;
+    background: #3d454e;
 }
 
 .footer .footer-links a {
@@ -926,6 +933,7 @@ body {
     .right-bar {
         overflow: auto;
     }
+
     .right-bar .slimscroll-menu {
         height: auto !important;
     }
@@ -1936,6 +1944,7 @@ body.boxed-layout.enlarged .footer {
 }
 
 @media print {
+
     .left-side-menu,
     .right-bar,
     .page-title-box,
@@ -1943,6 +1952,7 @@ body.boxed-layout.enlarged .footer {
     .footer {
         display: none;
     }
+
     .card-body,
     .content-page,
     .right-bar,
@@ -1999,6 +2009,7 @@ body.boxed-layout.enlarged .footer {
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
@@ -2010,6 +2021,7 @@ body.boxed-layout.enlarged .footer {
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
@@ -2303,6 +2315,7 @@ body.boxed-layout.enlarged .footer {
 }
 
 @media (max-width: 767.98px) {
+
     .fc-toolbar .fc-left,
     .fc-toolbar .fc-right,
     .fc-toolbar .fc-center {
@@ -2311,9 +2324,11 @@ body.boxed-layout.enlarged .footer {
         clear: both;
         margin: 10px 0;
     }
+
     .fc .fc-toolbar>*>* {
         float: none;
     }
+
     .fc-today-button {
         display: none;
     }
@@ -2896,19 +2911,23 @@ div.dt-button-info h2 {
 }
 
 @media (max-width: 767.98px) {
+
     li.paginate_button.previous,
     li.paginate_button.next {
         display: inline-block;
         font-size: 1.5rem;
     }
+
     li.paginate_button {
         display: none;
     }
+
     .dataTables_paginate ul {
         text-align: center;
         display: block;
         margin: 1.5rem 0 0 !important;
     }
+
     div.dt-buttons {
         display: inline-table;
         margin-bottom: 1.5rem;
@@ -4068,6 +4087,7 @@ body.authentication-bg-pattern {
     0% {
         stroke-dashoffset: 1000;
     }
+
     100% {
         stroke-dashoffset: 0;
     }
@@ -4077,6 +4097,7 @@ body.authentication-bg-pattern {
     0% {
         stroke-dashoffset: 1000;
     }
+
     100% {
         stroke-dashoffset: 0;
     }
@@ -4086,6 +4107,7 @@ body.authentication-bg-pattern {
     0% {
         -webkit-transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(360deg);
     }
@@ -4095,6 +4117,7 @@ body.authentication-bg-pattern {
     0% {
         -webkit-transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(360deg);
     }
@@ -4104,6 +4127,7 @@ body.authentication-bg-pattern {
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
@@ -4113,6 +4137,7 @@ body.authentication-bg-pattern {
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
@@ -4183,9 +4208,11 @@ body.authentication-bg-pattern {
         margin-right: -69px;
         text-align: right;
     }
+
     .timeline .timeline-box {
         margin-left: 45px;
     }
+
     .timeline .timeline-icon {
         background: #5089de;
         border-radius: 50%;
@@ -4198,6 +4225,7 @@ body.authentication-bg-pattern {
         top: 50%;
         width: 20px;
     }
+
     .timeline .timeline-icon i {
         color: #fff;
         font-size: 13px;
@@ -4205,19 +4233,23 @@ body.authentication-bg-pattern {
         left: 4px;
         margin-top: 1px;
     }
+
     .timeline .timeline-desk {
         display: table-cell;
         vertical-align: top;
         width: 50%;
     }
+
     .timeline-item {
         display: table-row;
     }
+
     .timeline-item:before {
         content: "";
         display: block;
         width: 50%;
     }
+
     .timeline-item .timeline-desk .arrow {
         border-bottom: 12px solid transparent;
         border-right: 12px solid #fff !important;
@@ -4230,11 +4262,13 @@ body.authentication-bg-pattern {
         top: 50%;
         width: 0;
     }
+
     .timeline-item.timeline-item-left:after {
         content: "";
         display: block;
         width: 50%;
     }
+
     .timeline-item.timeline-item-left .timeline-desk .arrow-alt {
         border-bottom: 12px solid transparent;
         border-left: 12px solid #fff !important;
@@ -4248,21 +4282,26 @@ body.authentication-bg-pattern {
         top: 50%;
         width: 0;
     }
+
     .timeline-item.timeline-item-left .timeline-desk .album {
         float: right;
         margin-top: 20px;
     }
+
     .timeline-item.timeline-item-left .timeline-desk .album a {
         float: right;
         margin-left: 5px;
     }
+
     .timeline-item.timeline-item-left .timeline-icon {
         left: auto;
         right: -56px;
     }
+
     .timeline-item.timeline-item-left:before {
         display: none;
     }
+
     .timeline-item.timeline-item-left .timeline-box {
         margin-right: 45px;
         margin-left: 0;
@@ -4275,6 +4314,7 @@ body.authentication-bg-pattern {
         text-align: center;
         position: relative;
     }
+
     .timeline .timeline-icon {
         display: none;
     }
@@ -4313,6 +4353,7 @@ body.authentication-bg-pattern {
     .timeline-sm {
         padding-left: 0px;
     }
+
     .timeline-sm .timeline-sm-date {
         position: relative !important;
         display: block;
@@ -4618,11 +4659,13 @@ body.authentication-bg-pattern {
         width: 100%;
         float: none;
     }
+
     .inbox-rightbar {
         margin-left: 0;
         border: 0;
         padding-left: 0;
     }
+
     .message-list li .col-mail-1 .checkbox-wrapper-mail {
         margin-left: 0;
     }
@@ -4632,15 +4675,19 @@ body.authentication-bg-pattern {
     .inbox-rightbar>.btn-group {
         margin-bottom: 10px;
     }
+
     .message-list li .col-mail-1 {
         width: 150px;
     }
+
     .message-list li .col-mail-1 .title {
         left: 80px;
     }
+
     .message-list li .col-mail-2 {
         left: 160px;
     }
+
     .message-list li .col-mail-2 .date {
         text-align: right;
         padding-right: 10px;
@@ -4822,14 +4869,17 @@ body.authentication-bg-pattern {
 
 
 }
+
 #datatable-bouquets_length,
 #datatable-bouquets_filter {
     display: none !important;
 }
+
 #datatable-bouquets_wrapper {
     margin-top: 10px;
     width: 100% !important;
 }
+
 #datatable-md1_length,
 #datatable-md1_filter,
 #datatable-md2_length,
@@ -4842,6 +4892,7 @@ body.authentication-bg-pattern {
 #datatable-md5_filter {
     display: none;
 }
+
 #datatable-md1_wrapper,
 #datatable-md2_wrapper,
 #datatable-md3_wrapper,
@@ -4850,6 +4901,7 @@ body.authentication-bg-pattern {
     margin-top: 10px;
     width: 100% !important;
 }
+
 #datatable-md1,
 #datatable-md2,
 #datatable-md3,
@@ -4857,20 +4909,25 @@ body.authentication-bg-pattern {
 #datatable-md5 {
     width: 100% !important;
 }
+
 table.dataTable tbody>tr.reordered,
 table.dataTable tbody>tr>.reordered {
     background-color: #eeeeee;
 }
+
 .dataTables_scrollHeadInner {
     width: 100% !important;
 }
+
 table.table-borderless {
     width: 100% !important;
 }
+
 #datatable-mass_length,
 #datatable-mass_filter {
     display: none;
 }
+
 #datatable-mass_wrapper {
     margin-top: 10px;
     width: 100% !important;

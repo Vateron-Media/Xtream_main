@@ -22,10 +22,10 @@
 #include "php_pdo.h"
 
 /* forward declarations */
-typedef struct _pdo_dbh_t 		 pdo_dbh_t;
+typedef struct _pdo_dbh_t pdo_dbh_t;
 typedef struct _pdo_dbh_object_t pdo_dbh_object_t;
-typedef struct _pdo_stmt_t		 pdo_stmt_t;
-typedef struct _pdo_row_t		 pdo_row_t;
+typedef struct _pdo_stmt_t pdo_stmt_t;
+typedef struct _pdo_row_t pdo_row_t;
 struct pdo_bound_param_data;
 
 #ifdef PHP_WIN32
@@ -38,15 +38,16 @@ typedef unsigned long long int pdo_uint64_t;
 PDO_API char *php_pdo_int64_to_str(pdo_int64_t i64);
 
 #ifndef TRUE
-# define TRUE 1
+#define TRUE 1
 #endif
 #ifndef FALSE
-# define FALSE 0
+#define FALSE 0
 #endif
 
-#define PDO_DRIVER_API	20170320
+#define PDO_DRIVER_API 20170320
 
-enum pdo_param_type {
+enum pdo_param_type
+{
 	PDO_PARAM_NULL,
 
 	/* int as in long (the php native int type).
@@ -86,67 +87,70 @@ enum pdo_param_type {
 	PDO_PARAM_STR_CHAR = 0x20000000,
 };
 
-#define PDO_PARAM_FLAGS			0xFFFF0000
+#define PDO_PARAM_FLAGS 0xFFFF0000
 
-#define PDO_PARAM_TYPE(x)		((x) & ~PDO_PARAM_FLAGS)
+#define PDO_PARAM_TYPE(x) ((x) & ~PDO_PARAM_FLAGS)
 
-enum pdo_fetch_type {
+enum pdo_fetch_type
+{
 	PDO_FETCH_USE_DEFAULT,
 	PDO_FETCH_LAZY,
 	PDO_FETCH_ASSOC,
 	PDO_FETCH_NUM,
 	PDO_FETCH_BOTH,
 	PDO_FETCH_OBJ,
-	PDO_FETCH_BOUND, /* return true/false only; rely on bound columns */
+	PDO_FETCH_BOUND,	/* return true/false only; rely on bound columns */
 	PDO_FETCH_COLUMN,	/* fetch a numbered column only */
 	PDO_FETCH_CLASS,	/* create an instance of named class, call ctor and set properties */
 	PDO_FETCH_INTO,		/* fetch row into an existing object */
 	PDO_FETCH_FUNC,		/* fetch into function and return its result */
-	PDO_FETCH_NAMED,    /* like PDO_FETCH_ASSOC, but can handle duplicate names */
-	PDO_FETCH_KEY_PAIR,	/* fetch into an array where the 1st column is a key and all subsequent columns are values */
-	PDO_FETCH__MAX /* must be last */
+	PDO_FETCH_NAMED,	/* like PDO_FETCH_ASSOC, but can handle duplicate names */
+	PDO_FETCH_KEY_PAIR, /* fetch into an array where the 1st column is a key and all subsequent columns are values */
+	PDO_FETCH__MAX		/* must be last */
 };
 
-#define PDO_FETCH_FLAGS     0xFFFF0000  /* fetchAll() modes or'd to PDO_FETCH_XYZ */
-#define PDO_FETCH_GROUP     0x00010000  /* fetch into groups */
-#define PDO_FETCH_UNIQUE    0x00030000  /* fetch into groups assuming first col is unique */
-#define PDO_FETCH_CLASSTYPE 0x00040000  /* fetch class gets its class name from 1st column */
-#define PDO_FETCH_SERIALIZE 0x00080000  /* fetch class instances by calling serialize */
-#define PDO_FETCH_PROPS_LATE 0x00100000  /* fetch props after calling ctor */
+#define PDO_FETCH_FLAGS 0xFFFF0000		/* fetchAll() modes or'd to PDO_FETCH_XYZ */
+#define PDO_FETCH_GROUP 0x00010000		/* fetch into groups */
+#define PDO_FETCH_UNIQUE 0x00030000		/* fetch into groups assuming first col is unique */
+#define PDO_FETCH_CLASSTYPE 0x00040000	/* fetch class gets its class name from 1st column */
+#define PDO_FETCH_SERIALIZE 0x00080000	/* fetch class instances by calling serialize */
+#define PDO_FETCH_PROPS_LATE 0x00100000 /* fetch props after calling ctor */
 
 /* fetch orientation for scrollable cursors */
-enum pdo_fetch_orientation {
-	PDO_FETCH_ORI_NEXT,		/* default: fetch the next available row */
-	PDO_FETCH_ORI_PRIOR,	/* scroll back to prior row and fetch that */
-	PDO_FETCH_ORI_FIRST,	/* scroll to the first row and fetch that */
-	PDO_FETCH_ORI_LAST,		/* scroll to the last row and fetch that */
-	PDO_FETCH_ORI_ABS,		/* scroll to an absolute numbered row and fetch that */
-	PDO_FETCH_ORI_REL		/* scroll relative to the current row, and fetch that */
+enum pdo_fetch_orientation
+{
+	PDO_FETCH_ORI_NEXT,	 /* default: fetch the next available row */
+	PDO_FETCH_ORI_PRIOR, /* scroll back to prior row and fetch that */
+	PDO_FETCH_ORI_FIRST, /* scroll to the first row and fetch that */
+	PDO_FETCH_ORI_LAST,	 /* scroll to the last row and fetch that */
+	PDO_FETCH_ORI_ABS,	 /* scroll to an absolute numbered row and fetch that */
+	PDO_FETCH_ORI_REL	 /* scroll relative to the current row, and fetch that */
 };
 
-enum pdo_attribute_type {
-	PDO_ATTR_AUTOCOMMIT,	/* use to turn on or off auto-commit mode */
-	PDO_ATTR_PREFETCH,		/* configure the prefetch size for drivers that support it. Size is in KB */
-	PDO_ATTR_TIMEOUT,		/* connection timeout in seconds */
-	PDO_ATTR_ERRMODE,		/* control how errors are handled */
-	PDO_ATTR_SERVER_VERSION,	/* database server version */
-	PDO_ATTR_CLIENT_VERSION,	/* client library version */
-	PDO_ATTR_SERVER_INFO,		/* server information */
-	PDO_ATTR_CONNECTION_STATUS,	/* connection status */
-	PDO_ATTR_CASE,				/* control case folding for portability */
-	PDO_ATTR_CURSOR_NAME,		/* name a cursor for use in "WHERE CURRENT OF <name>" */
-	PDO_ATTR_CURSOR,			/* cursor type */
-	PDO_ATTR_ORACLE_NULLS,		/* convert empty strings to NULL */
-	PDO_ATTR_PERSISTENT,		/* pconnect style connection */
-	PDO_ATTR_STATEMENT_CLASS,	/* array(classname, array(ctor_args)) to specify the class of the constructed statement */
-	PDO_ATTR_FETCH_TABLE_NAMES, /* include table names in the column names, where available */
+enum pdo_attribute_type
+{
+	PDO_ATTR_AUTOCOMMIT,		  /* use to turn on or off auto-commit mode */
+	PDO_ATTR_PREFETCH,			  /* configure the prefetch size for drivers that support it. Size is in KB */
+	PDO_ATTR_TIMEOUT,			  /* connection timeout in seconds */
+	PDO_ATTR_ERRMODE,			  /* control how errors are handled */
+	PDO_ATTR_SERVER_VERSION,	  /* database server version */
+	PDO_ATTR_CLIENT_VERSION,	  /* client library version */
+	PDO_ATTR_SERVER_INFO,		  /* server information */
+	PDO_ATTR_CONNECTION_STATUS,	  /* connection status */
+	PDO_ATTR_CASE,				  /* control case folding for portability */
+	PDO_ATTR_CURSOR_NAME,		  /* name a cursor for use in "WHERE CURRENT OF <name>" */
+	PDO_ATTR_CURSOR,			  /* cursor type */
+	PDO_ATTR_ORACLE_NULLS,		  /* convert empty strings to NULL */
+	PDO_ATTR_PERSISTENT,		  /* pconnect style connection */
+	PDO_ATTR_STATEMENT_CLASS,	  /* array(classname, array(ctor_args)) to specify the class of the constructed statement */
+	PDO_ATTR_FETCH_TABLE_NAMES,	  /* include table names in the column names, where available */
 	PDO_ATTR_FETCH_CATALOG_NAMES, /* include the catalog/db name names in the column names, where available */
 	PDO_ATTR_DRIVER_NAME,		  /* name of the driver (as used in the constructor) */
-	PDO_ATTR_STRINGIFY_FETCHES,	/* converts integer/float types to strings during fetch */
-	PDO_ATTR_MAX_COLUMN_LEN,	/* make database calculate maximum length of data found in a column */
-	PDO_ATTR_DEFAULT_FETCH_MODE, /* Set the default fetch mode */
-	PDO_ATTR_EMULATE_PREPARES,  /* use query emulation rather than native */
-	PDO_ATTR_DEFAULT_STR_PARAM, /* set the default string parameter type (see the PDO::PARAM_STR_* magic flags) */
+	PDO_ATTR_STRINGIFY_FETCHES,	  /* converts integer/float types to strings during fetch */
+	PDO_ATTR_MAX_COLUMN_LEN,	  /* make database calculate maximum length of data found in a column */
+	PDO_ATTR_DEFAULT_FETCH_MODE,  /* Set the default fetch mode */
+	PDO_ATTR_EMULATE_PREPARES,	  /* use query emulation rather than native */
+	PDO_ATTR_DEFAULT_STR_PARAM,	  /* set the default string parameter type (see the PDO::PARAM_STR_* magic flags) */
 
 	/* this defines the start of the range for driver specific options.
 	 * Drivers should define their own attribute constants beginning with this
@@ -154,9 +158,10 @@ enum pdo_attribute_type {
 	PDO_ATTR_DRIVER_SPECIFIC = 1000
 };
 
-enum pdo_cursor_type {
-	PDO_CURSOR_FWDONLY,		/* forward only cursor (default) */
-	PDO_CURSOR_SCROLL		/* scrollable cursor */
+enum pdo_cursor_type
+{
+	PDO_CURSOR_FWDONLY, /* forward only cursor (default) */
+	PDO_CURSOR_SCROLL	/* scrollable cursor */
 };
 
 /* SQL-92 SQLSTATE error codes.
@@ -178,23 +183,25 @@ defined by SQL-92.
 
 typedef char pdo_error_type[6]; /* SQLSTATE */
 
+#define PDO_ERR_NONE "00000"
 
-#define PDO_ERR_NONE				"00000"
-
-enum pdo_error_mode {
-	PDO_ERRMODE_SILENT,		/* just set error codes */
-	PDO_ERRMODE_WARNING,	/* raise E_WARNING */
-	PDO_ERRMODE_EXCEPTION	/* throw exceptions */
+enum pdo_error_mode
+{
+	PDO_ERRMODE_SILENT,	  /* just set error codes */
+	PDO_ERRMODE_WARNING,  /* raise E_WARNING */
+	PDO_ERRMODE_EXCEPTION /* throw exceptions */
 };
 
-enum pdo_case_conversion {
+enum pdo_case_conversion
+{
 	PDO_CASE_NATURAL,
 	PDO_CASE_UPPER,
 	PDO_CASE_LOWER
 };
 
 /* oracle interop settings */
-enum pdo_null_handling {
+enum pdo_null_handling
+{
 	PDO_NULL_NATURAL = 0,
 	PDO_NULL_EMPTY_STRING = 1,
 	PDO_NULL_TO_STRING = 2
@@ -205,7 +212,8 @@ static inline zend_long pdo_attr_lval(zval *options, enum pdo_attribute_type opt
 {
 	zval *v;
 
-	if (options && (v = zend_hash_index_find(Z_ARRVAL_P(options), option_name))) {
+	if (options && (v = zend_hash_index_find(Z_ARRVAL_P(options), option_name)))
+	{
 		return zval_get_long(v);
 	}
 	return defval;
@@ -214,7 +222,8 @@ static inline zend_string *pdo_attr_strval(zval *options, enum pdo_attribute_typ
 {
 	zval *v;
 
-	if (options && (v = zend_hash_index_find(Z_ARRVAL_P(options), option_name))) {
+	if (options && (v = zend_hash_index_find(Z_ARRVAL_P(options), option_name)))
+	{
 		return zval_get_string(v);
 	}
 	return defval ? zend_string_copy(defval) : NULL;
@@ -223,14 +232,15 @@ static inline zend_string *pdo_attr_strval(zval *options, enum pdo_attribute_typ
 
 /* This structure is registered with PDO when a PDO driver extension is
  * initialized */
-typedef struct {
-	const char	*driver_name;
-	size_t		driver_name_len;
-	zend_ulong	api_version; /* needs to be compatible with PDO */
+typedef struct
+{
+	const char *driver_name;
+	size_t driver_name_len;
+	zend_ulong api_version; /* needs to be compatible with PDO */
 
-#define PDO_DRIVER_HEADER(name)	\
-	#name, sizeof(#name)-1, \
-	PDO_DRIVER_API
+#define PDO_DRIVER_HEADER(name) \
+	#name, sizeof(#name) - 1,   \
+		PDO_DRIVER_API
 
 	/* create driver specific portion of the database handle and stash it into
 	 * the dbh.  dbh contains the data source string and flags for this
@@ -273,7 +283,7 @@ typedef char *(*pdo_dbh_last_id_func)(pdo_dbh_t *dbh, const char *name, size_t *
  * - native error code
  * - string representation of the error code ... any other optional driver
  *   specific data ...  */
-typedef	int (*pdo_dbh_fetch_error_func)(pdo_dbh_t *dbh, pdo_stmt_t *stmt, zval *info);
+typedef int (*pdo_dbh_fetch_error_func)(pdo_dbh_t *dbh, pdo_stmt_t *stmt, zval *info);
 
 /* fetching of attributes */
 typedef int (*pdo_dbh_get_attr_func)(pdo_dbh_t *dbh, zend_long attr, zval *val);
@@ -294,7 +304,8 @@ to prefix the function names using the PDO driver name; this will
 reduce the chance of collisions with future functionality in the
 PDO class or in user code (they can extend the PDO object).
 */
-enum {
+enum
+{
 	PDO_DBH_DRIVER_METHOD_KIND_DBH = 0,
 	PDO_DBH_DRIVER_METHOD_KIND_STMT,
 	PDO_DBH_DRIVER_METHOD_KIND__MAX
@@ -302,22 +313,23 @@ enum {
 
 typedef const zend_function_entry *(*pdo_dbh_get_driver_methods_func)(pdo_dbh_t *dbh, int kind);
 
-struct pdo_dbh_methods {
-	pdo_dbh_close_func		closer;
-	pdo_dbh_prepare_func	preparer;
-	pdo_dbh_do_func			doer;
-	pdo_dbh_quote_func		quoter;
-	pdo_dbh_txn_func		begin;
-	pdo_dbh_txn_func		commit;
-	pdo_dbh_txn_func		rollback;
-	pdo_dbh_set_attr_func	set_attribute;
-	pdo_dbh_last_id_func		last_id;
-	pdo_dbh_fetch_error_func	fetch_err;
-	pdo_dbh_get_attr_func   	get_attribute;
-	pdo_dbh_check_liveness_func	check_liveness;
+struct pdo_dbh_methods
+{
+	pdo_dbh_close_func closer;
+	pdo_dbh_prepare_func preparer;
+	pdo_dbh_do_func doer;
+	pdo_dbh_quote_func quoter;
+	pdo_dbh_txn_func begin;
+	pdo_dbh_txn_func commit;
+	pdo_dbh_txn_func rollback;
+	pdo_dbh_set_attr_func set_attribute;
+	pdo_dbh_last_id_func last_id;
+	pdo_dbh_fetch_error_func fetch_err;
+	pdo_dbh_get_attr_func get_attribute;
+	pdo_dbh_check_liveness_func check_liveness;
 	pdo_dbh_get_driver_methods_func get_driver_methods;
-	pdo_dbh_request_shutdown	persistent_shutdown;
-	pdo_dbh_txn_func		in_transaction;
+	pdo_dbh_request_shutdown persistent_shutdown;
+	pdo_dbh_txn_func in_transaction;
 };
 
 /* }}} */
@@ -334,7 +346,7 @@ typedef int (*pdo_stmt_execute_func)(pdo_stmt_t *stmt);
  * more rows.  The ori and offset params modify which row should be returned,
  * if the stmt represents a scrollable cursor */
 typedef int (*pdo_stmt_fetch_func)(pdo_stmt_t *stmt,
-	enum pdo_fetch_orientation ori, zend_long offset);
+								   enum pdo_fetch_orientation ori, zend_long offset);
 
 /* queries information about the type of a column, by index (0 based).
  * Driver should populate stmt->columns[colno] with appropriate info */
@@ -349,7 +361,8 @@ typedef int (*pdo_stmt_describe_col_func)(pdo_stmt_t *stmt, int colno);
 typedef int (*pdo_stmt_get_col_data_func)(pdo_stmt_t *stmt, int colno, char **ptr, size_t *len, int *caller_frees);
 
 /* hook for bound params */
-enum pdo_param_event {
+enum pdo_param_event
+{
 	PDO_PARAM_EVT_ALLOC,
 	PDO_PARAM_EVT_FREE,
 	PDO_PARAM_EVT_EXEC_PRE,
@@ -409,29 +422,32 @@ typedef int (*pdo_stmt_next_rowset_func)(pdo_stmt_t *stmt);
  * fetch all the rows. */
 typedef int (*pdo_stmt_cursor_closer_func)(pdo_stmt_t *stmt);
 
-struct pdo_stmt_methods {
-	pdo_stmt_dtor_func			dtor;
-	pdo_stmt_execute_func		executer;
-	pdo_stmt_fetch_func			fetcher;
-	pdo_stmt_describe_col_func	describer;
-	pdo_stmt_get_col_data_func	get_col;
-	pdo_stmt_param_hook_func	param_hook;
-	pdo_stmt_set_attr_func		set_attribute;
-	pdo_stmt_get_attr_func		get_attribute;
+struct pdo_stmt_methods
+{
+	pdo_stmt_dtor_func dtor;
+	pdo_stmt_execute_func executer;
+	pdo_stmt_fetch_func fetcher;
+	pdo_stmt_describe_col_func describer;
+	pdo_stmt_get_col_data_func get_col;
+	pdo_stmt_param_hook_func param_hook;
+	pdo_stmt_set_attr_func set_attribute;
+	pdo_stmt_get_attr_func get_attribute;
 	pdo_stmt_get_column_meta_func get_column_meta;
-	pdo_stmt_next_rowset_func		next_rowset;
-	pdo_stmt_cursor_closer_func 	cursor_closer;
+	pdo_stmt_next_rowset_func next_rowset;
+	pdo_stmt_cursor_closer_func cursor_closer;
 };
 
 /* }}} */
 
-enum pdo_placeholder_support {
-	PDO_PLACEHOLDER_NONE=0,
-	PDO_PLACEHOLDER_NAMED=1,
-	PDO_PLACEHOLDER_POSITIONAL=2
+enum pdo_placeholder_support
+{
+	PDO_PLACEHOLDER_NONE = 0,
+	PDO_PLACEHOLDER_NAMED = 1,
+	PDO_PLACEHOLDER_POSITIONAL = 2
 };
 
-struct _pdo_dbh_t {
+struct _pdo_dbh_t
+{
 	/* driver specific methods */
 	const struct pdo_dbh_methods *methods;
 	/* driver specific data */
@@ -442,38 +458,38 @@ struct _pdo_dbh_t {
 
 	/* if true, then data stored and pointed at by this handle must all be
 	 * persistently allocated */
-	unsigned is_persistent:1;
+	unsigned is_persistent : 1;
 
 	/* if true, driver should act as though a COMMIT were executed between
 	 * each executed statement; otherwise, COMMIT must be carried out manually
 	 * */
-	unsigned auto_commit:1;
+	unsigned auto_commit : 1;
 
 	/* if true, the handle has been closed and will not function anymore */
-	unsigned is_closed:1;
+	unsigned is_closed : 1;
 
 	/* if true, the driver requires that memory be allocated explicitly for
 	 * the columns that are returned */
-	unsigned alloc_own_columns:1;
+	unsigned alloc_own_columns : 1;
 
 	/* if true, commit or rollBack is allowed to be called */
-	unsigned in_txn:1;
+	unsigned in_txn : 1;
 
 	/* max length a single character can become after correct quoting */
-	unsigned max_escaped_char_length:3;
+	unsigned max_escaped_char_length : 3;
 
 	/* oracle compat; see enum pdo_null_handling */
-	unsigned oracle_nulls:2;
+	unsigned oracle_nulls : 2;
 
 	/* when set, convert int/floats to strings */
-	unsigned stringify:1;
+	unsigned stringify : 1;
 
 	/* bitmap for pdo_param_event(s) to skip in dispatch_param_event */
-	unsigned skip_param_evt:7;
+	unsigned skip_param_evt : 7;
 
 	/* the sum of the number of bits here and the bit fields preceding should
 	 * equal 32 */
-	unsigned _reserved_flags:14;
+	unsigned _reserved_flags : 14;
 
 	/* data source string used to open this handle */
 	const char *data_source;
@@ -512,29 +528,33 @@ struct _pdo_dbh_t {
 };
 
 /* represents a connection to a database */
-struct _pdo_dbh_object_t {
+struct _pdo_dbh_object_t
+{
 	pdo_dbh_t *inner;
 	/* these items must appear in this order at the beginning of the
-       struct so that this can be cast as a zend_object.  we need this
-       to allow the extending class to escape all the custom handlers
+	   struct so that this can be cast as a zend_object.  we need this
+	   to allow the extending class to escape all the custom handlers
 	   that PDO declares.
-    */
+	*/
 	zend_object std;
 };
 
-static inline pdo_dbh_t *php_pdo_dbh_fetch_inner(zend_object *obj) {
-	return (pdo_dbh_t *)(((pdo_dbh_object_t *)((char*)(obj) - XtOffsetOf(pdo_dbh_object_t, std)))->inner);
+static inline pdo_dbh_t *php_pdo_dbh_fetch_inner(zend_object *obj)
+{
+	return (pdo_dbh_t *)(((pdo_dbh_object_t *)((char *)(obj)-XtOffsetOf(pdo_dbh_object_t, std)))->inner);
 }
 
-static inline pdo_dbh_object_t *php_pdo_dbh_fetch_object(zend_object *obj) {
-	return (pdo_dbh_object_t *)((char*)(obj) - XtOffsetOf(pdo_dbh_object_t, std));
+static inline pdo_dbh_object_t *php_pdo_dbh_fetch_object(zend_object *obj)
+{
+	return (pdo_dbh_object_t *)((char *)(obj)-XtOffsetOf(pdo_dbh_object_t, std));
 }
 
 #define Z_PDO_DBH_P(zv) php_pdo_dbh_fetch_inner(Z_OBJ_P((zv)))
 #define Z_PDO_OBJECT_P(zv) php_pdo_dbh_fetch_object(Z_OBJ_P((zv)))
 
 /* describes a column */
-struct pdo_column_data {
+struct pdo_column_data
+{
 	zend_string *name;
 	size_t maxlen;
 	zend_ulong precision;
@@ -542,40 +562,42 @@ struct pdo_column_data {
 };
 
 /* describes a bound parameter */
-struct pdo_bound_param_data {
-	zval parameter;				/* the variable itself */
+struct pdo_bound_param_data
+{
+	zval parameter; /* the variable itself */
 
-	zval driver_params;			/* optional parameter(s) for the driver */
+	zval driver_params; /* optional parameter(s) for the driver */
 
 	zend_long paramno; /* if -1, then it has a name, and we don't know the index *yet* */
 	zend_string *name;
 
-	zend_long max_value_len;	/* as a hint for pre-allocation */
+	zend_long max_value_len; /* as a hint for pre-allocation */
 
 	void *driver_data;
 
-	pdo_stmt_t *stmt;	/* for convenience in dtor */
+	pdo_stmt_t *stmt; /* for convenience in dtor */
 
 	enum pdo_param_type param_type; /* desired or suggested variable type */
 
-	int is_param;		/* parameter or column ? */
+	int is_param; /* parameter or column ? */
 };
 
 /* represents a prepared statement */
-struct _pdo_stmt_t {
+struct _pdo_stmt_t
+{
 	/* driver specifics */
 	const struct pdo_stmt_methods *methods;
 	void *driver_data;
 
 	/* if true, we've already successfully executed this statement at least
 	 * once */
-	unsigned executed:1;
+	unsigned executed : 1;
 	/* if true, the statement supports placeholders and can implement
 	 * bindParam() for its prepared statements, if false, PDO should
 	 * emulate prepare and bind on its behalf */
-	unsigned supports_placeholders:2;
+	unsigned supports_placeholders : 2;
 
-	unsigned _reserved:29;
+	unsigned _reserved : 29;
 
 	/* the number of columns in the result set; not valid until after
 	 * the statement has been executed at least once.  In some cases, might
@@ -618,22 +640,25 @@ struct _pdo_stmt_t {
 
 	/* defaults for fetches */
 	enum pdo_fetch_type default_fetch_type;
-	union {
+	union
+	{
 		int column;
-		struct {
-			zval ctor_args;            /* freed */
+		struct
+		{
+			zval ctor_args; /* freed */
 			zend_fcall_info fci;
 			zend_fcall_info_cache fcc;
 			zval retval;
 			zend_class_entry *ce;
 		} cls;
-		struct {
-			zval fetch_args;           /* freed */
+		struct
+		{
+			zval fetch_args; /* freed */
 			zend_fcall_info fci;
 			zend_fcall_info_cache fcc;
 			zval object;
 			zval function;
-			zval *values;              /* freed */
+			zval *values; /* freed */
 		} func;
 		zval into;
 	} fetch;
@@ -643,20 +668,22 @@ struct _pdo_stmt_t {
 	const char *named_rewrite_template;
 
 	/* these items must appear in this order at the beginning of the
-       struct so that this can be cast as a zend_object.  we need this
-       to allow the extending class to escape all the custom handlers
+	   struct so that this can be cast as a zend_object.  we need this
+	   to allow the extending class to escape all the custom handlers
 	   that PDO declares.
-    */
+	*/
 	zend_object std;
 };
 
-static inline pdo_stmt_t *php_pdo_stmt_fetch_object(zend_object *obj) {
-	return (pdo_stmt_t *)((char*)(obj) - XtOffsetOf(pdo_stmt_t, std));
+static inline pdo_stmt_t *php_pdo_stmt_fetch_object(zend_object *obj)
+{
+	return (pdo_stmt_t *)((char *)(obj)-XtOffsetOf(pdo_stmt_t, std));
 }
 
 #define Z_PDO_STMT_P(zv) php_pdo_stmt_fetch_object(Z_OBJ_P((zv)))
 
-struct _pdo_row_t {
+struct _pdo_row_t
+{
 	zend_object std;
 	pdo_stmt_t *stmt;
 };
@@ -669,30 +696,30 @@ PDO_API void php_pdo_unregister_driver(const pdo_driver_t *driver);
 /* For the convenience of drivers, this function will parse a data source
  * string, of the form "name=value; name2=value2" and populate variables
  * according to the data you pass in and array of pdo_data_src_parser structures */
-struct pdo_data_src_parser {
+struct pdo_data_src_parser
+{
 	const char *optname;
 	char *optval;
 	int freeme;
 };
 
 PDO_API int php_pdo_parse_data_source(const char *data_source,
-		zend_ulong data_source_len, struct pdo_data_src_parser *parsed,
-		int nparams);
+									  zend_ulong data_source_len, struct pdo_data_src_parser *parsed,
+									  int nparams);
 
 PDO_API zend_class_entry *php_pdo_get_dbh_ce(void);
 PDO_API zend_class_entry *php_pdo_get_exception(void);
 
 PDO_API int pdo_parse_params(pdo_stmt_t *stmt, char *inquery, size_t inquery_len,
-	char **outquery, size_t *outquery_len);
+							 char **outquery, size_t *outquery_len);
 
 PDO_API void pdo_raise_impl_error(pdo_dbh_t *dbh, pdo_stmt_t *stmt,
-	const char *sqlstate, const char *supp);
+								  const char *sqlstate, const char *supp);
 
 PDO_API void php_pdo_dbh_addref(pdo_dbh_t *dbh);
 PDO_API void php_pdo_dbh_delref(pdo_dbh_t *dbh);
 
 PDO_API void php_pdo_free_statement(pdo_stmt_t *stmt);
-
 
 PDO_API void pdo_throw_exception(unsigned int driver_errcode, char *driver_errmsg, pdo_error_type *pdo_error);
 #endif /* PHP_PDO_DRIVER_H */

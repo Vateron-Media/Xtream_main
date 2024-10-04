@@ -1,7 +1,7 @@
-.audio_widget_block{
+.audio_widget_block {
     position: absolute;
     left: 22px;
-    top : 229px;
+    top: 229px;
     width: 205px;
     height: 68px;
     color: #fff;
@@ -13,20 +13,20 @@
     padding: 0 0 3px 0;
 }
 
-.audio_widget_block .title{
+.audio_widget_block .title {
     white-space: pre;
     overflow: hidden;
     margin: 0 5px;
     text-overflow: ellipsis;
 }
 
-.audio_widget_block .items{
+.audio_widget_block .items {
     margin: 0 auto;
     color: #FFE8C7;
     font-size: 14px;
 }
 
-.audio_widget_block .seek_bar{
+.audio_widget_block .seek_bar {
     margin: 0 auto;
     width: 180px;
     height: 4px;
@@ -36,14 +36,14 @@
     overflow: hidden;
 }
 
-.audio_widget_block .seek_bar .inner{
+.audio_widget_block .seek_bar .inner {
     height: 4px;
     width: 0;
     background-color: #ffae00;
     -webkit-border-radius: 3px;
 }
 
-.audio_widget_block .prev_btn{
+.audio_widget_block .prev_btn {
     width: 27px;
     height: 21px;
     position: absolute;
@@ -53,7 +53,7 @@
     background-position: -75px 0;
 }
 
-.audio_widget_block .next_btn{
+.audio_widget_block .next_btn {
     width: 27px;
     height: 21px;
     position: absolute;
@@ -63,7 +63,7 @@
     background-position: -48px 0;
 }
 
-.audio_widget_block .play_btn{
+.audio_widget_block .play_btn {
     width: 24px;
     height: 21px;
     position: absolute;
@@ -73,7 +73,7 @@
     background-position: 0 0;
 }
 
-.audio_widget_block .pause_btn{
+.audio_widget_block .pause_btn {
     position: absolute;
     bottom: 3px;
     left: 89px;

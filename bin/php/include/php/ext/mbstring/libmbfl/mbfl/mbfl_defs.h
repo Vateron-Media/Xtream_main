@@ -40,7 +40,7 @@
 #endif
 
 #ifndef SIZE_MAX
-#define SIZE_MAX	((size_t)~0)
+#define SIZE_MAX ((size_t)~0)
 #endif
 
 #ifdef WIN32

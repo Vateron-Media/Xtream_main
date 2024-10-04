@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command, command pattern class
  *
@@ -97,8 +98,7 @@ $GLOBALS['_PEAR_Command_objects'] = array();
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
-class PEAR_Command
-{
+class PEAR_Command {
     // {{{ factory()
 
     /**
@@ -109,8 +109,7 @@ class PEAR_Command
      *
      * @return object the command object or a PEAR error
      */
-    public static function &factory($command, &$config)
-    {
+    public static function &factory($command, &$config) {
         if (empty($GLOBALS['_PEAR_Command_commandlist'])) {
             PEAR_Command::registerCommands();
         }
@@ -129,15 +128,14 @@ class PEAR_Command
             $a = PEAR::raiseError("unknown command `$command'");
             return $a;
         }
-        $ui =& PEAR_Command::getFrontendObject();
+        $ui = &PEAR_Command::getFrontendObject();
         $obj = new $class($ui, $config);
         return $obj;
     }
 
     // }}}
     // {{{ & getObject()
-    public static function &getObject($command)
-    {
+    public static function &getObject($command) {
         $class = $GLOBALS['_PEAR_Command_commandlist'][$command];
         if (!class_exists($class)) {
             require_once $GLOBALS['_PEAR_Command_objects'][$class];
@@ -145,7 +143,7 @@ class PEAR_Command
         if (!class_exists($class)) {
             return PEAR::raiseError("unknown command `$command'");
         }
-        $ui =& PEAR_Command::getFrontendObject();
+        $ui = &PEAR_Command::getFrontendObject();
         $config = &PEAR_Config::singleton();
         $obj = new $class($ui, $config);
         return $obj;
@@ -159,8 +157,7 @@ class PEAR_Command
      *
      * @return object|PEAR_Error
      */
-    public static function &getFrontendObject()
-    {
+    public static function &getFrontendObject() {
         $a = &PEAR_Frontend::singleton();
         return $a;
     }
@@ -175,8 +172,7 @@ class PEAR_Command
      *
      * @return object the frontend object, or a PEAR error
      */
-    public static function &setFrontendClass($uiclass)
-    {
+    public static function &setFrontendClass($uiclass) {
         $a = &PEAR_Frontend::setFrontendClass($uiclass);
         return $a;
     }
@@ -191,8 +187,7 @@ class PEAR_Command
      *
      * @return object the frontend object, or a PEAR error
      */
-    public static function setFrontendType($uitype)
-    {
+    public static function setFrontendType($uitype) {
         $uiclass = 'PEAR_Frontend_' . $uitype;
         return PEAR_Command::setFrontendClass($uiclass);
     }
@@ -215,8 +210,7 @@ class PEAR_Command
      *
      * @return bool TRUE on success, a PEAR error on failure
      */
-    public static function registerCommands($merge = false, $dir = null)
-    {
+    public static function registerCommands($merge = false, $dir = null) {
         $parser = new PEAR_XMLParser;
         if ($dir === null) {
             $dir = dirname(__FILE__) . '/Command';
@@ -296,8 +290,7 @@ class PEAR_Command
      *
      * @return array command => implementing class
      */
-    public static function getCommands()
-    {
+    public static function getCommands() {
         if (empty($GLOBALS['_PEAR_Command_commandlist'])) {
             PEAR_Command::registerCommands();
         }
@@ -312,8 +305,7 @@ class PEAR_Command
      *
      * @return array shortcut => command
      */
-    public static function getShortcuts()
-    {
+    public static function getShortcuts() {
         if (empty($GLOBALS['_PEAR_Command_shortcuts'])) {
             PEAR_Command::registerCommands();
         }
@@ -332,8 +324,7 @@ class PEAR_Command
      *
      * @return void
      */
-    public static function getGetoptArgs($command, &$short_args, &$long_args)
-    {
+    public static function getGetoptArgs($command, &$short_args, &$long_args) {
         if (empty($GLOBALS['_PEAR_Command_commandlist'])) {
             PEAR_Command::registerCommands();
         }
@@ -357,8 +348,7 @@ class PEAR_Command
      *
      * @return string command description
      */
-    public static function getDescription($command)
-    {
+    public static function getDescription($command) {
         if (!isset($GLOBALS['_PEAR_Command_commanddesc'][$command])) {
             return null;
         }
@@ -373,8 +363,7 @@ class PEAR_Command
      *
      * @param string $command Name of the command to return help for
      */
-    public static function getHelp($command)
-    {
+    public static function getHelp($command) {
         $cmds = PEAR_Command::getCommands();
         if (isset($GLOBALS['_PEAR_Command_shortcuts'][$command])) {
             $command = $GLOBALS['_PEAR_Command_shortcuts'][$command];

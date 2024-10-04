@@ -24,34 +24,36 @@
 typedef struct _php_core_globals php_core_globals;
 
 #ifdef ZTS
-# define PG(v) ZEND_TSRMG(core_globals_id, php_core_globals *, v)
+#define PG(v) ZEND_TSRMG(core_globals_id, php_core_globals *, v)
 extern PHPAPI int core_globals_id;
 #else
-# define PG(v) (core_globals.v)
+#define PG(v) (core_globals.v)
 extern ZEND_API struct _php_core_globals core_globals;
 #endif
 
 /* Error display modes */
-#define PHP_DISPLAY_ERRORS_STDOUT	1
-#define PHP_DISPLAY_ERRORS_STDERR	2
+#define PHP_DISPLAY_ERRORS_STDOUT 1
+#define PHP_DISPLAY_ERRORS_STDERR 2
 
 /* Track vars */
-#define TRACK_VARS_POST		0
-#define TRACK_VARS_GET		1
-#define TRACK_VARS_COOKIE	2
-#define TRACK_VARS_SERVER	3
-#define TRACK_VARS_ENV		4
-#define TRACK_VARS_FILES	5
-#define TRACK_VARS_REQUEST	6
+#define TRACK_VARS_POST 0
+#define TRACK_VARS_GET 1
+#define TRACK_VARS_COOKIE 2
+#define TRACK_VARS_SERVER 3
+#define TRACK_VARS_ENV 4
+#define TRACK_VARS_FILES 5
+#define TRACK_VARS_REQUEST 6
 
 struct _php_tick_function_entry;
 
-typedef struct _arg_separators {
+typedef struct _arg_separators
+{
 	char *output;
 	char *input;
 } arg_separators;
 
-struct _php_core_globals {
+struct _php_core_globals
+{
 	zend_bool implicit_flush;
 
 	zend_long output_buffering;
@@ -70,7 +72,7 @@ struct _php_core_globals {
 	zend_bool display_errors;
 	zend_bool display_startup_errors;
 	zend_bool log_errors;
-	zend_long      log_errors_max_len;
+	zend_long log_errors_max_len;
 	zend_bool ignore_repeated_errors;
 	zend_bool ignore_repeated_source;
 	zend_bool report_memleaks;
@@ -137,7 +139,7 @@ struct _php_core_globals {
 	int last_error_type;
 	char *last_error_message;
 	char *last_error_file;
-	int  last_error_lineno;
+	int last_error_lineno;
 
 	char *php_sys_temp_dir;
 
@@ -170,7 +172,6 @@ struct _php_core_globals {
 	zend_bool have_called_openlog;
 	zend_long syslog_filter;
 };
-
 
 #endif /* PHP_GLOBALS_H */
 

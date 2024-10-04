@@ -1,1 +1,1 @@
-$(function(){$(document).trigger("enhance.tablesaw")});
+$(function () { $(document).trigger("enhance.tablesaw") });

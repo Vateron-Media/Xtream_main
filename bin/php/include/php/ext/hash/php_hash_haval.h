@@ -21,37 +21,39 @@
 
 #include "ext/standard/basic_functions.h"
 /* HAVAL context. */
-typedef struct {
-	uint32_t state[8];
-	uint32_t count[2];
-	unsigned char buffer[128];
+typedef struct
+{
+   uint32_t state[8];
+   uint32_t count[2];
+   unsigned char buffer[128];
 
-	char passes;
-	short output;
-	void (*Transform)(uint32_t state[8], const unsigned char block[128]);
+   char passes;
+   short output;
+   void (*Transform)(uint32_t state[8], const unsigned char block[128]);
 } PHP_HAVAL_CTX;
 
-#define PHP_HASH_HAVAL_INIT_DECL(p,b)	PHP_HASH_API void PHP_##p##HAVAL##b##Init(PHP_HAVAL_CTX *); \
-										PHP_HASH_API void PHP_HAVAL##b##Final(unsigned char*, PHP_HAVAL_CTX *);
+#define PHP_HASH_HAVAL_INIT_DECL(p, b)                         \
+   PHP_HASH_API void PHP_##p##HAVAL##b##Init(PHP_HAVAL_CTX *); \
+   PHP_HASH_API void PHP_HAVAL##b##Final(unsigned char *, PHP_HAVAL_CTX *);
 
 PHP_HASH_API void PHP_HAVALUpdate(PHP_HAVAL_CTX *, const unsigned char *, unsigned int);
 
-PHP_HASH_HAVAL_INIT_DECL(3,128)
-PHP_HASH_HAVAL_INIT_DECL(3,160)
-PHP_HASH_HAVAL_INIT_DECL(3,192)
-PHP_HASH_HAVAL_INIT_DECL(3,224)
-PHP_HASH_HAVAL_INIT_DECL(3,256)
+PHP_HASH_HAVAL_INIT_DECL(3, 128)
+PHP_HASH_HAVAL_INIT_DECL(3, 160)
+PHP_HASH_HAVAL_INIT_DECL(3, 192)
+PHP_HASH_HAVAL_INIT_DECL(3, 224)
+PHP_HASH_HAVAL_INIT_DECL(3, 256)
 
-PHP_HASH_HAVAL_INIT_DECL(4,128)
-PHP_HASH_HAVAL_INIT_DECL(4,160)
-PHP_HASH_HAVAL_INIT_DECL(4,192)
-PHP_HASH_HAVAL_INIT_DECL(4,224)
-PHP_HASH_HAVAL_INIT_DECL(4,256)
+PHP_HASH_HAVAL_INIT_DECL(4, 128)
+PHP_HASH_HAVAL_INIT_DECL(4, 160)
+PHP_HASH_HAVAL_INIT_DECL(4, 192)
+PHP_HASH_HAVAL_INIT_DECL(4, 224)
+PHP_HASH_HAVAL_INIT_DECL(4, 256)
 
-PHP_HASH_HAVAL_INIT_DECL(5,128)
-PHP_HASH_HAVAL_INIT_DECL(5,160)
-PHP_HASH_HAVAL_INIT_DECL(5,192)
-PHP_HASH_HAVAL_INIT_DECL(5,224)
-PHP_HASH_HAVAL_INIT_DECL(5,256)
+PHP_HASH_HAVAL_INIT_DECL(5, 128)
+PHP_HASH_HAVAL_INIT_DECL(5, 160)
+PHP_HASH_HAVAL_INIT_DECL(5, 192)
+PHP_HASH_HAVAL_INIT_DECL(5, 224)
+PHP_HASH_HAVAL_INIT_DECL(5, 256)
 
 #endif

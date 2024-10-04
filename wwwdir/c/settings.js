@@ -2,7 +2,7 @@
  * Settings modile.
  */
 
-(function() {
+(function () {
 
     var submenu = module.settings_sub || [];
 
@@ -21,20 +21,20 @@
         }
     }
 
-    if (typeof(dvbManager) != 'undefined'){
+    if (typeof (dvbManager) != 'undefined') {
         var dvb_supported_scan_types = JSON.parse(dvbManager.GetSupportedScanTypes());
         var dvb_current_scan_types = JSON.parse(dvbManager.GetCurrentScanTypes());
-    }else{
+    } else {
         dvb_supported_scan_types = [];
         dvb_current_scan_types = [];
     }
 
-    main_menu.add(word['settings_title'], [], 'mm_ico_setting.png', function(){
-        if (connection_problem && connection_problem.on){
+    main_menu.add(word['settings_title'], [], 'mm_ico_setting.png', function () {
+        if (connection_problem && connection_problem.on) {
             stb.notice.show(get_word('settings_unavailable'));
-        }else{
+        } else {
             _debug('stb.profile.enable_setting_access_by_pass', stb.profile.enable_setting_access_by_pass);
-            var url = window.location.protocol+"//" + stb.portal_ip +  "/" + stb.portal_path + "/external/settings/index.html?ajax_loader=" + stb.ajax_loader;
+            var url = window.location.protocol + "//" + stb.portal_ip + "/" + stb.portal_path + "/external/settings/index.html?ajax_loader=" + stb.ajax_loader;
             url += '&language=' + stb.stb_lang;
             url += '&token=' + stb.access_token;
             url += '&pri_audio_lang=' + stb.user['pri_audio_lang'];
@@ -56,7 +56,7 @@
                 stbWindowMgr.openWebFavorites(url, 0);
             }
         }
-    }, {"layer_name" : "settings"});
+    }, { "layer_name": "settings" });
 
 })();
 

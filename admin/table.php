@@ -342,7 +342,7 @@ if ($_GET["id"] == "mag_events") {
 $sql_details = array(
     'user' => $_INFO['username'],
     'pass' => $_INFO['password'],
-    'db'   => $_INFO['database'],
+    'db' => $_INFO['database'],
     'host' => $_INFO['hostname'] . ":" . $_INFO['port']
 );
 
@@ -547,7 +547,7 @@ class SSP {
         // Main query to actually get the data
         if ($joinQuery) {
             $col = SSP::pluck($columns, 'db', $joinQuery);
-            $query =  "SELECT SQL_CALC_FOUND_ROWS " . implode(", ", $col) . "
+            $query = "SELECT SQL_CALC_FOUND_ROWS " . implode(", ", $col) . "
              $joinQuery
              $where
              $extraWhere
@@ -556,7 +556,7 @@ class SSP {
              $order
              $limit";
         } else {
-            $query =  "SELECT SQL_CALC_FOUND_ROWS `" . implode("`, `", SSP::pluck($columns, 'db')) . "`
+            $query = "SELECT SQL_CALC_FOUND_ROWS `" . implode("`, `", SSP::pluck($columns, 'db')) . "`
              FROM `$table`
              $where
              $extraWhere
@@ -587,10 +587,10 @@ class SSP {
          * Output
          */
         return array(
-            "draw"            => intval($request['draw']),
-            "recordsTotal"    => intval($recordsTotal),
+            "draw" => intval($request['draw']),
+            "recordsTotal" => intval($recordsTotal),
             "recordsFiltered" => intval($recordsFiltered),
-            "data"            => SSP::data_output($columns, $data, $joinQuery)
+            "data" => SSP::data_output($columns, $data, $joinQuery)
         );
     }
     /**

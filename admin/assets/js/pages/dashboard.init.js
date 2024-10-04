@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $("#datatable").DataTable({
         searching: !1,
         lengthChange: !1,
@@ -76,7 +76,7 @@ $(document).ready(function() {
             shared: !0,
             intersect: !1,
             y: {
-                formatter: function(e) {
+                formatter: function (e) {
                     return void 0 !== e ? e.toFixed(0) + "%" : e
                 }
             }

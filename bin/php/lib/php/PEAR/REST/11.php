@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_REST_11 - implement faster list-all/remote-list command
  *
@@ -30,20 +31,17 @@ require_once 'PEAR/REST.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.3
  */
-class PEAR_REST_11
-{
+class PEAR_REST_11 {
     /**
      * @var PEAR_REST
      */
     var $_rest;
 
-    function __construct($config, $options = array())
-    {
+    function __construct($config, $options = array()) {
         $this->_rest = new PEAR_REST($config, $options);
     }
 
-    function listAll($base, $dostable, $basic = true, $searchpackage = false, $searchsummary = false, $channel = false)
-    {
+    function listAll($base, $dostable, $basic = true, $searchpackage = false, $searchsummary = false, $channel = false) {
         $categorylist = $this->_rest->retrieveData($base . 'c/categories.xml', false, false, $channel);
         if (PEAR::isError($categorylist)) {
             return $categorylist;
@@ -78,8 +76,8 @@ class PEAR_REST_11
                     continue;
                 }
 
-                $info     = $packageinfo['p'];
-                $package  = $info['n'];
+                $info = $packageinfo['p'];
+                $package = $info['n'];
                 $releases = isset($packageinfo['a']) ? $packageinfo['a'] : false;
                 unset($latest);
                 unset($unstable);
@@ -161,8 +159,9 @@ class PEAR_REST_11
 
                 $deps = array();
                 if ($latest && isset($packageinfo['deps'])) {
-                    if (!is_array($packageinfo['deps']) ||
-                          !isset($packageinfo['deps'][0])
+                    if (
+                        !is_array($packageinfo['deps']) ||
+                        !isset($packageinfo['deps'][0])
                     ) {
                         $packageinfo['deps'] = array($packageinfo['deps']);
                     }
@@ -201,13 +200,13 @@ class PEAR_REST_11
                 }
 
                 $info = array(
-                    'stable'      => $latest,
-                    'summary'     => $info['s'],
+                    'stable' => $latest,
+                    'summary' => $info['s'],
                     'description' => $info['d'],
-                    'deps'        => $deps,
-                    'category'    => $info['ca']['_content'],
-                    'unstable'    => $unstable,
-                    'state'       => $state
+                    'deps' => $deps,
+                    'category' => $info['ca']['_content'],
+                    'unstable' => $unstable,
+                    'state' => $state
                 );
                 $ret[$package] = $info;
             }
@@ -223,8 +222,7 @@ class PEAR_REST_11
      * @param string $base base URL of the server
      * @return array of categorynames
      */
-    function listCategories($base, $channel = false)
-    {
+    function listCategories($base, $channel = false) {
         $categorylist = $this->_rest->retrieveData($base . 'c/categories.xml', false, false, $channel);
         if (PEAR::isError($categorylist)) {
             return $categorylist;
@@ -250,16 +248,17 @@ class PEAR_REST_11
      * @param boolean $info also download full package info
      * @return array of packagenames
      */
-    function listCategory($base, $category, $info = false, $channel = false)
-    {
+    function listCategory($base, $category, $info = false, $channel = false) {
         if ($info == false) {
-            $url = '%s'.'c/%s/packages.xml';
+            $url = '%s' . 'c/%s/packages.xml';
         } else {
-            $url = '%s'.'c/%s/packagesinfo.xml';
+            $url = '%s' . 'c/%s/packagesinfo.xml';
         }
-        $url = sprintf($url,
-                    $base,
-                    urlencode($category));
+        $url = sprintf(
+            $url,
+            $base,
+            urlencode($category)
+        );
 
         // gives '404 Not Found' error when category doesn't exist
         $packagelist = $this->_rest->retrieveData($url, false, false, $channel);
@@ -274,8 +273,10 @@ class PEAR_REST_11
             if (!isset($packagelist['p'])) {
                 return array();
             }
-            if (!is_array($packagelist['p']) ||
-                !isset($packagelist['p'][0])) { // only 1 pkg
+            if (
+                !is_array($packagelist['p']) ||
+                !isset($packagelist['p'][0])
+            ) { // only 1 pkg
                 $packagelist = array($packagelist['p']);
             } else {
                 $packagelist = $packagelist['p'];
@@ -288,8 +289,10 @@ class PEAR_REST_11
             return array();
         }
 
-        if (!is_array($packagelist['pi']) ||
-            !isset($packagelist['pi'][0])) { // only 1 pkg
+        if (
+            !is_array($packagelist['pi']) ||
+            !isset($packagelist['pi'][0])
+        ) { // only 1 pkg
             $packagelist_pre = array($packagelist['pi']);
         } else {
             $packagelist_pre = $packagelist['pi'];
@@ -308,9 +311,11 @@ class PEAR_REST_11
                 $item['p']['st'] = $item['a']['r']['s'];
             }
 
-            $packagelist[$i] = array('attribs' => $item['p']['r'],
-                                     '_content' => $item['p']['n'],
-                                     'info' => $item['p']);
+            $packagelist[$i] = array(
+                'attribs' => $item['p']['r'],
+                '_content' => $item['p']['n'],
+                'info' => $item['p']
+            );
         }
 
         return $packagelist;
@@ -324,8 +329,7 @@ class PEAR_REST_11
      * @param boolean Determines whether to include $state in the list
      * @return false|array False if $state is not a valid release state
      */
-    function betterStates($state, $include = false)
-    {
+    function betterStates($state, $include = false) {
         static $states = array('snapshot', 'devel', 'alpha', 'beta', 'stable');
         $i = array_search($state, $states);
         if ($i === false) {
@@ -337,4 +341,3 @@ class PEAR_REST_11
         return array_slice($states, $i + 1);
     }
 }
-?>

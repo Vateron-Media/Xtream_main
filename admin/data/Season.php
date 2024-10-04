@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 	This class handles all the data you can get from a Season
  *
@@ -9,7 +10,7 @@
  * 	@copyright Licensed under BSD (http://www.opensource.org/licenses/bsd-license.php)
  */
 
-class Season{
+class Season {
 
     //------------------------------------------------------------------------------
     // Class Variables
@@ -95,7 +96,7 @@ class Season{
     public function getEpisodes() {
         $episodes = array();
 
-        foreach($this->_data['episodes'] as $data){
+        foreach ($this->_data['episodes'] as $data) {
             $episodes[] = new Episode($data, $this->getTVShowID());
         }
 
@@ -144,4 +145,3 @@ class Season{
         return json_encode($this->_data, JSON_PRETTY_PRINT);
     }
 }
-?>

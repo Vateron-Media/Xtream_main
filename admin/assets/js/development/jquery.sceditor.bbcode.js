@@ -58,7 +58,7 @@
 	 */
 	function extend(targetArg, sourceArg) {
 		var isTargetBoolean = targetArg === !!targetArg;
-		var i      = isTargetBoolean ? 2 : 1;
+		var i = isTargetBoolean ? 2 : 1;
 		var target = isTargetBoolean ? sourceArg : targetArg;
 		var isDeep = isTargetBoolean ? targetArg : false;
 
@@ -749,7 +749,7 @@
 	function parseHTML(html, context) {
 		context = context || document;
 
-		var	ret = context.createDocumentFragment();
+		var ret = context.createDocumentFragment();
 		var tmp = createElement('div', {}, context);
 
 		tmp.innerHTML = html;
@@ -795,7 +795,7 @@
 			// ignore these.
 			try {
 				attr(newElement, attribute.name, attribute.value);
-			} catch (ex) {}
+			} catch (ex) { }
 		});
 
 		while (element.firstChild) {
@@ -883,7 +883,7 @@
 	 * @param {HTMLElement} node
 	 */
 	function fixNesting(node) {
-		var	getLastInlineParent = function (node) {
+		var getLastInlineParent = function (node) {
 			while (isInline(node.parentNode, true)) {
 				node = node.parentNode;
 			}
@@ -897,7 +897,7 @@
 
 			// Any blocklevel element inside an inline element needs fixing.
 			if (isBlock && isInline(node.parentNode, true)) {
-				var	parent = getLastInlineParent(node),
+				var parent = getLastInlineParent(node),
 					before = extractContents(parent, node),
 					middle = node;
 
@@ -959,7 +959,7 @@
 	 * @since 1.4.3
 	 */
 	function removeWhiteSpace(root) {
-		var	nodeValue, nodeType, next, previous, previousSibling,
+		var nodeValue, nodeType, next, previous, previousSibling,
 			nextNode, trimStart,
 			cssWhiteSpace = css(root, 'whiteSpace'),
 			// Preserve newlines if is pre-line
@@ -972,17 +972,17 @@
 		}
 
 		while (node) {
-			nextNode  = node.nextSibling;
+			nextNode = node.nextSibling;
 			nodeValue = node.nodeValue;
-			nodeType  = node.nodeType;
+			nodeType = node.nodeType;
 
 			if (nodeType === ELEMENT_NODE && node.firstChild) {
 				removeWhiteSpace(node);
 			}
 
 			if (nodeType === TEXT_NODE) {
-				next      = getSibling(node);
-				previous  = getSibling(node, true);
+				next = getSibling(node);
+				previous = getSibling(node, true);
 				trimStart = false;
 
 				while (hasClass(previous, 'sceditor-ignore')) {
@@ -1065,13 +1065,13 @@
 	 * @return {Object} An object with left and top properties
 	 */
 	function getOffset(node) {
-		var	left = 0,
+		var left = 0,
 			top = 0;
 
 		while (node) {
 			left += node.offsetLeft;
-			top  += node.offsetTop;
-			node  = node.offsetParent;
+			top += node.offsetTop;
+			node = node.offsetParent;
 		}
 
 		return {
@@ -1088,19 +1088,19 @@
 	 * @return {string}
 	 */
 	function getStyle(elm, property) {
-		var	direction, styleValue,
+		var direction, styleValue,
 			elmStyle = elm.style;
 
 		if (!cssPropertyNameCache[property]) {
 			cssPropertyNameCache[property] = camelCase(property);
 		}
 
-		property   = cssPropertyNameCache[property];
+		property = cssPropertyNameCache[property];
 		styleValue = elmStyle[property];
 
 		// Add an exception for text-align
 		if ('textAlign' === property) {
-			direction  = elmStyle.direction;
+			direction = elmStyle.direction;
 			styleValue = styleValue || css(elm, property);
 
 			if (css(elm.parentNode, property) === styleValue ||
@@ -1191,13 +1191,13 @@
 		 * @type {string}
 		 */
 		colors: '#000000,#44B8FF,#1E92F7,#0074D9,#005DC2,#00369B,#b3d5f4|' +
-				'#444444,#C3FFFF,#9DF9FF,#7FDBFF,#68C4E8,#419DC1,#d9f4ff|' +
-				'#666666,#72FF84,#4CEA5E,#2ECC40,#17B529,#008E02,#c0f0c6|' +
-				'#888888,#FFFF44,#FFFA1E,#FFDC00,#E8C500,#C19E00,#fff5b3|' +
-				'#aaaaaa,#FFC95F,#FFA339,#FF851B,#E86E04,#C14700,#ffdbbb|' +
-				'#cccccc,#FF857A,#FF5F54,#FF4136,#E82A1F,#C10300,#ffc6c3|' +
-				'#eeeeee,#FF56FF,#FF30DC,#F012BE,#D900A7,#B20080,#fbb8ec|' +
-				'#ffffff,#F551FF,#CF2BE7,#B10DC9,#9A00B2,#9A00B2,#e8b6ef',
+			'#444444,#C3FFFF,#9DF9FF,#7FDBFF,#68C4E8,#419DC1,#d9f4ff|' +
+			'#666666,#72FF84,#4CEA5E,#2ECC40,#17B529,#008E02,#c0f0c6|' +
+			'#888888,#FFFF44,#FFFA1E,#FFDC00,#E8C500,#C19E00,#fff5b3|' +
+			'#aaaaaa,#FFC95F,#FFA339,#FF851B,#E86E04,#C14700,#ffdbbb|' +
+			'#cccccc,#FF857A,#FF5F54,#FF4136,#E82A1F,#C10300,#ffc6c3|' +
+			'#eeeeee,#FF56FF,#FF30DC,#F012BE,#D900A7,#B20080,#fbb8ec|' +
+			'#ffffff,#F551FF,#CF2BE7,#B10DC9,#9A00B2,#9A00B2,#e8b6ef',
 
 		/**
 		 * The locale to use.
@@ -1491,14 +1491,14 @@
 		 *
 		 * @type {Object}
 		 */
-		parserOptions: { },
+		parserOptions: {},
 
 		/**
 		 * CSS that will be added to the to dropdown menu (eg. z-index)
 		 *
 		 * @type {Object}
 		 */
-		dropDownCss: { }
+		dropDownCss: {}
 	};
 
 	var USER_AGENT = navigator.userAgent;
@@ -1517,8 +1517,8 @@
 	 * @type {number}
 	 */
 	var ie = (function () {
-		var	undef,
-			v   = 3,
+		var undef,
+			v = 3,
 			doc = document,
 			div = doc.createElement('div'),
 			all = div.getElementsByTagName('i');
@@ -1562,10 +1562,10 @@
 	 * @return {boolean}
 	 */
 	var isWysiwygSupported = (function () {
-		var	match, isUnsupported;
+		var match, isUnsupported;
 
 		var div = document.createElement('div');
-		div.contentEditable = true ;
+		div.contentEditable = true;
 
 		// Check if the contentEditable attribute is supported
 		if (!('contentEditable' in document.documentElement) ||
@@ -1682,9 +1682,9 @@
 		};
 
 		if (noQuotes !== false) {
-			replacements['"']  = '&#34;';
+			replacements['"'] = '&#34;';
 			replacements['\''] = '&#39;';
-			replacements['`']  = '&#96;';
+			replacements['`'] = '&#96;';
 		}
 
 		str = str.replace(/ {2}|\r\n|[&<>\r\n'"`]/g, function (match) {
@@ -1720,7 +1720,7 @@
 	 * @since 1.4.5
 	 */
 	function uriScheme(url) {
-		var	path,
+		var path,
 			// If there is a : before a / then it has a scheme
 			hasScheme = /^[^\/]*:/i,
 			location = window.location;
@@ -1748,19 +1748,19 @@
 		html:
 			'<!DOCTYPE html>' +
 			'<html{attrs}>' +
-				'<head>' +
-					'<style>.ie * {min-height: auto !important} ' +
-						'.ie table td {height:15px} ' +
-						// Target Edge (fixes edge issues)
-						'@supports (-ms-ime-align:auto) { ' +
-							'* { min-height: auto !important; } ' +
-						'}' +
-						'</style>' +
-					'<meta http-equiv="Content-Type" ' +
-						'content="text/html;charset={charset}" />' +
-					'<link rel="stylesheet" type="text/css" href="{style}" />' +
-				'</head>' +
-				'<body contenteditable="true" {spellcheck}><p></p></body>' +
+			'<head>' +
+			'<style>.ie * {min-height: auto !important} ' +
+			'.ie table td {height:15px} ' +
+			// Target Edge (fixes edge issues)
+			'@supports (-ms-ime-align:auto) { ' +
+			'* { min-height: auto !important; } ' +
+			'}' +
+			'</style>' +
+			'<meta http-equiv="Content-Type" ' +
+			'content="text/html;charset={charset}" />' +
+			'<link rel="stylesheet" type="text/css" href="{style}" />' +
+			'</head>' +
+			'<body contenteditable="true" {spellcheck}><p></p></body>' +
 			'</html>',
 
 		toolbarButton: '<a class="sceditor-button sceditor-button-{name}" ' +
@@ -1778,48 +1778,48 @@
 
 		pastetext:
 			'<div><label for="txt">{label}</label> ' +
-				'<textarea cols="20" rows="7" id="txt"></textarea></div>' +
-				'<div><input type="button" class="button" value="{insert}" />' +
+			'<textarea cols="20" rows="7" id="txt"></textarea></div>' +
+			'<div><input type="button" class="button" value="{insert}" />' +
 			'</div>',
 
 		table:
 			'<div><label for="rows">{rows}</label><input type="text" ' +
-				'id="rows" value="2" /></div>' +
+			'id="rows" value="2" /></div>' +
 			'<div><label for="cols">{cols}</label><input type="text" ' +
-				'id="cols" value="2" /></div>' +
+			'id="cols" value="2" /></div>' +
 			'<div><input type="button" class="button" value="{insert}"' +
-				' /></div>',
+			' /></div>',
 
 		image:
 			'<div><label for="link">{url}</label> ' +
-				'<input type="text" id="image" dir="ltr" placeholder="https://" /></div>' +
+			'<input type="text" id="image" dir="ltr" placeholder="https://" /></div>' +
 			'<div><label for="width">{width}</label> ' +
-				'<input type="text" id="width" size="2" dir="ltr" /></div>' +
+			'<input type="text" id="width" size="2" dir="ltr" /></div>' +
 			'<div><label for="height">{height}</label> ' +
-				'<input type="text" id="height" size="2" dir="ltr" /></div>' +
+			'<input type="text" id="height" size="2" dir="ltr" /></div>' +
 			'<div><input type="button" class="button" value="{insert}" />' +
-				'</div>',
+			'</div>',
 
 		email:
 			'<div><label for="email">{label}</label> ' +
-				'<input type="text" id="email" dir="ltr" /></div>' +
+			'<input type="text" id="email" dir="ltr" /></div>' +
 			'<div><label for="des">{desc}</label> ' +
-				'<input type="text" id="des" /></div>' +
+			'<input type="text" id="des" /></div>' +
 			'<div><input type="button" class="button" value="{insert}" />' +
-				'</div>',
+			'</div>',
 
 		link:
 			'<div><label for="link">{url}</label> ' +
-				'<input type="text" id="link" dir="ltr" placeholder="https://" /></div>' +
+			'<input type="text" id="link" dir="ltr" placeholder="https://" /></div>' +
 			'<div><label for="des">{desc}</label> ' +
-				'<input type="text" id="des" /></div>' +
+			'<input type="text" id="des" /></div>' +
 			'<div><input type="button" class="button" value="{ins}" /></div>',
 
 		youtubeMenu:
 			'<div><label for="link">{label}</label> ' +
-				'<input type="text" id="link" dir="ltr" placeholder="https://" /></div>' +
+			'<input type="text" id="link" dir="ltr" placeholder="https://" /></div>' +
 			'<div><input type="button" class="button" value="{insert}" />' +
-				'</div>',
+			'</div>',
 
 		youtube:
 			'<iframe width="560" height="315" frameborder="0" allowfullscreen ' +
@@ -1839,7 +1839,7 @@
 	 * @returns {string|DocumentFragment}
 	 * @private
 	 */
-	function _tmpl (name, params, createHtml) {
+	function _tmpl(name, params, createHtml) {
 		var template = _templates[name];
 
 		Object.keys(params).forEach(function (name) {
@@ -1998,7 +1998,7 @@
 		// START_COMMAND: Font
 		font: {
 			_dropDown: function (editor, caller, callback) {
-				var	content = createElement('div');
+				var content = createElement('div');
 
 				on(content, 'click', 'a', function (e) {
 					callback(data(this, 'font'));
@@ -2027,7 +2027,7 @@
 		// START_COMMAND: Size
 		size: {
 			_dropDown: function (editor, caller, callback) {
-				var	content = createElement('div');
+				var content = createElement('div');
 
 				on(content, 'click', 'a', function (e) {
 					callback(data(this, 'size'));
@@ -2056,9 +2056,9 @@
 		// START_COMMAND: Colour
 		color: {
 			_dropDown: function (editor, caller, callback) {
-				var	content = createElement('div'),
-					html    = '',
-					cmd     = defaultCmds.color;
+				var content = createElement('div'),
+					html = '',
+					cmd = defaultCmds.color;
 
 				if (!cmd._htmlCache) {
 					editor.opts.colors.split('|').forEach(function (column) {
@@ -2131,9 +2131,9 @@
 		// START_COMMAND: Paste Text
 		pastetext: {
 			exec: function (caller) {
-				var	val,
+				var val,
 					content = createElement('div'),
-					editor  = this;
+					editor = this;
 
 				appendChild(content, _tmpl('pastetext', {
 					label: editor._(
@@ -2180,7 +2180,7 @@
 		indent: {
 			state: function (parent$$1, firstBlock) {
 				// Only works with lists, for now
-				var	range, startParent, endParent;
+				var range, startParent, endParent;
 
 				if (is(firstBlock, 'li')) {
 					return 0;
@@ -2193,7 +2193,7 @@
 					range = this.getRangeHelper().selectedRange();
 
 					startParent = range.startContainer.parentNode;
-					endParent   = range.endContainer.parentNode;
+					endParent = range.endContainer.parentNode;
 
 					// TODO: could use nodeType for this?
 					// Maybe just check the firstBlock contains both the start
@@ -2235,7 +2235,7 @@
 				return closest(firstBlock, 'ul,ol,menu') ? 0 : -1;
 			},
 			exec: function () {
-				var	block = this.getRangeHelper().getFirstBlockParent();
+				var block = this.getRangeHelper().getFirstBlockParent();
 				if (closest(block, 'ul,ol,menu')) {
 					this.execCommand('outdent');
 				}
@@ -2247,7 +2247,7 @@
 		// START_COMMAND: Table
 		table: {
 			exec: function (caller) {
-				var	editor  = this,
+				var editor = this,
 					content = createElement('div');
 
 				appendChild(content, _tmpl('table', {
@@ -2257,16 +2257,16 @@
 				}, true));
 
 				on(content, 'click', '.button', function (e) {
-					var	rows = Number(find(content, '#rows')[0].value),
+					var rows = Number(find(content, '#rows')[0].value),
 						cols = Number(find(content, '#cols')[0].value),
 						html = '<table>';
 
 					if (rows > 0 && cols > 0) {
 						html += Array(rows + 1).join(
 							'<tr>' +
-								Array(cols + 1).join(
-									'<td>' + (IE_BR_FIX ? '' : '<br />') + '</td>'
-								) +
+							Array(cols + 1).join(
+								'<td>' + (IE_BR_FIX ? '' : '<br />') + '</td>'
+							) +
 							'</tr>'
 						);
 
@@ -2306,7 +2306,7 @@
 		// START_COMMAND: Image
 		image: {
 			_dropDown: function (editor, caller, selected, cb) {
-				var	content = createElement('div');
+				var content = createElement('div');
 
 				appendChild(content, _tmpl('image', {
 					url: editor._('URL:'),
@@ -2316,7 +2316,7 @@
 				}, true));
 
 
-				var	urlInput = find(content, '#image')[0];
+				var urlInput = find(content, '#image')[0];
 
 				urlInput.value = selected;
 
@@ -2336,14 +2336,14 @@
 				editor.createDropDown(caller, 'insertimage', content);
 			},
 			exec: function (caller) {
-				var	editor  = this;
+				var editor = this;
 
 				defaultCmds.image._dropDown(
 					editor,
 					caller,
 					'',
 					function (url, width$$1, height$$1) {
-						var attrs  = '';
+						var attrs = '';
 
 						if (width$$1) {
 							attrs += ' width="' + width$$1 + '"';
@@ -2366,7 +2366,7 @@
 		// START_COMMAND: E-mail
 		email: {
 			_dropDown: function (editor, caller, cb) {
-				var	content = createElement('div');
+				var content = createElement('div');
 
 				appendChild(content, _tmpl('email', {
 					label: editor._('E-mail:'),
@@ -2388,7 +2388,7 @@
 				editor.createDropDown(caller, 'insertemail', content);
 			},
 			exec: function (caller) {
-				var	editor  = this;
+				var editor = this;
 
 				defaultCmds.email._dropDown(
 					editor,
@@ -2400,7 +2400,7 @@
 						if (!editor.getRangeHelper().selectedHtml() || text) {
 							editor.wysiwygEditorInsertHtml(
 								'<a href="' + 'mailto:' + email + '">' +
-									(text || email) +
+								(text || email) +
 								'</a>'
 							);
 						} else {
@@ -2494,16 +2494,16 @@
 		// START_COMMAND: Quote
 		quote: {
 			exec: function (caller, html, author) {
-				var	before = '<blockquote>',
-					end    = '</blockquote>';
+				var before = '<blockquote>',
+					end = '</blockquote>';
 
 				// if there is HTML passed set end to null so any selected
 				// text is replaced
 				if (html) {
 					author = (author ? '<cite>' + author + '</cite>' : '');
 					before = before + author + html + end;
-					end    = null;
-				// if not add a newline to the end of the inserted quote
+					end = null;
+					// if not add a newline to the end of the inserted quote
 				} else if (this.getRangeHelper().selectedHtml() === '') {
 					end = (IE_BR_FIX ? '' : '<br />') + end;
 				}
@@ -2520,19 +2520,19 @@
 				var editor = this;
 
 				var createContent = function (includeMore) {
-					var	moreLink,
-						opts            = editor.opts,
-						emoticonsRoot   = opts.emoticonsRoot || '',
+					var moreLink,
+						opts = editor.opts,
+						emoticonsRoot = opts.emoticonsRoot || '',
 						emoticonsCompat = opts.emoticonsCompat,
-						rangeHelper     = editor.getRangeHelper(),
-						startSpace      = emoticonsCompat &&
+						rangeHelper = editor.getRangeHelper(),
+						startSpace = emoticonsCompat &&
 							rangeHelper.getOuterText(true, 1) !== ' ' ? ' ' : '',
-						endSpace        = emoticonsCompat &&
+						endSpace = emoticonsCompat &&
 							rangeHelper.getOuterText(false, 1) !== ' ' ? ' ' : '',
-						content         = createElement('div'),
-						line            = createElement('div'),
-						perLine         = 0,
-						emoticons       = extend(
+						content = createElement('div'),
+						line = createElement('div'),
+						perLine = 0,
+						emoticons = extend(
 							{},
 							opts.emoticons.dropdown,
 							includeMore ? opts.emoticons.more : {}
@@ -2596,7 +2596,7 @@
 		// START_COMMAND: YouTube
 		youtube: {
 			_dropDown: function (editor, caller, callback) {
-				var	content = createElement('div');
+				var content = createElement('div');
 
 				appendChild(content, _tmpl('youtubeMenu', {
 					label: editor._('Video URL:'),
@@ -2644,10 +2644,10 @@
 		// START_COMMAND: Date
 		date: {
 			_date: function (editor) {
-				var	now   = new Date(),
-					year  = now.getYear(),
+				var now = new Date(),
+					year = now.getYear(),
 					month = now.getMonth() + 1,
-					day   = now.getDate();
+					day = now.getDate();
 
 				if (year < 2000) {
 					year = 1900 + year;
@@ -2679,10 +2679,10 @@
 		// START_COMMAND: Time
 		time: {
 			_time: function () {
-				var	now   = new Date(),
+				var now = new Date(),
 					hours = now.getHours(),
-					mins  = now.getMinutes(),
-					secs  = now.getSeconds();
+					mins = now.getMinutes(),
+					secs = now.getSeconds();
 
 				if (hours < 10) {
 					hours = '0' + hours;
@@ -2715,7 +2715,7 @@
 				return firstBlock && firstBlock.style.direction === 'ltr';
 			},
 			exec: function () {
-				var	editor = this,
+				var editor = this,
 					rangeHelper = editor.getRangeHelper(),
 					node = rangeHelper.getFirstBlockParent();
 
@@ -2724,7 +2724,7 @@
 				if (!node || is(node, 'body')) {
 					editor.execCommand('formatBlock', 'p');
 
-					node  = rangeHelper.getFirstBlockParent();
+					node = rangeHelper.getFirstBlockParent();
 
 					if (!node || is(node, 'body')) {
 						return;
@@ -2744,7 +2744,7 @@
 				return firstBlock && firstBlock.style.direction === 'rtl';
 			},
 			exec: function () {
-				var	editor = this,
+				var editor = this,
 					rangeHelper = editor.getRangeHelper(),
 					node = rangeHelper.getFirstBlockParent();
 
@@ -2862,7 +2862,7 @@
 		var callHandlers = function (args, returnAtFirst) {
 			args = [].slice.call(args);
 
-			var	idx, ret,
+			var idx, ret,
 				signal = formatSignalName(args.shift());
 
 			for (idx = 0; idx < registeredPlugins.length; idx++) {
@@ -2913,7 +2913,7 @@
 		 * @memberOf PluginManager.prototype
 		 */
 		base.hasHandler = function (signal) {
-			var i  = registeredPlugins.length;
+			var i = registeredPlugins.length;
 			signal = formatSignalName(signal);
 
 			while (i--) {
@@ -3002,9 +3002,9 @@
 		 * @memberOf PluginManager.prototype
 		 */
 		base.deregister = function (plugin) {
-			var	removedPlugin,
+			var removedPlugin,
 				pluginIdx = registeredPlugins.length,
-				removed   = false;
+				removed = false;
 
 			if (!base.isRegistered(plugin)) {
 				return removed;
@@ -3013,7 +3013,7 @@
 			while (pluginIdx--) {
 				if (registeredPlugins[pluginIdx] instanceof plugins[plugin]) {
 					removedPlugin = registeredPlugins.splice(pluginIdx, 1)[0];
-					removed       = true;
+					removed = true;
 
 					if ('destroy' in removedPlugin) {
 						removedPlugin.destroy.call(thisObj);
@@ -3043,7 +3043,7 @@
 			}
 
 			registeredPlugins = [];
-			thisObj    = null;
+			thisObj = null;
 		};
 	}
 
@@ -3124,11 +3124,11 @@
 	 * @name RangeHelper
 	 */
 	function RangeHelper(win, d) {
-		var	_createMarker, _prepareInput,
-			doc          = d || win.contentDocument || win.document,
-			startMarker  = 'sceditor-start-marker',
-			endMarker    = 'sceditor-end-marker',
-			base         = this;
+		var _createMarker, _prepareInput,
+			doc = d || win.contentDocument || win.document,
+			startMarker = 'sceditor-start-marker',
+			endMarker = 'sceditor-end-marker',
+			base = this;
 
 		/**
 		 * Inserts HTML into the current range replacing any selected
@@ -3146,7 +3146,7 @@
 		 * @memberOf RangeHelper.prototype
 		 */
 		base.insertHTML = function (html, endHTML) {
-			var	node, div,
+			var node, div,
 				range = base.selectedRange();
 
 			if (!range) {
@@ -3157,8 +3157,8 @@
 				html += base.selectedHtml() + endHTML;
 			}
 
-			div           = createElement('p', {}, doc);
-			node          = doc.createDocumentFragment();
+			div = createElement('p', {}, doc);
+			node = doc.createDocumentFragment();
 			div.innerHTML = html;
 
 			while (div.firstChild) {
@@ -3250,8 +3250,8 @@
 		 * @memberOf RangeHelper.prototype
 		 */
 		base.insertNode = function (node, endNode) {
-			var	input  = _prepareInput(node, endNode),
-				range  = base.selectedRange(),
+			var input = _prepareInput(node, endNode),
+				range = base.selectedRange(),
 				parent$$1 = range.commonAncestorContainer;
 
 			if (!input) {
@@ -3298,7 +3298,7 @@
 		 * @memberOf RangeHelper.prototype
 		 */
 		base.selectedRange = function () {
-			var	range, firstChild,
+			var range, firstChild,
 				sel = win.getSelection();
 
 			if (!sel) {
@@ -3338,7 +3338,7 @@
 		 * @memberOf RangeHelper.prototype
 		 */
 		base.hasSelection = function () {
-			var	sel = win.getSelection();
+			var sel = win.getSelection();
 
 			return sel && sel.rangeCount > 0;
 		};
@@ -3352,7 +3352,7 @@
 		 * @memberOf RangeHelper.prototype
 		 */
 		base.selectedHtml = function () {
-			var	div,
+			var div,
 				range = base.selectedRange();
 
 			if (range) {
@@ -3425,8 +3425,8 @@
 		 * @memberOf RangeHelper.prototype
 		 */
 		base.insertNodeAt = function (start, node) {
-			var	currentRange = base.selectedRange(),
-				range        = base.cloneSelected();
+			var currentRange = base.selectedRange(),
+				range = base.cloneSelected();
 
 			if (!range) {
 				return false;
@@ -3450,7 +3450,7 @@
 		_createMarker = function (id) {
 			base.removeMarker(id);
 
-			var marker  = createElement('span', {
+			var marker = createElement('span', {
 				id: id,
 				className: 'sceditor-selection sceditor-ignore',
 				style: 'display:none;line-height:0'
@@ -3471,7 +3471,7 @@
 		 * @name insertMarkers
 		 */
 		base.insertMarkers = function () {
-			var	currentRange = base.selectedRange();
+			var currentRange = base.selectedRange();
 			var startNode = _createMarker(startMarker);
 
 			base.removeMarkers();
@@ -3589,10 +3589,10 @@
 		 * @memberOf RangeHelper.prototype
 		 */
 		base.restoreRange = function () {
-			var	isCollapsed,
+			var isCollapsed,
 				range = base.selectedRange(),
 				start = base.getMarker(startMarker),
-				end   = base.getMarker(endMarker);
+				end = base.getMarker(endMarker);
 
 			if (!start || !end || !range) {
 				return false;
@@ -3653,7 +3653,7 @@
 		 * @memberOf RangeHelper.prototype
 		 */
 		base.getOuterText = function (before, length) {
-			var	range = base.cloneSelected();
+			var range = base.cloneSelected();
 
 			if (!range) {
 				return '';
@@ -3702,9 +3702,9 @@
 			var outerText, match, matchPos, startIndex,
 				leftLen, charsLeft, keyword, keywordLen,
 				whitespaceRegex = '(^|[\\s\xA0\u2002\u2003\u2009])',
-				keywordIdx      = keywords.length,
-				whitespaceLen   = requireWhitespace ? 1 : 0,
-				maxKeyLen       = longestKeyword ||
+				keywordIdx = keywords.length,
+				whitespaceLen = requireWhitespace ? 1 : 0,
+				maxKeyLen = longestKeyword ||
 					keywords[keywordIdx - 1][0].length;
 
 			if (requireWhitespace) {
@@ -3712,19 +3712,19 @@
 			}
 
 			keypressChar = keypressChar || '';
-			outerText    = base.getOuterText(true, maxKeyLen);
-			leftLen      = outerText.length;
-			outerText   += keypressChar;
+			outerText = base.getOuterText(true, maxKeyLen);
+			leftLen = outerText.length;
+			outerText += keypressChar;
 
 			if (includeAfter) {
 				outerText += base.getOuterText(false, maxKeyLen);
 			}
 
 			while (keywordIdx--) {
-				keyword    = keywords[keywordIdx][0];
+				keyword = keywords[keywordIdx][0];
 				keywordLen = keyword.length;
 				startIndex = Math.max(0, leftLen - keywordLen - whitespaceLen);
-				matchPos   = -1;
+				matchPos = -1;
 
 				if (requireWhitespace) {
 					match = outerText
@@ -3754,7 +3754,7 @@
 						base.selectOuterText(
 							charsLeft,
 							keywordLen - charsLeft -
-								(/^\S/.test(keypressChar) ? 1 : 0)
+							(/^\S/.test(keypressChar) ? 1 : 0)
 						);
 
 						base.insertHTML(keywords[keywordIdx][1]);
@@ -3902,8 +3902,8 @@
 	 * @return {void}
 	 */
 	function replace(root, emoticons, emoticonsCompat) {
-		var	doc           = root.ownerDocument;
-		var space         = '(^|\\s|\xA0|\u2002|\u2003|\u2009|$)';
+		var doc = root.ownerDocument;
+		var space = '(^|\\s|\xA0|\u2002|\u2003|\u2009|$)';
 		var emoticonCodes = [];
 		var emoticonRegex = {};
 
@@ -3935,8 +3935,8 @@
 
 				if (node.nodeType === TEXT_NODE) {
 					for (var i = 0; i < emoticonCodes.length; i++) {
-						var text  = node.nodeValue;
-						var key   = emoticonCodes[i];
+						var text = node.nodeValue;
+						var key = emoticonCodes[i];
 						var index = emoticonsCompat ?
 							text.search(emoticonRegex[key]) :
 							text.indexOf(key);
@@ -3945,8 +3945,8 @@
 							// When emoticonsCompat is enabled this will be the
 							// position after any white space
 							var startIndex = text.indexOf(key, index);
-							var fragment   = parseHTML(emoticons[key], doc);
-							var after      = text.substr(startIndex + key.length);
+							var fragment = parseHTML(emoticons[key], doc);
+							var after = text.substr(startIndex + key.length);
 
 							fragment.appendChild(doc.createTextNode(after));
 
@@ -3962,8 +3962,8 @@
 		}(root));
 	}
 
-	var globalWin  = window;
-	var globalDoc  = document;
+	var globalWin = window;
+	var globalDoc = document;
 
 	var IE_VER = ie;
 
@@ -4274,7 +4274,7 @@
 		 * Private functions
 		 * @private
 		 */
-		var	init,
+		var init,
 			replaceEmoticons,
 			handleCommand,
 			saveRange,
@@ -4403,9 +4403,9 @@
 		};
 
 		initPlugins = function () {
-			var plugins   = options.plugins;
+			var plugins = options.plugins;
 
-			plugins       = plugins ? plugins.toString().split(',') : [];
+			plugins = plugins ? plugins.toString().split(',') : [];
 			pluginManager = new PluginManager(base);
 
 			plugins.forEach(function (plugin) {
@@ -4424,7 +4424,7 @@
 			locale = SCEditor.locale[options.locale];
 
 			if (!locale) {
-				lang   = options.locale.split('-');
+				lang = options.locale.split('-');
 				locale = SCEditor.locale[lang[0]];
 			}
 
@@ -4439,7 +4439,7 @@
 		 * @private
 		 */
 		initEditor = function () {
-			sourceEditor  = createElement('textarea');
+			sourceEditor = createElement('textarea');
 			wysiwygEditor = createElement('iframe', {
 				frameborder: 0,
 				allowfullscreen: true
@@ -4630,10 +4630,10 @@
 		 * @private
 		 */
 		initToolBar = function () {
-			var	group,
+			var group,
 				commands = base.commands,
-				exclude  = (options.toolbarExclude || '').split(','),
-				groups   = options.toolbar.split('|');
+				exclude = (options.toolbarExclude || '').split(','),
+				groups = options.toolbar.split('|');
 
 			toolbar = createElement('div', {
 				className: 'sceditor-toolbar',
@@ -4650,8 +4650,8 @@
 				});
 
 				each(menuItems.split(','), function (_, commandName) {
-					var	button, shortcut,
-						command  = commands[commandName];
+					var button, shortcut,
+						command = commands[commandName];
 
 					// The commandName must be a valid command and not excluded
 					if (!command || exclude.indexOf(commandName) > -1) {
@@ -4659,10 +4659,10 @@
 					}
 
 					shortcut = command.shortcut;
-					button   = _tmpl('toolbarButton', {
+					button = _tmpl('toolbarButton', {
 						name: commandName,
 						dispName: base._(command.name ||
-								command.tooltip || commandName)
+							command.tooltip || commandName)
 					}, true).firstChild;
 
 					if (icons && icons.create) {
@@ -4694,7 +4694,7 @@
 					if (command.tooltip) {
 						attr(button, 'title',
 							base._(command.tooltip) +
-								(shortcut ? ' (' + shortcut + ')' : '')
+							(shortcut ? ' (' + shortcut + ')' : '')
 						);
 					}
 
@@ -4707,7 +4707,7 @@
 							name: commandName,
 							state: command.state
 						});
-					// exec string commands can be passed to queryCommandState
+						// exec string commands can be passed to queryCommandState
 					} else if (isString(command.exec)) {
 						btnStateHandlers.push({
 							name: commandName,
@@ -4734,38 +4734,38 @@
 		 * @private
 		 */
 		initResize = function () {
-			var	minHeight, maxHeight, minWidth, maxWidth,
+			var minHeight, maxHeight, minWidth, maxWidth,
 				mouseMoveFunc, mouseUpFunc,
-				grip        = createElement('div', {
+				grip = createElement('div', {
 					className: 'sceditor-grip'
 				}),
 				// Cover is used to cover the editor iframe so document
 				// still gets mouse move events
-				cover       = createElement('div', {
+				cover = createElement('div', {
 					className: 'sceditor-resize-cover'
 				}),
-				moveEvents  = 'touchmove mousemove',
-				endEvents   = 'touchcancel touchend mouseup',
-				startX      = 0,
-				startY      = 0,
-				newX        = 0,
-				newY        = 0,
-				startWidth  = 0,
+				moveEvents = 'touchmove mousemove',
+				endEvents = 'touchcancel touchend mouseup',
+				startX = 0,
+				startY = 0,
+				newX = 0,
+				newY = 0,
+				startWidth = 0,
 				startHeight = 0,
-				origWidth   = width(editorContainer),
-				origHeight  = height(editorContainer),
-				isDragging  = false,
-				rtl         = base.rtl();
+				origWidth = width(editorContainer),
+				origHeight = height(editorContainer),
+				isDragging = false,
+				rtl = base.rtl();
 
 			minHeight = options.resizeMinHeight || origHeight / 1.5;
 			maxHeight = options.resizeMaxHeight || origHeight * 2.5;
-			minWidth  = options.resizeMinWidth  || origWidth  / 1.25;
-			maxWidth  = options.resizeMaxWidth  || origWidth  * 1.25;
+			minWidth = options.resizeMinWidth || origWidth / 1.25;
+			maxWidth = options.resizeMaxWidth || origWidth * 1.25;
 
 			mouseMoveFunc = function (e) {
 				// iOS uses window.event
 				if (e.type === 'touchmove') {
-					e    = globalWin.event;
+					e = globalWin.event;
 					newX = e.changedTouches[0].pageX;
 					newY = e.changedTouches[0].pageY;
 				} else {
@@ -4773,8 +4773,8 @@
 					newY = e.pageY;
 				}
 
-				var	newHeight = startHeight + (newY - startY),
-					newWidth  = rtl ?
+				var newHeight = startHeight + (newY - startY),
+					newWidth = rtl ?
 						startWidth - (newX - startX) :
 						startWidth + (newX - startX);
 
@@ -4835,7 +4835,7 @@
 			on(grip, 'touchstart mousedown', function (e) {
 				// iOS uses window.event
 				if (e.type === 'touchstart') {
-					e      = globalWin.event;
+					e = globalWin.event;
 					startX = e.touches[0].pageX;
 					startY = e.touches[0].pageY;
 				} else {
@@ -4843,9 +4843,9 @@
 					startY = e.pageY;
 				}
 
-				startWidth  = width(editorContainer);
+				startWidth = width(editorContainer);
 				startHeight = height(editorContainer);
-				isDragging  = true;
+				isDragging = true;
 
 				addClass(editorContainer, 'resizing');
 				show(cover);
@@ -4861,8 +4861,8 @@
 		 * @private
 		 */
 		initEmoticons = function () {
-			var	emoticons = options.emoticons;
-			var root      = options.emoticonsRoot || '';
+			var emoticons = options.emoticons;
+			var root = options.emoticonsRoot || '';
 
 			if (emoticons) {
 				allEmoticons = extend(
@@ -4892,8 +4892,8 @@
 		 * @private
 		 */
 		autofocus = function () {
-			var	range, txtPos,
-				node     = wysiwygBody.firstChild,
+			var range, txtPos,
+				node = wysiwygBody.firstChild,
 				focusEnd = !!options.autofocusEnd;
 
 			// Can't focus invisible elements
@@ -5122,7 +5122,7 @@
 		 */
 		base.dimensions = function (width$$1, height$$1, save) {
 			// set undefined width/height to boolean false
-			width$$1  = (!width$$1 && width$$1 !== 0) ? false : width$$1;
+			width$$1 = (!width$$1 && width$$1 !== 0) ? false : width$$1;
 			height$$1 = (!height$$1 && height$$1 !== 0) ? false : height$$1;
 
 			if (width$$1 === false && height$$1 === false) {
@@ -5310,8 +5310,8 @@
 
 			pluginManager.destroy();
 
-			rangeHelper   = null;
-			lastRange     = null;
+			rangeHelper = null;
+			lastRange = null;
 			pluginManager = null;
 
 			if (dropdown) {
@@ -5355,7 +5355,7 @@
 		 */
 		base.createDropDown = function (menuItem, name, content, ieFix) {
 			// first click for create second click for close
-			var	dropDownCss,
+			var dropDownCss,
 				dropDownClass = 'sceditor-' + name;
 
 			// Will re-focus the editor. This is needed for IE
@@ -5466,8 +5466,8 @@
 				data$$1.html = data$$1['text/html'];
 
 				handlePasteData(data$$1);
-			// If contentsFragment exists then we are already waiting for a
-			// previous paste so let the handler for that handle this one too
+				// If contentsFragment exists then we are already waiting for a
+				// previous paste so let the handler for that handle this one too
 			} else if (!pasteContentFragment) {
 				// Save the scroll position so can be restored
 				// when contents is restored
@@ -5578,7 +5578,7 @@
 		base.wysiwygEditorInsertHtml = function (
 			html, endHtml, overrideCodeBlocking
 		) {
-			var	marker, scrollTop, scrollTo,
+			var marker, scrollTop, scrollTo,
 				editorHeight = height(wysiwygEditor);
 
 			base.focus();
@@ -5598,10 +5598,10 @@
 			replaceEmoticons();
 
 			// Scroll the editor after the end of the selection
-			marker   = find(wysiwygBody, '#sceditor-end-marker')[0];
+			marker = find(wysiwygBody, '#sceditor-end-marker')[0];
 			show(marker);
 			scrollTop = wysiwygBody.scrollTop;
-			scrollTo  = (getOffset(marker).top +
+			scrollTo = (getOffset(marker).top +
 				(marker.offsetHeight * 1.5)) - editorHeight;
 			hide(marker);
 
@@ -5686,7 +5686,7 @@
 		base.sourceEditorInsertText = function (text, endText) {
 			var scrollTop, currentValue,
 				startPos = sourceEditor.selectionStart,
-				endPos   = sourceEditor.selectionEnd;
+				endPos = sourceEditor.selectionEnd;
 
 			scrollTop = sourceEditor.scrollTop;
 			sourceEditor.focus();
@@ -5856,7 +5856,7 @@
 
 			// Add the selection between start and end
 			if (end) {
-				var	html = rangeHelper.selectedHtml();
+				var html = rangeHelper.selectedHtml();
 
 				if (filter !== false && 'fragmentToSource' in format) {
 					html = format
@@ -5896,7 +5896,7 @@
 		 * @memberOf SCEditor.prototype
 		 */
 		base.getWysiwygEditorValue = function (filter) {
-			var	html;
+			var html;
 			// Create a tmp node to store contents so it can be modified
 			// without affecting anything else.
 			var tmp = createElement('div', {}, wysiwygDocument);
@@ -6177,8 +6177,8 @@
 		 * @memberOf SCEditor.prototype
 		 */
 		base.execCommand = function (command, param) {
-			var	executed    = false,
-				commandObj  = base.commands[command];
+			var executed = false,
+				commandObj = base.commands[command];
 
 			base.focus();
 
@@ -6216,8 +6216,8 @@
 				if (wysiwygWindow.getSelection() &&
 					wysiwygWindow.getSelection().rangeCount <= 0) {
 					currentSelection = null;
-				// rangeHelper could be null if editor was destroyed
-				// before the timeout had finished
+					// rangeHelper could be null if editor was destroyed
+					// before the timeout had finished
 				} else if (rangeHelper && !rangeHelper.compare(currentSelection)) {
 					currentSelection = rangeHelper.cloneSelected();
 
@@ -6270,12 +6270,12 @@
 		 */
 		checkNodeChanged = function () {
 			// check if node has changed
-			var	oldNode,
+			var oldNode,
 				node = rangeHelper.parentNode();
 
 			if (currentNode !== node) {
-				oldNode          = currentNode;
-				currentNode      = node;
+				oldNode = currentNode;
+				currentNode = node;
 				currentBlockNode = rangeHelper.getFirstBlockParent(node);
 
 				trigger(editorContainer, 'nodechanged', {
@@ -6323,8 +6323,8 @@
 		updateActiveButtons = function () {
 			var firstBlock, parent$$1;
 			var activeClass = 'active';
-			var doc         = wysiwygDocument;
-			var isSource    = base.sourceMode();
+			var doc = wysiwygDocument;
+			var isSource = base.sourceMode();
 
 			if (base.readOnly()) {
 				each(find(toolbar, activeClass), function (_, menuItem) {
@@ -6334,16 +6334,16 @@
 			}
 
 			if (!isSource) {
-				parent$$1     = rangeHelper.parentNode();
+				parent$$1 = rangeHelper.parentNode();
 				firstBlock = rangeHelper.getFirstBlockParent(parent$$1);
 			}
 
 			for (var j = 0; j < btnStateHandlers.length; j++) {
-				var state      = 0;
-				var btn        = toolbarButtons[btnStateHandlers[j].name];
-				var stateFn    = btnStateHandlers[j].state;
+				var state = 0;
+				var btn = toolbarButtons[btnStateHandlers[j].name];
+				var stateFn = btnStateHandlers[j].state;
 				var isDisabled = (isSource && !btn._sceTxtMode) ||
-							(!isSource && !btn._sceWysiwygMode);
+					(!isSource && !btn._sceWysiwygMode);
 
 				if (isString(stateFn)) {
 					if (!isSource) {
@@ -6354,7 +6354,7 @@
 							if (state > -1) {
 								state = doc.queryCommandState(stateFn) ? 1 : 0;
 							}
-						} catch (ex) {}
+						} catch (ex) { }
 					}
 				} else if (!isDisabled) {
 					state = stateFn.call(base, parent$$1, firstBlock);
@@ -6399,7 +6399,7 @@
 					// IE < 11 so need to make sure the <br> that was inserted
 					// isn't the last node of a block.
 					if (!IE_BR_FIX$2) {
-						var parent$$1  = br.parentNode;
+						var parent$$1 = br.parentNode;
 						var lastChild = parent$$1.lastChild;
 
 						// Sometimes an empty next node is created after the <br>
@@ -6491,7 +6491,7 @@
 		 * @memberOf SCEditor.prototype
 		 */
 		base._ = function () {
-			var	undef,
+			var undef,
 				args = arguments;
 
 			if (locale && locale[args[0]]) {
@@ -6565,7 +6565,7 @@
 		base.bind = function (events, handler, excludeWysiwyg, excludeSource) {
 			events = events.split(' ');
 
-			var i  = events.length;
+			var i = events.length;
 			while (i--) {
 				if (isFunction(handler)) {
 					var wysEvent = 'scewys' + events[i];
@@ -6613,7 +6613,7 @@
 		base.unbind = function (events, handler, excludeWysiwyg, excludeSource) {
 			events = events.split(' ');
 
-			var i  = events.length;
+			var i = events.length;
 			while (i--) {
 				if (isFunction(handler)) {
 					if (!excludeWysiwyg) {
@@ -6859,10 +6859,10 @@
 		 * @private
 		 */
 		emoticonsKeyPress = function (e) {
-			var	replacedEmoticon,
-				cachePos       = 0,
+			var replacedEmoticon,
+				cachePos = 0,
 				emoticonsCache = base.emoticonsCache,
-				curChar        = String.fromCharCode(e.which);
+				curChar = String.fromCharCode(e.which);
 
 			// TODO: Make configurable
 			if (closest(currentBlockNode, 'code')) {
@@ -7010,7 +7010,7 @@
 		 * @private
 		 */
 		handleKeyDown = function (e) {
-			var	shortcut   = [],
+			var shortcut = [],
 				SHIFT_KEYS = {
 					'`': '~',
 					'1': '!',
@@ -7111,7 +7111,7 @@
 					104: '8',
 					105: '9'
 				},
-				which     = e.which,
+				which = e.which,
 				character = SPECIAL_KEYS[which] ||
 					String.fromCharCode(which).toLowerCase();
 
@@ -7187,7 +7187,7 @@
 		 * @private
 		 */
 		handleBackSpace = function (e) {
-			var	node, offset, range, parent$$1;
+			var node, offset, range, parent$$1;
 
 			// 8 is the backspace key
 			if (options.disableBlockRemove || e.which !== 8 ||
@@ -7195,7 +7195,7 @@
 				return;
 			}
 
-			node   = range.startContainer;
+			node = range.startContainer;
 			offset = range.startOffset;
 
 			if (offset !== 0 || !(parent$$1 = currentStyledBlockNode()) ||
@@ -7259,7 +7259,7 @@
 			rangeHelper.saveRange();
 
 			block.className = '';
-			lastRange       = null;
+			lastRange = null;
 
 			attr(block, 'style', '');
 
@@ -7290,8 +7290,8 @@
 				return;
 			}
 
-			var	currentHtml,
-				sourceMode   = base.sourceMode(),
+			var currentHtml,
+				sourceMode = base.sourceMode(),
 				hasSelection = !sourceMode && rangeHelper.hasSelection();
 
 			// Composition end isn't guaranteed to fire but must have
@@ -7345,9 +7345,9 @@
 		 * @private
 		 */
 		valueChangedKeyUp = function (e) {
-			var which         = e.which,
-				lastChar      = valueChangedKeyUp.lastChar,
-				lastWasSpace  = (lastChar === 13 || lastChar === 32),
+			var which = e.which,
+				lastChar = valueChangedKeyUp.lastChar,
+				lastWasSpace = (lastChar === 13 || lastChar === 32),
 				lastWasDelete = (lastChar === 8 || lastChar === 46);
 
 			valueChangedKeyUp.lastChar = which;
@@ -7363,7 +7363,7 @@
 				} else {
 					valueChangedKeyUp.triggerNext = true;
 				}
-			// 8 = backspace & 46 = del
+				// 8 = backspace & 46 = del
 			} else if (which === 8 || which === 46) {
 				if (!lastWasDelete) {
 					triggerValueChanged();
@@ -7610,7 +7610,7 @@
 	 * @return {this|Array<SCEditor>|Array<boolean>|SCEditor|boolean}
 	 */
 	$.fn.sceditor = function (options) {
-		var	instance;
+		var instance;
 		var ret = [];
 
 		this.each(function () {
@@ -7651,16 +7651,16 @@
 	/*eslint max-depth: off*/
 	'use strict';
 
-	var escapeEntities  = sceditor.escapeEntities;
+	var escapeEntities = sceditor.escapeEntities;
 	var escapeUriScheme = sceditor.escapeUriScheme;
-	var dom             = sceditor.dom;
-	var utils           = sceditor.utils;
+	var dom = sceditor.dom;
+	var utils = sceditor.utils;
 
-	var css    = dom.css;
-	var attr   = dom.attr;
-	var is     = dom.is;
+	var css = dom.css;
+	var attr = dom.attr;
+	var is = dom.is;
 	var extend = utils.extend;
-	var each   = utils.each;
+	var each = utils.each;
 
 	var IE_VER = sceditor.ie;
 
@@ -7807,14 +7807,14 @@
 		},
 		image: {
 			txtExec: function (caller, selected) {
-				var	editor  = this;
+				var editor = this;
 
 				getEditorCommand('image')._dropDown(
 					editor,
 					caller,
 					selected,
 					function (url, width, height) {
-						var attrs  = '';
+						var attrs = '';
 
 						if (width) {
 							attrs += ' width=' + width;
@@ -7833,7 +7833,7 @@
 		},
 		email: {
 			txtExec: function (caller, selected) {
-				var	editor  = this;
+				var editor = this;
 
 				getEditorCommand('email')._dropDown(
 					editor,
@@ -7841,7 +7841,7 @@
 					function (url, text) {
 						editor.insertText(
 							'[email=' + url + ']' +
-								(text || selected || url) +
+							(text || selected || url) +
 							'[/email]'
 						);
 					}
@@ -7850,7 +7850,7 @@
 		},
 		link: {
 			txtExec: function (caller, selected) {
-				var	editor  = this;
+				var editor = this;
 
 				getEditorCommand('link')._dropDown(
 					editor,
@@ -7858,7 +7858,7 @@
 					function (url, text) {
 						editor.insertText(
 							'[url=' + url + ']' +
-								(text || selected || url) +
+							(text || selected || url) +
 							'[/url]'
 						);
 					}
@@ -8002,8 +8002,8 @@
 				'font-size': null
 			},
 			format: function (element, content) {
-				var	fontSize = attr(element, 'size'),
-					size     = 2;
+				var fontSize = attr(element, 'size'),
+					size = 2;
 
 				if (!fontSize) {
 					fontSize = css(element, 'fontSize');
@@ -8054,7 +8054,7 @@
 			},
 			quoteType: QuoteType.never,
 			format: function (elm, content) {
-				var	color;
+				var color;
 
 				if (!is(elm, 'font') || !(color = attr(elm, 'color'))) {
 					color = elm.style.color || css(elm, 'color');
@@ -8194,9 +8194,9 @@
 			allowedChildren: ['#'],
 			quoteType: QuoteType.never,
 			format: function (element, content) {
-				var	width, height,
-					attribs   = '',
-					style     = function (name) {
+				var width, height,
+					attribs = '',
+					style = function (name) {
 						return element.style ? element.style[name] : null;
 					};
 
@@ -8219,18 +8219,18 @@
 				return '[img' + attribs + ']' + attr(element, 'src') + '[/img]';
 			},
 			html: function (token, attrs, content) {
-				var	undef, width, height, match,
+				var undef, width, height, match,
 					attribs = '';
 
 				// handle [img width=340 height=240]url[/img]
-				width  = attrs.width;
+				width = attrs.width;
 				height = attrs.height;
 
 				// handle [img=340x240]url[/img]
 				if (attrs.defaultattr) {
 					match = attrs.defaultattr.split(/x/i);
 
-					width  = match[0];
+					width = match[0];
 					height = (match.length === 2 ? match[1] : match[0]);
 				}
 
@@ -8299,7 +8299,7 @@
 			quoteType: QuoteType.never,
 			format: function (element, content) {
 				var authorAttr = 'data-author';
-				var	author = '';
+				var author = '';
 				var cite;
 				var children = element.children;
 
@@ -8319,8 +8319,8 @@
 						element.removeChild(cite);
 					}
 
-					content	= this.elementToBbcode(element);
-					author  = '=' + author.replace(/(^\s+|\s+$)/g, '');
+					content = this.elementToBbcode(element);
+					author = '=' + author.replace(/(^\s+|\s+$)/g, '');
 
 					if (cite) {
 						element.insertBefore(cite, element.firstChild);
@@ -8479,7 +8479,7 @@
 	 */
 	function formatBBCodeString(str, obj) {
 		return str.replace(/\{([^}]+)\}/g, function (match, group) {
-			var	undef,
+			var undef,
 				escape = true;
 
 			if (group.charAt(0) === '!') {
@@ -8508,7 +8508,7 @@
 	 * @private
 	 */
 	function removeFirstLastDiv(html) {
-		var	node, next, removeDiv,
+		var node, next, removeDiv,
 			output = document.createElement('div');
 
 		removeDiv = function (node, isFirst) {
@@ -8575,7 +8575,7 @@
 	 * @since v1.4.0
 	 */
 	function _formatString(str) {
-		var	undef;
+		var undef;
 		var args = arguments;
 
 		return str.replace(/\{(\d+)\}/g, function (_, matchNum) {
@@ -8619,14 +8619,14 @@
 	 */
 	// eslint-disable-next-line max-params
 	function TokenizeToken(type, name, val, attrs, children, closing) {
-		var base      = this;
+		var base = this;
 
-		base.type     = type;
-		base.name     = name;
-		base.val      = val;
-		base.attrs    = attrs || {};
+		base.type = type;
+		base.name = name;
+		base.val = val;
+		base.attrs = attrs || {};
 		base.children = children || [];
-		base.closing  = closing || null;
+		base.closing = closing || null;
 	};
 
 	TokenizeToken.prototype = {
@@ -8657,14 +8657,14 @@
 		 */
 		splitAt: function (splitAt) {
 			var offsetLength;
-			var base         = this;
-			var	clone        = base.clone();
-			var offset       = base.children.indexOf(splitAt);
+			var base = this;
+			var clone = base.clone();
+			var offset = base.children.indexOf(splitAt);
 
 			if (offset > -1) {
 				// Work out how many items are on the right side of the split
 				// to pass to splice()
-				offsetLength   = base.children.length - offset;
+				offsetLength = base.children.length - offset;
 				clone.children = base.children.splice(offset, offsetLength);
 			}
 
@@ -8700,7 +8700,7 @@
 		 * @memberOf BBCodeParser.prototype
 		 */
 		base.tokenize = function (str) {
-			var	matches, type, i;
+			var matches, type, i;
 			var tokens = [];
 			// The token types in reverse order of precedence
 			// (they're looped in reverse)
@@ -8769,7 +8769,7 @@
 		 */
 		function tokenizeTag(type, val) {
 			var matches, attrs, name,
-				openRegex  = /\[([^\]\s=]+)(?:([^\]]+))?\]/,
+				openRegex = /\[([^\]\s=]+)(?:([^\]]+))?\]/,
 				closeRegex = /\[\/([^\[\]]+)\]/;
 
 			// Extract the name and attributes from opening tags and
@@ -8812,7 +8812,7 @@
 		 * @private
 		 */
 		function tokenizeAttrs(attrs) {
-			var	matches,
+			var matches,
 				/*
 				([^\s=]+)				Anything that's not a space or equals
 				=						Equals sign =
@@ -8835,7 +8835,7 @@
 				)
 				*/
 				attrRegex = /([^\s=]+)=(?:(?:(["'])((?:\\\2|[^\2])*?)\2)|((?:.(?!\s\S+=))*.))/g,
-				ret       = {};
+				ret = {};
 
 			// if only one attribute then remove the = from the start and
 			// strip any quotes
@@ -8867,7 +8867,7 @@
 		 * @memberOf BBCodeParser.prototype
 		 */
 		base.parse = function (str, preserveNewLines) {
-			var ret  = parseTokens(base.tokenize(str));
+			var ret = parseTokens(base.tokenize(str));
 			var opts = base.opts;
 
 			if (opts.fixInvalidNesting) {
@@ -8918,7 +8918,7 @@
 		 * @private
 		 */
 		function isChildAllowed(parent, child) {
-			var	parentBBCode    = parent ? bbcodeHandlers[parent.name] : {},
+			var parentBBCode = parent ? bbcodeHandlers[parent.name] : {},
 				allowedChildren = parentBBCode.allowedChildren;
 
 			if (base.opts.fixInvalidChildren && allowedChildren) {
@@ -8938,10 +8938,10 @@
 		 * @private
 		 */
 		function parseTokens(toks) {
-			var	token, bbcode, curTok, clone, i, next,
-				cloned     = [],
-				output     = [],
-				openTags   = [],
+			var token, bbcode, curTok, clone, i, next,
+				cloned = [],
+				output = [],
+				openTags = [],
 				/**
 				 * Returns the currently open tag or undefined
 				 * @return {TokenizeToken}
@@ -8994,7 +8994,7 @@
 
 					// exclude closing tags of current tag
 					if (token.type !== TOKEN_CLOSE || !currentTag() ||
-							token.name !== currentTag().name) {
+						token.name !== currentTag().name) {
 						token.name = '#';
 						token.type = TOKEN_CONTENT;
 					}
@@ -9040,11 +9040,11 @@
 							currentTag().closing = token;
 							openTags.pop();
 
-						// If this is closing an open tag that is the parent of
-						// the current tag then clone all the tags including the
-						// current one until reaching the parent that is being
-						// closed. Close the parent and then add the clones back
-						// in.
+							// If this is closing an open tag that is the parent of
+							// the current tag then clone all the tags including the
+							// current one until reaching the parent that is being
+							// closed. Close the parent and then add the clones back
+							// in.
 						} else if (hasTag(token.name, TOKEN_OPEN, openTags)) {
 
 							// Remove the tag from the open tags
@@ -9089,7 +9089,7 @@
 
 							cloned.length = 0;
 
-						// This tag is closing nothing so treat it as content
+							// This tag is closing nothing so treat it as content
 						} else {
 							token.type = TOKEN_CONTENT;
 							addTag(token);
@@ -9163,7 +9163,7 @@
 		 * @return {void}
 		 */
 		function normaliseNewLines(children, parent, onlyRemoveBreakAfter) {
-			var	token, left, right, parentBBCode, bbcode,
+			var token, left, right, parentBBCode, bbcode,
 				removedBreakEnd, removedBreakBefore, remove;
 			var childrenLength = children.length;
 			// TODO: this function really needs tidying up
@@ -9178,8 +9178,8 @@
 				}
 
 				if (token.type === TOKEN_NEWLINE) {
-					left   = i > 0 ? children[i - 1] : null;
-					right  = i < childrenLength - 1 ? children[i + 1] : null;
+					left = i > 0 ? children[i - 1] : null;
+					right = i < childrenLength - 1 ? children[i + 1] : null;
 					remove = false;
 
 					// Handle the start and end new lines
@@ -9198,10 +9198,10 @@
 							if (parentBBCode.breakStart) {
 								remove = true;
 							}
-						// Last child of parent so must be end line break
-						// (breakEndBlock, breakEnd)
-						// e.g. \n[/tag]
-						// remove last line break (breakEndBlock, breakEnd)
+							// Last child of parent so must be end line break
+							// (breakEndBlock, breakEnd)
+							// e.g. \n[/tag]
+							// remove last line break (breakEndBlock, breakEnd)
 						} else if (!removedBreakEnd && !right) {
 							if (parentBBCode.isInline === false &&
 								base.opts.breakEndBlock &&
@@ -9293,7 +9293,7 @@
 		 * @private
 		 */
 		function fixNesting(children, parents, insideInline, rootArr) {
-			var	token, i, parent, parentIndex, parentParentChildren, right;
+			var token, i, parent, parentIndex, parentParentChildren, right;
 
 			var isInline = function (token) {
 				var bbcode = bbcodeHandlers[token.name];
@@ -9315,7 +9315,7 @@
 					// if this is a blocklevel element inside an inline one then
 					// split the parent at the block level element
 					parent = last(parents);
-					right  = parent.splitAt(token);
+					right = parent.splitAt(token);
 
 					parentParentChildren = parents.length > 1 ?
 						parents[parents.length - 2].children : rootArr;
@@ -9379,7 +9379,7 @@
 		 * @private
 		 */
 		function removeEmpty(tokens) {
-			var	token, bbcode;
+			var token, bbcode;
 
 			/**
 			 * Checks if all children are whitespace or not
@@ -9443,7 +9443,7 @@
 		 * @private
 		 */
 		function convertToHTML(tokens, isRoot) {
-			var	undef, token, bbcode, content, html, needsBlockWrap,
+			var undef, token, bbcode, content, html, needsBlockWrap,
 				blockWrapOpen, isInline, lastChild,
 				ret = [];
 
@@ -9524,10 +9524,10 @@
 					ret.push('</div>\n');
 					blockWrapOpen = false;
 					continue;
-				// content
+					// content
 				} else {
 					needsBlockWrap = isRoot;
-					html           = escapeEntities(token.val, true);
+					html = escapeEntities(token.val, true);
 				}
 
 				if (needsBlockWrap && !blockWrapOpen) {
@@ -9575,7 +9575,7 @@
 		 * @private
 		 */
 		function convertToBBCode(toks) {
-			var	token, attr, bbcode, isBlock, isSelfClosing, quoteType,
+			var token, attr, bbcode, isBlock, isSelfClosing, quoteType,
 				breakBefore, breakStart, breakEnd, breakAfter,
 				// Create an array of strings which are joined together
 				// before being returned as this is faster in slow browsers.
@@ -9587,25 +9587,25 @@
 					continue;
 				}
 				// TODO: tidy this
-				bbcode        = bbcodeHandlers[token.name];
-				isBlock       = !(!bbcode || bbcode.isInline !== false);
+				bbcode = bbcodeHandlers[token.name];
+				isBlock = !(!bbcode || bbcode.isInline !== false);
 				isSelfClosing = bbcode && bbcode.isSelfClosing;
 
 				breakBefore = (isBlock && base.opts.breakBeforeBlock &&
-						bbcode.breakBefore !== false) ||
+					bbcode.breakBefore !== false) ||
 					(bbcode && bbcode.breakBefore);
 
 				breakStart = (isBlock && !isSelfClosing &&
-						base.opts.breakStartBlock &&
-						bbcode.breakStart !== false) ||
+					base.opts.breakStartBlock &&
+					bbcode.breakStart !== false) ||
 					(bbcode && bbcode.breakStart);
 
 				breakEnd = (isBlock && base.opts.breakEndBlock &&
-						bbcode.breakEnd !== false) ||
+					bbcode.breakEnd !== false) ||
 					(bbcode && bbcode.breakEnd);
 
 				breakAfter = (isBlock && base.opts.breakAfterBlock &&
-						bbcode.breakAfter !== false) ||
+					bbcode.breakAfter !== false) ||
 					(bbcode && bbcode.breakAfter);
 
 				quoteType = (bbcode ? bbcode.quoteType : null) ||
@@ -9693,7 +9693,7 @@
 		 * @private
 		 */
 		function quote(str, quoteType, name) {
-			var	needsQuotes = /\s|=/.test(str);
+			var needsQuotes = /\s|=/.test(str);
 
 			if (isFunction(quoteType)) {
 				return quoteType(str, name);
@@ -9903,8 +9903,8 @@
 		 */
 		function buildBbcodeCache() {
 			each(bbcodeHandlers, function (bbcode) {
-				var	isBlock,
-					tags   = bbcodeHandlers[bbcode].tags,
+				var isBlock,
+					tags = bbcodeHandlers[bbcode].tags,
 					styles = bbcodeHandlers[bbcode].styles;
 
 				if (tags) {
@@ -9947,7 +9947,7 @@
 		 * @private
 		 */
 		function handleStyles(element, content, blockLevel) {
-			var	styleValue, format,
+			var styleValue, format,
 				getStyle = dom.getStyle;
 
 			// convert blockLevel to boolean
@@ -9992,19 +9992,19 @@
 		 * @private
 		 */
 		function handleBlockNewlines(element, content) {
-			var	tag = element.nodeName.toLowerCase();
+			var tag = element.nodeName.toLowerCase();
 			var isInline = dom.isInline;
 			if (!isInline(element, true) || tag === 'br') {
-				var	isLastBlockChild, parent, parentLastChild,
+				var isLastBlockChild, parent, parentLastChild,
 					previousSibling = element.previousSibling;
 
 				// Skips selection makers and ignored elements
 				// Skip empty inline elements
 				while (previousSibling &&
-						previousSibling.nodeType === 1 &&
-						!is(previousSibling, 'br') &&
-						isInline(previousSibling, true) &&
-						!previousSibling.firstChild) {
+					previousSibling.nodeType === 1 &&
+					!is(previousSibling, 'br') &&
+					isInline(previousSibling, true) &&
+					!previousSibling.firstChild) {
 					previousSibling = previousSibling.previousSibling;
 				}
 
@@ -10013,7 +10013,7 @@
 				// except in IE < 11
 				// <block><inline><br></inline></block>
 				do {
-					parent          = element.parentNode;
+					parent = element.parentNode;
 					parentLastChild = parent && parent.lastChild;
 
 					isLastBlockChild = parentLastChild === element;
@@ -10056,8 +10056,8 @@
 		 * @private
 		 */
 		function handleTags(element, content, blockLevel) {
-			var	convertBBCode, format,
-				tag     = element.nodeName.toLowerCase();
+			var convertBBCode, format,
+				tag = element.nodeName.toLowerCase();
 
 			// convert blockLevel to boolean
 			blockLevel = !!blockLevel;
@@ -10118,11 +10118,11 @@
 				var ret = '';
 
 				dom.traverse(node, function (node) {
-					var	curTag       = '',
-						nodeType     = node.nodeType,
-						tag          = node.nodeName.toLowerCase(),
-						vChild       = validChildren[tag],
-						firstChild   = node.firstChild,
+					var curTag = '',
+						nodeType = node.nodeType,
+						tag = node.nodeName.toLowerCase(),
+						vChild = validChildren[tag],
+						firstChild = node.firstChild,
 						isValidChild = true;
 
 					if (typeof vChildren === 'object') {
@@ -10208,7 +10208,7 @@
 			);
 
 			// Add BBCode helper methods
-			this.toBBCode   = base.toSource;
+			this.toBBCode = base.toSource;
 			this.fromBBCode = base.toHtml;
 		};
 
@@ -10220,7 +10220,7 @@
 		 * @param {boolean} [legacyAsFragment] Used by fromBBCode() method
 		 */
 		function toHtml(asFragment, source, legacyAsFragment) {
-			var	parser = new BBCodeParser(base.opts.parserOptions);
+			var parser = new BBCodeParser(base.opts.parserOptions);
 			var html = parser.toHTML(
 				base.opts.bbcodeTrim ? source.trim() : source
 			);
@@ -10242,7 +10242,7 @@
 		function toSource(asFragment, html, context, parent) {
 			context = context || document;
 
-			var	bbcode, elements;
+			var bbcode, elements;
 			var containerParent = context.createElement('div');
 			var container = context.createElement('div');
 			var parser = new BBCodeParser(base.opts.parserOptions);

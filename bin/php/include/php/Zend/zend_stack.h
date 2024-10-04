@@ -20,11 +20,11 @@
 #ifndef ZEND_STACK_H
 #define ZEND_STACK_H
 
-typedef struct _zend_stack {
-	int size, top, max;
-	void *elements;
+typedef struct _zend_stack
+{
+   int size, top, max;
+   void *elements;
 } zend_stack;
-
 
 #define STACK_BLOCK_SIZE 16
 
@@ -43,8 +43,8 @@ ZEND_API void zend_stack_apply_with_argument(zend_stack *stack, int type, int (*
 ZEND_API void zend_stack_clean(zend_stack *stack, void (*func)(void *), zend_bool free_elements);
 END_EXTERN_C()
 
-#define ZEND_STACK_APPLY_TOPDOWN	1
-#define ZEND_STACK_APPLY_BOTTOMUP	2
+#define ZEND_STACK_APPLY_TOPDOWN 1
+#define ZEND_STACK_APPLY_BOTTOMUP 2
 
 #endif /* ZEND_STACK_H */
 

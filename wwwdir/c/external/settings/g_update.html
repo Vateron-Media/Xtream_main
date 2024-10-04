@@ -1,4 +1,5 @@
 <html>
+
 <head>
 
     <script>
@@ -8,7 +9,7 @@
         var mid = menuT.length + 2;
         var pread = ["a"];
         var model = parent.stb.RDir("Model").toLowerCase();
-        var read = {"result": {"a": "0"}}
+        var read = { "result": { "a": "0" } }
         var text = [parent.t("Update from HTTP"), parent.t("Update from USB"), parent.t("Bootstrap and imageupdate will be downloaded from USB"), parent.t("Bootstrap will be downloaded using multicast group"), parent.t("Bootstrap will be downloaded from TFTP Server")];
         var pre = ["update_url", "bootstrap_url", "dnsip", "ipaddr_conf", "netmask"];
         var tread = '{"varList":["' + pre[0] + '"';
@@ -93,41 +94,43 @@
     </script>
     <script language="JavaScript" src="js/pres.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 <body onload="onLoad()" onkeydown="pressKey(event);">
-<div id="blueback">
-    <table class="upd" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td align="right"><span id="t1"></span></td>
-            <td width="10">
-                <div class="sub_select"><select id="i1" onChange="upd(this.value)"></select></div>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div style="height:2px; background:#FFF; width:100%; margin:5px 0;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><br/><span id="info1" class="list_head"></span></td>
-        </tr>
-        <tr>
-            <td align="right"><span id="t3"></span></td>
-            <td>
-                <div class="sub_select"></div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div style="height:2px; background:#FFF; width:100%; margin:5px 0;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td align="center" colspan="2"><br/><span id="info2" class="list_head"></span></td>
-        </tr>
-    </table>
-</div>
-<div id="footer">
-    <input id="i3" type="button" value="" onClick="back();"/>
-    <input id="i2" type="button" value="" onClick="submit();"/>
-</div>
+    <div id="blueback">
+        <table class="upd" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="right"><span id="t1"></span></td>
+                <td width="10">
+                    <div class="sub_select"><select id="i1" onChange="upd(this.value)"></select></div>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="height:2px; background:#FFF; width:100%; margin:5px 0;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><br /><span id="info1" class="list_head"></span></td>
+            </tr>
+            <tr>
+                <td align="right"><span id="t3"></span></td>
+                <td>
+                    <div class="sub_select"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="height:2px; background:#FFF; width:100%; margin:5px 0;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><br /><span id="info2" class="list_head"></span></td>
+            </tr>
+        </table>
+    </div>
+    <div id="footer">
+        <input id="i3" type="button" value="" onClick="back();" />
+        <input id="i2" type="button" value="" onClick="submit();" />
+    </div>
 </body>
+
 </html>

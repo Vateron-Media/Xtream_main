@@ -1,10 +1,10 @@
-<!--
-* {
+< !-- * {
     margin: 0;
     padding: 0;
 }
 
-html, body {
+html,
+body {
     overflow: hidden;
     font-family: "Myriad Pro";
     color: #fff;
@@ -164,23 +164,22 @@ a {
     left: -9999px;
 }
 
-#blueback input[type="checkbox"] + label {
+#blueback input[type="checkbox"]+label {
     background: url(1080/checkbox.png) 0 0 no-repeat;
     padding: 36px 0 36px 69px;
     display: block;
     margin: 6px 15px;
 }
 
-#blueback input[type="checkbox"]:focus + label {
+#blueback input[type="checkbox"]:focus+label {
     background: url(1080/checkbox_act.png) 0 0 no-repeat;
 }
 
-#blueback input[type="checkbox"]:checked + label {
+#blueback input[type="checkbox"]:checked+label {
     background-position: 0 -96px;
 }
 
-#blueback input[type="checkbox"]:checked:focus + label {
-}
+#blueback input[type="checkbox"]:checked:focus+label {}
 
 #blueback input[type=text] {
     position: relative;
@@ -328,8 +327,7 @@ a {
     -webkit-border-image: url(1080/select_act.png) 0 51 0 12 stretch stretch;
 }
 
-#ch {
-}
+#ch {}
 
 #ch1 {
     height: 120px;
@@ -343,7 +341,8 @@ a {
     position: relative;
     height: 69px;
     width: 900px;
-    margin: 6px 0 6px 15px;;
+    margin: 6px 0 6px 15px;
+    ;
     background: none;
     font-family: "Myriad Pro";
     font-size: 33px;
@@ -411,7 +410,8 @@ a {
     position: relative;
     height: 69px;
     width: 900px;
-    margin: 15px 0 15px 15px;;
+    margin: 15px 0 15px 15px;
+    ;
     background: none;
     font-family: "Myriad Pro";
     font-size: 45px;
@@ -595,5 +595,3 @@ a {
 }
 
 -->
-
-

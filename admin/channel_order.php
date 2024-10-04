@@ -55,7 +55,8 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="channel_order_alt.php">
-                                                <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-success waves-effect waves-light btn-sm">
                                                     <?= $_["advanced"] ?>
                                                 </button>
                                             </a>
@@ -77,29 +78,34 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./channel_order.php" method="POST" id="channel_order_form">
-                                        <input type="hidden" id="stream_order_array" name="stream_order_array" value="" />
+                                        <input type="hidden" id="stream_order_array" name="stream_order_array"
+                                            value="" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#order-stream" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#order-stream" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-play mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["streams"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#order-movie" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#order-movie" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-movie mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["movies"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#order-series" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#order-series" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-youtube-tv mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["series"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#order-radio" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#order-radio" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-radio mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["stations"] ?></span>
                                                     </a>
@@ -112,23 +118,36 @@ if ($rSettings["sidebar"]) { ?>
                                                             <p class="sub-header">
                                                                 <?= $_["bouquet_order_sort_text"] ?>
                                                             </p>
-                                                            <select multiple id="sort_stream" class="form-control" style="min-height:400px;">
+                                                            <select multiple id="sort_stream" class="form-control"
+                                                                style="min-height:400px;">
                                                                 <?php foreach ($rOrdered["stream"] as $rStream) { ?>
-                                                                    <option value="<?= $rStream["id"] ?>"><?= $rStream["stream_display_name"] ?></option>
+                                                                    <option value="<?= $rStream["id"] ?>">
+                                                                        <?= $rStream["stream_display_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0 add-margin-top-20">
                                                         <li class="list-inline-item">
-                                                            <a href="javascript: void(0);" onClick="MoveUp('stream')" class="btn btn-purple"><i class="mdi mdi-chevron-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveDown('stream')" class="btn btn-purple"><i class="mdi mdi-chevron-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveTop('stream')" class="btn btn-pink"><i class="mdi mdi-chevron-triple-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveBottom('stream')" class="btn btn-pink"><i class="mdi mdi-chevron-triple-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="AtoZ('stream')" class="btn btn-info"><?= $_["a_to_z"] ?></a>
+                                                            <a href="javascript: void(0);" onClick="MoveUp('stream')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveDown('stream')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveTop('stream')"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-up"></i></a>
+                                                            <a href="javascript: void(0);"
+                                                                onClick="MoveBottom('stream')" class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="AtoZ('stream')"
+                                                                class="btn btn-info"><?= $_["a_to_z"] ?></a>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <button type="submit" class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -138,23 +157,36 @@ if ($rSettings["sidebar"]) { ?>
                                                             <p class="sub-header">
                                                                 <?= $_["bouquet_order_sort_text"] ?>
                                                             </p>
-                                                            <select multiple id="sort_movie" class="form-control" style="min-height:400px;">
+                                                            <select multiple id="sort_movie" class="form-control"
+                                                                style="min-height:400px;">
                                                                 <?php foreach ($rOrdered["movie"] as $rStream) { ?>
-                                                                    <option value="<?= $rStream["id"] ?>"><?= $rStream["stream_display_name"] ?></option>
+                                                                    <option value="<?= $rStream["id"] ?>">
+                                                                        <?= $rStream["stream_display_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0 add-margin-top-20">
                                                         <li class="list-inline-item">
-                                                            <a href="javascript: void(0);" onClick="MoveUp('movie')" class="btn btn-purple"><i class="mdi mdi-chevron-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveDown('movie')" class="btn btn-purple"><i class="mdi mdi-chevron-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveTop('movie')" class="btn btn-pink"><i class="mdi mdi-chevron-triple-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveBottom('movie')" class="btn btn-pink"><i class="mdi mdi-chevron-triple-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="AtoZ('movie')" class="btn btn-info"><?= $_["a_to_z"] ?></a>
+                                                            <a href="javascript: void(0);" onClick="MoveUp('movie')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveDown('movie')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveTop('movie')"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveBottom('movie')"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="AtoZ('movie')"
+                                                                class="btn btn-info"><?= $_["a_to_z"] ?></a>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <button type="submit" class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -164,23 +196,36 @@ if ($rSettings["sidebar"]) { ?>
                                                             <p class="sub-header">
                                                                 <?= $_["bouquet_order_sort_text"] ?>
                                                             </p>
-                                                            <select multiple id="sort_series" class="form-control" style="min-height:400px;">
+                                                            <select multiple id="sort_series" class="form-control"
+                                                                style="min-height:400px;">
                                                                 <?php foreach ($rOrdered["series"] as $rStream) { ?>
-                                                                    <option value="<?= $rStream["id"] ?>"><?= $rStream["stream_display_name"] ?></option>
+                                                                    <option value="<?= $rStream["id"] ?>">
+                                                                        <?= $rStream["stream_display_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0 add-margin-top-20">
                                                         <li class="list-inline-item">
-                                                            <a href="javascript: void(0);" onClick="MoveUp('series')" class="btn btn-purple"><i class="mdi mdi-chevron-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveDown('series')" class="btn btn-purple"><i class="mdi mdi-chevron-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveTop('series')" class="btn btn-pink"><i class="mdi mdi-chevron-triple-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveBottom('series')" class="btn btn-pink"><i class="mdi mdi-chevron-triple-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="AtoZ('series')" class="btn btn-info"><?= $_["a_to_z"] ?></a>
+                                                            <a href="javascript: void(0);" onClick="MoveUp('series')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveDown('series')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveTop('series')"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-up"></i></a>
+                                                            <a href="javascript: void(0);"
+                                                                onClick="MoveBottom('series')" class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="AtoZ('series')"
+                                                                class="btn btn-info"><?= $_["a_to_z"] ?></a>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <button type="submit" class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -190,23 +235,36 @@ if ($rSettings["sidebar"]) { ?>
                                                             <p class="sub-header">
                                                                 <?= $_["bouquet_order_sort_text"] ?>
                                                             </p>
-                                                            <select multiple id="sort_radio" class="form-control" style="min-height:400px;">
+                                                            <select multiple id="sort_radio" class="form-control"
+                                                                style="min-height:400px;">
                                                                 <?php foreach ($rOrdered["radio"] as $rStream) { ?>
-                                                                    <option value="<?= $rStream["id"] ?>"><?= $rStream["stream_display_name"] ?></option>
+                                                                    <option value="<?= $rStream["id"] ?>">
+                                                                        <?= $rStream["stream_display_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0 add-margin-top-20">
                                                         <li class="list-inline-item">
-                                                            <a href="javascript: void(0);" onClick="MoveUp('radio')" class="btn btn-purple"><i class="mdi mdi-chevron-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveDown('radio')" class="btn btn-purple"><i class="mdi mdi-chevron-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveTop('radio')" class="btn btn-pink"><i class="mdi mdi-chevron-triple-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveBottom('radio')" class="btn btn-pink"><i class="mdi mdi-chevron-triple-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="AtoZ('radio')" class="btn btn-info"><?= $_["a_to_z"] ?></a>
+                                                            <a href="javascript: void(0);" onClick="MoveUp('radio')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveDown('radio')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveTop('radio')"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveBottom('radio')"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="AtoZ('radio')"
+                                                                class="btn btn-info"><?= $_["a_to_z"] ?></a>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <button type="submit" class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
                                                         </li>
                                                     </ul>
                                                 </div>

@@ -12,7 +12,7 @@ include "../functions.php";
 
 function resellerapi_encrypt($q, $salt = null) {
     $qEncoded = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), $q, MCRYPT_MODE_CBC, md5(md5($salt))));
-    return( $qEncoded );
+    return ($qEncoded);
 }
 
 class Controller {
@@ -86,7 +86,7 @@ class Controller {
                             $return['result'] = 'success';
                             foreach ($packages as $rPackage) {
                                 if (in_array($row["member_group_id"], json_decode($rPackage["groups"], True))) {
-                                    if ((($rPackage["is_trial"]) && ($param["trial"] == 1)) OR ( ($rPackage["is_official"]) && ($param["trial"] == 0))) {
+                                    if ((($rPackage["is_trial"]) && ($param["trial"] == 1)) or (($rPackage["is_official"]) && ($param["trial"] == 0))) {
                                         if ($param['producttype'] == 'magdevice') {
                                             if ($rPackage["can_gen_mag"] == 1) {
                                                 $return['products'][] = array(
@@ -139,7 +139,7 @@ class Controller {
                 $param["mac_address_mag"] = strtoupper($param["mac_address_mag"]);
                 $param["mac_address_e2"] = strtoupper($param["mac_address_e2"]);
 
-                $rArray = Array("member_id" => 0, "username" => "", "password" => "", "exp_date" => null, "admin_enabled" => 1, "enabled" => 1, "admin_notes" => "", "reseller_notes" => "", "bouquet" => Array(), "max_connections" => 1, "is_restreamer" => 0, "allowed_ips" => Array(), "allowed_ua" => Array(), "created_at" => time(), "created_by" => -1, "is_mag" => 0, "is_e2" => 0, "force_server_id" => 0, "is_isplock" => 0, "isp_desc" => "", "forced_country" => "", "is_stalker" => 0, "bypass_ua" => 0, "play_token" => "");
+                $rArray = array("member_id" => 0, "username" => "", "password" => "", "exp_date" => null, "admin_enabled" => 1, "enabled" => 1, "admin_notes" => "", "reseller_notes" => "", "bouquet" => array(), "max_connections" => 1, "is_restreamer" => 0, "allowed_ips" => array(), "allowed_ua" => array(), "created_at" => time(), "created_by" => -1, "is_mag" => 0, "is_e2" => 0, "force_server_id" => 0, "is_isplock" => 0, "isp_desc" => "", "forced_country" => "", "is_stalker" => 0, "bypass_ua" => 0, "play_token" => "");
                 if (!empty($param["package"])) {
                     $rPackage = getPackage($param["package"]);
                     // Check package is within permissions.
@@ -190,14 +190,14 @@ class Controller {
                     $param["username"] = '';
                     $param["password"] = '';
                 }
-                if ((strlen($param["username"]) == 0) OR ( ($rArray["is_mag"]) && (!isset($rUser))) OR ( ($rArray["is_e2"]) && (!isset($rUser)))) {
+                if ((strlen($param["username"]) == 0) or (($rArray["is_mag"]) && (!isset($rUser))) or (($rArray["is_e2"]) && (!isset($rUser)))) {
                     $param["username"] = generateString(10);
-                } else if ((($rArray["is_mag"]) && (isset($rUser))) OR ( ($rArray["is_e2"]) && (isset($rUser)))) {
+                } else if ((($rArray["is_mag"]) && (isset($rUser))) or (($rArray["is_e2"]) && (isset($rUser)))) {
                     $param["username"] = $rUser["username"];
                 }
-                if ((strlen($param["password"]) == 0) OR ( ($rArray["is_mag"]) && (!isset($rUser))) OR ( ($rArray["is_e2"]) && (!isset($rUser)))) {
+                if ((strlen($param["password"]) == 0) or (($rArray["is_mag"]) && (!isset($rUser))) or (($rArray["is_e2"]) && (!isset($rUser)))) {
                     $param["password"] = generateString(10);
-                } else if ((($rArray["is_mag"]) && (isset($rUser))) OR ( ($rArray["is_e2"]) && (isset($rUser)))) {
+                } else if ((($rArray["is_mag"]) && (isset($rUser))) or (($rArray["is_e2"]) && (isset($rUser)))) {
                     $param["password"] = $rUser["password"];
                 }
                 $rArray["username"] = $param["username"];
@@ -210,16 +210,16 @@ class Controller {
                     return json_encode($return);
                 }
 
-                if ((($param["is_mag"]) && (!filter_var($param["mac_address_mag"], FILTER_VALIDATE_MAC))) OR ( (strlen($param["mac_address_e2"]) > 0) && (!filter_var($param["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
+                if ((($param["is_mag"]) && (!filter_var($param["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen($param["mac_address_e2"]) > 0) && (!filter_var($param["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
                     $return['result'] = 'error';
                     $return['message'] = 'An invalid MAC address was entered, please try again.';
                     return json_encode($return);
                 }
                 if (!isset($_STATUS)) {
                     $rArray["created_by"] = $rUserInfo["id"];
-					foreach ($rArray as $rKey => $rValue) {
-						$rArray[$db->real_escape_string($rKey)] = $rValue;
-					}
+                    foreach ($rArray as $rKey => $rValue) {
+                        $rArray[$db->real_escape_string($rKey)] = $rValue;
+                    }
                     $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
                     foreach (array_values($rArray) as $rValue) {
                         isset($rValues) ? $rValues .= ',' : $rValues = '';
@@ -245,7 +245,7 @@ class Controller {
                             $isE2 = True;
                         }
                     }
-                    if ((!$isMag) && (!$isE2) && (($rPackage["only_mag"]) OR ( $rPackage["only_e2"]))) {
+                    if ((!$isMag) && (!$isE2) && (($rPackage["only_mag"]) or ($rPackage["only_e2"]))) {
                         $return['result'] = 'error';
                         $return['message'] = 'Not allowed to generate normal users!';
                         return json_encode($return);
@@ -324,9 +324,9 @@ class Controller {
             $reseller_notes = $params['reseller_notes'];
             if ($params['producttype'] == 'streamlineonly') {
                 if (isset($username) && !empty($username)) {
-                    $result = $db->query("SELECT username FROM users WHERE username='".$db->real_escape_string($username)."' AND enabled='1' AND reseller_notes ='".$db->real_escape_string($reseller_notes)."'");
+                    $result = $db->query("SELECT username FROM users WHERE username='" . $db->real_escape_string($username) . "' AND enabled='1' AND reseller_notes ='" . $db->real_escape_string($reseller_notes) . "'");
                     if ($result->num_rows > 0) {
-                        $disable = $db->query("UPDATE users SET enabled='0' WHERE username='".$db->real_escape_string($username)."' AND enabled='1' AND reseller_notes ='".$db->real_escape_string($reseller_notes)."' ");
+                        $disable = $db->query("UPDATE users SET enabled='0' WHERE username='" . $db->real_escape_string($username) . "' AND enabled='1' AND reseller_notes ='" . $db->real_escape_string($reseller_notes) . "' ");
                         if ($disable) {
                             $return['result'] = 'success';
                             $return['message'] = 'User Disable Successfully!';
@@ -347,7 +347,7 @@ class Controller {
                 $result = $db->query("SELECT user_id FROM `mag_devices` WHERE mac='" . $db->real_escape_string(base64_encode($params['mac_address_mag'])) . "'");
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        $disable = $db->query("UPDATE users SET enabled='0' WHERE reseller_notes='".$db->real_escape_string($reseller_notes)."' AND is_mag='1' AND enabled='1' AND id='" . intval($row['user_id']) . "'");
+                        $disable = $db->query("UPDATE users SET enabled='0' WHERE reseller_notes='" . $db->real_escape_string($reseller_notes) . "' AND is_mag='1' AND enabled='1' AND id='" . intval($row['user_id']) . "'");
                         if ($disable) {
                             $return['result'] = 'success';
                             $return['message'] = 'User Disable Successfully!';
@@ -365,7 +365,7 @@ class Controller {
                 $result = $db->query("SELECT user_id FROM `enigma2_devices` WHERE mac='" . $db->real_escape_string($params['mac_address_e2']) . "'");
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        $disable = $db->query("UPDATE users SET enabled='0' WHERE reseller_notes='".$db->real_escape_string($reseller_notes)."' AND is_e2='1' AND enabled='1' AND id='" . intval($row['user_id']) . "'");
+                        $disable = $db->query("UPDATE users SET enabled='0' WHERE reseller_notes='" . $db->real_escape_string($reseller_notes) . "' AND is_e2='1' AND enabled='1' AND id='" . intval($row['user_id']) . "'");
                         if ($disable) {
                             $return['result'] = 'success';
                             $return['message'] = 'User Disable Successfully!';
@@ -396,9 +396,9 @@ class Controller {
             $reseller_notes = $params['reseller_notes'];
             if ($params['producttype'] == 'streamlineonly') {
                 if (isset($username) && !empty($username)) {
-                    $result = $db->query("SELECT username FROM users WHERE username='".$db->real_escape_string($username)."' AND enabled='0' AND reseller_notes ='".$db->real_escape_string($reseller_notes)."'");
+                    $result = $db->query("SELECT username FROM users WHERE username='" . $db->real_escape_string($username) . "' AND enabled='0' AND reseller_notes ='" . $db->real_escape_string($reseller_notes) . "'");
                     if ($result->num_rows > 0) {
-                        $disable = $db->query("UPDATE users SET enabled='1' WHERE username='".$db->real_escape_string($username)."' AND enabled='0' AND reseller_notes ='".$db->real_escape_string($reseller_notes)."' ");
+                        $disable = $db->query("UPDATE users SET enabled='1' WHERE username='" . $db->real_escape_string($username) . "' AND enabled='0' AND reseller_notes ='" . $db->real_escape_string($reseller_notes) . "' ");
                         if ($disable) {
                             $return['result'] = 'success';
                             $return['message'] = 'User Disable Successfully!';
@@ -437,7 +437,7 @@ class Controller {
                 $result = $db->query("SELECT user_id FROM `enigma2_devices` WHERE mac='" . $db->real_escape_string($params['mac_address_e2']) . "'");
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        $disable = $db->query("UPDATE users SET enabled='1' WHERE reseller_notes='".$db->real_escape_string($reseller_notes)."' AND is_e2='1' AND enabled='0' AND id='" . intval($row['user_id']) . "'");
+                        $disable = $db->query("UPDATE users SET enabled='1' WHERE reseller_notes='" . $db->real_escape_string($reseller_notes) . "' AND is_e2='1' AND enabled='0' AND id='" . intval($row['user_id']) . "'");
                         if ($disable) {
                             $return['result'] = 'success';
                             $return['message'] = 'User Disable Successfully!';
@@ -570,7 +570,7 @@ class Controller {
                 if ($param['extend'] == 'streamlineonly') {
                     $username = $param['username'];
                     if (isset($username) && !empty($username)) {
-                        $result = $db->query("SELECT * FROM users WHERE username='".$db->real_escape_string($username)."'");
+                        $result = $db->query("SELECT * FROM users WHERE username='" . $db->real_escape_string($username) . "'");
                     } else {
                         $return['result'] = 'error';
                         $return['message'] = 'No Record Found!';
@@ -632,7 +632,7 @@ class Controller {
                     $rArray["username"] = $param["username"];
                     $rArray["password"] = $param["password"];
 
-                    if ((($param["is_mag"]) && (!filter_var($param["mac_address_mag"], FILTER_VALIDATE_MAC))) OR ( (strlen($param["mac_address_e2"]) > 0) && (!filter_var($param["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
+                    if ((($param["is_mag"]) && (!filter_var($param["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen($param["mac_address_e2"]) > 0) && (!filter_var($param["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
                         $return['result'] = 'error';
                         $return['message'] = 'An invalid MAC address was entered, please try again.';
                         return json_encode($return);
@@ -651,7 +651,7 @@ class Controller {
                         }
                     }
                     $rQuery = '';
-                    if ((!$isMag) && (!$isE2) && (($rPackage["only_mag"]) OR ( $rPackage["only_e2"]))) {
+                    if ((!$isMag) && (!$isE2) && (($rPackage["only_mag"]) or ($rPackage["only_e2"]))) {
                         $return['result'] = 'error';
                         $return['message'] = 'Not allowed to generate normal users!';
                         return json_encode($return);
@@ -664,11 +664,11 @@ class Controller {
                             if ($upCounter == $totalUpdateData) {
                                 $commasel = "";
                             }
-                            $rQuery .= " ".$db->real_escape_string($KeyColumn)." = '".$db->real_escape_string($val)."' " . $commasel;
+                            $rQuery .= " " . $db->real_escape_string($KeyColumn) . " = '" . $db->real_escape_string($val) . "' " . $commasel;
                             ++$upCounter;
                         }
 
-                        $rQuery .= " WHERE id = '".intval($user_id)."'";
+                        $rQuery .= " WHERE id = '" . intval($user_id) . "'";
                         // Checks completed, run,
                         if ($db->query($rQuery)) {
                             $rInsertID = $db->insert_id;
@@ -714,4 +714,3 @@ class Controller {
         return json_encode($return);
     }
 }
-?>

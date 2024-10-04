@@ -29,19 +29,24 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="#" onClick="clearFilters();">
-                                                <button type="button" class="btn btn-warning waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-warning waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-filter-remove"></i>
                                                 </button>
                                             </a>
                                             <?php if (!$detect->isMobile()) { ?>
                                                 <a href="#" onClick="toggleAuto();" style="margin-right:10px;">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-refresh"></i> <span class="auto-text"><?= $_["auto_refresh"] ?></span>
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
+                                                        <i class="mdi mdi-refresh"></i> <span
+                                                            class="auto-text"><?= $_["auto_refresh"] ?></span>
                                                     </button>
                                                 </a>
                                             <?php } else { ?>
-                                                <a href="javascript:location.reload();" onClick="toggleAuto();" style="margin-right:10px;">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
+                                                <a href="javascript:location.reload();" onClick="toggleAuto();"
+                                                    style="margin-right:10px;">
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
                                                     </button>
                                                 </a>
@@ -61,20 +66,25 @@ if ($rSettings["sidebar"]) { ?>
                                     <form id="user_activity_search">
                                         <div class="form-group row mb-4">
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" id="live_search" value="" placeholder="<?= $_["search_logs"] ?>...">
+                                                <input type="text" class="form-control" id="live_search" value=""
+                                                    placeholder="<?= $_["search_logs"] ?>...">
                                             </div>
-                                            <label class="col-md-1 col-form-label text-center" for="live_filter"><?= $_["filter"] ?></label>
+                                            <label class="col-md-1 col-form-label text-center"
+                                                for="live_filter"><?= $_["filter"] ?></label>
                                             <div class="col-md-3">
                                                 <select id="live_filter" class="form-control" data-toggle="select2">
                                                     <option value="" selected><?= $_["all_servers"] ?></option>
                                                     <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                        <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?></option>
+                                                        <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?>
+                                                        </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
-                                            <label class="col-md-1 col-form-label text-center" for="live_show_entries"><?= $_["show"] ?></label>
+                                            <label class="col-md-1 col-form-label text-center"
+                                                for="live_show_entries"><?= $_["show"] ?></label>
                                             <div class="col-md-1">
-                                                <select id="live_show_entries" class="form-control" data-toggle="select2">
+                                                <select id="live_show_entries" class="form-control"
+                                                    data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                     echo " selected";

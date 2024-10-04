@@ -1,11 +1,12 @@
 <html>
+
 <head>
     <script>
         var iid = 1;
         var mid = 10;
         read = new Object();
         var pread = ["1", "2", "3"];
-        read = {'result': {'1': '', '2': '', '3': ''}};
+        read = { 'result': { '1': '', '2': '', '3': '' } };
         var menuT = [['input', parent.t('Password:')], ['input', parent.t('New password:')], ['input', parent.t('Confirm password:')]];
         var mid = menuT.length + 2;
 
@@ -22,7 +23,7 @@
             var p1 = document.getElementById('i1').value;
             var p2 = document.getElementById('i2').value;
             var p3 = document.getElementById('i3').value;
-            if (p1 != '' && p2 != '' && p3 != '') parent.load({"type": "stb", "action": "get_settings_profile"},
+            if (p1 != '' && p2 != '' && p3 != '') parent.load({ "type": "stb", "action": "get_settings_profile" },
                 function (profile) {
                     document.getElementById('i1').value = '';
                     document.getElementById('i2').value = '';
@@ -59,26 +60,28 @@
     </script>
     <script language="JavaScript" src="js/pres.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 <body onload="onLoad()" onkeydown="pressKey(event);">
-<div id="blueback">
-    <table class="nsp" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td align="right"><span id="t1"></span></td>
-            <td width="10"><input type="password" id="i1"/>
-        </tr>
-        <tr>
-            <td align="right"><span id="t2"></span></td>
-            <td><input type="password" id="i2">
-        </tr>
-        <tr>
-            <td align="right"><span id="t3"></span></td>
-            <td><input type="password" id="i3" value=""></td>
-        </tr>
-    </table>
-</div>
-<div id="footer">
-    <input id="i5" type="button" value="" onClick="back();"/>
-    <input id="i4" type="button" value="" onClick="submit();"/>
-</div>
+    <div id="blueback">
+        <table class="nsp" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="right"><span id="t1"></span></td>
+                <td width="10"><input type="password" id="i1" />
+            </tr>
+            <tr>
+                <td align="right"><span id="t2"></span></td>
+                <td><input type="password" id="i2">
+            </tr>
+            <tr>
+                <td align="right"><span id="t3"></span></td>
+                <td><input type="password" id="i3" value=""></td>
+            </tr>
+        </table>
+    </div>
+    <div id="footer">
+        <input id="i5" type="button" value="" onClick="back();" />
+        <input id="i4" type="button" value="" onClick="submit();" />
+    </div>
 </body>
+
 </html>

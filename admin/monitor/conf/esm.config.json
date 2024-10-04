@@ -19,7 +19,7 @@
             "facebook.com",
             "google.com",
             "uit.one",
-			"fdcservers.net"
+            "fdcservers.net"
         ]
     },
     "last_login": {
@@ -35,97 +35,97 @@
                 "port": 80,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server",
                 "host": "localhost",
                 "port": 443,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server",
                 "host": "localhost",
                 "port": 25500,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server",
                 "host": "localhost",
                 "port": 25461,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server",
                 "host": "localhost",
                 "port": 25462,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server",
                 "host": "localhost",
                 "port": 25463,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 8080,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 8880,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 2052,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 2082,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 2086,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 2095,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 2053,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 2083,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 2087,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 2096,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Web Server Cloudflare",
                 "host": "localhost",
                 "port": 8443,
@@ -137,7 +137,7 @@
                 "port": 7999,
                 "protocol": "tcp"
             },
-			{
+            {
                 "name": "Database Server",
                 "host": "localhost",
                 "port": 3306,

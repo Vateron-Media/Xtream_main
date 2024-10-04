@@ -39,7 +39,8 @@
 /*
  * string object
  */
-typedef struct _mbfl_string {
+typedef struct _mbfl_string
+{
 	enum mbfl_no_language no_language;
 	const mbfl_encoding *encoding;
 	unsigned char *val;

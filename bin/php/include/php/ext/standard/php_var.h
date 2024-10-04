@@ -52,16 +52,16 @@ PHPAPI HashTable *php_var_unserialize_get_allowed_classes(php_unserialize_data_t
 PHPAPI void php_var_unserialize_set_allowed_classes(php_unserialize_data_t d, HashTable *classes);
 
 #define PHP_VAR_SERIALIZE_INIT(d) \
-	(d) = php_var_serialize_init()
+   (d) = php_var_serialize_init()
 
 #define PHP_VAR_SERIALIZE_DESTROY(d) \
-	php_var_serialize_destroy(d)
+   php_var_serialize_destroy(d)
 
 #define PHP_VAR_UNSERIALIZE_INIT(d) \
-	(d) = php_var_unserialize_init()
+   (d) = php_var_unserialize_init()
 
 #define PHP_VAR_UNSERIALIZE_DESTROY(d) \
-	php_var_unserialize_destroy(d)
+   php_var_unserialize_destroy(d)
 
 PHPAPI void var_replace(php_unserialize_data_t *var_hash, zval *ozval, zval *nzval);
 PHPAPI void var_push_dtor(php_unserialize_data_t *var_hash, zval *val);

@@ -28,7 +28,7 @@ define('PEAR_IGNORE_BACKTRACE', 1);
 //the space is needed for windows include paths with trailing backslash
 // http://pear.php.net/bugs/bug.php?id=19482
 if ('/home/xtreamcodes/bin/php/lib/php ' != '@' . 'include_path' . '@ ') {
-    ini_set('include_path', trim('/home/xtreamcodes/bin/php/lib/php ') . PATH_SEPARATOR .  get_include_path());
+    ini_set('include_path', trim('/home/xtreamcodes/bin/php/lib/php ') . PATH_SEPARATOR . get_include_path());
     $raw = false;
 } else {
     // this is a raw, uninstalled pear, either a cvs checkout, or php distro
@@ -448,19 +448,19 @@ function error_handler($errno, $errmsg, $file, $line) {
         return false; // @silenced error, show all if debug is high enough
     }
     $errortype = array(
-        E_DEPRECATED  => 'Deprecated Warning',
-        E_ERROR   =>  "Error",
-        E_WARNING   =>  "Warning",
-        E_PARSE   =>  "Parsing Error",
-        E_STRICT  => 'Strict Warning',
-        E_NOTICE   =>  "Notice",
-        E_CORE_ERROR  =>  "Core Error",
-        E_CORE_WARNING  =>  "Core Warning",
-        E_COMPILE_ERROR  =>  "Compile Error",
-        E_COMPILE_WARNING =>  "Compile Warning",
-        E_USER_ERROR =>  "User Error",
-        E_USER_WARNING =>  "User Warning",
-        E_USER_NOTICE =>  "User Notice"
+        E_DEPRECATED => 'Deprecated Warning',
+        E_ERROR => "Error",
+        E_WARNING => "Warning",
+        E_PARSE => "Parsing Error",
+        E_STRICT => 'Strict Warning',
+        E_NOTICE => "Notice",
+        E_CORE_ERROR => "Core Error",
+        E_CORE_WARNING => "Core Warning",
+        E_COMPILE_ERROR => "Compile Error",
+        E_COMPILE_WARNING => "Compile Warning",
+        E_USER_ERROR => "User Error",
+        E_USER_WARNING => "User Warning",
+        E_USER_NOTICE => "User Notice"
     );
     $prefix = $errortype[$errno];
     global $_PEAR_PHPDIR;

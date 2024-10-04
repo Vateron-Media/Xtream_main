@@ -25,37 +25,36 @@
    always sizeof(signed) == sizeof(unsigned), so no need to
    overcomplicate things. */
 #if SIZEOF_INT < SIZEOF_ZEND_LONG
-# define ZEND_LONG_CAN_OVFL_INT 1
-# define ZEND_LONG_CAN_OVFL_UINT 1
+#define ZEND_LONG_CAN_OVFL_INT 1
+#define ZEND_LONG_CAN_OVFL_UINT 1
 #endif
 
 #if SIZEOF_INT < SIZEOF_SIZE_T
 /* size_t can always overflow signed int on the same platform.
    Furthermore, by the current design, size_t can always
    overflow zend_long. */
-# define ZEND_SIZE_T_CAN_OVFL_UINT 1
+#define ZEND_SIZE_T_CAN_OVFL_UINT 1
 #endif
-
 
 /* zend_long vs. (unsigned) int checks. */
 #ifdef ZEND_LONG_CAN_OVFL_INT
-# define ZEND_LONG_INT_OVFL(zlong) UNEXPECTED((zlong) > (zend_long)INT_MAX)
-# define ZEND_LONG_INT_UDFL(zlong) UNEXPECTED((zlong) < (zend_long)INT_MIN)
-# define ZEND_LONG_EXCEEDS_INT(zlong) UNEXPECTED(ZEND_LONG_INT_OVFL(zlong) || ZEND_LONG_INT_UDFL(zlong))
-# define ZEND_LONG_UINT_OVFL(zlong) UNEXPECTED((zlong) < 0 || (zlong) > (zend_long)UINT_MAX)
+#define ZEND_LONG_INT_OVFL(zlong) UNEXPECTED((zlong) > (zend_long)INT_MAX)
+#define ZEND_LONG_INT_UDFL(zlong) UNEXPECTED((zlong) < (zend_long)INT_MIN)
+#define ZEND_LONG_EXCEEDS_INT(zlong) UNEXPECTED(ZEND_LONG_INT_OVFL(zlong) || ZEND_LONG_INT_UDFL(zlong))
+#define ZEND_LONG_UINT_OVFL(zlong) UNEXPECTED((zlong) < 0 || (zlong) > (zend_long)UINT_MAX)
 #else
-# define ZEND_LONG_INT_OVFL(zl) (0)
-# define ZEND_LONG_INT_UDFL(zl) (0)
-# define ZEND_LONG_EXCEEDS_INT(zlong) (0)
-# define ZEND_LONG_UINT_OVFL(zl) (0)
+#define ZEND_LONG_INT_OVFL(zl) (0)
+#define ZEND_LONG_INT_UDFL(zl) (0)
+#define ZEND_LONG_EXCEEDS_INT(zlong) (0)
+#define ZEND_LONG_UINT_OVFL(zl) (0)
 #endif
 
 /* size_t vs (unsigned) int checks. */
-#define ZEND_SIZE_T_INT_OVFL(size) 	UNEXPECTED((size) > (size_t)INT_MAX)
+#define ZEND_SIZE_T_INT_OVFL(size) UNEXPECTED((size) > (size_t)INT_MAX)
 #ifdef ZEND_SIZE_T_CAN_OVFL_UINT
-# define ZEND_SIZE_T_UINT_OVFL(size) UNEXPECTED((size) > (size_t)UINT_MAX)
+#define ZEND_SIZE_T_UINT_OVFL(size) UNEXPECTED((size) > (size_t)UINT_MAX)
 #else
-# define ZEND_SIZE_T_UINT_OVFL(size) (0)
+#define ZEND_SIZE_T_UINT_OVFL(size) (0)
 #endif
 
 /* Comparison zend_long vs size_t */

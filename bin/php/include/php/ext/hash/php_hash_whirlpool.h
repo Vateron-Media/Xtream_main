@@ -20,14 +20,16 @@
 #define PHP_HASH_WHIRLPOOL_H
 
 /* WHIRLPOOL context */
-typedef struct {
-	uint64_t state[8];
-	unsigned char bitlength[32];
-	struct {
-		int pos;
-		int bits;
-		unsigned char data[64];
-	} buffer;
+typedef struct
+{
+   uint64_t state[8];
+   unsigned char bitlength[32];
+   struct
+   {
+      int pos;
+      int bits;
+      unsigned char data[64];
+   } buffer;
 } PHP_WHIRLPOOL_CTX;
 
 PHP_HASH_API void PHP_WHIRLPOOLInit(PHP_WHIRLPOOL_CTX *);

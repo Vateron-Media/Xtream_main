@@ -41,10 +41,11 @@ extern zend_module_entry xml_module_entry;
 #endif
 
 ZEND_BEGIN_MODULE_GLOBALS(xml)
-	XML_Char *default_encoding;
+XML_Char *default_encoding;
 ZEND_END_MODULE_GLOBALS(xml)
 
-typedef struct {
+typedef struct
+{
 	int case_folding;
 	XML_Parser parser;
 	XML_Char *target_encoding;
@@ -90,19 +91,19 @@ typedef struct {
 	XML_Char *baseURI;
 } xml_parser;
 
-
-typedef struct {
+typedef struct
+{
 	XML_Char *name;
 	char (*decoding_function)(unsigned short);
 	unsigned short (*encoding_function)(unsigned char);
 } xml_encoding;
 
-
-enum php_xml_option {
-    PHP_XML_OPTION_CASE_FOLDING = 1,
-    PHP_XML_OPTION_TARGET_ENCODING,
-    PHP_XML_OPTION_SKIP_TAGSTART,
-    PHP_XML_OPTION_SKIP_WHITE
+enum php_xml_option
+{
+	PHP_XML_OPTION_CASE_FOLDING = 1,
+	PHP_XML_OPTION_TARGET_ENCODING,
+	PHP_XML_OPTION_SKIP_TAGSTART,
+	PHP_XML_OPTION_SKIP_WHITE
 };
 
 /* for xml_parse_into_struct */

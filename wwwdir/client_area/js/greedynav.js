@@ -6,19 +6,19 @@ Copyright (c) 2015 Luke Jackson
 
 $(function () {
 
-var $nav = $('.greedy-nav');
-var $btn = $('.greedy-nav button');
-var $vlinks = $('.greedy-nav .visible-links');
-var $hlinks = $('.greedy-nav .hidden-links');
+  var $nav = $('.greedy-nav');
+  var $btn = $('.greedy-nav button');
+  var $vlinks = $('.greedy-nav .visible-links');
+  var $hlinks = $('.greedy-nav .hidden-links');
 
-var breaks = [];
+  var breaks = [];
 
   function updateNav() {
 
     var availableSpace = $btn.hasClass('hidden') ? $nav.width() : $nav.width() - $btn.width() - 30;
 
     // The visible list is overflowing the nav
-    if($vlinks.width() > availableSpace) {
+    if ($vlinks.width() > availableSpace) {
 
       // Record the width of the list
       breaks.push($vlinks.width());
@@ -27,15 +27,15 @@ var breaks = [];
       $vlinks.children().last().prependTo($hlinks);
 
       // Show the dropdown btn
-      if($btn.hasClass('hidden')) {
+      if ($btn.hasClass('hidden')) {
         $btn.removeClass('hidden');
       }
 
-    // The visible list is not overflowing
+      // The visible list is not overflowing
     } else {
 
       // There is space for another item in the nav
-      if(availableSpace > breaks[breaks.length-1]) {
+      if (availableSpace > breaks[breaks.length - 1]) {
 
         // Move the item to the visible list
         $hlinks.children().first().appendTo($vlinks);
@@ -43,7 +43,7 @@ var breaks = [];
       }
 
       // Hide the dropdown btn if hidden list is empty
-      if(breaks.length < 1) {
+      if (breaks.length < 1) {
         $btn.addClass('hidden');
         $hlinks.addClass('hidden');
       }
@@ -53,7 +53,7 @@ var breaks = [];
     $btn.attr("count", breaks.length);
 
     // Recur if the items are still overflowing the nav
-    if($vlinks.width() > availableSpace) {
+    if ($vlinks.width() > availableSpace) {
       updateNav();
     }
 
@@ -61,11 +61,11 @@ var breaks = [];
 
   // Window listeners
 
-  $(window).resize(function() {
-      updateNav();
+  $(window).resize(function () {
+    updateNav();
   });
 
-  $btn.on('click', function() {
+  $btn.on('click', function () {
     $hlinks.toggleClass('hidden');
   });
 

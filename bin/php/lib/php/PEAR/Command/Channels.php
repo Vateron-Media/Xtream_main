@@ -35,8 +35,7 @@ define('PEAR_COMMAND_CHANNELS_CHANNEL_EXISTS', -500);
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
-class PEAR_Command_Channels extends PEAR_Command_Common
-{
+class PEAR_Command_Channels extends PEAR_Command_Common {
     var $commands = array(
         'list-channels' => array(
             'summary' => 'List Available Channels',
@@ -46,7 +45,7 @@ class PEAR_Command_Channels extends PEAR_Command_Common
             'doc' => '
 List all available channels for installation.
 ',
-            ),
+        ),
         'update-channels' => array(
             'summary' => 'Update the Channel List',
             'function' => 'doUpdateAll',
@@ -55,7 +54,7 @@ List all available channels for installation.
             'doc' => '
 List all installed packages in all channels.
 '
-            ),
+        ),
         'channel-delete' => array(
             'summary' => 'Remove a Channel From the List',
             'function' => 'doDelete',
@@ -65,7 +64,7 @@ List all installed packages in all channels.
 Delete a channel from the registry.  You may not
 remove any channel that has installed packages.
 '
-            ),
+        ),
         'channel-add' => array(
             'summary' => 'Add a Channel',
             'function' => 'doAdd',
@@ -77,7 +76,7 @@ public channels should be synced using "update-channels".
 Parameter may be either a local file or remote URL to a
 channel.xml.
 '
-            ),
+        ),
         'channel-update' => array(
             'summary' => 'Update an Existing Channel',
             'function' => 'doUpdate',
@@ -86,20 +85,20 @@ channel.xml.
                 'force' => array(
                     'shortopt' => 'f',
                     'doc' => 'will force download of new channel.xml if an existing channel name is used',
-                    ),
+                ),
                 'channel' => array(
                     'shortopt' => 'c',
                     'arg' => 'CHANNEL',
                     'doc' => 'will force download of new channel.xml if an existing channel name is used',
-                    ),
-),
+                ),
+            ),
             'doc' => '[<channel.xml>|<channel name>]
 Update a channel in the channel list directly.  Note that all
 public channels can be synced using "update-channels".
 Parameter may be a local or remote channel.xml, or the name of
 an existing channel.
 '
-            ),
+        ),
         'channel-info' => array(
             'summary' => 'Retrieve Information on a Channel',
             'function' => 'doInfo',
@@ -108,7 +107,7 @@ an existing channel.
             'doc' => '<package>
 List the files in an installed package.
 '
-            ),
+        ),
         'channel-alias' => array(
             'summary' => 'Specify an alias to a channel name',
             'function' => 'doAlias',
@@ -119,7 +118,7 @@ Specify a specific alias to use for a channel name.
 The alias may not be an existing channel name or
 alias.
 '
-            ),
+        ),
         'channel-discover' => array(
             'summary' => 'Initialize a Channel from its server',
             'function' => 'doDiscover',
@@ -133,7 +132,7 @@ If <channel name> is in the format "<username>:<password>@<channel>" then
 it may allow other users on your computer to briefly view your username/
 password via the system\'s process list.
 '
-            ),
+        ),
         'channel-login' => array(
             'summary' => 'Connects and authenticates to remote channel server',
             'shortcut' => 'cli',
@@ -147,7 +146,7 @@ username and password you enter here will be stored in your per-user
 PEAR configuration (~/.pearrc on Unix-like systems).  After logging
 in, your username and password will be sent along in subsequent
 operations on the remote server.',
-            ),
+        ),
         'channel-logout' => array(
             'summary' => 'Logs out from the remote channel server',
             'shortcut' => 'clo',
@@ -158,26 +157,23 @@ Logs out from a remote channel server.  If <channel name> is not supplied,
 the default channel is used. This command does not actually connect to the
 remote server, it only deletes the stored username and password from your user
 configuration.',
-            ),
-        );
+        ),
+    );
 
     /**
      * PEAR_Command_Registry constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 
-    function _sortChannels($a, $b)
-    {
+    function _sortChannels($a, $b) {
         return strnatcasecmp($a->getName(), $b->getName());
     }
 
-    function doList($command, $options, $params)
-    {
+    function doList($command, $options, $params) {
         $reg = &$this->config->getRegistry();
         $registered = $reg->getChannels();
         usort($registered, array(&$this, '_sortchannels'));
@@ -186,11 +182,13 @@ configuration.',
             'caption' => 'Registered Channels:',
             'border' => true,
             'headline' => array('Channel', 'Alias', 'Summary')
-            );
+        );
         foreach ($registered as $channel) {
-            $data['data'][] = array($channel->getName(),
-                                    $channel->getAlias(),
-                                    $channel->getSummary());
+            $data['data'][] = array(
+                $channel->getName(),
+                $channel->getAlias(),
+                $channel->getSummary()
+            );
         }
 
         if (count($registered) === 0) {
@@ -200,8 +198,7 @@ configuration.',
         return true;
     }
 
-    function doUpdateAll($command, $options, $params)
-    {
+    function doUpdateAll($command, $options, $params) {
         $reg = &$this->config->getRegistry();
         $channels = $reg->getChannels();
 
@@ -209,9 +206,11 @@ configuration.',
         foreach ($channels as $channel) {
             if ($channel->getName() != '__uri') {
                 PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-                $err = $this->doUpdate('channel-update',
-                                          $options,
-                                          array($channel->getName()));
+                $err = $this->doUpdate(
+                    'channel-update',
+                    $options,
+                    array($channel->getName())
+                );
                 if (PEAR::isError($err)) {
                     $this->ui->outputData($err->getMessage(), $command);
                     $success = false;
@@ -223,13 +222,12 @@ configuration.',
         return $success;
     }
 
-    function doInfo($command, $options, $params)
-    {
+    function doInfo($command, $options, $params) {
         if (count($params) !== 1) {
             return $this->raiseError("No channel specified");
         }
 
-        $reg     = &$this->config->getRegistry();
+        $reg = &$this->config->getRegistry();
         $channel = strtolower($params[0]);
         if ($reg->channelExists($channel)) {
             $chan = $reg->getChannel($channel);
@@ -290,7 +288,8 @@ configuration.',
         $caption = 'Channel ' . $channel . ' Information:';
         $data1 = array(
             'caption' => $caption,
-            'border' => true);
+            'border' => true
+        );
         $data1['data']['server'] = array('Name and Server', $chan->getName());
         if ($chan->getAlias() != $chan->getName()) {
             $data1['data']['alias'] = array('Alias', $chan->getAlias());
@@ -314,8 +313,11 @@ configuration.',
                     $funcs = array($funcs);
                 }
                 foreach ($funcs as $protocol) {
-                    $data['data'][] = array('rest', $protocol['attribs']['type'],
-                        $protocol['_content']);
+                    $data['data'][] = array(
+                        'rest',
+                        $protocol['attribs']['type'],
+                        $protocol['_content']
+                    );
                 }
             }
         } else {
@@ -345,8 +347,11 @@ configuration.',
                         }
 
                         foreach ($funcs as $protocol) {
-                            $data['data'][] = array('rest', $protocol['attribs']['type'],
-                                $protocol['_content']);
+                            $data['data'][] = array(
+                                'rest',
+                                $protocol['attribs']['type'],
+                                $protocol['_content']
+                            );
                         }
                     }
                 } else {
@@ -360,8 +365,7 @@ configuration.',
 
     // }}}
 
-    function doDelete($command, $options, $params)
-    {
+    function doDelete($command, $options, $params) {
         if (count($params) !== 1) {
             return $this->raiseError('channel-delete: no channel specified');
         }
@@ -405,8 +409,7 @@ configuration.',
         }
     }
 
-    function doAdd($command, $options, $params)
-    {
+    function doAdd($command, $options, $params) {
         if (count($params) !== 1) {
             return $this->raiseError('channel-add: no channel file specified');
         }
@@ -503,8 +506,7 @@ configuration.',
         $this->ui->outputData('Adding Channel "' . $channel->getName() . '" succeeded', $command);
     }
 
-    function doUpdate($command, $options, $params)
-    {
+    function doUpdate($command, $options, $params) {
         if (count($params) !== 1) {
             return $this->raiseError("No channel file specified");
         }
@@ -530,8 +532,10 @@ configuration.',
 
         $reg = &$this->config->getRegistry();
         $lastmodified = false;
-        if ((!file_exists($params[0]) || is_dir($params[0]))
-              && $reg->channelExists(strtolower($params[0]))) {
+        if (
+            (!file_exists($params[0]) || is_dir($params[0]))
+            && $reg->channelExists(strtolower($params[0]))
+        ) {
             $c = $reg->getChannel(strtolower($params[0]));
             if (PEAR::isError($c)) {
                 return $this->raiseError($c);
@@ -542,16 +546,26 @@ configuration.',
             // if force is specified, use a timestamp of "1" to force retrieval
             $lastmodified = isset($options['force']) ? false : $c->lastModified();
             PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-            $contents = $dl->downloadHttp('http://' . $c->getName() . '/channel.xml',
-                $this->ui, $tmpdir, null, $lastmodified);
+            $contents = $dl->downloadHttp(
+                'http://' . $c->getName() . '/channel.xml',
+                $this->ui,
+                $tmpdir,
+                null,
+                $lastmodified
+            );
             PEAR::staticPopErrorHandling();
             if (PEAR::isError($contents)) {
                 // Attempt to fall back to https
                 $this->ui->outputData("Channel \"$params[0]\" is not responding over http://, failed with message: " . $contents->getMessage());
                 $this->ui->outputData("Trying channel \"$params[0]\" over https:// instead");
                 PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-                $contents = $dl->downloadHttp('https://' . $c->getName() . '/channel.xml',
-                    $this->ui, $tmpdir, null, $lastmodified);
+                $contents = $dl->downloadHttp(
+                    'https://' . $c->getName() . '/channel.xml',
+                    $this->ui,
+                    $tmpdir,
+                    null,
+                    $lastmodified
+                );
                 PEAR::staticPopErrorHandling();
                 if (PEAR::isError($contents)) {
                     return $this->raiseError('Cannot retrieve channel.xml for channel "' .
@@ -590,12 +604,17 @@ configuration.',
             if (strpos($params[0], '://')) {
                 $dl = &$this->getDownloader();
                 PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-                $loc = $dl->downloadHttp($params[0],
-                    $this->ui, $tmpdir, null, $lastmodified);
+                $loc = $dl->downloadHttp(
+                    $params[0],
+                    $this->ui,
+                    $tmpdir,
+                    null,
+                    $lastmodified
+                );
                 PEAR::staticPopErrorHandling();
                 if (PEAR::isError($loc)) {
                     return $this->raiseError("Cannot open " . $params[0] .
-                         ' (' . $loc->getMessage() . ')');
+                        ' (' . $loc->getMessage() . ')');
                 }
 
                 list($loc, $lastmodified) = $loc;
@@ -658,8 +677,7 @@ configuration.',
         $this->ui->outputData('Update of Channel "' . $channel->getName() . '" succeeded');
     }
 
-    function &getDownloader()
-    {
+    function &getDownloader() {
         if (!class_exists('PEAR_Downloader')) {
             require_once 'PEAR/Downloader.php';
         }
@@ -667,15 +685,15 @@ configuration.',
         return $a;
     }
 
-    function doAlias($command, $options, $params)
-    {
+    function doAlias($command, $options, $params) {
         if (count($params) === 1) {
             return $this->raiseError('No channel alias specified');
         }
 
         if (count($params) !== 2 || (!empty($params[1]) && $params[1][0] == '-')) {
             return $this->raiseError(
-                'Invalid format, correct is: channel-alias channel alias');
+                'Invalid format, correct is: channel-alias channel alias'
+            );
         }
 
         $reg = &$this->config->getRegistry();
@@ -722,8 +740,7 @@ configuration.',
      *               - <username>:<password>@<channel name>
      * @return null|PEAR_Error
      */
-    function doDiscover($command, $options, $params)
-    {
+    function doDiscover($command, $options, $params) {
         if (count($params) !== 1) {
             return $this->raiseError("No channel server specified");
         }
@@ -732,7 +749,7 @@ configuration.',
         if (preg_match('/^(.+):(.+)@(.+)\\z/', $params[0], $matches)) {
             $username = $matches[1];
             $password = $matches[2];
-            $channel  = $matches[3];
+            $channel = $matches[3];
         } else {
             $channel = $params[0];
         }
@@ -794,8 +811,7 @@ configuration.',
      *
      * @access public
      */
-    function doLogin($command, $options, $params)
-    {
+    function doLogin($command, $options, $params) {
         $reg = &$this->config->getRegistry();
 
         // If a parameter is supplied, use that as the channel to log in to
@@ -806,8 +822,8 @@ configuration.',
             return $this->raiseError($chan);
         }
 
-        $server   = $this->config->get('preferred_mirror', null, $channel);
-        $username = $this->config->get('username',         null, $channel);
+        $server = $this->config->get('preferred_mirror', null, $channel);
+        $username = $this->config->get('username', null, $channel);
         if (empty($username)) {
             $username = isset($_ENV['USER']) ? $_ENV['USER'] : null;
         }
@@ -816,9 +832,9 @@ configuration.',
         list($username, $password) = $this->ui->userDialog(
             $command,
             array('Username', 'Password'),
-            array('text',     'password'),
-            array($username,  '')
-            );
+            array('text', 'password'),
+            array($username, '')
+        );
         $username = trim($username);
         $password = trim($password);
 
@@ -860,14 +876,13 @@ configuration.',
      *
      * @access public
      */
-    function doLogout($command, $options, $params)
-    {
-        $reg     = &$this->config->getRegistry();
+    function doLogout($command, $options, $params) {
+        $reg = &$this->config->getRegistry();
 
         // If a parameter is supplied, use that as the channel to log in to
         $channel = isset($params[0]) ? $params[0] : $this->config->get('default_channel');
 
-        $chan    = $reg->getChannel($channel);
+        $chan = $reg->getChannel($channel);
         if (PEAR::isError($chan)) {
             return $this->raiseError($chan);
         }

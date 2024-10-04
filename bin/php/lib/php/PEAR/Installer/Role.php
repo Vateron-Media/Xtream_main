@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Installer_Role
  *
@@ -28,16 +29,14 @@ require_once 'PEAR/XMLParser.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
-class PEAR_Installer_Role
-{
+class PEAR_Installer_Role {
     /**
      * Set up any additional configuration variables that file roles require
      *
      * Never call this directly, it is called by the PEAR_Config constructor
      * @param PEAR_Config
      */
-    public static function initializeConfig(&$config)
-    {
+    public static function initializeConfig(&$config) {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
         }
@@ -57,8 +56,7 @@ class PEAR_Installer_Role
      * @param PEAR_Config
      * @return PEAR_Installer_Role_Common
      */
-    public static function &factory($pkg, $role, &$config)
-    {
+    public static function &factory($pkg, $role, &$config) {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
         }
@@ -85,8 +83,7 @@ class PEAR_Installer_Role
      * @param bool clear cache
      * @return array
      */
-    public static function getValidRoles($release, $clear = false)
-    {
+    public static function getValidRoles($release, $clear = false) {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
         }
@@ -119,8 +116,7 @@ class PEAR_Installer_Role
      * @param bool clear cache
      * @return array
      */
-    public static function getInstallableRoles($clear = false)
-    {
+    public static function getInstallableRoles($clear = false) {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
         }
@@ -153,8 +149,7 @@ class PEAR_Installer_Role
      * @param bool clear cache
      * @return array
      */
-    public static function getBaseinstallRoles($clear = false)
-    {
+    public static function getBaseinstallRoles($clear = false) {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
         }
@@ -184,8 +179,7 @@ class PEAR_Installer_Role
      * @param bool clear cache
      * @return array
      */
-    public static function getPhpRoles($clear = false)
-    {
+    public static function getPhpRoles($clear = false) {
         if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'])) {
             PEAR_Installer_Role::registerRoles();
         }
@@ -219,8 +213,7 @@ class PEAR_Installer_Role
      *
      * @return bool TRUE on success, a PEAR error on failure
      */
-    public static function registerRoles($dir = null)
-    {
+    public static function registerRoles($dir = null) {
         $GLOBALS['_PEAR_INSTALLER_ROLES'] = array();
         $parser = new PEAR_XMLParser;
         if ($dir === null) {
@@ -241,7 +234,7 @@ class PEAR_Installer_Role
                 continue;
             }
 
-            $class = "PEAR_Installer_Role_".substr($entry, 0, -4);
+            $class = "PEAR_Installer_Role_" . substr($entry, 0, -4);
             // List of roles
             if (!isset($GLOBALS['_PEAR_INSTALLER_ROLES'][$class])) {
                 $file = "$dir/$entry";

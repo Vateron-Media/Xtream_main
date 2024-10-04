@@ -1,4 +1,5 @@
 <?php
+
 /**
  * <tasks:unixeol> - read/write version
  *
@@ -27,29 +28,23 @@ require_once 'PEAR/Task/Unixeol.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a10
  */
-class PEAR_Task_Unixeol_rw extends PEAR_Task_Unixeol
-{
-    function __construct(&$pkg, &$config, &$logger, $fileXml)
-    {
+class PEAR_Task_Unixeol_rw extends PEAR_Task_Unixeol {
+    function __construct(&$pkg, &$config, &$logger, $fileXml) {
         parent::__construct($config, $logger, PEAR_TASK_PACKAGE);
         $this->_contents = $fileXml;
         $this->_pkg = &$pkg;
         $this->_params = array();
     }
 
-    public function validate()
-    {
+    public function validate() {
         return true;
     }
 
-    public function getName()
-    {
+    public function getName() {
         return 'unixeol';
     }
 
-    public function getXml()
-    {
+    public function getXml() {
         return '';
     }
 }
-?>

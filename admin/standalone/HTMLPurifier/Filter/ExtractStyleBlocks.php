@@ -4,8 +4,7 @@
 // understand how to interpret this filter if it's a static method.
 // It's all really silly, but if we go this route it might be reasonable
 // to coalesce all of these methods into one.
-function htmlpurifier_filter_extractstyleblocks_muteerrorhandler()
-{
+function htmlpurifier_filter_extractstyleblocks_muteerrorhandler() {
 }
 
 /**
@@ -22,8 +21,7 @@ function htmlpurifier_filter_extractstyleblocks_muteerrorhandler()
  *      document--something purists would probably prefer. Just directly
  *      call HTMLPurifier_Filter_ExtractStyleBlocks->cleanCSS()
  */
-class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
-{
+class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter {
     /**
      * @type string
      */
@@ -54,8 +52,7 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
      */
     private $_enum_attrdef;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->_tidy = new csstidy();
         $this->_tidy->set_cfg('lowercase_s', false);
         $this->_id_attrdef = new HTMLPurifier_AttrDef_HTML_ID(true);
@@ -76,8 +73,7 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
      * Save the contents of CSS blocks to style matches
      * @param array $matches preg_replace style $matches array
      */
-    protected function styleCallback($matches)
-    {
+    protected function styleCallback($matches) {
         $this->_styleMatches[] = $matches[1];
     }
 
@@ -89,8 +85,7 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
      * @return string
      * @todo Extend to indicate non-text/css style blocks
      */
-    public function preFilter($html, $config, $context)
-    {
+    public function preFilter($html, $config, $context) {
         $tidy = $config->get('Filter.ExtractStyleBlocks.TidyImpl');
         if ($tidy !== null) {
             $this->_tidy = $tidy;
@@ -119,8 +114,7 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
      * @throws HTMLPurifier_Exception
      * @return string Cleaned CSS
      */
-    public function cleanCSS($css, $config, $context)
-    {
+    public function cleanCSS($css, $config, $context) {
         // prepare scope
         $scope = $config->get('Filter.ExtractStyleBlocks.Scope');
         if ($scope !== null) {

@@ -26,7 +26,8 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="useragent.php">
-                                                <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-success waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-plus"></i> <?= $_["block_user-agent"] ?>
                                                 </button>
                                             </a>
@@ -63,8 +64,14 @@ if ($rSettings["sidebar"]) { ?>
                                                     <td class="text-center"><?= $rUserAgent["attempts_blocked"] ?></td>
                                                     <td class="text-center">
                                                         <div class="btn-group">
-                                                            <a href="./useragent.php?id=<?= $rUserAgent["id"] ?>"><button type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
-                                                            <button type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rUserAgent["id"] ?>, 'delete');"><i class="mdi mdi-close"></i></button>
+                                                            <a href="./useragent.php?id=<?= $rUserAgent["id"] ?>"><button
+                                                                    type="button"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                        class="mdi mdi-pencil-outline"></i></button></a>
+                                                            <button type="button"
+                                                                class="btn btn-light waves-effect waves-light btn-xs"
+                                                                onClick="api(<?= $rUserAgent["id"] ?>, 'delete');"><i
+                                                                    class="mdi mdi-close"></i></button>
                                                         </div>
                                                     </td>
                                                 </tr>

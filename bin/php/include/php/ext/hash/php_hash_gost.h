@@ -22,12 +22,13 @@
 #include "ext/standard/basic_functions.h"
 
 /* GOST context */
-typedef struct {
-	uint32_t state[16];
-	uint32_t count[2];
-	unsigned char length;
-	unsigned char buffer[32];
-	const uint32_t (*tables)[4][256];
+typedef struct
+{
+   uint32_t state[16];
+   uint32_t count[2];
+   unsigned char length;
+   unsigned char buffer[32];
+   const uint32_t (*tables)[4][256];
 } PHP_GOST_CTX;
 
 PHP_HASH_API void PHP_GOSTInit(PHP_GOST_CTX *);

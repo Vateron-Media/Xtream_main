@@ -18,9 +18,9 @@
 
 #include "zend_sort.h"
 
-#define VM_TRACE(op)     zend_vm_trace(#op, sizeof(#op)-1);
+#define VM_TRACE(op) zend_vm_trace(#op, sizeof(#op) - 1);
 #define VM_TRACE_START() zend_vm_trace_init();
-#define VM_TRACE_END()   zend_vm_trace_finish();
+#define VM_TRACE_END() zend_vm_trace_finish();
 
 static HashTable vm_trace_ht;
 
@@ -32,17 +32,23 @@ static void zend_vm_trace(const char *op, size_t op_len)
 	size_t len;
 	zval tmp, *zv;
 
-	if (EXPECTED(last)) {
+	if (EXPECTED(last))
+	{
 		len = last_len + 1 + op_len;
 		memcpy(buf, last, last_len);
 		buf[last_len] = ' ';
 		memcpy(buf + last_len + 1, op, op_len + 1);
 		zv = zend_hash_str_find(&vm_trace_ht, buf, len);
-		if (EXPECTED(zv)) {
-			if (EXPECTED(Z_LVAL_P(zv) < ZEND_LONG_MAX)) {
-				Z_LVAL_P(zv)++;
+		if (EXPECTED(zv))
+		{
+			if (EXPECTED(Z_LVAL_P(zv) < ZEND_LONG_MAX))
+			{
+				Z_LVAL_P(zv)
+				++;
 			}
-		} else {
+		}
+		else
+		{
 			ZVAL_LONG(&tmp, 1);
 			zend_hash_str_add_new(&vm_trace_ht, buf, len, &tmp);
 		}
@@ -53,11 +59,16 @@ static void zend_vm_trace(const char *op, size_t op_len)
 
 static int zend_vm_trace_compare(const Bucket *p1, const Bucket *p2)
 {
-	if (Z_LVAL(p1->val) < Z_LVAL(p2->val)) {
+	if (Z_LVAL(p1->val) < Z_LVAL(p2->val))
+	{
 		return 1;
-	} else if (Z_LVAL(p1->val) > Z_LVAL(p2->val)) {
+	}
+	else if (Z_LVAL(p1->val) > Z_LVAL(p2->val))
+	{
 		return -1;
-	} else {
+	}
+	else
+	{
 		return 0;
 	}
 }
@@ -69,11 +80,14 @@ static void zend_vm_trace_finish(void)
 	FILE *f;
 
 	f = fopen("zend_vm_trace.log", "w+");
-	if (f) {
+	if (f)
+	{
 		zend_hash_sort(&vm_trace_ht, (compare_func_t)zend_vm_trace_compare, 0);
-		ZEND_HASH_FOREACH_STR_KEY_VAL(&vm_trace_ht, key, val) {
-			fprintf(f, "%s "ZEND_LONG_FMT"\n", ZSTR_VAL(key), Z_LVAL_P(val));
-		} ZEND_HASH_FOREACH_END();
+		ZEND_HASH_FOREACH_STR_KEY_VAL(&vm_trace_ht, key, val)
+		{
+			fprintf(f, "%s " ZEND_LONG_FMT "\n", ZSTR_VAL(key), Z_LVAL_P(val));
+		}
+		ZEND_HASH_FOREACH_END();
 		fclose(f);
 	}
 	zend_hash_destroy(&vm_trace_ht);
@@ -85,23 +99,29 @@ static void zend_vm_trace_init(void)
 
 	zend_hash_init(&vm_trace_ht, 0, NULL, NULL, 1);
 	f = fopen("zend_vm_trace.log", "r");
-	if (f) {
+	if (f)
+	{
 		char buf[256];
 		size_t len;
 		zval tmp;
 
-		while (!feof(f)) {
-			if (fgets(buf, sizeof(buf)-1, f)) {
+		while (!feof(f))
+		{
+			if (fgets(buf, sizeof(buf) - 1, f))
+			{
 				len = strlen(buf);
-				while (len > 0 && buf[len-1] <= ' ') {
+				while (len > 0 && buf[len - 1] <= ' ')
+				{
 					len--;
 					buf[len] = 0;
 				}
-				while (len > 0 && buf[len-1] >= '0' && buf[len-1] <= '9') {
+				while (len > 0 && buf[len - 1] >= '0' && buf[len - 1] <= '9')
+				{
 					len--;
 				}
-				if (len > 1) {
-					buf[len-1] = 0;
+				if (len > 1)
+				{
+					buf[len - 1] = 0;
 					ZVAL_LONG(&tmp, ZEND_STRTOL(buf + len, NULL, 10));
 					zend_hash_str_add(&vm_trace_ht, buf, len - 1, &tmp);
 				}

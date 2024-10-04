@@ -28,23 +28,23 @@ if ($rSettings["sidebar"]) { ?>
 						<!-- start page title -->
 						<div class="card-box1">
 							<!--<div class="col-12">
-                        <div class="page-title-box">
-                            <ul class="nav nav-tabs nav-bordered dashboard-tabs" style="flex-wrap: nowrap !important;">
-                                <li class="nav-item">
-                                    <a data-id="home" href="#" class="nav-link active">
-                                        <?= $_["overview"] ?>
-                                    </a>
-                                </li>
-                                <?php foreach ($rServers as $rServer) { ?>
-                                <li class="nav-item">
-                                    <a data-id="<?= $rServer["id"] ?>" href="#" class="nav-link">
-                                        <?= $rServer["server_name"] ?>
-                                    </a>
-                                </li>
-                                <?php } ?>
-                            </ul>
-                        </div>
-                    </div>-->
+						<div class="page-title-box">
+							<ul class="nav nav-tabs nav-bordered dashboard-tabs" style="flex-wrap: nowrap !important;">
+								<li class="nav-item">
+									<a data-id="home" href="#" class="nav-link active">
+										<?= $_["overview"] ?>
+									</a>
+								</li>
+								<?php foreach ($rServers as $rServer) { ?>
+								<li class="nav-item">
+									<a data-id="<?= $rServer["id"] ?>" href="#" class="nav-link">
+										<?= $rServer["server_name"] ?>
+									</a>
+								</li>
+								<?php } ?>
+							</ul>
+						</div>
+					</div>-->
 						</div>
 
 						<!-- end page title -->
@@ -70,8 +70,10 @@ if ($rSettings["sidebar"]) { ?>
 													</div>
 													<div class="col-6">
 														<div class="text-right">
-															<h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span></h3>
-															<p class="text-white mb-1 text-truncate"><?= $_["open_connections"] ?></p>
+															<h3 class="text-white my-1"><span data-plugin="counterup"
+																	class="entry">0</span></h3>
+															<p class="text-white mb-1 text-truncate">
+																<?= $_["open_connections"] ?></p>
 														</div>
 													</div>
 												</div>
@@ -100,8 +102,10 @@ if ($rSettings["sidebar"]) { ?>
 													</div>
 													<div class="col-6">
 														<div class="text-right">
-															<h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span></h3>
-															<p class="text-white mb-1 text-truncate"><?= $_["online_users"] ?></p>
+															<h3 class="text-white my-1"><span data-plugin="counterup"
+																	class="entry">0</span></h3>
+															<p class="text-white mb-1 text-truncate">
+																<?= $_["online_users"] ?></p>
 														</div>
 													</div>
 												</div>
@@ -130,8 +134,10 @@ if ($rSettings["sidebar"]) { ?>
 													</div>
 													<div class="col-6">
 														<div class="text-right">
-															<h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span><small> Mbps</small></h3>
-															<p class="text-white mb-1 text-white"><?= $_["total_input"] ?></p>
+															<h3 class="text-white my-1"><span data-plugin="counterup"
+																	class="entry">0</span><small> Mbps</small></h3>
+															<p class="text-white mb-1 text-white"><?= $_["total_input"] ?>
+															</p>
 														</div>
 													</div>
 												</div>
@@ -160,8 +166,10 @@ if ($rSettings["sidebar"]) { ?>
 													</div>
 													<div class="col-6">
 														<div class="text-right">
-															<h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span><small> Mbps</small></h3>
-															<p class="text-white mb-1 text-white"><?= $_["total_output"] ?></p>
+															<h3 class="text-white my-1"><span data-plugin="counterup"
+																	class="entry">0</span><small> Mbps</small></h3>
+															<p class="text-white mb-1 text-white"><?= $_["total_output"] ?>
+															</p>
 														</div>
 													</div>
 												</div>
@@ -190,8 +198,10 @@ if ($rSettings["sidebar"]) { ?>
 													</div>
 													<div class="col-6">
 														<div class="text-right">
-															<h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span></h3>
-															<p class="text-white mb-1 text-truncate"><?= $_["online_streams"] ?></p>
+															<h3 class="text-white my-1"><span data-plugin="counterup"
+																	class="entry">0</span></h3>
+															<p class="text-white mb-1 text-truncate">
+																<?= $_["online_streams"] ?></p>
 														</div>
 													</div>
 												</div>
@@ -220,8 +230,10 @@ if ($rSettings["sidebar"]) { ?>
 													</div>
 													<div class="col-6">
 														<div class="text-right">
-															<h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span></h3>
-															<p class="text-white mb-1 text-white"><?= $_["offline_streams"] ?></p>
+															<h3 class="text-white my-1"><span data-plugin="counterup"
+																	class="entry">0</span></h3>
+															<p class="text-white mb-1 text-white">
+																<?= $_["offline_streams"] ?></p>
 														</div>
 													</div>
 												</div>
@@ -238,13 +250,16 @@ if ($rSettings["sidebar"]) { ?>
 												<div class="card-body">
 													<div class="card-widgets">
 														<a href="javascript: setPeriod('week');">
-															<button type="button" class="btn btn-info waves-effect waves-light btn-xs"><?= $_["week"] ?></button>
+															<button type="button"
+																class="btn btn-info waves-effect waves-light btn-xs"><?= $_["week"] ?></button>
 														</a>
 														<a href="javascript: setPeriod('day');">
-															<button type="button" class="btn btn-info waves-effect waves-light btn-xs"><?= $_["day"] ?></button>
+															<button type="button"
+																class="btn btn-info waves-effect waves-light btn-xs"><?= $_["day"] ?></button>
 														</a>
 														<a href="javascript: setPeriod('hour');">
-															<button type="button" class="btn btn-info waves-effect waves-light btn-xs"><?= $_["hour"] ?></button>
+															<button type="button"
+																class="btn btn-info waves-effect waves-light btn-xs"><?= $_["hour"] ?></button>
 														</a>
 													</div>
 													<h4 class="header-title mb-0"><?= $_["connections"] ?></h4>
@@ -265,14 +280,20 @@ if ($rSettings["sidebar"]) { ?>
 											<div class="card-header bg-dark text-white">
 												<?php if (hasPermissions("adv", "live_connections")) { ?>
 													<div class="float-right">
-														<a href="./live_connections.php?server_id=<?= $rServer["id"] ?>" class="arrow-none card-drop">
+														<a href="./live_connections.php?server_id=<?= $rServer["id"] ?>"
+															class="arrow-none card-drop">
 															<i class="fe-play"></i>
 
-															<a data-toggle="collapse" href="#cardCollpase1" class="arrow-none card-drop" data-parent="#cardCollpase1" role="tablist" aria-expanded="true" aria-controls="cardCollpase1">
+															<a data-toggle="collapse" href="#cardCollpase1"
+																class="arrow-none card-drop" data-parent="#cardCollpase1"
+																role="tablist" aria-expanded="true" aria-controls="cardCollpase1">
 																<i class="fe-zoom-in"></i></a>
 
 															<a href="javascript: void(0);" data-toggle="collapse">
-																<a data-toggle="collapse" href="#cardCollpase2" class="arrow-none card-drop" data-parent="#cardCollpase1" role="tablist" aria-expanded="true" aria-controls="cardCollpase2">
+																<a data-toggle="collapse" href="#cardCollpase2"
+																	class="arrow-none card-drop" data-parent="#cardCollpase1"
+																	role="tablist" aria-expanded="true"
+																	aria-controls="cardCollpase2">
 																	<i class="fe-zoom-out"></i>
 																</a>
 													</div>
@@ -312,7 +333,8 @@ if ($rSettings["sidebar"]) { ?>
 												</div>
 												<!--<div class="card-box">-->
 												<p>
-												<div id="cardCollpase2" class="collapse pt-3 show bg-white card-box" style="margin-bottom:-8px;">
+												<div id="cardCollpase2" class="collapse pt-3 show bg-white card-box"
+													style="margin-bottom:-8px;">
 													<div class="row" style="margin-bottom:-12px;">
 														<div class="col-md-4" align="center">
 															<a href="./streams.php?filter=1">
@@ -320,18 +342,27 @@ if ($rSettings["sidebar"]) { ?>
 																<p class="sub-header" id="s_<?= $rServer["id"] ?>_online">0</p>
 																<a href="./streams.php?filter=2">
 																	<h4 class="header-title"><?= $_["offline_streams"] ?></h4>
-																	<p class="sub-header" id="s_<?= $rServer["id"] ?>_down">0</p>
+																	<p class="sub-header" id="s_<?= $rServer["id"] ?>_down">0
+																	</p>
 														</div>
 														<div class="col-md-4" align="center">
 															<a href="./process_monitor.php?server=<?= $rServer["id"] ?>">
 																<h4 class="header-title"><?= $_["cpu_usage"] ?></h4>
-																<input id="s_<?= $rServer["id"] ?>_cpu" data-plugin="knob" data-width="60" data-height="60" data-fgColor="#414d5f" data-bgColor="#e8e7f4" value="0" data-skin="tron" data-angleOffset="-125" data-anglearc="250" data-readOnly=true data-thickness=".03" />
+																<input id="s_<?= $rServer["id"] ?>_cpu" data-plugin="knob"
+																	data-width="60" data-height="60" data-fgColor="#414d5f"
+																	data-bgColor="#e8e7f4" value="0" data-skin="tron"
+																	data-angleOffset="-125" data-anglearc="250"
+																	data-readOnly=true data-thickness=".03" />
 															</a>
 														</div>
 														<div class="col-md-4" align="center">
 															<a href="./process_monitor.php?server=<?= $rServer["id"] ?>&mem">
 																<h4 class="header-title"><?= $_["mem_usage"] ?></h4>
-																<input id="s_<?= $rServer["id"] ?>_mem" data-plugin="knob" data-width="60" data-height="60" data-fgColor="#414d5f" data-bgColor="#e8e7f4" value="0" data-skin="tron" data-angleOffset="-125" data-anglearc="250" data-readOnly=true data-thickness=".03" />
+																<input id="s_<?= $rServer["id"] ?>_mem" data-plugin="knob"
+																	data-width="60" data-height="60" data-fgColor="#414d5f"
+																	data-bgColor="#e8e7f4" value="0" data-skin="tron"
+																	data-angleOffset="-125" data-anglearc="250"
+																	data-readOnly=true data-thickness=".03" />
 															</a>
 														</div>
 													</div>
@@ -339,18 +370,18 @@ if ($rSettings["sidebar"]) { ?>
 											</div>
 											<div class="card-box1">
 												<!--<div class="row">
-                                        <div class="col-md-6" align="center">
-                                            <a href="./process_monitor.php?server=<?= $rServer["id"] ?>">
-                                                <h4 class="header-title"><?= $_["cpu_usage"] ?></h4>
-                                                <input id="s_<?= $rServer["id"] ?>_cpu" data-plugin="knob" data-width="64" data-height="64" data-fgColor="#414d5f" data-bgColor="#e8e7f4" value="0" data-skin="tron" data-angleOffset="180" data-readOnly=true data-thickness=".15"/>
-                                            </a>
-                                        </div>
-                                        <div class="col-md-6" align="center">
-                                            <a href="./process_monitor.php?server=<?= $rServer["id"] ?>&mem">
-                                                <h4 class="header-title"><?= $_["mem_usage"] ?></h4>
-                                                <input id="s_<?= $rServer["id"] ?>_mem" data-plugin="knob" data-width="64" data-height="64" data-fgColor="#414d5f" data-bgColor="#e8e7f4" value="0" data-skin="tron" data-angleOffset="180" data-readOnly=true data-thickness=".15"/>
-                                            </a>
-                                        </div>
+										<div class="col-md-6" align="center">
+											<a href="./process_monitor.php?server=<?= $rServer["id"] ?>">
+												<h4 class="header-title"><?= $_["cpu_usage"] ?></h4>
+												<input id="s_<?= $rServer["id"] ?>_cpu" data-plugin="knob" data-width="64" data-height="64" data-fgColor="#414d5f" data-bgColor="#e8e7f4" value="0" data-skin="tron" data-angleOffset="180" data-readOnly=true data-thickness=".15"/>
+											</a>
+										</div>
+										<div class="col-md-6" align="center">
+											<a href="./process_monitor.php?server=<?= $rServer["id"] ?>&mem">
+												<h4 class="header-title"><?= $_["mem_usage"] ?></h4>
+												<input id="s_<?= $rServer["id"] ?>_mem" data-plugin="knob" data-width="64" data-height="64" data-fgColor="#414d5f" data-bgColor="#e8e7f4" value="0" data-skin="tron" data-angleOffset="180" data-readOnly=true data-thickness=".15"/>
+											</a>
+										</div>
 									</div>-->
 											</div>
 										</div>
@@ -376,18 +407,25 @@ if ($rSettings["sidebar"]) { ?>
 												</div>
 												<div class="col-6">
 													<div class="text-right">
-														<h3 class="text-dark my-1"><span data-plugin="counterup" class="entry">0</span></h3>
-														<p class="text-muted mb-1 text-truncate"><?= $_["open_connections"] ?></p>
+														<h3 class="text-dark my-1"><span data-plugin="counterup"
+																class="entry">0</span></h3>
+														<p class="text-muted mb-1 text-truncate">
+															<?= $_["open_connections"] ?></p>
 													</div>
 												</div>
 											</div>
 											<div class="mt-3">
-												<h6 class="text-uppercase"><?= $_["total_connections"] ?> <span class="float-right entry-percentage">0</span></h6>
+												<h6 class="text-uppercase"><?= $_["total_connections"] ?> <span
+														class="float-right entry-percentage">0</span></h6>
 												<div class="progress progress-sm m-0">
 													<?php if ($rAdminSettings["dark_mode"]) { ?>
-														<div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+														<div class="progress-bar bg-secondary" role="progressbar"
+															aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+															style="width: 0%">
 														<?php } else { ?>
-															<div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+															<div class="progress-bar bg-success" role="progressbar"
+																aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+																style="width: 0%">
 															<?php } ?>
 															<span class="sr-only">0%</span>
 															</div>
@@ -412,18 +450,25 @@ if ($rSettings["sidebar"]) { ?>
 													</div>
 													<div class="col-6">
 														<div class="text-right">
-															<h3 class="text-dark my-1"><span data-plugin="counterup" class="entry">0</span></h3>
-															<p class="text-muted mb-1 text-truncate"><?= $_["online_users"] ?></p>
+															<h3 class="text-dark my-1"><span data-plugin="counterup"
+																	class="entry">0</span></h3>
+															<p class="text-muted mb-1 text-truncate">
+																<?= $_["online_users"] ?></p>
 														</div>
 													</div>
 												</div>
 												<div class="mt-3">
-													<h6 class="text-uppercase"><?= $_["total_active"] ?> <span class="float-right entry-percentage">0</span></h6>
+													<h6 class="text-uppercase"><?= $_["total_active"] ?> <span
+															class="float-right entry-percentage">0</span></h6>
 													<div class="progress progress-sm m-0">
 														<?php if ($rAdminSettings["dark_mode"]) { ?>
-															<div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+															<div class="progress-bar bg-secondary" role="progressbar"
+																aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+																style="width: 0%">
 															<?php } else { ?>
-																<div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																<div class="progress-bar bg-success" role="progressbar"
+																	aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+																	style="width: 0%">
 																<?php } ?>
 																<span class="sr-only">0%</span>
 																</div>
@@ -438,28 +483,37 @@ if ($rSettings["sidebar"]) { ?>
 														<div class="col-6">
 															<?php if ($rAdminSettings["dark_mode"]) { ?>
 																<div class="avatar-sm bg-secondary rounded">
-																	<i class="fe-trending-down avatar-title font-22 text-white"></i>
+																	<i
+																		class="fe-trending-down avatar-title font-22 text-white"></i>
 																</div>
 															<?php } else { ?>
 																<div class="avatar-sm bg-soft-primary rounded">
-																	<i class="fe-trending-down avatar-title font-22 text-primary"></i>
+																	<i
+																		class="fe-trending-down avatar-title font-22 text-primary"></i>
 																</div>
 															<?php } ?>
 														</div>
 														<div class="col-6">
 															<div class="text-right">
-																<h3 class="text-dark my-1"><span data-plugin="counterup" class="entry">0</span> <small>Mbps</small></h3>
-																<p class="text-muted mb-1 text-truncate"><?= $_["input_flow"] ?></p>
+																<h3 class="text-dark my-1"><span data-plugin="counterup"
+																		class="entry">0</span> <small>Mbps</small></h3>
+																<p class="text-muted mb-1 text-truncate">
+																	<?= $_["input_flow"] ?></p>
 															</div>
 														</div>
 													</div>
 													<div class="mt-3">
-														<h6 class="text-uppercase"><?= $_["network_load"] ?> <span class="float-right entry-percentage">0%</span></h6>
+														<h6 class="text-uppercase"><?= $_["network_load"] ?> <span
+																class="float-right entry-percentage">0%</span></h6>
 														<div class="progress progress-sm m-0">
 															<?php if ($rAdminSettings["dark_mode"]) { ?>
-																<div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																<div class="progress-bar bg-secondary" role="progressbar"
+																	aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+																	style="width: 0%">
 																<?php } else { ?>
-																	<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																	<div class="progress-bar bg-primary" role="progressbar"
+																		aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+																		style="width: 0%">
 																	<?php } ?>
 																	<span class="sr-only">0%</span>
 																	</div>
@@ -474,28 +528,37 @@ if ($rSettings["sidebar"]) { ?>
 															<div class="col-6">
 																<?php if ($rAdminSettings["dark_mode"]) { ?>
 																	<div class="avatar-sm bg-secondary rounded">
-																		<i class="fe-trending-up avatar-title font-22 text-white"></i>
+																		<i
+																			class="fe-trending-up avatar-title font-22 text-white"></i>
 																	</div>
 																<?php } else { ?>
 																	<div class="avatar-sm bg-soft-info rounded">
-																		<i class="fe-trending-up avatar-title font-22 text-info"></i>
+																		<i
+																			class="fe-trending-up avatar-title font-22 text-info"></i>
 																	</div>
 																<?php } ?>
 															</div>
 															<div class="col-6">
 																<div class="text-right">
-																	<h3 class="text-dark my-1"><span data-plugin="counterup" class="entry">0</span> <small>Mbps</small></h3>
-																	<p class="text-muted mb-1 text-truncate"><?= $_["output_flow"] ?></p>
+																	<h3 class="text-dark my-1"><span data-plugin="counterup"
+																			class="entry">0</span> <small>Mbps</small></h3>
+																	<p class="text-muted mb-1 text-truncate">
+																		<?= $_["output_flow"] ?></p>
 																</div>
 															</div>
 														</div>
 														<div class="mt-3">
-															<h6 class="text-uppercase"><?= $_["network_load"] ?> <span class="float-right entry-percentage">0%</span></h6>
+															<h6 class="text-uppercase"><?= $_["network_load"] ?> <span
+																	class="float-right entry-percentage">0%</span></h6>
 															<div class="progress progress-sm m-0">
 																<?php if ($rAdminSettings["dark_mode"]) { ?>
-																	<div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																	<div class="progress-bar bg-secondary" role="progressbar"
+																		aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+																		style="width: 0%">
 																	<?php } else { ?>
-																		<div class="progress-bar bg-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																		<div class="progress-bar bg-info" role="progressbar"
+																			aria-valuenow="0" aria-valuemin="0"
+																			aria-valuemax="100" style="width: 0%">
 																		<?php } ?>
 																		<span class="sr-only">0%</span>
 																		</div>
@@ -510,31 +573,44 @@ if ($rSettings["sidebar"]) { ?>
 																<div class="col-6">
 																	<?php if ($rAdminSettings["dark_mode"]) { ?>
 																		<div class="avatar-sm bg-secondary rounded">
-																			<i class="fe-arrow-up-right avatar-title font-22 text-white"></i>
+																			<i
+																				class="fe-arrow-up-right avatar-title font-22 text-white"></i>
 																		</div>
 																	<?php } else { ?>
 																		<div class="avatar-sm bg-soft-purple rounded">
-																			<i class="fe-arrow-up-right avatar-title font-22 text-purple"></i>
+																			<i
+																				class="fe-arrow-up-right avatar-title font-22 text-purple"></i>
 																		</div>
 																	<?php } ?>
 																</div>
 																<div class="col-6">
 																	<a href="javascript:void(0);" onClick="onlineStreams()">
 																		<div class="text-right">
-																			<h3 class="text-dark my-1"><span data-plugin="counterup" class="entry">0</span></h3>
-																			<p class="text-muted mb-1 text-truncate"><?= $_["online_streams"] ?></p>
+																			<h3 class="text-dark my-1"><span
+																					data-plugin="counterup"
+																					class="entry">0</span></h3>
+																			<p class="text-muted mb-1 text-truncate">
+																				<?= $_["online_streams"] ?></p>
 																		</div>
 																	</a>
 																</div>
 															</div>
 															<a href="javascript:void(0);" onClick="offlineStreams()">
 																<div class="mt-3">
-																	<h6 class="text-uppercase"><?= $_["offline_streams"] ?> <span class="float-right entry-percentage">0</span></h6>
+																	<h6 class="text-uppercase"><?= $_["offline_streams"] ?>
+																		<span class="float-right entry-percentage">0</span>
+																	</h6>
 																	<div class="progress progress-sm m-0">
 																		<?php if ($rAdminSettings["dark_mode"]) { ?>
-																			<div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																			<div class="progress-bar bg-secondary"
+																				role="progressbar" aria-valuenow="0"
+																				aria-valuemin="0" aria-valuemax="100"
+																				style="width: 0%">
 																			<?php } else { ?>
-																				<div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																				<div class="progress-bar bg-success"
+																					role="progressbar" aria-valuenow="0"
+																					aria-valuemin="0" aria-valuemax="100"
+																					style="width: 0%">
 																				<?php } ?>
 																				<span class="sr-only">0%</span>
 																				</div>
@@ -550,18 +626,23 @@ if ($rSettings["sidebar"]) { ?>
 																<div class="col-6">
 																	<?php if ($rAdminSettings["dark_mode"]) { ?>
 																		<div class="avatar-sm bg-secondary rounded">
-																			<i class="fe-cpu avatar-title font-22 text-white"></i>
+																			<i
+																				class="fe-cpu avatar-title font-22 text-white"></i>
 																		</div>
 																	<?php } else { ?>
 																		<div class="avatar-sm bg-soft-success rounded">
-																			<i class="fe-cpu avatar-title font-22 text-success"></i>
+																			<i
+																				class="fe-cpu avatar-title font-22 text-success"></i>
 																		</div>
 																	<?php } ?>
 																</div>
 																<div class="col-6">
 																	<div class="text-right">
-																		<h3 class="text-dark my-1"><span data-plugin="counterup" class="entry">0</span><small>%</small></h3>
-																		<p class="text-muted mb-1 text-truncate"><?= $_["cpu_usage"] ?></p>
+																		<h3 class="text-dark my-1"><span
+																				data-plugin="counterup"
+																				class="entry">0</span><small>%</small></h3>
+																		<p class="text-muted mb-1 text-truncate">
+																			<?= $_["cpu_usage"] ?></p>
 																	</div>
 																</div>
 															</div>
@@ -569,9 +650,15 @@ if ($rSettings["sidebar"]) { ?>
 																<h6 class="text-uppercase">&nbsp;</h6>
 																<div class="progress progress-sm m-0">
 																	<?php if ($rAdminSettings["dark_mode"]) { ?>
-																		<div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																		<div class="progress-bar bg-secondary"
+																			role="progressbar" aria-valuenow="0"
+																			aria-valuemin="0" aria-valuemax="100"
+																			style="width: 0%">
 																		<?php } else { ?>
-																			<div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																			<div class="progress-bar bg-success"
+																				role="progressbar" aria-valuenow="0"
+																				aria-valuemin="0" aria-valuemax="100"
+																				style="width: 0%">
 																			<?php } ?>
 																			<span class="sr-only">0%</span>
 																			</div>
@@ -586,18 +673,24 @@ if ($rSettings["sidebar"]) { ?>
 																	<div class="col-6">
 																		<?php if ($rAdminSettings["dark_mode"]) { ?>
 																			<div class="avatar-sm bg-secondary rounded">
-																				<i class="fe-terminal avatar-title font-22 text-white"></i>
+																				<i
+																					class="fe-terminal avatar-title font-22 text-white"></i>
 																			</div>
 																		<?php } else { ?>
 																			<div class="avatar-sm bg-soft-primary rounded">
-																				<i class="fe-terminal avatar-title font-22 text-primary"></i>
+																				<i
+																					class="fe-terminal avatar-title font-22 text-primary"></i>
 																			</div>
 																		<?php } ?>
 																	</div>
 																	<div class="col-6">
 																		<div class="text-right">
-																			<h3 class="text-dark my-1"><span data-plugin="counterup" class="entry">0</span><small>%</small></h3>
-																			<p class="text-muted mb-1 text-truncate"><?= $_["mem_usage"] ?></p>
+																			<h3 class="text-dark my-1"><span
+																					data-plugin="counterup"
+																					class="entry">0</span><small>%</small>
+																			</h3>
+																			<p class="text-muted mb-1 text-truncate">
+																				<?= $_["mem_usage"] ?></p>
 																		</div>
 																	</div>
 																</div>
@@ -605,9 +698,15 @@ if ($rSettings["sidebar"]) { ?>
 																	<h6 class="text-uppercase">&nbsp;</h6>
 																	<div class="progress progress-sm m-0">
 																		<?php if ($rAdminSettings["dark_mode"]) { ?>
-																			<div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																			<div class="progress-bar bg-secondary"
+																				role="progressbar" aria-valuenow="0"
+																				aria-valuemin="0" aria-valuemax="100"
+																				style="width: 0%">
 																			<?php } else { ?>
-																				<div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+																				<div class="progress-bar bg-primary"
+																					role="progressbar" aria-valuenow="0"
+																					aria-valuemin="0" aria-valuemax="100"
+																					style="width: 0%">
 																				<?php } ?>
 																				<span class="sr-only">0%</span>
 																				</div>
@@ -622,18 +721,21 @@ if ($rSettings["sidebar"]) { ?>
 																		<div class="col-6">
 																			<?php if ($rAdminSettings["dark_mode"]) { ?>
 																				<div class="avatar-sm bg-secondary rounded">
-																					<i class="fe-power avatar-title font-22 text-white"></i>
+																					<i
+																						class="fe-power avatar-title font-22 text-white"></i>
 																				</div>
 																			<?php } else { ?>
 																				<div class="avatar-sm bg-soft-info rounded">
-																					<i class="fe-power avatar-title font-22 text-info"></i>
+																					<i
+																						class="fe-power avatar-title font-22 text-info"></i>
 																				</div>
 																			<?php } ?>
 																		</div>
 																		<div class="col-6">
 																			<div class="text-right">
 																				<h3 class="text-dark my-1 entry">--</h3>
-																				<p class="text-muted mb-1 text-truncate"><?= $_["system_uptime"] ?></p>
+																				<p class="text-muted mb-1 text-truncate">
+																					<?= $_["system_uptime"] ?></p>
 																			</div>
 																		</div>
 																	</div>
@@ -726,7 +828,8 @@ if ($rSettings["sidebar"]) { ?>
 												<?php } ?>
 												<!-- end row -->
 											<?php } else { ?>
-												<div class="alert alert-danger show text-center" role="alert" style="margin-top:20px;">
+												<div class="alert alert-danger show text-center" role="alert"
+													style="margin-top:20px;">
 													<?= $_["dashboard_no_permissions"] ?><br />
 													<?php if ($rSettings["sidebar"]) {
 														echo $_["dashboard_nav_left"];

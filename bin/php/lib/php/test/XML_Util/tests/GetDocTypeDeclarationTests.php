@@ -1,12 +1,10 @@
 <?php
 
-class GetDocTypeDeclarationTests extends AbstractUnitTests
-{
+class GetDocTypeDeclarationTests extends AbstractUnitTests {
     /**
      * @covers XML_Util::getDocTypeDeclaration()
      */
-    public function testGetDocTypeDeclarationUsingRoot()
-    {
+    public function testGetDocTypeDeclarationUsingRoot() {
         $expected = "<!DOCTYPE rootTag>";
         $this->assertEquals($expected, XML_Util::getDocTypeDeclaration("rootTag"));
     }
@@ -14,8 +12,7 @@ class GetDocTypeDeclarationTests extends AbstractUnitTests
     /**
      * @covers XML_Util::getDocTypeDeclaration()
      */
-    public function testGetDocTypeDeclarationUsingRootAndStringUri()
-    {
+    public function testGetDocTypeDeclarationUsingRootAndStringUri() {
         $expected = "<!DOCTYPE rootTag SYSTEM \"myDocType.dtd\">";
         $this->assertEquals($expected, XML_Util::getDocTypeDeclaration("rootTag", "myDocType.dtd"));
     }
@@ -23,8 +20,7 @@ class GetDocTypeDeclarationTests extends AbstractUnitTests
     /**
      * @covers XML_Util::getDocTypeDeclaration()
      */
-    public function testGetDocTypeDeclarationUsingRootAndArrayUri()
-    {
+    public function testGetDocTypeDeclarationUsingRootAndArrayUri() {
         $uri = array(
             'uri' => 'http://pear.php.net/dtd/package-1.0',
             'id' => '-//PHP//PEAR/DTD PACKAGE 0.1'
@@ -36,15 +32,14 @@ class GetDocTypeDeclarationTests extends AbstractUnitTests
     /**
      * @covers XML_Util::getDocTypeDeclaration()
      */
-    public function testGetDocTypeDeclarationUsingRootAndArrayUriAndInternalDtd()
-    {
+    public function testGetDocTypeDeclarationUsingRootAndArrayUriAndInternalDtd() {
         $uri = array(
             'uri' => 'http://pear.php.net/dtd/package-1.0',
             'id' => '-//PHP//PEAR/DTD PACKAGE 0.1'
         );
         $dtdEntry = '<!ELEMENT additionalInfo (#PCDATA)>';
         $expected =
-<<< EOF
+            <<<EOF
 <!DOCTYPE rootTag PUBLIC "-//PHP//PEAR/DTD PACKAGE 0.1" "http://pear.php.net/dtd/package-1.0" [
 <!ELEMENT additionalInfo (#PCDATA)>
 ]>

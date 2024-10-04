@@ -270,7 +270,7 @@ class ipTV_streaming {
         file_put_contents(CACHE_TMP_PATH . "servers_capacity", json_encode($rRows), LOCK_EX);
         return $rRows;
     }
-    public static function GetUserInfo($userID = null, $username = null, $password = null, $getChannelIDs = false,  $getBouquetInfo = false, $IP = '') {
+    public static function GetUserInfo($userID = null, $username = null, $password = null, $getChannelIDs = false, $getBouquetInfo = false, $IP = '') {
         $userInfo = null;
 
         if (empty($password) && empty($userID) && strlen($username) == 32) {
@@ -457,7 +457,7 @@ class ipTV_streaming {
     public static function validateConnections($userInfo, $IP = null, $userAgent = null) {
         if ($userInfo['max_connections'] != 0) {
             if (!empty($userInfo['pair_id'])) {
-                self::closeConnections($userInfo['pair_id'], $userInfo['max_connections'],  $IP, $userAgent);
+                self::closeConnections($userInfo['pair_id'], $userInfo['max_connections'], $IP, $userAgent);
             }
             self::closeConnections($userInfo['id'], $userInfo['max_connections'], $IP, $userAgent);
         }

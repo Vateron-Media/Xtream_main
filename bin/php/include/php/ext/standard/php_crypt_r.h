@@ -35,21 +35,21 @@ extern "C"
 #define __CONST __const
 #endif
 
-void php_init_crypt_r();
-void php_shutdown_crypt_r();
+  void php_init_crypt_r();
+  void php_shutdown_crypt_r();
 
-extern void _crypt_extended_init_r(void);
+  extern void _crypt_extended_init_r(void);
 
-/*PHPAPI char* crypt(const char *key, const char *salt);*/
-PHPAPI char *php_crypt_r (const char *__key, const char *__salt, struct php_crypt_extended_data * __data);
+  /*PHPAPI char* crypt(const char *key, const char *salt);*/
+  PHPAPI char *php_crypt_r(const char *__key, const char *__salt, struct php_crypt_extended_data *__data);
 
 #define MD5_HASH_MAX_LEN 120
 
 #include "crypt_blowfish.h"
 
-extern char * php_md5_crypt_r(const char *pw, const char *salt, char *out);
-extern char * php_sha512_crypt_r (const char *key, const char *salt, char *buffer, int buflen);
-extern char * php_sha256_crypt_r (const char *key, const char *salt, char *buffer, int buflen);
+  extern char *php_md5_crypt_r(const char *pw, const char *salt, char *out);
+  extern char *php_sha512_crypt_r(const char *key, const char *salt, char *buffer, int buflen);
+  extern char *php_sha256_crypt_r(const char *key, const char *salt, char *buffer, int buflen);
 
 #ifdef __cplusplus
 }

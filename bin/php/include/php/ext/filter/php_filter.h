@@ -53,16 +53,16 @@ PHP_FUNCTION(filter_has_var);
 PHP_FUNCTION(filter_id);
 
 ZEND_BEGIN_MODULE_GLOBALS(filter)
-	zval post_array;
-	zval get_array;
-	zval cookie_array;
-	zval env_array;
-	zval server_array;
+zval post_array;
+zval get_array;
+zval cookie_array;
+zval env_array;
+zval server_array;
 #if 0
 	zval session_array;
 #endif
-	zend_long default_filter;
-	zend_long default_filter_flags;
+zend_long default_filter;
+zend_long default_filter_flags;
 ZEND_END_MODULE_GLOBALS(filter)
 
 #if defined(COMPILE_DL_FILTER) && defined(ZTS)
@@ -95,7 +95,7 @@ void php_filter_add_slashes(PHP_INPUT_FILTER_PARAM_DECL);
 
 void php_filter_callback(PHP_INPUT_FILTER_PARAM_DECL);
 
-#endif	/* FILTER_H */
+#endif /* FILTER_H */
 
 /*
  * Local variables:

@@ -23,25 +23,27 @@
 
 typedef struct _zend_arena zend_arena;
 
-struct _zend_arena {
-	char		*ptr;
-	char		*end;
-	zend_arena  *prev;
+struct _zend_arena
+{
+	char *ptr;
+	char *end;
+	zend_arena *prev;
 };
 
-static zend_always_inline zend_arena* zend_arena_create(size_t size)
+static zend_always_inline zend_arena *zend_arena_create(size_t size)
 {
-	zend_arena *arena = (zend_arena*)emalloc(size);
+	zend_arena *arena = (zend_arena *)emalloc(size);
 
-	arena->ptr = (char*) arena + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena));
-	arena->end = (char*) arena + size;
+	arena->ptr = (char *)arena + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena));
+	arena->end = (char *)arena + size;
 	arena->prev = NULL;
 	return arena;
 }
 
 static zend_always_inline void zend_arena_destroy(zend_arena *arena)
 {
-	do {
+	do
+	{
 		zend_arena *prev = arena->prev;
 		efree(arena);
 		arena = prev;
@@ -50,40 +52,42 @@ static zend_always_inline void zend_arena_destroy(zend_arena *arena)
 
 #define ZEND_ARENA_ALIGNMENT 8U
 
-static zend_always_inline void* zend_arena_alloc(zend_arena **arena_ptr, size_t size)
+static zend_always_inline void *zend_arena_alloc(zend_arena **arena_ptr, size_t size)
 {
 	zend_arena *arena = *arena_ptr;
 	char *ptr = arena->ptr;
 
 	size = ZEND_MM_ALIGNED_SIZE(size);
 
-	if (EXPECTED(size <= (size_t)(arena->end - ptr))) {
+	if (EXPECTED(size <= (size_t)(arena->end - ptr)))
+	{
 		arena->ptr = ptr + size;
-	} else {
+	}
+	else
+	{
 		size_t arena_size =
-			UNEXPECTED((size + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena))) > (size_t)(arena->end - (char*) arena)) ?
-				(size + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena))) :
-				(size_t)(arena->end - (char*) arena);
-		zend_arena *new_arena = (zend_arena*)emalloc(arena_size);
+			UNEXPECTED((size + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena))) > (size_t)(arena->end - (char *)arena)) ? (size + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena))) : (size_t)(arena->end - (char *)arena);
+		zend_arena *new_arena = (zend_arena *)emalloc(arena_size);
 
-		ptr = (char*) new_arena + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena));
-		new_arena->ptr = (char*) new_arena + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena)) + size;
-		new_arena->end = (char*) new_arena + arena_size;
+		ptr = (char *)new_arena + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena));
+		new_arena->ptr = (char *)new_arena + ZEND_MM_ALIGNED_SIZE(sizeof(zend_arena)) + size;
+		new_arena->end = (char *)new_arena + arena_size;
 		new_arena->prev = arena;
 		*arena_ptr = new_arena;
 	}
 
-	return (void*) ptr;
+	return (void *)ptr;
 }
 
-static zend_always_inline void* zend_arena_calloc(zend_arena **arena_ptr, size_t count, size_t unit_size)
+static zend_always_inline void *zend_arena_calloc(zend_arena **arena_ptr, size_t count, size_t unit_size)
 {
 	int overflow;
 	size_t size;
 	void *ret;
 
 	size = zend_safe_address(unit_size, count, 0, &overflow);
-	if (UNEXPECTED(overflow)) {
+	if (UNEXPECTED(overflow))
+	{
 		zend_error(E_ERROR, "Possible integer overflow in zend_arena_calloc() (%zu * %zu)", unit_size, count);
 	}
 	ret = zend_arena_alloc(arena_ptr, size);
@@ -91,7 +95,7 @@ static zend_always_inline void* zend_arena_calloc(zend_arena **arena_ptr, size_t
 	return ret;
 }
 
-static zend_always_inline void* zend_arena_checkpoint(zend_arena *arena)
+static zend_always_inline void *zend_arena_checkpoint(zend_arena *arena)
 {
 	return arena->ptr;
 }
@@ -100,20 +104,23 @@ static zend_always_inline void zend_arena_release(zend_arena **arena_ptr, void *
 {
 	zend_arena *arena = *arena_ptr;
 
-	while (UNEXPECTED((char*)checkpoint > arena->end) ||
-	       UNEXPECTED((char*)checkpoint <= (char*)arena)) {
+	while (UNEXPECTED((char *)checkpoint > arena->end) ||
+		   UNEXPECTED((char *)checkpoint <= (char *)arena))
+	{
 		zend_arena *prev = arena->prev;
 		efree(arena);
 		*arena_ptr = arena = prev;
 	}
-	ZEND_ASSERT((char*)checkpoint > (char*)arena && (char*)checkpoint <= arena->end);
-	arena->ptr = (char*)checkpoint;
+	ZEND_ASSERT((char *)checkpoint > (char *)arena && (char *)checkpoint <= arena->end);
+	arena->ptr = (char *)checkpoint;
 }
 
 static zend_always_inline zend_bool zend_arena_contains(zend_arena *arena, void *ptr)
 {
-	while (arena) {
-		if ((char*)ptr > (char*)arena && (char*)ptr <= arena->ptr) {
+	while (arena)
+	{
+		if ((char *)ptr > (char *)arena && (char *)ptr <= arena->ptr)
+		{
 			return 1;
 		}
 		arena = arena->prev;

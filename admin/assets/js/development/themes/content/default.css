@@ -1,5 +1,9 @@
 /*! SCEditor | (C) 2011-2013, Sam Clarke | sceditor.com/license */
-html, body, p, code:before, table {
+html,
+body,
+p,
+code:before,
+table {
 	margin: 0;
 	padding: 0;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -8,19 +12,23 @@ html, body, p, code:before, table {
 	line-height: 1.25;
 	overflow: visible;
 }
+
 html {
 	height: 100%;
 }
+
 .ios {
 	/* Needed for iOS scrolling bug fix */
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
 }
+
 .ios body {
 	/* Needed for iOS scrolling bug fix */
 	position: relative;
 	overflow: auto;
 }
+
 body {
 	/* Needed to make sure body covers the whole editor and that
 		long lines don't cause horizontal scrolling */
@@ -29,19 +37,21 @@ body {
 }
 
 body.placeholder::before {
-    content: attr(placeholder);
-    color: #555;
-    font-style: italic;
+	content: attr(placeholder);
+	color: #555;
+	font-style: italic;
 }
 
-ul, ol {
+ul,
+ol {
 	margin-top: 0;
 	margin-bottom: 0;
 	padding-top: 0;
 	padding-bottom: 0;
 }
 
-table, td {
+table,
+td {
 	border: 1px dotted #000;
 	empty-cells: show;
 }
@@ -66,6 +76,7 @@ blockquote {
 	border-left: .3em solid #f4e59f;
 	padding: .5em .5em .5em .75em;
 }
+
 blockquote cite {
 	font-weight: bold;
 	display: block;
@@ -75,11 +86,18 @@ blockquote cite {
 	border-bottom: 1px solid #f4e59f;
 }
 
-h1, h2, h3, h4, h5, h6 {
-	padding: 0; margin: 0;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	padding: 0;
+	margin: 0;
 }
 
 /* Prevent empty paragraphs from collapsing */
-div, p {
+div,
+p {
 	min-height: 1.25em;
 }

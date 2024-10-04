@@ -1,4 +1,5 @@
 <?php
+
 /**
  * <tasks:replace> - read/write version
  *
@@ -27,33 +28,27 @@ require_once 'PEAR/Task/Replace.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a10
  */
-class PEAR_Task_Replace_rw extends PEAR_Task_Replace
-{
-    public function __construct(&$pkg, &$config, &$logger, $fileXml)
-    {
+class PEAR_Task_Replace_rw extends PEAR_Task_Replace {
+    public function __construct(&$pkg, &$config, &$logger, $fileXml) {
         parent::__construct($config, $logger, PEAR_TASK_PACKAGE);
         $this->_contents = $fileXml;
         $this->_pkg = &$pkg;
         $this->_params = array();
     }
 
-    public function validate()
-    {
+    public function validate() {
         return $this->validateXml($this->_pkg, $this->_params, $this->config, $this->_contents);
     }
 
-    public function setInfo($from, $to, $type)
-    {
+    public function setInfo($from, $to, $type) {
         $this->_params = array('attribs' => array('from' => $from, 'to' => $to, 'type' => $type));
     }
 
-    public function getName()
-    {
+    public function getName() {
         return 'replace';
     }
 
-    public function getXml()
-    {
+    public function getXml() {
         return $this->_params;
     }
 }

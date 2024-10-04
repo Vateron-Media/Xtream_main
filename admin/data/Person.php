@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 	This class handles all the data you can get from a Person
  *
@@ -9,7 +10,7 @@
  * 	@copyright Licensed under BSD (http://www.opensource.org/licenses/bsd-license.php)
  */
 
-class Person{
+class Person {
 
     //------------------------------------------------------------------------------
     // Class Variables
@@ -101,7 +102,7 @@ class Person{
     public function getMovieRoles() {
         $movieRoles = array();
 
-        foreach($this->_data['movie_credits']['cast'] as $data){
+        foreach ($this->_data['movie_credits']['cast'] as $data) {
             $movieRoles[] = new MovieRole($data, $this->getID());
         }
 
@@ -116,7 +117,7 @@ class Person{
     public function getTVShowRoles() {
         $tvShowRole = array();
 
-        foreach($this->_data['tv_credits']['cast'] as $data){
+        foreach ($this->_data['tv_credits']['cast'] as $data) {
             $tvShowRole[] = new TVShowRole($data, $this->getID());
         }
 
@@ -130,7 +131,7 @@ class Person{
      *  @param string $item The item of the $data array you want
      *  @return array
      */
-    public function get($item = ''){
+    public function get($item = '') {
         return (empty($item)) ? $this->_data : $this->_data[$item];
     }
 
@@ -147,4 +148,3 @@ class Person{
         return json_encode($this->_data, JSON_PRETTY_PRINT);
     }
 }
-?>

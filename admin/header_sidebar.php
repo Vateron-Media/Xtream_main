@@ -38,12 +38,12 @@
 </head>
 
 <body class="<?php if (!$rAdminSettings["dark_mode"]) {
-    echo "topbar-dark left-side-menu-light ";
-} ?><?php if (!$rAdminSettings["expanded_sidebar"]) {
-     echo 'enlarged" data-keep-enlarged="true"';
- } else {
-     echo '"';
- } ?>>
+                    echo "topbar-dark left-side-menu-light ";
+                } ?><?php if (!$rAdminSettings["expanded_sidebar"]) {
+                        echo 'enlarged" data-keep-enlarged="true"';
+                    } else {
+                        echo '"';
+                    } ?>>
         <!-- Begin page -->
         <div id=" wrapper">
     <!-- Topbar Start -->
@@ -76,7 +76,7 @@
                         } ?>
                     </a>
                 </li>
-            <?php }
+                <?php }
             if ($rPermissions["is_admin"]) {
                 if ((hasPermissions("adv", "settings")) or (hasPermissions("adv", "database")) or (hasPermissions("adv", "block_ips")) or (hasPermissions("adv", "block_isps")) or (hasPermissions("adv", "block_uas")) or (hasPermissions("adv", "categories")) or (hasPermissions("adv", "channel_order")) or (hasPermissions("adv", "epg")) or (hasPermissions("adv", "folder_watch")) or (hasPermissions("adv", "mng_groups")) or (hasPermissions("adv", "mass_delete")) or (hasPermissions("adv", "mng_packages")) or (hasPermissions("adv", "process_monitor")) or (hasPermissions("adv", "rtmp")) or (hasPermissions("adv", "subresellers")) or (hasPermissions("adv", "tprofiles"))) { ?>
                     <li class="dropdown notification-list">
@@ -152,7 +152,7 @@
                             <?php } ?>
                         </div>
                     </li>
-                <?php }
+            <?php }
             } ?>
             <li class="notification-list">
                 <a href="./logout.php" class="nav-link right-bar-toggle waves-effect text-white">
@@ -165,11 +165,11 @@
             <a href="<?php if ($rPermissions["is_admin"]) { ?>dashboard.php<?php } else { ?>reseller.php<?php } ?>"
                 class="logo text-center">
                 <span class="logo-lg">
-                    <img src="<?php $rSettings["logo_url"] ? print ($rSettings["logo_url"]) : print ("/assets/images/logo.png") ?>"
+                    <img src="<?php $rSettings["logo_url"] ? print($rSettings["logo_url"]) : print("/assets/images/logo.png") ?>"
                         alt="" height="26">
                 </span>
                 <span class="logo-sm">
-                    <img src="<?php $rSettings["logo_url_sidebar"] ? print ($rSettings["logo_url_sidebar"]) : print ("/assets/images/logo-sm.png") ?>"
+                    <img src="<?php $rSettings["logo_url_sidebar"] ? print($rSettings["logo_url_sidebar"]) : print("/assets/images/logo-sm.png") ?>"
                         alt="" height="26">
                 </span>
             </a>
@@ -210,7 +210,7 @@
                                             <?= $_["activity_logs"] ?></a></li>
                             </ul>
                         </li>
-                    <?php }
+                        <?php }
                     if ($rPermissions["is_admin"]) {
                         if ((hasPermissions("adv", "servers")) or (hasPermissions("adv", "add_server")) or (hasPermissions("adv", "live_connections")) or (hasPermissions("adv", "connection_logs"))) { ?>
                             <li>
@@ -311,29 +311,29 @@
                                             <?= $_["generate_trial"] ?></a></li>
                                     <p>
                                     <?php } ?>
-                                <div class="separator"></div>
-                                <li><a href="./user_reseller.php"><span
-                                            class="mdi mdi-account-plus-outline mdi-18px"></span> <?= $_["add_user"] ?></a>
-                                </li>
-                                <p>
-                                    <li><a href="./users.php"><span class="mdi mdi-account-multiple-outline mdi-18px">
-                                                <?= $_["manage_users"] ?></a></li>
-                                <p>
-                                <div class="separator"></div>
-                                <li><a href="./user_reseller.php?mag"><span
-                                            class="mdi mdi-account-plus-outline mdi-18px"></span> <?= $_["add_mag"] ?></a>
-                                </li>
-                                <p>
-                                    <li><a href="./mags.php"><span class="mdi mdi-account-multiple-outline mdi-18px">
-                                                <?= $_["manage_mag_devices"] ?></a></li>
-                                <p>
-                                <div class="separator"></div>
-                                <li><a href="./user_reseller.php?e2"><span
-                                            class="mdi mdi-account-plus-outline mdi-18px"></span>
-                                        <?= $_["add_enigma"] ?></a></li>
-                                <p>
-                                    <li><a href="./enigmas.php"><span class="mdi mdi-account-multiple-outline mdi-18px">
-                                                <?= $_["manage_enigma_devices"] ?></a></li>
+                                    <div class="separator"></div>
+                                    <li><a href="./user_reseller.php"><span
+                                                class="mdi mdi-account-plus-outline mdi-18px"></span> <?= $_["add_user"] ?></a>
+                                    </li>
+                                    <p>
+                                        <li><a href="./users.php"><span class="mdi mdi-account-multiple-outline mdi-18px">
+                                                    <?= $_["manage_users"] ?></a></li>
+                                    <p>
+                                    <div class="separator"></div>
+                                    <li><a href="./user_reseller.php?mag"><span
+                                                class="mdi mdi-account-plus-outline mdi-18px"></span> <?= $_["add_mag"] ?></a>
+                                    </li>
+                                    <p>
+                                        <li><a href="./mags.php"><span class="mdi mdi-account-multiple-outline mdi-18px">
+                                                    <?= $_["manage_mag_devices"] ?></a></li>
+                                    <p>
+                                    <div class="separator"></div>
+                                    <li><a href="./user_reseller.php?e2"><span
+                                                class="mdi mdi-account-plus-outline mdi-18px"></span>
+                                            <?= $_["add_enigma"] ?></a></li>
+                                    <p>
+                                        <li><a href="./enigmas.php"><span class="mdi mdi-account-multiple-outline mdi-18px">
+                                                    <?= $_["manage_enigma_devices"] ?></a></li>
                             </ul>
                         </li>
                     <?php }
@@ -355,7 +355,7 @@
                                             <?= $_["manage_subresellers"] ?></a></li>
                             </ul>
                         </li>
-                    <?php }
+                        <?php }
                     if ($rPermissions["is_admin"]) {
                         if ((hasPermissions("adv", "add_movie")) or (hasPermissions("adv", "import_movies")) or (hasPermissions("adv", "movies")) or (hasPermissions("adv", "series")) or (hasPermissions("adv", "add_series")) or (hasPermissions("adv", "radio")) or (hasPermissions("adv", "add_radio")) or (hasPermissions("adv", "mass_sedits_vod")) or (hasPermissions("adv", "mass_sedits")) or (hasPermissions("adv", "mass_edits_radio"))) { ?>
                             <li>

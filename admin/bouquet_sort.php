@@ -71,13 +71,16 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./bouquet_sort.php" method="POST" id="bouquet_sort_form">
-                                        <input type="hidden" id="bouquet_order_array" name="bouquet_order_array" value="" />
+                                        <input type="hidden" id="bouquet_order_array" name="bouquet_order_array"
+                                            value="" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#order-stream" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#order-stream" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-flower-tulip-outline mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["bouquet_order"] ?></span>
+                                                        <span
+                                                            class="d-none d-sm-inline"><?= $_["bouquet_order"] ?></span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -88,27 +91,43 @@ if ($rSettings["sidebar"]) { ?>
                                                             <p class="sub-header">
                                                                 <?= $_["bouquet_sort_text"] ?>
                                                             </p>
-                                                            <select multiple id="sort_bouquet" class="form-control" style="min-height:400px;">
+                                                            <select multiple id="sort_bouquet" class="form-control"
+                                                                style="min-height:400px;">
                                                                 <?php foreach (getBouquets() as $rBouquet) { ?>
-                                                                    <option value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                    <option value="<?= $rBouquet["id"] ?>">
+                                                                        <?= $rBouquet["bouquet_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
-                                                            <div class="custom-control custom-checkbox add-margin-top-20">
-                                                                <input type="checkbox" class="custom-control-input" name="confirmReplace" id="confirmReplace">
-                                                                <label class="custom-control-label" for="confirmReplace"><?= $_["replace_bouquet_order"] ?></label>
+                                                            <div
+                                                                class="custom-control custom-checkbox add-margin-top-20">
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    name="confirmReplace" id="confirmReplace">
+                                                                <label class="custom-control-label"
+                                                                    for="confirmReplace"><?= $_["replace_bouquet_order"] ?></label>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0 add-margin-top-20">
                                                         <li class="list-inline-item">
-                                                            <a href="javascript: void(0);" onClick="MoveUp()" class="btn btn-purple"><i class="mdi mdi-chevron-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveDown()" class="btn btn-purple"><i class="mdi mdi-chevron-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveTop()" class="btn btn-pink"><i class="mdi mdi-chevron-triple-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveBottom()" class="btn btn-pink"><i class="mdi mdi-chevron-triple-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="AtoZ()" class="btn btn-info"><?= $_["a_to_z"] ?></a>
+                                                            <a href="javascript: void(0);" onClick="MoveUp()"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveDown()"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveTop()"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveBottom()"
+                                                                class="btn btn-pink"><i
+                                                                    class="mdi mdi-chevron-triple-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="AtoZ()"
+                                                                class="btn btn-info"><?= $_["a_to_z"] ?></a>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <button type="submit" class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
                                                         </li>
                                                     </ul>
                                                 </div>

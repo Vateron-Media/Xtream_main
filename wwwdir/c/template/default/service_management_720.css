@@ -1,9 +1,9 @@
-#service_management .description_block{
+#service_management .description_block {
     display: none !important;
 }
 
 #service_management .subscribed_str_block,
-#service_management .not_subscribed_str_block{
+#service_management .not_subscribed_str_block {
     position: absolute;
     right: 1px;
     top: 0;
@@ -14,21 +14,21 @@
     font-size: 20px;
 }
 
-#service_management .subscribed_str_block{
+#service_management .subscribed_str_block {
     background: url("i_720/mb_table02.png") 202px 0;
     color: #122f59;
 }
 
-#service_management .not_subscribed_str_block{
+#service_management .not_subscribed_str_block {
     background: url("i_720/mb_table04.png") 202px 0;
     color: #fff;
 }
 
-#service_management .active_name_block{
+#service_management .active_name_block {
     margin-top: 0;
 }
 
-#service_management .active_description_block{
+#service_management .active_description_block {
     color: #284B82;
     font-size: 20px;
     line-height: 21px;
@@ -41,7 +41,7 @@
     height: 21px;
 }
 
-.active_subscribed_str_block{
+.active_subscribed_str_block {
     position: absolute;
     right: 23px;
     top: 4px;
@@ -55,7 +55,7 @@
     overflow: hidden;
 }
 
-.active_not_subscribed_str_block{
+.active_not_subscribed_str_block {
     position: absolute;
     right: 23px;
     top: 4px;
@@ -73,6 +73,6 @@
     color: #99A8B5;
 }
 
-#package_info .info-block{
+#package_info .info-block {
     margin-bottom: 10px;
 }

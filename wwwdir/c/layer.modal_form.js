@@ -3,13 +3,13 @@
  *
  * @constructor
  */
-function ModalForm(options){
+function ModalForm(options) {
 
     this.on = false;
-    
+
     this._items = [];
     this._cur_item_idx = 0;
-    this._title  = "";
+    this._title = "";
     this._status = "";
     this._text = "";
     this._parent = {};
@@ -24,69 +24,69 @@ function ModalForm(options){
     this._init();
 }
 
-ModalForm.prototype._parse_options = function(options){
-    if (options){
-        for (var prop in options){
-            if (options.hasOwnProperty(prop)){
-                this["_"+prop] = options[prop];
+ModalForm.prototype._parse_options = function (options) {
+    if (options) {
+        for (var prop in options) {
+            if (options.hasOwnProperty(prop)) {
+                this["_" + prop] = options[prop];
             }
         }
     }
 };
 
-ModalForm.prototype._init = function(){
-    this._dom_obj        = create_block_element("modal_form");
+ModalForm.prototype._init = function () {
+    this._dom_obj = create_block_element("modal_form");
 
-    if (this._id){
+    if (this._id) {
         this._dom_obj.setAttribute('id', this._id);
     }
 
-    this._title_dom_obj  = create_block_element("title", this._dom_obj);
+    this._title_dom_obj = create_block_element("title", this._dom_obj);
     this._title_dom_obj.innerHTML = this._title;
     this._status_dom_obj = create_block_element("status", this._dom_obj);
 
-    if (this._text){
+    if (this._text) {
         this._text_dom_obj = create_block_element("text", this._dom_obj);
         this._text_dom_obj.innerHTML = this._text;
     }
 
-    this._items_block    = create_block_element("", this._dom_obj);
-    this._buttons_block  = create_block_element("buttons", this._dom_obj);
+    this._items_block = create_block_element("", this._dom_obj);
+    this._buttons_block = create_block_element("buttons", this._dom_obj);
     this.hide();
     //this._bind.call(this);
     this._bind();
 };
 
-ModalForm.prototype.show = function(params){
+ModalForm.prototype.show = function (params) {
 
     this.triggerCustomEventListener("before_show", this);
 
-    if (typeof(params) == 'string'){
+    if (typeof (params) == 'string') {
         var text = params;
-    }else if (typeof(params) == 'object'){
+    } else if (typeof (params) == 'object') {
         this._parse_options(params);
 
-        if (!params.hasOwnProperty('parent')){
+        if (!params.hasOwnProperty('parent')) {
             this._parent = null;
             this._need_restore_parent_on = false;
         }
 
-        if (params.hasOwnProperty('text')){
+        if (params.hasOwnProperty('text')) {
             text = params.text;
         }
     }
 
-    if (text){
+    if (text) {
         this.setText(text);
     }
 
     this._dom_obj.show();
     this.on = true;
 
-    if (this._parent && this._parent.on){
+    if (this._parent && this._parent.on) {
         this._need_restore_parent_on = true;
         this._parent.on = false;
-    }else{
+    } else {
         this._need_restore_parent_on = false;
     }
 
@@ -94,61 +94,61 @@ ModalForm.prototype.show = function(params){
     this._items[0].focus();
 };
 
-ModalForm.prototype.hide = function(){
+ModalForm.prototype.hide = function () {
     this.triggerCustomEventListener("before_hide", this);
     this._items[this._cur_item_idx] && this._items[this._cur_item_idx].blur && this._items[this._cur_item_idx].blur();
     this._dom_obj.hide();
     this.on = false;
     this.reset();
-    if (this._need_restore_parent_on){
+    if (this._need_restore_parent_on) {
         this._parent.on = true;
     }
     this.triggerCustomEventListener("hide", this);
 };
 
-ModalForm.prototype.reset = function(){
-    this._items.map(function(item){
+ModalForm.prototype.reset = function () {
+    this._items.map(function (item) {
         item && item.reset && item.reset();
     });
     this._cur_item_idx = 0;
 };
 
-ModalForm.prototype.destroy = function(){
+ModalForm.prototype.destroy = function () {
     this._dom_obj.parentNode.removeChild(this._dom_obj);
 };
 
-ModalForm.prototype.addItem = function(item){
+ModalForm.prototype.addItem = function (item) {
     this._items.push(item);
 
-    if (item instanceof ModalFormButton){
+    if (item instanceof ModalFormButton) {
         this._buttons_block.appendChild(item.getDomElement.call(item));
-    }else{
+    } else {
         this._items_block.appendChild(item.getDomElement.call(item));
     }
 };
 
-ModalForm.prototype._setActiveItem = function(){
+ModalForm.prototype._setActiveItem = function () {
     this._items[this._cur_item_idx] && this._items[this._cur_item_idx].focus && this._items[this._cur_item_idx].focus();
 };
 
-ModalForm.prototype._setPassiveItem = function(){
+ModalForm.prototype._setPassiveItem = function () {
     this._items[this._cur_item_idx] && this._items[this._cur_item_idx].blur && this._items[this._cur_item_idx].blur();
 };
 
-ModalForm.prototype._changeFocus = function(dir){
+ModalForm.prototype._changeFocus = function (dir) {
 
     this._setPassiveItem();
 
-    if (dir > 0){
-        if (this._cur_item_idx < this._items.length - 1){
+    if (dir > 0) {
+        if (this._cur_item_idx < this._items.length - 1) {
             this._cur_item_idx++;
-        }else{
+        } else {
             //this._cur_item_idx = 0;
         }
-    }else{
-        if (this._cur_item_idx > 0){
+    } else {
+        if (this._cur_item_idx > 0) {
             this._cur_item_idx--;
-        }else{
+        } else {
             //this._cur_item_idx = this._items.length - 1;
         }
     }
@@ -156,103 +156,103 @@ ModalForm.prototype._changeFocus = function(dir){
     this._setActiveItem();
 };
 
-ModalForm.prototype.getItemByName = function(name){
+ModalForm.prototype.getItemByName = function (name) {
 
-    var search = this._items.filter(function(item){
-        if (item.getName() == name){
+    var search = this._items.filter(function (item) {
+        if (item.getName() == name) {
             return true;
         }
     });
 
-    if (!search){
+    if (!search) {
         return null;
     }
 
-    return search[0]; 
+    return search[0];
 };
 
-ModalForm.prototype.setStatus = function(status){
+ModalForm.prototype.setStatus = function (status) {
 
     this._status = status;
     this._status_dom_obj.innerHTML = status;
 };
 
-ModalForm.prototype.resetStatus = function(){
+ModalForm.prototype.resetStatus = function () {
 
     _debug("this._status", this._status);
 
-    if (this._status != ""){
+    if (this._status != "") {
         this._status_dom_obj.innerHTML = "";
         this._status = "";
     }
 };
 
-ModalForm.prototype._bind = function(){
+ModalForm.prototype._bind = function () {
 
-    (function(dir){
+    (function (dir) {
 
-        if (this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect && this._items[this._cur_item_idx].inEditMode()){
+        if (this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect && this._items[this._cur_item_idx].inEditMode()) {
             this._items[this._cur_item_idx].verticalShift(dir > 0 ? -1 : 1);
-        }else{
+        } else {
             this._changeFocus(dir);
         }
 
-    }).bind(key.DOWN, this,  1).bind(key.UP,   this, -1);
+    }).bind(key.DOWN, this, 1).bind(key.UP, this, -1);
 
-    (function(){
-        if (this._items[this._cur_item_idx] instanceof ModalFormButton){
+    (function () {
+        if (this._items[this._cur_item_idx] instanceof ModalFormButton) {
             this._changeFocus(-1);
-        }else if (this._items[this._cur_item_idx] instanceof ModalFormSelect || this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect){
+        } else if (this._items[this._cur_item_idx] instanceof ModalFormSelect || this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect) {
             this._items[this._cur_item_idx].shift(-1);
         }
     }).bind(key.LEFT, this);
 
-    (function(){
-        if (this._items[this._cur_item_idx] instanceof ModalFormButton){
+    (function () {
+        if (this._items[this._cur_item_idx] instanceof ModalFormButton) {
             this._changeFocus(1);
-        }else if (this._items[this._cur_item_idx] instanceof ModalFormSelect || this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect){
+        } else if (this._items[this._cur_item_idx] instanceof ModalFormSelect || this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect) {
             this._items[this._cur_item_idx].shift(1);
         }
     }).bind(key.RIGHT, this);
 
-    (function(){
-        if (this._items[this._cur_item_idx] instanceof ModalFormInput){
+    (function () {
+        if (this._items[this._cur_item_idx] instanceof ModalFormInput) {
             stb.ShowVirtualKeyboard();
-        }else if (this._items[this._cur_item_idx] instanceof ModalFormButton){
+        } else if (this._items[this._cur_item_idx] instanceof ModalFormButton) {
             this._items[this._cur_item_idx].action();
-        }else if (this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect){
+        } else if (this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect) {
             this._items[this._cur_item_idx].toggleEditMode();
         }
     }).bind(key.OK, this).bind(key.KEYBOARD, this);
 
-    (function(){
-        if (this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect && this._items[this._cur_item_idx].inEditMode()){
+    (function () {
+        if (this._items[this._cur_item_idx] instanceof ModalFormDateTimeSelect && this._items[this._cur_item_idx].inEditMode()) {
             this._items[this._cur_item_idx].disableEditMode();
-        }else if(this._on_exit_close){
+        } else if (this._on_exit_close) {
             this.hide();
         }
     }).bind(key.EXIT, this);
 
-    (function(){}).bind(key.TV, this);
+    (function () { }).bind(key.TV, this);
 };
 
-ModalForm.prototype.enableOnExitClose = function(){
+ModalForm.prototype.enableOnExitClose = function () {
     this._on_exit_close = true;
 };
 
-ModalForm.prototype.getTitleDomObj = function(){
+ModalForm.prototype.getTitleDomObj = function () {
     return this._title_dom_obj;
 };
 
-ModalForm.prototype.getButtonsBlockDomObj = function(){
+ModalForm.prototype.getButtonsBlockDomObj = function () {
     return this._buttons_block;
 };
 
-ModalForm.prototype.getTextDomObj = function(){
+ModalForm.prototype.getTextDomObj = function () {
     return this._text_dom_obj;
 };
 
-ModalForm.prototype.setText = function(text){
+ModalForm.prototype.setText = function (text) {
     this._text_dom_obj.innerHTML = text;
 };
 /* END ModalForm */
@@ -260,21 +260,21 @@ ModalForm.prototype.setText = function(text){
 /**
  * @constructor
  */
-function ModalFormItem(){}
+function ModalFormItem() { }
 
-ModalFormItem.prototype.focus = function(){
-    this._input_dom_odj && this._input_dom_odj.focus  && this._input_dom_odj.focus();
+ModalFormItem.prototype.focus = function () {
+    this._input_dom_odj && this._input_dom_odj.focus && this._input_dom_odj.focus();
 };
 
-ModalFormItem.prototype.blur = function(){
-    this._input_dom_odj && this._input_dom_odj.blur  && this._input_dom_odj.blur();
+ModalFormItem.prototype.blur = function () {
+    this._input_dom_odj && this._input_dom_odj.blur && this._input_dom_odj.blur();
 };
 
-ModalFormItem.prototype.getDomElement = function(){
+ModalFormItem.prototype.getDomElement = function () {
     return this._item;
 };
 
-ModalFormItem.prototype.getName = function(){};
+ModalFormItem.prototype.getName = function () { };
 
 /* END ModalFormItem */
 
@@ -284,22 +284,22 @@ ModalFormItem.prototype.getName = function(){};
  * @constructor
  * @param {Object} options
  */
-function ModalFormInput(options){
+function ModalFormInput(options) {
 
-    this._name  = "";
-    this._type  = "text";
+    this._name = "";
+    this._type = "text";
     this._label = "";
     this._value = "";
     this._placeholder = "";
-    this._onchange =  function(){};
-    this._oninput =  function(){};
+    this._onchange = function () { };
+    this._oninput = function () { };
 
     this.options = options;
 
-    if (options){
-        for (var prop in options){
-            if (options.hasOwnProperty(prop)){
-                this["_"+prop] = options[prop];
+    if (options) {
+        for (var prop in options) {
+            if (options.hasOwnProperty(prop)) {
+                this["_" + prop] = options[prop];
             }
         }
     }
@@ -309,13 +309,13 @@ function ModalFormInput(options){
 
 ModalFormInput.prototype = new ModalFormItem();
 
-ModalFormInput.prototype._init = function(){
+ModalFormInput.prototype._init = function () {
     this._item = document.createElement("div");
     this._item.setClass("item");
     this._label_dom_obj = create_block_element("label", this._item);
     this._label_dom_obj.innerHTML = this._label;
     this._input_dom_odj = document.createElement("input");
-    this._input_dom_odj.setAttribute("type",  this._type);
+    this._input_dom_odj.setAttribute("type", this._type);
     this._input_dom_odj.setAttribute("value", this._value);
     this._input_dom_odj.setAttribute("placeholder", this._placeholder);
     this._input_dom_odj.onchange = this._onchange;
@@ -323,19 +323,19 @@ ModalFormInput.prototype._init = function(){
     this._item.appendChild(this._input_dom_odj);
 };
 
-ModalFormInput.prototype.setValue = function(value){
+ModalFormInput.prototype.setValue = function (value) {
     return this._input_dom_odj.value = value;
 };
 
-ModalFormInput.prototype.getValue = function(){
+ModalFormInput.prototype.getValue = function () {
     return this._input_dom_odj.value;
 };
 
-ModalFormInput.prototype.getName = function(){
+ModalFormInput.prototype.getName = function () {
     return this._name;
 };
 
-ModalFormInput.prototype.reset = function(){
+ModalFormInput.prototype.reset = function () {
     this._input_dom_odj.value = this._value;
 };
 /* END ModalFormInput */
@@ -346,15 +346,15 @@ ModalFormInput.prototype.reset = function(){
  * @constructor
  * @param {Object} options
  */
-function ModalFormButton(options){
+function ModalFormButton(options) {
     this._value = "";
     this._name = "";
-    this._onclick  = function(){};
+    this._onclick = function () { };
 
-    if (options){
-        for (var prop in options){
-            if (options.hasOwnProperty(prop)){
-                this["_"+prop] = options[prop];
+    if (options) {
+        for (var prop in options) {
+            if (options.hasOwnProperty(prop)) {
+                this["_" + prop] = options[prop];
             }
         }
     }
@@ -364,26 +364,26 @@ function ModalFormButton(options){
 
 ModalFormButton.prototype = new ModalFormItem();
 
-ModalFormButton.prototype._init = function(){
+ModalFormButton.prototype._init = function () {
     this._input_dom_odj = document.createElement("input");
-    this._input_dom_odj.setAttribute("type",  "button");
+    this._input_dom_odj.setAttribute("type", "button");
     this._input_dom_odj.setAttribute("value", this._value);
 };
 
-ModalFormButton.prototype.action = function(){
+ModalFormButton.prototype.action = function () {
     this._onclick && this._onclick();
 };
 
-ModalFormButton.prototype.getDomElement = function(){
+ModalFormButton.prototype.getDomElement = function () {
     return this._input_dom_odj;
 };
 
-ModalFormButton.prototype.setValue = function(value){
+ModalFormButton.prototype.setValue = function (value) {
     this._value = value;
     this._input_dom_odj.setAttribute("value", this._value);
 };
 
-ModalFormButton.prototype.getName = function(){
+ModalFormButton.prototype.getName = function () {
     return this._name;
 };
 
@@ -395,20 +395,20 @@ ModalFormButton.prototype.getName = function(){
  * @constructor
  * @param {Object} options
  */
-function ModalFormSelect(options){
-    this._name  = "";
+function ModalFormSelect(options) {
+    this._name = "";
     this._label = "";
     this._default = "";
     this._options = [];
     this._cur_idx = 0;
-    this._onchange =  function(){};
+    this._onchange = function () { };
 
     this.options = options;
 
-    if (options){
-        for (var prop in options){
-            if (options.hasOwnProperty(prop)){
-                this["_"+prop] = options[prop];
+    if (options) {
+        for (var prop in options) {
+            if (options.hasOwnProperty(prop)) {
+                this["_" + prop] = options[prop];
             }
         }
     }
@@ -418,18 +418,18 @@ function ModalFormSelect(options){
 
 ModalFormSelect.prototype = new ModalFormItem();
 
-ModalFormSelect.prototype.focus = function(){
+ModalFormSelect.prototype.focus = function () {
     this._input_dom_odj.addClass('active');
     this.update_input();
 };
 
-ModalFormSelect.prototype.blur = function(){
+ModalFormSelect.prototype.blur = function () {
     this._input_dom_odj.removeClass('active');
     this.left_arrow.removeClass('active');
     this.update_input();
 };
 
-ModalFormSelect.prototype._init = function(){
+ModalFormSelect.prototype._init = function () {
     this._item = document.createElement("div");
     this._item.setClass("item");
     this._label_dom_obj = create_block_element("label", this._item);
@@ -443,8 +443,8 @@ ModalFormSelect.prototype._init = function(){
 
     this._input_dom_odj = document.createElement("input");
     this._input_dom_odj.addClass('form_select');
-    this._input_dom_odj.setAttribute("readonly",  "readonly");
-    this._input_dom_odj.setAttribute("type",  "text");
+    this._input_dom_odj.setAttribute("readonly", "readonly");
+    this._input_dom_odj.setAttribute("type", "text");
 
     this._input_dom_odj.onchange = this._onchange;
     input_container.appendChild(this._input_dom_odj);
@@ -455,7 +455,7 @@ ModalFormSelect.prototype._init = function(){
     this.setOptions(this._options);
 };
 
-ModalFormSelect.prototype.setOptions = function(options){
+ModalFormSelect.prototype.setOptions = function (options) {
 
     this._options = options || [];
 
@@ -465,8 +465,8 @@ ModalFormSelect.prototype.setOptions = function(options){
     this.update_input();
 };
 
-ModalFormSelect.prototype.update_input = function(){
-    if (this._options.length > 0){
+ModalFormSelect.prototype.update_input = function () {
+    if (this._options.length > 0) {
         this._input_dom_odj.value = this._options[this._cur_idx].text;
     }
 
@@ -477,15 +477,15 @@ ModalFormSelect.prototype.update_input = function(){
     this.left_arrow.removeClass('active');
     this.right_arrow.removeClass('active');
 
-    if (this._cur_idx == 0){
+    if (this._cur_idx == 0) {
         this.left_arrow.removeClass('active');
-    }else{
+    } else {
         this.left_arrow.addClass('active');
     }
 
-    if (this._options.length == 0 || this._cur_idx >= this._options.length || this._cur_idx == this._options.length-1){
+    if (this._options.length == 0 || this._cur_idx >= this._options.length || this._cur_idx == this._options.length - 1) {
         this.right_arrow.removeClass('active');
-    }else{
+    } else {
         this.right_arrow.addClass('active');
     }
 
@@ -493,14 +493,14 @@ ModalFormSelect.prototype.update_input = function(){
     _debug('this.right_arrow.className', this.right_arrow.className);
 };
 
-ModalFormSelect.prototype.shift = function(dir){
+ModalFormSelect.prototype.shift = function (dir) {
 
-    if (dir > 0){
-        if (this._cur_idx < this._options.length - 1){
+    if (dir > 0) {
+        if (this._cur_idx < this._options.length - 1) {
             this._cur_idx++;
         }
-    }else{
-        if (this._cur_idx > 0){
+    } else {
+        if (this._cur_idx > 0) {
             this._cur_idx--;
         }
     }
@@ -508,25 +508,25 @@ ModalFormSelect.prototype.shift = function(dir){
     this.update_input();
 };
 
-ModalFormSelect.prototype.getValue = function(){
+ModalFormSelect.prototype.getValue = function () {
 
-    if (this._options.length == 0){
+    if (this._options.length == 0) {
         return null;
     }
 
     return this._options[this._cur_idx].value;
 };
 
-ModalFormSelect.prototype.getText = function(){
+ModalFormSelect.prototype.getText = function () {
 
-    if (this._options.length == 0){
+    if (this._options.length == 0) {
         return null;
     }
 
     return this._options[this._cur_idx].text;
 };
 
-ModalFormSelect.prototype.getName = function(){
+ModalFormSelect.prototype.getName = function () {
     return this._name;
 };
 
@@ -539,12 +539,12 @@ ModalFormSelect.prototype.getName = function(){
  * @param {Object} options
  */
 
-function ModalFormDateTimeSelect(options){
-    this._name  = "";
+function ModalFormDateTimeSelect(options) {
+    this._name = "";
     this._label = "";
     this._default = "now";
-    this._onchange =  function(){};
-    this._onset =  function(){};
+    this._onchange = function () { };
+    this._onset = function () { };
 
     this._active_time = true;
     this._edit_mode = false;
@@ -557,10 +557,10 @@ function ModalFormDateTimeSelect(options){
 
     this.options = options;
 
-    if (options){
-        for (var prop in options){
-            if (options.hasOwnProperty(prop)){
-                this["_"+prop] = options[prop];
+    if (options) {
+        for (var prop in options) {
+            if (options.hasOwnProperty(prop)) {
+                this["_" + prop] = options[prop];
             }
         }
     }
@@ -570,48 +570,48 @@ function ModalFormDateTimeSelect(options){
 
 ModalFormDateTimeSelect.prototype = new ModalFormItem();
 
-ModalFormDateTimeSelect.prototype.focus = function(){
-    if (this._time_dom_odj && this._time_dom_odj.addClass){
+ModalFormDateTimeSelect.prototype.focus = function () {
+    if (this._time_dom_odj && this._time_dom_odj.addClass) {
         this._focus_time();
     }
 };
 
-ModalFormDateTimeSelect.prototype._focus_time = function(){
+ModalFormDateTimeSelect.prototype._focus_time = function () {
     this._blurDate();
     this._active_time = true;
-    if (this._time_dom_odj && this._time_dom_odj.addClass){
+    if (this._time_dom_odj && this._time_dom_odj.addClass) {
         this._time_dom_odj.addClass('active');
     }
 };
 
-ModalFormDateTimeSelect.prototype._focus_date = function(){
+ModalFormDateTimeSelect.prototype._focus_date = function () {
     this._blurTime();
     this._active_time = false;
-    if (this._date_dom_odj && this._date_dom_odj.addClass){
+    if (this._date_dom_odj && this._date_dom_odj.addClass) {
         this._date_dom_odj.addClass('active');
     }
 };
 
-ModalFormDateTimeSelect.prototype.blur = function(){
+ModalFormDateTimeSelect.prototype.blur = function () {
     this.disableEditMode();
     this._blurTime();
     this._blurDate();
     this._active_time = true;
 };
 
-ModalFormDateTimeSelect.prototype._blurTime = function(){
-    if (this._time_dom_odj && this._time_dom_odj.addClass){
+ModalFormDateTimeSelect.prototype._blurTime = function () {
+    if (this._time_dom_odj && this._time_dom_odj.addClass) {
         this._time_dom_odj.removeClass('active');
     }
 };
 
-ModalFormDateTimeSelect.prototype._blurDate = function(){
-    if (this._date_dom_odj && this._date_dom_odj.addClass){
+ModalFormDateTimeSelect.prototype._blurDate = function () {
+    if (this._date_dom_odj && this._date_dom_odj.addClass) {
         this._date_dom_odj.removeClass('active');
     }
 };
 
-ModalFormDateTimeSelect.prototype._init = function(){
+ModalFormDateTimeSelect.prototype._init = function () {
 
     this._item = document.createElement("div");
     this._item.setClass("item");
@@ -623,35 +623,35 @@ ModalFormDateTimeSelect.prototype._init = function(){
     this._time_dom_odj = create_block_element('form_time', container);
     this._time_dom_odj.innerHTML = '00:00';
 
-    if (!this._only_time){
+    if (!this._only_time) {
         this._date_dom_odj = create_block_element('form_date', container);
         this._date_dom_odj.innerHTML = '00.00.0000';
     }
 };
 
-ModalFormDateTimeSelect.prototype.shift = function(dir){
+ModalFormDateTimeSelect.prototype.shift = function (dir) {
 
-    if (!this._edit_mode && !this._only_time){
-        if (dir > 0){
-            if (this._active_time){
+    if (!this._edit_mode && !this._only_time) {
+        if (dir > 0) {
+            if (this._active_time) {
                 this._focus_date();
             }
-        }else{
-            if (!this._active_time){
+        } else {
+            if (!this._active_time) {
                 this._focus_time();
             }
         }
-    }else if (this._edit_mode){
-        if (dir > 0){
+    } else if (this._edit_mode) {
+        if (dir > 0) {
 
             var total_sections = this._active_time ? 2 : 3;
 
-            if (this._section_idx < total_sections-1){
+            if (this._section_idx < total_sections - 1) {
                 this._section_idx++;
             }
 
-        }else{
-            if (this._section_idx > 0){
+        } else {
+            if (this._section_idx > 0) {
                 this._section_idx--;
             }
         }
@@ -659,7 +659,7 @@ ModalFormDateTimeSelect.prototype.shift = function(dir){
     }
 };
 
-ModalFormDateTimeSelect.prototype._setActiveSection = function(){
+ModalFormDateTimeSelect.prototype._setActiveSection = function () {
 
     var separator = this._active_time ? ":" : ".";
 
@@ -669,10 +669,10 @@ ModalFormDateTimeSelect.prototype._setActiveSection = function(){
 
     var self = this;
 
-    sections = sections.map(function(section, idx){
+    sections = sections.map(function (section, idx) {
         section = section.replace(/<.*?>/g, '');
 
-        if (idx == self._section_idx){
+        if (idx == self._section_idx) {
             section = '<span class="highlight">' + section + '</span>';
         }
 
@@ -682,13 +682,13 @@ ModalFormDateTimeSelect.prototype._setActiveSection = function(){
     input.innerHTML = sections.join(separator);
 };
 
-ModalFormDateTimeSelect.prototype._disableSections = function(){
+ModalFormDateTimeSelect.prototype._disableSections = function () {
 
     this._section_idx = -1;
     this._setActiveSection();
 };
 
-ModalFormDateTimeSelect.prototype.verticalShift = function(dir){
+ModalFormDateTimeSelect.prototype.verticalShift = function (dir) {
 
     var separator = this._active_time ? ":" : ".";
 
@@ -696,16 +696,16 @@ ModalFormDateTimeSelect.prototype.verticalShift = function(dir){
 
     var sections = input.innerHTML.split(separator);
 
-    if (this._active_time){
-        var max_map = this._max_time.split(':').map(function(part, idx){
+    if (this._active_time) {
+        var max_map = this._max_time.split(':').map(function (part, idx) {
             part = parseInt(part, 10);
-            if (idx == 1 && part == 0){
+            if (idx == 1 && part == 0) {
                 part = 59;
             }
             return part;
         });
-    }else{
-        max_map = this._max_date.split('.').map(function(part){
+    } else {
+        max_map = this._max_date.split('.').map(function (part) {
             return parseInt(part, 10);
         });
     }
@@ -714,32 +714,32 @@ ModalFormDateTimeSelect.prototype.verticalShift = function(dir){
 
     var min_value = this._section_idx == 2 ? 1900 + new Date().getYear() : 0;
 
-    if (dir > 0){
-        if (value < max_map[this._section_idx]){
+    if (dir > 0) {
+        if (value < max_map[this._section_idx]) {
             value++;
-        }else{
+        } else {
             value = min_value;
         }
-    }else{
-        if (value > min_value){
+    } else {
+        if (value > min_value) {
             value--;
-        }else{
-            if (this._section_idx != 2){
+        } else {
+            if (this._section_idx != 2) {
                 value = max_map[this._section_idx];
             }
         }
     }
 
-    if (value < 10){
-        value = '0'+value;
+    if (value < 10) {
+        value = '0' + value;
     }
 
     var self = this;
 
-    sections = sections.map(function(section, idx){
+    sections = sections.map(function (section, idx) {
         section = section.replace(/<.*?>/g, '');
 
-        if (idx == self._section_idx){
+        if (idx == self._section_idx) {
             section = '<span class="highlight">' + value + '</span>';
         }
 
@@ -749,20 +749,20 @@ ModalFormDateTimeSelect.prototype.verticalShift = function(dir){
     input.innerHTML = sections.join(separator);
 };
 
-ModalFormDateTimeSelect.prototype.inEditMode = function(){
+ModalFormDateTimeSelect.prototype.inEditMode = function () {
     return this._edit_mode
 };
 
-ModalFormDateTimeSelect.prototype.enableEditMode = function(){
-    if (this._edit_mode){
+ModalFormDateTimeSelect.prototype.enableEditMode = function () {
+    if (this._edit_mode) {
         return;
     }
 
     this._edit_mode = true;
 
-    if (this._active_time){
+    if (this._active_time) {
         this._time_dom_odj.addClass('edit');
-    }else{
+    } else {
         this._date_dom_odj.addClass('edit');
     }
 
@@ -770,15 +770,15 @@ ModalFormDateTimeSelect.prototype.enableEditMode = function(){
     this._setActiveSection();
 };
 
-ModalFormDateTimeSelect.prototype.disableEditMode = function(){
-    if (!this._edit_mode){
+ModalFormDateTimeSelect.prototype.disableEditMode = function () {
+    if (!this._edit_mode) {
         return;
     }
 
     this._edit_mode = false;
-    if (this._active_time){
+    if (this._active_time) {
         this._time_dom_odj.removeClass('edit');
-    }else{
+    } else {
         this._date_dom_odj.removeClass('edit');
     }
 
@@ -787,24 +787,24 @@ ModalFormDateTimeSelect.prototype.disableEditMode = function(){
     this._onset && this._onset(this.getValue());
 };
 
-ModalFormDateTimeSelect.prototype.toggleEditMode = function(){
-    if (this._edit_mode){
+ModalFormDateTimeSelect.prototype.toggleEditMode = function () {
+    if (this._edit_mode) {
         this.disableEditMode();
-    }else{
+    } else {
         this.enableEditMode();
     }
 };
 
-ModalFormDateTimeSelect.prototype.setTime = function(time){
-    if (time == 0){
+ModalFormDateTimeSelect.prototype.setTime = function (time) {
+    if (time == 0) {
         this._time_dom_odj.innerHTML = '00:00';
-    }else if (typeof(time) == 'number'){
+    } else if (typeof (time) == 'number') {
 
-        var h = Math.floor(time/3600);
-        var m = Math.floor((time - (h*3600)) / 60);
+        var h = Math.floor(time / 3600);
+        var m = Math.floor((time - (h * 3600)) / 60);
         var time_str = '';
 
-        time_str += this._formatXX(h)+':';
+        time_str += this._formatXX(h) + ':';
 
         time_str += this._formatXX(m);
 
@@ -812,36 +812,36 @@ ModalFormDateTimeSelect.prototype.setTime = function(time){
     }
 };
 
-ModalFormDateTimeSelect.prototype.setValue = function(date){
-    if (date == 'now'){
+ModalFormDateTimeSelect.prototype.setValue = function (date) {
+    if (date == 'now') {
         date = new Date();
-    }else if (this._only_time){
+    } else if (this._only_time) {
         this._time_dom_odj.innerHTML = date;
-    }else if (typeof(date) == 'string' || typeof(date) == 'number'){
+    } else if (typeof (date) == 'string' || typeof (date) == 'number') {
         date = new Date(date);
-    }else{
+    } else {
         throw new Error('Unsupported date format');
     }
 
-    if (this._time_dom_odj){
-        this._time_dom_odj.innerHTML = this._formatXX(date.getHours())+':'+this._formatXX(date.getMinutes());
+    if (this._time_dom_odj) {
+        this._time_dom_odj.innerHTML = this._formatXX(date.getHours()) + ':' + this._formatXX(date.getMinutes());
     }
 
-    if (this._date_dom_odj){
-        this._date_dom_odj.innerHTML = this._formatXX(date.getDate())+'.'+this._formatXX(date.getMonth()+1)+'.'+(1900 + date.getYear());
+    if (this._date_dom_odj) {
+        this._date_dom_odj.innerHTML = this._formatXX(date.getDate()) + '.' + this._formatXX(date.getMonth() + 1) + '.' + (1900 + date.getYear());
     }
 };
 
-ModalFormDateTimeSelect.prototype.getValue = function(){
+ModalFormDateTimeSelect.prototype.getValue = function () {
     var value = '';
 
-    if (this._date_dom_odj){
+    if (this._date_dom_odj) {
         value += this._date_dom_odj.innerHTML;
     }
 
-    if (this._time_dom_odj){
+    if (this._time_dom_odj) {
 
-        if (value){
+        if (value) {
             value += ' ';
         }
 
@@ -855,7 +855,7 @@ ModalFormDateTimeSelect.prototype.getValue = function(){
  *
  * @return {Date}
  */
-ModalFormDateTimeSelect.prototype.getDateValue = function(){
+ModalFormDateTimeSelect.prototype.getDateValue = function () {
 
     var date_items = this._date_dom_odj.innerHTML.split('.');
 
@@ -880,13 +880,13 @@ ModalFormDateTimeSelect.prototype.getDateValue = function(){
     return date;
 };
 
-ModalFormDateTimeSelect.prototype.getName = function(){
+ModalFormDateTimeSelect.prototype.getName = function () {
     return this._name;
 };
 
-ModalFormDateTimeSelect.prototype._formatXX = function(value){
-    if (value < 10){
-        value = '0'+value;
+ModalFormDateTimeSelect.prototype._formatXX = function (value) {
+    if (value < 10) {
+        value = '0' + value;
     }
     return value;
 };

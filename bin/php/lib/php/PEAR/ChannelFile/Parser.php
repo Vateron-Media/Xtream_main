@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_ChannelFile_Parser for parsing channel.xml
  *
@@ -29,25 +30,21 @@ require_once 'PEAR/ChannelFile.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
-class PEAR_ChannelFile_Parser extends PEAR_XMLParser
-{
+class PEAR_ChannelFile_Parser extends PEAR_XMLParser {
     var $_config;
     var $_logger;
     var $_registry;
 
-    function setConfig(&$c)
-    {
+    function setConfig(&$c) {
         $this->_config = &$c;
         $this->_registry = &$c->getRegistry();
     }
 
-    function setLogger(&$l)
-    {
+    function setLogger(&$l) {
         $this->_logger = &$l;
     }
 
-    function parse($data, $file)
-    {
+    function parse($data, $file) {
         if (PEAR::isError($err = parent::parse($data, $file))) {
             return $err;
         }

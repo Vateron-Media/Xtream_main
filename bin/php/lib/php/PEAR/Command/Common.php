@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Common base class
  *
@@ -32,8 +33,7 @@ require_once 'PEAR.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
-class PEAR_Command_Common extends PEAR
-{
+class PEAR_Command_Common extends PEAR {
     /**
      * PEAR_Config object used to pass user system and configuration
      * on when executing commands
@@ -54,34 +54,33 @@ class PEAR_Command_Common extends PEAR
     var $ui;
 
     var $_deps_rel_trans = array(
-                                 'lt' => '<',
-                                 'le' => '<=',
-                                 'eq' => '=',
-                                 'ne' => '!=',
-                                 'gt' => '>',
-                                 'ge' => '>=',
-                                 'has' => '=='
-                                 );
+        'lt' => '<',
+        'le' => '<=',
+        'eq' => '=',
+        'ne' => '!=',
+        'gt' => '>',
+        'ge' => '>=',
+        'has' => '=='
+    );
 
     var $_deps_type_trans = array(
-                                  'pkg' => 'package',
-                                  'ext' => 'extension',
-                                  'php' => 'PHP',
-                                  'prog' => 'external program',
-                                  'ldlib' => 'external library for linking',
-                                  'rtlib' => 'external runtime library',
-                                  'os' => 'operating system',
-                                  'websrv' => 'web server',
-                                  'sapi' => 'SAPI backend'
-                                  );
+        'pkg' => 'package',
+        'ext' => 'extension',
+        'php' => 'PHP',
+        'prog' => 'external program',
+        'ldlib' => 'external library for linking',
+        'rtlib' => 'external runtime library',
+        'os' => 'operating system',
+        'websrv' => 'web server',
+        'sapi' => 'SAPI backend'
+    );
 
     /**
      * PEAR_Command_Common constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct();
         $this->config = &$config;
         $this->ui = &$ui;
@@ -92,8 +91,7 @@ class PEAR_Command_Common extends PEAR
      * @return array list of commands
      * @access public
      */
-    function getCommands()
-    {
+    function getCommands() {
         $ret = array();
         foreach (array_keys($this->commands) as $command) {
             $ret[$command] = $this->commands[$command]['summary'];
@@ -107,8 +105,7 @@ class PEAR_Command_Common extends PEAR
      * @return array shortcut => command
      * @access public
      */
-    function getShortcuts()
-    {
+    function getShortcuts() {
         $ret = array();
         foreach (array_keys($this->commands) as $command) {
             if (isset($this->commands[$command]['shortcut'])) {
@@ -119,23 +116,23 @@ class PEAR_Command_Common extends PEAR
         return $ret;
     }
 
-    function getOptions($command)
-    {
+    function getOptions($command) {
         $shortcuts = $this->getShortcuts();
         if (isset($shortcuts[$command])) {
             $command = $shortcuts[$command];
         }
 
-        if (isset($this->commands[$command]) &&
-              isset($this->commands[$command]['options'])) {
+        if (
+            isset($this->commands[$command]) &&
+            isset($this->commands[$command]['options'])
+        ) {
             return $this->commands[$command]['options'];
         }
 
         return null;
     }
 
-    function getGetoptArgs($command, &$short_args, &$long_args)
-    {
+    function getGetoptArgs($command, &$short_args, &$long_args) {
         $short_args = '';
         $long_args = array();
         if (empty($this->commands[$command]) || empty($this->commands[$command]['options'])) {
@@ -166,15 +163,14 @@ class PEAR_Command_Common extends PEAR
     }
 
     /**
-    * Returns the help message for the given command
-    *
-    * @param string $command The command
-    * @return mixed A fail string if the command does not have help or
-    *               a two elements array containing [0]=>help string,
-    *               [1]=> help string for the accepted cmd args
-    */
-    function getHelp($command)
-    {
+     * Returns the help message for the given command
+     *
+     * @param string $command The command
+     * @return mixed A fail string if the command does not have help or
+     *               a two elements array containing [0]=>help string,
+     *               [1]=> help string for the accepted cmd args
+     */
+    function getHelp($command) {
         $config = &PEAR_Config::singleton();
         if (!isset($this->commands[$command])) {
             return "No such command \"$command\"";
@@ -194,7 +190,7 @@ class PEAR_Command_Common extends PEAR
         }
 
         if (preg_match_all('/{config\s+([^\}]+)}/', $help, $matches)) {
-            foreach($matches[0] as $k => $v) {
+            foreach ($matches[0] as $k => $v) {
                 $help = preg_replace("/$v/", $config->get($matches[1][$k]), $help);
             }
         }
@@ -208,11 +204,11 @@ class PEAR_Command_Common extends PEAR
      * @param  string $command
      * @return string The help string
      */
-    function getHelpArgs($command)
-    {
-        if (isset($this->commands[$command]['options']) &&
-            count($this->commands[$command]['options']))
-        {
+    function getHelpArgs($command) {
+        if (
+            isset($this->commands[$command]['options']) &&
+            count($this->commands[$command]['options'])
+        ) {
             $help = "Options:\n";
             foreach ($this->commands[$command]['options'] as $k => $v) {
                 if (isset($v['arg'])) {
@@ -246,8 +242,7 @@ class PEAR_Command_Common extends PEAR
         return null;
     }
 
-    function run($command, $options, $params)
-    {
+    function run($command, $options, $params) {
         if (empty($this->commands[$command]['function'])) {
             // look for shortcuts
             foreach (array_keys($this->commands) as $cmd) {

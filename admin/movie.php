@@ -347,19 +347,22 @@ if ($rSettings["sidebar"]) { ?>
                                             <a href="./movies.php<?php if (isset($_GET["category"])) {
                                                                         echo "?category=" . $_GET["category"];
                                                                     } ?>">
-                                                <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-primary waves-effect waves-light btn-sm">
                                                     <?= $_["view_movies"] ?>
                                                 </button>
                                             </a>
                                             <?php if (!isset($_GET["import"])) { ?>
                                                 <a href="./movie.php?import">
-                                                    <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-info waves-effect waves-light btn-sm">
                                                         <?= $_["import_multiple"] ?>
                                                     </button>
                                                 </a>
                                             <?php } else { ?>
                                                 <a href="./movie.php">
-                                                    <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-info waves-effect waves-light btn-sm">
                                                         <?= $_["add_single"] ?>
                                                     </button>
                                                 </a>
@@ -426,7 +429,8 @@ if ($rSettings["sidebar"]) { ?>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td colspan="7" class="text-center"><?= $_["loading_movie_information"] ?>...</td>
+                                                    <td colspan="7" class="text-center">
+                                                        <?= $_["loading_movie_information"] ?>...</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -438,7 +442,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        <strong><?= $_["error_on_server"] ?> - <?= $rServers[$rServerID]["server_name"] ?></strong><br />
+                                        <strong><?= $_["error_on_server"] ?> -
+                                            <?= $rServers[$rServerID]["server_name"] ?></strong><br />
                                         <?= str_replace("\n", "<br/>", $rEncodeError) ?>
                                     </div>
                             <?php }
@@ -451,7 +456,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         echo "?import";
                                                                     } else if (isset($_GET["id"])) {
                                                                         echo "?id=" . $_GET["id"];
-                                                                    } ?>" method="POST" id="stream_form" data-parsley-validate="">
+                                                                    } ?>" method="POST" id="stream_form"
+                                        data-parsley-validate="">
                                         <?php if (isset($rMovie["id"])) { ?>
                                             <input type="hidden" name="edit" value="<?= $rMovie["id"] ?>" />
                                         <?php } ?>
@@ -462,27 +468,31 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#stream-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <?php if (!isset($_GET["import"])) { ?>
                                                     <li class="nav-item">
-                                                        <a href="#movie-information" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#movie-information" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-movie-outline mr-1"></i>
                                                             <span class="d-none d-sm-inline"><?= $_["information"] ?></span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
                                                 <li class="nav-item">
-                                                    <a href="#advanced-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#advanced-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-folder-alert-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["advanced"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#load-balancing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#load-balancing" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-server-network mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["server"] ?></span>
                                                     </a>
@@ -494,17 +504,24 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="col-12">
                                                             <?php if (!isset($_GET["import"])) { ?>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="stream_display_name"><?= $_["movie_name"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="stream_display_name"><?= $_["movie_name"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="stream_display_name" name="stream_display_name" value="<?php if (isset($rMovie)) {
-                                                                                                                                                                                echo htmlspecialchars($rMovie["stream_display_name"]);
-                                                                                                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                        <input type="text" class="form-control"
+                                                                            id="stream_display_name"
+                                                                            name="stream_display_name"
+                                                                            value="<?php if (isset($rMovie)) {
+                                                                                        echo htmlspecialchars($rMovie["stream_display_name"]);
+                                                                                    } ?>"
+                                                                            required data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="tmdb_search"><?= $_["tmdb_results"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="tmdb_search"><?= $_["tmdb_results"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <select id="tmdb_search" class="form-control" data-toggle="select2"></select>
+                                                                        <select id="tmdb_search" class="form-control"
+                                                                            data-toggle="select2"></select>
                                                                     </div>
                                                                 </div>
                                                                 <?php
@@ -514,95 +531,133 @@ if ($rSettings["sidebar"]) { ?>
                                                                     $rMovieSource = "";
                                                                 } ?>
                                                                 <div class="form-group row mb-4 stream-url">
-                                                                    <label class="col-md-4 col-form-label" for="stream_source"><?= $_["movie_path_or_url"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="stream_source"><?= $_["movie_path_or_url"] ?></label>
                                                                     <div class="col-md-8 input-group">
-                                                                        <input type="text" id="stream_source" name="stream_source" class="form-control" value="<?= $rMovieSource ?>" required data-parsley-trigger="change">
+                                                                        <input type="text" id="stream_source"
+                                                                            name="stream_source" class="form-control"
+                                                                            value="<?= $rMovieSource ?>" required
+                                                                            data-parsley-trigger="change">
                                                                         <div class="input-group-append">
-                                                                            <a href="#file-browser" id="filebrowser" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-folder-open-outline"></i></a>
+                                                                            <a href="#file-browser" id="filebrowser"
+                                                                                class="btn btn-primary waves-effect waves-light"><i
+                                                                                    class="mdi mdi-folder-open-outline"></i></a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             <?php } else { ?>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="import_type"><?= $_["type"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="import_type"><?= $_["type"] ?></label>
                                                                     <div class="col-md-8">
                                                                         <div class="custom-control custom-radio mt-1">
                                                                             <span>
-                                                                                <input type="radio" id="import_type_1" name="customRadio" class="custom-control-input" checked>
-                                                                                <label class="custom-control-label" for="import_type_1"><?= $_["m3u"] ?></label>
+                                                                                <input type="radio" id="import_type_1"
+                                                                                    name="customRadio"
+                                                                                    class="custom-control-input" checked>
+                                                                                <label class="custom-control-label"
+                                                                                    for="import_type_1"><?= $_["m3u"] ?></label>
                                                                             </span>
                                                                             <span style="padding-left:50px;">
-                                                                                <input type="radio" id="import_type_2" name="customRadio" class="custom-control-input">
-                                                                                <label class="custom-control-label" for="import_type_2"><?= $_["folder"] ?></label>
+                                                                                <input type="radio" id="import_type_2"
+                                                                                    name="customRadio"
+                                                                                    class="custom-control-input">
+                                                                                <label class="custom-control-label"
+                                                                                    for="import_type_2"><?= $_["folder"] ?></label>
                                                                             </span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div id="import_m3uf_toggle">
                                                                     <div class="form-group row mb-4">
-                                                                        <label class="col-md-4 col-form-label" for="m3u_file"><?= $_["m3u_file"] ?></label>
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="m3u_file"><?= $_["m3u_file"] ?></label>
                                                                         <div class="col-md-8">
-                                                                            <input type="file" id="m3u_file" name="m3u_file" />
+                                                                            <input type="file" id="m3u_file"
+                                                                                name="m3u_file" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div id="import_folder_toggle" style="display:none;">
                                                                     <div class="form-group row mb-4">
-                                                                        <label class="col-md-4 col-form-label" for="import_folder"><?= $_["folder"] ?></label>
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="import_folder"><?= $_["folder"] ?></label>
                                                                         <div class="col-md-8 input-group">
-                                                                            <input type="text" id="import_folder" name="import_folder" class="form-control" value="<?= $rMovieSource ?>">
+                                                                            <input type="text" id="import_folder"
+                                                                                name="import_folder" class="form-control"
+                                                                                value="<?= $rMovieSource ?>">
                                                                             <div class="input-group-append">
-                                                                                <a href="#file-browser" id="filebrowser" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-folder-open-outline"></i></a>
+                                                                                <a href="#file-browser" id="filebrowser"
+                                                                                    class="btn btn-primary waves-effect waves-light"><i
+                                                                                        class="mdi mdi-folder-open-outline"></i></a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row mb-4">
-                                                                        <label class="col-md-4 col-form-label" for="scan_recursive"><?= $_["scan_recursively"] ?></label>
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="scan_recursive"><?= $_["scan_recursively"] ?></label>
                                                                         <div class="col-md-2">
-                                                                            <input name="scan_recursive" id="scan_recursive" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                            <input name="scan_recursive" id="scan_recursive"
+                                                                                type="checkbox" data-plugin="switchery"
+                                                                                class="js-switch" data-color="#039cfd" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="category_id"><?= $_["category_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="category_id"><?= $_["category_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="category_id[]" id="category_id" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose...">
-                                                                        <?php foreach (getCategories('movie') as $rCategory) : ?>
+                                                                    <select name="category_id[]" id="category_id"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="Choose...">
+                                                                        <?php foreach (getCategories('movie') as $rCategory): ?>
                                                                             <option <?php if (isset($rMovie) && in_array(intval($rCategory['id']), json_decode($rMovie['category_id'], true))) {
                                                                                         echo 'selected ';
-                                                                                    } ?>value="<?php echo $rCategory['id']; ?>"><?php echo $rCategory['category_name']; ?></option>
+                                                                                    } ?>value="<?php echo $rCategory['id']; ?>">
+                                                                                <?php echo $rCategory['category_name']; ?>
+                                                                            </option>
                                                                         <?php endforeach; ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="bouquets"><?= $_["add_to_bouquets"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="bouquets"><?= $_["add_to_bouquets"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="bouquets[]" id="bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>...">
+                                                                    <select name="bouquets[]" id="bouquets"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <option <?php if (isset($rMovie)) {
                                                                                         if (in_array($rMovie["id"], json_decode($rBouquet["bouquet_movies"], True))) {
                                                                                             echo "selected ";
                                                                                         }
-                                                                                    } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                                    } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                <?= $rBouquet["bouquet_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="notes"><?= $_["notes"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="notes"><?= $_["notes"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea id="notes" name="notes" class="form-control" rows="3" placeholder=""><?php if (isset($rMovie)) {
-                                                                                                                                                        echo htmlspecialchars($rMovie["notes"]);
-                                                                                                                                                    } ?></textarea>
+                                                                    <textarea id="notes" name="notes"
+                                                                        class="form-control" rows="3"
+                                                                        placeholder=""><?php if (isset($rMovie)) {
+                                                                                            echo htmlspecialchars($rMovie["notes"]);
+                                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -610,107 +665,150 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="movie_image"><?= $_["poster_url"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="movie_image"><?= $_["poster_url"] ?></label>
                                                                 <div class="col-md-8 input-group">
-                                                                    <input type="text" class="form-control" id="movie_image" name="movie_image" value="<?php if (isset($rMovie)) {
-                                                                                                                                                            echo htmlspecialchars($rMovie["properties"]["movie_image"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="movie_image" name="movie_image"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["movie_image"]);
+                                                                                } ?>">
                                                                     <div class="input-group-append">
-                                                                        <a href="javascript:void(0)" onClick="openImage(this)" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-eye"></i></a>
+                                                                        <a href="javascript:void(0)"
+                                                                            onClick="openImage(this)"
+                                                                            class="btn btn-primary waves-effect waves-light"><i
+                                                                                class="mdi mdi-eye"></i></a>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="backdrop_path"><?= $_["backdrop_url"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="backdrop_path"><?= $_["backdrop_url"] ?></label>
                                                                 <div class="col-md-8 input-group">
-                                                                    <input type="text" class="form-control" id="backdrop_path" name="backdrop_path" value="<?php if (isset($rMovie)) {
-                                                                                                                                                                echo htmlspecialchars($rMovie["properties"]["backdrop_path"][0]);
-                                                                                                                                                            } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="backdrop_path" name="backdrop_path"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["backdrop_path"][0]);
+                                                                                } ?>">
                                                                     <div class="input-group-append">
-                                                                        <a href="javascript:void(0)" onClick="openImage(this)" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-eye"></i></a>
+                                                                        <a href="javascript:void(0)"
+                                                                            onClick="openImage(this)"
+                                                                            class="btn btn-primary waves-effect waves-light"><i
+                                                                                class="mdi mdi-eye"></i></a>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="plot"><?= $_["plot"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="plot"><?= $_["plot"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea rows="6" class="form-control" id="plot" name="plot"><?php if (isset($rMovie)) {
-                                                                                                                                        echo htmlspecialchars($rMovie["properties"]["plot"]);
-                                                                                                                                    } ?></textarea>
+                                                                    <textarea rows="6" class="form-control" id="plot"
+                                                                        name="plot"><?php if (isset($rMovie)) {
+                                                                                        echo htmlspecialchars($rMovie["properties"]["plot"]);
+                                                                                    } ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="cast"><?= $_["cast"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="cast"><?= $_["cast"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="cast" name="cast" value="<?php if (isset($rMovie)) {
-                                                                                                                                                echo htmlspecialchars($rMovie["properties"]["cast"]);
-                                                                                                                                            } ?>">
+                                                                    <input type="text" class="form-control" id="cast"
+                                                                        name="cast"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["cast"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="director"><?= $_["director"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="director"><?= $_["director"] ?></label>
                                                                 <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="director" name="director" value="<?php if (isset($rMovie)) {
-                                                                                                                                                        echo htmlspecialchars($rMovie["properties"]["director"]);
-                                                                                                                                                    } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="director" name="director"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["director"]);
+                                                                                } ?>">
                                                                 </div>
-                                                                <label class="col-md-2 col-form-label" for="genre"><?= $_["genres"] ?></label>
+                                                                <label class="col-md-2 col-form-label"
+                                                                    for="genre"><?= $_["genres"] ?></label>
                                                                 <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="genre" name="genre" value="<?php if (isset($rMovie)) {
-                                                                                                                                                echo htmlspecialchars($rMovie["properties"]["genre"]);
-                                                                                                                                            } ?>">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="releasedate"><?= $_["release_date"] ?></label>
-                                                                <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="releasedate" name="releasedate" value="<?php if (isset($rMovie)) {
-                                                                                                                                                            echo htmlspecialchars($rMovie["properties"]["releasedate"]);
-                                                                                                                                                        } ?>">
-                                                                </div>
-                                                                <label class="col-md-2 col-form-label" for="episode_run_time"><?= $_["runtime"] ?></label>
-                                                                <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="episode_run_time" name="episode_run_time" value="<?php if (isset($rMovie)) {
-                                                                                                                                                                        echo htmlspecialchars($rMovie["properties"]["episode_run_time"]);
-                                                                                                                                                                    } ?>">
+                                                                    <input type="text" class="form-control" id="genre"
+                                                                        name="genre"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["genre"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="youtube_trailer"><?= $_["youtube_trailer"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="releasedate"><?= $_["release_date"] ?></label>
                                                                 <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="youtube_trailer" name="youtube_trailer" value="<?php if (isset($rMovie)) {
-                                                                                                                                                                    echo htmlspecialchars($rMovie["properties"]["youtube_trailer"]);
-                                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="releasedate" name="releasedate"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["releasedate"]);
+                                                                                } ?>">
                                                                 </div>
-                                                                <label class="col-md-2 col-form-label" for="rating"><?= $_["rating"] ?></label>
+                                                                <label class="col-md-2 col-form-label"
+                                                                    for="episode_run_time"><?= $_["runtime"] ?></label>
                                                                 <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="rating" name="rating" value="<?php if (isset($rMovie)) {
-                                                                                                                                                    echo htmlspecialchars($rMovie["properties"]["rating"]);
-                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="episode_run_time" name="episode_run_time"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["episode_run_time"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="country"><?= $_["country"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="youtube_trailer"><?= $_["youtube_trailer"] ?></label>
                                                                 <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="country" name="country" value="<?php if (isset($rMovie)) {
-                                                                                                                                                    echo htmlspecialchars($rMovie["properties"]["country"]);
-                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="youtube_trailer" name="youtube_trailer"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["youtube_trailer"]);
+                                                                                } ?>">
                                                                 </div>
-                                                                <label class="col-md-2 col-form-label" for="tmdb_id"><?= $_["tmdb_id"] ?></label>
+                                                                <label class="col-md-2 col-form-label"
+                                                                    for="rating"><?= $_["rating"] ?></label>
                                                                 <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="tmdb_id" name="tmdb_id" value="<?php if (isset($rMovie)) {
-                                                                                                                                                    echo htmlspecialchars($rMovie["properties"]["tmdb_id"]);
-                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control" id="rating"
+                                                                        name="rating"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["rating"]);
+                                                                                } ?>">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row mb-4">
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="country"><?= $_["country"] ?></label>
+                                                                <div class="col-md-3">
+                                                                    <input type="text" class="form-control" id="country"
+                                                                        name="country"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["country"]);
+                                                                                } ?>">
+                                                                </div>
+                                                                <label class="col-md-2 col-form-label"
+                                                                    for="tmdb_id"><?= $_["tmdb_id"] ?></label>
+                                                                <div class="col-md-3">
+                                                                    <input type="text" class="form-control" id="tmdb_id"
+                                                                        name="tmdb_id"
+                                                                        value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["properties"]["tmdb_id"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -718,47 +816,78 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="direct_source"><?= $_["direct_source"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_1"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="direct_source"><?= $_["direct_source"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["episode_tooltip_1"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="direct_source" id="direct_source" type="checkbox" <?php if (isset($rMovie)) {
-                                                                                                                                        if ($rMovie["direct_source"] == 1) {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        }
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="direct_source" id="direct_source"
+                                                                        type="checkbox" <?php if (isset($rMovie)) {
+                                                                                            if ($rMovie["direct_source"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="read_native"><?= $_["native_frames"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="read_native"><?= $_["native_frames"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="read_native" id="read_native" type="checkbox" <?php if (isset($rMovie)) {
-                                                                                                                                    if ($rMovie["read_native"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    }
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="read_native" id="read_native"
+                                                                        type="checkbox" <?php if (isset($rMovie)) {
+                                                                                            if ($rMovie["read_native"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="movie_symlink"><?= $_["create_symlink"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_2"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="movie_symlink"><?= $_["create_symlink"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["episode_tooltip_2"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="movie_symlink" id="movie_symlink" type="checkbox" <?php if (isset($rMovie)) {
-                                                                                                                                        if ($rMovie["movie_symlink"] == 1) {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        }
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="movie_symlink" id="movie_symlink"
+                                                                        type="checkbox" <?php if (isset($rMovie)) {
+                                                                                            if ($rMovie["movie_symlink"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
                                                                 <?php if (!isset($_GET["import"])) { ?>
-                                                                    <label class="col-md-4 col-form-label" for="custom_sid"><?= $_["custom_channel_sid"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_5"] ?>" class="mdi mdi-information"></i></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="custom_sid"><?= $_["custom_channel_sid"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["episode_tooltip_5"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input type="text" class="form-control" id="custom_sid" name="custom_sid" value="<?php if (isset($rMovie)) {
-                                                                                                                                                                echo htmlspecialchars($rMovie["custom_sid"]);
-                                                                                                                                                            } ?>">
+                                                                        <input type="text" class="form-control"
+                                                                            id="custom_sid" name="custom_sid"
+                                                                            value="<?php if (isset($rMovie)) {
+                                                                                        echo htmlspecialchars($rMovie["custom_sid"]);
+                                                                                    } ?>">
                                                                     </div>
                                                                 <?php } else { ?>
-                                                                    <label class="col-md-4 col-form-label" for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_3"] ?>" class="mdi mdi-information"></i></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["episode_tooltip_3"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="remove_subtitles" id="remove_subtitles" type="checkbox" <?php if (isset($rMovie)) {
-                                                                                                                                                    if ($rMovie["remove_subtitles"] == 1) {
-                                                                                                                                                        echo "checked ";
-                                                                                                                                                    }
-                                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                        <input name="remove_subtitles" id="remove_subtitles"
+                                                                            type="checkbox" <?php if (isset($rMovie)) {
+                                                                                                if ($rMovie["remove_subtitles"] == 1) {
+                                                                                                    echo "checked ";
+                                                                                                }
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 <?php } ?>
                                                             </div>
@@ -772,57 +901,89 @@ if ($rSettings["sidebar"]) { ?>
                                                                 }
                                                             ?>
                                                                 <div class="form-group row mb-4 stream-url">
-                                                                    <label class="col-md-4 col-form-label" for="movie_subtitles"><?= $_["subtitle_location"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_6"] ?>" class="mdi mdi-information"></i></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="movie_subtitles"><?= $_["subtitle_location"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["episode_tooltip_6"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-8 input-group">
-                                                                        <input type="text" id="movie_subtitles" name="movie_subtitles" class="form-control" value="<?php if (isset($rMovie)) {
-                                                                                                                                                                        echo htmlspecialchars($rSubFile);
-                                                                                                                                                                    } ?>">
+                                                                        <input type="text" id="movie_subtitles"
+                                                                            name="movie_subtitles" class="form-control"
+                                                                            value="<?php if (isset($rMovie)) {
+                                                                                        echo htmlspecialchars($rSubFile);
+                                                                                    } ?>">
                                                                         <div class="input-group-append">
-                                                                            <a href="#file-browser" id="filebrowser-sub" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-folder-open-outline"></i></a>
+                                                                            <a href="#file-browser" id="filebrowser-sub"
+                                                                                class="btn btn-primary waves-effect waves-light"><i
+                                                                                    class="mdi mdi-folder-open-outline"></i></a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="transcode_profile_id"><?= $_["transcoding_profile"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_7"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="transcode_profile_id"><?= $_["transcoding_profile"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["episode_tooltip_7"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="transcode_profile_id" id="transcode_profile_id" class="form-control" data-toggle="select2">
+                                                                    <select name="transcode_profile_id"
+                                                                        id="transcode_profile_id" class="form-control"
+                                                                        data-toggle="select2">
                                                                         <option <?php if (isset($rMovie)) {
                                                                                     if (intval($rMovie["transcode_profile_id"]) == 0) {
                                                                                         echo "selected ";
                                                                                     }
-                                                                                } ?>value="0"><?= $_["transcoding_disabled"] ?></option>
+                                                                                } ?>value="0">
+                                                                            <?= $_["transcoding_disabled"] ?></option>
                                                                         <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
                                                                             <option <?php if (isset($rMovie)) {
                                                                                         if (intval($rMovie["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
                                                                                             echo "selected ";
                                                                                         }
-                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>"><?= $rProfile["profile_name"] ?></option>
+                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>">
+                                                                                <?= $rProfile["profile_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <?php if (!isset($_GET["import"])) { ?>
-                                                                    <label class="col-md-4 col-form-label" for="target_container"><?= $_["target_container"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_4"] ?>" class="mdi mdi-information"></i></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="target_container"><?= $_["target_container"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["episode_tooltip_4"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <select name="target_container" id="target_container" class="form-control" data-toggle="select2">
+                                                                        <select name="target_container"
+                                                                            id="target_container" class="form-control"
+                                                                            data-toggle="select2">
                                                                             <?php foreach (array("mp4", "mkv", "avi", "mpg", "flv") as $rContainer) { ?>
                                                                                 <option <?php if (isset($rMovie)) {
                                                                                             if (json_decode($rMovie["target_container"], True)[0] == $rContainer) {
                                                                                                 echo "selected ";
                                                                                             }
-                                                                                        } ?>value="<?= $rContainer ?>"><?= $rContainer ?></option>
+                                                                                        } ?>value="<?= $rContainer ?>">
+                                                                                    <?= $rContainer ?></option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
-                                                                    <label class="col-md-4 col-form-label" for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title=<?= $_["episode_tooltip_3"] ?>" class="mdi mdi-information"></i></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title=<?= $_["episode_tooltip_3"] ?>" class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="remove_subtitles" id="remove_subtitles" type="checkbox" <?php if (isset($rMovie)) {
-                                                                                                                                                    if ($rMovie["remove_subtitles"] == 1) {
-                                                                                                                                                        echo "checked ";
-                                                                                                                                                    }
-                                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                        <input name="remove_subtitles" id="remove_subtitles"
+                                                                            type="checkbox" <?php if (isset($rMovie)) {
+                                                                                                if ($rMovie["remove_subtitles"] == 1) {
+                                                                                                    echo "checked ";
+                                                                                                }
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 <?php } ?>
                                                             </div>
@@ -830,10 +991,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -841,29 +1004,36 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="servers"><?= $_["server_tree"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="servers"><?= $_["server_tree"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <div id="server_tree"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="restart_on_edit"><?php if (isset($rMovie)) { ?><?= $_["reprocess_on_edit"] ?><?php } else { ?><?= $_["process_movie"] ?><?php } ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="restart_on_edit"><?php if (isset($rMovie)) { ?><?= $_["reprocess_on_edit"] ?><?php } else { ?><?= $_["process_movie"] ?><?php } ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="restart_on_edit" id="restart_on_edit" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="restart_on_edit" id="restart_on_edit"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_movie" type="submit" class="btn btn-primary" value="<?php if (isset($rMovie)) {
-                                                                                                                                        echo "Edit";
-                                                                                                                                    } else {
-                                                                                                                                        echo "Add";
-                                                                                                                                    } ?>" />
+                                                            <input name="submit_movie" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?php if (isset($rMovie)) {
+                                                                            echo "Edit";
+                                                                        } else {
+                                                                            echo "Add";
+                                                                        } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -873,34 +1043,48 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="file-browser" class="mfp-hide white-popup-block">
                                             <div class="col-12">
                                                 <div class="form-group row mb-4">
-                                                    <label class="col-md-4 col-form-label" for="server_id"><?= $_["server_name"] ?></label>
+                                                    <label class="col-md-4 col-form-label"
+                                                        for="server_id"><?= $_["server_name"] ?></label>
                                                     <div class="col-md-8">
-                                                        <select id="server_id" class="form-control" data-toggle="select2">
+                                                        <select id="server_id" class="form-control"
+                                                            data-toggle="select2">
                                                             <?php foreach (getStreamingServers() as $rServer) { ?>
                                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
                                                                                                             echo " selected";
-                                                                                                        } ?>><?= htmlspecialchars($rServer["server_name"]) ?></option>
+                                                                                                        } ?>><?= htmlspecialchars($rServer["server_name"]) ?>
+                                                                </option>
                                                             <?php } ?>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
-                                                    <label class="col-md-4 col-form-label" for="current_path"><?= $_["current_path"] ?></label>
+                                                    <label class="col-md-4 col-form-label"
+                                                        for="current_path"><?= $_["current_path"] ?></label>
                                                     <div class="col-md-8 input-group">
-                                                        <input type="text" id="current_path" name="current_path" class="form-control" value="/">
+                                                        <input type="text" id="current_path" name="current_path"
+                                                            class="form-control" value="/">
                                                         <div class="input-group-append">
-                                                            <button class="btn btn-primary waves-effect waves-light" type="button" id="changeDir"><i class="mdi mdi-chevron-right"></i></button>
+                                                            <button class="btn btn-primary waves-effect waves-light"
+                                                                type="button" id="changeDir"><i
+                                                                    class="mdi mdi-chevron-right"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <?php if (!isset($_GET["import"])) { ?>
                                                     <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label" for="search"><?= $_["search_directory"] ?></label>
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="search"><?= $_["search_directory"] ?></label>
                                                         <div class="col-md-8 input-group">
-                                                            <input type="text" id="search" name="search" class="form-control" placeholder="<?= $_["filter_files"] ?>...">
+                                                            <input type="text" id="search" name="search"
+                                                                class="form-control"
+                                                                placeholder="<?= $_["filter_files"] ?>...">
                                                             <div class="input-group-append">
-                                                                <button class="btn btn-warning waves-effect waves-light" type="button" onClick="clearSearch()"><i class="mdi mdi-close"></i></button>
-                                                                <button class="btn btn-primary waves-effect waves-light" type="button" id="doSearch"><i class="mdi mdi-magnify"></i></button>
+                                                                <button class="btn btn-warning waves-effect waves-light"
+                                                                    type="button" onClick="clearSearch()"><i
+                                                                        class="mdi mdi-close"></i></button>
+                                                                <button class="btn btn-primary waves-effect waves-light"
+                                                                    type="button" id="doSearch"><i
+                                                                        class="mdi mdi-magnify"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -931,7 +1115,8 @@ if ($rSettings["sidebar"]) { ?>
                                                 </div>
                                                 <?php if (isset($_GET["import"])) { ?>
                                                     <div class="float-right">
-                                                        <input id="select_folder" type="button" class="btn btn-info" value="<?= $_["select"] ?>" />
+                                                        <input id="select_folder" type="button" class="btn btn-info"
+                                                            value="<?= $_["select"] ?>" />
                                                     </div>
                                                 <?php } ?>
                                             </div> <!-- end col -->

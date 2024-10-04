@@ -36,7 +36,6 @@ PHP_PHAR_API int phar_resolve_alias(char *alias, size_t alias_len, char **filena
 
 #endif /* PHP_PHAR_H */
 
-
 /*
  * Local variables:
  * tab-width: 4

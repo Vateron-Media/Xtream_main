@@ -24,7 +24,7 @@ extern PHPAPI zend_class_entry *spl_ce_SplFixedArray;
 
 PHP_MINIT_FUNCTION(spl_fixedarray);
 
-#endif	/* SPL_FIXEDARRAY_H */
+#endif /* SPL_FIXEDARRAY_H */
 
 /*
  * Local variables:

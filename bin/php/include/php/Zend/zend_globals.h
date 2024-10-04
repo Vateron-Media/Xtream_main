@@ -20,7 +20,6 @@
 #ifndef ZEND_GLOBALS_H
 #define ZEND_GLOBALS_H
 
-
 #include <setjmp.h>
 
 #include "zend_globals_macros.h"
@@ -51,21 +50,20 @@ END_EXTERN_C()
 
 #define SYMTABLE_CACHE_SIZE 32
 
-
 #include "zend_compile.h"
 
 /* excpt.h on Digital Unix 4.0 defines function_table */
 #undef function_table
 
 #define ZEND_EARLY_BINDING_COMPILE_TIME 0
-#define ZEND_EARLY_BINDING_DELAYED      1
-#define ZEND_EARLY_BINDING_DELAYED_ALL  2
+#define ZEND_EARLY_BINDING_DELAYED 1
+#define ZEND_EARLY_BINDING_DELAYED_ALL 2
 
 typedef struct _zend_vm_stack *zend_vm_stack;
 typedef struct _zend_ini_entry zend_ini_entry;
 
-
-struct _zend_compiler_globals {
+struct _zend_compiler_globals
+{
 	zend_stack loop_var_stack;
 
 	zend_class_entry *active_class_entry;
@@ -76,8 +74,8 @@ struct _zend_compiler_globals {
 
 	zend_op_array *active_op_array;
 
-	HashTable *function_table;	/* function symbol table */
-	HashTable *class_table;		/* class table */
+	HashTable *function_table; /* function symbol table */
+	HashTable *class_table;	   /* class table */
 
 	HashTable filenames_table;
 
@@ -127,8 +125,8 @@ struct _zend_compiler_globals {
 #endif
 };
 
-
-struct _zend_executor_globals {
+struct _zend_executor_globals
+{
 	zval uninitialized_zval;
 	zval error_zval;
 
@@ -137,23 +135,23 @@ struct _zend_executor_globals {
 	zend_array **symtable_cache_limit;
 	zend_array **symtable_cache_ptr;
 
-	zend_array symbol_table;		/* main symbol table */
+	zend_array symbol_table; /* main symbol table */
 
-	HashTable included_files;	/* files already included */
+	HashTable included_files; /* files already included */
 
 	JMP_BUF *bailout;
 
 	int error_reporting;
 	int exit_status;
 
-	HashTable *function_table;	/* function symbol table */
-	HashTable *class_table;		/* class table */
-	HashTable *zend_constants;	/* constants table */
+	HashTable *function_table; /* function symbol table */
+	HashTable *class_table;	   /* class table */
+	HashTable *zend_constants; /* constants table */
 
-	zval          *vm_stack_top;
-	zval          *vm_stack_end;
-	zend_vm_stack  vm_stack;
-	size_t         vm_stack_page_size;
+	zval *vm_stack_top;
+	zval *vm_stack_end;
+	zend_vm_stack vm_stack;
+	size_t vm_stack_page_size;
 
 	struct _zend_execute_data *current_execute_data;
 	zend_class_entry *fake_scope; /* used to avoid checks accessing properties */
@@ -191,8 +189,8 @@ struct _zend_executor_globals {
 	zend_stack user_error_handlers;
 	zend_stack user_exception_handlers;
 
-	zend_error_handling_t  error_handling;
-	zend_class_entry      *exception_class;
+	zend_error_handling_t error_handling;
+	zend_class_entry *exception_class;
 
 	/* timeout support */
 	zend_long timeout_seconds;
@@ -215,10 +213,10 @@ struct _zend_executor_globals {
 
 	zend_long assertions;
 
-	uint32_t           ht_iterators_count;     /* number of allocatd slots */
-	uint32_t           ht_iterators_used;      /* number of used slots */
+	uint32_t ht_iterators_count; /* number of allocatd slots */
+	uint32_t ht_iterators_used;	 /* number of used slots */
 	HashTableIterator *ht_iterators;
-	HashTableIterator  ht_iterators_slots[16];
+	HashTableIterator ht_iterators_slots[16];
 
 	void *saved_fpu_cw_ptr;
 #if XPFPA_HAVE_CW
@@ -226,18 +224,19 @@ struct _zend_executor_globals {
 #endif
 
 	zend_function trampoline;
-	zend_op       call_trampoline_op;
+	zend_op call_trampoline_op;
 
 	zend_bool each_deprecation_thrown;
 
 	void *reserved[ZEND_MAX_RESERVED_RESOURCES];
 };
 
-#define EG_FLAGS_INITIAL				(0)
-#define EG_FLAGS_IN_SHUTDOWN			(1<<0)
-#define EG_FLAGS_OBJECT_STORE_NO_REUSE	(1<<1)
+#define EG_FLAGS_INITIAL (0)
+#define EG_FLAGS_IN_SHUTDOWN (1 << 0)
+#define EG_FLAGS_OBJECT_STORE_NO_REUSE (1 << 1)
 
-struct _zend_ini_scanner_globals {
+struct _zend_ini_scanner_globals
+{
 	zend_file_handle *yy_in;
 	zend_file_handle *yy_out;
 
@@ -257,13 +256,15 @@ struct _zend_ini_scanner_globals {
 	int scanner_mode;
 };
 
-typedef enum {
+typedef enum
+{
 	ON_TOKEN,
 	ON_FEEDBACK,
 	ON_STOP
 } zend_php_scanner_event;
 
-struct _zend_php_scanner_globals {
+struct _zend_php_scanner_globals
+{
 	zend_file_handle *yy_in;
 	zend_file_handle *yy_out;
 

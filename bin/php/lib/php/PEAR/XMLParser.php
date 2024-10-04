@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_XMLParser
  *
@@ -26,8 +27,7 @@
  * @link      http://pear.php.net/package/PEAR
  * @since     Class available since Release 1.4.0a1
  */
-class PEAR_XMLParser
-{
+class PEAR_XMLParser {
     /**
      * unserilialized data
      * @var string $_serializedData
@@ -67,8 +67,7 @@ class PEAR_XMLParser
     /**
      * @return array
      */
-    function getData()
-    {
+    function getData() {
         return $this->_unserializedData;
     }
 
@@ -76,13 +75,12 @@ class PEAR_XMLParser
      * @param string xml content
      * @return true|PEAR_Error
      */
-    function parse($data)
-    {
+    function parse($data) {
         if (!extension_loaded('xml')) {
             include_once 'PEAR.php';
             return PEAR::raiseError("XML Extension not found", 1);
         }
-        $this->_dataStack =  $this->_valStack = array();
+        $this->_dataStack = $this->_valStack = array();
         $this->_depth = 0;
 
         if (
@@ -119,18 +117,17 @@ class PEAR_XMLParser
      * @param  array  $attribs attributes of XML tag
      * @return void
      */
-    function startHandler($parser, $element, $attribs)
-    {
+    function startHandler($parser, $element, $attribs) {
         $this->_depth++;
         $this->_dataStack[$this->_depth] = null;
 
         $val = array(
-            'name'         => $element,
-            'value'        => null,
-            'type'         => 'string',
+            'name' => $element,
+            'value' => null,
+            'type' => 'string',
             'childrenKeys' => array(),
-            'aggregKeys'   => array()
-       );
+            'aggregKeys' => array()
+        );
 
         if (count($attribs) > 0) {
             $val['children'] = array();
@@ -147,8 +144,7 @@ class PEAR_XMLParser
      * @param string $data
      * @param string $element element name
      */
-    function postProcess($data, $element)
-    {
+    function postProcess($data, $element) {
         return trim($data);
     }
 
@@ -160,14 +156,13 @@ class PEAR_XMLParser
      * @param  string
      * @return void
      */
-    function endHandler($parser, $element)
-    {
+    function endHandler($parser, $element) {
         $value = array_pop($this->_valStack);
-        $data  = $this->postProcess($this->_dataStack[$this->_depth], $element);
+        $data = $this->postProcess($this->_dataStack[$this->_depth], $element);
 
         // adjust type of the value
         switch (strtolower($value['type'])) {
-            // unserialize an array
+                // unserialize an array
             case 'array':
                 if ($data !== '') {
                     $value['children']['_content'] = $data;
@@ -176,14 +171,14 @@ class PEAR_XMLParser
                 $value['value'] = isset($value['children']) ? $value['children'] : array();
                 break;
 
-            /*
+                /*
              * unserialize a null value
              */
             case 'null':
                 $data = null;
                 break;
 
-            /*
+                /*
              * unserialize any scalar value
              */
             default:
@@ -225,7 +220,7 @@ class PEAR_XMLParser
                 array_push($parent['childrenKeys'], $value['name']);
             }
         } else {
-            array_push($parent['children'],$value['value']);
+            array_push($parent['children'], $value['value']);
         }
         array_push($this->_valStack, $parent);
 
@@ -240,8 +235,7 @@ class PEAR_XMLParser
      * @param  string CDATA
      * @return void
      */
-    function cdataHandler($parser, $cdata)
-    {
+    function cdataHandler($parser, $cdata) {
         $this->_dataStack[$this->_depth] .= $cdata;
     }
 }

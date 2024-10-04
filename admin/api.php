@@ -1205,32 +1205,32 @@ if (isset($_GET["action"])) {
             //     echo json_encode(array("result" => False));
             //     exit;
             /* 
-         case "send_event":
-            if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "manage_events"))) { echo json_encode(Array("result" => False)); exit; }
-            $rData = json_decode($_GET["data"], True);
-            $rMag = getMag($rData["id"]);
-            if ($rMag) {
-                if ($rData["type"] == "send_msg") {
-                    $rData["need_confirm"] = 1;
-                } else if ($rData["type"] == "play_channel") {
-                    $rData["need_confirm"] = 0;
-                    $rData["reboot_portal"] = 0;
-                    $rData["message"] = intval($rData["channel"]);
-                } else if ($rData["type"] == "reset_stb_lock") {
-                    resetSTB($rData["id"]);
-                    echo json_encode(Array("result" => True));exit;
-                } else {
-                    $rData["need_confirm"] = 0;
-                    $rData["reboot_portal"] = 0;
-                    $rData["message"] = "";
-                }
-                if ($db->query("INSERT INTO `mag_events`(`status`, `mag_device_id`, `event`, `need_confirm`, `msg`, `reboot_after_ok`, `send_time`) VALUES (0, ".intval($rData["id"]).", '".ESC($rData["type"])."', ".intval($rData["need_confirm"]).", '".ESC($rData["message"])."', ".intval($rData["reboot_portal"]).", ".intval(time()).");")) {
-                    echo json_encode(Array("result" => True));exit;
-                }
+     case "send_event":
+        if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "manage_events"))) { echo json_encode(Array("result" => False)); exit; }
+        $rData = json_decode($_GET["data"], True);
+        $rMag = getMag($rData["id"]);
+        if ($rMag) {
+            if ($rData["type"] == "send_msg") {
+                $rData["need_confirm"] = 1;
+            } else if ($rData["type"] == "play_channel") {
+                $rData["need_confirm"] = 0;
+                $rData["reboot_portal"] = 0;
+                $rData["message"] = intval($rData["channel"]);
+            } else if ($rData["type"] == "reset_stb_lock") {
+                resetSTB($rData["id"]);
+                echo json_encode(Array("result" => True));exit;
+            } else {
+                $rData["need_confirm"] = 0;
+                $rData["reboot_portal"] = 0;
+                $rData["message"] = "";
             }
-            echo json_encode(Array("result" => False));exit;
-        }  
-        */
+            if ($db->query("INSERT INTO `mag_events`(`status`, `mag_device_id`, `event`, `need_confirm`, `msg`, `reboot_after_ok`, `send_time`) VALUES (0, ".intval($rData["id"]).", '".ESC($rData["type"])."', ".intval($rData["need_confirm"]).", '".ESC($rData["message"])."', ".intval($rData["reboot_portal"]).", ".intval(time()).");")) {
+                echo json_encode(Array("result" => True));exit;
+            }
+        }
+        echo json_encode(Array("result" => False));exit;
+    }  
+    */
             // SEND MAG EVENT RESELLERS
         case "send_event":
             if (($rPermissions["is_admin"]) && (hasPermissions("adv", "manage_events")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_mag_events"]))) {

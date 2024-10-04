@@ -117,11 +117,13 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./users.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_users"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_users"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
-                                <h4 class="page-title"><?= $_["mass_edit_users"] ?> <small id="selected_count"></small></h4>
+                                <h4 class="page-title"><?= $_["mass_edit_users"] ?> <small id="selected_count"></small>
+                                </h4>
                             </div>
                         </div>
                     </div>
@@ -151,19 +153,22 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#user-selection" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#user-selection" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-group mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["user"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#user-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#user-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#bouquets" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#bouquets" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-flower-tulip mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["bouquets"] ?></span>
                                                     </a>
@@ -173,19 +178,25 @@ if ($rSettings["sidebar"]) { ?>
                                                 <div class="tab-pane" id="user-selection">
                                                     <div class="row">
                                                         <div class="col-md-3 col-6">
-                                                            <input type="text" class="form-control" id="user_search" value="" placeholder="<?= $_["search_users"] ?>">
+                                                            <input type="text" class="form-control" id="user_search"
+                                                                value="" placeholder="<?= $_["search_users"] ?>">
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <select id="reseller_search" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["all_resellers"] ?></option>
+                                                            <select id="reseller_search" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["all_resellers"] ?>
+                                                                </option>
                                                                 <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
-                                                                    <option value="<?= $rRegisteredUser["id"] ?>"><?= $rRegisteredUser["username"] ?></option>
+                                                                    <option value="<?= $rRegisteredUser["id"] ?>">
+                                                                        <?= $rRegisteredUser["username"] ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <select id="filter" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["no_filter"] ?></option>
+                                                            <select id="filter" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["no_filter"] ?>
+                                                                </option>
                                                                 <option value="1"><?= $_["active"] ?></option>
                                                                 <option value="2"><?= $_["disabled"] ?></option>
                                                                 <option value="3"><?= $_["banned"] ?></option>
@@ -196,7 +207,8 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2 col-8">
-                                                            <select id="show_entries" class="form-control" data-toggle="select2">
+                                                            <select id="show_entries" class="form-control"
+                                                                data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                                 echo " selected";
@@ -205,11 +217,14 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <button type="button" class="btn btn-info waves-effect waves-light" onClick="toggleUsers()">
+                                                            <button type="button"
+                                                                class="btn btn-info waves-effect waves-light"
+                                                                onClick="toggleUsers()">
                                                                 <i class="mdi mdi-selection"></i>
                                                             </button>
                                                         </div>
-                                                        <table id="datatable-mass" class="table table-hover table-borderless mb-0">
+                                                        <table id="datatable-mass"
+                                                            class="table table-hover table-borderless mb-0">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th class="text-center"><?= $_["id"] ?></th>
@@ -237,162 +252,261 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?= $_["to_mass_edit_any_of_the_below_options"] ?>
                                                             </p>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="member_id" name="c_member_id">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="member_id" name="c_member_id">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="member_id"><?= $_["owner"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="member_id"><?= $_["owner"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select disabled name="member_id" id="member_id" class="form-control select2" data-toggle="select2">
+                                                                    <select disabled name="member_id" id="member_id"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
-                                                                            <option value="<?= $rRegisteredUser["id"] ?>"><?= $rRegisteredUser["username"] ?></option>
+                                                                            <option value="<?= $rRegisteredUser["id"] ?>">
+                                                                                <?= $rRegisteredUser["username"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="max_connections" name="c_max_connections">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="max_connections"
+                                                                        name="c_max_connections">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="max_connections"><?= $_["max_connections"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="max_connections"><?= $_["max_connections"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input disabled type="text" class="form-control" id="max_connections" name="max_connections" value="1">
+                                                                    <input disabled type="text" class="form-control"
+                                                                        id="max_connections" name="max_connections"
+                                                                        value="1">
                                                                 </div>
-                                                                <label class="col-md-2 col-form-label" for="exp_date"><?= $_["expiry_date"] ?></label>
+                                                                <label class="col-md-2 col-form-label"
+                                                                    for="exp_date"><?= $_["expiry_date"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input disabled type="text" disabled class="form-control text-center date" id="exp_date" name="exp_date" value="" data-toggle="date-picker" data-single-date-picker="true">
+                                                                    <input disabled type="text" disabled
+                                                                        class="form-control text-center date"
+                                                                        id="exp_date" name="exp_date" value=""
+                                                                        data-toggle="date-picker"
+                                                                        data-single-date-picker="true">
                                                                 </div>
                                                                 <div class="col-md-1">
                                                                     <div class="custom-control custom-checkbox mt-1">
-                                                                        <input disabled type="checkbox" class="custom-control-input" id="no_expire" name="no_expire">
-                                                                        <label class="custom-control-label" for="no_expire"><?= $_["never"] ?></label>
+                                                                        <input disabled type="checkbox"
+                                                                            class="custom-control-input" id="no_expire"
+                                                                            name="no_expire">
+                                                                        <label class="custom-control-label"
+                                                                            for="no_expire"><?= $_["never"] ?></label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="exp_date" name="c_exp_date">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="exp_date" name="c_exp_date">
                                                                     <label></label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="admin_notes" name="c_admin_notes">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="admin_notes" name="c_admin_notes">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="admin_notes"><?= $_["admin_notes"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="admin_notes"><?= $_["admin_notes"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea disabled id="admin_notes" name="admin_notes" class="form-control" rows="3" placeholder=""></textarea>
+                                                                    <textarea disabled id="admin_notes"
+                                                                        name="admin_notes" class="form-control" rows="3"
+                                                                        placeholder=""></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="reseller_notes" name="c_reseller_notes">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="reseller_notes"
+                                                                        name="c_reseller_notes">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="reseller_notes"><?= $_["reseller_notes"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="reseller_notes"><?= $_["reseller_notes"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea disabled id="reseller_notes" name="reseller_notes" class="form-control" rows="3" placeholder=""></textarea>
+                                                                    <textarea disabled id="reseller_notes"
+                                                                        name="reseller_notes" class="form-control"
+                                                                        rows="3" placeholder=""></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="force_server_id" name="c_force_server_id">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="force_server_id"
+                                                                        name="c_force_server_id">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="force_server_id"><?= $_["forced_connection"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="force_server_id"><?= $_["forced_connection"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select disabled name="force_server_id" id="force_server_id" class="form-control select2" data-toggle="select2">
-                                                                        <option selected value="0"><?= $_["disabled"] ?></option>
+                                                                    <select disabled name="force_server_id"
+                                                                        id="force_server_id"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
+                                                                        <option selected value="0"><?= $_["disabled"] ?>
+                                                                        </option>
                                                                         <?php foreach ($rServers as $rServer) { ?>
-                                                                            <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?></option>
+                                                                            <option value="<?= $rServer["id"] ?>">
+                                                                                <?= $rServer["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="is_stalker" data-type="switch" name="c_is_stalker">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="is_stalker" data-type="switch"
+                                                                        name="c_is_stalker">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="is_stalker"><?= $_["ministra_portal"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="is_stalker"><?= $_["ministra_portal"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input disabled name="is_stalker" id="is_stalker" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input disabled name="is_stalker" id="is_stalker"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="is_restreamer"><?= $_["restreamer"] ?>></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="is_restreamer"><?= $_["restreamer"] ?>></label>
                                                                 <div class="col-md-2">
-                                                                    <input disabled name="is_restreamer" id="is_restreamer" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input disabled name="is_restreamer"
+                                                                        id="is_restreamer" type="checkbox"
+                                                                        data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="is_restreamer" data-type="switch" name="c_is_restreamer">
-                                                                    <label></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="is_e2" data-type="switch" name="c_is_e2">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label" for="is_e2"><?= $_["enigma_device"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled name="is_e2" id="is_e2" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label" for="is_mag"><?= $_["mag_device"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled name="is_mag" id="is_mag" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="is_mag" data-type="switch" name="c_is_mag">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="is_restreamer" data-type="switch"
+                                                                        name="c_is_restreamer">
                                                                     <label></label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="lock_device" data-type="switch" name="c_lock_device">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="is_e2" data-type="switch"
+                                                                        name="c_is_e2">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="lock_device"><?= $_["mag_stb_lock"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="is_e2"><?= $_["enigma_device"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input disabled name="lock_device" id="lock_device" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input disabled name="is_e2" id="is_e2"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-5 col-form-label" for="reset_stb_lock"><?= $_["reset_stb_lock"] ?></label>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="is_mag"><?= $_["mag_device"] ?></label>
+                                                                <div class="col-md-2">
+                                                                    <input disabled name="is_mag" id="is_mag"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
+                                                                </div>
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="is_mag" data-type="switch"
+                                                                        name="c_is_mag">
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row mb-4">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="lock_device" data-type="switch"
+                                                                        name="c_lock_device">
+                                                                    <label></label>
+                                                                </div>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="lock_device"><?= $_["mag_stb_lock"] ?></label>
+                                                                <div class="col-md-2">
+                                                                    <input disabled name="lock_device" id="lock_device"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
+                                                                </div>
+                                                                <label class="col-md-5 col-form-label"
+                                                                    for="reset_stb_lock"><?= $_["reset_stb_lock"] ?></label>
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
                                                                     <input type="checkbox" name="reset_stb_lock">
                                                                     <label></label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="is_trial" data-type="switch" name="c_is_trial">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="is_trial" data-type="switch"
+                                                                        name="c_is_trial">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="is_trial"><?= $_["trial_account"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="is_trial"><?= $_["trial_account"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input disabled name="is_trial" id="is_trial" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input disabled name="is_trial" id="is_trial"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-2 col-form-label" for="access_output"><?= $_["access_output"] ?></label>
+                                                                <label class="col-md-2 col-form-label"
+                                                                    for="access_output"><?= $_["access_output"] ?></label>
                                                                 <div class="col-md-3">
                                                                     <?php foreach (getOutputs() as $rOutput) { ?>
                                                                         <div class="checkbox form-check-inline">
-                                                                            <input disabled class="output" data-size="large" type="checkbox" id="access_output_<?= $rOutput["access_output_id"] ?>" name="access_output[]" value="<?= $rOutput["access_output_id"] ?>" checked>
-                                                                            <label for="access_output_<?= $rOutput["access_output_id"] ?>"> <?= $rOutput["output_name"] ?> </label>
+                                                                            <input disabled class="output" data-size="large"
+                                                                                type="checkbox"
+                                                                                id="access_output_<?= $rOutput["access_output_id"] ?>"
+                                                                                name="access_output[]"
+                                                                                value="<?= $rOutput["access_output_id"] ?>"
+                                                                                checked>
+                                                                            <label
+                                                                                for="access_output_<?= $rOutput["access_output_id"] ?>">
+                                                                                <?= $rOutput["output_name"] ?> </label>
                                                                         </div>
                                                                     <?php } ?>
                                                                 </div>
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="access_output" data-type="output" name="c_access_output">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="access_output" data-type="output"
+                                                                        name="c_access_output">
                                                                     <label></label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="forced_country" name="c_forced_country">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="forced_country"
+                                                                        name="c_forced_country">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="forced_country"><?= $_["forced_country"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="forced_country"><?= $_["forced_country"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select disabled name="forced_country" id="forced_country" class="form-control select2" data-toggle="select2">
+                                                                    <select disabled name="forced_country"
+                                                                        id="forced_country" class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach ($rCountries as $rCountry) { ?>
-                                                                            <option value="<?= $rCountry["id"] ?>"><?= $rCountry["name"] ?></option>
+                                                                            <option value="<?= $rCountry["id"] ?>">
+                                                                                <?= $rCountry["name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -401,10 +515,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -412,40 +528,56 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <table id="datatable-bouquets" class="table table-borderless mb-0">
+                                                                <table id="datatable-bouquets"
+                                                                    class="table table-borderless mb-0">
                                                                     <thead class="bg-light">
                                                                         <tr>
                                                                             <th class="text-center"><?= $_["id"] ?></th>
                                                                             <th><?= $_["bouquet_name"] ?></th>
-                                                                            <th class="text-center"><?= $_["streams"] ?></th>
-                                                                            <th class="text-center"><?= $_["series"] ?></th>
+                                                                            <th class="text-center"><?= $_["streams"] ?>
+                                                                            </th>
+                                                                            <th class="text-center"><?= $_["series"] ?>
+                                                                            </th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <tr>
-                                                                                <td class="text-center"><?= $rBouquet["id"] ?></td>
+                                                                                <td class="text-center">
+                                                                                    <?= $rBouquet["id"] ?></td>
                                                                                 <td><?= $rBouquet["bouquet_name"] ?></td>
-                                                                                <td class="text-center"><?= count(json_decode($rBouquet["bouquet_channels"], True)) ?></td>
-                                                                                <td class="text-center"><?= count(json_decode($rBouquet["bouquet_series"], True)) ?></td>
+                                                                                <td class="text-center">
+                                                                                    <?= count(json_decode($rBouquet["bouquet_channels"], True)) ?>
+                                                                                </td>
+                                                                                <td class="text-center">
+                                                                                    <?= count(json_decode($rBouquet["bouquet_series"], True)) ?>
+                                                                                </td>
                                                                             </tr>
                                                                         <?php } ?>
                                                                     </tbody>
                                                                 </table>
-                                                                <div class="custom-control col-md-12 custom-checkbox text-center" style="margin-top:20px;">
-                                                                    <input type="checkbox" class="custom-control-input" id="c_bouquets" data-name="bouquets" data-type="bouquet" name="c_bouquets">
-                                                                    <label class="custom-control-label" for="c_bouquets"><?= $_["tick_this_box_to_apply"] ?></label>
+                                                                <div class="custom-control col-md-12 custom-checkbox text-center"
+                                                                    style="margin-top:20px;">
+                                                                    <input type="checkbox" class="custom-control-input"
+                                                                        id="c_bouquets" data-name="bouquets"
+                                                                        data-type="bouquet" name="c_bouquets">
+                                                                    <label class="custom-control-label"
+                                                                        for="c_bouquets"><?= $_["tick_this_box_to_apply"] ?></label>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" onClick="toggleBouquets()" class="btn btn-info"><?= $_["toggle_bouquets"] ?></a>
-                                                            <input name="submit_user" type="submit" class="btn btn-primary" value="<?= $_["mass_edit"] ?>" />
+                                                            <a href="javascript: void(0);" onClick="toggleBouquets()"
+                                                                class="btn btn-info"><?= $_["toggle_bouquets"] ?></a>
+                                                            <input name="submit_user" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?= $_["mass_edit"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

@@ -26,10 +26,10 @@
 PHPAPI int php_flock(int fd, int operation);
 
 #ifndef HAVE_FLOCK
-#	define LOCK_SH 1
-#	define LOCK_EX 2
-#	define LOCK_NB 4
-#	define LOCK_UN 8
+#define LOCK_SH 1
+#define LOCK_EX 2
+#define LOCK_NB 4
+#define LOCK_UN 8
 PHPAPI int flock(int fd, int operation);
 #endif
 
@@ -40,12 +40,12 @@ PHPAPI int flock(int fd, int operation);
 #define PHP_LOCK_NB 4
 
 #ifdef PHP_WIN32
-# ifdef EWOULDBLOCK
-#  undef EWOULDBLOCK
-# endif
-# define EWOULDBLOCK WSAEWOULDBLOCK
-# define fsync _commit
-# define ftruncate(a, b) chsize(a, b)
+#ifdef EWOULDBLOCK
+#undef EWOULDBLOCK
+#endif
+#define EWOULDBLOCK WSAEWOULDBLOCK
+#define fsync _commit
+#define ftruncate(a, b) chsize(a, b)
 #endif /* defined(PHP_WIN32) */
 
 #if !HAVE_INET_ATON
@@ -61,4 +61,4 @@ extern int inet_aton(const char *, struct in_addr *);
 #endif
 #endif
 
-#endif	/* FLOCK_COMPAT_H */
+#endif /* FLOCK_COMPAT_H */

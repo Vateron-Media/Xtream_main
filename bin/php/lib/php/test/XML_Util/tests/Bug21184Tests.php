@@ -8,10 +8,8 @@
  *
  * @link https://pear.php.net/bugs/bug.php?id=21177
  */
-class Bug21184 extends AbstractUnitTests
-{
-    public function testBug21184()
-    {
+class Bug21184 extends AbstractUnitTests {
+    public function testBug21184() {
         $xml = '<XML_Serializer_Tag>one</XML_Serializer_Tag>';
         $this->assertEquals($xml, XML_Util::collapseEmptyTags($xml, XML_UTIL_COLLAPSE_ALL));
     }

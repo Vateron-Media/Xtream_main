@@ -1,4 +1,5 @@
 <?php
+
 /**
  * <tasks:replace>
  *
@@ -27,8 +28,7 @@ require_once 'PEAR/Task/Common.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
-class PEAR_Task_Replace extends PEAR_Task_Common
-{
+class PEAR_Task_Replace extends PEAR_Task_Common {
     public $type = 'simple';
     public $phase = PEAR_TASK_PACKAGEANDINSTALL;
     public $_replacements;
@@ -40,8 +40,7 @@ class PEAR_Task_Replace extends PEAR_Task_Common
      * @param  array raw, parsed xml
      * @param  PEAR_Config
      */
-    public static function validateXml($pkg, $xml, $config, $fileXml)
-    {
+    public static function validateXml($pkg, $xml, $config, $fileXml) {
         if (!isset($xml['attribs'])) {
             return array(PEAR_TASK_ERROR_NOATTRIBS);
         }
@@ -56,35 +55,83 @@ class PEAR_Task_Replace extends PEAR_Task_Common
         }
         if ($xml['attribs']['type'] == 'pear-config') {
             if (!in_array($xml['attribs']['to'], $config->getKeys())) {
-                return array(PEAR_TASK_ERROR_WRONG_ATTRIB_VALUE, 'to', $xml['attribs']['to'],
-                    $config->getKeys(), );
+                return array(
+                    PEAR_TASK_ERROR_WRONG_ATTRIB_VALUE,
+                    'to',
+                    $xml['attribs']['to'],
+                    $config->getKeys(),
+                );
             }
         } elseif ($xml['attribs']['type'] == 'php-const') {
             if (defined($xml['attribs']['to'])) {
                 return true;
             } else {
-                return array(PEAR_TASK_ERROR_WRONG_ATTRIB_VALUE, 'to', $xml['attribs']['to'],
-                    array('valid PHP constant'), );
+                return array(
+                    PEAR_TASK_ERROR_WRONG_ATTRIB_VALUE,
+                    'to',
+                    $xml['attribs']['to'],
+                    array('valid PHP constant'),
+                );
             }
         } elseif ($xml['attribs']['type'] == 'package-info') {
-            if (in_array(
-                $xml['attribs']['to'],
-                array('name', 'summary', 'channel', 'notes', 'extends', 'description',
-                    'release_notes', 'license', 'release-license', 'license-uri',
-                    'version', 'api-version', 'state', 'api-state', 'release_date',
-                    'date', 'time', )
-            )) {
+            if (
+                in_array(
+                    $xml['attribs']['to'],
+                    array(
+                        'name',
+                        'summary',
+                        'channel',
+                        'notes',
+                        'extends',
+                        'description',
+                        'release_notes',
+                        'license',
+                        'release-license',
+                        'license-uri',
+                        'version',
+                        'api-version',
+                        'state',
+                        'api-state',
+                        'release_date',
+                        'date',
+                        'time',
+                    )
+                )
+            ) {
                 return true;
             } else {
-                return array(PEAR_TASK_ERROR_WRONG_ATTRIB_VALUE, 'to', $xml['attribs']['to'],
-                    array('name', 'summary', 'channel', 'notes', 'extends', 'description',
-                    'release_notes', 'license', 'release-license', 'license-uri',
-                    'version', 'api-version', 'state', 'api-state', 'release_date',
-                    'date', 'time', ), );
+                return array(
+                    PEAR_TASK_ERROR_WRONG_ATTRIB_VALUE,
+                    'to',
+                    $xml['attribs']['to'],
+                    array(
+                        'name',
+                        'summary',
+                        'channel',
+                        'notes',
+                        'extends',
+                        'description',
+                        'release_notes',
+                        'license',
+                        'release-license',
+                        'license-uri',
+                        'version',
+                        'api-version',
+                        'state',
+                        'api-state',
+                        'release_date',
+                        'date',
+                        'time',
+                    ),
+                );
             }
         } else {
-            return array(PEAR_TASK_ERROR_WRONG_ATTRIB_VALUE, 'type', $xml['attribs']['type'],
-                array('pear-config', 'package-info', 'php-const'), );
+            return array(
+                PEAR_TASK_ERROR_WRONG_ATTRIB_VALUE,
+                'type',
+                $xml['attribs']['type'],
+                array('pear-config', 'package-info', 'php-const'),
+            );
         }
 
         return true;
@@ -96,8 +143,7 @@ class PEAR_Task_Replace extends PEAR_Task_Common
      * @param unused
      * @param unused
      */
-    public function init($xml, $attribs, $lastVersion = null)
-    {
+    public function init($xml, $attribs, $lastVersion = null) {
         $this->_replacements = isset($xml['attribs']) ? array($xml) : $xml;
     }
 
@@ -112,8 +158,7 @@ class PEAR_Task_Replace extends PEAR_Task_Common
      * @return string|false|PEAR_Error false to skip this file, PEAR_Error to fail
      *                                 (use $this->throwError), otherwise return the new contents
      */
-    public function startSession($pkg, $contents, $dest)
-    {
+    public function startSession($pkg, $contents, $dest) {
         $subst_from = $subst_to = array();
         foreach ($this->_replacements as $a) {
             $a = $a['attribs'];
@@ -174,8 +219,9 @@ class PEAR_Task_Replace extends PEAR_Task_Common
             }
         }
         $this->logger->log(
-            3, "doing ".sizeof($subst_from).
-            " substitution(s) for $dest"
+            3,
+            "doing " . sizeof($subst_from) .
+                " substitution(s) for $dest"
         );
         if (sizeof($subst_from)) {
             $contents = str_replace($subst_from, $subst_to, $contents);

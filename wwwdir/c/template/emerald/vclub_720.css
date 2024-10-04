@@ -1,5 +1,5 @@
 /* VCLUB */
-.ears_back{
+.ears_back {
     position: absolute;
     width: 40px;
     height: 420px;
@@ -9,7 +9,7 @@
     background-position: 0 0;
 }
 
-.ears_movie{
+.ears_movie {
     position: absolute;
     width: 40px;
     height: 420px;
@@ -19,7 +19,7 @@
     background-position: -40px 0;
 }
 
-.vclub_info_box{
+.vclub_info_box {
     position: absolute;
     width: 400px;
     height: 196px;
@@ -32,17 +32,17 @@
     padding: 5px;
 }
 
-.vclub_info_box_mask{
-    -webkit-mask: -webkit-gradient(linear, left 191, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+.vclub_info_box_mask {
+    -webkit-mask: -webkit-gradient(linear, left 191, left bottom, from(rgba(0, 0, 0, 1)), to(rgba(0, 0, 0, 0)));
 }
 
-.vclub_info_box span{
+.vclub_info_box span {
     color: #bcf092;
     font-size: 25px;
     font-family: "Myriad Pro Cond", serif;
 }
 
-.vclub_screenshot_box{
+.vclub_screenshot_box {
     position: absolute;
     background: url("i_720/mb_prev_bg.png");
     height: 322px;
@@ -52,12 +52,12 @@
     padding: 5px;
 }
 
-.vclub_screenshot_box img{
+.vclub_screenshot_box img {
     width: 240px;
     height: 320px;
 }
 
-.today_block{
+.today_block {
     position: absolute;
     right: 1px;
     top: 0;
@@ -72,7 +72,7 @@
     overflow: hidden;
 }
 
-.yesterday_block{
+.yesterday_block {
     position: absolute;
     right: 1px;
     top: 0;
@@ -87,7 +87,7 @@
     overflow: hidden;
 }
 
-.week_and_more_block{
+.week_and_more_block {
     position: absolute;
     right: 1px;
     top: 0;
@@ -102,7 +102,9 @@
     overflow: hidden;
 }
 
-.active_today_block, .active_yesterday_block, .active_week_and_more_block{
+.active_today_block,
+.active_yesterday_block,
+.active_week_and_more_block {
     position: absolute;
     right: 23px;
     top: 4px;
@@ -118,22 +120,24 @@
     font-weight: bold;
 }
 
-.disabled_all_buttons span{
+.disabled_all_buttons span {
     color: #707070 !important;
 }
 
-#vclub .low_quality_block{
+#vclub .low_quality_block {
     float: left;
     width: 28px;
     height: 28px;
     background-image: url("i_720/low_q.png");
     margin: 5px 0 0 2px;
 }
-#vclub .active_low_quality_block{
+
+#vclub .active_low_quality_block {
     float: left;
     width: 28px;
     height: 28px;
     background-image: url("i_720/low_q.png");
     margin: 11px 2px 0 2px;
 }
+
 /* END VCLUB */

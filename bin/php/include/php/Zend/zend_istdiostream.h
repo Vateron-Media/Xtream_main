@@ -24,10 +24,11 @@
 class istdiostream : public istream
 {
 private:
-	stdiobuf _file;
+   stdiobuf _file;
+
 public:
-	istdiostream (FILE* __f) : istream(), _file(__f) { init(&_file); }
-	stdiobuf* rdbuf()/* const */ { return &_file; }
+   istdiostream(FILE *__f) : istream(), _file(__f) { init(&_file); }
+   stdiobuf *rdbuf() /* const */ { return &_file; }
 };
 #endif
 

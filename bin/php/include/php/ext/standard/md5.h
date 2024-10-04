@@ -39,11 +39,12 @@ PHP_NAMED_FUNCTION(php_if_md5_file);
  */
 
 /* MD5 context. */
-typedef struct {
-	uint32_t lo, hi;
-	uint32_t a, b, c, d;
-	unsigned char buffer[64];
-	uint32_t block[16];
+typedef struct
+{
+   uint32_t lo, hi;
+   uint32_t a, b, c, d;
+   unsigned char buffer[64];
+   uint32_t block[16];
 } PHP_MD5_CTX;
 
 PHPAPI void PHP_MD5Init(PHP_MD5_CTX *ctx);

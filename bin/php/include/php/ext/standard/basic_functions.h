@@ -162,13 +162,14 @@ PHPAPI int php_prefix_varname(zval *result, const zval *prefix, const char *var_
 typedef uint32_t php_uint32;
 typedef int32_t php_int32;
 
-typedef struct _php_basic_globals {
+typedef struct _php_basic_globals
+{
 	HashTable *user_shutdown_function_names;
 	HashTable putenv_ht;
-	zval  strtok_zval;
+	zval strtok_zval;
 	char *strtok_string;
 	zend_string *locale_string; /* current LC_CTYPE locale (or NULL for 'C') */
-	zend_bool locale_changed;   /* locale was changed and has to be restored */
+	zend_bool locale_changed;	/* locale was changed and has to be restored */
 	char *strtok_last;
 	char strtok_table[256];
 	zend_ulong strtok_len;
@@ -192,9 +193,9 @@ typedef struct _php_basic_globals {
 	php_stream_statbuf ssb, lssb;
 
 	/* mt_rand.c */
-	uint32_t state[MT_N+1];  /* state vector + 1 extra to not violate ANSI C */
-	uint32_t *next;       /* next random value is computed from here */
-	int      left;        /* can *next++ this many times before reloading */
+	uint32_t state[MT_N + 1]; /* state vector + 1 extra to not violate ANSI C */
+	uint32_t *next;			  /* next random value is computed from here */
+	int left;				  /* can *next++ this many times before reloading */
 
 	zend_bool mt_rand_is_seeded; /* Whether mt_rand() has been seeded */
 	zend_long mt_rand_mode;
@@ -205,11 +206,13 @@ typedef struct _php_basic_globals {
 	/* var.c */
 	zend_class_entry *incomplete_class;
 	unsigned serialize_lock; /* whether to use the locally supplied var_hash instead (__sleep/__wakeup) */
-	struct {
+	struct
+	{
 		struct php_serialize_data *data;
 		unsigned level;
 	} serialize;
-	struct {
+	struct
+	{
 		struct php_unserialize_data *data;
 		unsigned level;
 	} unserialize;
@@ -244,7 +247,8 @@ PHPAPI extern php_basic_globals basic_globals;
 #endif
 
 #if HAVE_PUTENV
-typedef struct {
+typedef struct
+{
 	char *putenv_string;
 	char *previous_value;
 	char *key;
@@ -255,7 +259,8 @@ typedef struct {
 PHPAPI double php_get_nan(void);
 PHPAPI double php_get_inf(void);
 
-typedef struct _php_shutdown_function_entry {
+typedef struct _php_shutdown_function_entry
+{
 	zval *arguments;
 	int arg_count;
 } php_shutdown_function_entry;
@@ -266,6 +271,5 @@ PHPAPI extern zend_bool append_user_shutdown_function(php_shutdown_function_entr
 
 PHPAPI void php_call_shutdown_functions(void);
 PHPAPI void php_free_shutdown_functions(void);
-
 
 #endif /* BASIC_FUNCTIONS_H */

@@ -1,4 +1,4 @@
-.anecdote_body_container{
+.anecdote_body_container {
     position: absolute;
     top: 100px;
     left: 70px;
@@ -12,26 +12,26 @@
     font-size: 18px;
 }
 
-.anecdote_body_container .date{
+.anecdote_body_container .date {
     color: #FFE8C7;
 }
 
-.anecdote_body_container .date{
+.anecdote_body_container .date {
     color: #99a8b5;
 }
 
-.anecdote_body_container .rate{
+.anecdote_body_container .rate {
     color: #0c0;
 }
 
-.anecdote_body{
+.anecdote_body {
     float: left;
     overflow: hidden;
     width: 540px;
     height: 348px;
 }
 
-.anecdote_left_arrow{
+.anecdote_left_arrow {
     position: absolute;
     top: 250px;
     left: 20px;
@@ -40,7 +40,7 @@
     background-image: url("i/arr_left.png");
 }
 
-.anecdote_right_arrow{
+.anecdote_right_arrow {
     position: absolute;
     top: 250px;
     right: 20px;
@@ -49,7 +49,7 @@
     background-image: url("i/arr_right.png");
 }
 
-.anecdote_page_bar{
+.anecdote_page_bar {
     position: absolute;
     top: 480px;
     width: 570px;
@@ -60,8 +60,8 @@
 }
 
 /* QUICK PAGE SWITCH */
-.quick_page_switch{
-    position:absolute;
+.quick_page_switch {
+    position: absolute;
     width: 239px;
     height: 196px;
     left: 240px;
@@ -69,8 +69,8 @@
     background: url("i/input_channel_bg.png");
 }
 
-.quick_page_input{
-    position:absolute;
+.quick_page_input {
+    position: absolute;
     top: 82px;
     left: 75px;
     font: 28px trebuchet ms, Arial, Helvetica, sans-serif;
@@ -79,4 +79,5 @@
     width: 89px;
     height: 40px;
 }
+
 /* END QUICK PAGE SWITCH */

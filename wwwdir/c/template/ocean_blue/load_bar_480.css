@@ -1,7 +1,7 @@
 /* LOADER */
 
-.loader{
-    position:absolute;
+.loader {
+    position: absolute;
     left: 0;
     top: 0;
     width: 720px;
@@ -9,8 +9,8 @@
     background-image: url("i_480/bg2.png");
 }
 
-.loader_bar{
-    position:absolute;
+.loader_bar {
+    position: absolute;
     left: 2px;
     top: 2px;
     width: 0px;
@@ -18,8 +18,8 @@
     background-image: url("i_480/loading.png");
 }
 
-.loader_bar_bg{
-    position:absolute;
+.loader_bar_bg {
+    position: absolute;
     left: 234px;
     top: 230px;
     width: 252px;
@@ -27,8 +27,8 @@
     background-image: url("i_480/loading_bg.gif");
 }
 
-.loader_log{
-    position:absolute;
+.loader_log {
+    position: absolute;
     left: 100px;
     top: 300px;
     width: 500px;

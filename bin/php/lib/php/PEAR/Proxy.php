@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Proxy
  *
@@ -12,8 +13,7 @@
  * @link       http://pear.php.net/package/PEAR
  */
 
-class PEAR_Proxy
-{
+class PEAR_Proxy {
     var $config = null;
 
     /**
@@ -37,8 +37,7 @@ class PEAR_Proxy
      */
     var $proxy_schema;
 
-    function __construct($config = null)
-    {
+    function __construct($config = null) {
         $this->config = $config;
         $this->_parseProxyInfo();
     }
@@ -46,17 +45,17 @@ class PEAR_Proxy
     /**
      * @access private
      */
-    function _parseProxyInfo()
-    {
+    function _parseProxyInfo() {
         $this->proxy_host = $this->proxy_port = $this->proxy_user = $this->proxy_pass = '';
-        if ($this->config->get('http_proxy')&&
-              $proxy = parse_url($this->config->get('http_proxy'))
+        if (
+            $this->config->get('http_proxy') &&
+            $proxy = parse_url($this->config->get('http_proxy'))
         ) {
             $this->proxy_host = isset($proxy['host']) ? $proxy['host'] : null;
 
-            $this->proxy_port   = isset($proxy['port']) ? $proxy['port'] : 8080;
-            $this->proxy_user   = isset($proxy['user']) ? urldecode($proxy['user']) : null;
-            $this->proxy_pass   = isset($proxy['pass']) ? urldecode($proxy['pass']) : null;
+            $this->proxy_port = isset($proxy['port']) ? $proxy['port'] : 8080;
+            $this->proxy_user = isset($proxy['user']) ? urldecode($proxy['user']) : null;
+            $this->proxy_pass = isset($proxy['pass']) ? urldecode($proxy['pass']) : null;
             $this->proxy_schema = (isset($proxy['scheme']) && $proxy['scheme'] == 'https') ? 'https' : 'http';
         }
     }
@@ -64,8 +63,7 @@ class PEAR_Proxy
     /**
      * @access private
      */
-    function _httpConnect($fp, $host, $port)
-    {
+    function _httpConnect($fp, $host, $port) {
         fwrite($fp, "CONNECT $host:$port HTTP/1.1\r\n");
         fwrite($fp, "Host: $host:$port\r\n");
         if ($this->getProxyAuth()) {
@@ -75,7 +73,7 @@ class PEAR_Proxy
 
         while ($line = trim(fgets($fp, 1024))) {
             if (preg_match('|^HTTP/1.[01] ([0-9]{3}) |', $line, $matches)) {
-                $code = (int)$matches[1];
+                $code = (int) $matches[1];
 
                 /* as per RFC 2817 */
                 if ($code < 200 || $code >= 300) {
@@ -101,7 +99,7 @@ class PEAR_Proxy
         // stream_socket_enable_crypto()
         // see
         // <http://php.net/manual/en/function.stream-socket-enable-crypto.php>
-        stream_set_blocking ($fp, true);
+        stream_set_blocking($fp, true);
         $crypto_res = stream_socket_enable_crypto($fp, true, $crypto_method);
         if (!$crypto_res) {
             return PEAR::raiseError("Could not establish SSL connection through proxy $proxy_host:$proxy_port: $crypto_res");
@@ -117,16 +115,14 @@ class PEAR_Proxy
      *                     proxy and authentication is configured, null 
      *                     otherwise.
      */
-    function getProxyAuth()
-    {
+    function getProxyAuth() {
         if ($this->isProxyConfigured() && $this->proxy_user != '') {
             return base64_encode($this->proxy_user . ':' . $this->proxy_pass);
         }
         return null;
     }
 
-    function getProxyUser()
-    {
+    function getProxyUser() {
         return $this->proxy_user;
     }
 
@@ -137,8 +133,7 @@ class PEAR_Proxy
      *                 otherwise.
      * @access public
      */
-    function isProxyConfigured()
-    {
+    function isProxyConfigured() {
         return $this->proxy_host != '';
     }
 
@@ -155,12 +150,14 @@ class PEAR_Proxy
      *                        using TLS.
      * @access public
      */
-    function openSocket($host, $port, $secure = false)
-    {
+    function openSocket($host, $port, $secure = false) {
         if ($this->isProxyConfigured()) {
             $fp = @fsockopen(
-                $this->proxy_host, $this->proxy_port, 
-                $errno, $errstr, 15
+                $this->proxy_host,
+                $this->proxy_port,
+                $errno,
+                $errstr,
+                15
             );
 
             if (!$fp) {

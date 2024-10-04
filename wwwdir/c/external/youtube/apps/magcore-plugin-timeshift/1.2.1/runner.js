@@ -1,12 +1,12 @@
 'use strict';
 
-var path    = require('path'),
-    runner  = require('node-runner'),
+var path = require('path'),
+    runner = require('node-runner'),
     // tools   = require('node-runner/lib/tools'),
     webpack = require('webpack'),
     generators = require('spa-tasks'),
-    source  = 'src',
-    target  = path.join('app');
+    source = 'src',
+    target = path.join('app');
 
 
 // activate popup notifications on errors
@@ -100,7 +100,7 @@ generators.webpack({
             }
         })
     ]
-},{
+}, {
     prefix: 'release:'
 });
 

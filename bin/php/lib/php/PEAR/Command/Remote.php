@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Remote (remote-info, list-upgrades, remote-list, search, list-all, download,
  * clear-cache commands)
@@ -34,8 +35,7 @@ require_once 'PEAR/REST.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
-class PEAR_Command_Remote extends PEAR_Command_Common
-{
+class PEAR_Command_Remote extends PEAR_Command_Common {
     var $commands = array(
         'remote-info' => array(
             'summary' => 'Information About Remote Packages',
@@ -44,7 +44,7 @@ class PEAR_Command_Remote extends PEAR_Command_Common
             'options' => array(),
             'doc' => '<package>
 Get details on a package from the server.',
-            ),
+        ),
         'list-upgrades' => array(
             'summary' => 'List Available Upgrades',
             'function' => 'doListUpgrades',
@@ -53,75 +53,75 @@ Get details on a package from the server.',
                 'channelinfo' => array(
                     'shortopt' => 'i',
                     'doc' => 'output fully channel-aware data, even on failure',
-                    ),
+                ),
             ),
             'doc' => '[preferred_state]
 List releases on the server of packages you have installed where
 a newer version is available with the same release state (stable etc.)
 or the state passed as the second parameter.'
-            ),
+        ),
         'remote-list' => array(
             'summary' => 'List Remote Packages',
             'function' => 'doRemoteList',
             'shortcut' => 'rl',
             'options' => array(
                 'channel' =>
-                    array(
+                array(
                     'shortopt' => 'c',
                     'doc' => 'specify a channel other than the default channel',
                     'arg' => 'CHAN',
-                    )
-                ),
+                )
+            ),
             'doc' => '
 Lists the packages available on the configured server along with the
 latest stable release of each package.',
-            ),
+        ),
         'search' => array(
             'summary' => 'Search remote package database',
             'function' => 'doSearch',
             'shortcut' => 'sp',
             'options' => array(
                 'channel' =>
-                    array(
+                array(
                     'shortopt' => 'c',
                     'doc' => 'specify a channel other than the default channel',
                     'arg' => 'CHAN',
-                    ),
+                ),
                 'allchannels' => array(
                     'shortopt' => 'a',
                     'doc' => 'search packages from all known channels',
-                    ),
+                ),
                 'channelinfo' => array(
                     'shortopt' => 'i',
                     'doc' => 'output fully channel-aware data, even on failure',
-                    ),
                 ),
+            ),
             'doc' => '[packagename] [packageinfo]
 Lists all packages which match the search parameters.  The first
 parameter is a fragment of a packagename.  The default channel
 will be used unless explicitly overridden.  The second parameter
 will be used to match any portion of the summary/description',
-            ),
+        ),
         'list-all' => array(
             'summary' => 'List All Packages',
             'function' => 'doListAll',
             'shortcut' => 'la',
             'options' => array(
                 'channel' =>
-                    array(
+                array(
                     'shortopt' => 'c',
                     'doc' => 'specify a channel other than the default channel',
                     'arg' => 'CHAN',
-                    ),
+                ),
                 'channelinfo' => array(
                     'shortopt' => 'i',
                     'doc' => 'output fully channel-aware data, even on failure',
-                    ),
                 ),
+            ),
             'doc' => '
 Lists the packages available on the configured server along with the
 latest stable release of each package.',
-            ),
+        ),
         'download' => array(
             'summary' => 'Download Package',
             'function' => 'doDownload',
@@ -130,13 +130,13 @@ latest stable release of each package.',
                 'nocompress' => array(
                     'shortopt' => 'Z',
                     'doc' => 'download an uncompressed (.tar) file',
-                    ),
                 ),
+            ),
             'doc' => '<package>...
 Download package tarballs.  The files will be named as suggested by the
 server, for example if you download the DB package and the latest stable
 version of DB is 1.6.5, the downloaded file will be DB-1.6.5.tgz.',
-            ),
+        ),
         'clear-cache' => array(
             'summary' => 'Clear Web Services Cache',
             'function' => 'doClearCache',
@@ -146,21 +146,19 @@ version of DB is 1.6.5, the downloaded file will be DB-1.6.5.tgz.',
 Clear the REST cache. See also the cache_ttl configuration
 parameter.
 ',
-            ),
-        );
+        ),
+    );
 
     /**
      * PEAR_Command_Remote constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 
-    function _checkChannelForStatus($channel, $chan)
-    {
+    function _checkChannelForStatus($channel, $chan) {
         if (PEAR::isError($chan)) {
             $this->raiseError($chan);
         }
@@ -170,8 +168,11 @@ parameter.
         }
         $rest = new PEAR_REST($this->config);
         PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-        $mirror = $this->config->get('preferred_mirror', null,
-                                     $channel);
+        $mirror = $this->config->get(
+            'preferred_mirror',
+            null,
+            $channel
+        );
         $a = $rest->downloadHttp('http://' . $channel .
             '/channel.xml', $chan->lastModified());
         PEAR::staticPopErrorHandling();
@@ -182,8 +183,7 @@ parameter.
         }
     }
 
-    function doRemoteInfo($command, $options, $params)
-    {
+    function doRemoteInfo($command, $options, $params) {
         if (sizeof($params) != 1) {
             return $this->raiseError("$command expects one param: the remote package name");
         }
@@ -233,8 +233,7 @@ parameter.
         return true;
     }
 
-    function doRemoteList($command, $options, $params)
-    {
+    function doRemoteList($command, $options, $params) {
         $savechannel = $channel = $this->config->get('default_channel');
         $reg = &$this->config->getRegistry();
         if (isset($options['channel'])) {
@@ -257,14 +256,17 @@ parameter.
         }
 
         $available = array();
-        if ($chan->supportsREST($this->config->get('preferred_mirror')) &&
-              $base = $chan->getBaseURL('REST1.1', $this->config->get('preferred_mirror'))
+        if (
+            $chan->supportsREST($this->config->get('preferred_mirror')) &&
+            $base = $chan->getBaseURL('REST1.1', $this->config->get('preferred_mirror'))
         ) {
             // use faster list-all if available
             $rest = &$this->config->getREST('1.1', array());
             $available = $rest->listAll($base, $list_options, true, false, false, $chan->getName());
-        } elseif ($chan->supportsREST($this->config->get('preferred_mirror')) &&
-              $base = $chan->getBaseURL('REST1.0', $this->config->get('preferred_mirror'))) {
+        } elseif (
+            $chan->supportsREST($this->config->get('preferred_mirror')) &&
+            $base = $chan->getBaseURL('REST1.0', $this->config->get('preferred_mirror'))
+        ) {
             $rest = &$this->config->getREST('1.0', array());
             $available = $rest->listAll($base, $list_options, true, false, false, $chan->getName());
         }
@@ -280,7 +282,7 @@ parameter.
             'border' => true,
             'headline' => array('Package', 'Version'),
             'channel' => $channel
-            );
+        );
 
         if (count($available) == 0) {
             $data = '(no packages available yet)';
@@ -295,8 +297,7 @@ parameter.
         return true;
     }
 
-    function doListAll($command, $options, $params)
-    {
+    function doListAll($command, $options, $params) {
         $savechannel = $channel = $this->config->get('default_channel');
         $reg = &$this->config->getRegistry();
         if (isset($options['channel'])) {
@@ -318,13 +319,17 @@ parameter.
             return $e;
         }
 
-        if ($chan->supportsREST($this->config->get('preferred_mirror')) &&
-              $base = $chan->getBaseURL('REST1.1', $this->config->get('preferred_mirror'))) {
+        if (
+            $chan->supportsREST($this->config->get('preferred_mirror')) &&
+            $base = $chan->getBaseURL('REST1.1', $this->config->get('preferred_mirror'))
+        ) {
             // use faster list-all if available
             $rest = &$this->config->getREST('1.1', array());
             $available = $rest->listAll($base, $list_options, false, false, false, $chan->getName());
-        } elseif ($chan->supportsREST($this->config->get('preferred_mirror')) &&
-              $base = $chan->getBaseURL('REST1.0', $this->config->get('preferred_mirror'))) {
+        } elseif (
+            $chan->supportsREST($this->config->get('preferred_mirror')) &&
+            $base = $chan->getBaseURL('REST1.0', $this->config->get('preferred_mirror'))
+        ) {
             $rest = &$this->config->getREST('1.0', array());
             $available = $rest->listAll($base, $list_options, false, false, false, $chan->getName());
         }
@@ -339,13 +344,19 @@ parameter.
             'border' => true,
             'headline' => array('Package', 'Latest', 'Local'),
             'channel' => $channel,
-            );
+        );
 
         if (isset($options['channelinfo'])) {
             // add full channelinfo
             $data['caption'] = 'Channel ' . $channel . ' All packages:';
-            $data['headline'] = array('Channel', 'Package', 'Latest', 'Local',
-                'Description', 'Dependencies');
+            $data['headline'] = array(
+                'Channel',
+                'Package',
+                'Latest',
+                'Local',
+                'Description',
+                'Dependencies'
+            );
         }
         $local_pkgs = $reg->listPackages($channel);
 
@@ -356,19 +367,23 @@ parameter.
             }
             $desc = $info['summary'];
             if (isset($params[$name])) {
-                $desc .= "\n\n".$info['description'];
+                $desc .= "\n\n" . $info['description'];
             }
-            if (isset($options['mode']))
-            {
+            if (isset($options['mode'])) {
                 if ($options['mode'] == 'installed' && !isset($installed['version'])) {
                     continue;
                 }
                 if ($options['mode'] == 'notinstalled' && isset($installed['version'])) {
                     continue;
                 }
-                if ($options['mode'] == 'upgrades'
-                      && (!isset($installed['version']) || version_compare($installed['version'],
-                      $info['stable'], '>='))) {
+                if (
+                    $options['mode'] == 'upgrades'
+                    && (!isset($installed['version']) || version_compare(
+                        $installed['version'],
+                        $info['stable'],
+                        '>='
+                    ))
+                ) {
                     continue;
                 }
             }
@@ -388,11 +403,11 @@ parameter.
                 } else {
                     $state = 'stable';
                 }
-                $latest = $info['stable'].' ('.$state.')';
+                $latest = $info['stable'] . ' (' . $state . ')';
                 $local = '';
                 if (isset($installed['version'])) {
                     $inst_state = $reg->packageInfo($name, 'release_state', $channel);
-                    $local = $installed['version'].' ('.$inst_state.')';
+                    $local = $installed['version'] . ' (' . $inst_state . ')';
                 }
 
                 $packageinfo = array(
@@ -429,7 +444,7 @@ parameter.
                 $info->getVersion(),
                 $info->getSummary(),
                 $info->getDeps()
-                );
+            );
         }
 
         $this->config->set('default_channel', $savechannel);
@@ -437,11 +452,11 @@ parameter.
         return true;
     }
 
-    function doSearch($command, $options, $params)
-    {
-        if ((!isset($params[0]) || empty($params[0]))
-            && (!isset($params[1]) || empty($params[1])))
-        {
+    function doSearch($command, $options, $params) {
+        if (
+            (!isset($params[0]) || empty($params[0]))
+            && (!isset($params[1]) || empty($params[1]))
+        ) {
             return $this->raiseError('no valid search string supplied');
         }
 
@@ -490,8 +505,10 @@ parameter.
             return $e;
         }
 
-        if ($chan->supportsREST($this->config->get('preferred_mirror')) &&
-              $base = $chan->getBaseURL('REST1.0', $this->config->get('preferred_mirror'))) {
+        if (
+            $chan->supportsREST($this->config->get('preferred_mirror')) &&
+            $base = $chan->getBaseURL('REST1.0', $this->config->get('preferred_mirror'))
+        ) {
             $rest = &$this->config->getREST('1.0', array());
             $available = $rest->listAll($base, false, false, $package, $summary, $chan->getName());
         }
@@ -503,7 +520,7 @@ parameter.
 
         if (!$available && !$channelinfo) {
             // clean exit when not found, no error !
-            $data = 'no packages found that match pattern "' . $package . '", for channel '.$channel.'.';
+            $data = 'no packages found that match pattern "' . $package . '", for channel ' . $channel . '.';
             $this->ui->outputData($data);
             $this->config->set('default_channel', $channel);
             return true;
@@ -515,14 +532,14 @@ parameter.
                 'border' => true,
                 'headline' => array('Channel', 'Package', 'Stable/(Latest)', 'Local'),
                 'channel' => $channel
-                );
+            );
         } else {
             $data = array(
                 'caption' => 'Matched packages, channel ' . $channel . ':',
                 'border' => true,
                 'headline' => array('Package', 'Stable/(Latest)', 'Local'),
                 'channel' => $channel
-                );
+            );
         }
 
         if (!$available && $channelinfo) {
@@ -535,7 +552,7 @@ parameter.
             $installed = $reg->packageInfo($name, null, $channel);
             $desc = $info['summary'];
             if (isset($params[$name]))
-                $desc .= "\n\n".$info['description'];
+                $desc .= "\n\n" . $info['description'];
 
             if (!isset($info['stable']) || !$info['stable']) {
                 $version_remote = 'none';
@@ -545,7 +562,7 @@ parameter.
                 } else {
                     $version_remote = $info['stable'];
                 }
-                $version_remote .= ' ('.$info['state'].')';
+                $version_remote .= ' (' . $info['state'] . ')';
             }
             $version = is_array($installed['version']) ? $installed['version']['release'] :
                 $installed['version'];
@@ -573,8 +590,7 @@ parameter.
         return true;
     }
 
-    function &getDownloader($options)
-    {
+    function &getDownloader($options) {
         if (!class_exists('PEAR_Downloader')) {
             require_once 'PEAR/Downloader.php';
         }
@@ -582,8 +598,7 @@ parameter.
         return $a;
     }
 
-    function doDownload($command, $options, $params)
-    {
+    function doDownload($command, $options, $params) {
         // make certain that dependencies are ignored
         $options['downloadonly'] = 1;
 
@@ -627,15 +642,13 @@ parameter.
         return true;
     }
 
-    function downloadCallback($msg, $params = null)
-    {
+    function downloadCallback($msg, $params = null) {
         if ($msg == 'done') {
             $this->bytes_downloaded = $params;
         }
     }
 
-    function doListUpgrades($command, $options, $params)
-    {
+    function doListUpgrades($command, $options, $params) {
         require_once 'PEAR/Common.php';
         if (isset($params[0]) && !is_array(PEAR_Common::betterStates($params[0]))) {
             return $this->raiseError($params[0] . ' is not a valid state (stable/beta/alpha/devel/etc.) try "pear help list-upgrades"');
@@ -663,12 +676,13 @@ parameter.
             }
 
             $latest = array();
-            $base2  = false;
+            $base2 = false;
             $preferred_mirror = $this->config->get('preferred_mirror');
-            if ($chan->supportsREST($preferred_mirror) &&
+            if (
+                $chan->supportsREST($preferred_mirror) &&
                 (
-                   ($base2 = $chan->getBaseURL('REST1.3', $preferred_mirror))
-                   || ($base  = $chan->getBaseURL('REST1.0', $preferred_mirror))
+                    ($base2 = $chan->getBaseURL('REST1.3', $preferred_mirror))
+                    || ($base = $chan->getBaseURL('REST1.0', $preferred_mirror))
                 )
 
             ) {
@@ -706,9 +720,9 @@ parameter.
                 'border' => 1,
                 'headline' => array('Channel', 'Package', 'Local', 'Remote', 'Size'),
                 'channel' => $channel
-                );
+            );
 
-            foreach ((array)$latest as $pkg => $info) {
+            foreach ((array) $latest as $pkg => $info) {
                 $package = strtolower($pkg);
                 if (!isset($inst[$package])) {
                     // skip packages we don't have installed
@@ -717,7 +731,7 @@ parameter.
 
                 extract($info);
                 $inst_version = $reg->packageInfo($package, 'version', $channel);
-                $inst_state   = $reg->packageInfo($package, 'release_state', $channel);
+                $inst_state = $reg->packageInfo($package, 'release_state', $channel);
                 if (version_compare("$version", "$inst_version", "le")) {
                     // installed version is up-to-date
                     continue;
@@ -759,10 +773,9 @@ parameter.
         return true;
     }
 
-    function doClearCache($command, $options, $params)
-    {
+    function doClearCache($command, $options, $params) {
         $cache_dir = $this->config->get('cache_dir');
-        $verbose   = $this->config->get('verbose');
+        $verbose = $this->config->get('verbose');
         $output = '';
         if (!file_exists($cache_dir) || !is_dir($cache_dir)) {
             return $this->raiseError("$cache_dir does not exist or is not a directory");

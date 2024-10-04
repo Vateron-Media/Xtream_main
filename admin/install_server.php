@@ -46,7 +46,7 @@ if (isset($_POST["submit_server"])) {
             $db->query("GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO `" . $userBD . "`@`" . $rArray["server_ip"] . "` WITH GRANT OPTION;");
             $db->query("FLUSH PRIVILEGES;");
             // Run lb installer
-            $rCommand = '/home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/tools/balancer.php ' . intval($rInsertID) . ' ' . intval($_POST["ssh_port"]) . ' ' . escapeshellarg($_POST['root_username']) . ' ' . escapeshellarg($_POST['root_password']) . ' '  . $rArray["http_broadcast_port"] . ' ' . $rArray["https_broadcast_port"] . ' ' . intval($rUpdateSysctl) . ' > "/home/xtreamcodes/install/' . intval($rInsertID) . '.install" 2>/dev/null &';
+            $rCommand = '/home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/tools/balancer.php ' . intval($rInsertID) . ' ' . intval($_POST["ssh_port"]) . ' ' . escapeshellarg($_POST['root_username']) . ' ' . escapeshellarg($_POST['root_password']) . ' ' . $rArray["http_broadcast_port"] . ' ' . $rArray["https_broadcast_port"] . ' ' . intval($rUpdateSysctl) . ' > "/home/xtreamcodes/install/' . intval($rInsertID) . '.install" 2>/dev/null &';
 
             shell_exec($rCommand);
             header("Location: ./servers.php");
@@ -76,7 +76,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./servers.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_servers"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_servers"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
@@ -97,11 +98,13 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./install_server.php" method="POST" id="server_form" data-parsley-validate="">
+                                    <form action="./install_server.php" method="POST" id="server_form"
+                                        data-parsley-validate="">
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#server-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#server-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-creation mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
@@ -112,54 +115,82 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="server_name"><?= $_["server_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="server_name"><?= $_["server_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="server_name" name="server_name" value="" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="server_name" name="server_name" value=""
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="server_ip"><?= $_["server_ip"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="server_ip"><?= $_["server_ip"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="server_ip" name="server_ip" value="" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="server_ip" name="server_ip" value=""
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="root_username"><?= $_["root_username"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="root_username"><?= $_["root_username"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="root_username" name="root_username" value="" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="root_username" name="root_username" value=""
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="root_password"><?= $_["root_password"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="root_password"><?= $_["root_password"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="root_password" name="root_password" value="" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="root_password" name="root_password" value=""
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="ssh_port"><?= $_["ssh_port"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="ssh_port"><?= $_["ssh_port"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="ssh_port" name="ssh_port" value="22" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="ssh_port" name="ssh_port" value="22"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="http_broadcast_port"><?= $_["http_port"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="http_broadcast_port"><?= $_["http_port"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="http_broadcast_port" name="http_broadcast_port" value="25461" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="http_broadcast_port"
+                                                                        name="http_broadcast_port" value="25461"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="https_broadcast_port"><?= $_["https_port"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="https_broadcast_port"><?= $_["https_port"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="https_broadcast_port" name="https_broadcast_port" value="25463" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="https_broadcast_port"
+                                                                        name="https_broadcast_port" value="25463"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="rtmp_port"><?= $_["rtmp_port"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="rtmp_port"><?= $_["rtmp_port"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="rtmp_port" name="rtmp_port" value="25462" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="rtmp_port" name="rtmp_port" value="25462"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_server" type="submit" class="btn btn-primary" value="<?= $_["install_server"] ?>" />
+                                                            <input name="submit_server" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?= $_["install_server"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

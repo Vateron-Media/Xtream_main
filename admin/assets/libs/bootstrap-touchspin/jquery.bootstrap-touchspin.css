@@ -15,7 +15,7 @@
   z-index: 11;
 }
 
-.bootstrap-touchspin .input-group-btn-vertical > .btn {
+.bootstrap-touchspin .input-group-btn-vertical>.btn {
   position: absolute;
   right: 0;
   height: 50%;
@@ -34,5 +34,3 @@
   border-radius: 0 0 4px 0;
   bottom: 0;
 }
-
-

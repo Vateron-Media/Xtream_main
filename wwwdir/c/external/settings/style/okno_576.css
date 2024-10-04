@@ -1,10 +1,10 @@
-<!--
-* {
+< !-- * {
     margin: 0;
     padding: 0;
 }
 
-html, body {
+html,
+body {
     overflow: hidden;
     font-family: "Myriad Pro";
     color: #FFF;
@@ -35,7 +35,8 @@ a {
     width: 580px;
     position: absolute;
     top: 0px;
-    background: -webkit-gradient(linear, left bottom, left top, color-stop(1, rgba(37, 82, 155, 1)), color-stop(0.9, rgba(37, 82, 155, 1)), color-stop(0, rgba(35, 77, 145, 0.3)));;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(1, rgba(37, 82, 155, 1)), color-stop(0.9, rgba(37, 82, 155, 1)), color-stop(0, rgba(35, 77, 145, 0.3)));
+    ;
     z-index: 100;
 }
 
@@ -128,22 +129,22 @@ a {
     left: -9999px;
 }
 
-#blueback input[type="checkbox"] + label {
+#blueback input[type="checkbox"]+label {
     background: url(576/checkbox.png) 0 0 no-repeat;
     padding: 13px 0 13px 26px;
     display: block;
     margin: 5px 10px;
 }
 
-#blueback input[type="checkbox"]:focus + label {
+#blueback input[type="checkbox"]:focus+label {
     background: url(576/checkbox_act.png) 0 0 no-repeat;
 }
 
-#blueback input[type="checkbox"]:checked + label {
+#blueback input[type="checkbox"]:checked+label {
     background-position: 0 -36px;
 }
 
-#blueback input[type="checkbox"]:checked:focus + label {
+#blueback input[type="checkbox"]:checked:focus+label {
     background-position: 0 -36px;
 }
 
@@ -325,7 +326,8 @@ a {
     position: relative;
     height: 30px;
     width: 320px;
-    margin: 5px 0 5px 10px;;
+    margin: 5px 0 5px 10px;
+    ;
     background: none;
     font-family: "Myriad Pro";
     font-size: 22px;
@@ -364,7 +366,8 @@ a {
     position: relative;
     height: 30px;
     width: 320px;
-    margin: 5px 0 5px 10px;;
+    margin: 5px 0 5px 10px;
+    ;
     background: none;
     font-family: "Myriad Pro";
     font-size: 20px;
@@ -650,11 +653,13 @@ a {
     padding-right: 15px;
 }
 
-#tracert_result_head td, #tracert_result td {
+#tracert_result_head td,
+#tracert_result td {
     width: 25%;
 }
 
-#tracert_result_head td:first-of-type, #tracert_result td:first-of-type {
+#tracert_result_head td:first-of-type,
+#tracert_result td:first-of-type {
     width: 50%;
 }
 

@@ -14,7 +14,7 @@
 
         this.layer_name = 'localization_settings';
 
-        this.save_params = {"type": "stb", "action": "set_locale"};
+        this.save_params = { "type": "stb", "action": "set_locale" };
 
         this.superclass = SettingLayer.prototype;
 
@@ -105,7 +105,7 @@
                             "name": "country",
                             "label": word['country_label'],
                             "map": this.countries,
-                            "suggests_target": {"type": "stb", "action": "search_countries"}
+                            "suggests_target": { "type": "stb", "action": "search_countries" }
                         })
                     );
 
@@ -114,7 +114,7 @@
                             "name": "city",
                             "label": word['city_label'],
                             "map": [],
-                            "suggests_target": {"type": "stb", "action": "search_cities"}
+                            "suggests_target": { "type": "stb", "action": "search_cities" }
                         })
                     );
 
@@ -231,10 +231,10 @@
     //localization_settings.init_left_ear(word['ears_back']);
 
     localization_settings.init_color_buttons([
-        {"label": word['parent_settings_cancel'], "cmd": localization_settings.cancel},
-        {"label": word['parent_settings_save'], "cmd": localization_settings.save},
-        {"label": word['empty'], "cmd": ''},
-        {"label": word['empty'], "cmd": ''}
+        { "label": word['parent_settings_cancel'], "cmd": localization_settings.cancel },
+        { "label": word['parent_settings_save'], "cmd": localization_settings.save },
+        { "label": word['empty'], "cmd": '' },
+        { "label": word['empty'], "cmd": '' }
     ]);
 
     //localization_settings.color_buttons[localization_settings.color_buttons.getIdxByVal('color', 'yellow')].text_obj.setClass('disable_color_btn_text');

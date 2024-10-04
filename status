@@ -72,7 +72,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			socket_connect($socket, '8.8.8.8', 80);
 			$name = socket_getsockname($socket, $addr, $port);
 			socket_close($socket);
-			$ipTV_db->query('UPDATE `streaming_servers` SET `server_ip`=\'%s\', `network_interface` = \'auto\' WHERE `id`=\'%s\';', $addr,  SERVER_ID);
+			$ipTV_db->query('UPDATE `streaming_servers` SET `server_ip`=\'%s\', `network_interface` = \'auto\' WHERE `id`=\'%s\';', $addr, SERVER_ID);
 		}
 
 		if (!$rFirstRun || $rServers[SERVER_ID]['is_main']) {

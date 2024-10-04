@@ -32,17 +32,21 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="#" onClick="clearFilters();">
-                                                <button type="button" class="btn btn-warning waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-warning waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-filter-remove"></i>
                                                 </button>
                                             </a>
                                             <?php if ($rPermissions["is_admin"]) { ?>
-                                                <button type="button" class="btn btn-info waves-effect waves-light btn-sm btn-clear-logs">
+                                                <button type="button"
+                                                    class="btn btn-info waves-effect waves-light btn-sm btn-clear-logs">
                                                     <i class="mdi mdi-minus"></i> <?= $_["clear_logs"] ?>
                                                 </button>
                                             <?php } ?>
-                                            <a href="javascript:location.reload();" onClick="toggleAuto();" style="margin-right:10px;">
-                                                <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
+                                            <a href="javascript:location.reload();" onClick="toggleAuto();"
+                                                style="margin-right:10px;">
+                                                <button type="button"
+                                                    class="btn btn-dark waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
                                                 </button>
                                             </a>
@@ -61,24 +65,32 @@ if ($rSettings["sidebar"]) { ?>
                                     <form id="user_activity_search">
                                         <div class="form-group row mb-4">
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" id="act_search" value="" placeholder="<?= $_["search_logs"] ?>">
+                                                <input type="text" class="form-control" id="act_search" value=""
+                                                    placeholder="<?= $_["search_logs"] ?>">
                                             </div>
-                                            <label class="col-md-1 col-form-label text-center" for="act_filter"><?= $_["filter"] ?></label>
+                                            <label class="col-md-1 col-form-label text-center"
+                                                for="act_filter"><?= $_["filter"] ?></label>
                                             <div class="col-md-3">
                                                 <select id="act_filter" class="form-control" data-toggle="select2">
                                                     <option value="" selected><?= $_["all_servers"] ?></option>
                                                     <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                        <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?></option>
+                                                        <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?>
+                                                        </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
-                                            <label class="col-md-1 col-form-label text-center" for="act_range"><?= $_["dates"] ?></label>
+                                            <label class="col-md-1 col-form-label text-center"
+                                                for="act_range"><?= $_["dates"] ?></label>
                                             <div class="col-md-2">
-                                                <input type="text" class="form-control text-center date" id="act_range" name="range" data-toggle="date-picker" data-single-date-picker="true">
+                                                <input type="text" class="form-control text-center date" id="act_range"
+                                                    name="range" data-toggle="date-picker"
+                                                    data-single-date-picker="true">
                                             </div>
-                                            <label class="col-md-1 col-form-label text-center" for="act_show_entries"><?= $_["show"] ?></label>
+                                            <label class="col-md-1 col-form-label text-center"
+                                                for="act_show_entries"><?= $_["show"] ?></label>
                                             <div class="col-md-1">
-                                                <select id="act_show_entries" class="form-control" data-toggle="select2">
+                                                <select id="act_show_entries" class="form-control"
+                                                    data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                     echo " selected";
@@ -113,7 +125,8 @@ if ($rSettings["sidebar"]) { ?>
                     </div> <!-- end container -->
                 </div>
                 <?php if ($rPermissions["is_admin"]) { ?>
-                    <div class="modal fade bs-logs-modal-center" tabindex="-1" role="dialog" aria-labelledby="clearLogsLabel" aria-hidden="true" style="display: none;" data-id="">
+                    <div class="modal fade bs-logs-modal-center" tabindex="-1" role="dialog" aria-labelledby="clearLogsLabel"
+                        aria-hidden="true" style="display: none;" data-id="">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -124,14 +137,19 @@ if ($rSettings["sidebar"]) { ?>
                                     <div class="form-group row mb-4">
                                         <label class="col-md-4 col-form-label" for="range_clear"><?= $_["date_range"] ?></label>
                                         <div class="col-md-4">
-                                            <input type="text" class="form-control text-center date" id="range_clear_from" name="range_clear_from" data-toggle="date-picker" data-single-date-picker="true" autocomplete="off" placeholder="<?= $_["from"] ?>">
+                                            <input type="text" class="form-control text-center date" id="range_clear_from"
+                                                name="range_clear_from" data-toggle="date-picker" data-single-date-picker="true"
+                                                autocomplete="off" placeholder="<?= $_["from"] ?>">
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="text" class="form-control text-center date" id="range_clear_to" name="range_clear_to" data-toggle="date-picker" data-single-date-picker="true" autocomplete="off" placeholder="<?= $_["to"] ?>">
+                                            <input type="text" class="form-control text-center date" id="range_clear_to"
+                                                name="range_clear_to" data-toggle="date-picker" data-single-date-picker="true"
+                                                autocomplete="off" placeholder="<?= $_["to"] ?>">
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        <input id="clear_logs" type="submit" class="btn btn-primary" value="<?= $_["clear"] ?>" style="width:100%" />
+                                        <input id="clear_logs" type="submit" class="btn btn-primary" value="<?= $_["clear"] ?>"
+                                            style="width:100%" />
                                     </div>
                                 </div>
                             </div><!-- /.modal-content -->

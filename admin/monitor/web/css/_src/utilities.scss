@@ -14,10 +14,18 @@
 /* ------------------- */
 /*  ==     Misc        */
 /* ------------------- */
-* { padding: 0; margin: 0; }
-*:focus { outline: none; }
+* {
+    padding: 0;
+    margin: 0;
+}
 
-*, *:before, *:after {
+*:focus {
+    outline: none;
+}
+
+*,
+*:before,
+*:after {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -31,29 +39,55 @@
     visibility: hidden;
 }
 
-img { border: 0; }
+img {
+    border: 0;
+}
 
-.debug { border: 1px solid red; }
+.debug {
+    border: 1px solid red;
+}
 
-.text_left, .t-left { text-align: left !important; }
-.text_right, .t-right { text-align: right !important; }
-.text_center, .t-center { text-align: center !important; }
+.text_left,
+.t-left {
+    text-align: left !important;
+}
 
-.pfixed { position: fixed !important; }
-.f-left { float: left; }
-.f-right { float: right; }
+.text_right,
+.t-right {
+    text-align: right !important;
+}
+
+.text_center,
+.t-center {
+    text-align: center !important;
+}
+
+.pfixed {
+    position: fixed !important;
+}
+
+.f-left {
+    float: left;
+}
+
+.f-right {
+    float: right;
+}
 
 .column-left {
     float: left;
     width: 49%;
 }
+
 .column-right {
     float: right;
     width: 49%;
 }
+
 .column-33 {
     width: 32%;
 }
+
 .column-66 {
     width: 66%;
 }
@@ -66,35 +100,60 @@ img { border: 0; }
     color: #666;
 }*/
 
-.w10p  { width: 10%; }
-.w15p  { width: 15%; }
-.w20p  { width: 20%; }
-.w33p  { width: 33%; }
-.w35p  { width: 35%; }
-.w50p  { width: 50%; }
-.w100p { width: 100%; }
+.w10p {
+    width: 10%;
+}
+
+.w15p {
+    width: 15%;
+}
+
+.w20p {
+    width: 20%;
+}
+
+.w33p {
+    width: 33%;
+}
+
+.w35p {
+    width: 35%;
+}
+
+.w50p {
+    width: 50%;
+}
+
+.w100p {
+    width: 100%;
+}
 
 
 /* ------------------------ */
 /*  ==     Scrollbar        */
 /* ------------------------ */
 ::-webkit-scrollbar-track {
-    box-shadow: inset 1px 0px 3px rgba(0,0,0,0.2);
+    box-shadow: inset 1px 0px 3px rgba(0, 0, 0, 0.2);
     background-color: #F5F5F5;
 }
+
 ::-webkit-scrollbar-track:hover {
     background-color: #EFEFEF;
 }
+
 ::-webkit-scrollbar {
     width: 8px;
     background-color: #F5F5F5;
 }
+
 ::-webkit-scrollbar-thumb {
     background-color: #959595;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background-color: #6B6B6B;
 }
+
 ::-webkit-scrollbar-thumb:active {
     background-color: #555;
 }

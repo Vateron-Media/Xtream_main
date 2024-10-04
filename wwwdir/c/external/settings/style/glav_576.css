@@ -1,10 +1,10 @@
-<!--
-* {
+< !-- * {
     margin: 0;
     padding: 0;
 }
 
-html, body {
+html,
+body {
     overflow: hidden;
     font-family: "Myriad Pro";
     color: #FFF;
@@ -52,7 +52,8 @@ a {
     border-radius: 7px;
     width: 550px;
     max-width: 550px;
-    max-height: 350px;;
+    max-height: 350px;
+    ;
     overflow: hidden;
     margin: 70px 0 0 25px;
     padding: 10px 10px;
@@ -71,7 +72,8 @@ a {
     border-radius: 7px;
     width: 450px;
     max-width: 450px;
-    max-height: 250px;;
+    max-height: 250px;
+    ;
     overflow: hidden;
     margin: 120px 0 0 70px;
     padding: 10px 10px;
@@ -130,4 +132,3 @@ a {
     border-width: 0 20px;
     -webkit-border-image: url(576/btn_act.png) 0 20 0 20 stretch stretch;
 }
-

@@ -1,6 +1,6 @@
 AmCharts.themes.light = {
 
-	themeName:"light",
+	themeName: "light",
 
 	AmChart: {
 		color: "#000000", backgroundColor: "#FFFFFF"
@@ -116,8 +116,8 @@ AmCharts.themes.light = {
 	},
 
 	ZoomControl: {
-		buttonFillAlpha:0.7,
-		buttonIconColor:"#a7a7a7"
+		buttonFillAlpha: 0.7,
+		buttonIconColor: "#a7a7a7"
 	},
 
 	SmallMap: {

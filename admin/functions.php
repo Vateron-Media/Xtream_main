@@ -296,8 +296,8 @@ function SystemAPIRequest($rServerID, $rData) {
 //network interface 1
 function multiexplode($delimiters, $data) {
     $MakeReady = str_replace($delimiters, $delimiters[0], $data);
-    $Return    = array_filter(explode($delimiters[0], $MakeReady));
-    return  $Return;
+    $Return = array_filter(explode($delimiters[0], $MakeReady));
+    return $Return;
 }
 //network interface 1		 
 function sexec($rServerID, $rCommand) {
@@ -311,7 +311,7 @@ function sexec($rServerID, $rCommand) {
 //network interface 2
 function sexec2($rServerID, $rCommand) {
     $loool = SystemAPIRequest($rServerID, array("action" => "BackgroundCLI", "cmds" => array($rCommand)));
-    return  $loool;
+    return $loool;
 }
 function loadnginx($rServerID) {
     sexec($rServerID, "sudo /home/xtreamcodes/bin/nginx/sbin/nginx -s reload");
@@ -1642,8 +1642,8 @@ function checkTable($rTable) {
 
 function secondsToTime($inputSeconds) {
     $secondsInAMinute = 60;
-    $secondsInAnHour  = 60 * $secondsInAMinute;
-    $secondsInADay    = 24 * $secondsInAnHour;
+    $secondsInAnHour = 60 * $secondsInAMinute;
+    $secondsInADay = 24 * $secondsInAnHour;
     $days = floor($inputSeconds / $secondsInADay);
     $hourSeconds = $inputSeconds % $secondsInADay;
     $hours = floor($hourSeconds / $secondsInAnHour);
@@ -2030,7 +2030,8 @@ function rrmdir($dir) {
             if ($object != "." && $object != "..") {
                 if (filetype($dir . "/" . $object) == "dir")
                     rrmdir($dir . "/" . $object);
-                else unlink($dir . "/" . $object);
+                else
+                    unlink($dir . "/" . $object);
             }
         }
         reset($objects);

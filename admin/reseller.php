@@ -48,7 +48,8 @@ if ($rSettings["sidebar"]) { ?>
                                     </div>
                                     <div class="col-6">
                                         <div class="text-right">
-                                            <h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span></h3>
+                                            <h3 class="text-white my-1"><span data-plugin="counterup"
+                                                    class="entry">0</span></h3>
                                             <p class="text-white mb-1 text-truncate"><?= $_["connections"] ?></p>
                                         </div>
                                     </div>
@@ -72,7 +73,8 @@ if ($rSettings["sidebar"]) { ?>
                                     </div>
                                     <div class="col-6">
                                         <div class="text-right">
-                                            <h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span></h3>
+                                            <h3 class="text-white my-1"><span data-plugin="counterup"
+                                                    class="entry">0</span></h3>
                                             <p class="text-white mb-1 text-truncate"><?= $_["online_users"] ?></p>
                                         </div>
                                     </div>
@@ -96,7 +98,8 @@ if ($rSettings["sidebar"]) { ?>
                                     </div>
                                     <div class="col-6">
                                         <div class="text-right">
-                                            <h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span></h3>
+                                            <h3 class="text-white my-1"><span data-plugin="counterup"
+                                                    class="entry">0</span></h3>
                                             <p class="text-white mb-1 text-truncate"><?= $_["active_accounts"] ?></p>
                                         </div>
                                     </div>
@@ -120,7 +123,8 @@ if ($rSettings["sidebar"]) { ?>
                                     </div>
                                     <div id="statistics-collapse" class="col-6 collapsept-3 show">
                                         <div class="text-right">
-                                            <h3 class="text-white my-1"><span data-plugin="counterup" class="entry">0</span></h3>
+                                            <h3 class="text-white my-1"><span data-plugin="counterup"
+                                                    class="entry">0</span></h3>
                                             <p class="text-white mb-1 text-truncate"><?= $_["credits"] ?></p>
                                         </div>
                                     </div>
@@ -128,14 +132,17 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-box-->
                         </div> <!-- end col -->
                         <!--<div class="col-12">
-					<p class="text-muted">MENSSAGEM</p>
+                    <p class="text-muted">MENSSAGEM</p>
                     </div>-->
                         <div class="col-12">
                             <div class="card-header bg-white text-danger">
-                                <a data-toggle="collapse" href="#cardCollpase1" class="arrow-none card-drop" data-parent="#cardCollpase1" role="tablist" aria-expanded="true" aria-controls="cardCollpase1">
+                                <a data-toggle="collapse" href="#cardCollpase1" class="arrow-none card-drop"
+                                    data-parent="#cardCollpase1" role="tablist" aria-expanded="true"
+                                    aria-controls="cardCollpase1">
                                     <i class="mdi mdi-magnify-minus"></i></a>
 
-                                <div id="cardCollpase1" class="collapse pt-3 show bg-white card-box" style="margin-bottom:-8px;">
+                                <div id="cardCollpase1" class="collapse pt-3 show bg-white card-box"
+                                    style="margin-bottom:-8px;">
                                     <div class="row">
                                         <div class="col-1">
                                             <?php if ($rAdminSettings["dark_mode"]) { ?>
@@ -175,10 +182,12 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="timeline-item">
                                                             <i class="timeline-icon"></i>
                                                             <div class="timeline-item-info">
-                                                                <a href="#" class="text-body font-weight-semibold mb-1 d-block"><?= $rRow["username"] ?></a>
+                                                                <a href="#"
+                                                                    class="text-body font-weight-semibold mb-1 d-block"><?= $rRow["username"] ?></a>
                                                                 <small><?= html_entity_decode($rRow["type"]) ?></small>
                                                                 <p>
-                                                                    <small class="text-muted"><?= date("Y-m-d H:i:s", $rRow["date"]) ?></small>
+                                                                    <small
+                                                                        class="text-muted"><?= date("Y-m-d H:i:s", $rRow["date"]) ?></small>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -197,7 +206,9 @@ if ($rSettings["sidebar"]) { ?>
                                     <h4 class="header-title mb-0"><?= $_["expiring_lines"] ?></h4>
                                     <div id="cardActivity" class="pt-3">
                                         <div class="slimscroll" style="height: 350px;">
-                                            <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100" id="users-table">
+                                            <table
+                                                class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
+                                                id="users-table">
                                                 <thead>
                                                     <tr>
                                                         <th class="text-center"><?= $_["username"] ?></th>
@@ -213,9 +224,19 @@ if ($rSettings["sidebar"]) { ?>
                                                         <tr id="user-<?= $rUser["id"] ?>">
                                                             <td class="text-center"><?= $rUser["username"] ?></td>
                                                             <td class="text-center"><?= $rUser["password"] ?></td>
-                                                            <td class="text-center"><?= $rRegisteredUsers[$rUser["member_id"]]["username"] ?></td>
-                                                            <td class="text-center"><?= date("Y-m-d H:i:s", $rUser["exp_date"]) ?></td>
-                                                            <td class="text-center"><a href="./user_reseller.php?id=<?= $rUser["id"] ?>"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Renew" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-autorenew mdi-spin"></i></button></a></td>
+                                                            <td class="text-center">
+                                                                <?= $rRegisteredUsers[$rUser["member_id"]]["username"] ?>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <?= date("Y-m-d H:i:s", $rUser["exp_date"]) ?>
+                                                            </td>
+                                                            <td class="text-center"><a
+                                                                    href="./user_reseller.php?id=<?= $rUser["id"] ?>"><button
+                                                                        data-toggle="tooltip" data-placement="top" title=""
+                                                                        data-original-title="Renew" type="button"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                            class="mdi mdi-autorenew mdi-spin"></i></button></a>
+                                                            </td>
                                                         </tr>
                                                     <?php } ?>
                                                 </tbody>

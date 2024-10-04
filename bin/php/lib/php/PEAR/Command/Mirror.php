@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Mirror (download-all command)
  *
@@ -30,8 +31,7 @@ require_once 'PEAR/Command/Common.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.2.0
  */
-class PEAR_Command_Mirror extends PEAR_Command_Common
-{
+class PEAR_Command_Mirror extends PEAR_Command_Common {
     var $commands = array(
         'download-all' => array(
             'summary' => 'Downloads each available package from the default channel',
@@ -39,18 +39,18 @@ class PEAR_Command_Mirror extends PEAR_Command_Common
             'shortcut' => 'da',
             'options' => array(
                 'channel' =>
-                    array(
+                array(
                     'shortopt' => 'c',
                     'doc' => 'specify a channel other than the default channel',
                     'arg' => 'CHAN',
-                    ),
                 ),
+            ),
             'doc' => '
 Requests a list of available packages from the default channel ({config default_channel})
 and downloads them to current working directory.  Note: only
 packages within preferred_state ({config preferred_state}) will be downloaded'
-            ),
-        );
+        ),
+    );
 
     /**
      * PEAR_Command_Mirror constructor.
@@ -59,33 +59,30 @@ packages within preferred_state ({config preferred_state}) will be downloaded'
      * @param object PEAR_Frontend a reference to an frontend
      * @param object PEAR_Config a reference to the configuration data
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 
     /**
      * For unit-testing
      */
-    function &factory($a)
-    {
+    function &factory($a) {
         $a = &PEAR_Command::factory($a, $this->config);
         return $a;
     }
 
     /**
-    * retrieves a list of avaible Packages from master server
-    * and downloads them
-    *
-    * @access public
-    * @param string $command the command
-    * @param array $options the command options before the command
-    * @param array $params the stuff after the command name
-    * @return bool true if successful
-    * @throw PEAR_Error
-    */
-    function doDownloadAll($command, $options, $params)
-    {
+     * retrieves a list of avaible Packages from master server
+     * and downloads them
+     *
+     * @access public
+     * @param string $command the command
+     * @param array $options the command options before the command
+     * @param array $params the stuff after the command name
+     * @return bool true if successful
+     * @throw PEAR_Error
+     */
+    function doDownloadAll($command, $options, $params) {
         $savechannel = $this->config->get('default_channel');
         $reg = &$this->config->getRegistry();
         $channel = isset($options['channel']) ? $options['channel'] :
@@ -102,8 +99,10 @@ packages within preferred_state ({config preferred_state}) will be downloaded'
             return $this->raiseError($chan);
         }
 
-        if ($chan->supportsREST($this->config->get('preferred_mirror')) &&
-              $base = $chan->getBaseURL('REST1.0', $this->config->get('preferred_mirror'))) {
+        if (
+            $chan->supportsREST($this->config->get('preferred_mirror')) &&
+            $base = $chan->getBaseURL('REST1.0', $this->config->get('preferred_mirror'))
+        ) {
             $rest = &$this->config->getREST('1.0', array());
             $remoteInfo = array_flip($rest->listPackages($base, $channel));
         }

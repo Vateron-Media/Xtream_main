@@ -1,7 +1,7 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +-----------------------------------------------------------------------------+
-// | Copyright (c) 2003 Sérgio Gonçalves Carvalho                                |
+// | Copyright (c) 2003 Sï¿½rgio Gonï¿½alves Carvalho                                |
 // +-----------------------------------------------------------------------------+
 // | This file is part of Structures_Graph.                                      |
 // |                                                                             |
@@ -20,7 +20,7 @@
 // | Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA                    |
 // | 02111-1307 USA                                                              |
 // +-----------------------------------------------------------------------------+
-// | Author: Sérgio Carvalho <sergio.carvalho@portugalmail.com>                  |
+// | Author: Sï¿½rgio Carvalho <sergio.carvalho@portugalmail.com>                  |
 // +-----------------------------------------------------------------------------+
 //
 /**
@@ -42,13 +42,12 @@ require_once 'Structures/Graph/Manipulator/AcyclicTest.php';
  * A graph may only be sorted topologically iff it's a DAG. You can test it
  * with the Structures_Graph_Manipulator_AcyclicTest.
  * 
- * @author    Sérgio Carvalho <sergio.carvalho@portugalmail.com> 
- * @copyright (c) 2004 by Sérgio Carvalho
+ * @author    Sï¿½rgio Carvalho <sergio.carvalho@portugalmail.com> 
+ * @copyright (c) 2004 by Sï¿½rgio Carvalho
  * @see       Structures_Graph_Manipulator_AcyclicTest
  * @package   Structures_Graph
  */
-class Structures_Graph_Manipulator_TopologicalSorter
-{
+class Structures_Graph_Manipulator_TopologicalSorter {
     /**
      * This is a variant of Structures_Graph::inDegree which does 
      * not count nodes marked as visited.
@@ -57,19 +56,18 @@ class Structures_Graph_Manipulator_TopologicalSorter
      *
      * @return integer Number of non-visited nodes that link to this one
      */
-    protected static function _nonVisitedInDegree(&$node)
-    {
+    protected static function _nonVisitedInDegree(&$node) {
         $result = 0;
-        $graphNodes =& $node->_graph->getNodes();
+        $graphNodes = &$node->_graph->getNodes();
         foreach (array_keys($graphNodes) as $key) {
-            if ((!$graphNodes[$key]->getMetadata('topological-sort-visited'))
+            if (
+                (!$graphNodes[$key]->getMetadata('topological-sort-visited'))
                 && $graphNodes[$key]->connectsTo($node)
             ) {
                 $result++;
             }
         }
         return $result;
-        
     }
 
     /**
@@ -79,10 +77,9 @@ class Structures_Graph_Manipulator_TopologicalSorter
      *
      * @return void
      */
-    protected static function _sort(&$graph)
-    {
+    protected static function _sort(&$graph) {
         // Mark every node as not visited
-        $nodes =& $graph->getNodes();
+        $nodes = &$graph->getNodes();
         $nodeKeys = array_keys($nodes);
         $refGenerator = array();
         foreach ($nodeKeys as $key) {
@@ -99,16 +96,17 @@ class Structures_Graph_Manipulator_TopologicalSorter
             // Find out which nodes are leafs (excluding visited nodes)
             $leafNodes = array();
             foreach ($nodeKeys as $key) {
-                if ((!$nodes[$key]->getMetadata('topological-sort-visited'))
+                if (
+                    (!$nodes[$key]->getMetadata('topological-sort-visited'))
                     && static::_nonVisitedInDegree($nodes[$key]) == 0
                 ) {
-                    $leafNodes[] =& $nodes[$key];
+                    $leafNodes[] = &$nodes[$key];
                 }
             }
             // Mark leafs as visited
             $refGenerator[] = $topologicalLevel;
-            for ($i = sizeof($leafNodes) - 1; $i>=0; $i--) {
-                $visited =& $leafNodes[$i]->getMetadata('topological-sort-visited');
+            for ($i = sizeof($leafNodes) - 1; $i >= 0; $i--) {
+                $visited = &$leafNodes[$i]->getMetadata('topological-sort-visited');
                 $visited = true;
                 $leafNodes[$i]->setMetadata('topological-sort-visited', $visited);
                 $leafNodes[$i]->setMetadata(
@@ -136,20 +134,19 @@ class Structures_Graph_Manipulator_TopologicalSorter
      *
      * @return array The graph's nodes, sorted by topological order.
      */
-    public static function sort(&$graph)
-    {
+    public static function sort(&$graph) {
         // We only sort graphs
         if (!is_a($graph, 'Structures_Graph')) {
             return Pear::raiseError(
                 'Structures_Graph_Manipulator_TopologicalSorter::sort received'
-                . ' an object that is not a Structures_Graph',
+                    . ' an object that is not a Structures_Graph',
                 STRUCTURES_GRAPH_ERROR_GENERIC
             );
         }
         if (!Structures_Graph_Manipulator_AcyclicTest::isAcyclic($graph)) {
             return Pear::raiseError(
                 'Structures_Graph_Manipulator_TopologicalSorter::sort'
-                . ' received an graph that has cycles',
+                    . ' received an graph that has cycles',
                 STRUCTURES_GRAPH_ERROR_GENERIC
             );
         }
@@ -158,7 +155,7 @@ class Structures_Graph_Manipulator_TopologicalSorter
         $result = array();
 
         // Fill out result array
-        $nodes =& $graph->getNodes();
+        $nodes = &$graph->getNodes();
         $nodeKeys = array_keys($nodes);
         foreach ($nodeKeys as $key) {
             if (!array_key_exists($nodes[$key]->getMetadata('topological-sort-level'), $result)) {
@@ -166,11 +163,10 @@ class Structures_Graph_Manipulator_TopologicalSorter
                     = array();
             }
             $result[$nodes[$key]->getMetadata('topological-sort-level')][]
-                =& $nodes[$key];
+                = &$nodes[$key];
             $nodes[$key]->unsetMetadata('topological-sort-level');
         }
 
         return $result;
     }
 }
-?>

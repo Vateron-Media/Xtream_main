@@ -71,7 +71,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./stream_categories.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_categories"] ?> </li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_categories"] ?> </li>
                                         </a>
                                     </ol>
                                 </div>
@@ -108,21 +109,25 @@ if ($rSettings["sidebar"]) { ?>
                                                                         } ?>" method="POST" id="category_form" data-parsley-validate="">
                                         <?php if (isset($rCategoryArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rCategoryArr["id"] ?>" />
-                                            <input type="hidden" name="cat_order" value="<?= $rCategoryArr["cat_order"] ?>" />
+                                            <input type="hidden" name="cat_order"
+                                                value="<?= $rCategoryArr["cat_order"] ?>" />
                                         <?php } ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#category-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#category-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <?php if (isset($rCategoryArr)) { ?>
                                                     <li class="nav-item">
-                                                        <a href="#view-channels" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#view-channels" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-play mr-1"></i>
-                                                            <span class="d-none d-sm-inline"><?= $_["permission_streams"] ?> </span>
+                                                            <span class="d-none d-sm-inline"><?= $_["permission_streams"] ?>
+                                                            </span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
@@ -133,9 +138,13 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="col-12">
                                                             <?php if (!isset($rCategoryArr)) { ?>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="category_type"><?= $_["category_type"] ?> </label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="category_type"><?= $_["category_type"] ?>
+                                                                    </label>
                                                                     <div class="col-md-8">
-                                                                        <select name="category_type" id="category_type" class="form-control select2" data-toggle="select2">
+                                                                        <select name="category_type" id="category_type"
+                                                                            class="form-control select2"
+                                                                            data-toggle="select2">
                                                                             <?php foreach (array("live" => "Live TV", "movie" => "Movie", "series" => "TV Series", "radio" => "Radio Station") as $rGroupID => $rGroup) { ?>
                                                                                 <option <?php if (isset($rCategoryArr)) {
                                                                                             if ($rCategoryArr["category_type"] == $rGroupID) {
@@ -147,25 +156,30 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </div>
                                                                 </div>
                                                             <?php } else { ?>
-                                                                <input type="hidden" name="category_type" value="<?= $rCategoryArr["category_type"] ?>" />
+                                                                <input type="hidden" name="category_type"
+                                                                    value="<?= $rCategoryArr["category_type"] ?>" />
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="category_name"><?= $_["category_name"] ?> </label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="category_name"><?= $_["category_name"] ?>
+                                                                </label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="category_name" name="category_name" value="<?php if (isset($rCategoryArr)) {
-                                                                                                                                                                echo htmlspecialchars($rCategoryArr["category_name"]);
-                                                                                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="category_name" name="category_name" value="<?php if (isset($rCategoryArr)) {
+                                                                                                                            echo htmlspecialchars($rCategoryArr["category_name"]);
+                                                                                                                        } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_category" type="submit" class="btn btn-primary" value="<?php if (isset($rCategoryArr)) {
-                                                                                                                                            echo $_["edit"];
-                                                                                                                                        } else {
-                                                                                                                                            echo $_["add"];
-                                                                                                                                        } ?>" />
+                                                            <input name="submit_category" type="submit"
+                                                                class="btn btn-primary" value="<?php if (isset($rCategoryArr)) {
+                                                                                                    echo $_["edit"];
+                                                                                                } else {
+                                                                                                    echo $_["add"];
+                                                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -175,9 +189,11 @@ if ($rSettings["sidebar"]) { ?>
                                                             <table id="datatable" class="table dt-responsive nowrap">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th class="text-center"><?= $_["stream_id"] ?> </th>
+                                                                        <th class="text-center"><?= $_["stream_id"] ?>
+                                                                        </th>
                                                                         <th><?= $_["stream_name"] ?> </th>
-                                                                        <th class="text-center"><?= $_["actions"] ?> </th>
+                                                                        <th class="text-center"><?= $_["actions"] ?>
+                                                                        </th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody></tbody>

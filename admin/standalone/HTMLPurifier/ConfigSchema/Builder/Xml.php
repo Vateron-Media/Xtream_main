@@ -4,8 +4,7 @@
  * Converts HTMLPurifier_ConfigSchema_Interchange to an XML format,
  * which can be further processed to generate documentation.
  */
-class HTMLPurifier_ConfigSchema_Builder_Xml extends XMLWriter
-{
+class HTMLPurifier_ConfigSchema_Builder_Xml extends XMLWriter {
 
     /**
      * @type HTMLPurifier_ConfigSchema_Interchange
@@ -20,8 +19,7 @@ class HTMLPurifier_ConfigSchema_Builder_Xml extends XMLWriter
     /**
      * @param string $html
      */
-    protected function writeHTMLDiv($html)
-    {
+    protected function writeHTMLDiv($html) {
         $this->startElement('div');
 
         $purifier = HTMLPurifier::getInstance();
@@ -36,8 +34,7 @@ class HTMLPurifier_ConfigSchema_Builder_Xml extends XMLWriter
      * @param mixed $var
      * @return string
      */
-    protected function export($var)
-    {
+    protected function export($var) {
         if ($var === array()) {
             return 'array()';
         }
@@ -47,8 +44,7 @@ class HTMLPurifier_ConfigSchema_Builder_Xml extends XMLWriter
     /**
      * @param HTMLPurifier_ConfigSchema_Interchange $interchange
      */
-    public function build($interchange)
-    {
+    public function build($interchange) {
         // global access, only use as last resort
         $this->interchange = $interchange;
 
@@ -72,8 +68,7 @@ class HTMLPurifier_ConfigSchema_Builder_Xml extends XMLWriter
     /**
      * @param HTMLPurifier_ConfigSchema_Interchange_Directive $directive
      */
-    public function buildDirective($directive)
-    {
+    public function buildDirective($directive) {
         // Kludge, although I suppose having a notion of a "root namespace"
         // certainly makes things look nicer when documentation is built.
         // Depends on things being sorted.

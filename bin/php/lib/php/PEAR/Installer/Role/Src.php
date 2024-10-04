@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Installer_Role_Src
  *
@@ -23,11 +24,8 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
-class PEAR_Installer_Role_Src extends PEAR_Installer_Role_Common
-{
-    function setup(&$installer, $pkg, $atts, $file)
-    {
+class PEAR_Installer_Role_Src extends PEAR_Installer_Role_Common {
+    function setup(&$installer, $pkg, $atts, $file) {
         $installer->source_files++;
     }
 }
-?>

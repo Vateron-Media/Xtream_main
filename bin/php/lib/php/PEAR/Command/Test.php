@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Test (run-tests)
  *
@@ -35,8 +36,7 @@ require_once 'PEAR/Command/Common.php';
  * @since      Class available since Release 0.1
  */
 
-class PEAR_Command_Test extends PEAR_Command_Common
-{
+class PEAR_Command_Test extends PEAR_Command_Common {
     var $commands = array(
         'run-tests' => array(
             'summary' => 'Run Regression Tests',
@@ -84,7 +84,7 @@ If none is found, all .phpt tests will be tried instead.',
                 ),
                 'coverage' => array(
                     'shortopt' => 'x',
-                    'doc'      => 'Generate a code coverage report (requires Xdebug 2.0.0+)',
+                    'doc' => 'Generate a code coverage report (requires Xdebug 2.0.0+)',
                 ),
                 'showdiff' => array(
                     'shortopt' => 'd',
@@ -93,8 +93,8 @@ If none is found, all .phpt tests will be tried instead.',
             ),
             'doc' => '[testfile|dir ...]
 Run regression tests with PHP\'s regression testing script (run-tests.php).',
-            ),
-        );
+        ),
+    );
 
     var $output;
 
@@ -103,13 +103,11 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 
-    function doRunTests($command, $options, $params)
-    {
+    function doRunTests($command, $options, $params) {
         if (isset($options['phpunit']) && isset($options['tapoutput'])) {
             return $this->raiseError('ERROR: cannot use both --phpunit and --tapoutput at the same time');
         }
@@ -161,14 +159,22 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
         foreach ($params as $p) {
             if (is_dir($p)) {
                 if (isset($options['phpunit'])) {
-                    $dir = System::find(array($p, '-type', 'f',
-                                                '-maxdepth', $depth,
-                                                '-name', 'AllTests.php'));
+                    $dir = System::find(array(
+                        $p,
+                        '-type',
+                        'f',
+                        '-maxdepth',
+                        $depth,
+                        '-name',
+                        'AllTests.php'
+                    ));
                     if (count($dir)) {
                         foreach ($dir as $p) {
                             $p = realpath($p);
-                            if (!count($tests) ||
-                                  (count($tests) && strlen($p) < strlen($tests[0]))) {
+                            if (
+                                !count($tests) ||
+                                (count($tests) && strlen($p) < strlen($tests[0]))
+                            ) {
                                 // this is in a higher-level directory, use this one instead.
                                 $tests = array($p);
                             }
@@ -177,13 +183,15 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
                     continue;
                 }
 
-                $args  = array($p, '-type', 'f', '-name', '*.phpt');
+                $args = array($p, '-type', 'f', '-name', '*.phpt');
             } else {
                 if (isset($options['phpunit'])) {
                     if (preg_match('/AllTests\.php\\z/i', $p)) {
                         $p = realpath($p);
-                        if (!count($tests) ||
-                              (count($tests) && strlen($p) < strlen($tests[0]))) {
+                        if (
+                            !count($tests) ||
+                            (count($tests) && strlen($p) < strlen($tests[0]))
+                        ) {
                             // this is in a higher-level directory, use this one instead.
                             $tests = array($p);
                         }
@@ -200,7 +208,7 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
                     $p .= '.phpt';
                 }
 
-                $args  = array(dirname($p), '-type', 'f', '-name', $p);
+                $args = array(dirname($p), '-type', 'f', '-name', $p);
             }
 
             if (!isset($options['recur'])) {
@@ -208,7 +216,7 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
                 $args[] = 1;
             }
 
-            $dir   = System::find($args);
+            $dir = System::find($args);
             $tests = array_merge($tests, $dir);
         }
 
@@ -241,7 +249,7 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
         $run = new PEAR_RunTest($log, $options);
         $run->tests_count = $tests_count;
 
-        if (isset($options['coverage']) && extension_loaded('xdebug')){
+        if (isset($options['coverage']) && extension_loaded('xdebug')) {
             $run->xdebug_loaded = true;
         } else {
             $run->xdebug_loaded = false;
@@ -300,7 +308,7 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
             if ($fp) {
                 fwrite($fp, $tap, strlen($tap));
                 fclose($fp);
-                $this->ui->outputData('wrote TAP-format log to "' .realpath('run-tests.log') .
+                $this->ui->outputData('wrote TAP-format log to "' . realpath('run-tests.log') .
                     '"', $command);
             }
         } else {
@@ -314,7 +322,7 @@ Run regression tests with PHP\'s regression testing script (run-tests.php).',
                 }
 
                 $mode = isset($options['realtimelog']) ? 'a' : 'w';
-                $fp   = @fopen('run-tests.log', $mode);
+                $fp = @fopen('run-tests.log', $mode);
 
                 if ($fp) {
                     fwrite($fp, $output, strlen($output));

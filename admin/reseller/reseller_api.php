@@ -9,11 +9,11 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 include 'class.resellerapi.php';
- 
+
 foreach ($_GET as $rKey => $rValue) {
     $_POST[$rKey] = $rValue;
 }
- 
+
 if (isset($_POST['api_key']) && !empty($_POST['api_key'])) {
     $action = $_POST['action'];
     $return = array();
@@ -37,4 +37,3 @@ if (isset($_POST['api_key']) && !empty($_POST['api_key'])) {
         exit;
     }
 }
-?>

@@ -30,7 +30,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <ol class="breadcrumb m-0">
                                             <li>
                                                 <a href="rtmp_ip.php">
-                                                    <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-plus"></i> <?= $_["add_ip_address"] ?>
                                                     </button>
                                                 </a>
@@ -66,9 +67,15 @@ if ($rSettings["sidebar"]) { ?>
                                                     <td class="text-center">
                                                         <div class="btn-group">
                                                             <?php if (hasPermissions("adv", "add_rtmp")) { ?>
-                                                                <a href="./rtmp_ip.php?id=<?= $rIP["id"] ?>"><button type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
+                                                                <a href="./rtmp_ip.php?id=<?= $rIP["id"] ?>"><button
+                                                                        type="button"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                            class="mdi mdi-pencil-outline"></i></button></a>
                                                             <?php } ?>
-                                                            <button type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rIP["id"] ?>, 'delete');"><i class="mdi mdi-close"></i></button>
+                                                            <button type="button"
+                                                                class="btn btn-light waves-effect waves-light btn-xs"
+                                                                onClick="api(<?= $rIP["id"] ?>, 'delete');"><i
+                                                                    class="mdi mdi-close"></i></button>
                                                         </div>
                                                     </td>
                                                 </tr>

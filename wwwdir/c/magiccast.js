@@ -1,25 +1,25 @@
 /**
  * Redirection to ex.ua module.
  */
-(function(){
+(function () {
 
-    main_menu.add('MAGic Cast', [], 'mm_ico_magiccast.png', function(){
+    main_menu.add('MAGic Cast', [], 'mm_ico_magiccast.png', function () {
 
         var params = '';
 
-        if (stb.user['web_proxy_host']){
+        if (stb.user['web_proxy_host']) {
             params += '?proxy=http://';
-            if (stb.user['web_proxy_user']){
-                params += stb.user['web_proxy_user']+':'+stb.user['web_proxy_pass']+'@';
+            if (stb.user['web_proxy_user']) {
+                params += stb.user['web_proxy_user'] + ':' + stb.user['web_proxy_pass'] + '@';
             }
-            params += stb.user['web_proxy_host']+':' +stb.user['web_proxy_port'];
+            params += stb.user['web_proxy_host'] + ':' + stb.user['web_proxy_port'];
         }
 
         stb.setFrontPanel('.');
 
-        if (!params){
+        if (!params) {
             params += '?';
-        }else{
+        } else {
             params += '&';
         }
 
@@ -27,10 +27,10 @@
 
         var url = 'http://magiccast.magapps.net/index.html';
 
-        _debug('url', url+params);
+        _debug('url', url + params);
 
-        window.location = url+params;
-    }, {layer_name : "magiccast"});
+        window.location = url + params;
+    }, { layer_name: "magiccast" });
 
     loader.next();
 })();

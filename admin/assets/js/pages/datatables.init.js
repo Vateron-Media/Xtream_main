@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $("#basic-datatable").DataTable({
         language: {
             paginate: {
@@ -6,7 +6,7 @@ $(document).ready(function() {
                 next: "<i class='mdi mdi-chevron-right'>"
             }
         },
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         }
     });
@@ -19,7 +19,7 @@ $(document).ready(function() {
                 next: "<i class='mdi mdi-chevron-right'>"
             }
         },
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         }
     });
@@ -33,7 +33,7 @@ $(document).ready(function() {
                 next: "<i class='mdi mdi-chevron-right'>"
             }
         },
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         }
     }), $("#key-datatable").DataTable({
@@ -44,12 +44,12 @@ $(document).ready(function() {
                 next: "<i class='mdi mdi-chevron-right'>"
             }
         },
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         }
     }), a.buttons().container().appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)"), $("#alternative-page-datatable").DataTable({
         pagingType: "full_numbers",
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         }
     }), $("#scroll-vertical-datatable").DataTable({
@@ -62,7 +62,7 @@ $(document).ready(function() {
                 next: "<i class='mdi mdi-chevron-right'>"
             }
         },
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         }
     }), $("#scroll-horizontal-datatable").DataTable({
@@ -73,7 +73,7 @@ $(document).ready(function() {
                 next: "<i class='mdi mdi-chevron-right'>"
             }
         },
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         }
     }), $("#complex-header-datatable").DataTable({
@@ -83,7 +83,7 @@ $(document).ready(function() {
                 next: "<i class='mdi mdi-chevron-right'>"
             }
         },
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         },
         columnDefs: [{
@@ -97,10 +97,10 @@ $(document).ready(function() {
                 next: "<i class='mdi mdi-chevron-right'>"
             }
         },
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         },
-        createdRow: function(a, i, e) {
+        createdRow: function (a, i, e) {
             15e4 < 1 * i[5].replace(/[\$,]/g, "") && $("td", a).eq(5).addClass("text-danger")
         }
     }), $("#state-saving-datatable").DataTable({
@@ -111,7 +111,7 @@ $(document).ready(function() {
                 next: "<i class='mdi mdi-chevron-right'>"
             }
         },
-        drawCallback: function() {
+        drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
         }
     })

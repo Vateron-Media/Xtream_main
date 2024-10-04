@@ -8,10 +8,8 @@
  *
  * @link https://pear.php.net/bugs/bug.php?id=4950
  */
-class Bug4950Tests extends AbstractUnitTests
-{
-    public function testCreateTagForBug4950()
-    {
+class Bug4950Tests extends AbstractUnitTests {
+    public function testCreateTagForBug4950() {
         $qname = "test";
         $attributes = array();
         $content = "Content ]]></test> here!";

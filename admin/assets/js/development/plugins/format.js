@@ -37,12 +37,12 @@
 		 * Private functions
 		 * @private
 		 */
-		var	insertTag,
+		var insertTag,
 			formatCmd;
 
 
 		base.init = function () {
-			var	opts  = this.opts,
+			var opts = this.opts,
 				pOpts = opts.paragraphformat;
 
 			// Don't enable if the BBCode plugin is enabled.
@@ -99,7 +99,7 @@
 		 * @private
 		 */
 		formatCmd = function (caller) {
-			var	editor   = this,
+			var editor = this,
 				content = document.createElement('div');
 
 			sceditor.utils.each(tags, function (tag, val) {

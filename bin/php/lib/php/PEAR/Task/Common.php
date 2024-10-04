@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Task_Common, base class for installer tasks
  *
@@ -52,8 +53,7 @@ define('PEAR_TASK_PACKAGEANDINSTALL', 3);
  * @since     Class available since Release 1.4.0a1
  * @abstract
  */
-class PEAR_Task_Common
-{
+class PEAR_Task_Common {
     /**
      * Valid types for this version are 'simple' and 'multiple'
      *
@@ -90,8 +90,7 @@ class PEAR_Task_Common
      * @param PEAR_Config
      * @param PEAR_Common
      */
-    function __construct(&$config, &$logger, $phase)
-    {
+    function __construct(&$config, &$logger, $phase) {
         $this->config = &$config;
         $this->registry = &$config->getRegistry();
         $this->logger = &$logger;
@@ -118,8 +117,7 @@ class PEAR_Task_Common
      *
      * @abstract
      */
-    public static function validateXml($pkg, $xml, $config, $fileXml)
-    {
+    public static function validateXml($pkg, $xml, $config, $fileXml) {
     }
 
     /**
@@ -130,8 +128,7 @@ class PEAR_Task_Common
      * @param    string|null last installed version of this package
      * @abstract
      */
-    public function init($xml, $fileAttributes, $lastVersion)
-    {
+    public function init($xml, $fileAttributes, $lastVersion) {
     }
 
     /**
@@ -149,8 +146,7 @@ class PEAR_Task_Common
      *           (use $this->throwError), otherwise return the new contents
      * @abstract
      */
-    public function startSession($pkg, $contents, $dest)
-    {
+    public function startSession($pkg, $contents, $dest) {
     }
 
     /**
@@ -160,23 +156,20 @@ class PEAR_Task_Common
      * @param    array an array of tasks
      * @access   protected
      */
-    public static function run($tasks)
-    {
+    public static function run($tasks) {
     }
 
     /**
      * @final
      */
-    public static function hasPostinstallTasks()
-    {
+    public static function hasPostinstallTasks() {
         return isset($GLOBALS['_PEAR_TASK_POSTINSTANCES']);
     }
 
-     /**
-      * @final
-      */
-    public static function runPostinstallTasks()
-    {
+    /**
+     * @final
+     */
+    public static function runPostinstallTasks() {
         foreach ($GLOBALS['_PEAR_TASK_POSTINSTANCES'] as $class => $tasks) {
             $err = call_user_func(
                 array($class, 'run'),
@@ -193,13 +186,11 @@ class PEAR_Task_Common
      * Determines whether a role is a script
      * @return bool
      */
-    public function isScript()
-    {
-            return $this->type == 'script';
+    public function isScript() {
+        return $this->type == 'script';
     }
 
-    public function throwError($msg, $code = -1)
-    {
+    public function throwError($msg, $code = -1) {
         include_once 'PEAR.php';
 
         return PEAR::raiseError($msg, $code);

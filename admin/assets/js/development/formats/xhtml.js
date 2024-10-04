@@ -122,14 +122,14 @@
 		},
 		image: {
 			txtExec: function (caller, selected) {
-				var	editor  = this;
+				var editor = this;
 
 				getEditorCommand('image')._dropDown(
 					editor,
 					caller,
 					selected,
 					function (url, width, height) {
-						var attrs  = '';
+						var attrs = '';
 
 						if (width) {
 							attrs += ' width="' + width + '"';
@@ -148,7 +148,7 @@
 		},
 		email: {
 			txtExec: function (caller, selected) {
-				var	editor  = this;
+				var editor = this;
 
 				getEditorCommand('email')._dropDown(
 					editor,
@@ -156,7 +156,7 @@
 					function (url, text) {
 						editor.insertText(
 							'<a href="mailto:' + url + '">' +
-								(text || selected || url) +
+							(text || selected || url) +
 							'</a>'
 						);
 					}
@@ -165,7 +165,7 @@
 		},
 		link: {
 			txtExec: function (caller, selected) {
-				var	editor  = this;
+				var editor = this;
 
 				getEditorCommand('link')._dropDown(
 					editor,
@@ -173,7 +173,7 @@
 					function (url, text) {
 						editor.insertText(
 							'<a href="' + url + '">' +
-								(text || selected || url) +
+							(text || selected || url) +
 							'</a>'
 						);
 					}
@@ -357,7 +357,7 @@
 		 * @private
 		 */
 		function handleDoc(node) {
-			var	child = node.firstChild;
+			var child = node.firstChild;
 
 			while (child) {
 				serializeNode(child);
@@ -372,13 +372,13 @@
 		 * @private
 		 */
 		function handleElement(node, parentIsPre) {
-			var	child, attr, attrValue,
-				tagName     = node.nodeName.toLowerCase(),
-				isIframe    = tagName === 'iframe',
-				attrIdx     = node.attributes.length,
-				firstChild  = node.firstChild,
+			var child, attr, attrValue,
+				tagName = node.nodeName.toLowerCase(),
+				isIframe = tagName === 'iframe',
+				attrIdx = node.attributes.length,
+				firstChild = node.firstChild,
 				// pre || pre-wrap with any vendor prefix
-				isPre       = parentIsPre ||
+				isPre = parentIsPre ||
 					/pre(?:\-wrap)?$/i.test(css(node, 'whiteSpace')),
 				selfClosing = !node.firstChild && !dom.canHaveChildren(node) &&
 					!isIframe;
@@ -415,7 +415,7 @@
 				output(
 					'</' + tagName + '>',
 					!isPre && !isIframe && canIndent(node) &&
-						firstChild && canIndent(firstChild)
+					firstChild && canIndent(firstChild)
 				);
 			}
 		};
@@ -631,7 +631,7 @@
 		 */
 		function convertTags(node) {
 			dom.traverse(node, function (node) {
-				var	tagName = node.nodeName.toLowerCase();
+				var tagName = node.nodeName.toLowerCase();
 
 				convertNode('*', node);
 				convertNode(tagName, node);
@@ -646,12 +646,12 @@
 		 * @private
 		 */
 		function isEmpty(node, excludeBr) {
-			var	rect,
-				childNodes     = node.childNodes,
-				tagName        = node.nodeName.toLowerCase(),
-				nodeValue      = node.nodeValue,
+			var rect,
+				childNodes = node.childNodes,
+				tagName = node.nodeName.toLowerCase(),
+				nodeValue = node.nodeValue,
 				childrenLength = childNodes.length,
-				allowedEmpty   = xhtmlFormat.allowedEmptyTags || [];
+				allowedEmpty = xhtmlFormat.allowedEmptyTags || [];
 
 			if (excludeBr && tagName === 'br') {
 				return true;
@@ -700,21 +700,21 @@
 		 */
 		function removeTags(rootNode) {
 			dom.traverse(rootNode, function (node) {
-				var	remove,
-					tagName         = node.nodeName.toLowerCase(),
-					parentNode      = node.parentNode,
-					nodeType        = node.nodeType,
-					isBlock         = !dom.isInline(node),
+				var remove,
+					tagName = node.nodeName.toLowerCase(),
+					parentNode = node.parentNode,
+					nodeType = node.nodeType,
+					isBlock = !dom.isInline(node),
 					previousSibling = node.previousSibling,
-					nextSibling     = node.nextSibling,
-					isTopLevel      = parentNode === rootNode,
-					noSiblings      = !previousSibling && !nextSibling,
-					empty           = tagName !== 'iframe' && isEmpty(node,
+					nextSibling = node.nextSibling,
+					isTopLevel = parentNode === rootNode,
+					noSiblings = !previousSibling && !nextSibling,
+					empty = tagName !== 'iframe' && isEmpty(node,
 						isTopLevel && noSiblings && tagName !== 'br'),
-					document        = node.ownerDocument,
-					allowedTags     = xhtmlFormat.allowedTags,
-					firstChild   	= node.firstChild,
-					disallowedTags  = xhtmlFormat.disallowedTags;
+					document = node.ownerDocument,
+					allowedTags = xhtmlFormat.allowedTags,
+					firstChild = node.firstChild,
+					disallowedTags = xhtmlFormat.disallowedTags;
 
 				// 3 = text node
 				if (nodeType === 3) {
@@ -748,7 +748,7 @@
 
 				if (empty) {
 					remove = true;
-				// 3 is text node which do not get filtered
+					// 3 is text node which do not get filtered
 				} else if (allowedTags && allowedTags.length) {
 					remove = (allowedTags.indexOf(tagName) < 0);
 				} else if (disallowedTags && disallowedTags.length) {
@@ -852,12 +852,12 @@
 		 * @private
 		 */
 		function removeAttribs(node) {
-			var	tagName, attr, attrName, attrsLength, validValues, remove,
-				allowedAttribs    = xhtmlFormat.allowedAttribs,
-				isAllowed         = allowedAttribs &&
+			var tagName, attr, attrName, attrsLength, validValues, remove,
+				allowedAttribs = xhtmlFormat.allowedAttribs,
+				isAllowed = allowedAttribs &&
 					!isEmptyObject(allowedAttribs),
 				disallowedAttribs = xhtmlFormat.disallowedAttribs,
-				isDisallowed      = disallowedAttribs &&
+				isDisallowed = disallowedAttribs &&
 					!isEmptyObject(disallowedAttribs);
 
 			attrsCache = {};
@@ -867,7 +867,7 @@
 					return;
 				}
 
-				tagName     = node.nodeName.toLowerCase();
+				tagName = node.nodeName.toLowerCase();
 				attrsLength = node.attributes.length;
 
 				if (attrsLength) {
@@ -886,10 +886,10 @@
 					}
 
 					while (attrsLength--) {
-						attr        = node.attributes[attrsLength];
-						attrName    = attr.name;
+						attr = node.attributes[attrsLength];
+						attrName = attr.name;
 						validValues = attrsCache[tagName][attrName];
-						remove      = false;
+						remove = false;
 
 						if (isAllowed) {
 							remove = validValues !== null &&

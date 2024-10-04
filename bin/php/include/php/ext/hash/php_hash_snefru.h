@@ -26,11 +26,12 @@
 #include "ext/standard/basic_functions.h"
 
 /* SNEFRU context */
-typedef struct {
-	uint32_t state[16];
-	uint32_t count[2];
-	unsigned char length;
-	unsigned char buffer[32];
+typedef struct
+{
+   uint32_t state[16];
+   uint32_t count[2];
+   unsigned char length;
+   unsigned char buffer[32];
 } PHP_SNEFRU_CTX;
 
 PHP_HASH_API void PHP_SNEFRUInit(PHP_SNEFRU_CTX *);

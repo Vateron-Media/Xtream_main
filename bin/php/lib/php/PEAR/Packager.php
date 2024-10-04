@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Packager for generating releases
  *
@@ -34,23 +35,21 @@ require_once 'System.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
-class PEAR_Packager extends PEAR_Common
-{
+class PEAR_Packager extends PEAR_Common {
     /**
      * @var PEAR_Registry
      */
     var $_registry;
 
-    function package($pkgfile = null, $compress = true, $pkg2 = null)
-    {
+    function package($pkgfile = null, $compress = true, $pkg2 = null) {
         // {{{ validate supplied package.xml file
         if (empty($pkgfile)) {
             $pkgfile = 'package.xml';
         }
 
         PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-        $pkg  = new PEAR_PackageFile($this->config, $this->debug);
-        $pf   = &$pkg->fromPackageFile($pkgfile, PEAR_VALIDATE_NORMAL);
+        $pkg = new PEAR_PackageFile($this->config, $this->debug);
+        $pf = &$pkg->fromPackageFile($pkgfile, PEAR_VALIDATE_NORMAL);
         $main = &$pf;
         PEAR::staticPopErrorHandling();
         if (PEAR::isError($pf)) {
@@ -88,18 +87,21 @@ class PEAR_Packager extends PEAR_Common
                 $this->log(1, 'Warning: ' . $warning['message']);
             }
 
-            if ($pf2->getPackagexmlVersion() == '2.0' ||
-                  $pf2->getPackagexmlVersion() == '2.1'
+            if (
+                $pf2->getPackagexmlVersion() == '2.0' ||
+                $pf2->getPackagexmlVersion() == '2.1'
             ) {
-                $main  = &$pf2;
+                $main = &$pf2;
                 $other = &$pf;
             } else {
-                $main  = &$pf;
+                $main = &$pf;
                 $other = &$pf2;
             }
 
-            if ($main->getPackagexmlVersion() != '2.0' &&
-                  $main->getPackagexmlVersion() != '2.1') {
+            if (
+                $main->getPackagexmlVersion() != '2.0' &&
+                $main->getPackagexmlVersion() != '2.1'
+            ) {
                 return PEAR::raiseError('Error: cannot package two package.xml version 1.0, can ' .
                     'only package together a package.xml 1.0 and package.xml 2.0');
             }
@@ -152,7 +154,7 @@ class PEAR_Packager extends PEAR_Common
             }
 
             $dest_package = basename($tgzfile);
-            $pkgdir       = dirname($pkgfile);
+            $pkgdir = dirname($pkgfile);
 
             // TAR the Package -------------------------------------------
             $this->log(1, "Package $dest_package done");
@@ -178,7 +180,7 @@ class PEAR_Packager extends PEAR_Common
             }
 
             $dest_package = basename($tgzfile);
-            $pkgdir       = dirname($pkgfile);
+            $pkgdir = dirname($pkgfile);
 
             // TAR the Package -------------------------------------------
             $this->log(1, "Package $dest_package done");

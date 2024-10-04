@@ -30,22 +30,21 @@
 #define PHP_MBSTRING_VERSION PHP_VERSION
 
 #ifdef PHP_WIN32
-#	undef MBSTRING_API
-#	ifdef MBSTRING_EXPORTS
-#		define MBSTRING_API __declspec(dllexport)
-#	elif defined(COMPILE_DL_MBSTRING)
-#		define MBSTRING_API __declspec(dllimport)
-#	else
-#		define MBSTRING_API /* nothing special */
-#	endif
-#elif defined(__GNUC__) && __GNUC__ >= 4
-#	undef MBSTRING_API
-#	define MBSTRING_API __attribute__ ((visibility("default")))
+#undef MBSTRING_API
+#ifdef MBSTRING_EXPORTS
+#define MBSTRING_API __declspec(dllexport)
+#elif defined(COMPILE_DL_MBSTRING)
+#define MBSTRING_API __declspec(dllimport)
 #else
-#	undef MBSTRING_API
-#	define MBSTRING_API /* nothing special */
+#define MBSTRING_API /* nothing special */
 #endif
-
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#undef MBSTRING_API
+#define MBSTRING_API __attribute__((visibility("default")))
+#else
+#undef MBSTRING_API
+#define MBSTRING_API /* nothing special */
+#endif
 
 #if HAVE_MBSTRING
 
@@ -109,19 +108,18 @@ PHP_FUNCTION(mb_ord);
 PHP_FUNCTION(mb_chr);
 PHP_FUNCTION(mb_scrub);
 
-
 MBSTRING_API char *php_mb_safe_strrchr_ex(const char *s, unsigned int c,
-                                    size_t nbytes, const mbfl_encoding *enc);
+                                          size_t nbytes, const mbfl_encoding *enc);
 MBSTRING_API char *php_mb_safe_strrchr(const char *s, unsigned int c,
-                                 size_t nbytes);
+                                       size_t nbytes);
 
 MBSTRING_API char *php_mb_convert_encoding_ex(
-		const char *input, size_t length,
-		const mbfl_encoding *to_encoding, const mbfl_encoding *from_encoding, size_t *output_len);
-MBSTRING_API char * php_mb_convert_encoding(const char *input, size_t length,
-                                      const char *_to_encoding,
-                                      const char *_from_encodings,
-                                      size_t *output_len);
+    const char *input, size_t length,
+    const mbfl_encoding *to_encoding, const mbfl_encoding *from_encoding, size_t *output_len);
+MBSTRING_API char *php_mb_convert_encoding(const char *input, size_t length,
+                                           const char *_to_encoding,
+                                           const char *_from_encodings,
+                                           size_t *output_len);
 
 MBSTRING_API int php_mb_check_encoding_list(const char *encoding_list);
 
@@ -135,52 +133,53 @@ MBSTRING_API int php_mb_check_encoding(const char *input, size_t length, const c
 int _php_mb_ini_mbstring_internal_encoding_set(const char *new_value, size_t new_value_length);
 
 ZEND_BEGIN_MODULE_GLOBALS(mbstring)
-	char *internal_encoding_name;
-	const mbfl_encoding *internal_encoding;
-	const mbfl_encoding *current_internal_encoding;
-	const mbfl_encoding *http_output_encoding;
-	const mbfl_encoding *current_http_output_encoding;
-	const mbfl_encoding *http_input_identify;
-	const mbfl_encoding *http_input_identify_get;
-	const mbfl_encoding *http_input_identify_post;
-	const mbfl_encoding *http_input_identify_cookie;
-	const mbfl_encoding *http_input_identify_string;
-	const mbfl_encoding **http_input_list;
-	size_t http_input_list_size;
-	const mbfl_encoding **detect_order_list;
-	size_t detect_order_list_size;
-	const mbfl_encoding **current_detect_order_list;
-	size_t current_detect_order_list_size;
-	enum mbfl_no_encoding *default_detect_order_list;
-	size_t default_detect_order_list_size;
-	int filter_illegal_mode;
-	int filter_illegal_substchar;
-	int current_filter_illegal_mode;
-	int current_filter_illegal_substchar;
-	zend_long func_overload;
-	enum mbfl_no_language language;
-	zend_bool encoding_translation;
-	zend_bool strict_detection;
-	size_t illegalchars;
-	mbfl_buffer_converter *outconv;
-    void *http_output_conv_mimetypes;
+char *internal_encoding_name;
+const mbfl_encoding *internal_encoding;
+const mbfl_encoding *current_internal_encoding;
+const mbfl_encoding *http_output_encoding;
+const mbfl_encoding *current_http_output_encoding;
+const mbfl_encoding *http_input_identify;
+const mbfl_encoding *http_input_identify_get;
+const mbfl_encoding *http_input_identify_post;
+const mbfl_encoding *http_input_identify_cookie;
+const mbfl_encoding *http_input_identify_string;
+const mbfl_encoding **http_input_list;
+size_t http_input_list_size;
+const mbfl_encoding **detect_order_list;
+size_t detect_order_list_size;
+const mbfl_encoding **current_detect_order_list;
+size_t current_detect_order_list_size;
+enum mbfl_no_encoding *default_detect_order_list;
+size_t default_detect_order_list_size;
+int filter_illegal_mode;
+int filter_illegal_substchar;
+int current_filter_illegal_mode;
+int current_filter_illegal_substchar;
+zend_long func_overload;
+enum mbfl_no_language language;
+zend_bool encoding_translation;
+zend_bool strict_detection;
+size_t illegalchars;
+mbfl_buffer_converter *outconv;
+void *http_output_conv_mimetypes;
 #if HAVE_MBREGEX
-    struct _zend_mb_regex_globals *mb_regex_globals;
-    zend_long regex_stack_limit;
+struct _zend_mb_regex_globals *mb_regex_globals;
+zend_long regex_stack_limit;
 #endif
-	char *last_used_encoding_name;
-	const mbfl_encoding *last_used_encoding;
+char *last_used_encoding_name;
+const mbfl_encoding *last_used_encoding;
 ZEND_END_MODULE_GLOBALS(mbstring)
 
 #define MB_OVERLOAD_MAIL 1
 #define MB_OVERLOAD_STRING 2
 #define MB_OVERLOAD_REGEX 4
 
-struct mb_overload_def {
-	int type;
-	char *orig_func;
-	char *ovld_func;
-	char *save_func;
+struct mb_overload_def
+{
+  int type;
+  char *orig_func;
+  char *ovld_func;
+  char *save_func;
 };
 
 #define MBSTRG(v) ZEND_MODULE_GLOBALS_ACCESSOR(mbstring, v)
@@ -189,15 +188,15 @@ struct mb_overload_def {
 ZEND_TSRMLS_CACHE_EXTERN()
 #endif
 
-#else	/* HAVE_MBSTRING */
+#else /* HAVE_MBSTRING */
 
 #define mbstring_module_ptr NULL
 
-#endif	/* HAVE_MBSTRING */
+#endif /* HAVE_MBSTRING */
 
 #define phpext_mbstring_ptr mbstring_module_ptr
 
-#endif		/* _MBSTRING_H */
+#endif /* _MBSTRING_H */
 
 /*
  * Local variables:

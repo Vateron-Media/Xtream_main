@@ -35,7 +35,8 @@ PHPAPI int php_url_scanner_reset_vars(void);
 
 #include "zend_smart_str_public.h"
 
-typedef struct {
+typedef struct
+{
 	/* Used by the mainloop of the scanner */
 	smart_str tag; /* read only */
 	smart_str arg; /* read only */

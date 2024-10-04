@@ -1,4 +1,5 @@
 <?php
+
 /**
  * <tasks:postinstallscript> - read/write version
  *
@@ -27,8 +28,7 @@ require_once 'PEAR/Task/Postinstallscript.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a10
  */
-class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
-{
+class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript {
     /**
      * parent package file object
      *
@@ -45,21 +45,18 @@ class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
      *
      * @return PEAR_Task_Postinstallscript_rw
      */
-    function __construct(&$pkg, &$config, &$logger, $fileXml)
-    {
+    function __construct(&$pkg, &$config, &$logger, $fileXml) {
         parent::__construct($config, $logger, PEAR_TASK_PACKAGE);
         $this->_contents = $fileXml;
         $this->_pkg = &$pkg;
         $this->_params = array();
     }
 
-    public function validate()
-    {
+    public function validate() {
         return $this->validateXml($this->_pkg, $this->_params, $this->config, $this->_contents);
     }
 
-    public function getName()
-    {
+    public function getName() {
         return 'postinstallscript';
     }
 
@@ -78,22 +75,21 @@ class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
      * @param array|false  $params       array of getParam() calls, or false for no params
      * @param string|false $instructions
      */
-    public function addParamGroup($id, $params = false, $instructions = false)
-    {
+    public function addParamGroup($id, $params = false, $instructions = false) {
         if ($params && isset($params[0]) && !isset($params[1])) {
             $params = $params[0];
         }
         $stuff =
             array(
-                $this->_pkg->getTasksNs().':id' => $id,
+                $this->_pkg->getTasksNs() . ':id' => $id,
             );
         if ($instructions) {
-            $stuff[$this->_pkg->getTasksNs().':instructions'] = $instructions;
+            $stuff[$this->_pkg->getTasksNs() . ':instructions'] = $instructions;
         }
         if ($params) {
-            $stuff[$this->_pkg->getTasksNs().':param'] = $params;
+            $stuff[$this->_pkg->getTasksNs() . ':param'] = $params;
         }
-        $this->_params[$this->_pkg->getTasksNs().':paramgroup'][] = $stuff;
+        $this->_params[$this->_pkg->getTasksNs() . ':paramgroup'][] = $stuff;
     }
 
     /**
@@ -118,7 +114,8 @@ class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
      * @param array|false  $params        array of getParam() calls, or false for no params
      * @param string|false $instructions
      */
-    public function addConditionTypeGroup($id,
+    public function addConditionTypeGroup(
+        $id,
         $oldgroup,
         $param,
         $value,
@@ -130,22 +127,21 @@ class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
             $params = $params[0];
         }
         $stuff = array(
-            $this->_pkg->getTasksNs().':id' => $id,
+            $this->_pkg->getTasksNs() . ':id' => $id,
         );
         if ($instructions) {
-            $stuff[$this->_pkg->getTasksNs().':instructions'] = $instructions;
+            $stuff[$this->_pkg->getTasksNs() . ':instructions'] = $instructions;
         }
-        $stuff[$this->_pkg->getTasksNs().':name'] = $oldgroup.'::'.$param;
-        $stuff[$this->_pkg->getTasksNs().':conditiontype'] = $conditiontype;
-        $stuff[$this->_pkg->getTasksNs().':value'] = $value;
+        $stuff[$this->_pkg->getTasksNs() . ':name'] = $oldgroup . '::' . $param;
+        $stuff[$this->_pkg->getTasksNs() . ':conditiontype'] = $conditiontype;
+        $stuff[$this->_pkg->getTasksNs() . ':value'] = $value;
         if ($params) {
-            $stuff[$this->_pkg->getTasksNs().':param'] = $params;
+            $stuff[$this->_pkg->getTasksNs() . ':param'] = $params;
         }
-        $this->_params[$this->_pkg->getTasksNs().':paramgroup'][] = $stuff;
+        $this->_params[$this->_pkg->getTasksNs() . ':paramgroup'][] = $stuff;
     }
 
-    public function getXml()
-    {
+    public function getXml() {
         return $this->_params;
     }
 
@@ -160,23 +156,26 @@ class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
      * @return array
      */
     public function getParam(
-        $name, $prompt, $type = 'string', $default = null
+        $name,
+        $prompt,
+        $type = 'string',
+        $default = null
     ) {
         if ($default !== null) {
             return
-            array(
-                $this->_pkg->getTasksNs().':name' => $name,
-                $this->_pkg->getTasksNs().':prompt' => $prompt,
-                $this->_pkg->getTasksNs().':type' => $type,
-                $this->_pkg->getTasksNs().':default' => $default,
-            );
+                array(
+                    $this->_pkg->getTasksNs() . ':name' => $name,
+                    $this->_pkg->getTasksNs() . ':prompt' => $prompt,
+                    $this->_pkg->getTasksNs() . ':type' => $type,
+                    $this->_pkg->getTasksNs() . ':default' => $default,
+                );
         }
 
         return
             array(
-                $this->_pkg->getTasksNs().':name' => $name,
-                $this->_pkg->getTasksNs().':prompt' => $prompt,
-                $this->_pkg->getTasksNs().':type' => $type,
+                $this->_pkg->getTasksNs() . ':name' => $name,
+                $this->_pkg->getTasksNs() . ':prompt' => $prompt,
+                $this->_pkg->getTasksNs() . ':type' => $type,
             );
     }
 }

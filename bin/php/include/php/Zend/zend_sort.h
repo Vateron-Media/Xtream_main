@@ -26,7 +26,7 @@ ZEND_API void zend_sort(void *base, size_t nmemb, size_t siz, compare_func_t cmp
 ZEND_API void zend_insert_sort(void *base, size_t nmemb, size_t siz, compare_func_t cmp, swap_func_t swp);
 END_EXTERN_C()
 
-#endif       /* ZEND_SORT_H */
+#endif /* ZEND_SORT_H */
 
 /*
  * Local variables:

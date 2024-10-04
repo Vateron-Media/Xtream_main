@@ -28,21 +28,21 @@ extern zend_module_entry pdo_module_entry;
 #define PHP_PDO_VERSION PHP_VERSION
 
 #ifdef PHP_WIN32
-#	if defined(PDO_EXPORTS) || (!defined(COMPILE_DL_PDO))
-#		define PDO_API __declspec(dllexport)
-#	elif defined(COMPILE_DL_PDO)
-#		define PDO_API __declspec(dllimport)
-#	else
-#		define PDO_API /* nothing special */
-#	endif
-#elif defined(__GNUC__) && __GNUC__ >= 4
-#	define PDO_API __attribute__ ((visibility("default")))
+#if defined(PDO_EXPORTS) || (!defined(COMPILE_DL_PDO))
+#define PDO_API __declspec(dllexport)
+#elif defined(COMPILE_DL_PDO)
+#define PDO_API __declspec(dllimport)
 #else
-#	define PDO_API /* nothing special */
+#define PDO_API /* nothing special */
+#endif
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#define PDO_API __attribute__((visibility("default")))
+#else
+#define PDO_API /* nothing special */
 #endif
 
 #ifdef ZTS
-# include "TSRM.h"
+#include "TSRM.h"
 #endif
 
 PHP_MINIT_FUNCTION(pdo);
@@ -50,30 +50,29 @@ PHP_MSHUTDOWN_FUNCTION(pdo);
 PHP_MINFO_FUNCTION(pdo);
 
 ZEND_BEGIN_MODULE_GLOBALS(pdo)
-	zend_long  global_value;
+zend_long global_value;
 ZEND_END_MODULE_GLOBALS(pdo)
 
 #ifdef ZTS
-# define PDOG(v) TSRMG(pdo_globals_id, zend_pdo_globals *, v)
+#define PDOG(v) TSRMG(pdo_globals_id, zend_pdo_globals *, v)
 #else
-# define PDOG(v) (pdo_globals.v)
+#define PDOG(v) (pdo_globals.v)
 #endif
 
 #define REGISTER_PDO_CLASS_CONST_LONG(const_name, value) \
-	zend_declare_class_constant_long(php_pdo_get_dbh_ce(), const_name, sizeof(const_name)-1, (zend_long)value);
+  zend_declare_class_constant_long(php_pdo_get_dbh_ce(), const_name, sizeof(const_name) - 1, (zend_long)value);
 
 #define REGISTER_PDO_CLASS_CONST_STRING(const_name, value) \
-	zend_declare_class_constant_stringl(php_pdo_get_dbh_ce(), const_name, sizeof(const_name)-1, value, sizeof(value)-1);
+  zend_declare_class_constant_stringl(php_pdo_get_dbh_ce(), const_name, sizeof(const_name) - 1, value, sizeof(value) - 1);
 
-#define PDO_CONSTRUCT_CHECK	\
-	if (!dbh->driver) {	\
-		pdo_raise_impl_error(dbh, NULL, "00000", "PDO constructor was not called");	\
-		return;	\
-	}	\
+#define PDO_CONSTRUCT_CHECK                                                     \
+  if (!dbh->driver)                                                             \
+  {                                                                             \
+    pdo_raise_impl_error(dbh, NULL, "00000", "PDO constructor was not called"); \
+    return;                                                                     \
+  }
 
-
-#endif	/* PHP_PDO_H */
-
+#endif /* PHP_PDO_H */
 
 /*
  * Local variables:

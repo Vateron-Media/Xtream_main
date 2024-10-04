@@ -2,9 +2,9 @@
 #include <php_compat.h>
 
 #ifdef PHP_WIN32
-# include <config.w32.h>
+#include <config.w32.h>
 #else
-# include <php_config.h>
+#include <php_config.h>
 #endif
 
 #undef PACKAGE_NAME
@@ -16,22 +16,20 @@
 #define SUPPORT_UTF8
 
 #if defined(__GNUC__) && __GNUC__ >= 4
-# ifdef __cplusplus
-#  define PCRE_EXP_DECL		extern "C" __attribute__ ((visibility("default")))
-# else
-#  define PCRE_EXP_DECL		extern __attribute__ ((visibility("default")))
-# endif
-# define PCRE_EXP_DEFN		__attribute__ ((visibility("default")))
-# define PCRE_EXP_DATA_DEFN	__attribute__ ((visibility("default")))
+#ifdef __cplusplus
+#define PCRE_EXP_DECL extern "C" __attribute__((visibility("default")))
+#else
+#define PCRE_EXP_DECL extern __attribute__((visibility("default")))
 #endif
-
+#define PCRE_EXP_DEFN __attribute__((visibility("default")))
+#define PCRE_EXP_DATA_DEFN __attribute__((visibility("default")))
+#endif
 
 /* Exclude these below definitions when building within PHP */
 #ifndef ZEND_API
 
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
-
 
 /* PCRE is written in Standard C, but there are a few non-standard things it
 can cope with, allowing it to run on SunOS4 and other "close to standard"
@@ -358,7 +356,6 @@ them both to 0; an emulation function will be used. */
 
 /* to make a symbol visible */
 /* #undef PCRE_EXP_DECL */
-
 
 /* If you are compiling for a system other than a Unix-like system or
    Win32, and it needs some magic to be inserted before the definition

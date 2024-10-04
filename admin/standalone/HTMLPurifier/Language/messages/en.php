@@ -5,7 +5,7 @@ $fallback = false;
 $messages = array(
 
     'HTMLPurifier' => 'HTML Purifier',
-// for unit testing purposes
+    // for unit testing purposes
     'LanguageFactoryTest: Pizza' => 'Pizza',
     'LanguageTest: List' => '$1',
     'LanguageTest: Hash' => '$1.Keys; $1.Values',

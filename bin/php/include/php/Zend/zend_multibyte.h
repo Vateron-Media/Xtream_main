@@ -24,8 +24,8 @@ typedef struct _zend_encoding zend_encoding;
 
 typedef size_t (*zend_encoding_filter)(unsigned char **str, size_t *str_length, const unsigned char *buf, size_t length);
 
-typedef const zend_encoding* (*zend_encoding_fetcher)(const char *encoding_name);
-typedef const char* (*zend_encoding_name_getter)(const zend_encoding *encoding);
+typedef const zend_encoding *(*zend_encoding_fetcher)(const char *encoding_name);
+typedef const char *(*zend_encoding_name_getter)(const zend_encoding *encoding);
 typedef int (*zend_encoding_lexer_compatibility_checker)(const zend_encoding *encoding);
 typedef const zend_encoding *(*zend_encoding_detector)(const unsigned char *string, size_t length, const zend_encoding **list, size_t list_size);
 typedef size_t (*zend_encoding_converter)(unsigned char **to, size_t *to_length, const unsigned char *from, size_t from_length, const zend_encoding *encoding_to, const zend_encoding *encoding_from);
@@ -33,7 +33,8 @@ typedef int (*zend_encoding_list_parser)(const char *encoding_list, size_t encod
 typedef const zend_encoding *(*zend_encoding_internal_encoding_getter)(void);
 typedef int (*zend_encoding_internal_encoding_setter)(const zend_encoding *encoding);
 
-typedef struct _zend_multibyte_functions {
+typedef struct _zend_multibyte_functions
+{
     const char *provider_name;
     zend_encoding_fetcher encoding_fetcher;
     zend_encoding_name_getter encoding_name_getter;

@@ -4,15 +4,13 @@
  * Converts HTMLPurifier_ConfigSchema_Interchange to our runtime
  * representation used to perform checks on user configuration.
  */
-class HTMLPurifier_ConfigSchema_Builder_ConfigSchema
-{
+class HTMLPurifier_ConfigSchema_Builder_ConfigSchema {
 
     /**
      * @param HTMLPurifier_ConfigSchema_Interchange $interchange
      * @return HTMLPurifier_ConfigSchema
      */
-    public function build($interchange)
-    {
+    public function build($interchange) {
         $schema = new HTMLPurifier_ConfigSchema();
         foreach ($interchange->directives as $d) {
             $schema->add(

@@ -37,7 +37,8 @@ if ($rSettings["sidebar"]) { ?>
                                     if (($rPermissions["is_reseller"]) or (hasPermissions("adv", "ticket"))) { ?>
                                         <div class="page-title-right">
                                             <a href="./ticket.php?id=<?= $rTicket["id"] ?>">
-                                                <button type="button" class="btn btn-sm btn-primary waves-effect waves-light float-right">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-primary waves-effect waves-light float-right">
                                                     <i class="mdi mdi-plus"></i> <?= $_["add_response"] ?>
                                                 </button>
                                             </a>
@@ -64,7 +65,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                             } else {
                                                                                 echo "Admin";
                                                                             } ?></h4>
-                                                <p class="text-muted"><small><?= date("Y-m-d H:i", $rReply["date"]) ?></small></p>
+                                                <p class="text-muted">
+                                                    <small><?= date("Y-m-d H:i", $rReply["date"]) ?></small>
+                                                </p>
                                                 <p class="mb-0"><?= $rReply["message"] ?></p>
                                             </div>
                                         </div>

@@ -66,7 +66,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./rtmp_ips.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_rtmp_ip"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_rtmp_ip"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
@@ -107,7 +108,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#ip-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#ip-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
@@ -118,30 +120,36 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="ip"><?= $_["ip_address"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="ip"><?= $_["ip_address"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="ip" name="ip" value="<?php if (isset($rIPArr)) {
-                                                                                                                                            echo htmlspecialchars($rIPArr["ip"]);
-                                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control" id="ip"
+                                                                        name="ip" value="<?php if (isset($rIPArr)) {
+                                                                                                echo htmlspecialchars($rIPArr["ip"]);
+                                                                                            } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="notes"><?= $_["notes"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="notes"><?= $_["notes"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea class="form-control" id="notes" name="notes" required data-parsley-trigger="change"><?php if (isset($rIPArr)) {
-                                                                                                                                                                        echo htmlspecialchars($rIPArr["notes"]);
-                                                                                                                                                                    } ?></textarea>
+                                                                    <textarea class="form-control" id="notes"
+                                                                        name="notes" required
+                                                                        data-parsley-trigger="change"><?php if (isset($rIPArr)) {
+                                                                                                            echo htmlspecialchars($rIPArr["notes"]);
+                                                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_ip" type="submit" class="btn btn-primary" value="<?php if (isset($rIPArr)) {
-                                                                                                                                        echo $_["edit"];
-                                                                                                                                    } else {
-                                                                                                                                        echo $_["add"];
-                                                                                                                                    } ?>" />
+                                                            <input name="submit_ip" type="submit"
+                                                                class="btn btn-primary" value="<?php if (isset($rIPArr)) {
+                                                                                                    echo $_["edit"];
+                                                                                                } else {
+                                                                                                    echo $_["add"];
+                                                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

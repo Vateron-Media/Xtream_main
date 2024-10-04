@@ -319,7 +319,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./users.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_users"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_users"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
@@ -417,7 +418,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["this_is_a_trial_user"] ?>
                                 </div>
-                            <?php  } ?>
+                            <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./user_reseller_edit.php<?php if (isset($_GET["id"])) {
@@ -433,7 +434,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#review-purchase" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#review-purchase" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-book-open-variant mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["bouquets"] ?></span>
                                                     </a>
@@ -444,29 +446,42 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4" id="uname">
-                                                                <label class="col-md-4 col-form-label" for="username"><?= $_["username"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="username"><?= $_["username"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input<?php if ((!$rPermissions["allow_change_pass"]) && (!$rAdminSettings["change_usernames"])) {
                                                                                 echo $_[" disabled"];
-                                                                            } ?> type="text" class="form-control" id="username" name="username" placeholder="<?= $_["auto_generate_if_blank"] ?>" value="<?php if (isset($rUser)) {
-                                                                                                                                                                                                                echo htmlspecialchars($rUser["username"]);
-                                                                                                                                                                                                            } ?>">
+                                                                            } ?> type="text"
+                                                                        class="form-control" id="username"
+                                                                        name="username"
+                                                                        placeholder="<?= $_["auto_generate_if_blank"] ?>"
+                                                                        value="<?php if (isset($rUser)) {
+                                                                                    echo htmlspecialchars($rUser["username"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4" id="pass">
-                                                                <label class="col-md-4 col-form-label" for="password"><?= $_["password"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="password"><?= $_["password"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input<?php if (!$rPermissions["allow_change_pass"]) {
                                                                                 echo " disabled";
-                                                                            } ?> type="text" class="form-control" id="password" name="password" placeholder="<?= $_["auto_generate_if_blank"] ?>" value="<?php if (isset($rUser)) {
-                                                                                                                                                                                                                echo htmlspecialchars($rUser["password"]);
-                                                                                                                                                                                                            } ?>">
+                                                                            } ?> type="text"
+                                                                        class="form-control" id="password"
+                                                                        name="password"
+                                                                        placeholder="<?= $_["auto_generate_if_blank"] ?>"
+                                                                        value="<?php if (isset($rUser)) {
+                                                                                    echo htmlspecialchars($rUser["password"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="member_id"><?= $_["owner"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="member_id"><?= $_["owner"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="member_id" id="member_id" class="form-control select2" data-toggle="select2">
+                                                                    <select name="member_id" id="member_id"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach ($rRegisteredUsers as $rRegisteredUser) { ?>
                                                                             <option <?php if (isset($rUser)) {
                                                                                         if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
@@ -474,24 +489,30 @@ if ($rSettings["sidebar"]) { ?>
                                                                                         }
                                                                                     } else if ($rUserInfo["id"] == $rRegisteredUser["id"]) {
                                                                                         echo "selected ";
-                                                                                    } ?>value="<?= $rRegisteredUser["id"] ?>"><?= $rRegisteredUser["username"] ?></option>
+                                                                                    } ?>value="<?= $rRegisteredUser["id"] ?>">
+                                                                                <?= $rRegisteredUser["username"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="package"><?php if (isset($rUser)) {
-                                                                                                                            echo "Extend ";
-                                                                                                                        } ?><?= $_["package"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="package"><?php if (isset($rUser)) {
+                                                                                        echo "Extend ";
+                                                                                    } ?><?= $_["package"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="package" id="package" class="form-control select2" data-toggle="select2">
+                                                                    <select name="package" id="package"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php if (isset($rUser)) { ?>
-                                                                            <option value=""><?= $_["no_changes"] ?></option>
+                                                                            <option value=""><?= $_["no_changes"] ?>
+                                                                            </option>
                                                                             <?php }
                                                                         foreach (getPackages() as $rPackage) {
                                                                             if (in_array($rUserInfo["member_group_id"], json_decode($rPackage["groups"], True))) {
                                                                                 if ((($rPackage["is_trial"]) && ((isset($_GET["trial"])) or (isset($_POST["trial"])))) or (($rPackage["is_official"]) && ((!isset($_GET["trial"])) and (!isset($_POST["trial"]))))) { ?>
-                                                                                    <option value="<?= $rPackage["id"] ?>"><?= $rPackage["package_name"] ?></option>
+                                                                                    <option value="<?= $rPackage["id"] ?>">
+                                                                                        <?= $rPackage["package_name"] ?></option>
                                                                         <?php }
                                                                             }
                                                                         } ?>
@@ -499,39 +520,64 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="max_connections"><?= $_["max_connections"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="max_connections"><?= $_["max_connections"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input disabled type="text" class="form-control" id="max_connections" name="max_connections" value="<?php if (isset($rUser)) {
-                                                                                                                                                                            echo htmlspecialchars($rUser["max_connections"]);
-                                                                                                                                                                        } else {
-                                                                                                                                                                            echo "1";
-                                                                                                                                                                        } ?>">
+                                                                    <input disabled type="text" class="form-control"
+                                                                        id="max_connections" name="max_connections"
+                                                                        value="<?php if (isset($rUser)) {
+                                                                                    echo htmlspecialchars($rUser["max_connections"]);
+                                                                                } else {
+                                                                                    echo "1";
+                                                                                } ?>">
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="exp_date"><?= $_["expiry"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["leave_blank_for_unlimited"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="exp_date"><?= $_["expiry"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["leave_blank_for_unlimited"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" disabled class="form-control text-center date" id="exp_date" name="exp_date" value="<?php if (isset($rUser)) {
-                                                                                                                                                                                if (!is_null($rUser["exp_date"])) {
-                                                                                                                                                                                    echo date("Y-m-d", $rUser["exp_date"]);
-                                                                                                                                                                                } else {
-                                                                                                                                                                                    echo "\" disabled=\"disabled";
-                                                                                                                                                                                }
-                                                                                                                                                                            } ?>" data-toggle="date-picker" data-single-date-picker="true">
+                                                                    <input type="text" disabled
+                                                                        class="form-control text-center date"
+                                                                        id="exp_date" name="exp_date"
+                                                                        value="<?php if (isset($rUser)) {
+                                                                                    if (!is_null($rUser["exp_date"])) {
+                                                                                        echo date("Y-m-d", $rUser["exp_date"]);
+                                                                                    } else {
+                                                                                        echo "\" disabled=\"disabled";
+                                                                                    }
+                                                                                } ?>"
+                                                                        data-toggle="date-picker"
+                                                                        data-single-date-picker="true">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="is_mag"><?= $_["mag_device"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["this_option_will_be_selected_mag"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="is_mag"><?= $_["mag_device"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["this_option_will_be_selected_mag"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input<?php if (isset($rUser)) {
                                                                                 echo " disabled";
-                                                                            } ?> name="is_mag" id="is_mag" type="checkbox" <?php if (isset($rUser)) {
-                                                                                                                                if ($rUser["is_mag"] == 1) {
-                                                                                                                                    echo "checked ";
-                                                                                                                                }
-                                                                                                                            } else if (isset($_GET["mag"])) {
-                                                                                                                                echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                            } ?> name="is_mag" id="is_mag" type="checkbox"
+                                                                        <?php if (isset($rUser)) {
+                                                                            if ($rUser["is_mag"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } else if (isset($_GET["mag"])) {
+                                                                            echo "checked ";
+                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="is_e2"><?= $_["enigma_device"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["this_option_will_be_selected_enigma"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="is_e2"><?= $_["enigma_device"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["this_option_will_be_selected_enigma"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input<?php if (isset($rUser)) {
                                                                                 echo " disabled";
@@ -541,38 +587,51 @@ if ($rSettings["sidebar"]) { ?>
                                                                                                                                 }
                                                                                                                             } else if (isset($_GET["e2"])) {
                                                                                                                                 echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group row mb-4" style="display:none" id="mac_entry_mag">
-                                                                <label class="col-md-4 col-form-label" for="mac_address_mag"><?= $_["mac_address"] ?></label>
+                                                            <div class="form-group row mb-4" style="display:none"
+                                                                id="mac_entry_mag">
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="mac_address_mag"><?= $_["mac_address"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="mac_address_mag" name="mac_address_mag" value="<?php if (isset($rUser)) {
-                                                                                                                                                                    echo htmlspecialchars($rUser["mac_address_mag"]);
-                                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="mac_address_mag" name="mac_address_mag"
+                                                                        value="<?php if (isset($rUser)) {
+                                                                                    echo htmlspecialchars($rUser["mac_address_mag"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group row mb-4" style="display:none" id="mac_entry_e2">
-                                                                <label class="col-md-4 col-form-label" for="mac_address_e2"><?= $_["mac_address"] ?></label>
+                                                            <div class="form-group row mb-4" style="display:none"
+                                                                id="mac_entry_e2">
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="mac_address_e2"><?= $_["mac_address"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="mac_address_e2" name="mac_address_e2" value="<?php if (isset($rUser)) {
-                                                                                                                                                                    echo htmlspecialchars($rUser["mac_address_e2"]);
-                                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="mac_address_e2" name="mac_address_e2"
+                                                                        value="<?php if (isset($rUser)) {
+                                                                                    echo htmlspecialchars($rUser["mac_address_e2"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="reseller_notes"><?= $_["reseller_notes"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="reseller_notes"><?= $_["reseller_notes"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea id="reseller_notes" name="reseller_notes" class="form-control" rows="3" placeholder=""><?php if (isset($rUser)) {
-                                                                                                                                                                            echo htmlspecialchars($rUser["reseller_notes"]);
-                                                                                                                                                                        } ?></textarea>
+                                                                    <textarea id="reseller_notes" name="reseller_notes"
+                                                                        class="form-control" rows="3"
+                                                                        placeholder=""><?php if (isset($rUser)) {
+                                                                                            echo htmlspecialchars($rUser["reseller_notes"]);
+                                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -581,19 +640,28 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="ip_field"><?= $_["allowed_ip_addresses"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="ip_field"><?= $_["allowed_ip_addresses"] ?></label>
                                                                     <div class="col-md-8 input-group">
-                                                                        <input type="text" id="ip_field" class="form-control" value="">
+                                                                        <input type="text" id="ip_field"
+                                                                            class="form-control" value="">
                                                                         <div class="input-group-append">
-                                                                            <a href="javascript:void(0)" id="add_ip" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus"></i></a>
-                                                                            <a href="javascript:void(0)" id="remove_ip" class="btn btn-danger waves-effect waves-light"><i class="mdi mdi-close"></i></a>
+                                                                            <a href="javascript:void(0)" id="add_ip"
+                                                                                class="btn btn-primary waves-effect waves-light"><i
+                                                                                    class="mdi mdi-plus"></i></a>
+                                                                            <a href="javascript:void(0)" id="remove_ip"
+                                                                                class="btn btn-danger waves-effect waves-light"><i
+                                                                                    class="mdi mdi-close"></i></a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="allowed_ips">&nbsp;</label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="allowed_ips">&nbsp;</label>
                                                                     <div class="col-md-8">
-                                                                        <select class="form-control" id="allowed_ips" name="allowed_ips[]" size=6 class="form-control" multiple="multiple">
+                                                                        <select class="form-control" id="allowed_ips"
+                                                                            name="allowed_ips[]" size=6 class="form-control"
+                                                                            multiple="multiple">
                                                                             <?php if (isset($rUser)) {
                                                                                 foreach (json_decode($rUser["allowed_ips"], True) as $rIP) { ?>
                                                                                     <option value="<?= $rIP ?>"><?= $rIP ?></option>
@@ -603,19 +671,28 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="ua_field"><?= $_["allowed_user-agents"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="ua_field"><?= $_["allowed_user-agents"] ?></label>
                                                                     <div class="col-md-8 input-group">
-                                                                        <input type="text" id="ua_field" class="form-control" value="">
+                                                                        <input type="text" id="ua_field"
+                                                                            class="form-control" value="">
                                                                         <div class="input-group-append">
-                                                                            <a href="javascript:void(0)" id="add_ua" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus"></i></a>
-                                                                            <a href="javascript:void(0)" id="remove_ua" class="btn btn-danger waves-effect waves-light"><i class="mdi mdi-close"></i></a>
+                                                                            <a href="javascript:void(0)" id="add_ua"
+                                                                                class="btn btn-primary waves-effect waves-light"><i
+                                                                                    class="mdi mdi-plus"></i></a>
+                                                                            <a href="javascript:void(0)" id="remove_ua"
+                                                                                class="btn btn-danger waves-effect waves-light"><i
+                                                                                    class="mdi mdi-close"></i></a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="allowed_ua">&nbsp;</label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="allowed_ua">&nbsp;</label>
                                                                     <div class="col-md-8">
-                                                                        <select class="form-control" id="allowed_ua" name="allowed_ua[]" size=6 class="form-control" multiple="multiple">
+                                                                        <select class="form-control" id="allowed_ua"
+                                                                            name="allowed_ua[]" size=6 class="form-control"
+                                                                            multiple="multiple">
                                                                             <?php if (isset($rUser)) {
                                                                                 foreach (json_decode($rUser["allowed_ua"], True) as $rUA) { ?>
                                                                                     <option value="<?= $rUA ?>"><?= $rUA ?></option>
@@ -628,10 +705,12 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                             </li>
                                                             <li class="next list-inline-item float-right">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["next"] ?></a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -639,14 +718,17 @@ if ($rSettings["sidebar"]) { ?>
                                                 <div class="tab-pane" id="review-purchase">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="alert alert-danger" role="alert" style="display:none;" id="no-credits">
-                                                                <i class="mdi mdi-block-helper mr-2"></i> <?= $_["you_do_not_have_enough_credits"] ?>
+                                                            <div class="alert alert-danger" role="alert"
+                                                                style="display:none;" id="no-credits">
+                                                                <i class="mdi mdi-block-helper mr-2"></i>
+                                                                <?= $_["you_do_not_have_enough_credits"] ?>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <table class="table" id="credits-cost">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th class="text-center"><?= $_["select_bouquets_user"] ?></th>
+                                                                            <th class="text-center">
+                                                                                <?= $_["select_bouquets_user"] ?></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -660,13 +742,21 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <div class="form-group row mb-4">
                                                                                 <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                                     <div class="col-md-6">
-                                                                                        <div class="custom-control custom-checkbox mt-1">
-                                                                                            <input type="checkbox" class="custom-control-input bouquet-checkbox" id="bouquet-<?= $rBouquet["id"] ?>" name="bouquet[]" value="<?= $rBouquet["id"] ?>" <?php if (isset($rUser)) {
-                                                                                                                                                                                                                                                            if (in_array($rBouquet["id"], json_decode($rUser["bouquet"], True))) {
-                                                                                                                                                                                                                                                                echo " checked";
-                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                        } ?>>
-                                                                                            <label class="custom-control-label" for="bouquet-<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></label>
+                                                                                        <div
+                                                                                            class="custom-control custom-checkbox mt-1">
+                                                                                            <input type="checkbox"
+                                                                                                class="custom-control-input bouquet-checkbox"
+                                                                                                id="bouquet-<?= $rBouquet["id"] ?>"
+                                                                                                name="bouquet[]"
+                                                                                                value="<?= $rBouquet["id"] ?>"
+                                                                                                <?php if (isset($rUser)) {
+                                                                                                    if (in_array($rBouquet["id"], json_decode($rUser["bouquet"], True))) {
+                                                                                                        echo " checked";
+                                                                                                    }
+                                                                                                } ?>>
+                                                                                            <label
+                                                                                                class="custom-control-label"
+                                                                                                for="bouquet-<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></label>
                                                                                         </div>
                                                                                     </div>
                                                                                 <?php } ?>
@@ -675,13 +765,19 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </div> <!-- end row -->
                                                                     <ul class="list-inline wizard mb-0">
                                                                         <li class="next list-inline-item float-right">
-                                                                            <a href="javascript: void(0);" onClick="selectAll()" class="btn btn-secondary"><?= $_["select_all"] ?></a>
-                                                                            <a href="javascript: void(0);" onClick="selectNone()" class="btn btn-secondary"><?= $_["deselect_all"] ?></a>
-                                                                            <input name="submit_user" type="submit" class="btn btn-primary" value="<?php if (isset($rUser)) {
-                                                                                                                                                        echo $_["edit"];
-                                                                                                                                                    } else {
-                                                                                                                                                        echo $_["add"];
-                                                                                                                                                    } ?>" />
+                                                                            <a href="javascript: void(0);"
+                                                                                onClick="selectAll()"
+                                                                                class="btn btn-secondary"><?= $_["select_all"] ?></a>
+                                                                            <a href="javascript: void(0);"
+                                                                                onClick="selectNone()"
+                                                                                class="btn btn-secondary"><?= $_["deselect_all"] ?></a>
+                                                                            <input name="submit_user" type="submit"
+                                                                                class="btn btn-primary"
+                                                                                value="<?php if (isset($rUser)) {
+                                                                                            echo $_["edit"];
+                                                                                        } else {
+                                                                                            echo $_["add"];
+                                                                                        } ?>" />
                                                                         </li>
                                                                     </ul>
                                                                 </div>

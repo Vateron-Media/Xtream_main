@@ -23,18 +23,17 @@
 struct _zend_property_info;
 
 #define ZEND_WRONG_PROPERTY_INFO \
-	((struct _zend_property_info*)((intptr_t)-1))
+	((struct _zend_property_info *)((intptr_t) - 1))
 
-#define ZEND_DYNAMIC_PROPERTY_OFFSET               ((uintptr_t)(intptr_t)(-1))
+#define ZEND_DYNAMIC_PROPERTY_OFFSET ((uintptr_t)(intptr_t)(-1))
 
-#define IS_VALID_PROPERTY_OFFSET(offset)           ((intptr_t)(offset) > 0)
-#define IS_WRONG_PROPERTY_OFFSET(offset)           ((intptr_t)(offset) == 0)
-#define IS_DYNAMIC_PROPERTY_OFFSET(offset)         ((intptr_t)(offset) < 0)
+#define IS_VALID_PROPERTY_OFFSET(offset) ((intptr_t)(offset) > 0)
+#define IS_WRONG_PROPERTY_OFFSET(offset) ((intptr_t)(offset) == 0)
+#define IS_DYNAMIC_PROPERTY_OFFSET(offset) ((intptr_t)(offset) < 0)
 
 #define IS_UNKNOWN_DYNAMIC_PROPERTY_OFFSET(offset) (offset == ZEND_DYNAMIC_PROPERTY_OFFSET)
-#define ZEND_DECODE_DYN_PROP_OFFSET(offset)        ((uintptr_t)(-(intptr_t)(offset) - 2))
-#define ZEND_ENCODE_DYN_PROP_OFFSET(offset)        ((uintptr_t)(-((intptr_t)(offset) + 2)))
-
+#define ZEND_DECODE_DYN_PROP_OFFSET(offset) ((uintptr_t)(-(intptr_t)(offset) - 2))
+#define ZEND_ENCODE_DYN_PROP_OFFSET(offset) ((uintptr_t)(-((intptr_t)(offset) + 2)))
 
 /* The following rule applies to read_property() and read_dimension() implementations:
    If you return a zval which is not otherwise referenced by the extension or the engine's
@@ -45,7 +44,6 @@ typedef zval *(*zend_object_read_property_t)(zval *object, zval *member, int typ
 
 /* Used to fetch dimension from the object, read-only */
 typedef zval *(*zend_object_read_dimension_t)(zval *object, zval *offset, int type, zval *rv);
-
 
 /* The following rule applies to write_property() and write_dimension() implementations:
    If you receive a value zval in write_property/write_dimension, you may only modify it if
@@ -58,7 +56,6 @@ typedef void (*zend_object_write_property_t)(zval *object, zval *member, zval *v
 /* Used to set dimension of the object */
 typedef void (*zend_object_write_dimension_t)(zval *object, zval *offset, zval *value);
 
-
 /* Used to create pointer to the property of the object, for future direct r/w access */
 typedef zval *(*zend_object_get_property_ptr_ptr_t)(zval *object, zval *member, int type, void **cache_slot);
 
@@ -69,7 +66,7 @@ typedef void (*zend_object_set_t)(zval *object, zval *value);
 /* Used to get object value. Can be used when converting object value to
  * one of the basic types and when using scalar ops (like ++, +=) on the object
  */
-typedef zval* (*zend_object_get_t)(zval *object, zval *rv);
+typedef zval *(*zend_object_get_t)(zval *object, zval *rv);
 
 /* Used to check if a property of the object exists */
 /* param has_set_exists:
@@ -104,7 +101,7 @@ typedef zend_function *(*zend_object_get_constructor_t)(zend_object *object);
 /* Object maintenance/destruction */
 typedef void (*zend_object_dtor_obj_t)(zend_object *object);
 typedef void (*zend_object_free_obj_t)(zend_object *object);
-typedef zend_object* (*zend_object_clone_obj_t)(zval *object);
+typedef zend_object *(*zend_object_clone_obj_t)(zval *object);
 
 /* Get class name for display in var_dump and other debugging functions.
  * Must be defined and must return a non-NULL value. */
@@ -128,38 +125,39 @@ typedef HashTable *(*zend_object_get_gc_t)(zval *object, zval **table, int *n);
 
 typedef int (*zend_object_do_operation_t)(zend_uchar opcode, zval *result, zval *op1, zval *op2);
 
-struct _zend_object_handlers {
+struct _zend_object_handlers
+{
 	/* offset of real object header (usually zero) */
-	int										offset;
+	int offset;
 	/* general object functions */
-	zend_object_free_obj_t					free_obj;
-	zend_object_dtor_obj_t					dtor_obj;
-	zend_object_clone_obj_t					clone_obj;
+	zend_object_free_obj_t free_obj;
+	zend_object_dtor_obj_t dtor_obj;
+	zend_object_clone_obj_t clone_obj;
 	/* individual object functions */
-	zend_object_read_property_t				read_property;
-	zend_object_write_property_t			write_property;
-	zend_object_read_dimension_t			read_dimension;
-	zend_object_write_dimension_t			write_dimension;
-	zend_object_get_property_ptr_ptr_t		get_property_ptr_ptr;
-	zend_object_get_t						get;
-	zend_object_set_t						set;
-	zend_object_has_property_t				has_property;
-	zend_object_unset_property_t			unset_property;
-	zend_object_has_dimension_t				has_dimension;
-	zend_object_unset_dimension_t			unset_dimension;
-	zend_object_get_properties_t			get_properties;
-	zend_object_get_method_t				get_method;
-	zend_object_call_method_t				call_method;
-	zend_object_get_constructor_t			get_constructor;
-	zend_object_get_class_name_t			get_class_name;
-	zend_object_compare_t					compare_objects;
-	zend_object_cast_t						cast_object;
-	zend_object_count_elements_t			count_elements;
-	zend_object_get_debug_info_t			get_debug_info;
-	zend_object_get_closure_t				get_closure;
-	zend_object_get_gc_t					get_gc;
-	zend_object_do_operation_t				do_operation;
-	zend_object_compare_zvals_t				compare;
+	zend_object_read_property_t read_property;
+	zend_object_write_property_t write_property;
+	zend_object_read_dimension_t read_dimension;
+	zend_object_write_dimension_t write_dimension;
+	zend_object_get_property_ptr_ptr_t get_property_ptr_ptr;
+	zend_object_get_t get;
+	zend_object_set_t set;
+	zend_object_has_property_t has_property;
+	zend_object_unset_property_t unset_property;
+	zend_object_has_dimension_t has_dimension;
+	zend_object_unset_dimension_t unset_dimension;
+	zend_object_get_properties_t get_properties;
+	zend_object_get_method_t get_method;
+	zend_object_call_method_t call_method;
+	zend_object_get_constructor_t get_constructor;
+	zend_object_get_class_name_t get_class_name;
+	zend_object_compare_t compare_objects;
+	zend_object_cast_t cast_object;
+	zend_object_count_elements_t count_elements;
+	zend_object_get_debug_info_t get_debug_info;
+	zend_object_get_closure_t get_closure;
+	zend_object_get_gc_t get_gc;
+	zend_object_do_operation_t do_operation;
+	zend_object_compare_zvals_t compare;
 };
 
 BEGIN_EXTERN_C()
@@ -171,9 +169,9 @@ extern const ZEND_API zend_object_handlers std_object_handlers;
 #define zend_get_function_root_class(fbc) \
 	((fbc)->common.prototype ? (fbc)->common.prototype->common.scope : (fbc)->common.scope)
 
-#define ZEND_PROPERTY_ISSET     0x0          /* Property exists and is not NULL */
+#define ZEND_PROPERTY_ISSET 0x0				 /* Property exists and is not NULL */
 #define ZEND_PROPERTY_NOT_EMPTY ZEND_ISEMPTY /* Property is not empty */
-#define ZEND_PROPERTY_EXISTS    0x2          /* Property exists */
+#define ZEND_PROPERTY_EXISTS 0x2			 /* Property exists */
 
 ZEND_API void zend_class_init_statics(zend_class_entry *ce);
 ZEND_API zend_function *zend_std_get_static_method(zend_class_entry *ce, zend_string *function_name_strval, const zval *key);
@@ -210,12 +208,17 @@ ZEND_API zend_function *zend_get_call_trampoline_func(zend_class_entry *ce, zend
 
 ZEND_API uint32_t *zend_get_property_guard(zend_object *zobj, zend_string *member);
 
-#define zend_free_trampoline(func) do { \
-		if ((func) == &EG(trampoline)) { \
+#define zend_free_trampoline(func)                      \
+	do                                                  \
+	{                                                   \
+		if ((func) == &EG(trampoline))                  \
+		{                                               \
 			EG(trampoline).common.function_name = NULL; \
-		} else { \
-			efree(func); \
-		} \
+		}                                               \
+		else                                            \
+		{                                               \
+			efree(func);                                \
+		}                                               \
 	} while (0)
 
 END_EXTERN_C()

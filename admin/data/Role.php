@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 	This class handles all the data you can get from a Role
  *
@@ -9,7 +10,7 @@
  * 	@copyright Licensed under BSD (http://www.opensource.org/licenses/bsd-license.php)
  */
 
-class Role{
+class Role {
 
     //------------------------------------------------------------------------------
     // Class Variables
@@ -56,8 +57,7 @@ class Role{
      *  @param string $item The item of the $data array you want
      *  @return array
      */
-    public function get($item = ''){
+    public function get($item = '') {
         return (empty($item)) ? $this->_data : $this->_data[$item];
     }
 }
-?>

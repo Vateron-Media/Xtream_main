@@ -92,7 +92,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./bouquets.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_bouquets"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_bouquets"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
@@ -134,38 +135,44 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#bouquet-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#bouquet-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <?php if (isset($rBouquetArr)) { ?>
                                                     <li class="nav-item">
-                                                        <a href="#channels" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#channels" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-play mr-1"></i>
                                                             <span class="d-none d-sm-inline"><?= $_["streams"] ?></span>
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="#vod" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#vod" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-movie mr-1"></i>
                                                             <span class="d-none d-sm-inline"><?= $_["movies"] ?></span>
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="#series" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#series" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-youtube-tv mr-1"></i>
                                                             <span class="d-none d-sm-inline"><?= $_["series"] ?></span>
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="#radios" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#radios" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-radio mr-1"></i>
                                                             <span class="d-none d-sm-inline"><?= $_["radio"] ?></span>
                                                         </a>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <a href="#review" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#review" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-book-open-variant mr-1"></i>
                                                             <span class="d-none d-sm-inline"><?= $_["review"] ?></span>
                                                         </a>
@@ -177,11 +184,13 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="bouquet_name"><?= $_["bouquet_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="bouquet_name"><?= $_["bouquet_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="bouquet_name" name="bouquet_name" value="<?php if (isset($rBouquetArr)) {
-                                                                                                                                                                echo htmlspecialchars($rBouquetArr["bouquet_name"]);
-                                                                                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="bouquet_name" name="bouquet_name" value="<?php if (isset($rBouquetArr)) {
+                                                                                                                            echo htmlspecialchars($rBouquetArr["bouquet_name"]);
+                                                                                                                        } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -189,9 +198,11 @@ if ($rSettings["sidebar"]) { ?>
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
                                                             <?php if (isset($rBouquetArr)) { ?>
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["next"] ?></a>
                                                             <?php } else { ?>
-                                                                <input name="submit_bouquet" type="submit" class="btn btn-primary" value="<?= $_["add"] ?>" />
+                                                                <input name="submit_bouquet" type="submit"
+                                                                    class="btn btn-primary" value="<?= $_["add"] ?>" />
                                                             <?php } ?>
                                                         </li>
                                                     </ul>
@@ -201,20 +212,28 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="category_name"><?= $_["category_name"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="category_name"><?= $_["category_name"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <select id="category_id" class="form-control" data-toggle="select2">
-                                                                            <option value="" selected><?= $_["all_categories"] ?></option>
+                                                                        <select id="category_id" class="form-control"
+                                                                            data-toggle="select2">
+                                                                            <option value="" selected>
+                                                                                <?= $_["all_categories"] ?>
+                                                                            </option>
                                                                             <?php foreach ($rCategories as $rCategory) { ?>
-                                                                                <option value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                <option value="<?= $rCategory["id"] ?>">
+                                                                                    <?= $rCategory["category_name"] ?>
+                                                                                </option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="stream_search"><?= $_["search"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="stream_search"><?= $_["search"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="stream_search" value="">
+                                                                        <input type="text" class="form-control"
+                                                                            id="stream_search" value="">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -224,7 +243,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 <th class="text-center"><?= $_["id"] ?></th>
                                                                                 <th><?= $_["stream_name"] ?></th>
                                                                                 <th><?= $_["category"] ?></th>
-                                                                                <th class="text-center"><?= $_["actions"] ?></th>
+                                                                                <th class="text-center"><?= $_["actions"] ?>
+                                                                                </th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody></tbody>
@@ -234,14 +254,18 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                             </li>
                                                             <span class="float-right">
                                                                 <li class="list-inline-item">
-                                                                    <a href="javascript: void(0);" onClick="toggleBouquets('datatable-streams')" class="btn btn-primary"><?= $_["toggle_page"] ?></a>
+                                                                    <a href="javascript: void(0);"
+                                                                        onClick="toggleBouquets('datatable-streams')"
+                                                                        class="btn btn-primary"><?= $_["toggle_page"] ?></a>
                                                                 </li>
                                                                 <li class="next list-inline-item">
-                                                                    <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                    <a href="javascript: void(0);"
+                                                                        class="btn btn-secondary"><?= $_["next"] ?></a>
                                                                 </li>
                                                             </span>
                                                         </ul>
@@ -250,20 +274,28 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="category_name"><?= $_["category_name"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="category_name"><?= $_["category_name"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <select id="category_idv" class="form-control" data-toggle="select2">
-                                                                            <option value="" selected><?= $_["all_categories"] ?></option>
+                                                                        <select id="category_idv" class="form-control"
+                                                                            data-toggle="select2">
+                                                                            <option value="" selected>
+                                                                                <?= $_["all_categories"] ?>
+                                                                            </option>
                                                                             <?php foreach (getCategories("movie") as $rCategory) { ?>
-                                                                                <option value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                <option value="<?= $rCategory["id"] ?>">
+                                                                                    <?= $rCategory["category_name"] ?>
+                                                                                </option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="vod_search"><?= $_["search"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="vod_search"><?= $_["search"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="vod_search" value="">
+                                                                        <input type="text" class="form-control"
+                                                                            id="vod_search" value="">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -273,7 +305,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 <th class="text-center"><?= $_["id"] ?></th>
                                                                                 <th><?= $_["vod_name"] ?></th>
                                                                                 <th><?= $_["category"] ?></th>
-                                                                                <th class="text-center"><?= $_["actions"] ?></th>
+                                                                                <th class="text-center"><?= $_["actions"] ?>
+                                                                                </th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody></tbody>
@@ -283,14 +316,18 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                             </li>
                                                             <span class="float-right">
                                                                 <li class="list-inline-item">
-                                                                    <a href="javascript: void(0);" onClick="toggleBouquets('datatable-vod')" class="btn btn-primary"><?= $_["toggle_page"] ?></a>
+                                                                    <a href="javascript: void(0);"
+                                                                        onClick="toggleBouquets('datatable-vod')"
+                                                                        class="btn btn-primary"><?= $_["toggle_page"] ?></a>
                                                                 </li>
                                                                 <li class="next list-inline-item">
-                                                                    <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                    <a href="javascript: void(0);"
+                                                                        class="btn btn-secondary"><?= $_["next"] ?></a>
                                                                 </li>
                                                             </span>
                                                         </ul>
@@ -299,20 +336,28 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="category_name"><?= $_["category_name"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="category_name"><?= $_["category_name"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <select id="category_ids" class="form-control" data-toggle="select2">
-                                                                            <option value="" selected><?= $_["all_categories"] ?></option>
+                                                                        <select id="category_ids" class="form-control"
+                                                                            data-toggle="select2">
+                                                                            <option value="" selected>
+                                                                                <?= $_["all_categories"] ?>
+                                                                            </option>
                                                                             <?php foreach (getCategories("series") as $rCategory) { ?>
-                                                                                <option value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                <option value="<?= $rCategory["id"] ?>">
+                                                                                    <?= $rCategory["category_name"] ?>
+                                                                                </option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="series_search"><?= $_["search"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="series_search"><?= $_["search"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="series_search" value="">
+                                                                        <input type="text" class="form-control"
+                                                                            id="series_search" value="">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -322,7 +367,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 <th class="text-center"><?= $_["id"] ?></th>
                                                                                 <th><?= $_["series_name"] ?></th>
                                                                                 <th><?= $_["category"] ?></th>
-                                                                                <th class="text-center"><?= $_["actions"] ?></th>
+                                                                                <th class="text-center"><?= $_["actions"] ?>
+                                                                                </th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody></tbody>
@@ -332,14 +378,18 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                             </li>
                                                             <span class="float-right">
                                                                 <li class="list-inline-item">
-                                                                    <a href="javascript: void(0);" onClick="toggleBouquets('datatable-series')" class="btn btn-primary"><?= $_["toggle_page"] ?></a>
+                                                                    <a href="javascript: void(0);"
+                                                                        onClick="toggleBouquets('datatable-series')"
+                                                                        class="btn btn-primary"><?= $_["toggle_page"] ?></a>
                                                                 </li>
                                                                 <li class="next list-inline-item">
-                                                                    <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                    <a href="javascript: void(0);"
+                                                                        class="btn btn-secondary"><?= $_["next"] ?></a>
                                                                 </li>
                                                             </span>
                                                         </ul>
@@ -348,20 +398,28 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="category_idr"><?= $_["category_name"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="category_idr"><?= $_["category_name"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <select id="category_idr" class="form-control" data-toggle="select2">
-                                                                            <option value="" selected><?= $_["all_categories"] ?></option>
+                                                                        <select id="category_idr" class="form-control"
+                                                                            data-toggle="select2">
+                                                                            <option value="" selected>
+                                                                                <?= $_["all_categories"] ?>
+                                                                            </option>
                                                                             <?php foreach (getCategories("radio") as $rCategory) { ?>
-                                                                                <option value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                <option value="<?= $rCategory["id"] ?>">
+                                                                                    <?= $rCategory["category_name"] ?>
+                                                                                </option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="radios_search"><?= $_["search"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="radios_search"><?= $_["search"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="radios_search" value="">
+                                                                        <input type="text" class="form-control"
+                                                                            id="radios_search" value="">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -371,7 +429,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 <th class="text-center"><?= $_["id"] ?></th>
                                                                                 <th><?= $_["station_name"] ?></th>
                                                                                 <th><?= $_["category"] ?></th>
-                                                                                <th class="text-center"><?= $_["actions"] ?></th>
+                                                                                <th class="text-center"><?= $_["actions"] ?>
+                                                                                </th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody></tbody>
@@ -381,14 +440,18 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                             </li>
                                                             <span class="float-right">
                                                                 <li class="list-inline-item">
-                                                                    <a href="javascript: void(0);" onClick="toggleBouquets('datatable-series')" class="btn btn-primary"><?= $_["toggle_page"] ?></a>
+                                                                    <a href="javascript: void(0);"
+                                                                        onClick="toggleBouquets('datatable-series')"
+                                                                        class="btn btn-primary"><?= $_["toggle_page"] ?></a>
                                                                 </li>
                                                                 <li class="next list-inline-item">
-                                                                    <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                    <a href="javascript: void(0);"
+                                                                        class="btn btn-secondary"><?= $_["next"] ?></a>
                                                                 </li>
                                                             </span>
                                                         </ul>
@@ -403,7 +466,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 <th class="text-center"><?= $_["id"] ?></th>
                                                                                 <th><?= $_["type"] ?></th>
                                                                                 <th><?= $_["display_name"] ?></th>
-                                                                                <th class="text-center"><?= $_["actions"] ?></th>
+                                                                                <th class="text-center"><?= $_["actions"] ?>
+                                                                                </th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
@@ -414,14 +478,16 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                             </li>
                                                             <li class="next list-inline-item float-right">
-                                                                <input name="submit_bouquet" type="submit" class="btn btn-primary" value="<?php if (isset($rBouquetArr)) {
-                                                                                                                                                echo $_["edit"];
-                                                                                                                                            } else {
-                                                                                                                                                echo $_["add"];
-                                                                                                                                            } ?>" />
+                                                                <input name="submit_bouquet" type="submit"
+                                                                    class="btn btn-primary" value="<?php if (isset($rBouquetArr)) {
+                                                                                                        echo $_["edit"];
+                                                                                                    } else {
+                                                                                                        echo $_["add"];
+                                                                                                    } ?>" />
                                                             </li>
                                                         </ul>
                                                     </div>

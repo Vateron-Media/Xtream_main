@@ -1,12 +1,10 @@
 <?php
 
-class CreateEndElementTests extends AbstractUnitTests
-{
+class CreateEndElementTests extends AbstractUnitTests {
     /**
      * @covers XML_Util::createEndElement()
      */
-    public function testCreateEndElementBasicUsage()
-    {
+    public function testCreateEndElementBasicUsage() {
         $original = "myTag";
         $expected = "</myTag>";
         $this->assertEquals($expected, XML_Util::createEndElement($original));
@@ -15,8 +13,7 @@ class CreateEndElementTests extends AbstractUnitTests
     /**
      * @covers XML_Util::createEndElement()
      */
-    public function testCreateEndElementWithNamespacedTag()
-    {
+    public function testCreateEndElementWithNamespacedTag() {
         $original = "myNs:myTag";
         $expected = "</myNs:myTag>";
         $this->assertEquals($expected, XML_Util::createEndElement($original));

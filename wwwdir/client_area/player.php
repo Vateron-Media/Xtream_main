@@ -53,10 +53,12 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
         <?php
         if (ipTV_lib::$settings["client_area_plugin"] == "vlc") {
         ?>
-            <object classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" codebase="http://download.videolan.org/pub/videolan/vlc/last/win32/axvlc.cab" id="vlc">
-                <embed type="application/x-vlc-plugin" pluginspage="http://www.videolan.org" name="vlc" class="fullscreen-bg fullscreen-bg__video" target="<?php
-                                                                                                                                                            echo $B80b91ec08fe2fc8b600751840264e3a;
-                                                                                                                                                            ?>
+            <object classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921"
+                codebase="http://download.videolan.org/pub/videolan/vlc/last/win32/axvlc.cab" id="vlc">
+                <embed type="application/x-vlc-plugin" pluginspage="http://www.videolan.org" name="vlc"
+                    class="fullscreen-bg fullscreen-bg__video" target="<?php
+                                                                        echo $B80b91ec08fe2fc8b600751840264e3a;
+                                                                        ?>
 " />
             </object>
         <?php
@@ -87,9 +89,10 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
 
     </body>
 
-    </html><?php
-            // [PHPDeobfuscator] Implied script end
-            return;
-        }
-        header("Location: index.php");
-        die;
+    </html>
+<?php
+    // [PHPDeobfuscator] Implied script end
+    return;
+}
+header("Location: index.php");
+die;

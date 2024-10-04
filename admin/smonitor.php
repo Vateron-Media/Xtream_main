@@ -37,7 +37,9 @@ if ($rSettings["sidebar"]) { ?>
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body" style="overflow-x:auto;">
-                                    <center><iframe src="./monitor/index.php" style=" background: white; border: none; width: 1520px; height: 1860px; align: center"></iframe></center>
+                                    <center><iframe src="./monitor/index.php"
+                                            style=" background: white; border: none; width: 1520px; height: 1860px; align: center"></iframe>
+                                    </center>
                                 </div> <!-- end card-body -->
                             </div> <!-- end card-->
 

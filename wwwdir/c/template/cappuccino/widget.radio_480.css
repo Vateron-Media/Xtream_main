@@ -1,7 +1,7 @@
-.radio_widget_block{
+.radio_widget_block {
     position: absolute;
     left: 22px;
-    top : 229px;
+    top: 229px;
     width: 205px;
     height: 68px;
     color: #fff;
@@ -13,20 +13,20 @@
     padding: 0 0 3px 0;
 }
 
-.radio_widget_block .title{
+.radio_widget_block .title {
     white-space: pre;
     overflow: hidden;
     margin: 0 5px;
     text-overflow: ellipsis;
 }
 
-.radio_widget_block .items{
+.radio_widget_block .items {
     margin: 0 auto;
     color: #FFE8C7;
     font-size: 14px;
 }
 
-.radio_widget_block .prev_btn{
+.radio_widget_block .prev_btn {
     width: 27px;
     height: 21px;
     position: absolute;
@@ -36,7 +36,7 @@
     background-position: -75px 0;
 }
 
-.radio_widget_block .next_btn{
+.radio_widget_block .next_btn {
     width: 27px;
     height: 21px;
     position: absolute;
@@ -46,7 +46,7 @@
     background-position: -48px 0;
 }
 
-.radio_widget_block .play_btn{
+.radio_widget_block .play_btn {
     width: 24px;
     height: 21px;
     position: absolute;
@@ -56,7 +56,7 @@
     background-position: 0 0;
 }
 
-.radio_widget_block .pause_btn{
+.radio_widget_block .pause_btn {
     position: absolute;
     bottom: 3px;
     left: 89px;

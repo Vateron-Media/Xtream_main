@@ -3,8 +3,8 @@
 
 #ifndef HAVE_GD_BUNDLED
 /* from gd_compat.c */
-const char * gdPngGetVersionString();
-const char * gdJpegGetVersionString();
+const char *gdPngGetVersionString();
+const char *gdJpegGetVersionString();
 #endif
 
 /* from gd_compat.c of libgd/gd_security.c */

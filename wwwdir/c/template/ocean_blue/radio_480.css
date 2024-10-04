@@ -1,4 +1,4 @@
-#radio .playing_block{
+#radio .playing_block {
     width: 24px;
     height: 21px;
     float: left;
@@ -7,16 +7,16 @@
     background-position: 0 0;
 }
 
-#radio .active_playing_block{
+#radio .active_playing_block {
     width: 24px;
     height: 31px;
     margin: 4px 2px 0 0;
-    float:left;
+    float: left;
     background-image: url("i/mb_player.png");
     background-position: 0 -21px;
 }
 
-#radio .paused_block{
+#radio .paused_block {
     width: 24px;
     height: 21px;
     float: left;
@@ -25,7 +25,7 @@
     background-position: -24px 0;
 }
 
-#radio .active_paused_block{
+#radio .active_paused_block {
     width: 24px;
     height: 31px;
     margin: 4px 2px 0 0;
@@ -34,6 +34,7 @@
     background-position: -24px -21px;
 }
 
-#radio .active_row_bg[status="playing"] .active_name_block, #radio .playing .active_name_block{
+#radio .active_row_bg[status="playing"] .active_name_block,
+#radio .playing .active_name_block {
     margin-top: 3px;
 }

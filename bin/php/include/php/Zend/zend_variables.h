@@ -31,18 +31,23 @@ ZEND_API void ZEND_FASTCALL zval_copy_ctor_func(zval *zvalue);
 
 static zend_always_inline void zval_ptr_dtor_nogc(zval *zval_ptr)
 {
-	if (Z_REFCOUNTED_P(zval_ptr) && !Z_DELREF_P(zval_ptr)) {
+	if (Z_REFCOUNTED_P(zval_ptr) && !Z_DELREF_P(zval_ptr))
+	{
 		rc_dtor_func(Z_COUNTED_P(zval_ptr));
 	}
 }
 
 static zend_always_inline void i_zval_ptr_dtor(zval *zval_ptr ZEND_FILE_LINE_DC)
 {
-	if (Z_REFCOUNTED_P(zval_ptr)) {
+	if (Z_REFCOUNTED_P(zval_ptr))
+	{
 		zend_refcounted *ref = Z_COUNTED_P(zval_ptr);
-		if (!GC_DELREF(ref)) {
+		if (!GC_DELREF(ref))
+		{
 			rc_dtor_func(ref);
-		} else {
+		}
+		else
+		{
 			gc_check_possible_root(ref);
 		}
 	}
@@ -50,25 +55,32 @@ static zend_always_inline void i_zval_ptr_dtor(zval *zval_ptr ZEND_FILE_LINE_DC)
 
 static zend_always_inline void zval_copy_ctor(zval *zvalue)
 {
-	if (Z_TYPE_P(zvalue) == IS_ARRAY) {
+	if (Z_TYPE_P(zvalue) == IS_ARRAY)
+	{
 		ZVAL_ARR(zvalue, zend_array_dup(Z_ARR_P(zvalue)));
-	} else if (Z_REFCOUNTED_P(zvalue)) {
+	}
+	else if (Z_REFCOUNTED_P(zvalue))
+	{
 		Z_ADDREF_P(zvalue);
 	}
 }
 
 static zend_always_inline void zval_opt_copy_ctor(zval *zvalue)
 {
-	if (Z_OPT_TYPE_P(zvalue) == IS_ARRAY) {
+	if (Z_OPT_TYPE_P(zvalue) == IS_ARRAY)
+	{
 		ZVAL_ARR(zvalue, zend_array_dup(Z_ARR_P(zvalue)));
-	} else if (Z_OPT_REFCOUNTED_P(zvalue)) {
+	}
+	else if (Z_OPT_REFCOUNTED_P(zvalue))
+	{
 		Z_ADDREF_P(zvalue);
 	}
 }
 
 static zend_always_inline void zval_ptr_dtor_str(zval *zval_ptr)
 {
-	if (Z_REFCOUNTED_P(zval_ptr) && !Z_DELREF_P(zval_ptr)) {
+	if (Z_REFCOUNTED_P(zval_ptr) && !Z_DELREF_P(zval_ptr))
+	{
 		ZEND_ASSERT(Z_TYPE_P(zval_ptr) == IS_STRING);
 		ZEND_ASSERT(!ZSTR_IS_INTERNED(Z_STR_P(zval_ptr)));
 		ZEND_ASSERT(!(GC_FLAGS(Z_STR_P(zval_ptr)) & IS_STR_PERSISTENT));

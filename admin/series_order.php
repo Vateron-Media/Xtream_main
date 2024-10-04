@@ -54,7 +54,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./series.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_series"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_series"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
@@ -67,15 +68,19 @@ if ($rSettings["sidebar"]) { ?>
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./series_order.php?id=<?= $_GET["id"] ?>" method="POST" id="episode_order_form">
-                                        <input type="hidden" id="episode_order_array" name="episode_order_array" value="" />
+                                    <form action="./series_order.php?id=<?= $_GET["id"] ?>" method="POST"
+                                        id="episode_order_form">
+                                        <input type="hidden" id="episode_order_array" name="episode_order_array"
+                                            value="" />
                                         <input type="hidden" name="reorder" value="<?= $_GET["id"] ?>" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <?php foreach ($rSeasons as $rSeasonNum => $rSeasonArray) { ?>
                                                     <li class="nav-item">
-                                                        <a href="#season-<?= $rSeasonNum ?>" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                                            <span class="d-none d-sm-inline">S<?= sprintf('%02d', $rSeasonNum) ?></span>
+                                                        <a href="#season-<?= $rSeasonNum ?>" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
+                                                            <span
+                                                                class="d-none d-sm-inline">S<?= sprintf('%02d', $rSeasonNum) ?></span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
@@ -86,25 +91,40 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <p class="sub-header">
-                                                                    <?= $_["to_re-order"] ?> <i class="mdi mdi-chevron-up"></i> <?= $_["and"] ?> <i class="mdi mdi-chevron-down"></i> <?= $_["buttons_to_move_it"] ?>
+                                                                    <?= $_["to_re-order"] ?> <i
+                                                                        class="mdi mdi-chevron-up"></i> <?= $_["and"] ?> <i
+                                                                        class="mdi mdi-chevron-down"></i>
+                                                                    <?= $_["buttons_to_move_it"] ?>
                                                                 </p>
-                                                                <select multiple id="sort_episode_<?= $rSeasonNum ?>" class="form-control" style="min-height:400px;">
+                                                                <select multiple id="sort_episode_<?= $rSeasonNum ?>"
+                                                                    class="form-control" style="min-height:400px;">
                                                                     <?php $i = 0;
                                                                     foreach ($rSeasonArray as $rEpisode) {
                                                                         $i++; ?>
-                                                                        <option value="<?= $rEpisode["id"] ?>"><?= $i ?> - <?= $rEpisode["title"] ?></option>
+                                                                        <option value="<?= $rEpisode["id"] ?>"><?= $i ?> -
+                                                                            <?= $rEpisode["title"] ?>
+                                                                        </option>
                                                                     <?php } ?>
                                                                 </select>
                                                             </div> <!-- end col -->
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0 add-margin-top-20">
                                                             <li class="list-inline-item">
-                                                                <a href="javascript: void(0);" onClick="MoveUp(<?= $rSeasonNum ?>)" class="btn btn-purple"><i class="mdi mdi-chevron-up"></i></a>
-                                                                <a href="javascript: void(0);" onClick="MoveDown(<?= $rSeasonNum ?>)" class="btn btn-purple"><i class="mdi mdi-chevron-down"></i></a>
-                                                                <a href="javascript: void(0);" onClick="AtoZ(<?= $rSeasonNum ?>)" class="btn btn-info"><?= $_["sort_all_a_to_z"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    onClick="MoveUp(<?= $rSeasonNum ?>)"
+                                                                    class="btn btn-purple"><i
+                                                                        class="mdi mdi-chevron-up"></i></a>
+                                                                <a href="javascript: void(0);"
+                                                                    onClick="MoveDown(<?= $rSeasonNum ?>)"
+                                                                    class="btn btn-purple"><i
+                                                                        class="mdi mdi-chevron-down"></i></a>
+                                                                <a href="javascript: void(0);"
+                                                                    onClick="AtoZ(<?= $rSeasonNum ?>)"
+                                                                    class="btn btn-info"><?= $_["sort_all_a_to_z"] ?></a>
                                                             </li>
                                                             <li class="list-inline-item float-right">
-                                                                <button type="submit" class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary waves-effect waves-light"><?= $_["save_changes"] ?></button>
                                                             </li>
                                                         </ul>
                                                     </div>

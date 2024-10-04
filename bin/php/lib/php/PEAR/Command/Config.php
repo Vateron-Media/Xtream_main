@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Config (config-show, config-get, config-set, config-help, config-create commands)
  *
@@ -32,8 +33,7 @@ require_once 'PEAR/Command/Common.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
-class PEAR_Command_Config extends PEAR_Command_Common
-{
+class PEAR_Command_Config extends PEAR_Command_Common {
     var $commands = array(
         'config-show' => array(
             'summary' => 'Show All Settings',
@@ -44,8 +44,8 @@ class PEAR_Command_Config extends PEAR_Command_Common
                     'shortopt' => 'c',
                     'doc' => 'show configuration variables for another channel',
                     'arg' => 'CHAN',
-                    ),
-),
+                ),
+            ),
             'doc' => '[layer]
 Displays all configuration values.  An optional argument
 may be used to tell which configuration layer to display.  Valid
@@ -53,7 +53,7 @@ configuration layers are "user", "system" and "default". To display
 configurations for different channels, set the default_channel
 configuration variable and run config-show again.
 ',
-            ),
+        ),
         'config-get' => array(
             'summary' => 'Show One Setting',
             'function' => 'doConfigGet',
@@ -63,8 +63,8 @@ configuration variable and run config-show again.
                     'shortopt' => 'c',
                     'doc' => 'show configuration variables for another channel',
                     'arg' => 'CHAN',
-                    ),
-),
+                ),
+            ),
             'doc' => '<parameter> [layer]
 Displays the value of one configuration parameter.  The
 first argument is the name of the parameter, an optional second argument
@@ -74,7 +74,7 @@ will be picked from the first layer that defines the parameter, in the order
 just specified.  The configuration value will be retrieved for the channel
 specified by the default_channel configuration variable.
 ',
-            ),
+        ),
         'config-set' => array(
             'summary' => 'Change Setting',
             'function' => 'doConfigSet',
@@ -84,8 +84,8 @@ specified by the default_channel configuration variable.
                     'shortopt' => 'c',
                     'doc' => 'show configuration variables for another channel',
                     'arg' => 'CHAN',
-                    ),
-),
+                ),
+            ),
             'doc' => '<parameter> <value> [layer]
 Sets the value of one configuration parameter.  The first argument is
 the name of the parameter, the second argument is the new value.  Some
@@ -96,7 +96,7 @@ configuration parameter.  The default layer is "user".  The
 configuration value will be set for the current channel, which
 is controlled by the default_channel configuration variable.
 ',
-            ),
+        ),
         'config-help' => array(
             'summary' => 'Show Information About Setting',
             'function' => 'doConfigHelp',
@@ -106,7 +106,7 @@ is controlled by the default_channel configuration variable.
 Displays help for a configuration parameter.  Without arguments it
 displays help for all configuration parameters.
 ',
-           ),
+        ),
         'config-create' => array(
             'summary' => 'Create a Default configuration file',
             'function' => 'doConfigCreate',
@@ -115,7 +115,7 @@ displays help for all configuration parameters.
                 'windows' => array(
                     'shortopt' => 'w',
                     'doc' => 'create a config file for a windows install',
-                    ),
+                ),
             ),
             'doc' => '<root path> <filename>
 Create a default configuration file with all directory configuration
@@ -124,21 +124,19 @@ This is useful especially for creating a configuration file for a remote
 PEAR installation (using the --remoteconfig option of install, upgrade,
 and uninstall).
 ',
-            ),
-        );
+        ),
+    );
 
     /**
      * PEAR_Command_Config constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 
-    function doConfigShow($command, $options, $params)
-    {
+    function doConfigShow($command, $options, $params) {
         $layer = null;
         if (is_array($params)) {
             $layer = isset($params[0]) ? $params[0] : null;
@@ -173,19 +171,18 @@ and uninstall).
                 $value = 'true';
             }
 
-            $data['data'][$this->config->getGroup($key)][] = array($this->config->getPrompt($key) , $key, $value);
+            $data['data'][$this->config->getGroup($key)][] = array($this->config->getPrompt($key), $key, $value);
         }
 
         foreach ($this->config->getLayers() as $layer) {
-            $data['data']['Config Files'][] = array(ucfirst($layer) . ' Configuration File', 'Filename' , $this->config->getConfFile($layer));
+            $data['data']['Config Files'][] = array(ucfirst($layer) . ' Configuration File', 'Filename', $this->config->getConfFile($layer));
         }
 
         $this->ui->outputData($data, $command);
         return true;
     }
 
-    function doConfigGet($command, $options, $params)
-    {
+    function doConfigGet($command, $options, $params) {
         $args_cnt = is_array($params) ? count($params) : 0;
         switch ($args_cnt) {
             case 1:
@@ -215,8 +212,7 @@ and uninstall).
         return true;
     }
 
-    function doConfigSet($command, $options, $params)
-    {
+    function doConfigSet($command, $options, $params) {
         // $param[0] -> a parameter to set
         // $param[1] -> the value for the parameter
         // $param[2] -> the layer
@@ -242,15 +238,16 @@ and uninstall).
             return $this->raiseError('Channel "' . $params[1] . '" does not exist');
         }
 
-        if ($params[0] == 'preferred_mirror'
+        if (
+            $params[0] == 'preferred_mirror'
             && (
                 !$reg->mirrorExists($channel, $params[1]) &&
                 (!$reg->channelExists($params[1]) || $channel != $params[1])
             )
         ) {
-            $msg  = 'Channel Mirror "' . $params[1] . '" does not exist';
+            $msg = 'Channel Mirror "' . $params[1] . '" does not exist';
             $msg .= ' in your registry for channel "' . $channel . '".';
-            $msg .= "\n" . 'Attempt to run "pear channel-update ' . $channel .'"';
+            $msg .= "\n" . 'Attempt to run "pear channel-update ' . $channel . '"';
             $msg .= ' if you believe this mirror should exist as you may';
             $msg .= ' have outdated channel information.';
             return $this->raiseError($msg);
@@ -279,15 +276,14 @@ and uninstall).
         return true;
     }
 
-    function doConfigHelp($command, $options, $params)
-    {
+    function doConfigHelp($command, $options, $params) {
         if (empty($params)) {
             $params = $this->config->getKeys();
         }
 
-        $data['caption']  = "Config help" . ((count($params) == 1) ? " for $params[0]" : '');
+        $data['caption'] = "Config help" . ((count($params) == 1) ? " for $params[0]" : '');
         $data['headline'] = array('Name', 'Type', 'Description');
-        $data['border']   = true;
+        $data['border'] = true;
         foreach ($params as $name) {
             $type = $this->config->getType($name);
             $docs = $this->config->getDocs($name);
@@ -302,8 +298,7 @@ and uninstall).
         $this->ui->outputData($data, $command);
     }
 
-    function doConfigCreate($command, $options, $params)
-    {
+    function doConfigCreate($command, $options, $params) {
         if (count($params) != 2) {
             return PEAR::raiseError('config-create: must have 2 parameters, root path and ' .
                 'filename to save as');
@@ -312,9 +307,11 @@ and uninstall).
         $root = $params[0];
         // Clean up the DIRECTORY_SEPARATOR mess
         $ds2 = DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR;
-        $root = preg_replace(array('!\\\\+!', '!/+!', "!$ds2+!"),
-                             array('/', '/', '/'),
-                            $root);
+        $root = preg_replace(
+            array('!\\\\+!', '!/+!', "!$ds2+!"),
+            array('/', '/', '/'),
+            $root
+        );
         if ($root[0] != '/') {
             if (!isset($options['windows'])) {
                 return PEAR::raiseError('Root directory must be an absolute path beginning ' .
@@ -357,12 +354,13 @@ and uninstall).
         $config->set('man_dir', $windows ? "$root\\pear\\man" : "$root/pear/man");
         $config->writeConfigFile();
         $this->_showConfig($config);
-        $this->ui->outputData('Successfully created default configuration file "' . $params[1] . '"',
-            $command);
+        $this->ui->outputData(
+            'Successfully created default configuration file "' . $params[1] . '"',
+            $command
+        );
     }
 
-    function _showConfig(&$config)
-    {
+    function _showConfig(&$config) {
         $params = array('user');
         $keys = $config->getKeys();
         sort($keys);
@@ -381,13 +379,16 @@ and uninstall).
                 $value = 'true';
             }
             $data['data'][$config->getGroup($key)][] =
-                array($config->getPrompt($key) , $key, $value);
+                array($config->getPrompt($key), $key, $value);
         }
 
         foreach ($config->getLayers() as $layer) {
             $data['data']['Config Files'][] =
-                array(ucfirst($layer) . ' Configuration File', 'Filename' ,
-                    $config->getConfFile($layer));
+                array(
+                    ucfirst($layer) . ' Configuration File',
+                    'Filename',
+                    $config->getConfFile($layer)
+                );
         }
 
         $this->ui->outputData($data, 'config-show');
@@ -400,8 +401,7 @@ and uninstall).
      * @param string $layer The layer to search for
      * @return mixed False on no error or the error message
      */
-    function _checkLayer($layer = null)
-    {
+    function _checkLayer($layer = null) {
         if (!empty($layer) && $layer != 'default') {
             $layers = $this->config->getLayers();
             if (!in_array($layer, $layers)) {

@@ -26,7 +26,7 @@ void php_run_ticks(int count);
 
 BEGIN_EXTERN_C()
 PHPAPI void php_add_tick_function(void (*func)(int, void *), void *arg);
-PHPAPI void php_remove_tick_function(void (*func)(int, void *), void * arg);
+PHPAPI void php_remove_tick_function(void (*func)(int, void *), void *arg);
 END_EXTERN_C()
 
 #endif

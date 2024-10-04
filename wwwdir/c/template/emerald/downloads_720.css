@@ -55,7 +55,8 @@
 
 /* </passive row> */
 /* <progress bar> */
-.pb, .pb span {
+.pb,
+.pb span {
     display: block;
     height: 16px;
 }

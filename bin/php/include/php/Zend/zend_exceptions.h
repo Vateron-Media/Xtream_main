@@ -71,10 +71,11 @@ ZEND_API ZEND_COLD void zend_exception_error(zend_object *exception, int severit
 
 static zend_always_inline void zend_rethrow_exception(zend_execute_data *execute_data)
 {
-	if (EX(opline)->opcode != ZEND_HANDLE_EXCEPTION) {
-		EG(opline_before_exception) = EX(opline);
-		EX(opline) = EG(exception_op);
-	}
+   if (EX(opline)->opcode != ZEND_HANDLE_EXCEPTION)
+   {
+      EG(opline_before_exception) = EX(opline);
+      EX(opline) = EG(exception_op);
+   }
 }
 
 END_EXTERN_C()

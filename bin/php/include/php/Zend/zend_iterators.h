@@ -26,7 +26,8 @@
 
 typedef struct _zend_object_iterator zend_object_iterator;
 
-typedef struct _zend_object_iterator_funcs {
+typedef struct _zend_object_iterator_funcs
+{
 	/* release all resources associated with this iterator instance */
 	void (*dtor)(zend_object_iterator *iter);
 
@@ -52,14 +53,16 @@ typedef struct _zend_object_iterator_funcs {
 	void (*invalidate_current)(zend_object_iterator *iter);
 } zend_object_iterator_funcs;
 
-struct _zend_object_iterator {
+struct _zend_object_iterator
+{
 	zend_object std;
 	zval data;
 	const zend_object_iterator_funcs *funcs;
 	zend_ulong index; /* private to fe_reset/fe_fetch opcodes */
 };
 
-typedef struct _zend_class_iterator_funcs {
+typedef struct _zend_class_iterator_funcs
+{
 	union _zend_function *zf_new_iterator;
 	union _zend_function *zf_valid;
 	union _zend_function *zf_current;
@@ -70,7 +73,7 @@ typedef struct _zend_class_iterator_funcs {
 
 BEGIN_EXTERN_C()
 /* given a zval, returns stuff that can be used to iterate it. */
-ZEND_API zend_object_iterator* zend_iterator_unwrap(zval *array_ptr);
+ZEND_API zend_object_iterator *zend_iterator_unwrap(zval *array_ptr);
 
 /* given an iterator, wrap it up as a zval for use by the engine opcodes */
 ZEND_API void zend_iterator_init(zend_object_iterator *iter);

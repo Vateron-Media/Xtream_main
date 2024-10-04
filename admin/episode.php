@@ -308,20 +308,23 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="./episodes.php?series=<?= $_GET["sid"] ?>">
-                                                <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-primary waves-effect waves-light btn-sm">
                                                     <?= $_["view_episodes"] ?>
                                                 </button>
                                             </a>
                                             <?php if (!isset($rEpisode)) {
                                                 if ($rMulti) { ?>
                                                     <a href="./episode.php?sid=<?= $_GET["sid"] ?>">
-                                                        <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                        <button type="button"
+                                                            class="btn btn-info waves-effect waves-light btn-sm">
                                                             <?= $_["add_single"] ?>
                                                         </button>
                                                     </a>
                                                 <?php } else { ?>
                                                     <a href="./episode.php?sid=<?= $_GET["sid"] ?>&multi">
-                                                        <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                        <button type="button"
+                                                            class="btn btn-info waves-effect waves-light btn-sm">
                                                             <?= $_["add_multiple"] ?>
                                                         </button>
                                                     </a>
@@ -387,7 +390,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        <strong><?= $_["error_on_server"] ?> - <?= $rServers[$rServerID]["server_name"] ?></strong><br />
+                                        <strong><?= $_["error_on_server"] ?> -
+                                            <?= $rServers[$rServerID]["server_name"] ?></strong><br />
                                         <?= str_replace("\n", "<br/>", $rEncodeError) ?>
                                     </div>
                             <?php }
@@ -396,7 +400,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body">
                                     <form action="./episode.php<?php if (isset($_GET["id"])) {
                                                                     echo "?id=" . $_GET["id"];
-                                                                } ?>" method="POST" id="stream_form" data-parsley-validate="">
+                                                                } ?>" method="POST" id="stream_form"
+                                        data-parsley-validate="">
                                         <?php if (isset($rEpisode)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rEpisode["id"] ?>" />
                                         <?php }
@@ -407,34 +412,39 @@ if ($rSettings["sidebar"]) { ?>
                                         <?php } else { ?>
                                             <input type="hidden" name="multi" id="multi" value="" />
                                             <input type="hidden" name="server" id="server" value="" />
-                                            <input type="hidden" id="tmdb_id" name="tmdb_id" value="<?php echo htmlspecialchars($rSeries["tmdb_id"]); ?>" />
+                                            <input type="hidden" id="tmdb_id" name="tmdb_id"
+                                                value="<?php echo htmlspecialchars($rSeries["tmdb_id"]); ?>" />
                                         <?php } ?>
                                         <input type="hidden" name="series" value="<?= $rSeries["id"] ?>" />
                                         <input type="hidden" name="server_tree_data" id="server_tree_data" value="" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#stream-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <?php if (!isset($rMulti)) { ?>
                                                     <li class="nav-item">
-                                                        <a href="#episode-information" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                        <a href="#episode-information" data-toggle="tab"
+                                                            class="nav-link rounded-0 pt-2 pb-2">
                                                             <i class="mdi mdi-movie-outline mr-1"></i>
                                                             <span class="d-none d-sm-inline"><?= $_["information"] ?></span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
                                                 <li class="nav-item">
-                                                    <a href="#advanced-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#advanced-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-folder-alert-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["advanced"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#load-balancing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#load-balancing" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-server-network mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["servers"] ?></span>
                                                     </a>
@@ -446,37 +456,55 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="series_name"><?= $_["series_name"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="series_name"><?= $_["series_name"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="series_name" name="series_name" value="<?= $rSeries["title"] ?>" readonly>
+                                                                        <input type="text" class="form-control"
+                                                                            id="series_name" name="series_name"
+                                                                            value="<?= $rSeries["title"] ?>" readonly>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="season_num"><?= $_["season_number"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="season_num"><?= $_["season_number"] ?></label>
                                                                     <div class="col-md-2">
-                                                                        <input type="text" class="form-control text-center" id="season_num" name="season_num" placeholder="" value="<?php if (isset($rEpisode)) {
-                                                                                                                                                                                        echo htmlspecialchars($rEpisode["season"]);
-                                                                                                                                                                                    } ?>" required data-parsley-trigger="change">
+                                                                        <input type="text" class="form-control text-center"
+                                                                            id="season_num" name="season_num" placeholder=""
+                                                                            value="<?php if (isset($rEpisode)) {
+                                                                                        echo htmlspecialchars($rEpisode["season"]);
+                                                                                    } ?>"
+                                                                            required data-parsley-trigger="change">
                                                                     </div>
-                                                                    <label class="col-md-4 col-form-label" for="episode"><?= $_["episode_number"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="episode"><?= $_["episode_number"] ?></label>
                                                                     <div class="col-md-2">
-                                                                        <input type="text" class="form-control text-center" id="episode" name="episode" placeholder="" value="<?php if (isset($rEpisode)) {
-                                                                                                                                                                                    echo htmlspecialchars($rEpisode["episode"]);
-                                                                                                                                                                                } ?>" required data-parsley-trigger="change">
+                                                                        <input type="text" class="form-control text-center"
+                                                                            id="episode" name="episode" placeholder=""
+                                                                            value="<?php if (isset($rEpisode)) {
+                                                                                        echo htmlspecialchars($rEpisode["episode"]);
+                                                                                    } ?>"
+                                                                            required data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="tmdb_search"><?= $_["tmdb_results"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="tmdb_search"><?= $_["tmdb_results"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <select id="tmdb_search" class="form-control" data-toggle="select2"></select>
+                                                                        <select id="tmdb_search" class="form-control"
+                                                                            data-toggle="select2"></select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="stream_display_name"><?= $_["episode_name"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="stream_display_name"><?= $_["episode_name"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="stream_display_name" name="stream_display_name" value="<?php if (isset($rEpisode)) {
-                                                                                                                                                                                echo htmlspecialchars($rEpisode["stream_display_name"]);
-                                                                                                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                        <input type="text" class="form-control"
+                                                                            id="stream_display_name"
+                                                                            name="stream_display_name"
+                                                                            value="<?php if (isset($rEpisode)) {
+                                                                                        echo htmlspecialchars($rEpisode["stream_display_name"]);
+                                                                                    } ?>"
+                                                                            required data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
                                                                 <?php
@@ -486,27 +514,37 @@ if ($rSettings["sidebar"]) { ?>
                                                                     $rEpisodeSource = "";
                                                                 } ?>
                                                                 <div class="form-group row mb-4 stream-url">
-                                                                    <label class="col-md-4 col-form-label" for="stream_source"><?= $_["episode_path"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="stream_source"><?= $_["episode_path"] ?></label>
                                                                     <div class="col-md-8 input-group">
-                                                                        <input type="text" id="stream_source" name="stream_source" class="form-control" value="<?= $rEpisodeSource ?>" required data-parsley-trigger="change">
+                                                                        <input type="text" id="stream_source"
+                                                                            name="stream_source" class="form-control"
+                                                                            value="<?= $rEpisodeSource ?>" required
+                                                                            data-parsley-trigger="change">
                                                                         <div class="input-group-append">
-                                                                            <a href="#file-browser" id="filebrowser" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-folder-open-outline"></i></a>
+                                                                            <a href="#file-browser" id="filebrowser"
+                                                                                class="btn btn-primary waves-effect waves-light"><i
+                                                                                    class="mdi mdi-folder-open-outline"></i></a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="notes"><?= $_["notes"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="notes"><?= $_["notes"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <textarea id="notes" name="notes" class="form-control" rows="3" placeholder=""><?php if (isset($rEpisode)) {
-                                                                                                                                                            echo htmlspecialchars($rEpisode["notes"]);
-                                                                                                                                                        } ?></textarea>
+                                                                        <textarea id="notes" name="notes"
+                                                                            class="form-control" rows="3"
+                                                                            placeholder=""><?php if (isset($rEpisode)) {
+                                                                                                echo htmlspecialchars($rEpisode["notes"]);
+                                                                                            } ?></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div> <!-- end col -->
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="next list-inline-item float-right">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["next"] ?></a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -515,20 +553,32 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="series_name"><?= $_["series_name"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="series_name"><?= $_["series_name"] ?></label>
                                                                     <div class="col-md-6">
-                                                                        <input type="text" class="form-control" id="series_name" name="series_name" value="<?= $rSeries["title"] ?>" readonly>
+                                                                        <input type="text" class="form-control"
+                                                                            id="series_name" name="series_name"
+                                                                            value="<?= $rSeries["title"] ?>" readonly>
                                                                     </div>
                                                                     <div class="col-md-2">
-                                                                        <input type="text" class="form-control text-center" id="season_num" name="season_num" placeholder="<?= $_["season"] ?>" value="" required data-parsley-trigger="change">
+                                                                        <input type="text" class="form-control text-center"
+                                                                            id="season_num" name="season_num"
+                                                                            placeholder="<?= $_["season"] ?>" value=""
+                                                                            required data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4 stream-url">
-                                                                    <label class="col-md-4 col-form-label" for="season_folder"><?= $_["season_folder"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="season_folder"><?= $_["season_folder"] ?></label>
                                                                     <div class="col-md-8 input-group">
-                                                                        <input type="text" id="season_folder" name="season_folder" readonly class="form-control" value="" required data-parsley-trigger="change">
+                                                                        <input type="text" id="season_folder"
+                                                                            name="season_folder" readonly
+                                                                            class="form-control" value="" required
+                                                                            data-parsley-trigger="change">
                                                                         <div class="input-group-append">
-                                                                            <a href="#file-browser" id="filebrowser" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-folder-open-outline"></i></a>
+                                                                            <a href="#file-browser" id="filebrowser"
+                                                                                class="btn btn-primary waves-effect waves-light"><i
+                                                                                    class="mdi mdi-folder-open-outline"></i></a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -536,14 +586,20 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="form-group row mb-4">
                                                                     <div class="col-md-6">
                                                                         <div class="custom-control custom-checkbox">
-                                                                            <input type="checkbox" class="custom-control-input" id="addName1" name="addName1" checked>
-                                                                            <label class="custom-control-label" for="addName1"><?= $_["add_series_name"] ?></label>
+                                                                            <input type="checkbox"
+                                                                                class="custom-control-input" id="addName1"
+                                                                                name="addName1" checked>
+                                                                            <label class="custom-control-label"
+                                                                                for="addName1"><?= $_["add_series_name"] ?></label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="custom-control custom-checkbox">
-                                                                            <input type="checkbox" class="custom-control-input" id="addName2" name="addName2" checked>
-                                                                            <label class="custom-control-label" for="addName2"><?= $_["add_episode_number"] ?></label>
+                                                                            <input type="checkbox"
+                                                                                class="custom-control-input" id="addName2"
+                                                                                name="addName2" checked>
+                                                                            <label class="custom-control-label"
+                                                                                for="addName2"><?= $_["add_episode_number"] ?></label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -551,7 +607,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         </div> <!-- end row -->
                                                         <ul class="list-inline wizard mb-0">
                                                             <li class="next list-inline-item float-right">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["next"] ?></a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -560,54 +617,73 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="movie_image"><?= $_["image_url"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="movie_image"><?= $_["image_url"] ?></label>
                                                                 <div class="col-md-8 input-group">
-                                                                    <input type="text" class="form-control" id="movie_image" name="movie_image" value="<?php if (isset($rEpisode)) {
-                                                                                                                                                            echo htmlspecialchars($rEpisode["properties"]["movie_image"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="movie_image" name="movie_image"
+                                                                        value="<?php if (isset($rEpisode)) {
+                                                                                    echo htmlspecialchars($rEpisode["properties"]["movie_image"]);
+                                                                                } ?>">
                                                                     <div class="input-group-append">
-                                                                        <a href="javascript:void(0)" onClick="openImage(this)" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-eye"></i></a>
+                                                                        <a href="javascript:void(0)"
+                                                                            onClick="openImage(this)"
+                                                                            class="btn btn-primary waves-effect waves-light"><i
+                                                                                class="mdi mdi-eye"></i></a>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="plot"><?= $_["plot"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="plot"><?= $_["plot"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea rows="6" class="form-control" id="plot" name="plot"><?php if (isset($rEpisode)) {
-                                                                                                                                        echo htmlspecialchars($rEpisode["properties"]["plot"]);
-                                                                                                                                    } ?></textarea>
+                                                                    <textarea rows="6" class="form-control" id="plot"
+                                                                        name="plot"><?php if (isset($rEpisode)) {
+                                                                                        echo htmlspecialchars($rEpisode["properties"]["plot"]);
+                                                                                    } ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="releasedate"><?= $_["release_date"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="releasedate"><?= $_["release_date"] ?></label>
                                                                 <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="releasedate" name="releasedate" value="<?php if (isset($rEpisode)) {
-                                                                                                                                                            echo htmlspecialchars($rEpisode["properties"]["releasedate"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="releasedate" name="releasedate"
+                                                                        value="<?php if (isset($rEpisode)) {
+                                                                                    echo htmlspecialchars($rEpisode["properties"]["releasedate"]);
+                                                                                } ?>">
                                                                 </div>
-                                                                <label class="col-md-2 col-form-label" for="episode_run_time"><?= $_["runtime"] ?></label>
+                                                                <label class="col-md-2 col-form-label"
+                                                                    for="episode_run_time"><?= $_["runtime"] ?></label>
                                                                 <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="episode_run_time" name="episode_run_time" value="<?php if (isset($rEpisode)) {
-                                                                                                                                                                        echo intval($rEpisode["properties"]["duration_secs"] / 60.0);
-                                                                                                                                                                    } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="episode_run_time" name="episode_run_time"
+                                                                        value="<?php if (isset($rEpisode)) {
+                                                                                    echo intval($rEpisode["properties"]["duration_secs"] / 60.0);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="rating"><?= $_["rating"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="rating"><?= $_["rating"] ?></label>
                                                                 <div class="col-md-3">
-                                                                    <input type="text" class="form-control" id="rating" name="rating" value="<?php if (isset($rEpisode)) {
-                                                                                                                                                    echo htmlspecialchars($rEpisode["properties"]["rating"]);
-                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control" id="rating"
+                                                                        name="rating"
+                                                                        value="<?php if (isset($rEpisode)) {
+                                                                                    echo htmlspecialchars($rEpisode["properties"]["rating"]);
+                                                                                } ?>">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -615,60 +691,99 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="direct_source"><?= $_["direct_source"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_1"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="direct_source"><?= $_["direct_source"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["episode_tooltip_1"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="direct_source" id="direct_source" type="checkbox" <?php if (isset($rEpisode)) {
-                                                                                                                                        if ($rEpisode["direct_source"] == 1) {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        }
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="direct_source" id="direct_source"
+                                                                        type="checkbox" <?php if (isset($rEpisode)) {
+                                                                                            if ($rEpisode["direct_source"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="read_native"><?= $_["native_frames"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="read_native"><?= $_["native_frames"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="read_native" id="read_native" type="checkbox" <?php if (isset($rEpisode)) {
-                                                                                                                                    if ($rEpisode["read_native"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    }
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="read_native" id="read_native"
+                                                                        type="checkbox" <?php if (isset($rEpisode)) {
+                                                                                            if ($rEpisode["read_native"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="movie_symlink"><?= $_["create_symlink"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_2"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="movie_symlink"><?= $_["create_symlink"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["episode_tooltip_2"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="movie_symlink" id="movie_symlink" type="checkbox" <?php if (isset($rEpisode)) {
-                                                                                                                                        if ($rEpisode["movie_symlink"] == 1) {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        }
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="movie_symlink" id="movie_symlink"
+                                                                        type="checkbox" <?php if (isset($rEpisode)) {
+                                                                                            if ($rEpisode["movie_symlink"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_3"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["episode_tooltip_3"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="remove_subtitles" id="remove_subtitles" type="checkbox" <?php if (isset($rEpisode)) {
-                                                                                                                                                if ($rEpisode["remove_subtitles"] == 1) {
-                                                                                                                                                    echo "checked ";
-                                                                                                                                                }
-                                                                                                                                            } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="remove_subtitles" id="remove_subtitles"
+                                                                        type="checkbox" <?php if (isset($rEpisode)) {
+                                                                                            if ($rEpisode["remove_subtitles"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            }
+                                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <?php if (!$rMulti) { ?>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="target_container"><?= $_["target_container"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_4"] ?>" class="mdi mdi-information"></i></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="target_container"><?= $_["target_container"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["episode_tooltip_4"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <select name="target_container" id="target_container" class="form-control" data-toggle="select2">
+                                                                        <select name="target_container"
+                                                                            id="target_container" class="form-control"
+                                                                            data-toggle="select2">
                                                                             <?php foreach (array("mp4", "mkv", "avi", "mpg", "flv") as $rContainer) { ?>
                                                                                 <option <?php if (isset($rEpisode)) {
                                                                                             if (json_decode($rEpisode["target_container"], True)[0] == $rContainer) {
                                                                                                 echo "selected ";
                                                                                             }
-                                                                                        } ?>value="<?= $rContainer ?>"><?= $rContainer ?></option>
+                                                                                        } ?>value="<?= $rContainer ?>">
+                                                                                    <?= $rContainer ?></option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
-                                                                    <label class="col-md-4 col-form-label" for="custom_sid"><?= $_["custom_channel_sid"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_5"] ?>" class="mdi mdi-information"></i></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="custom_sid"><?= $_["custom_channel_sid"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["episode_tooltip_5"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input type="text" class="form-control" id="custom_sid" name="custom_sid" value="<?php if (isset($rEpisode)) {
-                                                                                                                                                                echo htmlspecialchars($rEpisode["custom_sid"]);
-                                                                                                                                                            } ?>">
+                                                                        <input type="text" class="form-control"
+                                                                            id="custom_sid" name="custom_sid"
+                                                                            value="<?php if (isset($rEpisode)) {
+                                                                                        echo htmlspecialchars($rEpisode["custom_sid"]);
+                                                                                    } ?>">
                                                                     </div>
                                                                 </div>
                                                             <?php }
@@ -682,32 +797,50 @@ if ($rSettings["sidebar"]) { ?>
                                                             ?>
                                                             <?php if (!$rMulti) { ?>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="movie_subtitles"><?= $_["subtitle_location"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_6"] ?>" class="mdi mdi-information"></i></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="movie_subtitles"><?= $_["subtitle_location"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["episode_tooltip_6"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-8 input-group">
-                                                                        <input type="text" id="movie_subtitles" name="movie_subtitles" class="form-control" value="<?php if (isset($rEpisode)) {
-                                                                                                                                                                        echo htmlspecialchars($rSubFile);
-                                                                                                                                                                    } ?>">
+                                                                        <input type="text" id="movie_subtitles"
+                                                                            name="movie_subtitles" class="form-control"
+                                                                            value="<?php if (isset($rEpisode)) {
+                                                                                        echo htmlspecialchars($rSubFile);
+                                                                                    } ?>">
                                                                         <div class="input-group-append">
-                                                                            <a href="#file-browser" id="filebrowser-sub" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-folder-open-outline"></i></a>
+                                                                            <a href="#file-browser" id="filebrowser-sub"
+                                                                                class="btn btn-primary waves-effect waves-light"><i
+                                                                                    class="mdi mdi-folder-open-outline"></i></a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="transcode_profile_id"><?= $_["transcoding_profile"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["episode_tooltip_7"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="transcode_profile_id"><?= $_["transcoding_profile"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["episode_tooltip_7"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="transcode_profile_id" id="transcode_profile_id" class="form-control" data-toggle="select2">
+                                                                    <select name="transcode_profile_id"
+                                                                        id="transcode_profile_id" class="form-control"
+                                                                        data-toggle="select2">
                                                                         <option <?php if (isset($rEpisode)) {
                                                                                     if (intval($rEpisode["transcode_profile_id"]) == 0) {
                                                                                         echo "selected ";
                                                                                     }
-                                                                                } ?>value="0"><?= $_["transcoding_disabled"] ?></option>
+                                                                                } ?>value="0">
+                                                                            <?= $_["transcoding_disabled"] ?></option>
                                                                         <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
                                                                             <option <?php if (isset($rEpisode)) {
                                                                                         if (intval($rEpisode["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
                                                                                             echo "selected ";
                                                                                         }
-                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>"><?= $rProfile["profile_name"] ?></option>
+                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>">
+                                                                                <?= $rProfile["profile_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -716,10 +849,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -727,29 +862,36 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="servers"><?= $_["server_tree"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="servers"><?= $_["server_tree"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <div id="server_tree"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="restart_on_edit"><?php if (isset($rEpisode)) { ?><?= $_["reprocess_on_edit"] ?><?php } else { ?><?= $_["process_now"] ?><?php } ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="restart_on_edit"><?php if (isset($rEpisode)) { ?><?= $_["reprocess_on_edit"] ?><?php } else { ?><?= $_["process_now"] ?><?php } ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="restart_on_edit" id="restart_on_edit" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="restart_on_edit" id="restart_on_edit"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_stream" type="submit" class="btn btn-primary" value="<?php if (isset($rEpisode)) {
-                                                                                                                                            echo $_["edit"];
-                                                                                                                                        } else {
-                                                                                                                                            echo $_["add"];
-                                                                                                                                        } ?>" />
+                                                            <input name="submit_stream" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?php if (isset($rEpisode)) {
+                                                                            echo $_["edit"];
+                                                                        } else {
+                                                                            echo $_["add"];
+                                                                        } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -759,35 +901,47 @@ if ($rSettings["sidebar"]) { ?>
                                     <div id="file-browser" class="mfp-hide white-popup-block">
                                         <div class="col-12">
                                             <div class="form-group row mb-4">
-                                                <label class="col-md-4 col-form-label" for="server_id"><?= $_["server_name"] ?></label>
+                                                <label class="col-md-4 col-form-label"
+                                                    for="server_id"><?= $_["server_name"] ?></label>
                                                 <div class="col-md-8">
                                                     <select id="server_id" class="form-control" data-toggle="select2">
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
                                                                                                         echo " selected";
-                                                                                                    } ?>><?= htmlspecialchars($rServer["server_name"]) ?></option>
+                                                                                                    } ?>>
+                                                                <?= htmlspecialchars($rServer["server_name"]) ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="form-group row mb-4">
-                                                <label class="col-md-4 col-form-label" for="current_path"><?= $_["current_path"] ?></label>
+                                                <label class="col-md-4 col-form-label"
+                                                    for="current_path"><?= $_["current_path"] ?></label>
                                                 <div class="col-md-8 input-group">
-                                                    <input type="text" id="current_path" name="current_path" class="form-control" value="/">
+                                                    <input type="text" id="current_path" name="current_path"
+                                                        class="form-control" value="/">
                                                     <div class="input-group-append">
-                                                        <button class="btn btn-primary waves-effect waves-light" type="button" id="changeDir"><i class="mdi mdi-chevron-right"></i></button>
+                                                        <button class="btn btn-primary waves-effect waves-light"
+                                                            type="button" id="changeDir"><i
+                                                                class="mdi mdi-chevron-right"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group row mb-4" <?php if (isset($rMulti)) {
                                                                                     echo "style='display:none;'";
                                                                                 } ?>>
-                                                <label class="col-md-4 col-form-label" for="search"><?= $_["search_directory"] ?></label>
+                                                <label class="col-md-4 col-form-label"
+                                                    for="search"><?= $_["search_directory"] ?></label>
                                                 <div class="col-md-8 input-group">
-                                                    <input type="text" id="search" name="search" class="form-control" placeholder="<?= $_["filter_directory"] ?>">
+                                                    <input type="text" id="search" name="search" class="form-control"
+                                                        placeholder="<?= $_["filter_directory"] ?>">
                                                     <div class="input-group-append">
-                                                        <button class="btn btn-warning waves-effect waves-light" type="button" onClick="clearSearch()"><i class="mdi mdi-close"></i></button>
-                                                        <button class="btn btn-primary waves-effect waves-light" type="button" id="doSearch"><i class="mdi mdi-magnify"></i></button>
+                                                        <button class="btn btn-warning waves-effect waves-light"
+                                                            type="button" onClick="clearSearch()"><i
+                                                                class="mdi mdi-close"></i></button>
+                                                        <button class="btn btn-primary waves-effect waves-light"
+                                                            type="button" id="doSearch"><i
+                                                                class="mdi mdi-magnify"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -817,7 +971,8 @@ if ($rSettings["sidebar"]) { ?>
                                             </div>
                                             <?php if (isset($rMulti)) { ?>
                                                 <div class="float-right">
-                                                    <input id="select_folder" type="button" class="btn btn-info" value="<?= $_["add_this_directory"] ?>" />
+                                                    <input id="select_folder" type="button" class="btn btn-info"
+                                                        value="<?= $_["add_this_directory"] ?>" />
                                                 </div>
                                             <?php } ?>
                                         </div> <!-- end col -->

@@ -79,32 +79,39 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
       <div class="logo"></div>
 
       <div class="button_Live">
-        <img src="images/live_btn.png" onmouseover="this.src='images/live_btn_hover.png'" onmouseout="this.src='images/live_btn.png'" onClick="parent.location='live.php'" />
+        <img src="images/live_btn.png" onmouseover="this.src='images/live_btn_hover.png'"
+          onmouseout="this.src='images/live_btn.png'" onClick="parent.location='live.php'" />
       </div>
 
       <div class="button_Movies">
         <img src="images/videos_btn_hover.png" />
       </div>
       <div class="button_Radio">
-        <img src="images/radio_btn.png" onmouseover="this.src='images/radio_btn_hover.png'" onmouseout="this.src='images/radio_btn.png'" onClick="parent.location='radio.php'" />
+        <img src="images/radio_btn.png" onmouseover="this.src='images/radio_btn_hover.png'"
+          onmouseout="this.src='images/radio_btn.png'" onClick="parent.location='radio.php'" />
       </div>
       <div class="User"><img src="images/user_icon.png"><a style="margin-left:10px; color:#C60;"><?php
                                                                                                   echo $_SESSION["cl_data"]["username"];
                                                                                                   ?>
         </a>
-        <div style="width:3px; height:103px;position:absolute; margin-top:-40px; margin-left:-10px;"><img src="images/Header_default_line.png"></div>
-        <div style="width:3px; height:103px;position:absolute; margin-top:-40px; margin-left:140px;"><img src="images/Header_default_line.png"></div>
+        <div style="width:3px; height:103px;position:absolute; margin-top:-40px; margin-left:-10px;"><img
+            src="images/Header_default_line.png"></div>
+        <div style="width:3px; height:103px;position:absolute; margin-top:-40px; margin-left:140px;"><img
+            src="images/Header_default_line.png"></div>
         <ul>
-          <li><a style=" color:#c60; font-size:12px;">Expire Date:</a><a style="margin-left:10px; color:#fff; font-size:12px;"><?php
-                                                                                                                                if (empty($_SESSION["cl_data"]["exp_date"])) {
-                                                                                                                                  echo "Unlimited";
-                                                                                                                                  goto bd170100fbf9072548e9b06a2675252a;
-                                                                                                                                }
-                                                                                                                                echo date("d/m/Y H:i", $_SESSION["cl_data"]["exp_date"]);
-                                                                                                                                bd170100fbf9072548e9b06a2675252a:
-                                                                                                                                ?>
+          <li><a style=" color:#c60; font-size:12px;">Expire Date:</a><a
+              style="margin-left:10px; color:#fff; font-size:12px;"><?php
+                                                                    if (empty($_SESSION["cl_data"]["exp_date"])) {
+                                                                      echo "Unlimited";
+                                                                      goto bd170100fbf9072548e9b06a2675252a;
+                                                                    }
+                                                                    echo date("d/m/Y H:i", $_SESSION["cl_data"]["exp_date"]);
+                                                                    bd170100fbf9072548e9b06a2675252a:
+                                                                    ?>
             </a></li>
-          <li style="margin-left:30px;"><img src="images/logout_btn.png" onmouseover="this.src='images/logout_btn_hover.png'" onmouseout="this.src='images/logout_btn.png'" onClick="parent.location='index.php?action=logout'" /></li>
+          <li style="margin-left:30px;"><img src="images/logout_btn.png"
+              onmouseover="this.src='images/logout_btn_hover.png'" onmouseout="this.src='images/logout_btn.png'"
+              onClick="parent.location='index.php?action=logout'" /></li>
 
       </div>
     </div>
@@ -201,9 +208,10 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
     <!--/footer-->
   </body>
 
-  </html><?php
-          // [PHPDeobfuscator] Implied script end
-          return;
-        }
-        header("Location: index.php");
-        die;
+  </html>
+<?php
+  // [PHPDeobfuscator] Implied script end
+  return;
+}
+header("Location: index.php");
+die;

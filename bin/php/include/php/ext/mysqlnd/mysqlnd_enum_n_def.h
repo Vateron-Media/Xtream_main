@@ -29,126 +29,122 @@
 #define FALSE 0
 #endif
 
-
 #define MYSQLND_MIN_COMPRESS_LEN 0
 
-#define MYSQLND_MAX_PACKET_SIZE (256L*256L*256L-1)
+#define MYSQLND_MAX_PACKET_SIZE (256L * 256L * 256L - 1)
 
-#define MYSQLND_ASSEMBLED_PACKET_MAX_SIZE 3UL*1024UL*1024UL*1024UL
+#define MYSQLND_ASSEMBLED_PACKET_MAX_SIZE 3UL * 1024UL * 1024UL * 1024UL
 
 #define MYSQLND_DEFAULT_AUTH_PROTOCOL "mysql_native_password"
 
-#define MYSQLND_ERRMSG_SIZE			512
-#define MYSQLND_SQLSTATE_LENGTH		5
-#define MYSQLND_SQLSTATE_NULL		"00000"
+#define MYSQLND_ERRMSG_SIZE 512
+#define MYSQLND_SQLSTATE_LENGTH 5
+#define MYSQLND_SQLSTATE_NULL "00000"
 
-#define MYSQLND_MAX_ALLOWED_USER_LEN	252		/* 63 char * 4byte . MySQL supports now only 16 char, but let it be forward compatible */
-#define MYSQLND_MAX_ALLOWED_DB_LEN		1024	/* 256 char * 4byte. MySQL supports now only 64 char in the tables, but on the FS could be different. Forward compatible. */
+#define MYSQLND_MAX_ALLOWED_USER_LEN 252 /* 63 char * 4byte . MySQL supports now only 16 char, but let it be forward compatible */
+#define MYSQLND_MAX_ALLOWED_DB_LEN 1024	 /* 256 char * 4byte. MySQL supports now only 64 char in the tables, but on the FS could be different. Forward compatible. */
 
-#define MYSQLND_NET_CMD_BUFFER_MIN_SIZE			4096
-#define MYSQLND_NET_CMD_BUFFER_MIN_SIZE_STR		"4096"
+#define MYSQLND_NET_CMD_BUFFER_MIN_SIZE 4096
+#define MYSQLND_NET_CMD_BUFFER_MIN_SIZE_STR "4096"
 
 #define MYSQLND_STMT_ID_LENGTH 4
 
-
-#define SERVER_STATUS_IN_TRANS					1	/* Transaction has started */
-#define SERVER_STATUS_AUTOCOMMIT				2	/* Server in auto_commit mode */
-#define SERVER_MORE_RESULTS_EXISTS				8	/* Multi query - next query exists */
-#define SERVER_QUERY_NO_GOOD_INDEX_USED	16
-#define SERVER_QUERY_NO_INDEX_USED		32
+#define SERVER_STATUS_IN_TRANS 1	 /* Transaction has started */
+#define SERVER_STATUS_AUTOCOMMIT 2	 /* Server in auto_commit mode */
+#define SERVER_MORE_RESULTS_EXISTS 8 /* Multi query - next query exists */
+#define SERVER_QUERY_NO_GOOD_INDEX_USED 16
+#define SERVER_QUERY_NO_INDEX_USED 32
 /*
   The server was able to fulfill the clients request and opened a
   read-only non-scrollable cursor for a query. This flag comes
   in reply to COM_STMT_EXECUTE and COM_STMT_FETCH commands.
 */
-#define SERVER_STATUS_CURSOR_EXISTS				64
+#define SERVER_STATUS_CURSOR_EXISTS 64
 /*
   This flag is sent when a read-only cursor is exhausted, in reply to
   COM_STMT_FETCH command.
 */
-#define SERVER_STATUS_LAST_ROW_SENT				128
-#define SERVER_STATUS_DB_DROPPED				256 /* A database was dropped */
-#define SERVER_STATUS_NO_BACKSLASH_ESCAPES		512
-#define SERVER_QUERY_WAS_SLOW					2048
-#define SERVER_PS_OUT_PARAMS            		4096
+#define SERVER_STATUS_LAST_ROW_SENT 128
+#define SERVER_STATUS_DB_DROPPED 256 /* A database was dropped */
+#define SERVER_STATUS_NO_BACKSLASH_ESCAPES 512
+#define SERVER_QUERY_WAS_SLOW 2048
+#define SERVER_PS_OUT_PARAMS 4096
 
-#define MYSQLND_NO_DATA			100
-#define MYSQLND_DATA_TRUNCATED	101
+#define MYSQLND_NO_DATA 100
+#define MYSQLND_DATA_TRUNCATED 101
 
 #define SHA1_MAX_LENGTH 20
 #define SCRAMBLE_LENGTH 20
 #define SCRAMBLE_LENGTH_323 8
 
-#define CLIENT_LONG_PASSWORD		1		/* new more secure passwords */
-#define CLIENT_FOUND_ROWS			2		/* Found instead of affected rows */
-#define CLIENT_LONG_FLAG			4		/* Get all column flags */
-#define CLIENT_CONNECT_WITH_DB		8		/* One can specify db on connect */
-#define CLIENT_NO_SCHEMA			16		/* Don't allow database.table.column */
-#define CLIENT_COMPRESS				32		/* Can use compression protocol */
-#define CLIENT_ODBC					64		/* Odbc client */
-#define CLIENT_LOCAL_FILES			128		/* Can use LOAD DATA LOCAL */
-#define CLIENT_IGNORE_SPACE			256		/* Ignore spaces before '(' */
-#define CLIENT_PROTOCOL_41			512		/* New 4.1 protocol */
-#define CLIENT_INTERACTIVE			1024	/* This is an interactive client */
-#define CLIENT_SSL					2048	/* Switch to SSL after handshake */
-#define CLIENT_IGNORE_SIGPIPE		4096	/* IGNORE sigpipes */
-#define CLIENT_TRANSACTIONS			8192	/* Client knows about transactions */
-#define CLIENT_RESERVED				16384	/* Old flag for 4.1 protocol */
-#define CLIENT_SECURE_CONNECTION	32768	/* New 4.1 authentication */
-#define CLIENT_MULTI_STATEMENTS		(1UL << 16) /* Enable/disable multi-stmt support */
-#define CLIENT_MULTI_RESULTS		(1UL << 17) /* Enable/disable multi-results */
-#define CLIENT_PS_MULTI_RESULTS		(1UL << 18) /* Multi-results in PS-protocol */
-#define CLIENT_PLUGIN_AUTH			(1UL << 19) /* Client supports plugin authentication */
-#define CLIENT_CONNECT_ATTRS		(1UL << 20) /* Client supports connection attributes */
-#define CLIENT_PLUGIN_AUTH_LENENC_CLIENT_DATA	(1UL << 21) /* Enable authentication response packet to be larger than 255 bytes. */
-#define CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS		(1UL << 22) /* Don't close the connection for a connection with expired password. */
-#define CLIENT_SESSION_TRACK					(1UL << 23) /* Extended OK */
+#define CLIENT_LONG_PASSWORD 1							  /* new more secure passwords */
+#define CLIENT_FOUND_ROWS 2								  /* Found instead of affected rows */
+#define CLIENT_LONG_FLAG 4								  /* Get all column flags */
+#define CLIENT_CONNECT_WITH_DB 8						  /* One can specify db on connect */
+#define CLIENT_NO_SCHEMA 16								  /* Don't allow database.table.column */
+#define CLIENT_COMPRESS 32								  /* Can use compression protocol */
+#define CLIENT_ODBC 64									  /* Odbc client */
+#define CLIENT_LOCAL_FILES 128							  /* Can use LOAD DATA LOCAL */
+#define CLIENT_IGNORE_SPACE 256							  /* Ignore spaces before '(' */
+#define CLIENT_PROTOCOL_41 512							  /* New 4.1 protocol */
+#define CLIENT_INTERACTIVE 1024							  /* This is an interactive client */
+#define CLIENT_SSL 2048									  /* Switch to SSL after handshake */
+#define CLIENT_IGNORE_SIGPIPE 4096						  /* IGNORE sigpipes */
+#define CLIENT_TRANSACTIONS 8192						  /* Client knows about transactions */
+#define CLIENT_RESERVED 16384							  /* Old flag for 4.1 protocol */
+#define CLIENT_SECURE_CONNECTION 32768					  /* New 4.1 authentication */
+#define CLIENT_MULTI_STATEMENTS (1UL << 16)				  /* Enable/disable multi-stmt support */
+#define CLIENT_MULTI_RESULTS (1UL << 17)				  /* Enable/disable multi-results */
+#define CLIENT_PS_MULTI_RESULTS (1UL << 18)				  /* Multi-results in PS-protocol */
+#define CLIENT_PLUGIN_AUTH (1UL << 19)					  /* Client supports plugin authentication */
+#define CLIENT_CONNECT_ATTRS (1UL << 20)				  /* Client supports connection attributes */
+#define CLIENT_PLUGIN_AUTH_LENENC_CLIENT_DATA (1UL << 21) /* Enable authentication response packet to be larger than 255 bytes. */
+#define CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS (1UL << 22)	  /* Don't close the connection for a connection with expired password. */
+#define CLIENT_SESSION_TRACK (1UL << 23)				  /* Extended OK */
 /*
   This is a mysqlnd extension. CLIENT_ODBC is not used anyway. We will reuse it for our case and translate it to not using SSL peer verification
 */
-#define CLIENT_SSL_DONT_VERIFY_SERVER_CERT	CLIENT_ODBC
-#define CLIENT_SSL_VERIFY_SERVER_CERT	(1UL << 30)
-#define CLIENT_REMEMBER_OPTIONS			(1UL << 31)
+#define CLIENT_SSL_DONT_VERIFY_SERVER_CERT CLIENT_ODBC
+#define CLIENT_SSL_VERIFY_SERVER_CERT (1UL << 30)
+#define CLIENT_REMEMBER_OPTIONS (1UL << 31)
 
 #define MYSQLND_CAPABILITIES (CLIENT_LONG_PASSWORD | CLIENT_LONG_FLAG | CLIENT_TRANSACTIONS | \
-				CLIENT_PROTOCOL_41 | CLIENT_SECURE_CONNECTION | \
-				CLIENT_MULTI_RESULTS  | CLIENT_LOCAL_FILES | CLIENT_PLUGIN_AUTH)
+							  CLIENT_PROTOCOL_41 | CLIENT_SECURE_CONNECTION |                 \
+							  CLIENT_MULTI_RESULTS | CLIENT_LOCAL_FILES | CLIENT_PLUGIN_AUTH)
 
 #define MYSQLND_PROTOCOL_FLAG_USE_COMPRESSION 1
 
-
 /* Client Error codes */
-#define CR_UNKNOWN_ERROR		2000
-#define CR_CONNECTION_ERROR		2002
-#define CR_SERVER_GONE_ERROR	2006
-#define CR_OUT_OF_MEMORY		2008
-#define CR_SERVER_LOST			2013
-#define CR_COMMANDS_OUT_OF_SYNC	2014
-#define CR_CANT_FIND_CHARSET	2019
-#define CR_MALFORMED_PACKET		2027
-#define CR_NOT_IMPLEMENTED		2054
-#define CR_NO_PREPARE_STMT		2030
-#define CR_PARAMS_NOT_BOUND		2031
-#define CR_INVALID_PARAMETER_NO	2034
-#define CR_INVALID_BUFFER_USE	2035
+#define CR_UNKNOWN_ERROR 2000
+#define CR_CONNECTION_ERROR 2002
+#define CR_SERVER_GONE_ERROR 2006
+#define CR_OUT_OF_MEMORY 2008
+#define CR_SERVER_LOST 2013
+#define CR_COMMANDS_OUT_OF_SYNC 2014
+#define CR_CANT_FIND_CHARSET 2019
+#define CR_MALFORMED_PACKET 2027
+#define CR_NOT_IMPLEMENTED 2054
+#define CR_NO_PREPARE_STMT 2030
+#define CR_PARAMS_NOT_BOUND 2031
+#define CR_INVALID_PARAMETER_NO 2034
+#define CR_INVALID_BUFFER_USE 2035
 
-#define MYSQLND_EE_FILENOTFOUND	 7890
+#define MYSQLND_EE_FILENOTFOUND 7890
 
-#define UNKNOWN_SQLSTATE		"HY000"
+#define UNKNOWN_SQLSTATE "HY000"
 
-#define MAX_CHARSET_LEN			32
+#define MAX_CHARSET_LEN 32
 
+#define TRANS_START_NO_OPT 0
+#define TRANS_START_WITH_CONSISTENT_SNAPSHOT 1
+#define TRANS_START_READ_WRITE 2
+#define TRANS_START_READ_ONLY 4
 
-#define TRANS_START_NO_OPT						0
-#define TRANS_START_WITH_CONSISTENT_SNAPSHOT	1
-#define TRANS_START_READ_WRITE					2
-#define TRANS_START_READ_ONLY					4
-
-#define TRANS_COR_NO_OPT		0
-#define TRANS_COR_AND_CHAIN		1
-#define TRANS_COR_AND_NO_CHAIN	2
-#define TRANS_COR_RELEASE		4
-#define TRANS_COR_NO_RELEASE	8
+#define TRANS_COR_NO_OPT 0
+#define TRANS_COR_AND_CHAIN 1
+#define TRANS_COR_AND_NO_CHAIN 2
+#define TRANS_COR_RELEASE 4
+#define TRANS_COR_NO_RELEASE 8
 
 typedef enum mysqlnd_extension
 {
@@ -160,7 +156,7 @@ enum
 {
 	MYSQLND_FETCH_ASSOC = 1,
 	MYSQLND_FETCH_NUM = 2,
-	MYSQLND_FETCH_BOTH = 1|2
+	MYSQLND_FETCH_BOTH = 1 | 2
 };
 
 /* Follow libmysql convention */
@@ -274,48 +270,47 @@ typedef enum mysqlnd_client_option
 typedef enum mysqlnd_session_protocol_type
 {
 	MYSQL_PROTOCOL_DEFAULT = 0,
-	MYSQL_PROTOCOL_TCP,		/* all, supported */
-	MYSQL_PROTOCOL_SOCKET,	/* unix, supported */
-	MYSQL_PROTOCOL_PIPE,	/* win32, not-supported */
-	MYSQL_PROTOCOL_MEMORY,	/* win32, not-supported */
+	MYSQL_PROTOCOL_TCP,	   /* all, supported */
+	MYSQL_PROTOCOL_SOCKET, /* unix, supported */
+	MYSQL_PROTOCOL_PIPE,   /* win32, not-supported */
+	MYSQL_PROTOCOL_MEMORY, /* win32, not-supported */
 	MYSQL_PROTOCOL_LAST
 } enum_mysqlnd_session_protocol_type;
 
 typedef enum mysqlnd_field_types
 {
-	MYSQL_TYPE_DECIMAL	= 0,
-	MYSQL_TYPE_TINY		= 1,
-	MYSQL_TYPE_SHORT	= 2,
-	MYSQL_TYPE_LONG		= 3,
-	MYSQL_TYPE_FLOAT	= 4,
-	MYSQL_TYPE_DOUBLE	= 5,
-	MYSQL_TYPE_NULL		= 6,
-	MYSQL_TYPE_TIMESTAMP= 7,
-	MYSQL_TYPE_LONGLONG	= 8,
-	MYSQL_TYPE_INT24	= 9,
-	MYSQL_TYPE_DATE		= 10,
-	MYSQL_TYPE_TIME		= 11,
-	MYSQL_TYPE_DATETIME	= 12,
-	MYSQL_TYPE_YEAR		= 13,
-	MYSQL_TYPE_NEWDATE	= 14,
-	MYSQL_TYPE_VARCHAR	= 15,
-	MYSQL_TYPE_BIT		= 16,
-	MYSQL_TYPE_JSON=245,
-	MYSQL_TYPE_NEWDECIMAL=246,
-	MYSQL_TYPE_ENUM=247,
-	MYSQL_TYPE_SET=248,
-	MYSQL_TYPE_TINY_BLOB=249,
-	MYSQL_TYPE_MEDIUM_BLOB=250,
-	MYSQL_TYPE_LONG_BLOB=251,
-	MYSQL_TYPE_BLOB=252,
-	MYSQL_TYPE_VAR_STRING=253,
-	MYSQL_TYPE_STRING=254,
-	MYSQL_TYPE_GEOMETRY=255
+	MYSQL_TYPE_DECIMAL = 0,
+	MYSQL_TYPE_TINY = 1,
+	MYSQL_TYPE_SHORT = 2,
+	MYSQL_TYPE_LONG = 3,
+	MYSQL_TYPE_FLOAT = 4,
+	MYSQL_TYPE_DOUBLE = 5,
+	MYSQL_TYPE_NULL = 6,
+	MYSQL_TYPE_TIMESTAMP = 7,
+	MYSQL_TYPE_LONGLONG = 8,
+	MYSQL_TYPE_INT24 = 9,
+	MYSQL_TYPE_DATE = 10,
+	MYSQL_TYPE_TIME = 11,
+	MYSQL_TYPE_DATETIME = 12,
+	MYSQL_TYPE_YEAR = 13,
+	MYSQL_TYPE_NEWDATE = 14,
+	MYSQL_TYPE_VARCHAR = 15,
+	MYSQL_TYPE_BIT = 16,
+	MYSQL_TYPE_JSON = 245,
+	MYSQL_TYPE_NEWDECIMAL = 246,
+	MYSQL_TYPE_ENUM = 247,
+	MYSQL_TYPE_SET = 248,
+	MYSQL_TYPE_TINY_BLOB = 249,
+	MYSQL_TYPE_MEDIUM_BLOB = 250,
+	MYSQL_TYPE_LONG_BLOB = 251,
+	MYSQL_TYPE_BLOB = 252,
+	MYSQL_TYPE_VAR_STRING = 253,
+	MYSQL_TYPE_STRING = 254,
+	MYSQL_TYPE_GEOMETRY = 255
 } enum_mysqlnd_field_types;
 
 /* Please update this if there is a new type after MYSQL_TYPE_GEOMETRY */
-#define MYSQL_TYPE_LAST		MYSQL_TYPE_GEOMETRY
-
+#define MYSQL_TYPE_LAST MYSQL_TYPE_GEOMETRY
 
 typedef enum mysqlnd_server_option
 {
@@ -323,64 +318,61 @@ typedef enum mysqlnd_server_option
 	MYSQL_OPTION_MULTI_STATEMENTS_OFF
 } enum_mysqlnd_server_option;
 
+#define FIELD_TYPE_DECIMAL MYSQL_TYPE_DECIMAL
+#define FIELD_TYPE_NEWDECIMAL MYSQL_TYPE_NEWDECIMAL
+#define FIELD_TYPE_TINY MYSQL_TYPE_TINY
+#define FIELD_TYPE_SHORT MYSQL_TYPE_SHORT
+#define FIELD_TYPE_LONG MYSQL_TYPE_LONG
+#define FIELD_TYPE_FLOAT MYSQL_TYPE_FLOAT
+#define FIELD_TYPE_DOUBLE MYSQL_TYPE_DOUBLE
+#define FIELD_TYPE_NULL MYSQL_TYPE_NULL
+#define FIELD_TYPE_TIMESTAMP MYSQL_TYPE_TIMESTAMP
+#define FIELD_TYPE_LONGLONG MYSQL_TYPE_LONGLONG
+#define FIELD_TYPE_INT24 MYSQL_TYPE_INT24
+#define FIELD_TYPE_DATE MYSQL_TYPE_DATE
+#define FIELD_TYPE_TIME MYSQL_TYPE_TIME
+#define FIELD_TYPE_DATETIME MYSQL_TYPE_DATETIME
+#define FIELD_TYPE_YEAR MYSQL_TYPE_YEAR
+#define FIELD_TYPE_NEWDATE MYSQL_TYPE_NEWDATE
+#define FIELD_TYPE_ENUM MYSQL_TYPE_ENUM
+#define FIELD_TYPE_SET MYSQL_TYPE_SET
+#define FIELD_TYPE_JSON MYSQL_TYPE_JSON
+#define FIELD_TYPE_TINY_BLOB MYSQL_TYPE_TINY_BLOB
+#define FIELD_TYPE_MEDIUM_BLOB MYSQL_TYPE_MEDIUM_BLOB
+#define FIELD_TYPE_LONG_BLOB MYSQL_TYPE_LONG_BLOB
+#define FIELD_TYPE_BLOB MYSQL_TYPE_BLOB
+#define FIELD_TYPE_VAR_STRING MYSQL_TYPE_VAR_STRING
+#define FIELD_TYPE_STRING MYSQL_TYPE_STRING
+#define FIELD_TYPE_CHAR MYSQL_TYPE_TINY
+#define FIELD_TYPE_INTERVAL MYSQL_TYPE_ENUM
+#define FIELD_TYPE_GEOMETRY MYSQL_TYPE_GEOMETRY
+#define FIELD_TYPE_BIT MYSQL_TYPE_BIT
 
-#define FIELD_TYPE_DECIMAL		MYSQL_TYPE_DECIMAL
-#define FIELD_TYPE_NEWDECIMAL	MYSQL_TYPE_NEWDECIMAL
-#define FIELD_TYPE_TINY			MYSQL_TYPE_TINY
-#define FIELD_TYPE_SHORT		MYSQL_TYPE_SHORT
-#define FIELD_TYPE_LONG			MYSQL_TYPE_LONG
-#define FIELD_TYPE_FLOAT		MYSQL_TYPE_FLOAT
-#define FIELD_TYPE_DOUBLE		MYSQL_TYPE_DOUBLE
-#define FIELD_TYPE_NULL			MYSQL_TYPE_NULL
-#define FIELD_TYPE_TIMESTAMP	MYSQL_TYPE_TIMESTAMP
-#define FIELD_TYPE_LONGLONG		MYSQL_TYPE_LONGLONG
-#define FIELD_TYPE_INT24		MYSQL_TYPE_INT24
-#define FIELD_TYPE_DATE			MYSQL_TYPE_DATE
-#define FIELD_TYPE_TIME			MYSQL_TYPE_TIME
-#define FIELD_TYPE_DATETIME		MYSQL_TYPE_DATETIME
-#define FIELD_TYPE_YEAR			MYSQL_TYPE_YEAR
-#define FIELD_TYPE_NEWDATE		MYSQL_TYPE_NEWDATE
-#define FIELD_TYPE_ENUM			MYSQL_TYPE_ENUM
-#define FIELD_TYPE_SET			MYSQL_TYPE_SET
-#define FIELD_TYPE_JSON 		MYSQL_TYPE_JSON
-#define FIELD_TYPE_TINY_BLOB	MYSQL_TYPE_TINY_BLOB
-#define FIELD_TYPE_MEDIUM_BLOB	MYSQL_TYPE_MEDIUM_BLOB
-#define FIELD_TYPE_LONG_BLOB	MYSQL_TYPE_LONG_BLOB
-#define FIELD_TYPE_BLOB			MYSQL_TYPE_BLOB
-#define FIELD_TYPE_VAR_STRING	MYSQL_TYPE_VAR_STRING
-#define FIELD_TYPE_STRING		MYSQL_TYPE_STRING
-#define FIELD_TYPE_CHAR			MYSQL_TYPE_TINY
-#define FIELD_TYPE_INTERVAL		MYSQL_TYPE_ENUM
-#define FIELD_TYPE_GEOMETRY		MYSQL_TYPE_GEOMETRY
-#define FIELD_TYPE_BIT			MYSQL_TYPE_BIT
+#define NOT_NULL_FLAG 1
+#define PRI_KEY_FLAG 2
+#define UNIQUE_KEY_FLAG 4
+#define MULTIPLE_KEY_FLAG 8
+#define BLOB_FLAG 16
+#define UNSIGNED_FLAG 32
+#define ZEROFILL_FLAG 64
+#define BINARY_FLAG 128
+#define ENUM_FLAG 256
+#define AUTO_INCREMENT_FLAG 512
+#define TIMESTAMP_FLAG 1024
+#define SET_FLAG 2048
+#define NO_DEFAULT_VALUE_FLAG 4096
+#define ON_UPDATE_NOW_FLAG 8192
+#define PART_KEY_FLAG 16384
+#define GROUP_FLAG 32768
+#define NUM_FLAG 32768
 
-#define NOT_NULL_FLAG			    1
-#define PRI_KEY_FLAG			    2
-#define UNIQUE_KEY_FLAG			    4
-#define MULTIPLE_KEY_FLAG		    8
-#define BLOB_FLAG				   16
-#define UNSIGNED_FLAG			   32
-#define ZEROFILL_FLAG			   64
-#define BINARY_FLAG				  128
-#define ENUM_FLAG				  256
-#define AUTO_INCREMENT_FLAG		  512
-#define TIMESTAMP_FLAG			 1024
-#define SET_FLAG				 2048
-#define NO_DEFAULT_VALUE_FLAG	 4096
-#define ON_UPDATE_NOW_FLAG		 8192
-#define PART_KEY_FLAG			16384
-#define GROUP_FLAG				32768
-#define NUM_FLAG				32768
-
-#define IS_PRI_KEY(n)	((n) & PRI_KEY_FLAG)
-#define IS_NOT_NULL(n)	((n) & NOT_NULL_FLAG)
-#define IS_BLOB(n)		((n) & BLOB_FLAG)
-#define IS_NUM(t)		((t) <= FIELD_TYPE_INT24 || (t) == FIELD_TYPE_YEAR || (t) == FIELD_TYPE_NEWDECIMAL)
-
+#define IS_PRI_KEY(n) ((n) & PRI_KEY_FLAG)
+#define IS_NOT_NULL(n) ((n) & NOT_NULL_FLAG)
+#define IS_BLOB(n) ((n) & BLOB_FLAG)
+#define IS_NUM(t) ((t) <= FIELD_TYPE_INT24 || (t) == FIELD_TYPE_YEAR || (t) == FIELD_TYPE_NEWDECIMAL)
 
 /* see mysqlnd_charset.c for more information */
-#define MYSQLND_BINARY_CHARSET_NR	63
-
+#define MYSQLND_BINARY_CHARSET_NR 63
 
 /*
 		/-----> CONN_CLOSE  <---------------\
@@ -401,7 +393,6 @@ typedef enum mysqlnd_connection_state
 	CONN_QUIT_SENT = 6 /* object is "destroyed" at this stage */
 } enum_mysqlnd_connection_state;
 
-
 typedef enum mysqlnd_stmt_state
 {
 	MYSQLND_STMT_INITTED = 0,
@@ -409,15 +400,13 @@ typedef enum mysqlnd_stmt_state
 	MYSQLND_STMT_EXECUTED = 2,
 	MYSQLND_STMT_WAITING_USE_OR_STORE = 3,
 	MYSQLND_STMT_USE_OR_STORE_CALLED = 4,
-	MYSQLND_STMT_USER_FETCHING = 5/* fetch_row_buff or fetch_row_unbuf */
+	MYSQLND_STMT_USER_FETCHING = 5 /* fetch_row_buff or fetch_row_unbuf */
 } enum_mysqlnd_stmt_state;
-
 
 typedef enum param_bind_flags
 {
 	MYSQLND_PARAM_BIND_BLOB_USED = 1
 } enum_param_bind_flags;
-
 
 /* PS */
 enum mysqlnd_stmt_attr
@@ -429,10 +418,10 @@ enum mysqlnd_stmt_attr
 
 enum myslqnd_cursor_type
 {
-	CURSOR_TYPE_NO_CURSOR= 0,
-	CURSOR_TYPE_READ_ONLY= 1,
-	CURSOR_TYPE_FOR_UPDATE= 2,
-	CURSOR_TYPE_SCROLLABLE= 4
+	CURSOR_TYPE_NO_CURSOR = 0,
+	CURSOR_TYPE_READ_ONLY = 1,
+	CURSOR_TYPE_FOR_UPDATE = 2,
+	CURSOR_TYPE_SCROLLABLE = 4
 };
 
 typedef enum mysqlnd_connection_close_type
@@ -440,9 +429,8 @@ typedef enum mysqlnd_connection_close_type
 	MYSQLND_CLOSE_EXPLICIT = 0,
 	MYSQLND_CLOSE_IMPLICIT,
 	MYSQLND_CLOSE_DISCONNECTED,
-	MYSQLND_CLOSE_LAST	/* for checking, should always be last */
+	MYSQLND_CLOSE_LAST /* for checking, should always be last */
 } enum_connection_close_type;
-
 
 typedef enum mysqlnd_collected_stats
 {
@@ -612,11 +600,10 @@ typedef enum mysqlnd_collected_stats
 	STAT_LAST /* Should be always the last */
 } enum_mysqlnd_collected_stats;
 
-
 /* Enums */
 enum mysqlnd_packet_type
 {
-	PROT_GREET_PACKET= 0,
+	PROT_GREET_PACKET = 0,
 	PROT_AUTH_PACKET,
 	PROT_AUTH_RESP_PACKET,
 	PROT_CHANGE_AUTH_RESP_PACKET,
@@ -633,7 +620,6 @@ enum mysqlnd_packet_type
 	PROT_SHA256_PK_REQUEST_RESPONSE_PACKET,
 	PROT_LAST /* should always be last */
 };
-
 
 /*
   After adding new elements please update
@@ -676,28 +662,26 @@ enum php_mysqlnd_server_command
 	COM_STMT_EXECUTE_BATCH = 32,
 	COM_END,
 	/* Here follow own, non-protocol, commands */
-	COM_REAP_RESULT=240,	/* own command */
-	COM_ENABLE_SSL,			/* own command */
-	COM_HANDSHAKE,			/* own command */
+	COM_REAP_RESULT = 240, /* own command */
+	COM_ENABLE_SSL,		   /* own command */
+	COM_HANDSHAKE,		   /* own command */
 };
 
+#define MYSQLND_DEFAULT_PREFETCH_ROWS (zend_ulong)1
 
-#define MYSQLND_DEFAULT_PREFETCH_ROWS (zend_ulong) 1
+#define MYSQLND_REFRESH_GRANT 1	   /* Refresh grant tables */
+#define MYSQLND_REFRESH_LOG 2	   /* Start on new log file */
+#define MYSQLND_REFRESH_TABLES 4   /* close all tables */
+#define MYSQLND_REFRESH_HOSTS 8	   /* Flush host cache */
+#define MYSQLND_REFRESH_STATUS 16  /* Flush status variables */
+#define MYSQLND_REFRESH_THREADS 32 /* Flush thread cache */
+#define MYSQLND_REFRESH_SLAVE 64   /* Reset master info and restart slave */
+#define MYSQLND_REFRESH_MASTER 128 /* Remove all bin logs in the index */
+#define MYSQLND_REFRESH_BACKUP_LOG 0x200000L
 
-#define MYSQLND_REFRESH_GRANT		1	/* Refresh grant tables */
-#define MYSQLND_REFRESH_LOG			2	/* Start on new log file */
-#define MYSQLND_REFRESH_TABLES		4	/* close all tables */
-#define MYSQLND_REFRESH_HOSTS		8	/* Flush host cache */
-#define MYSQLND_REFRESH_STATUS		16	/* Flush status variables */
-#define MYSQLND_REFRESH_THREADS		32	/* Flush thread cache */
-#define MYSQLND_REFRESH_SLAVE		64	/* Reset master info and restart slave */
-#define MYSQLND_REFRESH_MASTER		128	/* Remove all bin logs in the index */
-#define MYSQLND_REFRESH_BACKUP_LOG	0x200000L
-
-
-#define MYSQLND_STORE_PS		1
-#define MYSQLND_STORE_NO_COPY	2
-#define MYSQLND_STORE_COPY		4
+#define MYSQLND_STORE_PS 1
+#define MYSQLND_STORE_NO_COPY 2
+#define MYSQLND_STORE_COPY 4
 
 enum mysqlnd_buffered_type
 {
@@ -705,12 +689,10 @@ enum mysqlnd_buffered_type
 	MYSQLND_BUFFERED_TYPE_C
 };
 
+#define MYSQLND_CLIENT_NO_FLAG 0
+#define MYSQLND_CLIENT_KNOWS_RSET_COPY_DATA 1
 
-#define MYSQLND_CLIENT_NO_FLAG				0
-#define MYSQLND_CLIENT_KNOWS_RSET_COPY_DATA	1
-
-#endif	/* MYSQLND_ENUM_N_DEF_H */
-
+#endif /* MYSQLND_ENUM_N_DEF_H */
 
 /*
  * Local variables:

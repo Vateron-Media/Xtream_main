@@ -4,7 +4,7 @@
 
         on: false,
         widget_on: false,
-        get_result: {data: []},
+        get_result: { data: [] },
 
         init: function () {
             _debug('radio_widget.init');
@@ -118,22 +118,22 @@
                     if (!self.get_result.data[idx]) {
                         return;
                     }
-                    try{
-                        if (typeof(self.get_result.data[idx]) == 'object') {
+                    try {
+                        if (typeof (self.get_result.data[idx]) == 'object') {
                             var cur_media_item = self.get_result.data[idx].clone();
                             if (cur_media_item.page != module.radio.cur_page) {
                                 module.radio.cur_page = cur_media_item.page;
                                 module.radio.load_params.p = cur_media_item.page;
                                 module.radio.load_data();
                             }
-                            stb.player.radio_idx = idx - ( cur_media_item.page - 1) * self.get_result.max_page_items;
+                            stb.player.radio_idx = idx - (cur_media_item.page - 1) * self.get_result.max_page_items;
                             stb.player.cur_media_item = cur_media_item;
                             module.radio.cur_row = stb.player.radio_idx;
                             stb.player.cur_media_item.playing = module.radio.data_items[stb.player.radio_idx].playing = 1;
                             stb.player.cur_media_item.paused = module.radio.data_items[stb.player.radio_idx].paused = 0;
                             stb.player.play(cur_media_item);
                         }
-                    } catch (e){
+                    } catch (e) {
                         _debug(e);
                         stb.player.stop();
                     }
@@ -177,14 +177,14 @@
             _debug('radio_widget.shift_playlist', dir);
         },
 
-        set_radio_widget_items_list: function(){
+        set_radio_widget_items_list: function () {
             _debug('set_radio_widget_items_list');
-            var load_params = (module.radio && module.radio.load_params) ? module.radio.load_params : { 'type'   : 'radio', 'action' : 'get_ordered_list'};
+            var load_params = (module.radio && module.radio.load_params) ? module.radio.load_params : { 'type': 'radio', 'action': 'get_ordered_list' };
             load_params.all = 1;
             _debug('load_params', load_params);
             stb.load(
                 load_params,
-                function(result){
+                function (result) {
                     this.get_result = result;
                 },
                 this

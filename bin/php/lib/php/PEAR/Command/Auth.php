@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Auth (login, logout commands)
  *
@@ -34,8 +35,7 @@ require_once 'PEAR/Command/Channels.php';
  * @since      Class available since Release 0.1
  * @deprecated since 1.8.0alpha1
  */
-class PEAR_Command_Auth extends PEAR_Command_Channels
-{
+class PEAR_Command_Auth extends PEAR_Command_Channels {
     var $commands = array(
         'login' => array(
             'summary' => 'Connects and authenticates to remote server [Deprecated in favor of channel-login]',
@@ -52,7 +52,7 @@ username and password you enter here will be stored in your per-user
 PEAR configuration (~/.pearrc on Unix-like systems).  After logging
 in, your username and password will be sent along in subsequent
 operations on the remote server.',
-            ),
+        ),
         'logout' => array(
             'summary' => 'Logs out from the remote server [Deprecated in favor of channel-logout]',
             'shortcut' => 'lo',
@@ -64,17 +64,16 @@ WARNING: This function is deprecated in favor of using channel-logout
 Logs out from the remote server.  This command does not actually
 connect to the remote server, it only deletes the stored username and
 password from your user configuration.',
-            )
+        )
 
-        );
+    );
 
     /**
      * PEAR_Command_Auth constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 }

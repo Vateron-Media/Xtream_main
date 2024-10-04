@@ -7,7 +7,7 @@
 		var charChangedCount = 0;
 		var previousValue;
 
-		var undoLimit  = 50;
+		var undoLimit = 50;
 		var redoStates = [];
 		var undoStates = [];
 		var ignoreNextValueChanged = false;
@@ -50,7 +50,7 @@
 			var start, end, aLenDiff, bLenDiff,
 				aLength = strA.length,
 				bLength = strB.length,
-				length  = Math.max(aLength, bLength);
+				length = Math.max(aLength, bLength);
 
 			// Calculate the start
 			for (start = 0; start < length; start++) {
@@ -65,7 +65,7 @@
 
 			for (end = length - 1; end >= 0; end--) {
 				if (strA.charAt(end - aLenDiff) !==
-						strB.charAt(end - bLenDiff)) {
+					strB.charAt(end - bLenDiff)) {
 					break;
 				}
 			}
@@ -159,7 +159,7 @@
 			// If the editor hasn't fully loaded yet,
 			// then the previous value won't be set.
 			if (ignoreNextValueChanged || !previousValue ||
-					previousValue === rawValue) {
+				previousValue === rawValue) {
 				return;
 			}
 
@@ -169,7 +169,7 @@
 
 			if (charChangedCount < 20) {
 				return;
-			// ??
+				// ??
 			} else if (charChangedCount < 50 && !/\s$/g.test(e.rawValue)) {
 				return;
 			}

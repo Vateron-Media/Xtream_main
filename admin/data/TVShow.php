@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 	This class handles all the data you can get from a TVShow
  *
@@ -9,7 +10,7 @@
  * 	@copyright Licensed under BSD (http://www.opensource.org/licenses/bsd-license.php)
  */
 
-class TVShow{
+class TVShow {
 
     //------------------------------------------------------------------------------
     // Class Variables
@@ -82,8 +83,8 @@ class TVShow{
      * 	@return int
      */
     public function getSeason($numSeason) {
-        foreach($this->_data['seasons'] as $season){
-            if ($season['season_number'] == $numSeason){
+        foreach ($this->_data['seasons'] as $season) {
+            if ($season['season_number'] == $numSeason) {
                 $data = $season;
                 break;
             }
@@ -99,7 +100,7 @@ class TVShow{
     public function getSeasons() {
         $seasons = array();
 
-        foreach($this->_data['seasons'] as $data){
+        foreach ($this->_data['seasons'] as $data) {
             $seasons[] = new Season($data, $this->getID());
         }
 
@@ -167,7 +168,7 @@ class TVShow{
      * 	@param string $item The item of the $data array you want
      * 	@return array
      */
-    public function get($item = ''){
+    public function get($item = '') {
         return (empty($item)) ? $this->_data : $this->_data[$item];
     }
 
@@ -184,4 +185,3 @@ class TVShow{
         return json_encode($this->_data, JSON_PRETTY_PRINT);
     }
 }
-?>

@@ -76,7 +76,8 @@ if ($rSettings["sidebar"]) {
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./reseller.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> Back to Dashboard</li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> Back to
+                                                Dashboard</li>
                                         </a>
                                     </ol>
                                 </div>
@@ -94,7 +95,8 @@ if ($rSettings["sidebar"]) {
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#" style="color: #fff; background-color: #5089de;" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#" style="color: #fff; background-color: #5089de;"
+                                                        data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-key mr-1"></i>
                                                         <span class="d-none d-sm-inline">Your Secret API Key</span>
                                                     </a>
@@ -108,7 +110,8 @@ if ($rSettings["sidebar"]) {
                                                 </div> <!-- end row -->
                                                 <ul class="list-inline wizard mb-0">
                                                     <li class="next list-inline-item float-right">
-                                                        <input name="submit_secret" type="submit" class="btn btn-primary" value="Generate" />
+                                                        <input name="submit_secret" type="submit"
+                                                            class="btn btn-primary" value="Generate" />
                                                     </li>
                                                 </ul>
 

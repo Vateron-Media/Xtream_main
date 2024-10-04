@@ -143,9 +143,9 @@
                 main_menu.show()
             }
         },
-        {"label": word['update_settings_start_update'], "cmd": update_settings.start_update},
-        {"label": word['empty'], "cmd": ''},
-        {"label": word['empty'], "cmd": ''}
+        { "label": word['update_settings_start_update'], "cmd": update_settings.start_update },
+        { "label": word['empty'], "cmd": '' },
+        { "label": word['empty'], "cmd": '' }
     ]);
 
     //update_settings.color_buttons[update_settings.color_buttons.getIdxByVal('color', 'yellow')].text_obj.setClass('disable_color_btn_text');

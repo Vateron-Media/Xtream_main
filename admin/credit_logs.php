@@ -25,7 +25,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <li>
-                                            <button type="button" class="btn btn-info waves-effect waves-light btn-sm btn-clear-logs">
+                                            <button type="button"
+                                                class="btn btn-info waves-effect waves-light btn-sm btn-clear-logs">
                                                 <i class="mdi mdi-minus"></i> <?= $_["clear_logs"] ?>
                                             </button>
                                         </li>
@@ -42,18 +43,22 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body" style="overflow-x:auto;">
                                     <div class="form-group row mb-4">
                                         <div class="col-md-3">
-                                            <input type="text" class="form-control" id="log_search" value="" placeholder="Search Logs...">
+                                            <input type="text" class="form-control" id="log_search" value=""
+                                                placeholder="Search Logs...">
                                         </div>
                                         <div class="col-md-4">
                                             <select id="reseller" class="form-control" data-toggle="select2">
                                                 <option value="" selected><?= $_["all_resellers"] ?></option>
                                                 <?php foreach (getRegisteredUsers() as $rReseller) { ?>
-                                                    <option value="<?= $rReseller["id"] ?>"><?= $rReseller["username"] ?></option>
+                                                    <option value="<?= $rReseller["id"] ?>"><?= $rReseller["username"] ?>
+                                                    </option>
                                                 <?php } ?>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
-                                            <input type="text" class="form-control text-center date" id="range" name="range" data-toggle="date-picker" data-single-date-picker="true" autocomplete="off" placeholder="Dates">
+                                            <input type="text" class="form-control text-center date" id="range"
+                                                name="range" data-toggle="date-picker" data-single-date-picker="true"
+                                                autocomplete="off" placeholder="Dates">
                                         </div>
                                         <div class="col-md-2">
                                             <select id="show_entries" class="form-control" data-toggle="select2">
@@ -86,7 +91,8 @@ if ($rSettings["sidebar"]) { ?>
                     <!-- end row-->
                     </div> <!-- end container -->
                 </div>
-                <div class="modal fade bs-logs-modal-center" tabindex="-1" role="dialog" aria-labelledby="clearLogsLabel" aria-hidden="true" style="display: none;" data-id="">
+                <div class="modal fade bs-logs-modal-center" tabindex="-1" role="dialog" aria-labelledby="clearLogsLabel"
+                    aria-hidden="true" style="display: none;" data-id="">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -97,14 +103,19 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="form-group row mb-4">
                                     <label class="col-md-4 col-form-label" for="range_clear"><?= $_["date_range"] ?></label>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control text-center date" id="range_clear_from" name="range_clear_from" data-toggle="date-picker" data-single-date-picker="true" autocomplete="off" placeholder="<?= $_["from"] ?>">
+                                        <input type="text" class="form-control text-center date" id="range_clear_from"
+                                            name="range_clear_from" data-toggle="date-picker" data-single-date-picker="true"
+                                            autocomplete="off" placeholder="<?= $_["from"] ?>">
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control text-center date" id="range_clear_to" name="range_clear_to" data-toggle="date-picker" data-single-date-picker="true" autocomplete="off" placeholder="<?= $_["to"] ?>">
+                                        <input type="text" class="form-control text-center date" id="range_clear_to"
+                                            name="range_clear_to" data-toggle="date-picker" data-single-date-picker="true"
+                                            autocomplete="off" placeholder="<?= $_["to"] ?>">
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <input id="clear_logs" type="submit" class="btn btn-primary" value="<?= $_["clear"] ?>" style="width:100%" />
+                                    <input id="clear_logs" type="submit" class="btn btn-primary" value="<?= $_["clear"] ?>"
+                                        style="width:100%" />
                                 </div>
                             </div>
                         </div><!-- /.modal-content -->

@@ -1,4 +1,4 @@
-#audioclub .genres_block{
+#audioclub .genres_block {
     position: absolute;
     right: 1px;
     top: 0;
@@ -14,15 +14,15 @@
     text-overflow: ellipsis;
 }
 
-#audioclub[data-place="albums"] .name_block{
+#audioclub[data-place="albums"] .name_block {
     margin-right: 201px;
 }
 
-#audioclub[data-place="albums"] .active_name_block{
+#audioclub[data-place="albums"] .active_name_block {
     margin-right: 229px;
 }
 
-#audioclub .active_genres_block{
+#audioclub .active_genres_block {
     position: absolute;
     right: 23px;
     top: 4px;
@@ -39,7 +39,7 @@
     text-overflow: ellipsis;
 }
 
-.audioclub_info_box{
+.audioclub_info_box {
     position: absolute;
     width: 370px;
     height: 196px;
@@ -52,13 +52,13 @@
     padding: 5px;
 }
 
-.audioclub_info_box span{
+.audioclub_info_box span {
     color: #cfeafe;
     font-size: 25px;
     font-family: "Myriad Pro Cond", serif;
 }
 
-.audioclub_screenshot_box{
+.audioclub_screenshot_box {
     position: absolute;
     /*background: url("i_720/mb_prev_bg.png");*/
     height: 242px;
@@ -68,12 +68,12 @@
     padding: 5px;
 }
 
-.audioclub_screenshot_box img{
+.audioclub_screenshot_box img {
     width: 240px;
     height: 240px;
 }
 
-#audioclub .playing_block{
+#audioclub .playing_block {
     width: 34px;
     height: 30px;
     float: left;
@@ -82,16 +82,16 @@
     background-position: 0 0;
 }
 
-#audioclub .active_playing_block{
+#audioclub .active_playing_block {
     width: 34px;
     height: 39px;
     margin: 6px 2px 0 0;
-    float:left;
+    float: left;
     background-image: url("i_720/mb_player.png");
     background-position: 0 -29px;
 }
 
-#audioclub .paused_block{
+#audioclub .paused_block {
     width: 34px;
     height: 30px;
     float: left;
@@ -100,28 +100,29 @@
     background-position: -34px 0;
 }
 
-#audioclub .active_paused_block{
+#audioclub .active_paused_block {
     width: 34px;
     height: 39px;
     margin: 6px 2px 0 0;
-    float:left;
+    float: left;
     background-image: url("i_720/mb_player.png");
     background-position: -34px -29px;
 }
 
-#audioclub .seek_bar_block{
+#audioclub .seek_bar_block {
     display: none;
 }
 
-#audioclub .active_row_bg[status="playing"] .active_name_block, #audioclub .playing .active_name_block{
+#audioclub .active_row_bg[status="playing"] .active_name_block,
+#audioclub .playing .active_name_block {
     margin-top: 4px;
 }
 
-#audioclub .active_row_bg .active_seek_bar_block{
+#audioclub .active_row_bg .active_seek_bar_block {
     display: none;
 }
 
-#audioclub .active_row_bg[status="playing"] .active_seek_bar_block{
+#audioclub .active_row_bg[status="playing"] .active_seek_bar_block {
     display: block;
     height: 4px;
     width: 680px;
@@ -132,13 +133,13 @@
     overflow: hidden;
 }
 
-#audioclub .seek_bar_inner{
+#audioclub .seek_bar_inner {
     height: 4px;
     width: 0;
     background-color: #fff;
 }
 
-.audioclub_buttons_bar span{
+.audioclub_buttons_bar span {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -146,6 +147,6 @@
     width: 200px;
 }
 
-.audioclub_wide_text_input .item input{
+.audioclub_wide_text_input .item input {
     width: 94%;
 }

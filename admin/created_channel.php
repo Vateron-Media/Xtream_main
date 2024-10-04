@@ -213,7 +213,8 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="./streams.php?filter=8">
-                                                <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-primary waves-effect waves-light btn-sm">
                                                     <?= $_["view_channels"] ?>
                                                 </button>
                                             </a>
@@ -250,7 +251,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["generic_fail"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS ==  2)) { ?>
+                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -276,7 +277,9 @@ if ($rSettings["sidebar"]) { ?>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td colspan="8" class="text-center"><?= $_["loading_channel_information"] ?></td>
+                                                    <td colspan="8" class="text-center">
+                                                        <?= $_["loading_channel_information"] ?>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -288,7 +291,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        <strong><?= $_["error_on_server"] ?> <?= $rServers[$rServerID]["server_name"] ?></strong><br />
+                                        <strong><?= $_["error_on_server"] ?>
+                                            <?= $rServers[$rServerID]["server_name"] ?></strong><br />
                                         <?= str_replace("\n", "<br/>", $rEncodeError) ?>
                                     </div>
                             <?php }
@@ -301,39 +305,45 @@ if ($rSettings["sidebar"]) { ?>
                                         <?php if (isset($rChannel)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rChannel["id"] ?>" />
                                         <?php } ?>
-                                        <input type="hidden" name="created_channel_location" id="created_channel_location" value="<?php if (isset($rChannel)) {
-                                                                                                                                        echo $rChannel["created_channel_location"];
-                                                                                                                                    } ?>" />
+                                        <input type="hidden" name="created_channel_location"
+                                            id="created_channel_location" value="<?php if (isset($rChannel)) {
+                                                                                        echo $rChannel["created_channel_location"];
+                                                                                    } ?>" />
                                         <input type="hidden" name="video_files" id="video_files" value="" />
                                         <input type="hidden" name="server_tree_data" id="server_tree_data" value="" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#stream-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item" id="selection_nav">
-                                                    <a href="#selection" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#selection" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-movie mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["selection"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item" id="review_nav">
-                                                    <a href="#review" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#review" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-marker mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["review"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item" id="videos_nav">
-                                                    <a href="#videos" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#videos" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-movie mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["videos"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#load-balancing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#load-balancing" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-server-network mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["servers"] ?></span>
                                                     </a>
@@ -344,9 +354,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="channel_type"><?= $_["seletion_type"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="channel_type"><?= $_["seletion_type"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="channel_type" id="channel_type" class="form-control select2" data-toggle="select2">
+                                                                    <select name="channel_type" id="channel_type"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach (array(0 => "Series", 1 => "File Browser", 2 => "VOD Selection") as $rID => $rType) { ?>
                                                                             <option <?php if (isset($rChannel)) {
                                                                                         if ($rProperties["type"] == $rID) {
@@ -358,10 +371,15 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4" id="series_nav">
-                                                                <label class="col-md-4 col-form-label" for="series_no"><?= $_["24/7_series"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="series_no"><?= $_["24/7_series"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="series_no" id="series_no" class="form-control select2" data-toggle="select2">
-                                                                        <option value="0"><?= $_["select_a_series"] ?>...</option>
+                                                                    <select name="series_no" id="series_no"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
+                                                                        <option value="0">
+                                                                            <?= $_["select_a_series"] ?>...
+                                                                        </option>
                                                                         <?php foreach (getSeries() as $rSeries) { ?>
                                                                             <option <?php if (isset($rChannel)) {
                                                                                         if (intval($rChannel["series_no"]) == intval($rSeries["id"])) {
@@ -373,17 +391,23 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="stream_display_name"><?= $_["channel_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="stream_display_name"><?= $_["channel_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="stream_display_name" name="stream_display_name" value="<?php if (isset($rChannel)) {
-                                                                                                                                                                            echo htmlspecialchars($rChannel["stream_display_name"]);
-                                                                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="stream_display_name"
+                                                                        name="stream_display_name" value="<?php if (isset($rChannel)) {
+                                                                                                                echo htmlspecialchars($rChannel["stream_display_name"]);
+                                                                                                            } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="category_id"><?= $_["category_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="category_id"><?= $_["category_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="category_id" id="category_id" class="form-control select2" data-toggle="select2">
+                                                                    <select name="category_id" id="category_id"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach ($rCategories as $rCategory) { ?>
                                                                             <option <?php if (isset($rChannel)) {
                                                                                         if (intval($rChannel["category_id"]) == intval($rCategory["id"])) {
@@ -391,15 +415,21 @@ if ($rSettings["sidebar"]) { ?>
                                                                                         }
                                                                                     } else if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
                                                                                         echo "selected ";
-                                                                                    } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                    } ?>value="<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="transcode_profile_id"><?= $_["transcoding_profile"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="transcode_profile_id"><?= $_["transcoding_profile"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="transcode_profile_id" id="transcode_profile_id" class="form-control select2" data-toggle="select2">
+                                                                    <select name="transcode_profile_id"
+                                                                        id="transcode_profile_id"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
                                                                             <option <?php if (isset($rChannel)) {
                                                                                         if (intval($rChannel["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
@@ -411,9 +441,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="bouquets"><?= $_["add_to_bouquets"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="bouquets"><?= $_["add_to_bouquets"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="bouquets[]" id="bouquets" class="form-control select2-multiple select2" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                    <select name="bouquets[]" id="bouquets"
+                                                                        class="form-control select2-multiple select2"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <option <?php if (isset($rChannel)) {
                                                                                         if (in_array($rChannel["id"], json_decode($rBouquet["bouquet_channels"], True))) {
@@ -425,26 +459,31 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="stream_icon"><?= $_["stream_logo_url"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="stream_icon"><?= $_["stream_logo_url"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="stream_icon" name="stream_icon" value="<?php if (isset($rChannel)) {
-                                                                                                                                                            echo htmlspecialchars($rChannel["stream_icon"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="stream_icon" name="stream_icon" value="<?php if (isset($rChannel)) {
+                                                                                                                        echo htmlspecialchars($rChannel["stream_icon"]);
+                                                                                                                    } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="notes"><?= $_["notes"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="notes"><?= $_["notes"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea id="notes" name="notes" class="form-control" rows="3" placeholder=""><?php if (isset($rChannel)) {
-                                                                                                                                                        echo htmlspecialchars($rChannel["notes"]);
-                                                                                                                                                    } ?></textarea>
+                                                                    <textarea id="notes" name="notes"
+                                                                        class="form-control" rows="3" placeholder=""><?php if (isset($rChannel)) {
+                                                                                                                            echo htmlspecialchars($rChannel["notes"]);
+                                                                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item float-right">
-                                                            <a href="javascript: void(0);" id="next_0" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);" id="next_0"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -452,9 +491,11 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="server_idc"><?= $_["server_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="server_idc"><?= $_["server_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select id="server_idc" class="form-control select2" data-toggle="select2">
+                                                                    <select id="server_idc" class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                                             <option value="<?= $rServer["id"] ?>" <?php if (isset($rChannel) && ($rChannel["created_channel_location"] == $rServer["id"])) {
                                                                                                                         echo " selected";
@@ -464,23 +505,33 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="category_name"><?= $_["category_series"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="category_name"><?= $_["category_series"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select id="category_idv" class="form-control select2" data-toggle="select2">
-                                                                        <option value="" selected><?= $_["no_filter"] ?></option>
+                                                                    <select id="category_idv"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
+                                                                        <option value="" selected><?= $_["no_filter"] ?>
+                                                                        </option>
                                                                         <?php foreach (getCategories("movie") as $rCategory) { ?>
-                                                                            <option value="0:<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                            <option value="0:<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?>
+                                                                            </option>
                                                                         <?php }
                                                                         foreach (getSeriesList() as $rSeries) { ?>
-                                                                            <option value="1:<?= $rSeries["id"] ?>"><?= $rSeries["title"] ?></option>
+                                                                            <option value="1:<?= $rSeries["id"] ?>">
+                                                                                <?= $rSeries["title"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="vod_search"><?= $_["search"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="vod_search"><?= $_["search"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="vod_search" value="">
+                                                                    <input type="text" class="form-control"
+                                                                        id="vod_search" value="">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -490,7 +541,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <th class="text-center"><?= $_["id"] ?></th>
                                                                             <th><?= $_["name"] ?></th>
                                                                             <th><?= $_["category_series"] ?></th>
-                                                                            <th class="text-center"><?= $_["actions"] ?></th>
+                                                                            <th class="text-center"><?= $_["actions"] ?>
+                                                                            </th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody></tbody>
@@ -500,11 +552,13 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <span class="float-right">
                                                             <li class="next list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                <a href="javascript: void(0);"
+                                                                    class="btn btn-secondary"><?= $_["next"] ?></a>
                                                             </li>
                                                         </span>
                                                     </ul>
@@ -514,10 +568,12 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4 stream-url">
                                                                 <div class="col-md-12">
-                                                                    <select multiple id="review_sort" name="review_sort" class="form-control" style="min-height:400px;">
+                                                                    <select multiple id="review_sort" name="review_sort"
+                                                                        class="form-control" style="min-height:400px;">
                                                                         <?php if ((isset($rChannel)) && (in_array(intval($rProperties["type"]), array(2)))) {
                                                                             foreach (json_decode($rChannel["stream_source"], True) as $rSource) { ?>
-                                                                                <option value="<?= $rSource ?>"><?= $rSource ?></option>
+                                                                                <option value="<?= $rSource ?>"><?= $rSource ?>
+                                                                                </option>
                                                                         <?php }
                                                                         } ?>
                                                                     </select>
@@ -527,12 +583,18 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item">
-                                                            <a href="javascript: void(0);" onClick="MoveUp('review')" class="btn btn-purple"><i class="mdi mdi-chevron-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveDown('review')" class="btn btn-purple"><i class="mdi mdi-chevron-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="AtoZ('review')" class="btn btn-info"><?= $_["a_to_z"] ?></a>
+                                                            <a href="javascript: void(0);" onClick="MoveUp('review')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveDown('review')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="AtoZ('review')"
+                                                                class="btn btn-info"><?= $_["a_to_z"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -540,20 +602,27 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4 stream-url">
-                                                                <label class="col-md-3 col-form-label" for="import_folder"><?= $_["import_folder"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="import_folder"><?= $_["import_folder"] ?></label>
                                                                 <div class="col-md-9 input-group">
-                                                                    <input type="text" id="import_folder" name="import_folder" readonly class="form-control" value="<?php if (isset($rChannel)) {
-                                                                                                                                                                        echo htmlspecialchars($rServers[$rChannel["created_channel_location"]]["server_name"]);
-                                                                                                                                                                    } ?>">
+                                                                    <input type="text" id="import_folder"
+                                                                        name="import_folder" readonly
+                                                                        class="form-control" value="<?php if (isset($rChannel)) {
+                                                                                                        echo htmlspecialchars($rServers[$rChannel["created_channel_location"]]["server_name"]);
+                                                                                                    } ?>">
                                                                     <div class="input-group-append">
-                                                                        <a href="#file-browser" id="filebrowser" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-folder-open-outline"></i></a>
+                                                                        <a href="#file-browser" id="filebrowser"
+                                                                            class="btn btn-primary waves-effect waves-light"><i
+                                                                                class="mdi mdi-folder-open-outline"></i></a>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12 add-margin-top-20">
-                                                                    <select multiple id="videos_sort" name="videos_sort" class="form-control" style="min-height:400px;">
+                                                                    <select multiple id="videos_sort" name="videos_sort"
+                                                                        class="form-control" style="min-height:400px;">
                                                                         <?php if ((isset($rChannel)) && (in_array(intval($rProperties["type"]), array(1)))) {
                                                                             foreach (json_decode($rChannel["stream_source"], True) as $rSource) { ?>
-                                                                                <option value="<?= $rSource ?>"><?= $rSource ?></option>
+                                                                                <option value="<?= $rSource ?>"><?= $rSource ?>
+                                                                                </option>
                                                                         <?php }
                                                                         } ?>
                                                                     </select>
@@ -563,13 +632,21 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item">
-                                                            <a href="javascript: void(0);" onClick="MoveUp('videos')" class="btn btn-purple"><i class="mdi mdi-chevron-up"></i></a>
-                                                            <a href="javascript: void(0);" onClick="MoveDown('videos')" class="btn btn-purple"><i class="mdi mdi-chevron-down"></i></a>
-                                                            <a href="javascript: void(0);" onClick="Remove('videos')" class="btn btn-warning"><i class="mdi mdi-close"></i></a>
-                                                            <a href="javascript: void(0);" onClick="AtoZ('videos')" class="btn btn-info"><?= $_["a_to_z"] ?></a>
+                                                            <a href="javascript: void(0);" onClick="MoveUp('videos')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-up"></i></a>
+                                                            <a href="javascript: void(0);" onClick="MoveDown('videos')"
+                                                                class="btn btn-purple"><i
+                                                                    class="mdi mdi-chevron-down"></i></a>
+                                                            <a href="javascript: void(0);" onClick="Remove('videos')"
+                                                                class="btn btn-warning"><i
+                                                                    class="mdi mdi-close"></i></a>
+                                                            <a href="javascript: void(0);" onClick="AtoZ('videos')"
+                                                                class="btn btn-info"><?= $_["a_to_z"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -577,29 +654,35 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="servers"><?= $_["server_tree"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="servers"><?= $_["server_tree"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <div id="server_tree"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="restart_on_edit"><?php if (isset($rChannel)) { ?><?= $_["restart_on_edit"] ?><?php } else { ?><?= $_["start_channel_now"] ?><?php } ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="restart_on_edit"><?php if (isset($rChannel)) { ?><?= $_["restart_on_edit"] ?><?php } else { ?><?= $_["start_channel_now"] ?><?php } ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="restart_on_edit" id="restart_on_edit" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="restart_on_edit" id="restart_on_edit"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item">
-                                                            <a href="javascript: void(0);" id="previous_0" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);" id="previous_0"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_stream" type="submit" class="btn btn-primary" value="<?php if (isset($rChannel)) {
-                                                                                                                                            echo $_["edit"];
-                                                                                                                                        } else {
-                                                                                                                                            echo $_["create"];
-                                                                                                                                        } ?>" />
+                                                            <input name="submit_stream" type="submit"
+                                                                class="btn btn-primary" value="<?php if (isset($rChannel)) {
+                                                                                                    echo $_["edit"];
+                                                                                                } else {
+                                                                                                    echo $_["create"];
+                                                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -609,9 +692,11 @@ if ($rSettings["sidebar"]) { ?>
                                     <div id="file-browser" class="mfp-hide white-popup-block">
                                         <div class="col-12">
                                             <div class="form-group row mb-4">
-                                                <label class="col-md-4 col-form-label" for="server_id"><?= $_["server_name"] ?></label>
+                                                <label class="col-md-4 col-form-label"
+                                                    for="server_id"><?= $_["server_name"] ?></label>
                                                 <div class="col-md-8">
-                                                    <select id="server_id" class="form-control select2" data-toggle="select2">
+                                                    <select id="server_id" class="form-control select2"
+                                                        data-toggle="select2">
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if (isset($rChannel) && ($rChannel["created_channel_location"] == $rServer["id"])) {
                                                                                                         echo " selected";
@@ -621,11 +706,15 @@ if ($rSettings["sidebar"]) { ?>
                                                 </div>
                                             </div>
                                             <div class="form-group row mb-4">
-                                                <label class="col-md-4 col-form-label" for="current_path"><?= $_["current_path"] ?></label>
+                                                <label class="col-md-4 col-form-label"
+                                                    for="current_path"><?= $_["current_path"] ?></label>
                                                 <div class="col-md-8 input-group">
-                                                    <input type="text" id="current_path" name="current_path" class="form-control" value="/">
+                                                    <input type="text" id="current_path" name="current_path"
+                                                        class="form-control" value="/">
                                                     <div class="input-group-append">
-                                                        <button class="btn btn-primary waves-effect waves-light" type="button" id="changeDir"><i class="mdi mdi-chevron-right"></i></button>
+                                                        <button class="btn btn-primary waves-effect waves-light"
+                                                            type="button" id="changeDir"><i
+                                                                class="mdi mdi-chevron-right"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -654,7 +743,8 @@ if ($rSettings["sidebar"]) { ?>
                                                 </div>
                                             </div>
                                             <div class="float-right">
-                                                <input id="select_folder" type="button" class="btn btn-info" value="<?= $_["add_this_directory"] ?>" />
+                                                <input id="select_folder" type="button" class="btn btn-info"
+                                                    value="<?= $_["add_this_directory"] ?>" />
                                             </div>
                                         </div> <!-- end col -->
                                     </div>

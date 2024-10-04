@@ -12,7 +12,7 @@
 
         this.layer_name = 'common_settings';
 
-        this.save_params = {"type": "stb", "action": "set_common_settings"};
+        this.save_params = { "type": "stb", "action": "set_common_settings" };
 
         this.superclass = SettingLayer.prototype;
 
@@ -117,9 +117,9 @@
                 main_menu.show()
             }
         },
-        {"label": word['settings_save'], "cmd": common_settings.save},
-        {"label": word['empty'], "cmd": ''},
-        {"label": word['empty'], "cmd": ''}
+        { "label": word['settings_save'], "cmd": common_settings.save },
+        { "label": word['empty'], "cmd": '' },
+        { "label": word['empty'], "cmd": '' }
     ]);
 
     common_settings.init_header_path(get_word('common_settings_title'));

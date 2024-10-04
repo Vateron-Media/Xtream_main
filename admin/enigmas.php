@@ -32,31 +32,37 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="#" onClick="clearFilters();">
-                                                <button type="button" class="btn btn-warning waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-warning waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-filter-remove"></i>
                                                 </button>
                                             </a>
                                             <a href="#" onClick="changeZoom();">
-                                                <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-info waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-magnify"></i>
                                                 </button>
                                             </a>
                                             <?php if (!$detect->isMobile()) { ?>
                                                 <a href="#" onClick="toggleAuto();">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-refresh"></i> <span class="auto-text"><?= $_["auto_refresh"] ?></span>
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
+                                                        <i class="mdi mdi-refresh"></i> <span
+                                                            class="auto-text"><?= $_["auto_refresh"] ?></span>
                                                     </button>
                                                 </a>
                                             <?php } else { ?>
                                                 <a href="javascript:location.reload();" onClick="toggleAuto();">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
                                                     </button>
                                                 </a>
                                             <?php }
                                             if (($rPermissions["is_admin"]) && (hasPermissions("adv", "add_mag"))) { ?>
                                                 <a href="enigma.php">
-                                                    <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-primary waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-link"></i> <?= $_["link_enigma"] ?>
                                                     </button>
                                                 </a>
@@ -65,7 +71,8 @@ if ($rSettings["sidebar"]) { ?>
                                                 <a href="user<?php if ($rPermissions["is_reseller"]) {
                                                                     echo "_reseller";
                                                                 } ?>.php?e2">
-                                                    <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-plus"></i> <?= $_["add_enigma"] ?>
                                                     </button>
                                                 </a>
@@ -85,14 +92,18 @@ if ($rSettings["sidebar"]) { ?>
                                     <form id="e2_form">
                                         <div class="form-group row mb-4">
                                             <div class="col-md-3">
-                                                <input type="text" class="form-control" id="e2_search" value="" placeholder="<?= $_["search_devices"] ?>...">
+                                                <input type="text" class="form-control" id="e2_search" value=""
+                                                    placeholder="<?= $_["search_devices"] ?>...">
                                             </div>
-                                            <label class="col-md-2 col-form-label text-center" for="e2_reseller"><?= $_["filter_results"] ?></label>
+                                            <label class="col-md-2 col-form-label text-center"
+                                                for="e2_reseller"><?= $_["filter_results"] ?></label>
                                             <div class="col-md-3">
                                                 <select id="e2_reseller" class="form-control" data-toggle="select2">
                                                     <option value="" selected><?= $_["all_resellers"] ?></option>
                                                     <?php foreach ($rRegisteredUsers as $rRegisteredUser) { ?>
-                                                        <option value="<?= $rRegisteredUser["id"] ?>"><?= $rRegisteredUser["username"] ?></option>
+                                                        <option value="<?= $rRegisteredUser["id"] ?>">
+                                                            <?= $rRegisteredUser["username"] ?>
+                                                        </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -106,7 +117,8 @@ if ($rSettings["sidebar"]) { ?>
                                                     <option value="5"><?= $_["trial"] ?></option>
                                                 </select>
                                             </div>
-                                            <label class="col-md-1 col-form-label text-center" for="e2_show_entries"><?= $_["show"] ?></label>
+                                            <label class="col-md-1 col-form-label text-center"
+                                                for="e2_show_entries"><?= $_["show"] ?></label>
                                             <div class="col-md-1">
                                                 <select id="e2_show_entries" class="form-control" data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
@@ -118,7 +130,8 @@ if ($rSettings["sidebar"]) { ?>
                                             </div>
                                         </div>
                                     </form>
-                                    <table id="datatable-users" class="table table-hover dt-responsive nowrap font-normal">
+                                    <table id="datatable-users"
+                                        class="table table-hover dt-responsive nowrap font-normal">
                                         <thead>
                                             <tr>
                                                 <th class="text-center"><?= $_["id"] ?></th>

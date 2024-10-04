@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Registry (list, list-files, shell-test, info commands)
  *
@@ -32,8 +33,7 @@ require_once 'PEAR/Command/Common.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
-class PEAR_Command_Registry extends PEAR_Command_Common
-{
+class PEAR_Command_Registry extends PEAR_Command_Common {
     var $commands = array(
         'list' => array(
             'summary' => 'List Installed Packages In The Default Channel',
@@ -44,22 +44,22 @@ class PEAR_Command_Registry extends PEAR_Command_Common
                     'shortopt' => 'c',
                     'doc' => 'list installed packages from this channel',
                     'arg' => 'CHAN',
-                    ),
+                ),
                 'allchannels' => array(
                     'shortopt' => 'a',
                     'doc' => 'list installed packages from all channels',
-                    ),
+                ),
                 'channelinfo' => array(
                     'shortopt' => 'i',
                     'doc' => 'output fully channel-aware data, even on failure',
-                    ),
                 ),
+            ),
             'doc' => '<package>
 If invoked without parameters, this command lists the PEAR packages
 installed in your php_dir ({config php_dir}).  With a parameter, it
 lists the files in a package.
 ',
-            ),
+        ),
         'list-files' => array(
             'summary' => 'List Files In Installed Package',
             'function' => 'doFileList',
@@ -68,7 +68,7 @@ lists the files in a package.
             'doc' => '<package>
 List the files in an installed package.
 '
-            ),
+        ),
         'shell-test' => array(
             'summary' => 'Shell Script Test',
             'function' => 'doShellTest',
@@ -79,38 +79,36 @@ Tests if a package is installed in the system. Will exit(1) if it is not.
    <relation>   The version comparison operator. One of:
                 <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne
    <version>    The version to compare with
-'),
+'
+        ),
         'info' => array(
-            'summary'  => 'Display information about a package',
+            'summary' => 'Display information about a package',
             'function' => 'doInfo',
             'shortcut' => 'in',
-            'options'  => array(),
-            'doc'      => '<package>
+            'options' => array(),
+            'doc' => '<package>
 Displays information about a package. The package argument may be a
 local package file, an URL to a package file, or the name of an
 installed package.'
-            )
-        );
+        )
+    );
 
     /**
      * PEAR_Command_Registry constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 
-    function _sortinfo($a, $b)
-    {
+    function _sortinfo($a, $b) {
         $apackage = isset($a['package']) ? $a['package'] : $a['name'];
         $bpackage = isset($b['package']) ? $b['package'] : $b['name'];
         return strcmp($apackage, $bpackage);
     }
 
-    function doList($command, $options, $params)
-    {
+    function doList($command, $options, $params) {
         $reg = &$this->config->getRegistry();
         $channelinfo = isset($options['channelinfo']);
         if (isset($options['allchannels']) && !$channelinfo) {
@@ -147,7 +145,7 @@ installed package.'
 
         if (isset($options['channel'])) {
             if (!$reg->channelExists($options['channel'])) {
-                return $this->raiseError('Channel "' . $options['channel'] .'" does not exist');
+                return $this->raiseError('Channel "' . $options['channel'] . '" does not exist');
             }
 
             $channel = $reg->channelName($options['channel']);
@@ -164,7 +162,7 @@ installed package.'
             'border' => true,
             'headline' => array('Package', 'Version', 'State'),
             'channel' => $channel,
-            );
+        );
         if ($channelinfo) {
             $data['headline'] = array('Channel', 'Package', 'Version', 'State');
         }
@@ -175,13 +173,20 @@ installed package.'
 
         foreach ($installed as $package) {
             $pobj = $reg->getPackage(isset($package['package']) ?
-                                        $package['package'] : $package['name'], $channel);
+                $package['package'] : $package['name'], $channel);
             if ($channelinfo) {
-                $packageinfo = array($pobj->getChannel(), $pobj->getPackage(), $pobj->getVersion(),
-                                    $pobj->getState() ? $pobj->getState() : null);
+                $packageinfo = array(
+                    $pobj->getChannel(),
+                    $pobj->getPackage(),
+                    $pobj->getVersion(),
+                    $pobj->getState() ? $pobj->getState() : null
+                );
             } else {
-                $packageinfo = array($pobj->getPackage(), $pobj->getVersion(),
-                                    $pobj->getState() ? $pobj->getState() : null);
+                $packageinfo = array(
+                    $pobj->getPackage(),
+                    $pobj->getVersion(),
+                    $pobj->getState() ? $pobj->getState() : null
+                );
             }
             $data['data'][] = $packageinfo;
         }
@@ -204,8 +209,7 @@ installed package.'
         return true;
     }
 
-    function doListAll($command, $options, $params)
-    {
+    function doListAll($command, $options, $params) {
         // This duplicate code is deprecated over
         // list --channelinfo, which gives identical
         // output for list and list --allchannels.
@@ -214,17 +218,20 @@ installed package.'
         foreach ($installed as $channel => $packages) {
             usort($packages, array($this, '_sortinfo'));
             $data = array(
-                'caption'  => 'Installed packages, channel ' . $channel . ':',
-                'border'   => true,
+                'caption' => 'Installed packages, channel ' . $channel . ':',
+                'border' => true,
                 'headline' => array('Package', 'Version', 'State'),
-                'channel'  => $channel
+                'channel' => $channel
             );
 
             foreach ($packages as $package) {
                 $p = isset($package['package']) ? $package['package'] : $package['name'];
                 $pobj = $reg->getPackage($p, $channel);
-                $data['data'][] = array($pobj->getPackage(), $pobj->getVersion(),
-                                        $pobj->getState() ? $pobj->getState() : null);
+                $data['data'][] = array(
+                    $pobj->getPackage(),
+                    $pobj->getVersion(),
+                    $pobj->getState() ? $pobj->getState() : null
+                );
             }
 
             // Adds a blank line after each section
@@ -236,15 +243,14 @@ installed package.'
                     'border' => true,
                     'data' => array(array('(no packages installed)'), array()),
                     'channel' => $channel
-                    );
+                );
             }
             $this->ui->outputData($data, $command);
         }
         return true;
     }
 
-    function doFileList($command, $options, $params)
-    {
+    function doFileList($command, $options, $params) {
         if (count($params) !== 1) {
             return $this->raiseError('list-files expects 1 parameter');
         }
@@ -298,7 +304,8 @@ installed package.'
         $data = array(
             'caption' => $caption,
             'border' => true,
-            'headline' => $headings);
+            'headline' => $headings
+        );
         if ($info->getPackagexmlVersion() == '1.0' || $installed) {
             foreach ($list as $file => $att) {
                 if ($installed) {
@@ -307,8 +314,12 @@ installed package.'
                     }
                     $data['data'][] = array($att['role'], $att['installed_as']);
                 } else {
-                    if (isset($att['baseinstalldir']) && !in_array($att['role'],
-                          array('test', 'data', 'doc'))) {
+                    if (
+                        isset($att['baseinstalldir']) && !in_array(
+                            $att['role'],
+                            array('test', 'data', 'doc')
+                        )
+                    ) {
                         $dest = $att['baseinstalldir'] . DIRECTORY_SEPARATOR .
                             $file;
                     } else {
@@ -331,11 +342,15 @@ installed package.'
                                 $dest;
                     }
                     $ds2 = DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR;
-                    $dest = preg_replace(array('!\\\\+!', '!/!', "!$ds2+!"),
-                                                    array(DIRECTORY_SEPARATOR,
-                                                          DIRECTORY_SEPARATOR,
-                                                          DIRECTORY_SEPARATOR),
-                                                    $dest);
+                    $dest = preg_replace(
+                        array('!\\\\+!', '!/!', "!$ds2+!"),
+                        array(
+                            DIRECTORY_SEPARATOR,
+                            DIRECTORY_SEPARATOR,
+                            DIRECTORY_SEPARATOR
+                        ),
+                        $dest
+                    );
                     $file = preg_replace('!/+!', '/', $file);
                     $data['data'][] = array($file, $dest);
                 }
@@ -368,8 +383,7 @@ installed package.'
         return true;
     }
 
-    function doShellTest($command, $options, $params)
-    {
+    function doShellTest($command, $options, $params) {
         if (count($params) < 1) {
             return PEAR::raiseError('ERROR, usage: pear shell-test packagename [[relation] version]');
         }
@@ -415,15 +429,15 @@ installed package.'
         }
     }
 
-    function doInfo($command, $options, $params)
-    {
+    function doInfo($command, $options, $params) {
         if (count($params) !== 1) {
             return $this->raiseError('pear info expects 1 parameter');
         }
 
         $info = $fp = false;
         $reg = &$this->config->getRegistry();
-        if (is_file($params[0]) && !is_dir($params[0]) &&
+        if (
+            is_file($params[0]) && !is_dir($params[0]) &&
             (file_exists($params[0]) || $fp = @fopen($params[0], 'r'))
         ) {
             if ($fp) {
@@ -500,103 +514,106 @@ installed package.'
             if (is_array($info[$key])) {
                 switch ($key) {
                     case 'maintainers': {
-                        $i = 0;
-                        $mstr = '';
-                        foreach ($info[$key] as $m) {
-                            if ($i++ > 0) {
-                                $mstr .= "\n";
+                            $i = 0;
+                            $mstr = '';
+                            foreach ($info[$key] as $m) {
+                                if ($i++ > 0) {
+                                    $mstr .= "\n";
+                                }
+                                $mstr .= $m['name'] . " <";
+                                if (isset($m['email'])) {
+                                    $mstr .= $m['email'];
+                                } else {
+                                    $mstr .= $m['handle'] . '@php.net';
+                                }
+                                $mstr .= "> ($m[role])";
                             }
-                            $mstr .= $m['name'] . " <";
-                            if (isset($m['email'])) {
-                                $mstr .= $m['email'];
-                            } else {
-                                $mstr .= $m['handle'] . '@php.net';
-                            }
-                            $mstr .= "> ($m[role])";
+                            $info[$key] = $mstr;
+                            break;
                         }
-                        $info[$key] = $mstr;
-                        break;
-                    }
                     case 'release_deps': {
-                        $i = 0;
-                        $dstr = '';
-                        foreach ($info[$key] as $d) {
-                            if (isset($this->_deps_rel_trans[$d['rel']])) {
-                                $rel = $this->_deps_rel_trans[$d['rel']];
-                            } else {
-                                $rel = $d['rel'];
+                            $i = 0;
+                            $dstr = '';
+                            foreach ($info[$key] as $d) {
+                                if (isset($this->_deps_rel_trans[$d['rel']])) {
+                                    $rel = $this->_deps_rel_trans[$d['rel']];
+                                } else {
+                                    $rel = $d['rel'];
+                                }
+                                if (isset($this->_deps_type_trans[$d['type']])) {
+                                    $type = ucfirst($this->_deps_type_trans[$d['type']]);
+                                } else {
+                                    $type = $d['type'];
+                                }
+                                if (isset($d['name'])) {
+                                    $name = $d['name'] . ' ';
+                                } else {
+                                    $name = '';
+                                }
+                                if (isset($d['version'])) {
+                                    $version = $d['version'] . ' ';
+                                } else {
+                                    $version = '';
+                                }
+                                if (isset($d['optional']) && $d['optional'] == 'yes') {
+                                    $optional = ' (optional)';
+                                } else {
+                                    $optional = '';
+                                }
+                                $dstr .= "$type $name$rel $version$optional\n";
                             }
-                            if (isset($this->_deps_type_trans[$d['type']])) {
-                                $type = ucfirst($this->_deps_type_trans[$d['type']]);
-                            } else {
-                                $type = $d['type'];
-                            }
-                            if (isset($d['name'])) {
-                                $name = $d['name'] . ' ';
-                            } else {
-                                $name = '';
-                            }
-                            if (isset($d['version'])) {
-                                $version = $d['version'] . ' ';
-                            } else {
-                                $version = '';
-                            }
-                            if (isset($d['optional']) && $d['optional'] == 'yes') {
-                                $optional = ' (optional)';
-                            } else {
-                                $optional = '';
-                            }
-                            $dstr .= "$type $name$rel $version$optional\n";
+                            $info[$key] = $dstr;
+                            break;
                         }
-                        $info[$key] = $dstr;
-                        break;
-                    }
-                    case 'provides' : {
-                        $debug = $this->config->get('verbose');
-                        if ($debug < 2) {
-                            $pstr = 'Classes: ';
-                        } else {
-                            $pstr = '';
-                        }
-                        $i = 0;
-                        foreach ($info[$key] as $p) {
-                            if ($debug < 2 && $p['type'] != "class") {
-                                continue;
-                            }
-                            // Only print classes when verbosity mode is < 2
+                    case 'provides': {
+                            $debug = $this->config->get('verbose');
                             if ($debug < 2) {
-                                if ($i++ > 0) {
-                                    $pstr .= ", ";
-                                }
-                                $pstr .= $p['name'];
+                                $pstr = 'Classes: ';
                             } else {
-                                if ($i++ > 0) {
-                                    $pstr .= "\n";
+                                $pstr = '';
+                            }
+                            $i = 0;
+                            foreach ($info[$key] as $p) {
+                                if ($debug < 2 && $p['type'] != "class") {
+                                    continue;
                                 }
-                                $pstr .= ucfirst($p['type']) . " " . $p['name'];
-                                if (isset($p['explicit']) && $p['explicit'] == 1) {
-                                    $pstr .= " (explicit)";
+                                // Only print classes when verbosity mode is < 2
+                                if ($debug < 2) {
+                                    if ($i++ > 0) {
+                                        $pstr .= ", ";
+                                    }
+                                    $pstr .= $p['name'];
+                                } else {
+                                    if ($i++ > 0) {
+                                        $pstr .= "\n";
+                                    }
+                                    $pstr .= ucfirst($p['type']) . " " . $p['name'];
+                                    if (isset($p['explicit']) && $p['explicit'] == 1) {
+                                        $pstr .= " (explicit)";
+                                    }
                                 }
                             }
+                            $info[$key] = $pstr;
+                            break;
                         }
-                        $info[$key] = $pstr;
-                        break;
-                    }
-                    case 'configure_options' : {
-                        foreach ($info[$key] as $i => $p) {
-                            $info[$key][$i] = array_map(null, array_keys($p), array_values($p));
-                            $info[$key][$i] = array_map(
-                                function($a) { return join(" = ", $a); },
-                                $info[$key][$i]);
-                            $info[$key][$i] = implode(', ', $info[$key][$i]);
+                    case 'configure_options': {
+                            foreach ($info[$key] as $i => $p) {
+                                $info[$key][$i] = array_map(null, array_keys($p), array_values($p));
+                                $info[$key][$i] = array_map(
+                                    function ($a) {
+                                        return join(" = ", $a);
+                                    },
+                                    $info[$key][$i]
+                                );
+                                $info[$key][$i] = implode(', ', $info[$key][$i]);
+                            }
+                            $info[$key] = implode("\n", $info[$key]);
+                            break;
                         }
-                        $info[$key] = implode("\n", $info[$key]);
-                        break;
-                    }
                     default: {
-                        $info[$key] = implode(", ", $info[$key]);
-                        break;
-                    }
+                            $info[$key] = implode(", ", $info[$key]);
+                            break;
+                        }
                 }
             }
 
@@ -618,7 +635,8 @@ installed package.'
         $caption = 'About ' . $info['package'] . '-' . $info['version'];
         $data = array(
             'caption' => $caption,
-            'border' => true);
+            'border' => true
+        );
         foreach ($info as $key => $value) {
             $key = ucwords(trim(str_replace('_', ' ', $key)));
             $data['data'][] = array($key, $value);
@@ -631,33 +649,33 @@ installed package.'
     /**
      * @access private
      */
-    function _doInfo2($command, $options, $params, &$obj, $installed)
-    {
+    function _doInfo2($command, $options, $params, &$obj, $installed) {
         $reg = &$this->config->getRegistry();
-        $caption = 'About ' . $obj->getChannel() . '/' .$obj->getPackage() . '-' .
+        $caption = 'About ' . $obj->getChannel() . '/' . $obj->getPackage() . '-' .
             $obj->getVersion();
         $data = array(
             'caption' => $caption,
-            'border' => true);
+            'border' => true
+        );
         switch ($obj->getPackageType()) {
-            case 'php' :
+            case 'php':
                 $release = 'PEAR-style PHP-based Package';
-            break;
-            case 'extsrc' :
+                break;
+            case 'extsrc':
                 $release = 'PECL-style PHP extension (source code)';
-            break;
-            case 'zendextsrc' :
+                break;
+            case 'zendextsrc':
                 $release = 'PECL-style Zend extension (source code)';
-            break;
-            case 'extbin' :
+                break;
+            case 'extbin':
                 $release = 'PECL-style PHP extension (binary)';
-            break;
-            case 'zendextbin' :
+                break;
+            case 'zendextbin':
                 $release = 'PECL-style Zend extension (binary)';
-            break;
-            case 'bundle' :
+                break;
+            case 'bundle':
                 $release = 'Package bundle (collection of packages)';
-            break;
+                break;
         }
         $extends = $obj->getExtends();
         $extends = $extends ?
@@ -672,7 +690,7 @@ installed package.'
             'Channel' => $obj->getChannel(),
             'Summary' => preg_replace('/  +/', ' ', $obj->getSummary()),
             'Description' => preg_replace('/  +/', ' ', $obj->getDescription()),
-            );
+        );
         $info['Maintainers'] = '';
         foreach (array('lead', 'developer', 'contributor', 'helper') as $role) {
             $leads = $obj->{"get{$role}s"}();
@@ -896,10 +914,10 @@ installed package.'
                         }
 
                         $package['package'] = $package['name']; // for parsedPackageNameToString
-                         if (isset($package['conflicts'])) {
+                        if (isset($package['conflicts'])) {
                             $info['Not Compatible with'] .= '=> except ';
                         }
-                       $info['Not Compatible with'] .= 'Package ' .
+                        $info['Not Compatible with'] .= 'Package ' .
                             $reg->parsedPackageNameToString($package, true);
                         $info['Not Compatible with'] .= "\n  Versions " . $package['exclude'];
                     }

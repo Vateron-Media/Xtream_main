@@ -41,9 +41,9 @@
 		while (node) {
 			// 3 is TextNodes
 			if (node.nodeType === 3) {
-				var text   = node.nodeValue;
+				var text = node.nodeValue;
 				var parent = node.parentNode;
-				var match  = text.match(ytUrlRegex);
+				var match = text.match(ytUrlRegex);
 
 				if (match) {
 					parent.insertBefore(document.createTextNode(

@@ -1,7 +1,7 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +-----------------------------------------------------------------------------+
-// | Copyright (c) 2003 Sérgio Gonçalves Carvalho                                |
+// | Copyright (c) 2003 Sï¿½rgio Gonï¿½alves Carvalho                                |
 // +-----------------------------------------------------------------------------+
 // | This file is part of Structures_Graph.                                      |
 // |                                                                             |
@@ -20,7 +20,7 @@
 // | Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA                    |
 // | 02111-1307 USA                                                              |
 // +-----------------------------------------------------------------------------+
-// | Author: Sérgio Carvalho <sergio.carvalho@portugalmail.com>                  |
+// | Author: Sï¿½rgio Carvalho <sergio.carvalho@portugalmail.com>                  |
 // +-----------------------------------------------------------------------------+
 //
 
@@ -29,13 +29,12 @@ require_once dirname(__FILE__) . '/helper.inc';
 /**
  * @access private
  */
-class BasicGraph extends PHPUnit_Framework_TestCase
-{
+class BasicGraph extends PHPUnit_Framework_TestCase {
     var $_graph = null;
 
     function test_create_graph() {
         $this->_graph = new Structures_Graph();
-        $this->assertTrue(is_a($this->_graph, 'Structures_Graph')); 
+        $this->assertTrue(is_a($this->_graph, 'Structures_Graph'));
     }
 
     function test_add_node() {
@@ -58,10 +57,10 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $this->_graph->addNode($node2);
         $node1->connectTo($node2);
 
-        $node =& $this->_graph->getNodes();
-        $node =& $node[0];
+        $node = &$this->_graph->getNodes();
+        $node = &$node[0];
         $node = $node->getNeighbours();
-        $node =& $node[0];
+        $node = &$node[0];
         /* 
          ZE1 == and === operators fail on $node,$node2 because of the recursion introduced
          by the _graph field in the Node object. So, we'll use the stupid method for reference
@@ -80,9 +79,9 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $node->setData($data);
         $this->_graph->addNode($node);
         $data = 2;
-        $dataInNode =& $this->_graph->getNodes();
-        $dataInNode =& $dataInNode[0];
-        $dataInNode =& $dataInNode->getData();
+        $dataInNode = &$this->_graph->getNodes();
+        $dataInNode = &$dataInNode[0];
+        $dataInNode = &$dataInNode->getData();
         $this->assertEquals($data, $dataInNode);
     }
 
@@ -92,10 +91,10 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $node = new Structures_Graph_Node();
         $node->setMetadata('5', $data);
         $data = 2;
-        $dataInNode =& $node->getMetadata('5');
+        $dataInNode = &$node->getMetadata('5');
         $this->assertEquals($data, $dataInNode);
     }
-   
+
     function test_metadata_key_exists() {
         $this->_graph = new Structures_Graph();
         $data = 1;
@@ -167,4 +166,3 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $node[2]->outDegree(), 'outDegree test failed for node 2 with 2 arcs');
     }
 }
-?>

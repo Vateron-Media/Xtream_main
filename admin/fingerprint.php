@@ -25,7 +25,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./streams.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_streams"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_streams"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
@@ -42,13 +43,15 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item" id="stream-selection-tab">
-                                                    <a href="#stream-selection" id="stream-selection-nav" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-selection" id="stream-selection-nav"
+                                                        data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-play mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["stream"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item disabled" id="stream-activity-tab">
-                                                    <a href="#stream-activity" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-activity" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-group mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["activity"] ?></span>
                                                     </a>
@@ -58,21 +61,27 @@ if ($rSettings["sidebar"]) { ?>
                                                 <div class="tab-pane" id="stream-selection">
                                                     <div class="row">
                                                         <div class="col-md-5 col-6">
-                                                            <input type="text" class="form-control" id="stream_search" value="" placeholder="<?= $_["search_streams"] ?>...">
+                                                            <input type="text" class="form-control" id="stream_search"
+                                                                value="" placeholder="<?= $_["search_streams"] ?>...">
                                                         </div>
                                                         <div class="col-md-4 col-6">
-                                                            <select id="category_search" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["all_categories"] ?></option>
+                                                            <select id="category_search" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["all_categories"] ?>
+                                                                </option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
                                                                                                                 echo " selected";
-                                                                                                            } ?>><?= $rCategory["category_name"] ?></option>
+                                                                                                            } ?>><?= $rCategory["category_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
-                                                        <label class="col-md-1 col-2 col-form-label text-center" for="show_entries"><?= $_["show"] ?></label>
+                                                        <label class="col-md-1 col-2 col-form-label text-center"
+                                                            for="show_entries"><?= $_["show"] ?></label>
                                                         <div class="col-md-2 col-8">
-                                                            <select id="show_entries" class="form-control" data-toggle="select2">
+                                                            <select id="show_entries" class="form-control"
+                                                                data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                                 echo " selected";
@@ -80,7 +89,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <?php } ?>
                                                             </select>
                                                         </div>
-                                                        <table id="datatable-md1" class="table table-hover table-borderless mb-0">
+                                                        <table id="datatable-md1"
+                                                            class="table table-hover table-borderless mb-0">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th class="text-center"><?= $_["id"] ?></th>
@@ -96,41 +106,56 @@ if ($rSettings["sidebar"]) { ?>
                                                 </div>
                                                 <div class="tab-pane" id="stream-activity">
                                                     <div class="row">
-                                                        <div class="alert alert-warning alert-dismissible fade show col-md-12 col-12 text-center" role="alert">
+                                                        <div class="alert alert-warning alert-dismissible fade show col-md-12 col-12 text-center"
+                                                            role="alert">
                                                             <?= $_["warning_fingerprint"] ?>
                                                         </div>
                                                     </div>
                                                     <div class="row" id="filter_selection">
-                                                        <label class="col-md-1 col-2 col-form-label text-center" for="fingerprint_type"><?= $_["type"] ?></label>
+                                                        <label class="col-md-1 col-2 col-form-label text-center"
+                                                            for="fingerprint_type"><?= $_["type"] ?></label>
                                                         <div class="col-md-2 col-6">
-                                                            <select id="fingerprint_type" class="form-control text-center" data-toggle="select2">
+                                                            <select id="fingerprint_type"
+                                                                class="form-control text-center" data-toggle="select2">
                                                                 <option value="1"><?= $_["activity_id"] ?></option>
                                                                 <option value="2"><?= $_["username"] ?></option>
                                                                 <option value="3"><?= $_["message"] ?></option>
                                                             </select>
                                                         </div>
-                                                        <label class="col-md-1 col-2 col-form-label text-center" for="font_size"><?= $_["size"] ?></label>
+                                                        <label class="col-md-1 col-2 col-form-label text-center"
+                                                            for="font_size"><?= $_["size"] ?></label>
                                                         <div class="col-md-1 col-2">
-                                                            <input type="text" class="form-control text-center" id="font_size" value="36" placeholder="">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="font_size" value="36" placeholder="">
                                                         </div>
-                                                        <label class="col-md-1 col-2 col-form-label text-center" for="font_color"><?= $_["colour"] ?></label>
+                                                        <label class="col-md-1 col-2 col-form-label text-center"
+                                                            for="font_color"><?= $_["colour"] ?></label>
                                                         <div class="col-md-2 col-2">
-                                                            <input type="text" id="font_color" class="form-control text-center" value="#ffffff">
+                                                            <input type="text" id="font_color"
+                                                                class="form-control text-center" value="#ffffff">
                                                         </div>
-                                                        <label class="col-md-1 col-2 col-form-label text-center" for="position"><?= $_["position"] ?></label>
+                                                        <label class="col-md-1 col-2 col-form-label text-center"
+                                                            for="position"><?= $_["position"] ?></label>
                                                         <div class="col-md-1 col-2">
-                                                            <input type="text" class="form-control text-center" id="position_x" value="10" placeholder="X">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="position_x" value="10" placeholder="X">
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <input type="text" class="form-control text-center" id="position_y" value="10" placeholder="Y">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="position_y" value="10" placeholder="Y">
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <button type="button" class="btn btn-info waves-effect waves-light" onClick="activateFingerprint()">
+                                                            <button type="button"
+                                                                class="btn btn-info waves-effect waves-light"
+                                                                onClick="activateFingerprint()">
                                                                 <i class="mdi mdi-fingerprint"></i>
                                                             </button>
                                                         </div>
-                                                        <div class="col-md-12 col-2" style="margin-top:10px;display:none;" id="custom_message_div">
-                                                            <input type="text" class="form-control" id="custom_message" value="" placeholder="<?= $_["custom_message"] ?>">
+                                                        <div class="col-md-12 col-2"
+                                                            style="margin-top:10px;display:none;"
+                                                            id="custom_message_div">
+                                                            <input type="text" class="form-control" id="custom_message"
+                                                                value="" placeholder="<?= $_["custom_message"] ?>">
                                                         </div>
                                                     </div>
                                                     <div class="row">

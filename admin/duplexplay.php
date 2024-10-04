@@ -32,7 +32,9 @@ if ($rSettings["sidebar"]) { ?>
                         <div class="col-12">
 
                             <div class="card-body" style="overflow-x:auto;">
-                                <center><iframe src="https://edit.duplexplay.com/" style=" background: white; border: none; width: 1060px; height: 750px; align: center"></iframe></center>
+                                <center><iframe src="https://edit.duplexplay.com/"
+                                        style=" background: white; border: none; width: 1060px; height: 750px; align: center"></iframe>
+                                </center>
                             </div> <!-- end card-body -->
 
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 	This class handles all the data you can get from a Collection
  *
@@ -83,7 +84,7 @@ class Collection {
     public function getMovies() {
         $movies = array();
 
-        foreach($this->_data['parts'] as $data){
+        foreach ($this->_data['parts'] as $data) {
             $movies[] = new Movie($data);
         }
 
@@ -101,4 +102,3 @@ class Collection {
         return (empty($item)) ? $this->_data : $this->_data[$item];
     }
 }
-?>

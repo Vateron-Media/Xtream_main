@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  This class handles all the data you can get from a Review
  *
@@ -73,10 +74,10 @@ class Review {
      *  @param string $item The item of the $data array you want
      *  @return array
      */
-    public function get($item = ''){
+    public function get($item = '') {
         return (empty($item)) ? $this->_data : $this->_data[$item];
     }
-    
+
     //------------------------------------------------------------------------------
     // Export
     //------------------------------------------------------------------------------
@@ -90,4 +91,3 @@ class Review {
         return json_encode($this->_data, JSON_PRETTY_PRINT);
     }
 }
-?>

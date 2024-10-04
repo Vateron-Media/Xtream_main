@@ -1,7 +1,7 @@
-.course_block{
+.course_block {
     position: absolute;
     left: 17px;
-    top : 200px;
+    top: 200px;
     width: 210px;
     color: #fff;
     font-size: 16px;
@@ -12,62 +12,63 @@
     text-align: left;
 }
 
-.course_title, .course_date{
+.course_title,
+.course_date {
     /*color: #99A8B5;*/
 }
 
-.course_block dt{
+.course_block dt {
     float: left;
     width: 65px;
     text-align: right;
-    
+
 }
 
-.course_block dd{
+.course_block dd {
     text-align: left;
     margin: 0 0 0 70px;
 }
 
-.course_block .trend_val{
+.course_block .trend_val {
     font-size: 10px;
 }
 
-.uarr{
+.uarr {
     font-size: 14px;
     color: #38fc3d;
-    float:left;
-    width:8px;
+    float: left;
+    width: 8px;
 }
 
-.darr{
+.darr {
     font-size: 16px;
     color: #fd5454;
-    float:left;
-    width:8px;
+    float: left;
+    width: 8px;
 }
 
 
-.course_block ul{
+.course_block ul {
     list-style: none;
     margin: auto;
 }
 
-.course_block ul li{
+.course_block ul li {
     float: left;
 }
 
-.course_block .course_currency{
+.course_block .course_currency {
     width: 70px;
     text-align: left;
 }
 
-.course_block .course_value{
+.course_block .course_value {
     width: 80px;
     margin: 0 0 0 4px;
     text-align: left;
 }
 
-.course_block .course_trend{
+.course_block .course_trend {
     text-align: left;
     margin: 0 0 0 4px;
     width: 45px;

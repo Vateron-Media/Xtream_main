@@ -97,11 +97,11 @@
 #define pcre2_set_recursion_memory_management_8 php_pcre2_set_recursion_memory_management
 #endif
 
-#define lookup				php_lookup
-#define hashTableInit		php_hashTableInit
-#define hashTableDestroy	php_hashTableDestroy
-#define hashTableIterInit	php_hashTableIterInit
-#define hashTableIterNext	php_hashTableIterNext
+#define lookup php_lookup
+#define hashTableInit php_hashTableInit
+#define hashTableDestroy php_hashTableDestroy
+#define hashTableIterInit php_hashTableIterInit
+#define hashTableIterNext php_hashTableIterNext
 
 #if defined(HAVE_LIBXML) && (defined(HAVE_XML) || defined(HAVE_XMLRPC)) && !defined(HAVE_LIBEXPAT)
 #define XML_DefaultCurrent php_XML_DefaultCurrent

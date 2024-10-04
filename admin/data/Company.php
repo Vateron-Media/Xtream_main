@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  This class handles all the data you can get from a Company
  *
@@ -101,7 +102,7 @@ class Company {
     public function getMovies() {
         $movies = array();
 
-        foreach($this->_data['movies']['results'] as $data){
+        foreach ($this->_data['movies']['results'] as $data) {
             $movies[] = new Movie($data);
         }
 
@@ -132,4 +133,3 @@ class Company {
         return json_encode($this->_data, JSON_PRETTY_PRINT);
     }
 }
-?>

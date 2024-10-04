@@ -21,7 +21,8 @@
 
 #include "zend.h"
 
-typedef struct _zend_ts_hashtable {
+typedef struct _zend_ts_hashtable
+{
 	HashTable hash;
 	uint32_t reader;
 #ifdef ZTS
@@ -39,18 +40,17 @@ ZEND_API void _zend_ts_hash_init(TsHashTable *ht, uint32_t nSize, dtor_func_t pD
 ZEND_API void zend_ts_hash_destroy(TsHashTable *ht);
 ZEND_API void zend_ts_hash_clean(TsHashTable *ht);
 
-#define zend_ts_hash_init(ht, nSize, pHashFunction, pDestructor, persistent)	\
+#define zend_ts_hash_init(ht, nSize, pHashFunction, pDestructor, persistent) \
 	_zend_ts_hash_init(ht, nSize, pDestructor, persistent)
-#define zend_ts_hash_init_ex(ht, nSize, pHashFunction, pDestructor, persistent, bApplyProtection)	\
+#define zend_ts_hash_init_ex(ht, nSize, pHashFunction, pDestructor, persistent, bApplyProtection) \
 	_zend_ts_hash_init(ht, nSize, pDestructor, persistent)
-
 
 /* additions/updates/changes */
 ZEND_API zval *zend_ts_hash_update(TsHashTable *ht, zend_string *key, zval *pData);
 ZEND_API zval *zend_ts_hash_add(TsHashTable *ht, zend_string *key, zval *pData);
 ZEND_API zval *zend_ts_hash_index_update(TsHashTable *ht, zend_ulong h, zval *pData);
 ZEND_API zval *zend_ts_hash_next_index_insert(TsHashTable *ht, zval *pData);
-ZEND_API zval* zend_ts_hash_add_empty_element(TsHashTable *ht, zend_string *key);
+ZEND_API zval *zend_ts_hash_add_empty_element(TsHashTable *ht, zend_string *key);
 
 ZEND_API void zend_ts_hash_graceful_destroy(TsHashTable *ht);
 ZEND_API void zend_ts_hash_apply(TsHashTable *ht, apply_func_t apply_func);
@@ -58,7 +58,6 @@ ZEND_API void zend_ts_hash_apply_with_argument(TsHashTable *ht, apply_func_arg_t
 ZEND_API void zend_ts_hash_apply_with_arguments(TsHashTable *ht, apply_func_args_t apply_func, int, ...);
 
 ZEND_API void zend_ts_hash_reverse_apply(TsHashTable *ht, apply_func_t apply_func);
-
 
 /* Deletes */
 ZEND_API int zend_ts_hash_del(TsHashTable *ht, zend_string *key);
@@ -123,13 +122,13 @@ static zend_always_inline void *zend_ts_hash_str_add_ptr(TsHashTable *ht, const 
 
 END_EXTERN_C()
 
-#define ZEND_TS_INIT_SYMTABLE(ht)								\
+#define ZEND_TS_INIT_SYMTABLE(ht) \
 	ZEND_TS_INIT_SYMTABLE_EX(ht, 2, 0)
 
-#define ZEND_TS_INIT_SYMTABLE_EX(ht, n, persistent)			\
+#define ZEND_TS_INIT_SYMTABLE_EX(ht, n, persistent) \
 	zend_ts_hash_init(ht, n, NULL, ZVAL_PTR_DTOR, persistent)
 
-#endif							/* ZEND_HASH_H */
+#endif /* ZEND_HASH_H */
 
 /*
  * Local variables:

@@ -25,7 +25,8 @@ if ($rSettings["sidebar"]) { ?>
                                 <?php if (!$rPermissions["is_admin"]) { ?>
                                     <div class="page-title-right">
                                         <a href="./ticket.php">
-                                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light float-right">
+                                            <button type="button"
+                                                class="btn btn-sm btn-primary waves-effect waves-light float-right">
                                                 <i class="mdi mdi-plus"></i> <?= $_["create_ticket"] ?>
                                             </button>
                                         </a>
@@ -38,7 +39,8 @@ if ($rSettings["sidebar"]) { ?>
                     <div class="row">
                         <div class="col-12">
                             <div class="card-box">
-                                <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100" id="tickets-table">
+                                <table class="table table-hover m-0 table-centered dt-responsive nowrap w-100"
+                                    id="tickets-table">
                                     <thead>
                                         <tr>
                                             <th class="text-center"><?= $_["id"] ?></th>
@@ -61,31 +63,50 @@ if ($rSettings["sidebar"]) { ?>
                                         }
                                         foreach ($rTickets as $rTicket) { ?>
                                             <tr id="ticket-<?= $rTicket["id"] ?>">
-                                                <td class="text-center"><a href="./ticket_view.php?id=<?= $rTicket["id"] ?>"><?= $rTicket["id"] ?></a></td>
+                                                <td class="text-center"><a
+                                                        href="./ticket_view.php?id=<?= $rTicket["id"] ?>"><?= $rTicket["id"] ?></a>
+                                                </td>
                                                 <?php if ($rPermissions["is_admin"]) { ?>
                                                     <td><?= $rTicket["username"] ?></td>
                                                 <?php } ?>
                                                 <td><?= $rTicket["title"] ?></td>
-                                                <td class="text-center"><span class="badge badge-<?= array(0 => "secondary", 1 => "warning", 2 => "success", 3 => "warning")[$rTicket["status"]] ?>"><?= $rStatusArray[$rTicket["status"]] ?></span></td>
+                                                <td class="text-center"><span
+                                                        class="badge badge-<?= array(0 => "secondary", 1 => "warning", 2 => "success", 3 => "warning")[$rTicket["status"]] ?>"><?= $rStatusArray[$rTicket["status"]] ?></span>
+                                                </td>
                                                 <td class="text-center"><?= $rTicket["created"] ?></td>
                                                 <td class="text-center"><?= $rTicket["last_reply"] ?></td>
                                                 <td class="text-center">
                                                     <div class="btn-group dropdown">
-                                                        <a href="javascript: void(0);" class="table-action-btn dropdown-toggle arrow-none btn btn-light btn-sm" data-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal"></i></a>
+                                                        <a href="javascript: void(0);"
+                                                            class="table-action-btn dropdown-toggle arrow-none btn btn-light btn-sm"
+                                                            data-toggle="dropdown" aria-expanded="false"><i
+                                                                class="mdi mdi-dots-horizontal"></i></a>
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            <a class="dropdown-item" href="./ticket_view.php?id=<?= $rTicket["id"] ?>"><i class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i><?= $_["view_ticket"] ?></a>
+                                                            <a class="dropdown-item"
+                                                                href="./ticket_view.php?id=<?= $rTicket["id"] ?>"><i
+                                                                    class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i><?= $_["view_ticket"] ?></a>
                                                             <?php if (hasPermissions("adv", "ticket")) {
                                                                 if ($rTicket["status"] > 0) { ?>
-                                                                    <a class="dropdown-item" href="javascript:void(0);" onClick="api(<?= $rTicket["id"] ?>, 'close');"><i class="mdi mdi-check-all mr-2 text-muted font-18 vertical-middle"></i><?= $_["close"] ?></a>
+                                                                    <a class="dropdown-item" href="javascript:void(0);"
+                                                                        onClick="api(<?= $rTicket["id"] ?>, 'close');"><i
+                                                                            class="mdi mdi-check-all mr-2 text-muted font-18 vertical-middle"></i><?= $_["close"] ?></a>
                                                                 <?php } else if ($rPermissions["is_admin"]) { ?>
-                                                                    <a class="dropdown-item" href="javascript:void(0);" onClick="api(<?= $rTicket["id"] ?>, 'reopen');"><i class="mdi mdi-check-all mr-2 text-muted font-18 vertical-middle"></i><?= $_["re-open"] ?></a>
+                                                                    <a class="dropdown-item" href="javascript:void(0);"
+                                                                        onClick="api(<?= $rTicket["id"] ?>, 'reopen');"><i
+                                                                            class="mdi mdi-check-all mr-2 text-muted font-18 vertical-middle"></i><?= $_["re-open"] ?></a>
                                                                 <?php } ?>
                                                                 <?php if ($rPermissions["is_admin"]) { ?>
-                                                                    <a class="dropdown-item" href="javascript:void(0);" onClick="api(<?= $rTicket["id"] ?>, 'delete');"><i class="mdi mdi-delete mr-2 text-muted font-18 vertical-middle"></i><?= $_["delete"] ?></a>
+                                                                    <a class="dropdown-item" href="javascript:void(0);"
+                                                                        onClick="api(<?= $rTicket["id"] ?>, 'delete');"><i
+                                                                            class="mdi mdi-delete mr-2 text-muted font-18 vertical-middle"></i><?= $_["delete"] ?></a>
                                                                     <?php if ($rTicket["admin_read"] == 0) { ?>
-                                                                        <a class="dropdown-item" href="javascript:void(0);" onClick="api(<?= $rTicket["id"] ?>, 'read');"><i class="mdi mdi-star mr-2 font-18 text-muted vertical-middle"></i><?= $_["mark_as_read"] ?></a>
+                                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                                            onClick="api(<?= $rTicket["id"] ?>, 'read');"><i
+                                                                                class="mdi mdi-star mr-2 font-18 text-muted vertical-middle"></i><?= $_["mark_as_read"] ?></a>
                                                                     <?php } else { ?>
-                                                                        <a class="dropdown-item" href="javascript:void(0);" onClick="api(<?= $rTicket["id"] ?>, 'unread');"><i class="mdi mdi-star mr-2 font-18 text-muted vertical-middle"></i><?= $_["mark_as_unread"] ?></a>
+                                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                                            onClick="api(<?= $rTicket["id"] ?>, 'unread');"><i
+                                                                                class="mdi mdi-star mr-2 font-18 text-muted vertical-middle"></i><?= $_["mark_as_unread"] ?></a>
                                                             <?php }
                                                                 }
                                                             } ?>

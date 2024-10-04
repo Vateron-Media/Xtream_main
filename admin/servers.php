@@ -26,18 +26,21 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="javascript:location.reload();">
-                                                <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-dark waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
                                                 </button>
                                             </a>
                                             <?php if (hasPermissions("adv", "add_server")) { ?>
                                                 <a href="server.php">
-                                                    <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-plus"></i> <?= $_["add_server"] ?>
                                                     </button>
                                                 </a>
                                                 <a href="install_server.php">
-                                                    <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-info waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-creation"></i> <?= $_["install_lb"] ?>
                                                     </button>
                                                 </a>
@@ -100,35 +103,71 @@ if ($rSettings["sidebar"]) { ?>
                                                 <tr id="server-<?= $rServer["id"] ?>">
                                                     <td class="text-center"><?= $rServer["id"] ?></td>
                                                     <td class="text-center"><?= $rServer["server_name"] ?></td>
-                                                    <td class="text-center" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $rServerText ?>"><i class="<?php if ($rServer["status"] == 1) {
-                                                                                                                                                                                        echo "btn-outline-success";
-                                                                                                                                                                                    } else if ($rServer["status"] == "3") {
-                                                                                                                                                                                        echo "btn-outline-info";
-                                                                                                                                                                                    } else {
-                                                                                                                                                                                        echo "btn-outline-danger";
-                                                                                                                                                                                    } ?> mdi mdi-<?= array(0 => "alarm-light-outline", 1 => "check-network", 2 => "alarm-light-outline", 3 => "creation")[$rServer["status"]] ?>"></i></td>
+                                                    <td class="text-center" data-toggle="tooltip" data-placement="top"
+                                                        title="" data-original-title="<?= $rServerText ?>"><i
+                                                            class="<?php if ($rServer["status"] == 1) {
+                                                                        echo "btn-outline-success";
+                                                                    } else if ($rServer["status"] == "3") {
+                                                                        echo "btn-outline-info";
+                                                                    } else {
+                                                                        echo "btn-outline-danger";
+                                                                    } ?> mdi mdi-<?= array(0 => "alarm-light-outline", 1 => "check-network", 2 => "alarm-light-outline", 3 => "creation")[$rServer["status"]] ?>"></i>
+                                                    </td>
                                                     <td class="text-center"><?= $rLatency ?></td>
                                                     <td class="text-center"><?= $rServer["domain_name"] ?></td>
                                                     <td class="text-center"><?= $rServer["server_ip"] ?></td>
                                                     <?php if (hasPermissions("adv", "live_connections")) { ?>
-                                                        <td class="text-center"><a href="./live_connections.php?server_id=<?= $rServer["id"] ?>"><?= count(getConnections($rServer["id"])) ?> / <?= $rServer["total_clients"] ?></a></td>
+                                                        <td class="text-center"><a
+                                                                href="./live_connections.php?server_id=<?= $rServer["id"] ?>"><?= count(getConnections($rServer["id"])) ?>
+                                                                / <?= $rServer["total_clients"] ?></a></td>
                                                     <?php } else { ?>
-                                                        <td class="text-center"><?= count(getConnections($rServer["id"])) ?> / <?= $rServer["total_clients"] ?></td>
+                                                        <td class="text-center"><?= count(getConnections($rServer["id"])) ?> /
+                                                            <?= $rServer["total_clients"] ?></td>
                                                     <?php } ?>
                                                     <td class="text-center"><?= intval($rWatchDog["cpu_avg"]) ?>%</td>
-                                                    <td class="text-center"><?= intval($rWatchDog["total_mem_used_percent"]) ?>%</td>
+                                                    <td class="text-center">
+                                                        <?= intval($rWatchDog["total_mem_used_percent"]) ?>%</td>
                                                     <td class="text-center">
                                                         <?php if (hasPermissions("adv", "edit_server")) { ?>
                                                             <div class="btn-group">
-                                                                <button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["restart_reboot_fast-reload_full-remake_update-release"] ?>" class="btn btn-light waves-effect waves-light btn-xs btn-reboot-server" data-id="<?= $rServer["id"] ?>"><i class="mdi mdi-restart"></i></button>
-                                                                <button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["start_all_servers"] ?>" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rServer["id"] ?>, 'start');"><i class="mdi mdi-play"></i></button>
-                                                                <button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["stop_all_streams"] ?>" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rServer["id"] ?>, 'stop');"><i class="mdi mdi-stop"></i></button>
-                                                                <button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["kill_all_connections"] ?>" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rServer["id"] ?>, 'kill');"><i class="fas fa-hammer"></i></button>
-                                                                <a href="./server.php?id=<?= $rServer["id"] ?>"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["edit_server"] ?>" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
+                                                                <button type="button" data-toggle="tooltip" data-placement="top"
+                                                                    title=""
+                                                                    data-original-title="<?= $_["restart_reboot_fast-reload_full-remake_update-release"] ?>"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs btn-reboot-server"
+                                                                    data-id="<?= $rServer["id"] ?>"><i
+                                                                        class="mdi mdi-restart"></i></button>
+                                                                <button type="button" data-toggle="tooltip" data-placement="top"
+                                                                    title=""
+                                                                    data-original-title="<?= $_["start_all_servers"] ?>"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs"
+                                                                    onClick="api(<?= $rServer["id"] ?>, 'start');"><i
+                                                                        class="mdi mdi-play"></i></button>
+                                                                <button type="button" data-toggle="tooltip" data-placement="top"
+                                                                    title="" data-original-title="<?= $_["stop_all_streams"] ?>"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs"
+                                                                    onClick="api(<?= $rServer["id"] ?>, 'stop');"><i
+                                                                        class="mdi mdi-stop"></i></button>
+                                                                <button type="button" data-toggle="tooltip" data-placement="top"
+                                                                    title=""
+                                                                    data-original-title="<?= $_["kill_all_connections"] ?>"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs"
+                                                                    onClick="api(<?= $rServer["id"] ?>, 'kill');"><i
+                                                                        class="fas fa-hammer"></i></button>
+                                                                <a href="./server.php?id=<?= $rServer["id"] ?>"><button
+                                                                        type="button" data-toggle="tooltip" data-placement="top"
+                                                                        title="" data-original-title="<?= $_["edit_server"] ?>"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                            class="mdi mdi-pencil-outline"></i></button></a>
                                                                 <?php if ($rServer["can_delete"] == 1) { ?>
-                                                                    <button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["delete_server"] ?>" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rServer["id"] ?>, 'delete');"><i class="mdi mdi-close"></i></button>
+                                                                    <button type="button" data-toggle="tooltip" data-placement="top"
+                                                                        title="" data-original-title="<?= $_["delete_server"] ?>"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"
+                                                                        onClick="api(<?= $rServer["id"] ?>, 'delete');"><i
+                                                                            class="mdi mdi-close"></i></button>
                                                                 <?php } else { ?>
-                                                                    <button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-close"></i></button>
+                                                                    <button disabled type="button"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                            class="mdi mdi-close"></i></button>
                                                                 <?php } ?>
                                                             </div>
                                                         <?php } else {
@@ -146,16 +185,19 @@ if ($rSettings["sidebar"]) { ?>
                     <!-- end row-->
                     </div> <!-- end container -->
                 </div>
-                <div class="modal fade bs-server-modal-center" tabindex="-1" role="dialog" aria-labelledby="restartServicesLabel" aria-hidden="true" style="display: none;" data-id="">
+                <div class="modal fade bs-server-modal-center" tabindex="-1" role="dialog"
+                    aria-labelledby="restartServicesLabel" aria-hidden="true" style="display: none;" data-id="">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="restartServicesLabel"><?= $_["advanced_functions_for_servers"] ?></h5>
+                                <h5 class="modal-title" id="restartServicesLabel">
+                                    <?= $_["advanced_functions_for_servers"] ?></h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group row mb-4">
-                                    <label class="col-md-3 col-form-label" for="root_password"><?= $_["root_password"] ?></label>
+                                    <label class="col-md-3 col-form-label"
+                                        for="root_password"><?= $_["root_password"] ?></label>
                                     <div class="col-md-5">
                                         <input type="text" class="form-control" id="root_password" value="">
                                     </div>
@@ -167,17 +209,19 @@ if ($rSettings["sidebar"]) { ?>
                                 </p>
                                 <div class="form-group row mb-4">
                                     <div class="col-md-6">
-                                        <input id="restart_services_ssh" type="submit" class="btn btn-primary" value="<?= $_["restart_services"] ?>" style="width:100%" /></p>
+                                        <input id="restart_services_ssh" type="submit" class="btn btn-primary"
+                                            value="<?= $_["restart_services"] ?>" style="width:100%" /></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <input id="reboot_server_ssh" type="submit" class="btn btn-primary" value="<?= $_["reboot_server"] ?>" style="width:100%" /></p>
+                                        <input id="reboot_server_ssh" type="submit" class="btn btn-primary"
+                                            value="<?= $_["reboot_server"] ?>" style="width:100%" /></p>
                                     </div>
                                 </div>
                                 <!--<div class="form-group row mb-4">
-							<div class="col-md-6 mx-auto">
-								<input id="update_release_ssh" type="submit" class="btn btn-danger" value="<?= $_["update_release"] ?>" style="width:100%" />
-							</div>
-						</div>-->
+                            <div class="col-md-6 mx-auto">
+                                <input id="update_release_ssh" type="submit" class="btn btn-danger" value="<?= $_["update_release"] ?>" style="width:100%" />
+                            </div>
+                        </div>-->
                             </div>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->

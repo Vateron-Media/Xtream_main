@@ -1,6 +1,6 @@
 /* MAIN MENU */
-.main_menu{
-    position:absolute;
+.main_menu {
+    position: absolute;
     left: 0;
     top: 0;
     width: 1280px;
@@ -8,7 +8,7 @@
     background-image: url("i_720/bg.png");
 }
 
-.main_menu_logo{
+.main_menu_logo {
     position: absolute;
     left: 20px;
     top: 10px;
@@ -16,14 +16,14 @@
     height: 100px;
 }
 
-.main_menu_date{
+.main_menu_date {
     font-family: "Trebuchet ms", serif;
     font-weight: bold;
     font-size: 22px;
     color: #99a8b5;
 }
 
-.main_menu_time{
+.main_menu_time {
     font-weight: bold;
     font-size: 34px;
     color: #ccd6de;
@@ -31,7 +31,7 @@
     /*margin-right: 65px;*/
 }
 
-.main_menu_date_bar{
+.main_menu_date_bar {
     position: absolute;
     width: 584px;
     top: 38px;
@@ -39,7 +39,7 @@
     font-family: "Myriad Pro Cond", serif;
 }
 
-.mm_menu_hor{
+.mm_menu_hor {
     position: absolute;
     width: 1140px;
     height: 210px;
@@ -47,7 +47,7 @@
     padding: 0 70px 0 70px;
 }
 
-.mm_hor_left{
+.mm_hor_left {
     position: absolute;
     width: 320px;
     height: 210px;
@@ -56,7 +56,7 @@
     background: url(i_720/mm_hor_left.png);
 }
 
-.mm_hor_right{
+.mm_hor_right {
     position: absolute;
     width: 320px;
     height: 210px;
@@ -65,7 +65,7 @@
     background: url(i_720/mm_hor_right.png);
 }
 
-.menu_hor_cell{
+.menu_hor_cell {
     float: left;
     width: 360px;
     height: 210px;
@@ -75,7 +75,7 @@
     text-align: center;
 }
 
-.menu_hor_cell_act{
+.menu_hor_cell_act {
     float: left;
     width: 360px;
     height: 210px;
@@ -89,12 +89,12 @@
     padding: 0 15px;
 }
 
-.menu_hor_cell_img{
+.menu_hor_cell_img {
     width: 360px;
     height: 160px;
 }
 
-.mm_menu_vert_empty{
+.mm_menu_vert_empty {
     position: absolute;
     background: url(i_720/mm_hor_bg2.png) no-repeat;
     width: 390px;
@@ -103,26 +103,26 @@
     left: 445px;
 }
 
-.mm_menu_vert{
+.mm_menu_vert {
     position: absolute;
     width: 390px;
     bottom: 270px;
     left: 445px;
 }
 
-.mm_menu_vert_bottom{
+.mm_menu_vert_bottom {
     height: 50px;
     width: 390px;
     background: url(i_720/mm_hor_bg3.png) bottom;
 }
 
-.mm_menu_vert_body{
+.mm_menu_vert_body {
     width: 390px;
     background: url(i_720/mm_hor_bg3.png) top;
     padding-top: 33px;
 }
 
-.mm_menu_vert_body .mm_vert_container div{
+.mm_menu_vert_body .mm_vert_container div {
     height: 38px;
     width: 346px;
     font: 26px "Myriad Pro";
@@ -138,7 +138,7 @@
     text-overflow: ellipsis;
 }
 
-.mm_menu_vert_body .mm_vert_container .active{
+.mm_menu_vert_body .mm_vert_container .active {
     color: #002864;
     text-shadow: #ffffff 0 1px 0;
     background: url(i_720/mm_vert_cell.png) top left;
@@ -146,12 +146,12 @@
     padding-top: 8px;
 }
 
-.main_menu_ver
-{
+.main_menu_ver {
     position: absolute;
     right: 70px;
     bottom: 30px;
-    font-size: 22px  !important;
-    color: #ccd6de  !important;
+    font-size: 22px !important;
+    color: #ccd6de !important;
 }
+
 /* END MAIN MENU */

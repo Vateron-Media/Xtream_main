@@ -26,12 +26,14 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <li>
-                                            <button type="button" class="btn btn-dark waves-effect waves-light btn-sm" onClick="forceUpdate();" id="force_update">
+                                            <button type="button" class="btn btn-dark waves-effect waves-light btn-sm"
+                                                onClick="forceUpdate();" id="force_update">
                                                 <i class="mdi mdi-refresh"></i> <?= $_["force_epg_reload"] ?>
                                             </button>
                                             <?php if (hasPermissions("adv", "add_epg")) { ?>
                                                 <a href="epg.php">
-                                                    <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-plus"></i> <?= $_["add_epg"] ?>
                                                     </button>
                                                 </a>
@@ -76,8 +78,16 @@ if ($rSettings["sidebar"]) { ?>
                                                     <td class="text-center">
                                                         <?php if (hasPermissions("adv", "epg_edit")) { ?>
                                                             <div class="btn-group">
-                                                                <a href="./epg.php?id=<?= $rEPG["id"] ?>"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["edit_epg"] ?>" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
-                                                                <button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["delete_epg"] ?>" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rEPG["id"] ?>, 'delete');"><i class="mdi mdi-close"></i></button>
+                                                                <a href="./epg.php?id=<?= $rEPG["id"] ?>"><button type="button"
+                                                                        data-toggle="tooltip" data-placement="top" title=""
+                                                                        data-original-title="<?= $_["edit_epg"] ?>"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                            class="mdi mdi-pencil-outline"></i></button></a>
+                                                                <button type="button" data-toggle="tooltip" data-placement="top"
+                                                                    title="" data-original-title="<?= $_["delete_epg"] ?>"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs"
+                                                                    onClick="api(<?= $rEPG["id"] ?>, 'delete');"><i
+                                                                        class="mdi mdi-close"></i></button>
                                                             </div>
                                                         <?php } else {
                                                             echo "--";

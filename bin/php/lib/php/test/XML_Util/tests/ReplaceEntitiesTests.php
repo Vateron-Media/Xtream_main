@@ -1,22 +1,18 @@
 <?php
 
-class ReplaceEntitiesTests extends AbstractUnitTests
-{
-    protected function getSimpleData()
-    {
+class ReplaceEntitiesTests extends AbstractUnitTests {
+    protected function getSimpleData() {
         return 'This string contains < & >.';
     }
 
-    protected function getUtf8Data()
-    {
+    protected function getUtf8Data() {
         return 'This data contains special chars like <, >, & and " as well as ä, ö, ß, à and ê';
     }
 
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForSimpleData()
-    {
+    public function testReplaceEntitiesForSimpleData() {
         $expected = "This string contains &lt; &amp; &gt;.";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getSimpleData()));
     }
@@ -24,8 +20,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForSimpleDataWithInvalidOptionReturnsOriginalData()
-    {
+    public function testReplaceEntitiesForSimpleDataWithInvalidOptionReturnsOriginalData() {
         $expected = "This string contains < & >.";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getSimpleData(), 'INVALID_OPTION'));
     }
@@ -33,8 +28,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForSimpleDataWithEntitiesXml()
-    {
+    public function testReplaceEntitiesForSimpleDataWithEntitiesXml() {
         $expected = "This string contains &lt; &amp; &gt;.";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getSimpleData(), XML_UTIL_ENTITIES_XML));
     }
@@ -42,8 +36,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForSimpleDataWithEntitiesXmlAndEncoding()
-    {
+    public function testReplaceEntitiesForSimpleDataWithEntitiesXmlAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This string contains &lt; &amp; &gt;.";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getSimpleData(), XML_UTIL_ENTITIES_XML, $encoding));
@@ -52,8 +45,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForUtf8DataWithEntitiesXmlAndEncoding()
-    {
+    public function testReplaceEntitiesForUtf8DataWithEntitiesXmlAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This data contains special chars like &lt;, &gt;, &amp; and &quot; as well as ä, ö, ß, à and ê";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getUtf8Data(), XML_UTIL_ENTITIES_XML, $encoding));
@@ -62,8 +54,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForSimpleDataWithEntitiesXmlRequired()
-    {
+    public function testReplaceEntitiesForSimpleDataWithEntitiesXmlRequired() {
         $expected = "This string contains &lt; &amp; >.";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getSimpleData(), XML_UTIL_ENTITIES_XML_REQUIRED));
     }
@@ -71,8 +62,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForSimpleDataWithEntitiesXmlRequiredAndEncoding()
-    {
+    public function testReplaceEntitiesForSimpleDataWithEntitiesXmlRequiredAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This string contains &lt; &amp; >.";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getSimpleData(), XML_UTIL_ENTITIES_XML_REQUIRED, $encoding));
@@ -81,8 +71,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForUtf8DataWithEntitiesXmlRequiredAndEncoding()
-    {
+    public function testReplaceEntitiesForUtf8DataWithEntitiesXmlRequiredAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This data contains special chars like &lt;, >, &amp; and &quot; as well as ä, ö, ß, à and ê";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getUtf8Data(), XML_UTIL_ENTITIES_XML_REQUIRED, $encoding));
@@ -91,8 +80,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForSimpleDataWithEntitiesHtml()
-    {
+    public function testReplaceEntitiesForSimpleDataWithEntitiesHtml() {
         $expected = "This string contains &lt; &amp; &gt;.";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getSimpleData(), XML_UTIL_ENTITIES_HTML));
     }
@@ -100,8 +88,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForSimpleDataWithEntitiesHtmlAndEncoding()
-    {
+    public function testReplaceEntitiesForSimpleDataWithEntitiesHtmlAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This string contains &lt; &amp; &gt;.";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getSimpleData(), XML_UTIL_ENTITIES_HTML, $encoding));
@@ -110,8 +97,7 @@ class ReplaceEntitiesTests extends AbstractUnitTests
     /**
      * @covers XML_Util::replaceEntities()
      */
-    public function testReplaceEntitiesForUtf8DataWithEntitiesHtmlAndEncoding()
-    {
+    public function testReplaceEntitiesForUtf8DataWithEntitiesHtmlAndEncoding() {
         $encoding = "UTF-8";
         $expected = "This data contains special chars like &lt;, &gt;, &amp; and &quot; as well as &auml;, &ouml;, &szlig;, &agrave; and &ecirc;";
         $this->assertEquals($expected, XML_Util::replaceEntities($this->getUtf8Data(), XML_UTIL_ENTITIES_HTML, $encoding));

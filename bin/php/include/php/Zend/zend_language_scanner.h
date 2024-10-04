@@ -20,7 +20,8 @@
 #ifndef ZEND_SCANNER_H
 #define ZEND_SCANNER_H
 
-typedef struct _zend_lex_state {
+typedef struct _zend_lex_state
+{
 	unsigned int yy_leng;
 	unsigned char *yy_start;
 	unsigned char *yy_text;
@@ -56,7 +57,8 @@ typedef struct _zend_lex_state {
 	zend_arena *ast_arena;
 } zend_lex_state;
 
-typedef struct _zend_heredoc_label {
+typedef struct _zend_heredoc_label
+{
 	char *label;
 	int length;
 	int indentation;

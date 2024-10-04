@@ -24,9 +24,9 @@
 #include "zend_compile.h"
 #include "zend_build.h"
 
-#define INIT_FUNC_ARGS		int type, int module_number
-#define INIT_FUNC_ARGS_PASSTHRU	type, module_number
-#define SHUTDOWN_FUNC_ARGS	int type, int module_number
+#define INIT_FUNC_ARGS int type, int module_number
+#define INIT_FUNC_ARGS_PASSTHRU type, module_number
+#define SHUTDOWN_FUNC_ARGS int type, int module_number
 #define SHUTDOWN_FUNC_ARGS_PASSTHRU type, module_number
 #define ZEND_MODULE_INFO_FUNC_ARGS zend_module_entry *zend_module
 #define ZEND_MODULE_INFO_FUNC_ARGS_PASSTHRU zend_module
@@ -51,9 +51,9 @@
 #define NO_MODULE_GLOBALS 0, NULL, NULL, NULL
 
 #ifdef ZTS
-# define ZEND_MODULE_GLOBALS(module_name) sizeof(zend_##module_name##_globals), &module_name##_globals_id
+#define ZEND_MODULE_GLOBALS(module_name) sizeof(zend_##module_name##_globals), &module_name##_globals_id
 #else
-# define ZEND_MODULE_GLOBALS(module_name) sizeof(zend_##module_name##_globals), &module_name##_globals
+#define ZEND_MODULE_GLOBALS(module_name) sizeof(zend_##module_name##_globals), &module_name##_globals
 #endif
 
 #define STANDARD_MODULE_PROPERTIES \
@@ -68,7 +68,8 @@ struct _zend_ini_entry;
 typedef struct _zend_module_entry zend_module_entry;
 typedef struct _zend_module_dep zend_module_dep;
 
-struct _zend_module_entry {
+struct _zend_module_entry
+{
 	unsigned short size;
 	unsigned int zend_api;
 	unsigned char zend_debug;
@@ -85,9 +86,9 @@ struct _zend_module_entry {
 	const char *version;
 	size_t globals_size;
 #ifdef ZTS
-	ts_rsrc_id* globals_id_ptr;
+	ts_rsrc_id *globals_id_ptr;
 #else
-	void* globals_ptr;
+	void *globals_ptr;
 #endif
 	void (*globals_ctor)(void *global);
 	void (*globals_dtor)(void *global);
@@ -99,25 +100,26 @@ struct _zend_module_entry {
 	const char *build_id;
 };
 
-#define MODULE_DEP_REQUIRED		1
-#define MODULE_DEP_CONFLICTS	2
-#define MODULE_DEP_OPTIONAL		3
+#define MODULE_DEP_REQUIRED 1
+#define MODULE_DEP_CONFLICTS 2
+#define MODULE_DEP_OPTIONAL 3
 
-#define ZEND_MOD_REQUIRED_EX(name, rel, ver)	{ name, rel, ver, MODULE_DEP_REQUIRED  },
-#define ZEND_MOD_CONFLICTS_EX(name, rel, ver)	{ name, rel, ver, MODULE_DEP_CONFLICTS },
-#define ZEND_MOD_OPTIONAL_EX(name, rel, ver)	{ name, rel, ver, MODULE_DEP_OPTIONAL  },
+#define ZEND_MOD_REQUIRED_EX(name, rel, ver) {name, rel, ver, MODULE_DEP_REQUIRED},
+#define ZEND_MOD_CONFLICTS_EX(name, rel, ver) {name, rel, ver, MODULE_DEP_CONFLICTS},
+#define ZEND_MOD_OPTIONAL_EX(name, rel, ver) {name, rel, ver, MODULE_DEP_OPTIONAL},
 
-#define ZEND_MOD_REQUIRED(name)		ZEND_MOD_REQUIRED_EX(name, NULL, NULL)
-#define ZEND_MOD_CONFLICTS(name)	ZEND_MOD_CONFLICTS_EX(name, NULL, NULL)
-#define ZEND_MOD_OPTIONAL(name)		ZEND_MOD_OPTIONAL_EX(name, NULL, NULL)
+#define ZEND_MOD_REQUIRED(name) ZEND_MOD_REQUIRED_EX(name, NULL, NULL)
+#define ZEND_MOD_CONFLICTS(name) ZEND_MOD_CONFLICTS_EX(name, NULL, NULL)
+#define ZEND_MOD_OPTIONAL(name) ZEND_MOD_OPTIONAL_EX(name, NULL, NULL)
 
-#define ZEND_MOD_END { NULL, NULL, NULL, 0 }
+#define ZEND_MOD_END {NULL, NULL, NULL, 0}
 
-struct _zend_module_dep {
-	const char *name;		/* module name */
-	const char *rel;		/* version relationship: NULL (exists), lt|le|eq|ge|gt (to given version) */
-	const char *version;	/* version */
-	unsigned char type;		/* dependency type */
+struct _zend_module_dep
+{
+	const char *name;	 /* module name */
+	const char *rel;	 /* version relationship: NULL (exists), lt|le|eq|ge|gt (to given version) */
+	const char *version; /* version */
+	unsigned char type;	 /* dependency type */
 };
 
 BEGIN_EXTERN_C()

@@ -2,10 +2,8 @@
 require_once dirname(__FILE__) . '/helper.inc';
 require_once 'Structures/Graph/Manipulator/AcyclicTest.php';
 
-class AcyclicTestTest extends PHPUnit_Framework_TestCase
-{
-    public function testIsAcyclicFalse()
-    {
+class AcyclicTestTest extends PHPUnit_Framework_TestCase {
+    public function testIsAcyclicFalse() {
         $graph = new Structures_Graph();
         $node1 = new Structures_Graph_Node();
         $graph->addNode($node1);
@@ -26,8 +24,7 @@ class AcyclicTestTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testIsAcyclicTrue()
-    {
+    public function testIsAcyclicTrue() {
         $graph = new Structures_Graph();
         $node1 = new Structures_Graph_Node();
         $graph->addNode($node1);
@@ -46,4 +43,3 @@ class AcyclicTestTest extends PHPUnit_Framework_TestCase
         );
     }
 }
-?>

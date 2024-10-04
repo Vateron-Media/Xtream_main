@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Builder for building PHP extensions (PECL packages)
  *
@@ -38,8 +39,7 @@ require_once 'System.php';
  * @since      Class available since PHP 4.0.2
  * @see        http://pear.php.net/manual/en/core.ppm.pear-builder.php
  */
-class PEAR_Builder extends PEAR_Common
-{
+class PEAR_Builder extends PEAR_Common {
     var $php_api_version = 0;
     var $zend_module_api_no = 0;
     var $zend_extension_api_no = 0;
@@ -71,8 +71,7 @@ class PEAR_Builder extends PEAR_Common
      *
      * @access public
      */
-    function __construct($configureoptions, &$ui)
-    {
+    function __construct($configureoptions, &$ui) {
         parent::__construct();
         $this->setFrontendObject($ui);
         $this->_parseConfigureOptions($configureoptions);
@@ -83,14 +82,15 @@ class PEAR_Builder extends PEAR_Common
      *
      * @param string Options, in the form "X=1 Y=2 Z='there\'s always one'"
      */
-    function _parseConfigureOptions($options)
-    {
+    function _parseConfigureOptions($options) {
         $data = '<XML><PROPERTIES ' . $options . ' /></XML>';
         $parser = xml_parser_create('ISO-8859-1');
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_set_element_handler(
-            $parser, array($this, '_parseConfigureOptionsStartElement'),
-            array($this, '_parseConfigureOptionsEndElement'));
+            $parser,
+            array($this, '_parseConfigureOptionsStartElement'),
+            array($this, '_parseConfigureOptionsEndElement')
+        );
         xml_parse($parser, $data, true);
         xml_parser_free($parser);
     }
@@ -104,8 +104,7 @@ class PEAR_Builder extends PEAR_Common
      * @param string $tagName
      * @param mixed[] $attribs
      */
-    function _parseConfigureOptionsStartElement($parser, $tagName, $attribs)
-    {
+    function _parseConfigureOptionsStartElement($parser, $tagName, $attribs) {
         if ($tagName !== 'PROPERTIES') {
             return;
         }
@@ -120,16 +119,14 @@ class PEAR_Builder extends PEAR_Common
      * @param resource
      * @param string $element
      */
-    function _parseConfigureOptionsEndElement($parser, $element)
-    {
+    function _parseConfigureOptionsEndElement($parser, $element) {
     }
 
     /**
      * Build an extension from source on windows.
      * requires msdev
      */
-    function _build_win32($descfile, $callback = null)
-    {
+    function _build_win32($descfile, $callback = null) {
         if (is_object($descfile)) {
             $pkg = $descfile;
             $descfile = $pkg->getPackageFile();
@@ -159,12 +156,12 @@ class PEAR_Builder extends PEAR_Common
 
         $this->log(2, "building in $dir");
 
-        $dsp = $pkg->getPackage().'.dsp';
+        $dsp = $pkg->getPackage() . '.dsp';
         if (!file_exists("$dir/$dsp")) {
             return $this->raiseError("The DSP $dsp does not exist.");
         }
         // XXX TODO: make release build type configurable
-        $command = 'msdev '.$dsp.' /MAKE "'.$pkg->getPackage(). ' - Release"';
+        $command = 'msdev ' . $dsp . ' /MAKE "' . $pkg->getPackage() . ' - Release"';
 
         $err = $this->_runCommand($command, array(&$this, 'msdevCallback'));
         if (PEAR::isError($err)) {
@@ -174,7 +171,7 @@ class PEAR_Builder extends PEAR_Common
         // figure out the build platform and type
         $platform = 'Win32';
         $buildtype = 'Release';
-        if (preg_match('/.*?'.$pkg->getPackage().'\s-\s(\w+)\s(.*?)-+/i',$this->_firstline,$matches)) {
+        if (preg_match('/.*?' . $pkg->getPackage() . '\s-\s(\w+)\s(.*?)-+/i', $this->_firstline, $matches)) {
             $platform = $matches[1];
             $buildtype = $matches[2];
         }
@@ -191,15 +188,15 @@ class PEAR_Builder extends PEAR_Common
 
         // msdev doesn't tell us the output directory :/
         // open the dsp, find /out and use that directory
-        $dsptext = join(file($dsp),'');
+        $dsptext = join(file($dsp), '');
 
         // this regex depends on the build platform and type having been
         // correctly identified above.
-        $regex ='/.*?!IF\s+"\$\(CFG\)"\s+==\s+("'.
-                    $pkg->getPackage().'\s-\s'.
-                    $platform.'\s'.
-                    $buildtype.'").*?'.
-                    '\/out:"(.*?)"/is';
+        $regex = '/.*?!IF\s+"\$\(CFG\)"\s+==\s+("' .
+            $pkg->getPackage() . '\s-\s' .
+            $platform . '\s' .
+            $buildtype . '").*?' .
+            '\/out:"(.*?)"/is';
 
         if ($dsptext && preg_match($regex, $dsptext, $matches)) {
             // what we get back is a relative path to the output file itself.
@@ -217,15 +214,14 @@ class PEAR_Builder extends PEAR_Common
             'php_api' => $this->php_api_version,
             'zend_mod_api' => $this->zend_module_api_no,
             'zend_ext_api' => $this->zend_extension_api_no,
-            );
+        );
 
         return $built_files;
     }
     // }}}
 
     // {{{ msdevCallback()
-    function msdevCallback($what, $data)
-    {
+    function msdevCallback($what, $data) {
         if (!$this->_firstline)
             $this->_firstline = $data;
         $this->_lastline = $data;
@@ -238,8 +234,7 @@ class PEAR_Builder extends PEAR_Common
      * @param array
      * @access private
      */
-    function _harvestInstDir($dest_prefix, $dirname, &$built_files)
-    {
+    function _harvestInstDir($dest_prefix, $dirname, &$built_files) {
         $d = opendir($dirname);
         if (!$d)
             return false;
@@ -251,21 +246,25 @@ class PEAR_Builder extends PEAR_Common
 
             $full = $dirname . DIRECTORY_SEPARATOR . $ent;
             if (is_dir($full)) {
-                if (!$this->_harvestInstDir(
+                if (
+                    !$this->_harvestInstDir(
                         $dest_prefix . DIRECTORY_SEPARATOR . $ent,
-                        $full, $built_files)) {
+                        $full,
+                        $built_files
+                    )
+                ) {
                     $ret = false;
                     break;
                 }
             } else {
                 $dest = $dest_prefix . DIRECTORY_SEPARATOR . $ent;
                 $built_files[] = array(
-                        'file' => $full,
-                        'dest' => $dest,
-                        'php_api' => $this->php_api_version,
-                        'zend_mod_api' => $this->zend_module_api_no,
-                        'zend_ext_api' => $this->zend_extension_api_no,
-                        );
+                    'file' => $full,
+                    'dest' => $dest,
+                    'php_api' => $this->php_api_version,
+                    'zend_mod_api' => $this->zend_module_api_no,
+                    'zend_ext_api' => $this->zend_extension_api_no,
+                );
             }
         }
         closedir($d);
@@ -295,22 +294,30 @@ class PEAR_Builder extends PEAR_Common
      *
      * @see PEAR_Builder::_runCommand
      */
-    function build($descfile, $callback = null)
-    {
-        if (preg_match('/(\\/|\\\\|^)([^\\/\\\\]+)?php([^\\/\\\\]+)?$/',
-                       $this->config->get('php_bin'), $matches)) {
-            if (isset($matches[2]) && strlen($matches[2]) &&
-                trim($matches[2]) != trim($this->config->get('php_prefix'))) {
+    function build($descfile, $callback = null) {
+        if (
+            preg_match(
+                '/(\\/|\\\\|^)([^\\/\\\\]+)?php([^\\/\\\\]+)?$/',
+                $this->config->get('php_bin'),
+                $matches
+            )
+        ) {
+            if (
+                isset($matches[2]) && strlen($matches[2]) &&
+                trim($matches[2]) != trim($this->config->get('php_prefix'))
+            ) {
                 $this->log(0, 'WARNING: php_bin ' . $this->config->get('php_bin') .
-                           ' appears to have a prefix ' . $matches[2] . ', but' .
-                           ' config variable php_prefix does not match');
+                    ' appears to have a prefix ' . $matches[2] . ', but' .
+                    ' config variable php_prefix does not match');
             }
 
-            if (isset($matches[3]) && strlen($matches[3]) &&
-                trim($matches[3]) != trim($this->config->get('php_suffix'))) {
+            if (
+                isset($matches[3]) && strlen($matches[3]) &&
+                trim($matches[3]) != trim($this->config->get('php_suffix'))
+            ) {
                 $this->log(0, 'WARNING: php_bin ' . $this->config->get('php_bin') .
-                           ' appears to have a suffix ' . $matches[3] . ', but' .
-                           ' config variable php_suffix does not match');
+                    ' appears to have a suffix ' . $matches[3] . ', but' .
+                    ' config variable php_suffix does not match');
             }
         }
 
@@ -344,10 +351,10 @@ class PEAR_Builder extends PEAR_Common
 
         // Find config. outside of normal path - e.g. config.m4
         foreach (array_keys($pkg->getInstallationFileList()) as $item) {
-          if (stristr(basename($item), 'config.m4') && dirname($item) != '.') {
-            $dir .= DIRECTORY_SEPARATOR . dirname($item);
-            break;
-          }
+            if (stristr(basename($item), 'config.m4') && dirname($item) != '.') {
+                $dir .= DIRECTORY_SEPARATOR . dirname($item);
+                break;
+            }
         }
 
         $old_cwd = getcwd();
@@ -366,10 +373,12 @@ class PEAR_Builder extends PEAR_Common
         if (!preg_match('@(^|:)' . preg_quote($binDir, '@') . '(:|$)@', getenv('PATH'))) {
             putenv('PATH=' . $binDir . ':' . getenv('PATH'));
         }
-        $err = $this->_runCommand($this->config->get('php_prefix')
-                                . "phpize" .
-                                $this->config->get('php_suffix'),
-                                array(&$this, 'phpizeCallback'));
+        $err = $this->_runCommand(
+            $this->config->get('php_prefix')
+                . "phpize" .
+                $this->config->get('php_suffix'),
+            array(&$this, 'phpizeCallback')
+        );
         if (PEAR::isError($err)) {
             return $err;
         }
@@ -398,21 +407,27 @@ class PEAR_Builder extends PEAR_Common
                     $response = $this->_parsed_configure_options[$option['name']];
                 } else {
                     list($response) = $this->ui->userDialog(
-                            'build', [$option['prompt']], ['text'], [$default]);
+                        'build',
+                        [$option['prompt']],
+                        ['text'],
+                        [$default]
+                    );
                 }
-                if (substr($option['name'], 0, 5) === 'with-' &&
-                    ($response === 'yes' || $response === 'autodetect')) {
+                if (
+                    substr($option['name'], 0, 5) === 'with-' &&
+                    ($response === 'yes' || $response === 'autodetect')
+                ) {
                     $configure_command .= " --{$option['name']}";
                 } else {
-                    $configure_command .= " --{$option['name']}=".trim($response);
+                    $configure_command .= " --{$option['name']}=" . trim($response);
                 }
             }
         }
         // }}} end of interactive part
 
         // FIXME make configurable
-        if (!$user=getenv('USER')) {
-            $user='defaultuser';
+        if (!$user = getenv('USER')) {
+            $user = 'defaultuser';
         }
 
         $tmpdir = $this->config->get('temp_dir');
@@ -441,7 +456,7 @@ class PEAR_Builder extends PEAR_Common
             $make_command,
             "$make_command INSTALL_ROOT=\"$inst_dir\" install",
             "find \"$inst_dir\" | xargs ls -dils"
-            );
+        );
         if (!file_exists($build_dir) || !is_dir($build_dir) || !chdir($build_dir)) {
             return $this->raiseError("could not chdir to $build_dir");
         }
@@ -463,8 +478,8 @@ class PEAR_Builder extends PEAR_Common
         }
         $built_files = array();
         $prefix = exec($this->config->get('php_prefix')
-                        . "php-config" .
-                       $this->config->get('php_suffix') . " --prefix");
+            . "php-config" .
+            $this->config->get('php_suffix') . " --prefix");
         $this->_harvestInstDir($prefix, $inst_dir . DIRECTORY_SEPARATOR . $prefix, $built_files);
         chdir($old_cwd);
         return $built_files;
@@ -482,8 +497,7 @@ class PEAR_Builder extends PEAR_Common
      *
      * @access public
      */
-    function phpizeCallback($what, $data)
-    {
+    function phpizeCallback($what, $data) {
         if ($what != 'cmdoutput') {
             return;
         }
@@ -494,7 +508,7 @@ class PEAR_Builder extends PEAR_Common
         $matches = array();
         if (preg_match('/^\s+(\S[^:]+):\s+(\d{8})/', $data, $matches)) {
             $member = preg_replace('/[^a-z]/', '_', strtolower($matches[1]));
-            $apino = (int)$matches[2];
+            $apino = (int) $matches[2];
             if (isset($this->$member)) {
                 $this->$member = $apino;
                 //$msg = sprintf("%-22s : %d", $matches[1], $apino);
@@ -519,8 +533,7 @@ class PEAR_Builder extends PEAR_Common
      *
      * @access private
      */
-    function _runCommand($command, $callback = null)
-    {
+    function _runCommand($command, $callback = null) {
         $this->log(1, "running: $command");
         $pp = popen("$command 2>&1", "r");
         if (!$pp) {
@@ -546,8 +559,7 @@ class PEAR_Builder extends PEAR_Common
         return ($exitcode == 0);
     }
 
-    function log($level, $msg, $append_crlf = true)
-    {
+    function log($level, $msg, $append_crlf = true) {
         if ($this->current_callback) {
             if ($this->debug >= $level) {
                 call_user_func($this->current_callback, 'output', $msg);

@@ -1,9 +1,9 @@
-#service_management .description_block{
+#service_management .description_block {
     display: none !important;
 }
 
 #service_management .subscribed_str_block,
-#service_management .not_subscribed_str_block{
+#service_management .not_subscribed_str_block {
     position: absolute;
     right: 2px;
     top: 0;
@@ -13,22 +13,22 @@
     font-family: "Myriad Pro Cond", sans-serif;
 }
 
-#service_management .subscribed_str_block{
+#service_management .subscribed_str_block {
     background: url("i/mb_table02.png") 102px 0;
     color: #122f59;
 }
 
-#service_management .not_subscribed_str_block{
+#service_management .not_subscribed_str_block {
     background: url("i/mb_table04.png") 102px 0;
     color: #fff;
 }
 
-#service_management .active_name_block{
+#service_management .active_name_block {
     margin-top: 0;
     margin-left: 2px;
 }
 
-#service_management .active_description_block{
+#service_management .active_description_block {
     color: #284B82;
     font-size: 18px;
     line-height: 19px;
@@ -41,7 +41,7 @@
     height: 20px;
 }
 
-.active_subscribed_str_block{
+.active_subscribed_str_block {
     position: absolute;
     right: 23px;
     top: 4px;
@@ -54,7 +54,7 @@
     overflow: hidden;
 }
 
-.active_not_subscribed_str_block{
+.active_not_subscribed_str_block {
     position: absolute;
     right: 23px;
     top: 4px;
@@ -71,6 +71,6 @@
     color: #99A8B5;
 }
 
-#package_info .info-block{
+#package_info .info-block {
     margin-bottom: 10px;
 }

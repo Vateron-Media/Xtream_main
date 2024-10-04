@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PEAR_Command_Install (install, upgrade, upgrade-all, uninstall, bundle, run-scripts commands)
  *
@@ -33,8 +34,7 @@ require_once 'PEAR/Command/Common.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
-class PEAR_Command_Install extends PEAR_Command_Common
-{
+class PEAR_Command_Install extends PEAR_Command_Common {
     // {{{ properties
 
     var $commands = array(
@@ -46,66 +46,66 @@ class PEAR_Command_Install extends PEAR_Command_Common
                 'force' => array(
                     'shortopt' => 'f',
                     'doc' => 'will overwrite newer installed packages',
-                    ),
+                ),
                 'loose' => array(
                     'shortopt' => 'l',
                     'doc' => 'do not check for recommended dependency version',
-                    ),
+                ),
                 'nodeps' => array(
                     'shortopt' => 'n',
                     'doc' => 'ignore dependencies, install anyway',
-                    ),
+                ),
                 'register-only' => array(
                     'shortopt' => 'r',
                     'doc' => 'do not install files, only register the package as installed',
-                    ),
+                ),
                 'soft' => array(
                     'shortopt' => 's',
                     'doc' => 'soft install, fail silently, or upgrade if already installed',
-                    ),
+                ),
                 'nobuild' => array(
                     'shortopt' => 'B',
                     'doc' => 'don\'t build C extensions',
-                    ),
+                ),
                 'configureoptions' => array(
                     'shortopt' => 'D',
                     'arg' => 'OPTION1=VALUE[ OPTION2=VALUE]',
                     'doc' => 'space-delimited list of configure options',
-                    ),
+                ),
                 'nocompress' => array(
                     'shortopt' => 'Z',
                     'doc' => 'request uncompressed files when downloading',
-                    ),
+                ),
                 'installroot' => array(
                     'shortopt' => 'R',
                     'arg' => 'DIR',
                     'doc' => 'root directory used when installing files (ala PHP\'s INSTALL_ROOT), use packagingroot for RPM',
-                    ),
+                ),
                 'packagingroot' => array(
                     'shortopt' => 'P',
                     'arg' => 'DIR',
                     'doc' => 'root directory used when packaging files, like RPM packaging',
-                    ),
+                ),
                 'ignore-errors' => array(
                     'doc' => 'force install even if there were errors',
-                    ),
+                ),
                 'alldeps' => array(
                     'shortopt' => 'a',
                     'doc' => 'install all required and optional dependencies',
-                    ),
+                ),
                 'onlyreqdeps' => array(
                     'shortopt' => 'o',
                     'doc' => 'install all required dependencies',
-                    ),
+                ),
                 'offline' => array(
                     'shortopt' => 'O',
                     'doc' => 'do not attempt to download any urls or contact channels',
-                    ),
+                ),
                 'pretend' => array(
                     'shortopt' => 'p',
                     'doc' => 'Only list the packages that would be downloaded',
-                    ),
                 ),
+            ),
             'doc' => '[channel/]<package> ...
 Installs one or more PEAR packages.  You can specify a package to
 install in four ways:
@@ -132,7 +132,8 @@ To download a package from another channel, prefix with the channel name like
 
 More than one package may be specified at once.  It is ok to mix these
 four ways of specifying packages.
-'),
+'
+        ),
         'upgrade' => array(
             'summary' => 'Upgrade Package',
             'function' => 'doInstall',
@@ -142,56 +143,56 @@ four ways of specifying packages.
                     'shortopt' => 'c',
                     'doc' => 'upgrade packages from a specific channel',
                     'arg' => 'CHAN',
-                    ),
+                ),
                 'force' => array(
                     'shortopt' => 'f',
                     'doc' => 'overwrite newer installed packages',
-                    ),
+                ),
                 'loose' => array(
                     'shortopt' => 'l',
                     'doc' => 'do not check for recommended dependency version',
-                    ),
+                ),
                 'nodeps' => array(
                     'shortopt' => 'n',
                     'doc' => 'ignore dependencies, upgrade anyway',
-                    ),
+                ),
                 'register-only' => array(
                     'shortopt' => 'r',
                     'doc' => 'do not install files, only register the package as upgraded',
-                    ),
+                ),
                 'nobuild' => array(
                     'shortopt' => 'B',
                     'doc' => 'don\'t build C extensions',
-                    ),
+                ),
                 'nocompress' => array(
                     'shortopt' => 'Z',
                     'doc' => 'request uncompressed files when downloading',
-                    ),
+                ),
                 'installroot' => array(
                     'shortopt' => 'R',
                     'arg' => 'DIR',
                     'doc' => 'root directory used when installing files (ala PHP\'s INSTALL_ROOT)',
-                    ),
+                ),
                 'ignore-errors' => array(
                     'doc' => 'force install even if there were errors',
-                    ),
+                ),
                 'alldeps' => array(
                     'shortopt' => 'a',
                     'doc' => 'install all required and optional dependencies',
-                    ),
+                ),
                 'onlyreqdeps' => array(
                     'shortopt' => 'o',
                     'doc' => 'install all required dependencies',
-                    ),
+                ),
                 'offline' => array(
                     'shortopt' => 'O',
                     'doc' => 'do not attempt to download any urls or contact channels',
-                    ),
+                ),
                 'pretend' => array(
                     'shortopt' => 'p',
                     'doc' => 'Only list the packages that would be downloaded',
-                    ),
                 ),
+            ),
             'doc' => '<package> ...
 Upgrades one or more PEAR packages.  See documentation for the
 "install" command for ways to specify a package.
@@ -201,7 +202,8 @@ package has a higher version number (use the -f option if you need to
 upgrade anyway).
 
 More than one package may be specified at once.
-'),
+'
+        ),
         'upgrade-all' => array(
             'summary' => 'Upgrade All Packages [Deprecated in favor of calling upgrade with no parameters]',
             'function' => 'doUpgradeAll',
@@ -211,35 +213,35 @@ More than one package may be specified at once.
                     'shortopt' => 'c',
                     'doc' => 'upgrade packages from a specific channel',
                     'arg' => 'CHAN',
-                    ),
+                ),
                 'nodeps' => array(
                     'shortopt' => 'n',
                     'doc' => 'ignore dependencies, upgrade anyway',
-                    ),
+                ),
                 'register-only' => array(
                     'shortopt' => 'r',
                     'doc' => 'do not install files, only register the package as upgraded',
-                    ),
+                ),
                 'nobuild' => array(
                     'shortopt' => 'B',
                     'doc' => 'don\'t build C extensions',
-                    ),
+                ),
                 'nocompress' => array(
                     'shortopt' => 'Z',
                     'doc' => 'request uncompressed files when downloading',
-                    ),
+                ),
                 'installroot' => array(
                     'shortopt' => 'R',
                     'arg' => 'DIR',
                     'doc' => 'root directory used when installing files (ala PHP\'s INSTALL_ROOT), use packagingroot for RPM',
-                    ),
+                ),
                 'ignore-errors' => array(
                     'doc' => 'force install even if there were errors',
-                    ),
+                ),
                 'loose' => array(
                     'doc' => 'do not check for recommended dependency version',
-                    ),
                 ),
+            ),
             'doc' => '
 WARNING: This function is deprecated in favor of using the upgrade command with no params
 
@@ -247,7 +249,8 @@ Upgrades all packages that have a newer release available.  Upgrades are
 done only if there is a release available of the state specified in
 "preferred_state" (currently {config preferred_state}), or a state considered
 more stable.
-'),
+'
+        ),
         'uninstall' => array(
             'summary' => 'Un-install Package',
             'function' => 'doUninstall',
@@ -256,39 +259,40 @@ more stable.
                 'nodeps' => array(
                     'shortopt' => 'n',
                     'doc' => 'ignore dependencies, uninstall anyway',
-                    ),
+                ),
                 'register-only' => array(
                     'shortopt' => 'r',
                     'doc' => 'do not remove files, only register the packages as not installed',
-                    ),
+                ),
                 'installroot' => array(
                     'shortopt' => 'R',
                     'arg' => 'DIR',
                     'doc' => 'root directory used when installing files (ala PHP\'s INSTALL_ROOT)',
-                    ),
+                ),
                 'ignore-errors' => array(
                     'doc' => 'force install even if there were errors',
-                    ),
+                ),
                 'offline' => array(
                     'shortopt' => 'O',
                     'doc' => 'do not attempt to uninstall remotely',
-                    ),
                 ),
+            ),
             'doc' => '[channel/]<package> ...
 Uninstalls one or more PEAR packages.  More than one package may be
 specified at once.  Prefix with channel name to uninstall from a
 channel not in your default channel ({config default_channel})
-'),
+'
+        ),
         'bundle' => array(
             'summary' => 'Unpacks a Pecl Package',
             'function' => 'doBundle',
             'shortcut' => 'bun',
             'options' => array(
                 'destination' => array(
-                   'shortopt' => 'd',
+                    'shortopt' => 'd',
                     'arg' => 'DIR',
                     'doc' => 'Optional destination directory for unpacking (defaults to current path or "ext" if exists)',
-                    ),
+                ),
                 'force' => array(
                     'shortopt' => 'f',
                     'doc' => 'Force the unpacking even if there were errors in the package',
@@ -297,16 +301,17 @@ channel not in your default channel ({config default_channel})
             'doc' => '<package>
 Unpacks a Pecl Package into the selected location. It will download the
 package if needed.
-'),
+'
+        ),
         'run-scripts' => array(
             'summary' => 'Run Post-Install Scripts bundled with a package',
             'function' => 'doRunScripts',
             'shortcut' => 'rs',
-            'options' => array(
-            ),
+            'options' => array(),
             'doc' => '<package>
 Run post-installation scripts in package <package>, if any exist.
-'),
+'
+        ),
     );
 
     // }}}
@@ -317,8 +322,7 @@ Run post-installation scripts in package <package>, if any exist.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
-    {
+    function __construct(&$ui, &$config) {
         parent::__construct($ui, $config);
     }
 
@@ -327,8 +331,7 @@ Run post-installation scripts in package <package>, if any exist.
     /**
      * For unit testing purposes
      */
-    function &getDownloader(&$ui, $options, &$config)
-    {
+    function &getDownloader(&$ui, $options, &$config) {
         if (!class_exists('PEAR_Downloader')) {
             require_once 'PEAR/Downloader.php';
         }
@@ -339,8 +342,7 @@ Run post-installation scripts in package <package>, if any exist.
     /**
      * For unit testing purposes
      */
-    function &getInstaller(&$ui)
-    {
+    function &getInstaller(&$ui) {
         if (!class_exists('PEAR_Installer')) {
             require_once 'PEAR/Installer.php';
         }
@@ -348,8 +350,7 @@ Run post-installation scripts in package <package>, if any exist.
         return $a;
     }
 
-    function enableExtension($binaries, $type)
-    {
+    function enableExtension($binaries, $type) {
         if (!($phpini = $this->config->get('php_ini', null, 'pear.php.net'))) {
             return PEAR::raiseError('configuration option "php_ini" is not set to php.ini location');
         }
@@ -372,8 +373,13 @@ Run post-installation scripts in package <package>, if any exist.
             $enable = 'zend_extension' . $debug . $ts;
         }
         foreach ($ini[$search] as $line => $extension) {
-            if (in_array($extension, $binaries, true) || in_array(
-                  $ini['extension_dir'] . DIRECTORY_SEPARATOR . $extension, $binaries, true)) {
+            if (
+                in_array($extension, $binaries, true) || in_array(
+                    $ini['extension_dir'] . DIRECTORY_SEPARATOR . $extension,
+                    $binaries,
+                    true
+                )
+            ) {
                 // already enabled - assume if one is, all are
                 return true;
             }
@@ -401,8 +407,7 @@ Run post-installation scripts in package <package>, if any exist.
         return true;
     }
 
-    function disableExtension($binaries, $type)
-    {
+    function disableExtension($binaries, $type) {
         if (!($phpini = $this->config->get('php_ini', null, 'pear.php.net'))) {
             return PEAR::raiseError('configuration option "php_ini" is not set to php.ini location');
         }
@@ -426,8 +431,13 @@ Run post-installation scripts in package <package>, if any exist.
         }
         $found = false;
         foreach ($ini[$search] as $line => $extension) {
-            if (in_array($extension, $binaries, true) || in_array(
-                  $ini['extension_dir'] . DIRECTORY_SEPARATOR . $extension, $binaries, true)) {
+            if (
+                in_array($extension, $binaries, true) || in_array(
+                    $ini['extension_dir'] . DIRECTORY_SEPARATOR . $extension,
+                    $binaries,
+                    true
+                )
+            ) {
                 $found = true;
                 break;
             }
@@ -454,8 +464,7 @@ Run post-installation scripts in package <package>, if any exist.
         return true;
     }
 
-    function _parseIni($filename)
-    {
+    function _parseIni($filename) {
         if (!file_exists($filename)) {
             return PEAR::raiseError('php.ini "' . $filename . '" does not exist');
         }
@@ -473,7 +482,7 @@ Run post-installation scripts in package <package>, if any exist.
         $zend_extension_line = 'zend_extension' . $debug . $ts;
         $all = @file($filename);
         if ($all === false) {
-            return PEAR::raiseError('php.ini "' . $filename .'" could not be read');
+            return PEAR::raiseError('php.ini "' . $filename . '" could not be read');
         }
         $zend_extensions = $extensions = array();
         // assume this is right, but pull from the php.ini if it is found
@@ -504,8 +513,10 @@ Run post-installation scripts in package <package>, if any exist.
                     continue;
                 }
             }
-            if (strtolower(substr($line, 0, strlen($zend_extension_line))) ==
-                  $zend_extension_line) {
+            if (
+                strtolower(substr($line, 0, strlen($zend_extension_line))) ==
+                $zend_extension_line
+            ) {
                 $line = trim(substr($line, strlen($zend_extension_line)));
                 if ($line[0] == '=') {
                     $x = trim(substr($line, 1));
@@ -525,8 +536,7 @@ Run post-installation scripts in package <package>, if any exist.
 
     // {{{ doInstall()
 
-    function doInstall($command, $options, $params)
-    {
+    function doInstall($command, $options, $params) {
         if (!class_exists('PEAR_PackageFile')) {
             require_once 'PEAR/PackageFile.php';
         }
@@ -559,12 +569,14 @@ Run post-installation scripts in package <package>, if any exist.
         if (isset($options['packagingroot']) && !isset($options['upgrade'])) {
             $packrootphp_dir = $this->installer->_prependPath(
                 $this->config->get('php_dir', null, 'pear.php.net'),
-                $options['packagingroot']);
+                $options['packagingroot']
+            );
             $metadata_dir = $this->config->get('metadata_dir', null, 'pear.php.net');
             if ($metadata_dir) {
                 $metadata_dir = $this->installer->_prependPath(
                     $metadata_dir,
-                    $options['packagingroot']);
+                    $options['packagingroot']
+                );
             }
             $instreg = new PEAR_Registry($packrootphp_dir, false, false, $metadata_dir); // other instreg!
 
@@ -590,21 +602,25 @@ Run post-installation scripts in package <package>, if any exist.
                 }
 
                 $pkg = new PEAR_PackageFile($this->config);
-                $pf  = $pkg->fromAnyFile($param, PEAR_VALIDATE_DOWNLOADING);
+                $pf = $pkg->fromAnyFile($param, PEAR_VALIDATE_DOWNLOADING);
                 if (PEAR::isError($pf)) {
                     $otherpackages[] = $param;
                     continue;
                 }
 
-                $exists   = $reg->packageExists($pf->getPackage(), $pf->getChannel());
+                $exists = $reg->packageExists($pf->getPackage(), $pf->getChannel());
                 $pversion = $reg->packageInfo($pf->getPackage(), 'version', $pf->getChannel());
                 $version_compare = version_compare($pf->getVersion(), $pversion, '<=');
                 if ($exists && $version_compare) {
                     if ($this->config->get('verbose')) {
                         $this->ui->outputData('Ignoring installed package ' .
                             $reg->parsedPackageNameToString(
-                            array('package' => $pf->getPackage(),
-                                  'channel' => $pf->getChannel()), true));
+                                array(
+                                    'package' => $pf->getPackage(),
+                                    'channel' => $pf->getChannel()
+                                ),
+                                true
+                            ));
                     }
                     continue;
                 }
@@ -659,7 +675,7 @@ Run post-installation scripts in package <package>, if any exist.
         $packages = array_merge($abstractpackages, $otherpackages);
         if (!count($packages)) {
             $c = '';
-            if (isset($options['channel'])){
+            if (isset($options['channel'])) {
                 $c .= ' in channel "' . $options['channel'] . '"';
             }
             $this->ui->outputData('Nothing to ' . $command . $c);
@@ -722,13 +738,13 @@ Run post-installation scripts in package <package>, if any exist.
                 $pkg = &$param->getPackageFile();
                 if ($info->getCode() != PEAR_INSTALLER_NOBINARY) {
                     if (!($info = $pkg->installBinary($this->installer))) {
-                        return $this->raiseError('ERROR: ' .$oldinfo->getMessage());
+                        return $this->raiseError('ERROR: ' . $oldinfo->getMessage());
                     }
 
                     // we just installed a different package than requested,
                     // let's change the param and info so that the rest of this works
                     $param = $info[0];
-                    $info  = $info[1];
+                    $info = $info[1];
                 }
             }
 
@@ -736,10 +752,11 @@ Run post-installation scripts in package <package>, if any exist.
                 return $this->raiseError("$command failed");
             }
 
-            if ($param->getPackageType() == 'extsrc' ||
-                  $param->getPackageType() == 'extbin' ||
-                  $param->getPackageType() == 'zendextsrc' ||
-                  $param->getPackageType() == 'zendextbin'
+            if (
+                $param->getPackageType() == 'extsrc' ||
+                $param->getPackageType() == 'extbin' ||
+                $param->getPackageType() == 'zendextsrc' ||
+                $param->getPackageType() == 'zendextbin'
             ) {
                 $pkg = &$param->getPackageFile();
                 if ($instbin = $pkg->getInstalledBinary()) {
@@ -750,18 +767,21 @@ Run post-installation scripts in package <package>, if any exist.
 
                 foreach ($instpkg->getFilelist() as $name => $atts) {
                     $pinfo = pathinfo($atts['installed_as']);
-                    if (!isset($pinfo['extension']) ||
-                          in_array($pinfo['extension'], array('c', 'h'))
+                    if (
+                        !isset($pinfo['extension']) ||
+                        in_array($pinfo['extension'], array('c', 'h'))
                     ) {
                         continue; // make sure we don't match php_blah.h
                     }
 
-                    if ((strpos($pinfo['basename'], 'php_') === 0 &&
-                          $pinfo['extension'] == 'dll') ||
-                          // most unices
-                          $pinfo['extension'] == 'so' ||
-                          // hp-ux
-                          $pinfo['extension'] == 'sl') {
+                    if (
+                        (strpos($pinfo['basename'], 'php_') === 0 &&
+                            $pinfo['extension'] == 'dll') ||
+                        // most unices
+                        $pinfo['extension'] == 'so' ||
+                        // hp-ux
+                        $pinfo['extension'] == 'sl'
+                    ) {
                         $binaries[] = array($atts['installed_as'], $pinfo);
                         break;
                     }
@@ -774,8 +794,10 @@ Run post-installation scripts in package <package>, if any exist.
                         PEAR::staticPopErrorHandling();
                         if (PEAR::isError($ret)) {
                             $extrainfo[] = $ret->getMessage();
-                            if ($param->getPackageType() == 'extsrc' ||
-                                  $param->getPackageType() == 'extbin') {
+                            if (
+                                $param->getPackageType() == 'extsrc' ||
+                                $param->getPackageType() == 'extbin'
+                            ) {
                                 $exttype = 'extension';
                                 $extpath = $pinfo[1]['basename'];
                             } else {
@@ -799,7 +821,8 @@ Run post-installation scripts in package <package>, if any exist.
                         'channel' => $chan,
                         'package' => $param->getPackage(),
                         'version' => $param->getVersion(),
-                    ));
+                    )
+                );
                 $out = array('data' => "$command ok: $label");
                 if (isset($info['release_warnings'])) {
                     $out['release_warnings'] = $info['release_warnings'];
@@ -843,9 +866,13 @@ Run post-installation scripts in package <package>, if any exist.
                     $extrainfo[] = $param->getPackage() .
                         ': To install optional features use "pear install ' .
                         $reg->parsedPackageNameToString(
-                            array('package' => $param->getPackage(),
-                                  'channel' => $param->getChannel()), true) .
-                              '#featurename"';
+                            array(
+                                'package' => $param->getPackage(),
+                                'channel' => $param->getChannel()
+                            ),
+                            true
+                        ) .
+                        '#featurename"';
                 }
             }
 
@@ -854,8 +881,11 @@ Run post-installation scripts in package <package>, if any exist.
             if (is_object($pkg)) {
                 $pkg->setConfig($this->config);
                 if ($list = $pkg->listPostinstallScripts()) {
-                    $pn = $reg->parsedPackageNameToString(array('channel' =>
-                       $param->getChannel(), 'package' => $param->getPackage()), true);
+                    $pn = $reg->parsedPackageNameToString(array(
+                        'channel' =>
+                        $param->getChannel(),
+                        'package' => $param->getPackage()
+                    ), true);
                     $extrainfo[] = $pn . ' has post-install scripts:';
                     foreach ($list as $file) {
                         $extrainfo[] = $file;
@@ -879,8 +909,7 @@ Run post-installation scripts in package <package>, if any exist.
     // }}}
     // {{{ doUpgradeAll()
 
-    function doUpgradeAll($command, $options, $params)
-    {
+    function doUpgradeAll($command, $options, $params) {
         $reg = &$this->config->getRegistry();
         $upgrade = array();
 
@@ -898,9 +927,9 @@ Run post-installation scripts in package <package>, if any exist.
             // parse name with channel
             foreach ($reg->listPackages($channel) as $name) {
                 $upgrade[] = $reg->parsedPackageNameToString(array(
-                        'channel' => $channel,
-                        'package' => $name
-                    ));
+                    'channel' => $channel,
+                    'package' => $name
+                ));
             }
         }
 
@@ -908,13 +937,12 @@ Run post-installation scripts in package <package>, if any exist.
         if (PEAR::isError($err)) {
             $this->ui->outputData($err->getMessage(), $command);
         }
-   }
+    }
 
     // }}}
     // {{{ doUninstall()
 
-    function doUninstall($command, $options, $params)
-    {
+    function doUninstall($command, $options, $params) {
         if (count($params) < 1) {
             return $this->raiseError("Please supply the package(s) you want to uninstall");
         }
@@ -946,8 +974,10 @@ Run post-installation scripts in package <package>, if any exist.
             $package = $parsed['package'];
             $channel = $parsed['channel'];
             $info = &$reg->getPackage($package, $channel);
-            if ($info === null &&
-                 ($channel == 'pear.php.net' || $channel == 'pecl.php.net')) {
+            if (
+                $info === null &&
+                ($channel == 'pear.php.net' || $channel == 'pecl.php.net')
+            ) {
                 // make sure this isn't a package that has flipped from pear to pecl but
                 // used a package.xml 1.0
                 $testc = ($channel == 'pear.php.net') ? 'pecl.php.net' : 'pear.php.net';
@@ -963,8 +993,10 @@ Run post-installation scripts in package <package>, if any exist.
                 // check for binary packages (this is an alias for those packages if so)
                 if ($installedbinary = $info->getInstalledBinary()) {
                     $this->ui->log('adding binary package ' .
-                        $reg->parsedPackageNameToString(array('channel' => $channel,
-                            'package' => $installedbinary), true));
+                        $reg->parsedPackageNameToString(array(
+                            'channel' => $channel,
+                            'package' => $installedbinary
+                        ), true));
                     $newparams[] = &$reg->getPackage($installedbinary, $channel);
                 }
                 // add the contents of a dependency group to the list of installed packages
@@ -1000,26 +1032,32 @@ Run post-installation scripts in package <package>, if any exist.
                     $this->ui->outputData($err->getMessage(), $command);
                     continue;
                 }
-                if ($pkg->getPackageType() == 'extsrc' ||
-                      $pkg->getPackageType() == 'extbin' ||
-                      $pkg->getPackageType() == 'zendextsrc' ||
-                      $pkg->getPackageType() == 'zendextbin') {
+                if (
+                    $pkg->getPackageType() == 'extsrc' ||
+                    $pkg->getPackageType() == 'extbin' ||
+                    $pkg->getPackageType() == 'zendextsrc' ||
+                    $pkg->getPackageType() == 'zendextbin'
+                ) {
                     if ($instbin = $pkg->getInstalledBinary()) {
                         continue; // this will be uninstalled later
                     }
 
                     foreach ($pkg->getFilelist() as $name => $atts) {
                         $pinfo = pathinfo($atts['installed_as']);
-                        if (!isset($pinfo['extension']) ||
-                              in_array($pinfo['extension'], array('c', 'h'))) {
+                        if (
+                            !isset($pinfo['extension']) ||
+                            in_array($pinfo['extension'], array('c', 'h'))
+                        ) {
                             continue; // make sure we don't match php_blah.h
                         }
-                        if ((strpos($pinfo['basename'], 'php_') === 0 &&
-                              $pinfo['extension'] == 'dll') ||
-                              // most unices
-                              $pinfo['extension'] == 'so' ||
-                              // hp-ux
-                              $pinfo['extension'] == 'sl') {
+                        if (
+                            (strpos($pinfo['basename'], 'php_') === 0 &&
+                                $pinfo['extension'] == 'dll') ||
+                            // most unices
+                            $pinfo['extension'] == 'so' ||
+                            // hp-ux
+                            $pinfo['extension'] == 'sl'
+                        ) {
                             $binaries[] = array($atts['installed_as'], $pinfo);
                             break;
                         }
@@ -1031,8 +1069,10 @@ Run post-installation scripts in package <package>, if any exist.
                             PEAR::staticPopErrorHandling();
                             if (PEAR::isError($ret)) {
                                 $extrainfo[] = $ret->getMessage();
-                                if ($pkg->getPackageType() == 'extsrc' ||
-                                      $pkg->getPackageType() == 'extbin') {
+                                if (
+                                    $pkg->getPackageType() == 'extsrc' ||
+                                    $pkg->getPackageType() == 'extbin'
+                                ) {
                                     $exttype = 'extension';
                                 } else {
                                     ob_start();
@@ -1059,8 +1099,10 @@ Run post-installation scripts in package <package>, if any exist.
                     }
                     $this->ui->outputData("uninstall ok: $pkg", $command);
                 }
-                if (!isset($options['offline']) && is_object($savepkg) &&
-                      defined('PEAR_REMOTEINSTALL_OK')) {
+                if (
+                    !isset($options['offline']) && is_object($savepkg) &&
+                    defined('PEAR_REMOTEINSTALL_OK')
+                ) {
                     if ($this->config->isDefinedLayer('ftp')) {
                         $this->installer->pushErrorHandling(PEAR_ERROR_RETURN);
                         $info = $this->installer->ftpUninstall($savepkg);
@@ -1095,12 +1137,11 @@ Run post-installation scripts in package <package>, if any exist.
             any check that the PEAR_Installer::_installFile() does.
     */
 
-    function doBundle($command, $options, $params)
-    {
+    function doBundle($command, $options, $params) {
         $opts = array(
-            'force'        => true,
-            'nodeps'       => true,
-            'soft'         => true,
+            'force' => true,
+            'nodeps' => true,
+            'soft' => true,
             'downloadonly' => true
         );
         $downloader = &$this->getDownloader($this->ui, $opts, $this->config);
@@ -1115,8 +1156,8 @@ Run post-installation scripts in package <package>, if any exist.
             }
             $dest = realpath($options['destination']);
         } else {
-            $pwd  = getcwd();
-            $dir  = $pwd . DIRECTORY_SEPARATOR . 'ext';
+            $pwd = getcwd();
+            $dir = $pwd . DIRECTORY_SEPARATOR . 'ext';
             $dest = is_dir($dir) ? $dir : $pwd;
         }
         PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
@@ -1146,13 +1187,12 @@ Run post-installation scripts in package <package>, if any exist.
             return $this->raiseError('unable to unpack ' . $pkgfile->getArchiveFile());
         }
         $this->ui->outputData("Package ready at '$dest'");
-    // }}}
+        // }}}
     }
 
     // }}}
 
-    function doRunScripts($command, $options, $params)
-    {
+    function doRunScripts($command, $options, $params) {
         if (!isset($params[0])) {
             return $this->raiseError('run-scripts expects 1 parameter: a package name');
         }
@@ -1182,8 +1222,7 @@ Run post-installation scripts in package <package>, if any exist.
      * @param $packages: packages, in parsed array format !
      * @return list of packages that can be upgraded
      */
-    function _filterUptodatePackages($packages, $command)
-    {
+    function _filterUptodatePackages($packages, $command) {
         $reg = &$this->config->getRegistry();
         $latestReleases = array();
 
@@ -1195,7 +1234,7 @@ Run post-installation scripts in package <package>, if any exist.
             }
 
             $channel = $package['channel'];
-            $name    = $package['package'];
+            $name = $package['package'];
             if (!$reg->packageExists($name, $channel)) {
                 $ret[] = $package;
                 continue;
@@ -1210,10 +1249,11 @@ Run post-installation scripts in package <package>, if any exist.
 
                 $base2 = false;
                 $preferred_mirror = $this->config->get('preferred_mirror', null, $channel);
-                if ($chan->supportsREST($preferred_mirror) &&
+                if (
+                    $chan->supportsREST($preferred_mirror) &&
                     (
-                       //($base2 = $chan->getBaseURL('REST1.4', $preferred_mirror)) ||
-                       ($base  = $chan->getBaseURL('REST1.0', $preferred_mirror))
+                        //($base2 = $chan->getBaseURL('REST1.4', $preferred_mirror)) ||
+                        ($base = $chan->getBaseURL('REST1.0', $preferred_mirror))
                     )
                 ) {
                     $dorest = true;
@@ -1235,7 +1275,7 @@ Run post-installation scripts in package <package>, if any exist.
                     }
 
                     $installed = array_flip($reg->listPackages($channel));
-                    $latest    = $rest->listLatestUpgrades($base, $state, $installed, $channel, $reg);
+                    $latest = $rest->listLatestUpgrades($base, $state, $installed, $channel, $reg);
                 }
 
                 PEAR::staticPopErrorHandling();
@@ -1252,7 +1292,7 @@ Run post-installation scripts in package <package>, if any exist.
             $name_lower = strtolower($name);
             if (isset($latestReleases[$channel][$name_lower])) {
                 // if not set, up to date
-                $inst_version    = $reg->packageInfo($name, 'version', $channel);
+                $inst_version = $reg->packageInfo($name, 'version', $channel);
                 $channel_version = $latestReleases[$channel][$name_lower]['version'];
                 if (version_compare($channel_version, $inst_version, 'le')) {
                     // installed version is up-to-date
@@ -1261,8 +1301,10 @@ Run post-installation scripts in package <package>, if any exist.
 
                 // maintain BC
                 if ($command == 'upgrade-all') {
-                    $this->ui->outputData(array('data' => 'Will upgrade ' .
-                        $reg->parsedPackageNameToString($package)), $command);
+                    $this->ui->outputData(array(
+                        'data' => 'Will upgrade ' .
+                            $reg->parsedPackageNameToString($package)
+                    ), $command);
                 }
                 $ret[] = $package;
             }

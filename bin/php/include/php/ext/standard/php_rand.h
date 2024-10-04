@@ -22,7 +22,7 @@
  */
 
 #ifndef PHP_RAND_H
-#define	PHP_RAND_H
+#define PHP_RAND_H
 
 #include "php_lcg.h"
 #include "php_mt_rand.h"
@@ -60,15 +60,15 @@
  * -RL
  */
 #define RAND_RANGE_BADSCALING(__n, __min, __max, __tmax) \
-	(__n) = (__min) + (zend_long) ((double) ( (double) (__max) - (__min) + 1.0) * ((__n) / ((__tmax) + 1.0)))
+  (__n) = (__min) + (zend_long)((double)((double)(__max) - (__min) + 1.0) * ((__n) / ((__tmax) + 1.0)))
 
 #ifdef PHP_WIN32
-#define GENERATE_SEED() (((zend_long) (time(0) * GetCurrentProcessId())) ^ ((zend_long) (1000000.0 * php_combined_lcg())))
+#define GENERATE_SEED() (((zend_long)(time(0) * GetCurrentProcessId())) ^ ((zend_long)(1000000.0 * php_combined_lcg())))
 #else
-#define GENERATE_SEED() (((zend_long) (time(0) * getpid())) ^ ((zend_long) (1000000.0 * php_combined_lcg())))
+#define GENERATE_SEED() (((zend_long)(time(0) * getpid())) ^ ((zend_long)(1000000.0 * php_combined_lcg())))
 #endif
 
 PHPAPI void php_srand(zend_long seed);
 PHPAPI zend_long php_rand(void);
 
-#endif	/* PHP_RAND_H */
+#endif /* PHP_RAND_H */

@@ -1,6 +1,6 @@
 /*************************************************
-*      Perl-Compatible Regular Expressions       *
-*************************************************/
+ *      Perl-Compatible Regular Expressions       *
+ *************************************************/
 
 /* PCRE is a library of functions to support regular expressions whose syntax
 and semantics are as close as possible to those of the Perl 5 language.
@@ -38,7 +38,6 @@ POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-
 #ifndef PCRE2_UCP_H_IDEMPOTENT_GUARD
 #define PCRE2_UCP_H_IDEMPOTENT_GUARD
 
@@ -55,75 +54,79 @@ called catposstab in pcre2_compile.c. */
 
 /* These are the general character categories. */
 
-enum {
-  ucp_C,     /* Other */
-  ucp_L,     /* Letter */
-  ucp_M,     /* Mark */
-  ucp_N,     /* Number */
-  ucp_P,     /* Punctuation */
-  ucp_S,     /* Symbol */
-  ucp_Z      /* Separator */
+enum
+{
+  ucp_C, /* Other */
+  ucp_L, /* Letter */
+  ucp_M, /* Mark */
+  ucp_N, /* Number */
+  ucp_P, /* Punctuation */
+  ucp_S, /* Symbol */
+  ucp_Z  /* Separator */
 };
 
 /* These are the particular character categories. */
 
-enum {
-  ucp_Cc,    /* Control */
-  ucp_Cf,    /* Format */
-  ucp_Cn,    /* Unassigned */
-  ucp_Co,    /* Private use */
-  ucp_Cs,    /* Surrogate */
-  ucp_Ll,    /* Lower case letter */
-  ucp_Lm,    /* Modifier letter */
-  ucp_Lo,    /* Other letter */
-  ucp_Lt,    /* Title case letter */
-  ucp_Lu,    /* Upper case letter */
-  ucp_Mc,    /* Spacing mark */
-  ucp_Me,    /* Enclosing mark */
-  ucp_Mn,    /* Non-spacing mark */
-  ucp_Nd,    /* Decimal number */
-  ucp_Nl,    /* Letter number */
-  ucp_No,    /* Other number */
-  ucp_Pc,    /* Connector punctuation */
-  ucp_Pd,    /* Dash punctuation */
-  ucp_Pe,    /* Close punctuation */
-  ucp_Pf,    /* Final punctuation */
-  ucp_Pi,    /* Initial punctuation */
-  ucp_Po,    /* Other punctuation */
-  ucp_Ps,    /* Open punctuation */
-  ucp_Sc,    /* Currency symbol */
-  ucp_Sk,    /* Modifier symbol */
-  ucp_Sm,    /* Mathematical symbol */
-  ucp_So,    /* Other symbol */
-  ucp_Zl,    /* Line separator */
-  ucp_Zp,    /* Paragraph separator */
-  ucp_Zs     /* Space separator */
+enum
+{
+  ucp_Cc, /* Control */
+  ucp_Cf, /* Format */
+  ucp_Cn, /* Unassigned */
+  ucp_Co, /* Private use */
+  ucp_Cs, /* Surrogate */
+  ucp_Ll, /* Lower case letter */
+  ucp_Lm, /* Modifier letter */
+  ucp_Lo, /* Other letter */
+  ucp_Lt, /* Title case letter */
+  ucp_Lu, /* Upper case letter */
+  ucp_Mc, /* Spacing mark */
+  ucp_Me, /* Enclosing mark */
+  ucp_Mn, /* Non-spacing mark */
+  ucp_Nd, /* Decimal number */
+  ucp_Nl, /* Letter number */
+  ucp_No, /* Other number */
+  ucp_Pc, /* Connector punctuation */
+  ucp_Pd, /* Dash punctuation */
+  ucp_Pe, /* Close punctuation */
+  ucp_Pf, /* Final punctuation */
+  ucp_Pi, /* Initial punctuation */
+  ucp_Po, /* Other punctuation */
+  ucp_Ps, /* Open punctuation */
+  ucp_Sc, /* Currency symbol */
+  ucp_Sk, /* Modifier symbol */
+  ucp_Sm, /* Mathematical symbol */
+  ucp_So, /* Other symbol */
+  ucp_Zl, /* Line separator */
+  ucp_Zp, /* Paragraph separator */
+  ucp_Zs  /* Space separator */
 };
 
 /* These are grapheme break properties. The Extended Pictographic property
 comes from the emoji-data.txt file. */
 
-enum {
-  ucp_gbCR,                    /*  0 */
-  ucp_gbLF,                    /*  1 */
-  ucp_gbControl,               /*  2 */
-  ucp_gbExtend,                /*  3 */
-  ucp_gbPrepend,               /*  4 */
-  ucp_gbSpacingMark,           /*  5 */
-  ucp_gbL,                     /*  6 Hangul syllable type L */
-  ucp_gbV,                     /*  7 Hangul syllable type V */
-  ucp_gbT,                     /*  8 Hangul syllable type T */
-  ucp_gbLV,                    /*  9 Hangul syllable type LV */
-  ucp_gbLVT,                   /* 10 Hangul syllable type LVT */
-  ucp_gbRegionalIndicator,     /* 11 */
-  ucp_gbOther,                 /* 12 */
-  ucp_gbZWJ,                   /* 13 */
-  ucp_gbExtended_Pictographic  /* 14 */
+enum
+{
+  ucp_gbCR,                   /*  0 */
+  ucp_gbLF,                   /*  1 */
+  ucp_gbControl,              /*  2 */
+  ucp_gbExtend,               /*  3 */
+  ucp_gbPrepend,              /*  4 */
+  ucp_gbSpacingMark,          /*  5 */
+  ucp_gbL,                    /*  6 Hangul syllable type L */
+  ucp_gbV,                    /*  7 Hangul syllable type V */
+  ucp_gbT,                    /*  8 Hangul syllable type T */
+  ucp_gbLV,                   /*  9 Hangul syllable type LV */
+  ucp_gbLVT,                  /* 10 Hangul syllable type LVT */
+  ucp_gbRegionalIndicator,    /* 11 */
+  ucp_gbOther,                /* 12 */
+  ucp_gbZWJ,                  /* 13 */
+  ucp_gbExtended_Pictographic /* 14 */
 };
 
 /* These are the script identifications. */
 
-enum {
+enum
+{
   ucp_Arabic,
   ucp_Armenian,
   ucp_Bengali,
@@ -283,6 +286,6 @@ enum {
   ucp_Sogdian
 };
 
-#endif  /* PCRE2_UCP_H_IDEMPOTENT_GUARD */
+#endif /* PCRE2_UCP_H_IDEMPOTENT_GUARD */
 
 /* End of pcre2_ucp.h */

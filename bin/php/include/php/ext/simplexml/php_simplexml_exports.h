@@ -23,32 +23,39 @@
 
 #include "php_simplexml.h"
 
-#define SKIP_TEXT(__p) \
-	if ((__p)->type == XML_TEXT_NODE) { \
-		goto next_iter; \
-	}
+#define SKIP_TEXT(__p)              \
+  if ((__p)->type == XML_TEXT_NODE) \
+  {                                 \
+    goto next_iter;                 \
+  }
 
-#define GET_NODE(__s, __n) { \
-	if ((__s)->node && (__s)->node->node) { \
-		__n = (__s)->node->node; \
-	} else { \
-		__n = NULL; \
-		php_error_docref(NULL, E_WARNING, "Node no longer exists"); \
-	} \
-}
+#define GET_NODE(__s, __n)                                        \
+  {                                                               \
+    if ((__s)->node && (__s)->node->node)                         \
+    {                                                             \
+      __n = (__s)->node->node;                                    \
+    }                                                             \
+    else                                                          \
+    {                                                             \
+      __n = NULL;                                                 \
+      php_error_docref(NULL, E_WARNING, "Node no longer exists"); \
+    }                                                             \
+  }
 
 PHP_SXE_API zend_object *sxe_object_new(zend_class_entry *ce);
 
-static inline php_sxe_object *php_sxe_fetch_object(zend_object *obj) /* {{{ */ {
-	return (php_sxe_object *)((char*)(obj) - XtOffsetOf(php_sxe_object, zo));
+static inline php_sxe_object *php_sxe_fetch_object(zend_object *obj) /* {{{ */
+{
+  return (php_sxe_object *)((char *)(obj)-XtOffsetOf(php_sxe_object, zo));
 }
 /* }}} */
 
 #define Z_SXEOBJ_P(zv) php_sxe_fetch_object(Z_OBJ_P((zv)))
 
-typedef struct {
-	zend_object_iterator  intern;
-	php_sxe_object        *sxe;
+typedef struct
+{
+  zend_object_iterator intern;
+  php_sxe_object *sxe;
 } php_sxe_iterator;
 
 PHP_SXE_API void php_sxe_rewind_iterator(php_sxe_object *sxe);

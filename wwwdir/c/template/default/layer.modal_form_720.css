@@ -1,4 +1,4 @@
-.modal_form{
+.modal_form {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -10,20 +10,20 @@
     -webkit-border-image: url(i/modal_bg.png) 11 13 15 13 stretch stretch;
 }
 
-.modal_form .title{
+.modal_form .title {
     font-size: 30px;
     color: #002864;
     margin-bottom: 6px;
 }
 
-.modal_form .text{
+.modal_form .text {
     font-size: 26px;
     margin-bottom: 3px;
     border: 5px;
     -webkit-border-image: url(i/item_bg.png) 5;
 }
 
-.modal_form .status{
+.modal_form .status {
     position: absolute;
     top: 3px;
     right: 5px;
@@ -31,13 +31,13 @@
     color: #990000;
 }
 
-.modal_form .item{
+.modal_form .item {
     border-width: 20px 6px 20px 6px;
     -webkit-border-image: url(i/item_bg.png) 20 6 20 6 stretch stretch;
     margin-bottom: 6px;
 }
 
-.modal_form  .item  input{
+.modal_form .item input {
     float: right;
     height: 5px;
     width: 59%;
@@ -46,11 +46,12 @@
     -webkit-border-image: url(i/input.png) 13 13 14 13 stretch stretch;
     -webkit-border-radius: 15px;
 }
-.modal_form .item input:focus{
+
+.modal_form .item input:focus {
     -webkit-border-image: url(i/input_act.png) 13 13 14 13 stretch stretch;
 }
 
-.modal_form .label{
+.modal_form .label {
     float: left;
     font-size: 22px;
     color: #002864;
@@ -58,12 +59,13 @@
     line-height: 42px;
     margin-top: -20px;
 }
-.modal_form .buttons{
+
+.modal_form .buttons {
     width: 100%;
     text-align: right;
 }
 
-.modal_form .buttons input{
+.modal_form .buttons input {
     /*float: right;*/
     background: url(i/btn2.png) right no-repeat;
     font-size: 19px;
@@ -78,13 +80,13 @@
     border: none;
 }
 
-.modal_form .buttons input:focus{
+.modal_form .buttons input:focus {
     background: url(i/btn2.png) left no-repeat;
     color: #fff;
     text-shadow: #000 -1px -1px 3px;
 }
 
-.modal_form .form_select{
+.modal_form .form_select {
     height: 5px;
     width: 233px !important;
     top: -13px;
@@ -97,11 +99,12 @@
     font-size: 18px;
 }
 
-.modal_form .form_select.active{
+.modal_form .form_select.active {
     -webkit-border-image: url(i/combobox_act.png) 13 13 14 13 stretch stretch !important;
 }
 
-.modal_form .form_time, .modal_form .form_date{
+.modal_form .form_time,
+.modal_form .form_date {
     height: 5px;
     top: -13px;
     border-width: 13px 13px 14px 13px;
@@ -115,31 +118,35 @@
     /*font-family: "Courier New", serif;*/
 }
 
-.modal_form .form_time.active, .modal_form .form_date.active{
+.modal_form .form_time.active,
+.modal_form .form_date.active {
     -webkit-border-image: url(i/input_act.png) 13 12 14 12 stretch stretch !important;
 }
 
-.modal_form .form_time.edit, .modal_form .form_date.edit{
+.modal_form .form_time.edit,
+.modal_form .form_date.edit {
     color: #00f;
 }
 
-.modal_form .form_time .highlight, .modal_form .form_date .highlight{
+.modal_form .form_time .highlight,
+.modal_form .form_date .highlight {
     color: #f00;
 }
 
-.modal_form .form_time{
+.modal_form .form_time {
     width: 45px;
 }
-.modal_form .form_date{
+
+.modal_form .form_date {
     width: 88px;
 }
 
-.modal_form .fixed_container{
+.modal_form .fixed_container {
     width: 280px;
     float: right;
 }
 
-.modal_form .select_arrow{
+.modal_form .select_arrow {
     float: right;
     font-size: 20px;
     font-family: "Myriad Pro Cond", serif;
@@ -151,10 +158,10 @@
     padding-right: 2px;
 }
 
-.modal_form .select_arrow.active{
+.modal_form .select_arrow.active {
     color: #035f9e;
 }
 
-#local_pvr_confirm{
+#local_pvr_confirm {
     margin-top: -164px;
 }

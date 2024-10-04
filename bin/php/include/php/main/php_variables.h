@@ -43,7 +43,7 @@ PHPAPI void php_build_argv(char *s, zval *track_vars_array);
 PHPAPI int php_hash_environment(void);
 END_EXTERN_C()
 
-#define NUM_TRACK_VARS	6
+#define NUM_TRACK_VARS 6
 
 #endif /* PHP_VARIABLES_H */
 /*

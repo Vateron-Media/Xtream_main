@@ -151,31 +151,36 @@ if ($rSettings["sidebar"]) { ?>
                                     <div id="basicwizard">
                                         <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                             <li class="nav-item">
-                                                <a href="#stream-selection" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                <a href="#stream-selection" data-toggle="tab"
+                                                    class="nav-link rounded-0 pt-2 pb-2">
                                                     <i class="mdi mdi-play mr-1"></i>
                                                     <span class="d-none d-sm-inline"><?= $_["streams"] ?></span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="#movie-selection" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                <a href="#movie-selection" data-toggle="tab"
+                                                    class="nav-link rounded-0 pt-2 pb-2">
                                                     <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                     <span class="d-none d-sm-inline"><?= $_["movies"] ?></span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="#series-selection" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                <a href="#series-selection" data-toggle="tab"
+                                                    class="nav-link rounded-0 pt-2 pb-2">
                                                     <i class="mdi mdi-youtube-tv mr-1"></i>
                                                     <span class="d-none d-sm-inline"><?= $_["series"] ?></span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="#episodes-selection" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                <a href="#episodes-selection" data-toggle="tab"
+                                                    class="nav-link rounded-0 pt-2 pb-2">
                                                     <i class="mdi mdi-folder-open-outline mr-1"></i>
                                                     <span class="d-none d-sm-inline"><?= $_["episodes"] ?></span>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="#user-selection" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                <a href="#user-selection" data-toggle="tab"
+                                                    class="nav-link rounded-0 pt-2 pb-2">
                                                     <i class="mdi mdi-server-network mr-1"></i>
                                                     <span class="d-none d-sm-inline"><?= $_["users"] ?></span>
                                                 </a>
@@ -187,21 +192,27 @@ if ($rSettings["sidebar"]) { ?>
                                                     <input type="hidden" name="streams" id="streams" value="" />
                                                     <div class="row">
                                                         <div class="col-md-4 col-6">
-                                                            <input type="text" class="form-control" id="stream_search" value="" placeholder="<?= $_["search_streams"] ?>...">
+                                                            <input type="text" class="form-control" id="stream_search"
+                                                                value="" placeholder="<?= $_["search_streams"] ?>...">
                                                         </div>
                                                         <div class="col-md-4 col-6">
-                                                            <select id="stream_category_search" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["all_categories"] ?></option>
+                                                            <select id="stream_category_search" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["all_categories"] ?>
+                                                                </option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
                                                                                                                 echo " selected";
-                                                                                                            } ?>><?= $rCategory["category_name"] ?></option>
+                                                                                                            } ?>><?= $rCategory["category_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
-                                                        <label class="col-md-1 col-2 col-form-label text-center" for="show_entries"><?= $_["show"] ?></label>
+                                                        <label class="col-md-1 col-2 col-form-label text-center"
+                                                            for="show_entries"><?= $_["show"] ?></label>
                                                         <div class="col-md-2 col-8">
-                                                            <select id="show_entries" class="form-control" data-toggle="select2">
+                                                            <select id="show_entries" class="form-control"
+                                                                data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                                 echo " selected";
@@ -210,11 +221,14 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <button type="button" class="btn btn-info waves-effect waves-light" onClick="toggleStreams()">
+                                                            <button type="button"
+                                                                class="btn btn-info waves-effect waves-light"
+                                                                onClick="toggleStreams()">
                                                                 <i class="mdi mdi-selection"></i>
                                                             </button>
                                                         </div>
-                                                        <table id="datatable-md1" class="table table-hover table-borderless mb-0">
+                                                        <table id="datatable-md1"
+                                                            class="table table-hover table-borderless mb-0">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th class="text-center"><?= $_["id"] ?></th>
@@ -227,7 +241,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div>
                                                     <ul class="list-inline wizard mb-0" style="margin-top:20px;">
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_streams" type="submit" class="btn btn-primary" value="<?= $_["delete_streams"] ?>" />
+                                                            <input name="submit_streams" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?= $_["delete_streams"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </form>
@@ -237,21 +253,27 @@ if ($rSettings["sidebar"]) { ?>
                                                     <input type="hidden" name="movies" id="movies" value="" />
                                                     <div class="row">
                                                         <div class="col-md-3 col-6">
-                                                            <input type="text" class="form-control" id="movie_search" value="" placeholder="<?= $_["search_movies"] ?>...">
+                                                            <input type="text" class="form-control" id="movie_search"
+                                                                value="" placeholder="<?= $_["search_movies"] ?>...">
                                                         </div>
                                                         <div class="col-md-3 col-6">
-                                                            <select id="movie_category_search" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["all_categories"] ?></option>
+                                                            <select id="movie_category_search" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["all_categories"] ?>
+                                                                </option>
                                                                 <?php foreach (getCategories("movie") as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
                                                                                                                 echo " selected";
-                                                                                                            } ?>><?= $rCategory["category_name"] ?></option>
+                                                                                                            } ?>><?= $rCategory["category_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-3 col-6">
-                                                            <select id="movie_filter" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["no_filter"] ?></option>
+                                                            <select id="movie_filter" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["no_filter"] ?>
+                                                                </option>
                                                                 <option value="1"><?= $_["encoded"] ?></option>
                                                                 <option value="2"><?= $_["encoding"] ?></option>
                                                                 <option value="3"><?= $_["down"] ?></option>
@@ -261,7 +283,8 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2 col-8">
-                                                            <select id="movie_show_entries" class="form-control" data-toggle="select2">
+                                                            <select id="movie_show_entries" class="form-control"
+                                                                data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                                 echo " selected";
@@ -270,11 +293,14 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <button type="button" class="btn btn-info waves-effect waves-light" onClick="toggleMovies()">
+                                                            <button type="button"
+                                                                class="btn btn-info waves-effect waves-light"
+                                                                onClick="toggleMovies()">
                                                                 <i class="mdi mdi-selection"></i>
                                                             </button>
                                                         </div>
-                                                        <table id="datatable-md2" class="table table-hover table-borderless mb-0">
+                                                        <table id="datatable-md2"
+                                                            class="table table-hover table-borderless mb-0">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th class="text-center"><?= $_["id"] ?></th>
@@ -288,7 +314,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div>
                                                     <ul class="list-inline wizard mb-0" style="margin-top:20px;">
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_movies" type="submit" class="btn btn-primary" value="<?= $_["delete_movies"] ?>" />
+                                                            <input name="submit_movies" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?= $_["delete_movies"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </form>
@@ -298,21 +326,26 @@ if ($rSettings["sidebar"]) { ?>
                                                     <input type="hidden" name="series" id="series" value="" />
                                                     <div class="row">
                                                         <div class="col-md-6 col-6">
-                                                            <input type="text" class="form-control" id="series_search" value="" placeholder="<?= $_["search_series"] ?>...">
+                                                            <input type="text" class="form-control" id="series_search"
+                                                                value="" placeholder="<?= $_["search_series"] ?>...">
                                                         </div>
                                                         <div class="col-md-3 col-6">
-                                                            <select id="series_category_search" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["all_categories"] ?></option>
+                                                            <select id="series_category_search" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["all_categories"] ?>
+                                                                </option>
                                                                 <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                                 <?php foreach (getCategories("series") as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
                                                                                                                 echo " selected";
-                                                                                                            } ?>><?= $rCategory["category_name"] ?></option>
+                                                                                                            } ?>><?= $rCategory["category_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2 col-8">
-                                                            <select id="series_show_entries" class="form-control" data-toggle="select2">
+                                                            <select id="series_show_entries" class="form-control"
+                                                                data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                                 echo " selected";
@@ -321,11 +354,14 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <button type="button" class="btn btn-info waves-effect waves-light" onClick="toggleSeries()">
+                                                            <button type="button"
+                                                                class="btn btn-info waves-effect waves-light"
+                                                                onClick="toggleSeries()">
                                                                 <i class="mdi mdi-selection"></i>
                                                             </button>
                                                         </div>
-                                                        <table id="datatable-md4" class="table table-hover table-borderless mb-0">
+                                                        <table id="datatable-md4"
+                                                            class="table table-hover table-borderless mb-0">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th class="text-center"><?= $_["id"] ?></th>
@@ -338,7 +374,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div>
                                                     <ul class="list-inline wizard mb-0" style="margin-top:20px;">
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_series" type="submit" class="btn btn-primary" value="<?= $_["delete_series"] ?>" />
+                                                            <input name="submit_series" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?= $_["delete_series"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </form>
@@ -348,19 +386,24 @@ if ($rSettings["sidebar"]) { ?>
                                                     <input type="hidden" name="episodes" id="episodes" value="" />
                                                     <div class="row">
                                                         <div class="col-md-3 col-6">
-                                                            <input type="text" class="form-control" id="episode_search" value="" placeholder="<?= $_["search_episodes"] ?>...">
+                                                            <input type="text" class="form-control" id="episode_search"
+                                                                value="" placeholder="<?= $_["search_episodes"] ?>...">
                                                         </div>
                                                         <div class="col-md-3 col-6">
-                                                            <select id="episode_series" class="form-control" data-toggle="select2">
+                                                            <select id="episode_series" class="form-control"
+                                                                data-toggle="select2">
                                                                 <option value=""><?= $_["all_series"] ?></option>
                                                                 <?php foreach (getSeries() as $rSerie) { ?>
-                                                                    <option value="<?= $rSerie["id"] ?>"><?= $rSerie["title"] ?></option>
+                                                                    <option value="<?= $rSerie["id"] ?>">
+                                                                        <?= $rSerie["title"] ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-3 col-6">
-                                                            <select id="episode_filter" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["no_filter"] ?></option>
+                                                            <select id="episode_filter" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["no_filter"] ?>
+                                                                </option>
                                                                 <option value="1"><?= $_["encoded"] ?></option>
                                                                 <option value="2"><?= $_["encoding"] ?></option>
                                                                 <option value="3"><?= $_["down"] ?></option>
@@ -369,7 +412,8 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2 col-8">
-                                                            <select id="episode_show_entries" class="form-control" data-toggle="select2">
+                                                            <select id="episode_show_entries" class="form-control"
+                                                                data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                                 echo " selected";
@@ -378,11 +422,14 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <button type="button" class="btn btn-info waves-effect waves-light" onClick="toggleEpisodes()">
+                                                            <button type="button"
+                                                                class="btn btn-info waves-effect waves-light"
+                                                                onClick="toggleEpisodes()">
                                                                 <i class="mdi mdi-selection"></i>
                                                             </button>
                                                         </div>
-                                                        <table id="datatable-md5" class="table table-hover table-borderless mb-0">
+                                                        <table id="datatable-md5"
+                                                            class="table table-hover table-borderless mb-0">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th class="text-center"><?= $_["id"] ?></th>
@@ -396,7 +443,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div>
                                                     <ul class="list-inline wizard mb-0" style="margin-top:20px;">
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_episodes" type="submit" class="btn btn-primary" value="<?= $_["delete_episodes"] ?>" />
+                                                            <input name="submit_episodes" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?= $_["delete_episodes"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </form>
@@ -406,19 +455,25 @@ if ($rSettings["sidebar"]) { ?>
                                                     <input type="hidden" name="users" id="users" value="" />
                                                     <div class="row">
                                                         <div class="col-md-3 col-6">
-                                                            <input type="text" class="form-control" id="user_search" value="" placeholder="<?= $_["search_users"] ?>...">
+                                                            <input type="text" class="form-control" id="user_search"
+                                                                value="" placeholder="<?= $_["search_users"] ?>...">
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <select id="reseller_search" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["all_resellers"] ?></option>
+                                                            <select id="reseller_search" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["all_resellers"] ?>
+                                                                </option>
                                                                 <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
-                                                                    <option value="<?= $rRegisteredUser["id"] ?>"><?= $rRegisteredUser["username"] ?></option>
+                                                                    <option value="<?= $rRegisteredUser["id"] ?>">
+                                                                        <?= $rRegisteredUser["username"] ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <select id="user_filter" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["no_filter"] ?></option>
+                                                            <select id="user_filter" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["no_filter"] ?>
+                                                                </option>
                                                                 <option value="1"><?= $_["active"] ?></option>
                                                                 <option value="2"><?= $_["disabled"] ?></option>
                                                                 <option value="3"><?= $_["banned"] ?></option>
@@ -429,7 +484,8 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2 col-8">
-                                                            <select id="user_show_entries" class="form-control" data-toggle="select2">
+                                                            <select id="user_show_entries" class="form-control"
+                                                                data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                                 echo " selected";
@@ -438,7 +494,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <button type="button" class="btn btn-info waves-effect waves-light" onClick="toggleUsers()">
+                                                            <button type="button"
+                                                                class="btn btn-info waves-effect waves-light"
+                                                                onClick="toggleUsers()">
                                                                 <i class="mdi mdi-selection"></i>
                                                             </button>
                                                         </div>
@@ -464,7 +522,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div>
                                                     <ul class="list-inline wizard mb-0" style="margin-top:20px;">
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_users" type="submit" class="btn btn-primary" value="<?= $_["delete_users"] ?>" />
+                                                            <input name="submit_users" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?= $_["delete_users"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </form>

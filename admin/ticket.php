@@ -78,11 +78,13 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <?php if (isset($rTicket)) { ?>
                                             <a href="./ticket_view.php?id=<?= $rTicket["id"] ?>">
-                                                <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_ticket"] ?></li>
+                                                <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                    <?= $_["back_to_ticket"] ?></li>
                                             </a>
                                         <?php } else { ?>
                                             <a href="./tickets.php">
-                                                <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_ticket"] ?></li>
+                                                <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                    <?= $_["back_to_ticket"] ?></li>
                                             </a>
                                         <?php } ?>
                                     </ol>
@@ -115,7 +117,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#ticket-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#ticket-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
@@ -127,23 +130,31 @@ if ($rSettings["sidebar"]) { ?>
                                                         <div class="col-12">
                                                             <?php if (!isset($rTicket)) { ?>
                                                                 <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label" for="title"><?= $_["subject"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="title"><?= $_["subject"] ?></label>
                                                                     <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="title" name="title" value="" required data-parsley-trigger="<?= $_["change"] ?>">
+                                                                        <input type="text" class="form-control" id="title"
+                                                                            name="title" value="" required
+                                                                            data-parsley-trigger="<?= $_["change"] ?>">
                                                                     </div>
                                                                 </div>
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="message"><?= $_["message"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="message"><?= $_["message"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea id="message" name="message" class="form-control" rows="3" placeholder="" required data-parsley-trigger="<?= $_["change"] ?>"></textarea>
+                                                                    <textarea id="message" name="message"
+                                                                        class="form-control" rows="3" placeholder=""
+                                                                        required
+                                                                        data-parsley-trigger="<?= $_["change"] ?>"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_ticket" type="submit" class="btn btn-primary" value="<?= $_["create"] ?>" />
+                                                            <input name="submit_ticket" type="submit"
+                                                                class="btn btn-primary" value="<?= $_["create"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

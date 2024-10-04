@@ -14,7 +14,7 @@
 
         this.layer_name = 'parent_settings';
 
-        this.save_params = {"type": "stb", "action": "set_parent_password"};
+        this.save_params = { "type": "stb", "action": "set_parent_password" };
 
         this.superclass = SettingLayer.prototype;
 
@@ -67,10 +67,10 @@
     parent_settings.init_left_ear(word['ears_back']);
 
     parent_settings.init_color_buttons([
-        {"label": word['parent_settings_cancel'], "cmd": parent_settings.cancel},
-        {"label": word['parent_settings_save'], "cmd": parent_settings.save},
-        {"label": word['empty'], "cmd": ''},
-        {"label": word['empty'], "cmd": ''}
+        { "label": word['parent_settings_cancel'], "cmd": parent_settings.cancel },
+        { "label": word['parent_settings_save'], "cmd": parent_settings.save },
+        { "label": word['empty'], "cmd": '' },
+        { "label": word['empty'], "cmd": '' }
     ]);
 
     //parent_settings.color_buttons[parent_settings.color_buttons.getIdxByVal('color', 'yellow')].text_obj.setClass('disable_color_btn_text');

@@ -32,7 +32,9 @@ if ($rSettings["sidebar"]) { ?>
                         <div class="col-12">
 
                             <div class="card-body" style="overflow-x:auto;">
-                                <center><iframe src="https://www.netiptv.eu/upload" style=" background: white; border: none; width: 1200px; height: 950px; align: center"></iframe></center>
+                                <center><iframe src="https://www.netiptv.eu/upload"
+                                        style=" background: white; border: none; width: 1200px; height: 950px; align: center"></iframe>
+                                </center>
                             </div> <!-- end card-body -->
 
 

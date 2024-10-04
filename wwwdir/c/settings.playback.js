@@ -12,7 +12,7 @@
 
         this.layer_name = 'playback_settings';
 
-        this.save_params = {"type": "stb", "action": "set_playback_settings"};
+        this.save_params = { "type": "stb", "action": "set_playback_settings" };
 
         this.superclass = SettingLayer.prototype;
 
@@ -156,9 +156,9 @@
                 main_menu.show()
             }
         },
-        {"label": word['playback_settings_save'], "cmd": playback_settings.save},
-        {"label": word['empty'], "cmd": ''},
-        {"label": word['empty'], "cmd": ''}
+        { "label": word['playback_settings_save'], "cmd": playback_settings.save },
+        { "label": word['empty'], "cmd": '' },
+        { "label": word['empty'], "cmd": '' }
     ]);
 
     playback_settings.init_header_path(get_word('playback_settings_title'));

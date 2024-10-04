@@ -34,7 +34,8 @@
 #include <stddef.h>
 #include "mbfl_defs.h"
 
-typedef struct _mbfl_allocators {
+typedef struct _mbfl_allocators
+{
 	void *(*malloc)(size_t);
 	void *(*realloc)(void *, size_t);
 	void *(*calloc)(size_t, size_t);

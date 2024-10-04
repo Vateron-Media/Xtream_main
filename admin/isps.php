@@ -26,7 +26,8 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="isp.php">
-                                                <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-success waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-plus"></i> <?= $_["block_isp"] ?>
                                                 </button>
                                             </a>
@@ -67,8 +68,13 @@ if ($rSettings["sidebar"]) { ?>
                                                     </td>
                                                     <td class="text-center">
                                                         <div class="btn-group">
-                                                            <a href="./isp.php?id=<?= $rISP["id"] ?>"><button type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
-                                                            <button type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rISP["id"] ?>, 'delete');"><i class="mdi mdi-close"></i></button>
+                                                            <a href="./isp.php?id=<?= $rISP["id"] ?>"><button type="button"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                        class="mdi mdi-pencil-outline"></i></button></a>
+                                                            <button type="button"
+                                                                class="btn btn-light waves-effect waves-light btn-xs"
+                                                                onClick="api(<?= $rISP["id"] ?>, 'delete');"><i
+                                                                    class="mdi mdi-close"></i></button>
                                                         </div>
                                                     </td>
                                                 </tr>

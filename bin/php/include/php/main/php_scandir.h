@@ -38,13 +38,13 @@
 #endif
 
 #ifdef HAVE_SCANDIR
-#define php_scandir		scandir
+#define php_scandir scandir
 #else
-PHPAPI int php_scandir(const char *dirname, struct dirent **namelist[], int (*selector) (const struct dirent *entry), int (*compare) (const struct dirent **a, const struct dirent **b));
+PHPAPI int php_scandir(const char *dirname, struct dirent **namelist[], int (*selector)(const struct dirent *entry), int (*compare)(const struct dirent **a, const struct dirent **b));
 #endif
 
 #ifdef HAVE_ALPHASORT
-#define php_alphasort	alphasort
+#define php_alphasort alphasort
 #else
 PHPAPI int php_alphasort(const struct dirent **a, const struct dirent **b);
 #endif

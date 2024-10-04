@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  This class handles all the data you can get from the api Configuration
  *
@@ -117,4 +118,3 @@ class APIConfiguration {
         return json_encode($this->_data, JSON_PRETTY_PRINT);
     }
 }
-?>

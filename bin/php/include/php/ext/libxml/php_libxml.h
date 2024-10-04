@@ -28,31 +28,33 @@ extern zend_module_entry libxml_module_entry;
 #define PHP_LIBXML_VERSION PHP_VERSION
 
 #ifdef PHP_WIN32
-#	define PHP_LIBXML_API __declspec(dllexport)
+#define PHP_LIBXML_API __declspec(dllexport)
 #elif defined(__GNUC__) && __GNUC__ >= 4
-#	define PHP_LIBXML_API __attribute__ ((visibility("default")))
+#define PHP_LIBXML_API __attribute__((visibility("default")))
 #else
-#	define PHP_LIBXML_API
+#define PHP_LIBXML_API
 #endif
 
 #include "zend_smart_str.h"
 #include <libxml/tree.h>
 
-#define LIBXML_SAVE_NOEMPTYTAG 1<<2
+#define LIBXML_SAVE_NOEMPTYTAG 1 << 2
 
 ZEND_BEGIN_MODULE_GLOBALS(libxml)
-	zval stream_context;
-	smart_str error_buffer;
-	zend_llist *error_list;
-	struct _php_libxml_entity_resolver {
-		zval                    object;
-		zend_fcall_info			fci;
-		zend_fcall_info_cache	fcc;
-	} entity_loader;
-	zend_bool entity_loader_disabled;
+zval stream_context;
+smart_str error_buffer;
+zend_llist *error_list;
+struct _php_libxml_entity_resolver
+{
+	zval object;
+	zend_fcall_info fci;
+	zend_fcall_info_cache fcc;
+} entity_loader;
+zend_bool entity_loader_disabled;
 ZEND_END_MODULE_GLOBALS(libxml)
 
-typedef struct _libxml_doc_props {
+typedef struct _libxml_doc_props
+{
 	int formatoutput;
 	int validateonparse;
 	int resolveexternals;
@@ -63,33 +65,36 @@ typedef struct _libxml_doc_props {
 	HashTable *classmap;
 } libxml_doc_props;
 
-typedef struct _php_libxml_ref_obj {
+typedef struct _php_libxml_ref_obj
+{
 	void *ptr;
-	int   refcount;
+	int refcount;
 	libxml_doc_props *doc_props;
 } php_libxml_ref_obj;
 
-typedef struct _php_libxml_node_ptr {
+typedef struct _php_libxml_node_ptr
+{
 	xmlNodePtr node;
-	int	refcount;
+	int refcount;
 	void *_private;
 } php_libxml_node_ptr;
 
-typedef struct _php_libxml_node_object {
+typedef struct _php_libxml_node_object
+{
 	php_libxml_node_ptr *node;
 	php_libxml_ref_obj *document;
 	HashTable *properties;
-	zend_object  std;
+	zend_object std;
 } php_libxml_node_object;
 
-
-static inline php_libxml_node_object *php_libxml_node_fetch_object(zend_object *obj) {
-	return (php_libxml_node_object *)((char*)(obj) - obj->handlers->offset);
+static inline php_libxml_node_object *php_libxml_node_fetch_object(zend_object *obj)
+{
+	return (php_libxml_node_object *)((char *)(obj)-obj->handlers->offset);
 }
 
 #define Z_LIBXML_NODE_P(zv) php_libxml_node_fetch_object(Z_OBJ_P((zv)))
 
-typedef void * (*php_libxml_export_node) (zval *object);
+typedef void *(*php_libxml_export_node)(zval *object);
 
 PHP_LIBXML_API int php_libxml_increment_node_ptr(php_libxml_node_object *object, xmlNodePtr node, void *private_data);
 PHP_LIBXML_API int php_libxml_decrement_node_ptr(php_libxml_node_object *object);

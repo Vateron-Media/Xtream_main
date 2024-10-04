@@ -33,26 +33,27 @@
 #define SAPI_POST_BLOCK_SIZE 0x4000
 
 #ifdef PHP_WIN32
-#	ifdef SAPI_EXPORTS
-#		define SAPI_API __declspec(dllexport)
-#	else
-#		define SAPI_API __declspec(dllimport)
-#	endif
-#elif defined(__GNUC__) && __GNUC__ >= 4
-#	define SAPI_API __attribute__ ((visibility("default")))
+#ifdef SAPI_EXPORTS
+#define SAPI_API __declspec(dllexport)
 #else
-#	define SAPI_API
+#define SAPI_API __declspec(dllimport)
+#endif
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#define SAPI_API __attribute__((visibility("default")))
+#else
+#define SAPI_API
 #endif
 
 #undef shutdown
 
-typedef struct {
+typedef struct
+{
 	char *header;
 	size_t header_len;
 } sapi_header_struct;
 
-
-typedef struct {
+typedef struct
+{
 	zend_llist headers;
 	int http_response_code;
 	unsigned char send_default_content_type;
@@ -60,12 +61,11 @@ typedef struct {
 	char *http_status_line;
 } sapi_headers_struct;
 
-
 typedef struct _sapi_post_entry sapi_post_entry;
 typedef struct _sapi_module_struct sapi_module_struct;
 
 BEGIN_EXTERN_C()
-extern SAPI_API sapi_module_struct sapi_module;  /* true global */
+extern SAPI_API sapi_module_struct sapi_module; /* true global */
 END_EXTERN_C()
 
 /* Some values in this structure needs to be filled in before
@@ -74,7 +74,8 @@ END_EXTERN_C()
  * and that you free them after sapi_deactivate().
  */
 
-typedef struct {
+typedef struct
+{
 	const char *request_method;
 	char *query_string;
 	char *cookie_data;
@@ -113,8 +114,8 @@ typedef struct {
 	int proto_num;
 } sapi_request_info;
 
-
-typedef struct _sapi_globals_struct {
+typedef struct _sapi_globals_struct
+{
 	void *server_context;
 	sapi_request_info request_info;
 	sapi_headers_struct sapi_headers;
@@ -134,13 +135,12 @@ typedef struct _sapi_globals_struct {
 	zend_fcall_info_cache fci_cache;
 } sapi_globals_struct;
 
-
 BEGIN_EXTERN_C()
 #ifdef ZTS
-# define SG(v) ZEND_TSRMG(sapi_globals_id, sapi_globals_struct *, v)
+#define SG(v) ZEND_TSRMG(sapi_globals_id, sapi_globals_struct *, v)
 SAPI_API extern int sapi_globals_id;
 #else
-# define SG(v) (sapi_globals.v)
+#define SG(v) (sapi_globals.v)
 extern SAPI_API sapi_globals_struct sapi_globals;
 #endif
 
@@ -163,18 +163,20 @@ END_EXTERN_C()
  *     sapi_header_line ctr = {0};
  */
 
-typedef struct {
+typedef struct
+{
 	char *line; /* If you allocated this, you need to free it yourself */
 	size_t line_len;
 	zend_long response_code; /* long due to zend_parse_parameters compatibility */
 } sapi_header_line;
 
-typedef enum {					/* Parameter: 			*/
-	SAPI_HEADER_REPLACE,		/* sapi_header_line* 	*/
-	SAPI_HEADER_ADD,			/* sapi_header_line* 	*/
-	SAPI_HEADER_DELETE,			/* sapi_header_line* 	*/
-	SAPI_HEADER_DELETE_ALL,		/* void					*/
-	SAPI_HEADER_SET_STATUS		/* int 					*/
+typedef enum
+{						  /* Parameter: 			*/
+  SAPI_HEADER_REPLACE,	  /* sapi_header_line* 	*/
+  SAPI_HEADER_ADD,		  /* sapi_header_line* 	*/
+  SAPI_HEADER_DELETE,	  /* sapi_header_line* 	*/
+  SAPI_HEADER_DELETE_ALL, /* void					*/
+  SAPI_HEADER_SET_STATUS  /* int 					*/
 } sapi_header_op_enum;
 
 BEGIN_EXTERN_C()
@@ -182,8 +184,7 @@ SAPI_API int sapi_header_op(sapi_header_op_enum op, void *arg);
 
 /* Deprecated functions. Use sapi_header_op instead. */
 SAPI_API int sapi_add_header_ex(char *header_line, size_t header_line_len, zend_bool duplicate, zend_bool replace);
-#define sapi_add_header(a, b, c) sapi_add_header_ex((a),(b),(c),1)
-
+#define sapi_add_header(a, b, c) sapi_add_header_ex((a), (b), (c), 1)
 
 SAPI_API int sapi_send_headers(void);
 SAPI_API void sapi_free_header(sapi_header_struct *sapi_header);
@@ -214,7 +215,8 @@ SAPI_API double sapi_get_request_time(void);
 SAPI_API void sapi_terminate_process(void);
 END_EXTERN_C()
 
-struct _sapi_module_struct {
+struct _sapi_module_struct
+{
 	char *name;
 	char *pretty_name;
 
@@ -269,7 +271,8 @@ struct _sapi_module_struct {
 	unsigned int (*input_filter_init)(void);
 };
 
-struct _sapi_post_entry {
+struct _sapi_post_entry
+{
 	char *content_type;
 	uint32_t content_type_len;
 	void (*post_reader)(void);
@@ -277,21 +280,20 @@ struct _sapi_post_entry {
 };
 
 /* header_handler() constants */
-#define SAPI_HEADER_ADD			(1<<0)
+#define SAPI_HEADER_ADD (1 << 0)
 
+#define SAPI_HEADER_SENT_SUCCESSFULLY 1
+#define SAPI_HEADER_DO_SEND 2
+#define SAPI_HEADER_SEND_FAILED 3
 
-#define SAPI_HEADER_SENT_SUCCESSFULLY	1
-#define SAPI_HEADER_DO_SEND				2
-#define SAPI_HEADER_SEND_FAILED			3
-
-#define SAPI_DEFAULT_MIMETYPE		"text/html"
-#define SAPI_DEFAULT_CHARSET		PHP_DEFAULT_CHARSET
-#define SAPI_PHP_VERSION_HEADER		"X-Powered-By: PHP/" PHP_VERSION
+#define SAPI_DEFAULT_MIMETYPE "text/html"
+#define SAPI_DEFAULT_CHARSET PHP_DEFAULT_CHARSET
+#define SAPI_PHP_VERSION_HEADER "X-Powered-By: PHP/" PHP_VERSION
 
 #define SAPI_POST_READER_FUNC(post_reader) void post_reader(void)
 #define SAPI_POST_HANDLER_FUNC(post_handler) void post_handler(char *content_type_dup, void *arg)
 
-#define SAPI_TREAT_DATA_FUNC(treat_data) void treat_data(int arg, char *str, zval* destArray)
+#define SAPI_TREAT_DATA_FUNC(treat_data) void treat_data(int arg, char *str, zval *destArray)
 #define SAPI_INPUT_FILTER_FUNC(input_filter) unsigned int input_filter(int arg, char *var, char **val, size_t val_len, size_t *new_val_len)
 
 BEGIN_EXTERN_C()
@@ -301,23 +303,23 @@ SAPI_API SAPI_TREAT_DATA_FUNC(php_default_treat_data);
 SAPI_API SAPI_INPUT_FILTER_FUNC(php_default_input_filter);
 END_EXTERN_C()
 
-#define STANDARD_SAPI_MODULE_PROPERTIES \
-	NULL, /* php_ini_path_override   */ \
-	NULL, /* default_post_reader     */ \
-	NULL, /* treat_data              */ \
-	NULL, /* executable_location     */ \
-	0,    /* php_ini_ignore          */ \
-	0,    /* php_ini_ignore_cwd      */ \
-	NULL, /* get_fd                  */ \
-	NULL, /* force_http_10           */ \
-	NULL, /* get_target_uid          */ \
-	NULL, /* get_target_gid          */ \
-	NULL, /* input_filter            */ \
-	NULL, /* ini_defaults            */ \
-	0,    /* phpinfo_as_text;        */ \
-	NULL, /* ini_entries;            */ \
-	NULL, /* additional_functions    */ \
-	NULL  /* input_filter_init       */
+#define STANDARD_SAPI_MODULE_PROPERTIES     \
+	NULL,	  /* php_ini_path_override   */ \
+		NULL, /* default_post_reader     */ \
+		NULL, /* treat_data              */ \
+		NULL, /* executable_location     */ \
+		0,	  /* php_ini_ignore          */ \
+		0,	  /* php_ini_ignore_cwd      */ \
+		NULL, /* get_fd                  */ \
+		NULL, /* force_http_10           */ \
+		NULL, /* get_target_uid          */ \
+		NULL, /* get_target_gid          */ \
+		NULL, /* input_filter            */ \
+		NULL, /* ini_defaults            */ \
+		0,	  /* phpinfo_as_text;        */ \
+		NULL, /* ini_entries;            */ \
+		NULL, /* additional_functions    */ \
+		NULL  /* input_filter_init       */
 
 #endif /* SAPI_H */
 

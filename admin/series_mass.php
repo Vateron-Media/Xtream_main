@@ -72,11 +72,13 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./series.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_series"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_series"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
-                                <h4 class="page-title"><?= $_["mass_edit_series"] ?> <small id="selected_count"></small></h4>
+                                <h4 class="page-title"><?= $_["mass_edit_series"] ?> <small id="selected_count"></small>
+                                </h4>
                             </div>
                         </div>
                     </div>
@@ -105,13 +107,15 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#stream-selection" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-selection" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-youtube-tv mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["series"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#stream-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
@@ -121,21 +125,26 @@ if ($rSettings["sidebar"]) { ?>
                                                 <div class="tab-pane" id="stream-selection">
                                                     <div class="row">
                                                         <div class="col-md-5 col-6">
-                                                            <input type="text" class="form-control" id="stream_search" value="" placeholder="<?= $_["search_series"] ?>">
+                                                            <input type="text" class="form-control" id="stream_search"
+                                                                value="" placeholder="<?= $_["search_series"] ?>">
                                                         </div>
                                                         <div class="col-md-4 col-6">
-                                                            <select id="category_search" class="form-control" data-toggle="select2">
-                                                                <option value="" selected><?= $_["all_categories"] ?></option>
+                                                            <select id="category_search" class="form-control"
+                                                                data-toggle="select2">
+                                                                <option value="" selected><?= $_["all_categories"] ?>
+                                                                </option>
                                                                 <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
                                                                                                                 echo " selected";
-                                                                                                            } ?>><?= $rCategory["category_name"] ?></option>
+                                                                                                            } ?>><?= $rCategory["category_name"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-2 col-8">
-                                                            <select id="show_entries" class="form-control" data-toggle="select2">
+                                                            <select id="show_entries" class="form-control"
+                                                                data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                                 echo " selected";
@@ -144,11 +153,14 @@ if ($rSettings["sidebar"]) { ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
-                                                            <button type="button" class="btn btn-info waves-effect waves-light" onClick="toggleStreams()">
+                                                            <button type="button"
+                                                                class="btn btn-info waves-effect waves-light"
+                                                                onClick="toggleStreams()">
                                                                 <i class="mdi mdi-selection"></i>
                                                             </button>
                                                         </div>
-                                                        <table id="datatable-mass" class="table table-hover table-borderless mb-0">
+                                                        <table id="datatable-mass"
+                                                            class="table table-hover table-borderless mb-0">
                                                             <thead class="bg-light">
                                                                 <tr>
                                                                     <th class="text-center"><?= $_["id"] ?></th>
@@ -167,38 +179,53 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?= $_["mass_edit_info"] ?>
                                                             </p>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="category_id" name="c_category_id">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="category_id" name="c_category_id">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="category_id"><?= $_["category_name"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="category_id"><?= $_["category_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select disabled name="category_id" id="category_id" class="form-control" data-toggle="select2">
+                                                                    <select disabled name="category_id" id="category_id"
+                                                                        class="form-control" data-toggle="select2">
                                                                         <?php foreach ($rCategories as $rCategory) { ?>
-                                                                            <option value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                            <option value="<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <div class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate" data-name="bouquets" name="c_bouquets">
+                                                                <div
+                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                                    <input type="checkbox" class="activate"
+                                                                        data-name="bouquets" name="c_bouquets">
                                                                     <label></label>
                                                                 </div>
-                                                                <label class="col-md-3 col-form-label" for="bouquets"><?= $_["select_bouquets"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="bouquets"><?= $_["select_bouquets"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select disabled name="bouquets[]" id="bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                    <select disabled name="bouquets[]" id="bouquets"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
-                                                                            <option value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                            <option value="<?= $rBouquet["id"] ?>">
+                                                                                <?= $rBouquet["bouquet_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <div class="col-md-1"></div>
-                                                                <label class="col-md-3 col-form-label" for="reprocess_tmdb"><?= $_["reprocess_tmdb_data"] ?></label>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="reprocess_tmdb"><?= $_["reprocess_tmdb_data"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="reprocess_tmdb" id="reprocess_tmdb" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="reprocess_tmdb" id="reprocess_tmdb"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
 
@@ -206,11 +233,14 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
 
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_series" type="submit" class="btn btn-primary" value="<?= $_["edit_series"] ?>" />
+                                                            <input name="submit_series" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?= $_["edit_series"] ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

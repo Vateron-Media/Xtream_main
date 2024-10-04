@@ -90,8 +90,8 @@
 					// Default is viewbox="0 0 24 24"
 					nodes[command] = sceditor.dom.parseHTML(
 						'<svg xmlns="http://www.w3.org/2000/svg" ' +
-							'viewbox="1 1 22 22" unselectable="on">' +
-								icons[command] +
+						'viewbox="1 1 22 22" unselectable="on">' +
+						icons[command] +
 						'</svg>'
 					).firstChild;
 

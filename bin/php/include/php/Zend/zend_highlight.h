@@ -20,21 +20,20 @@
 #ifndef ZEND_HIGHLIGHT_H
 #define ZEND_HIGHLIGHT_H
 
-#define HL_COMMENT_COLOR     "#FF8000"    /* orange */
-#define HL_DEFAULT_COLOR     "#0000BB"    /* blue */
-#define HL_HTML_COLOR        "#000000"    /* black */
-#define HL_STRING_COLOR      "#DD0000"    /* red */
-#define HL_KEYWORD_COLOR     "#007700"    /* green */
+#define HL_COMMENT_COLOR "#FF8000" /* orange */
+#define HL_DEFAULT_COLOR "#0000BB" /* blue */
+#define HL_HTML_COLOR "#000000"    /* black */
+#define HL_STRING_COLOR "#DD0000"  /* red */
+#define HL_KEYWORD_COLOR "#007700" /* green */
 
-
-typedef struct _zend_syntax_highlighter_ini {
-	char *highlight_html;
-	char *highlight_comment;
-	char *highlight_default;
-	char *highlight_string;
-	char *highlight_keyword;
+typedef struct _zend_syntax_highlighter_ini
+{
+   char *highlight_html;
+   char *highlight_comment;
+   char *highlight_default;
+   char *highlight_string;
+   char *highlight_keyword;
 } zend_syntax_highlighter_ini;
-
 
 BEGIN_EXTERN_C()
 ZEND_API void zend_highlight(zend_syntax_highlighter_ini *syntax_highlighter_ini);

@@ -23,26 +23,31 @@
 #include "zend.h"
 #include "zend_compile.h"
 
-#define OBJ_BUCKET_INVALID			(1<<0)
+#define OBJ_BUCKET_INVALID (1 << 0)
 
-#define IS_OBJ_VALID(o)				(!(((zend_uintptr_t)(o)) & OBJ_BUCKET_INVALID))
+#define IS_OBJ_VALID(o) (!(((zend_uintptr_t)(o)) & OBJ_BUCKET_INVALID))
 
-#define SET_OBJ_INVALID(o)			((zend_object*)((((zend_uintptr_t)(o)) | OBJ_BUCKET_INVALID)))
+#define SET_OBJ_INVALID(o) ((zend_object *)((((zend_uintptr_t)(o)) | OBJ_BUCKET_INVALID)))
 
-#define GET_OBJ_BUCKET_NUMBER(o)	(((zend_intptr_t)(o)) >> 1)
+#define GET_OBJ_BUCKET_NUMBER(o) (((zend_intptr_t)(o)) >> 1)
 
-#define SET_OBJ_BUCKET_NUMBER(o, n)	do { \
-		(o) = (zend_object*)((((zend_uintptr_t)(n)) << 1) | OBJ_BUCKET_INVALID); \
+#define SET_OBJ_BUCKET_NUMBER(o, n)                                               \
+	do                                                                            \
+	{                                                                             \
+		(o) = (zend_object *)((((zend_uintptr_t)(n)) << 1) | OBJ_BUCKET_INVALID); \
 	} while (0)
 
-#define ZEND_OBJECTS_STORE_ADD_TO_FREE_LIST(h) do { \
+#define ZEND_OBJECTS_STORE_ADD_TO_FREE_LIST(h)                                                          \
+	do                                                                                                  \
+	{                                                                                                   \
 		SET_OBJ_BUCKET_NUMBER(EG(objects_store).object_buckets[(h)], EG(objects_store).free_list_head); \
-		EG(objects_store).free_list_head = (h); \
+		EG(objects_store).free_list_head = (h);                                                         \
 	} while (0)
 
 #define OBJ_RELEASE(obj) zend_object_release(obj)
 
-typedef struct _zend_objects_store {
+typedef struct _zend_objects_store
+{
 	zend_object **object_buckets;
 	uint32_t top;
 	uint32_t size;
@@ -73,30 +78,33 @@ END_EXTERN_C()
 
 static zend_always_inline void zend_object_release(zend_object *obj)
 {
-	if (GC_DELREF(obj) == 0) {
+	if (GC_DELREF(obj) == 0)
+	{
 		zend_objects_store_del(obj);
-	} else if (UNEXPECTED(GC_MAY_LEAK((zend_refcounted*)obj))) {
-		gc_possible_root((zend_refcounted*)obj);
+	}
+	else if (UNEXPECTED(GC_MAY_LEAK((zend_refcounted *)obj)))
+	{
+		gc_possible_root((zend_refcounted *)obj);
 	}
 }
 
 static zend_always_inline size_t zend_object_properties_size(zend_class_entry *ce)
 {
 	return sizeof(zval) *
-		(ce->default_properties_count -
+		   (ce->default_properties_count -
 			((ce->ce_flags & ZEND_ACC_USE_GUARDS) ? 0 : 1));
 }
 
 /* Allocates object type and zeros it, but not the properties.
  * Properties MUST be initialized using object_properties_init(). */
-static zend_always_inline void *zend_object_alloc(size_t obj_size, zend_class_entry *ce) {
+static zend_always_inline void *zend_object_alloc(size_t obj_size, zend_class_entry *ce)
+{
 	void *obj = emalloc(obj_size + zend_object_properties_size(ce));
 	/* Subtraction of sizeof(zval) is necessary, because zend_object_properties_size() may be
 	 * -sizeof(zval), if the object has no properties. */
 	memset(obj, 0, obj_size - sizeof(zval));
 	return obj;
 }
-
 
 #endif /* ZEND_OBJECTS_H */
 

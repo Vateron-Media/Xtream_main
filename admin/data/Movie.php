@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 	This class handles all the data you can get from a Movie
  *
@@ -9,7 +10,7 @@
  * 	@copyright Licensed under BSD (http://www.opensource.org/licenses/bsd-license.php)
  */
 
-class Movie{
+class Movie {
 
 	//------------------------------------------------------------------------------
 	// Class Variables
@@ -156,7 +157,7 @@ class Movie{
 	 * 	@param string $item The item of the $data array you want
 	 * 	@return array
 	 */
-	public function get($item = ''){
+	public function get($item = '') {
 		return (empty($item)) ? $this->_data : $this->_data[$item];
 	}
 
@@ -169,7 +170,7 @@ class Movie{
 	 *
 	 *	@param TMDB $tmdb An instance of the api, necessary for the lazy load
 	 */
-	public function setAPI($tmdb){
+	public function setAPI($tmdb) {
 		$this->_tmdb = $tmdb;
 	}
 
@@ -186,4 +187,3 @@ class Movie{
 		return json_encode($this->_data, JSON_PRETTY_PRINT);
 	}
 }
-?>

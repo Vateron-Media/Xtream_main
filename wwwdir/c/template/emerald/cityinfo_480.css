@@ -1,4 +1,4 @@
-.cityinfo_info_box{
+.cityinfo_info_box {
     position: absolute;
     width: 242px;
     min-height: 100px;
@@ -13,7 +13,7 @@
     -webkit-border-radius: 8px;
 }
 
-.cityinfo_info_box span{
+.cityinfo_info_box span {
     color: #bcf092;
     font-size: 18px;
 }

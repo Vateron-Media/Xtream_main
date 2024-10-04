@@ -1,4 +1,4 @@
-.guess_block{
+.guess_block {
     color: #fff;
     font-size: 20px;
     text-shadow: #122946 0 -1px 0;
@@ -11,7 +11,7 @@
     width: 60px;
 }
 
-.active_guess_block{
+.active_guess_block {
     font-size: 22px;
     color: #002864;
     text-shadow: #fff 0 1px 0;
@@ -23,7 +23,7 @@
     width: 62px;
 }
 
-.score_block{
+.score_block {
     color: #fff;
     font-size: 20px;
     text-shadow: #122946 0 -1px 0;
@@ -35,7 +35,7 @@
     float: right;
 }
 
-.active_score_block{
+.active_score_block {
     font-size: 22px;
     color: #002864;
     text-shadow: #fff 0 1px 0;
@@ -47,13 +47,13 @@
     width: 62px;
 }
 
-.mastermind_field{
+.mastermind_field {
     position: absolute;
     top: 230px;
     left: 350px;
 }
 
-.mastermind_field div{
+.mastermind_field div {
     float: left;
     width: 60px;
     height: 82px;
@@ -72,11 +72,11 @@
     border: 2px solid #4a71a1;
 }
 
-.mastermind_field .active{
+.mastermind_field .active {
     border: 2px solid #bfb770;
 }
 
-.place_block{
+.place_block {
     background-image: url("i_480/mb_icons.png");
     background-position: -92px 0px;
     width: 34px;
@@ -91,13 +91,13 @@
     overflow: hidden;
 }
 
-.active_place_block{
+.active_place_block {
     width: 34px;
     height: 29px;
     background-image: url("i_480/mb_icons.png");
     background-position: -92px -21px;
     margin: 4px 2px 0 0;
-    float:left;
+    float: left;
     font-size: 22px;
     color: #fff;
     text-shadow: #122946 0 -1px 0;
@@ -107,7 +107,7 @@
     padding-top: 2px;
 }
 
-.sum_points_block{
+.sum_points_block {
     color: #fff;
     font-size: 20px;
     text-shadow: #122946 0 -1px 0;
@@ -119,7 +119,7 @@
     float: right;
 }
 
-.active_sum_points_block{
+.active_sum_points_block {
     font-size: 22px;
     color: #002864;
     text-shadow: #fff 0 1px 0;
@@ -130,9 +130,11 @@
     float: right;
 }
 
-#mastermind_rating .name_block, #mastermind_rating .active_name_block{
+#mastermind_rating .name_block,
+#mastermind_rating .active_name_block {
     float: left;
 }
+
 .mastermind_rules_txt {
     background-image: url("i_480/25alfa_20.png");
     border-radius: 10px 10px 10px 10px;

@@ -20,12 +20,13 @@
 #define PHP_HASH_TIGER_H
 
 /* TIGER context */
-typedef struct {
-	uint64_t state[3];
-	uint64_t passed;
-	unsigned char buffer[64];
-	unsigned int passes:1;
-	unsigned int length:7;
+typedef struct
+{
+   uint64_t state[3];
+   uint64_t passed;
+   unsigned char buffer[64];
+   unsigned int passes : 1;
+   unsigned int length : 7;
 } PHP_TIGER_CTX;
 
 PHP_HASH_API void PHP_3TIGERInit(PHP_TIGER_CTX *context);

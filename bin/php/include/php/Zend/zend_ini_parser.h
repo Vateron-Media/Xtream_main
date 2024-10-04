@@ -31,10 +31,10 @@
    version 2.2 of Bison.  */
 
 #ifndef YY_INI_ZEND_ZEND_INI_PARSER_H_INCLUDED
-# define YY_INI_ZEND_ZEND_INI_PARSER_H_INCLUDED
+#define YY_INI_ZEND_ZEND_INI_PARSER_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+#define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int ini_debug;
@@ -42,25 +42,25 @@ extern int ini_debug;
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
-  {
-    TC_SECTION = 258,
-    TC_RAW = 259,
-    TC_CONSTANT = 260,
-    TC_NUMBER = 261,
-    TC_STRING = 262,
-    TC_WHITESPACE = 263,
-    TC_LABEL = 264,
-    TC_OFFSET = 265,
-    TC_DOLLAR_CURLY = 266,
-    TC_VARNAME = 267,
-    TC_QUOTED_STRING = 268,
-    BOOL_TRUE = 269,
-    BOOL_FALSE = 270,
-    NULL_NULL = 271,
-    END_OF_LINE = 272
-  };
+#define YYTOKENTYPE
+enum yytokentype
+{
+   TC_SECTION = 258,
+   TC_RAW = 259,
+   TC_CONSTANT = 260,
+   TC_NUMBER = 261,
+   TC_STRING = 262,
+   TC_WHITESPACE = 263,
+   TC_LABEL = 264,
+   TC_OFFSET = 265,
+   TC_DOLLAR_CURLY = 266,
+   TC_VARNAME = 267,
+   TC_QUOTED_STRING = 268,
+   BOOL_TRUE = 269,
+   BOOL_FALSE = 270,
+   NULL_NULL = 271,
+   END_OF_LINE = 272
+};
 #endif
 /* Tokens.  */
 #define TC_SECTION 258
@@ -80,14 +80,12 @@ extern int ini_debug;
 #define END_OF_LINE 272
 
 /* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+#if !defined YYSTYPE && !defined YYSTYPE_IS_DECLARED
 typedef int YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
+#define YYSTYPE_IS_TRIVIAL 1
+#define YYSTYPE_IS_DECLARED 1
 #endif
 
-
-
-int ini_parse (void);
+int ini_parse(void);
 
 #endif /* !YY_INI_ZEND_ZEND_INI_PARSER_H_INCLUDED  */

@@ -12,14 +12,14 @@ extern char *gd_strtok_r(char *s, char *sep, char **state);
 	in gd.h, where callers can utilize it to correctly
 	free memory allocated by these functions with the
 	right version of free(). */
-#define gdCalloc(nmemb, size)	ecalloc(nmemb, size)
-#define gdMalloc(size)		emalloc(size)
-#define gdRealloc(ptr, size)	erealloc(ptr, size)
-#define gdEstrdup(ptr)		estrdup(ptr)
-#define gdFree(ptr)		efree(ptr)
-#define gdPMalloc(ptr)		pemalloc(ptr, 1)
-#define gdPFree(ptr)		pefree(ptr, 1)
-#define gdPEstrdup(ptr)		pestrdup(ptr, 1)
+#define gdCalloc(nmemb, size) ecalloc(nmemb, size)
+#define gdMalloc(size) emalloc(size)
+#define gdRealloc(ptr, size) erealloc(ptr, size)
+#define gdEstrdup(ptr) estrdup(ptr)
+#define gdFree(ptr) efree(ptr)
+#define gdPMalloc(ptr) pemalloc(ptr, 1)
+#define gdPFree(ptr) pefree(ptr, 1)
+#define gdPEstrdup(ptr) pestrdup(ptr, 1)
 
 /* Returns nonzero if multiplying the two quantities will
 	result in integer overflow. Also returns nonzero if
@@ -42,10 +42,9 @@ int overflow2(int a, int b);
 #define gdMutexUnlock(x)
 #endif
 
-#define DPCM2DPI(dpcm) (unsigned int)((dpcm)*2.54 + 0.5)
-#define DPM2DPI(dpm)   (unsigned int)((dpm)*0.0254 + 0.5)
-#define DPI2DPCM(dpi)  (unsigned int)((dpi)/2.54 + 0.5)
-#define DPI2DPM(dpi)   (unsigned int)((dpi)/0.0254 + 0.5)
+#define DPCM2DPI(dpcm) (unsigned int)((dpcm) * 2.54 + 0.5)
+#define DPM2DPI(dpm) (unsigned int)((dpm) * 0.0254 + 0.5)
+#define DPI2DPCM(dpi) (unsigned int)((dpi) / 2.54 + 0.5)
+#define DPI2DPM(dpi) (unsigned int)((dpi) / 0.0254 + 0.5)
 
 #endif /* GDHELPERS_H */
-

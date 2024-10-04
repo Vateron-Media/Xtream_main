@@ -3,8 +3,7 @@
 /**
  * Represents a directive ID in the interchange format.
  */
-class HTMLPurifier_ConfigSchema_Interchange_Id
-{
+class HTMLPurifier_ConfigSchema_Interchange_Id {
 
     /**
      * @type string
@@ -14,8 +13,7 @@ class HTMLPurifier_ConfigSchema_Interchange_Id
     /**
      * @param string $key
      */
-    public function __construct($key)
-    {
+    public function __construct($key) {
         $this->key = $key;
     }
 
@@ -24,24 +22,21 @@ class HTMLPurifier_ConfigSchema_Interchange_Id
      * @warning This is NOT magic, to ensure that people don't abuse SPL and
      *          cause problems for PHP 5.0 support.
      */
-    public function toString()
-    {
+    public function toString() {
         return $this->key;
     }
 
     /**
      * @return string
      */
-    public function getRootNamespace()
-    {
+    public function getRootNamespace() {
         return substr($this->key, 0, strpos($this->key, "."));
     }
 
     /**
      * @return string
      */
-    public function getDirective()
-    {
+    public function getDirective() {
         return substr($this->key, strpos($this->key, ".") + 1);
     }
 
@@ -49,8 +44,7 @@ class HTMLPurifier_ConfigSchema_Interchange_Id
      * @param string $id
      * @return HTMLPurifier_ConfigSchema_Interchange_Id
      */
-    public static function make($id)
-    {
+    public static function make($id) {
         return new HTMLPurifier_ConfigSchema_Interchange_Id($id);
     }
 }

@@ -28,7 +28,8 @@ if ($rSettings["sidebar"]) { ?>
                                         <ol class="breadcrumb m-0">
                                             <li>
                                                 <a href="bouquet.php">
-                                                    <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-plus"></i> <?= $_["add_bouquet"] ?>
                                                     </button>
                                                 </a>
@@ -62,16 +63,37 @@ if ($rSettings["sidebar"]) { ?>
                                                 <tr id="bouquet-<?= $rBouquet["id"] ?>">
                                                     <td class="text-center"><?= $rBouquet["id"] ?></td>
                                                     <td><?= $rBouquet["bouquet_name"] ?></td>
-                                                    <td class="text-center"><?= count(json_decode($rBouquet["bouquet_channels"], True)) ?></td>
-                                                    <td class="text-center"><?= count(json_decode($rBouquet["bouquet_movies"], True)) ?></td>
-                                                    <td class="text-center"><?= count(json_decode($rBouquet["bouquet_radios"], True)) ?></td>
-                                                    <td class="text-center"><?= count(json_decode($rBouquet["bouquet_series"], True)) ?></td>
+                                                    <td class="text-center">
+                                                        <?= count(json_decode($rBouquet["bouquet_channels"], True)) ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?= count(json_decode($rBouquet["bouquet_movies"], True)) ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?= count(json_decode($rBouquet["bouquet_radios"], True)) ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?= count(json_decode($rBouquet["bouquet_series"], True)) ?>
+                                                    </td>
                                                     <td class="text-center">
                                                         <?php if (hasPermissions("adv", "edit_bouquet")) { ?>
                                                             <div class="btn-group">
-                                                                <a href="./bouquet_order.php?id=<?= $rBouquet["id"] ?>"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["reorder_bouquet"] ?>" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-format-line-spacing"></i></button></a>
-                                                                <a href="./bouquet.php?id=<?= $rBouquet["id"] ?>"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["edit_bouquet"] ?>" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
-                                                                <button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["delete_bouquet"] ?>" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(<?= $rBouquet["id"] ?>, 'delete');""><i class=" mdi mdi-close"></i></button>
+                                                                <a href="./bouquet_order.php?id=<?= $rBouquet["id"] ?>"><button
+                                                                        type="button" data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["reorder_bouquet"] ?>"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                            class="mdi mdi-format-line-spacing"></i></button></a>
+                                                                <a href="./bouquet.php?id=<?= $rBouquet["id"] ?>"><button
+                                                                        type="button" data-toggle="tooltip" data-placement="top"
+                                                                        title="" data-original-title="<?= $_["edit_bouquet"] ?>"
+                                                                        class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                            class="mdi mdi-pencil-outline"></i></button></a>
+                                                                <button type="button" data-toggle="tooltip" data-placement="top"
+                                                                    title="" data-original-title="<?= $_["delete_bouquet"] ?>"
+                                                                    class="btn btn-light waves-effect waves-light btn-xs"
+                                                                    onClick="api(<?= $rBouquet["id"] ?>, 'delete');""><i class="
+                                                                    mdi mdi-close"></i></button>
                                                             </div>
                                                         <?php } else {
                                                             echo "--";

@@ -110,9 +110,9 @@ PHP_MINIT_FUNCTION(string_intrin);
 #endif
 
 #define strnatcmp(a, b) \
-	strnatcmp_ex(a, strlen(a), b, strlen(b), 0)
+   strnatcmp_ex(a, strlen(a), b, strlen(b), 0)
 #define strnatcasecmp(a, b) \
-	strnatcmp_ex(a, strlen(a), b, strlen(b), 1)
+   strnatcmp_ex(a, strlen(a), b, strlen(b), 1)
 PHPAPI int strnatcmp_ex(char const *a, size_t a_len, char const *b, size_t b_len, int fold_case);
 
 #ifdef HAVE_LOCALECONV
@@ -138,7 +138,7 @@ PHPAPI zend_string *php_basename(const char *s, size_t len, char *suffix, size_t
 PHPAPI size_t php_dirname(char *str, size_t len);
 PHPAPI char *php_stristr(char *s, char *t, size_t s_len, size_t t_len);
 PHPAPI zend_string *php_str_to_str(const char *haystack, size_t length, const char *needle,
-		size_t needle_len, const char *str, size_t str_len);
+                                   size_t needle_len, const char *str, size_t str_len);
 PHPAPI zend_string *php_trim(zend_string *str, char *what, size_t what_len, int mode);
 PHPAPI size_t php_strip_tags(char *rbuf, size_t len, uint8_t *state, const char *allow, size_t allow_len);
 PHPAPI size_t php_strip_tags_ex(char *rbuf, size_t len, uint8_t *stateptr, const char *allow, size_t allow_len, zend_bool allow_tag_spaces);
@@ -158,17 +158,17 @@ PHPAPI char *php_strerror(int errnum);
 #endif
 
 #ifndef HAVE_MBLEN
-# define php_mblen(ptr, len) 1
-# define php_mb_reset()
+#define php_mblen(ptr, len) 1
+#define php_mb_reset()
 #elif defined(_REENTRANT) && defined(HAVE_MBRLEN) && defined(HAVE_MBSTATE_T)
-# ifdef PHP_WIN32
-# include <wchar.h>
-# endif
-# define php_mblen(ptr, len) ((int) mbrlen(ptr, len, &BG(mblen_state)))
-# define php_mb_reset() memset(&BG(mblen_state), 0, sizeof(BG(mblen_state)))
+#ifdef PHP_WIN32
+#include <wchar.h>
+#endif
+#define php_mblen(ptr, len) ((int)mbrlen(ptr, len, &BG(mblen_state)))
+#define php_mb_reset() memset(&BG(mblen_state), 0, sizeof(BG(mblen_state)))
 #else
-# define php_mblen(ptr, len) mblen(ptr, len)
-# define php_mb_reset() php_ignore_value(mblen(NULL, 0))
+#define php_mblen(ptr, len) mblen(ptr, len)
+#define php_mb_reset() php_ignore_value(mblen(NULL, 0))
 #endif
 
 void register_string_constants(INIT_FUNC_ARGS);

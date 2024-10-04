@@ -32,14 +32,15 @@
  * it's return value), the next filter is invoked and so on.
  * */
 
-#define PHP_STREAM_FILTER_READ	0x0001
-#define PHP_STREAM_FILTER_WRITE	0x0002
-#define PHP_STREAM_FILTER_ALL	(PHP_STREAM_FILTER_READ | PHP_STREAM_FILTER_WRITE)
+#define PHP_STREAM_FILTER_READ 0x0001
+#define PHP_STREAM_FILTER_WRITE 0x0002
+#define PHP_STREAM_FILTER_ALL (PHP_STREAM_FILTER_READ | PHP_STREAM_FILTER_WRITE)
 
-typedef struct _php_stream_bucket			php_stream_bucket;
-typedef struct _php_stream_bucket_brigade	php_stream_bucket_brigade;
+typedef struct _php_stream_bucket php_stream_bucket;
+typedef struct _php_stream_bucket_brigade php_stream_bucket_brigade;
 
-struct _php_stream_bucket {
+struct _php_stream_bucket
+{
 	php_stream_bucket *next, *prev;
 	php_stream_bucket_brigade *brigade;
 
@@ -53,12 +54,14 @@ struct _php_stream_bucket {
 	int refcount;
 };
 
-struct _php_stream_bucket_brigade {
+struct _php_stream_bucket_brigade
+{
 	php_stream_bucket *head, *tail;
 };
 
-typedef enum {
-	PSFS_ERR_FATAL,	/* error in data stream */
+typedef enum
+{
+	PSFS_ERR_FATAL, /* error in data stream */
 	PSFS_FEED_ME,	/* filter needs more data; stop processing chain until more is available */
 	PSFS_PASS_ON	/* filter generated output buckets; pass them on to next in chain */
 } php_stream_filter_status_t;
@@ -68,27 +71,27 @@ BEGIN_EXTERN_C()
 PHPAPI php_stream_bucket *php_stream_bucket_new(php_stream *stream, char *buf, size_t buflen, uint8_t own_buf, uint8_t buf_persistent);
 PHPAPI int php_stream_bucket_split(php_stream_bucket *in, php_stream_bucket **left, php_stream_bucket **right, size_t length);
 PHPAPI void php_stream_bucket_delref(php_stream_bucket *bucket);
-#define php_stream_bucket_addref(bucket)	(bucket)->refcount++
+#define php_stream_bucket_addref(bucket) (bucket)->refcount++
 PHPAPI void php_stream_bucket_prepend(php_stream_bucket_brigade *brigade, php_stream_bucket *bucket);
 PHPAPI void php_stream_bucket_append(php_stream_bucket_brigade *brigade, php_stream_bucket *bucket);
 PHPAPI void php_stream_bucket_unlink(php_stream_bucket *bucket);
 PHPAPI php_stream_bucket *php_stream_bucket_make_writeable(php_stream_bucket *bucket);
 END_EXTERN_C()
 
-#define PSFS_FLAG_NORMAL		0	/* regular read/write */
-#define PSFS_FLAG_FLUSH_INC		1	/* an incremental flush */
-#define PSFS_FLAG_FLUSH_CLOSE	2	/* final flush prior to closing */
+#define PSFS_FLAG_NORMAL 0		/* regular read/write */
+#define PSFS_FLAG_FLUSH_INC 1	/* an incremental flush */
+#define PSFS_FLAG_FLUSH_CLOSE 2 /* final flush prior to closing */
 
-typedef struct _php_stream_filter_ops {
+typedef struct _php_stream_filter_ops
+{
 
 	php_stream_filter_status_t (*filter)(
-			php_stream *stream,
-			php_stream_filter *thisfilter,
-			php_stream_bucket_brigade *buckets_in,
-			php_stream_bucket_brigade *buckets_out,
-			size_t *bytes_consumed,
-			int flags
-			);
+		php_stream *stream,
+		php_stream_filter *thisfilter,
+		php_stream_bucket_brigade *buckets_in,
+		php_stream_bucket_brigade *buckets_out,
+		size_t *bytes_consumed,
+		int flags);
 
 	void (*dtor)(php_stream_filter *thisfilter);
 
@@ -96,14 +99,16 @@ typedef struct _php_stream_filter_ops {
 
 } php_stream_filter_ops;
 
-typedef struct _php_stream_filter_chain {
+typedef struct _php_stream_filter_chain
+{
 	php_stream_filter *head, *tail;
 
 	/* Owning stream */
 	php_stream *stream;
 } php_stream_filter_chain;
 
-struct _php_stream_filter {
+struct _php_stream_filter
+{
 	const php_stream_filter_ops *fops;
 	zval abstract; /* for use by filter implementation */
 	php_stream_filter *next;
@@ -131,15 +136,16 @@ PHPAPI php_stream_filter *php_stream_filter_remove(php_stream_filter *filter, in
 PHPAPI void php_stream_filter_free(php_stream_filter *filter);
 PHPAPI php_stream_filter *_php_stream_filter_alloc(const php_stream_filter_ops *fops, void *abstract, uint8_t persistent STREAMS_DC);
 END_EXTERN_C()
-#define php_stream_filter_alloc(fops, thisptr, persistent) _php_stream_filter_alloc((fops), (thisptr), (persistent) STREAMS_CC)
-#define php_stream_filter_alloc_rel(fops, thisptr, persistent) _php_stream_filter_alloc((fops), (thisptr), (persistent) STREAMS_REL_CC)
+#define php_stream_filter_alloc(fops, thisptr, persistent) _php_stream_filter_alloc((fops), (thisptr), (persistent)STREAMS_CC)
+#define php_stream_filter_alloc_rel(fops, thisptr, persistent) _php_stream_filter_alloc((fops), (thisptr), (persistent)STREAMS_REL_CC)
 #define php_stream_filter_prepend(chain, filter) _php_stream_filter_prepend((chain), (filter))
 #define php_stream_filter_append(chain, filter) _php_stream_filter_append((chain), (filter))
 #define php_stream_filter_flush(filter, finish) _php_stream_filter_flush((filter), (finish))
 
-#define php_stream_is_filtered(stream)	((stream)->readfilters.head || (stream)->writefilters.head)
+#define php_stream_is_filtered(stream) ((stream)->readfilters.head || (stream)->writefilters.head)
 
-typedef struct _php_stream_filter_factory {
+typedef struct _php_stream_filter_factory
+{
 	php_stream_filter *(*create_filter)(const char *filtername, zval *filterparams, uint8_t persistent);
 } php_stream_filter_factory;
 

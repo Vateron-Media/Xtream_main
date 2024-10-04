@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 	This class handles all the data you can get from a TVShowRole
  *
@@ -9,7 +10,7 @@
  * 	@copyright Licensed under BSD (http://www.opensource.org/licenses/bsd-license.php)
  */
 
-class TVShowRole extends Role{
+class TVShowRole extends Role {
 
     //------------------------------------------------------------------------------
     // Class Variables
@@ -81,4 +82,3 @@ class TVShowRole extends Role{
         return json_encode($this->_data, JSON_PRETTY_PRINT);
     }
 }
-?>

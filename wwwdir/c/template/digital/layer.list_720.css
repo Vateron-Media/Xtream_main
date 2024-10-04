@@ -1,19 +1,19 @@
-.text20_white{
+.text20_white {
     font-size: 20px;
     color: #fff;
 }
 
-.bold{
+.bold {
     font-weight: bold;
 }
 
-.uppercase{
+.uppercase {
     text-transform: uppercase;
 }
 
 /* LIST LAYER */
-.layer_bg{
-    position:absolute;
+.layer_bg {
+    position: absolute;
     left: 0;
     top: 0;
     width: 1280px;
@@ -21,7 +21,7 @@
     background: url("i_720/bg2.png") no-repeat;
 }
 
-.main_logo{
+.main_logo {
     position: absolute;
     left: 20px;
     top: 10px;
@@ -29,7 +29,7 @@
     height: 100px;
 }
 
-.hd_block{
+.hd_block {
     width: 34px;
     height: 29px;
     background: url("i_720/mb_icons.png") no-repeat;
@@ -37,7 +37,7 @@
     margin: 4px 0 0 4px;
 }
 
-.sd_block{
+.sd_block {
     width: 34px;
     height: 29px;
     background: url("i_720/mb_icons.png") no-repeat -34px 0;
@@ -46,7 +46,7 @@
     margin: 4px 0 0 4px;
 }
 
-.fav_block{
+.fav_block {
     width: 23px;
     height: 25px;
     background: url("i_720/mb_icons.png") no-repeat -70px 0;
@@ -55,7 +55,8 @@
     margin: 4px 0 0 2px;
 }
 
-.lock_block, .scrambled_block{
+.lock_block,
+.scrambled_block {
     width: 19px;
     height: 25px;
     background: url("i_720/mb_icons.png") no-repeat -93px 0;
@@ -64,11 +65,12 @@
     margin: 4px 0 0 2px;
 }
 
-.scrambled_block{
+.scrambled_block {
     background: url("i_720/mb_icon_scrambled.png") no-repeat;
 }
 
-.name_block, .title_block{
+.name_block,
+.title_block {
     color: #fff;
     font-size: 26px;
     margin: 0 2px 0 3px;
@@ -82,11 +84,11 @@
     color: #99A8B5 !important;
 }*/
 
-.blue_row_bg.close .name_block{
+.blue_row_bg.close .name_block {
     color: #919191 !important;
 }
 
-.number_block{
+.number_block {
     background: url("i_720/mb_chan.png") no-repeat;
     width: 64px;
     height: 29px;
@@ -102,15 +104,11 @@
     padding-top: 2px;
 }
 
-.wide_container{
-    
-}
+.wide_container {}
 
-.short_container{
-    
-}
+.short_container {}
 
-.wide_container .blue_row_bg{
+.wide_container .blue_row_bg {
     position: absolute;
     left: 70px;
     top: 82px;
@@ -119,7 +117,7 @@
     background: url("i_720/mb_table01.png") no-repeat;
 }
 
-.middle_container .blue_row_bg{
+.middle_container .blue_row_bg {
     position: absolute;
     left: 70px;
     top: 82px;
@@ -129,7 +127,7 @@
     /*background-position: 0 -190px;*/
 }
 
-.short_container .blue_row_bg{
+.short_container .blue_row_bg {
     position: absolute;
     left: 70px;
     top: 82px;
@@ -139,7 +137,7 @@
     /*background-position: 0 -152px;*/
 }
 
-.wide_container .active_row_bg{
+.wide_container .active_row_bg {
     position: absolute;
     width: 1168px;
     height: 62px;
@@ -148,7 +146,7 @@
     padding: 5px 0 0 13px;
 }
 
-.wide_container .moved_active_row_bg{
+.wide_container .moved_active_row_bg {
     position: absolute;
     width: 1168px;
     height: 62px;
@@ -158,7 +156,7 @@
     padding: 5px 0 0 13px;
 }
 
-.short_container .moved_active_row_bg{
+.short_container .moved_active_row_bg {
     position: absolute;
     width: 542px;
     height: 62px;
@@ -168,7 +166,7 @@
     padding: 5px 0 0 13px;
 }
 
-.middle_container .active_row_bg{
+.middle_container .active_row_bg {
     position: absolute;
     width: 757px;
     height: 62px;
@@ -177,7 +175,7 @@
     padding: 5px 0 0 13px;
 }
 
-.short_container .active_row_bg{
+.short_container .active_row_bg {
     position: absolute;
     width: 542px;
     height: 62px;
@@ -186,16 +184,16 @@
     padding: 5px 0 0 13px;
 }
 
-.active_hd_block{
+.active_hd_block {
     width: 34px;
     height: 39px;
     background: url("i_720/mb_icons.png") no-repeat 0 -29px;
     /*background-position: 0 -29px;*/
     margin: 6px 2px 0 0;
-    float:left;
+    float: left;
 }
 
-.active_sd_block{
+.active_sd_block {
     width: 34px;
     height: 39px;
     background: url("i_720/mb_icons.png") no-repeat -34px -29px;
@@ -204,7 +202,7 @@
     float: left;
 }
 
-.active_fav_block{
+.active_fav_block {
     width: 27px;
     height: 31px;
     background: url("i_720/mb_icons.png") no-repeat -68px -31px;
@@ -213,7 +211,8 @@
     float: left;
 }
 
-.active_lock_block, .active_scrambled_block{
+.active_lock_block,
+.active_scrambled_block {
     width: 16px;
     height: 30px;
     background: url("i_720/mb_icons.png") no-repeat -95px -32px;
@@ -222,11 +221,12 @@
     float: left;
 }
 
-.active_scrambled_block{
+.active_scrambled_block {
     background: url("i_720/mb_icon_scrambled.png") no-repeat -2px -31px;
 }
 
-.active_name_block, .active_title_block{
+.active_name_block,
+.active_title_block {
     font-size: 28px;
     /*font-weight: bold;*/
     color: #202020;
@@ -240,11 +240,12 @@
     color: #808080 !important;
 }*/
 
-.active_row_bg.close .active_name_block, .moved_active_row_bg.close .active_name_block{
+.active_row_bg.close .active_name_block,
+.moved_active_row_bg.close .active_name_block {
     color: #919191 !important;
 }
 
-.active_number_block{
+.active_number_block {
     width: 64px;
     height: 34px;
     background: url("i_720/mb_chan.png") no-repeat 0 -31px;
@@ -260,7 +261,7 @@
 }
 
 
-.footer_text{
+.footer_text {
     font-size: 15px;
     color: #001a33;
     float: left;
@@ -268,36 +269,36 @@
     font-weight: bold;
 }
 
-.footer_btn{
+.footer_btn {
     background: url("i_720/footer_btn.png") right no-repeat;
     width: 24px;
     height: 24px;
-    float:left;
+    float: left;
     margin: 11px 0 0 7px;
 }
 
-.btn_red{
+.btn_red {
     background: url("i_720/footer_btn.png") no-repeat;
     margin-left: 10px !important;
 }
 
-.btn_green{
+.btn_green {
     background: url("i_720/footer_btn.png") no-repeat -30px 0;
 }
 
-.btn_yellow{
+.btn_yellow {
     background: url("i_720/footer_btn.png") no-repeat -60px 0;
 }
 
-.btn_blue{
+.btn_blue {
     background: url("i_720/footer_btn.png") no-repeat -90px 0;
 }
 
-.disable_color_btn_text{
+.disable_color_btn_text {
     color: #919191 !important;
 }
 
-.mb_header_first{
+.mb_header_first {
     position: absolute;
     left: 213px;
     top: 34px;
@@ -309,21 +310,21 @@
     color: #fff;
 }
 
-.mb_header_first span{
+.mb_header_first span {
     color: #fff;
     font-size: 24px;
     text-transform: uppercase;
 }
 
-.mb_header_info{
+.mb_header_info {
     position: absolute;
     left: 72px;
-    top: 620px; 
+    top: 620px;
     font-size: 18px;
     color: #fff;
 }
 
-.color_button_bar{
+.color_button_bar {
     position: absolute;
     width: 1230px;
     height: 46px;
@@ -332,23 +333,23 @@
     padding-left: 50px;
 }
 
-.color_button_bar table{
+.color_button_bar table {
     width: 100%;
     height: 46px;
     border: 0;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
-.color_button_bar td{
+.color_button_bar td {
     vertical-align: top;
     width: 25%;
 }
 
-.color_button_bar img{
+.color_button_bar img {
     float: left;
 }
 
-.color_button_bar div{
+.color_button_bar div {
     /*background: url("i/footer_btn.png") right no-repeat;*/
     width: 30px;
     height: 30px;
@@ -356,7 +357,7 @@
     margin: 11px 0 0 7px;
 }
 
-.color_button_bar span{
+.color_button_bar span {
     font-size: 22px;
     color: #fff;
     float: left;
@@ -364,7 +365,7 @@
     /*font-weight: bold;*/
 }
 
-.color_button_bar span sup{
+.color_button_bar span sup {
     line-height: 1px;
 }
 
@@ -374,7 +375,7 @@
 
 /* OSD */
 
-.osd_info{
+.osd_info {
     position: absolute;
     height: 200px;
     width: 1280px;
@@ -385,7 +386,7 @@
     z-index: 100;
 }
 
-.osd_info_clock{
+.osd_info_clock {
     margin: 20px 0 0 40px;
     font-size: 24px;
     color: #99A8B5;
@@ -393,7 +394,7 @@
     float: left;
 }
 
-.osd_info_time_shift_mark{
+.osd_info_time_shift_mark {
     float: left;
     width: 27px;
     height: 30px;
@@ -401,7 +402,7 @@
     margin: 17px 0 0 9px;
 }
 
-.osd_info_title{
+.osd_info_title {
     margin: 16px 0 0 7px;
     float: left;
     width: 1110px;
@@ -410,11 +411,11 @@
     color: #fff;
     text-shadow: #000 0 1px 0;
     white-space: pre;
-	overflow: hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.pos_bar{
+.pos_bar {
     position: absolute;
     height: 22px;
     width: 1140px;
@@ -423,7 +424,7 @@
     background: url("i_720/osd_line.png");
 }
 
-.pos_button{
+.pos_button {
     position: absolute;
     width: 12px;
     height: 12px;
@@ -432,7 +433,7 @@
     left: 0;
 }
 
-.pos_time{
+.pos_time {
     position: absolute;
     top: 72px;
     right: 64px;
@@ -441,7 +442,8 @@
     text-shadow: #000 0 1px 0;
 }
 
-.cur_pos_time, .total_pos_time{
+.cur_pos_time,
+.total_pos_time {
     border: 1px solid transparent;
     float: left;
     margin: 0 1px;
@@ -452,21 +454,21 @@
     vertical-align: middle;
 }
 
-.total_pos_time{
+.total_pos_time {
     float: right;
 }
 
-.cur_pos_time[active="active"]{
+.cur_pos_time[active="active"] {
     border: 1px solid #4da8c4;
     background-color: #005378;
     border-radius: 4px;
 }
 
-.pos_time_separator{
+.pos_time_separator {
     float: left;
 }
 
-.pos_series{
+.pos_series {
     position: absolute;
     top: 72px;
     left: 80px;
@@ -475,7 +477,7 @@
     text-shadow: #000 0 1px 0;
 }
 
-.osd_info_epg{
+.osd_info_epg {
     position: absolute;
     top: 49px;
     left: 110px;
@@ -487,7 +489,7 @@
 
 /* END OSD */
 
-.pause{
+.pause {
     position: absolute;
     right: 130px;
     top: 83px;
@@ -497,7 +499,7 @@
     width: 47px;
 }
 
-.rec_container{
+.rec_container {
     position: absolute;
     right: 130px;
     top: 83px;
@@ -505,14 +507,14 @@
     /*width: 47px;*/
 }
 
-.rec_container .rec_left{
+.rec_container .rec_left {
     background: url("i_720/osd_rec.png") left no-repeat;
     float: left;
     width: 8px;
     height: 41px;
 }
 
-.rec_container .rec_main{
+.rec_container .rec_main {
     background: url("i_720/osd_rec.png") right no-repeat;
     float: left;
     height: 33px;
@@ -524,43 +526,44 @@
 
 
 /* VOLUME */
-.volume{
+.volume {
     position: absolute;
     left: 70px;
-	top: 70px;
-	z-index: 2;
+    top: 70px;
+    z-index: 2;
 }
 
-.volume_bar{
-	position: absolute;
-	width: 255px;
-	height: 41px;
-	background-image: url("i_720/volume_bg.png");
-	left: 0;
-	top: 0;
+.volume_bar {
+    position: absolute;
+    width: 255px;
+    height: 41px;
+    background-image: url("i_720/volume_bg.png");
+    left: 0;
+    top: 0;
 }
 
-.volume_progress{
-	position: absolute;
-	height: 41px;
-	left: 52px;
-	background: url("i_720/volume_bar.png") right no-repeat;
+.volume_progress {
+    position: absolute;
+    height: 41px;
+    left: 52px;
+    background: url("i_720/volume_bar.png") right no-repeat;
 }
 
-.volume_off{
-	position: absolute;
-	width: 47px;
-	height: 41px;
-	left: 0;
-	top: 0;
-	background: url("i_720/volume_off.png");
+.volume_off {
+    position: absolute;
+    width: 47px;
+    height: 41px;
+    left: 0;
+    top: 0;
+    background: url("i_720/volume_off.png");
     -webkit-transition: all 5s;
 }
+
 /* END VOLUME */
 
 /* QUICK CHANNEL SWITCH */
-.quick_ch_switch{
-    position:absolute;
+.quick_ch_switch {
+    position: absolute;
     width: 300px;
     height: 196px;
     left: 870px;
@@ -568,8 +571,8 @@
     background: url("i_720/input_channel_bg.png");
 }
 
-.quick_ch_input{
-    position:absolute;
+.quick_ch_input {
+    position: absolute;
     top: 72px;
     left: 75px;
     font: 45px trebuchet ms, Arial, Helvetica, sans-serif;
@@ -578,18 +581,19 @@
     width: 150px;
     height: 40px;
 }
+
 /* END QUICK CHANNEL SWITCH */
 
 /* END PLAYER */
 
 /* EARS */
-.ears_left_container{
+.ears_left_container {
     position: absolute;
     left: 0;
     top: 83px;
 }
 
-.ears_left{
+.ears_left {
     width: 60px;
     height: 530px;
     background-image: url("i_720/ears.png");
@@ -598,19 +602,19 @@
     display: table-cell;
 }
 
-.ears_left div{
+.ears_left div {
     margin-left: 25px;
     font: 22px Arial, Helvetica, sans-serif;
     color: #fff;
 }
 
-.ears_right_container{
+.ears_right_container {
     position: absolute;
     right: 0;
     top: 83px;
 }
 
-.ears_right{
+.ears_right {
     width: 60px;
     height: 530px;
     background-image: url("i_720/ears.png");
@@ -619,7 +623,7 @@
     display: table-cell;
 }
 
-.ears_right div{
+.ears_right div {
     margin-left: 14px;
     font: 22px Arial, Helvetica, sans-serif;
     color: #fff;
@@ -627,28 +631,29 @@
     width: 22px;
 }
 
-.ears_arrow_left{
+.ears_arrow_left {
     width: 22px;
     height: 40px;
     background-image: url("i_720/ears_arrow_l.png");
     margin: 20px 0 0;
 }
 
-.ears_arrow_right{
+.ears_arrow_right {
     width: 22px;
     height: 40px;
     background-image: url("i_720/ears_arrow_r.png");
     margin: 20px 0 0;
 }
+
 /* END EARS */
 
-.aspect_info_container{
+.aspect_info_container {
     position: absolute;
     top: 112px;
     left: 70px;
 }
 
-.aspect_block{
+.aspect_block {
     font-size: 22px;
     color: #fff;
     background: url("i_720/aspect_bg.png") left;
@@ -658,14 +663,14 @@
     float: left;
 }
 
-.aspect_block_right{
+.aspect_block_right {
     background: url("i_720/aspect_bg.png") right;
     width: 25px;
     float: left;
     height: 41px;
 }
 
-.playback_progress_block{
+.playback_progress_block {
     width: 400px;
     height: 10px;
     border: 2px #fff solid;
@@ -673,7 +678,7 @@
     border-radius: 6px;
 }
 
-.playback_progress{
+.playback_progress {
     height: 10px;
     width: 0;
     background-color: #202020;
@@ -681,13 +686,13 @@
     -webkit-transition: all 0.3s ease;
 }
 
-.osd_clock_block{
+.osd_clock_block {
     position: absolute;
     background: url("i_720/volume_bg.png") right;
     -webkit-border-radius: 8px;
 }
 
-.osd_clock_block .osd_clock{
+.osd_clock_block .osd_clock {
     color: #fff;
     text-shadow: #555 -1px -1px 2px;
     font-size: 28px;
@@ -696,19 +701,20 @@
     line-height: 28px;
 }
 
-.time_shift_info_container{
+.time_shift_info_container {
     position: absolute;
     top: 154px;
     left: 70px;
 }
 
-.ad_skip_container{
+.ad_skip_container {
     position: absolute;
     top: 154px;
     right: 70px;
 }
 
-.time_shift_info_block, .ad_skip_block{
+.time_shift_info_block,
+.ad_skip_block {
     font-size: 22px;
     color: #fff;
     background: url("i_720/aspect_bg.png") left;
@@ -718,19 +724,19 @@
     float: left;
 }
 
-.ad_skip_txt{
+.ad_skip_txt {
     padding-right: 30px;
     background: url("i_720/skip.png") right 5px no-repeat;
 }
 
-.time_shift_info_block_right{
+.time_shift_info_block_right {
     background: url("i_720/aspect_bg.png") right;
     width: 25px;
     float: left;
     height: 41px;
 }
 
-#epg_simple .blue_row_bg{
+#epg_simple .blue_row_bg {
     position: absolute;
     left: 330px;
     top: 92px;
@@ -739,7 +745,7 @@
     background: url("i_720/tv_table.png") no-repeat -339px -44px;
 }
 
-#epg .blue_row_bg{
+#epg .blue_row_bg {
     position: absolute;
     left: 70px;
     top: 92px;
@@ -749,18 +755,18 @@
     background-position: 0 -46px;
 }
 
-.osd_info_logo{
+.osd_info_logo {
     position: absolute;
     top: 49px;
     right: 100px;
 }
 
-img.timeshift_mode{
+img.timeshift_mode {
     position: relative;
     top: 22px;
     right: -30px;
 }
 
-.padding_pos_bar{
+.padding_pos_bar {
     right: 167px;
 }

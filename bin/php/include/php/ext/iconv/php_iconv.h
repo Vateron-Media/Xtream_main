@@ -21,15 +21,15 @@
 #define PHP_ICONV_H
 
 #ifdef PHP_WIN32
-# ifdef PHP_ICONV_EXPORTS
-#  define PHP_ICONV_API __declspec(dllexport)
-# else
-#  define PHP_ICONV_API __declspec(dllimport)
-# endif
-#elif defined(__GNUC__) && __GNUC__ >= 4
-# define PHP_ICONV_API __attribute__ ((visibility("default")))
+#ifdef PHP_ICONV_EXPORTS
+#define PHP_ICONV_API __declspec(dllexport)
 #else
-# define PHP_ICONV_API
+#define PHP_ICONV_API __declspec(dllimport)
+#endif
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#define PHP_ICONV_API __attribute__((visibility("default")))
+#else
+#define PHP_ICONV_API
 #endif
 
 #include "php_version.h"
@@ -68,9 +68,9 @@ PHP_FUNCTION(iconv_mime_decode);
 PHP_FUNCTION(iconv_mime_decode_headers);
 
 ZEND_BEGIN_MODULE_GLOBALS(iconv)
-	char *input_encoding;
-	char *internal_encoding;
-	char *output_encoding;
+char *input_encoding;
+char *internal_encoding;
+char *output_encoding;
 ZEND_END_MODULE_GLOBALS(iconv)
 
 #define ICONVG(v) ZEND_MODULE_GLOBALS_ACCESSOR(iconv, v)
@@ -80,11 +80,11 @@ ZEND_TSRMLS_CACHE_EXTERN()
 #endif
 
 #ifdef HAVE_IBM_ICONV
-# define ICONV_ASCII_ENCODING "IBM-850"
-# define ICONV_UCS4_ENCODING "UCS-4"
+#define ICONV_ASCII_ENCODING "IBM-850"
+#define ICONV_UCS4_ENCODING "UCS-4"
 #else
-# define ICONV_ASCII_ENCODING "ASCII"
-# define ICONV_UCS4_ENCODING "UCS-4LE"
+#define ICONV_ASCII_ENCODING "ASCII"
+#define ICONV_UCS4_ENCODING "UCS-4LE"
 #endif
 
 #ifndef ICONV_CSNMAXLEN
@@ -92,20 +92,21 @@ ZEND_TSRMLS_CACHE_EXTERN()
 #endif
 
 /* {{{ typedef enum php_iconv_err_t */
-typedef enum _php_iconv_err_t {
-	PHP_ICONV_ERR_SUCCESS           = SUCCESS,
-	PHP_ICONV_ERR_CONVERTER         = 1,
-	PHP_ICONV_ERR_WRONG_CHARSET     = 2,
-	PHP_ICONV_ERR_TOO_BIG           = 3,
-	PHP_ICONV_ERR_ILLEGAL_SEQ       = 4,
-	PHP_ICONV_ERR_ILLEGAL_CHAR      = 5,
-	PHP_ICONV_ERR_UNKNOWN           = 6,
-	PHP_ICONV_ERR_MALFORMED         = 7,
-	PHP_ICONV_ERR_ALLOC             = 8
+typedef enum _php_iconv_err_t
+{
+  PHP_ICONV_ERR_SUCCESS = SUCCESS,
+  PHP_ICONV_ERR_CONVERTER = 1,
+  PHP_ICONV_ERR_WRONG_CHARSET = 2,
+  PHP_ICONV_ERR_TOO_BIG = 3,
+  PHP_ICONV_ERR_ILLEGAL_SEQ = 4,
+  PHP_ICONV_ERR_ILLEGAL_CHAR = 5,
+  PHP_ICONV_ERR_UNKNOWN = 6,
+  PHP_ICONV_ERR_MALFORMED = 7,
+  PHP_ICONV_ERR_ALLOC = 8
 } php_iconv_err_t;
 /* }}} */
 
-PHP_ICONV_API php_iconv_err_t php_iconv_string(const char * in_p, size_t in_len, zend_string **out, const char *out_charset, const char *in_charset);
+PHP_ICONV_API php_iconv_err_t php_iconv_string(const char *in_p, size_t in_len, zend_string **out, const char *out_charset, const char *in_charset);
 
 #else
 
@@ -115,7 +116,7 @@ PHP_ICONV_API php_iconv_err_t php_iconv_string(const char * in_p, size_t in_len,
 
 #define phpext_iconv_ptr iconv_module_ptr
 
-#endif	/* PHP_ICONV_H */
+#endif /* PHP_ICONV_H */
 
 /*
  * Local variables:

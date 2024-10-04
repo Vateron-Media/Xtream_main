@@ -23,10 +23,10 @@
 PHPAPI double _php_math_round(double, int, int);
 PHPAPI zend_string *_php_math_number_format(double, int, char, char);
 PHPAPI zend_string *_php_math_number_format_ex(double, int, char *, size_t, char *, size_t);
-PHPAPI zend_string * _php_math_longtobase(zval *arg, int base);
+PHPAPI zend_string *_php_math_longtobase(zval *arg, int base);
 PHPAPI zend_long _php_math_basetolong(zval *arg, int base);
 PHPAPI int _php_math_basetozval(zval *arg, int base, zval *ret);
-PHPAPI zend_string * _php_math_zvaltobase(zval *arg, int base);
+PHPAPI zend_string *_php_math_zvaltobase(zval *arg, int base);
 
 PHP_FUNCTION(sin);
 PHP_FUNCTION(cos);
@@ -65,10 +65,10 @@ PHP_FUNCTION(deg2rad);
 PHP_FUNCTION(rad2deg);
 PHP_FUNCTION(intdiv);
 
-   /*
-   WARNING: these functions are expermental: they could change their names or
-   disappear in the next version of PHP!
-   */
+/*
+WARNING: these functions are expermental: they could change their names or
+disappear in the next version of PHP!
+*/
 PHP_FUNCTION(hypot);
 PHP_FUNCTION(expm1);
 PHP_FUNCTION(log1p);
@@ -84,88 +84,88 @@ PHP_FUNCTION(atanh);
 #include <math.h>
 
 #ifndef M_E
-#define M_E            2.7182818284590452354   /* e */
+#define M_E 2.7182818284590452354 /* e */
 #endif
 
 #ifndef M_LOG2E
-#define M_LOG2E        1.4426950408889634074   /* log_2 e */
+#define M_LOG2E 1.4426950408889634074 /* log_2 e */
 #endif
 
 #ifndef M_LOG10E
-#define M_LOG10E       0.43429448190325182765  /* log_10 e */
+#define M_LOG10E 0.43429448190325182765 /* log_10 e */
 #endif
 
 #ifndef M_LN2
-#define M_LN2          0.69314718055994530942  /* log_e 2 */
+#define M_LN2 0.69314718055994530942 /* log_e 2 */
 #endif
 
 #ifndef M_LN10
-#define M_LN10         2.30258509299404568402  /* log_e 10 */
+#define M_LN10 2.30258509299404568402 /* log_e 10 */
 #endif
 
 #ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
+#define M_PI 3.14159265358979323846 /* pi */
 #endif
 
 #ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /* pi/2 */
+#define M_PI_2 1.57079632679489661923 /* pi/2 */
 #endif
 
 #ifndef M_PI_4
-#define M_PI_4         0.78539816339744830962  /* pi/4 */
+#define M_PI_4 0.78539816339744830962 /* pi/4 */
 #endif
 
 #ifndef M_1_PI
-#define M_1_PI         0.31830988618379067154  /* 1/pi */
+#define M_1_PI 0.31830988618379067154 /* 1/pi */
 #endif
 
 #ifndef M_2_PI
-#define M_2_PI         0.63661977236758134308  /* 2/pi */
+#define M_2_PI 0.63661977236758134308 /* 2/pi */
 #endif
 
 #ifndef M_SQRTPI
-#define M_SQRTPI       1.77245385090551602729  /* sqrt(pi) */
+#define M_SQRTPI 1.77245385090551602729 /* sqrt(pi) */
 #endif
 
 #ifndef M_2_SQRTPI
-#define M_2_SQRTPI     1.12837916709551257390  /* 2/sqrt(pi) */
+#define M_2_SQRTPI 1.12837916709551257390 /* 2/sqrt(pi) */
 #endif
 
 #ifndef M_LNPI
-#define M_LNPI         1.14472988584940017414  /* ln(pi) */
+#define M_LNPI 1.14472988584940017414 /* ln(pi) */
 #endif
 
 #ifndef M_EULER
-#define M_EULER        0.57721566490153286061 /* Euler constant */
+#define M_EULER 0.57721566490153286061 /* Euler constant */
 #endif
 
 #ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
+#define M_SQRT2 1.41421356237309504880 /* sqrt(2) */
 #endif
 
 #ifndef M_SQRT1_2
-#define M_SQRT1_2      0.70710678118654752440  /* 1/sqrt(2) */
+#define M_SQRT1_2 0.70710678118654752440 /* 1/sqrt(2) */
 #endif
 
 #ifndef M_SQRT3
-#define M_SQRT3	       1.73205080756887729352  /* sqrt(3) */
+#define M_SQRT3 1.73205080756887729352 /* sqrt(3) */
 #endif
 
 /* Define rounding modes (all are round-to-nearest) */
 #ifndef PHP_ROUND_HALF_UP
-#define PHP_ROUND_HALF_UP        0x01    /* Arithmetic rounding, up == away from zero */
+#define PHP_ROUND_HALF_UP 0x01 /* Arithmetic rounding, up == away from zero */
 #endif
 
 #ifndef PHP_ROUND_HALF_DOWN
-#define PHP_ROUND_HALF_DOWN      0x02    /* Down == towards zero */
+#define PHP_ROUND_HALF_DOWN 0x02 /* Down == towards zero */
 #endif
 
 #ifndef PHP_ROUND_HALF_EVEN
-#define PHP_ROUND_HALF_EVEN      0x03    /* Banker's rounding */
+#define PHP_ROUND_HALF_EVEN 0x03 /* Banker's rounding */
 #endif
 
 #ifndef PHP_ROUND_HALF_ODD
-#define PHP_ROUND_HALF_ODD       0x04
+#define PHP_ROUND_HALF_ODD 0x04
 #endif
 
 #endif /* PHP_MATH_H */

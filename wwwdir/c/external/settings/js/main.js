@@ -148,7 +148,7 @@ function nextMenu(urlP) {
 function onLoad() {
     stb.EnableVKButton(true);
     document.cookie = "mac=" + escape(parent.stb.GetDeviceMacAddress()) + '; path=/;';
-    load({"type": "stb", "action": "get_settings_profile"}, function (profile) {
+    load({ "type": "stb", "action": "get_settings_profile" }, function (profile) {
         prof = profile;
         init_m();
     });
@@ -302,7 +302,7 @@ function load(params, callback, method, headers) {
     method = method || 'GET';
     headers = headers || {};
 
-    var sendHeader = {"Authorization": "Bearer " + _GET.token};
+    var sendHeader = { "Authorization": "Bearer " + _GET.token };
 
     for (var i in headers) {
         sendHeader[i] = headers[i];

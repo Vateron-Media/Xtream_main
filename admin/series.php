@@ -35,31 +35,37 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="#" onClick="clearFilters();">
-                                                <button type="button" class="btn btn-warning waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-warning waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-filter-remove"></i>
                                                 </button>
                                             </a>
                                             <a href="#" onClick="changeZoom();">
-                                                <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-info waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-magnify"></i>
                                                 </button>
                                             </a>
                                             <?php if (!$detect->isMobile()) { ?>
                                                 <a href="#" onClick="toggleAuto();">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-refresh"></i> <span class="auto-text"><?= $_["auto_refresh"] ?></span>
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
+                                                        <i class="mdi mdi-refresh"></i> <span
+                                                            class="auto-text"><?= $_["auto_refresh"] ?></span>
                                                     </button>
                                                 </a>
                                             <?php } else { ?>
                                                 <a href="javascript:location.reload();" onClick="toggleAuto();">
-                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-dark waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
                                                     </button>
                                                 </a>
                                             <?php }
                                             if (($rPermissions["is_admin"]) && (hasPermissions("adv", "add_series"))) { ?>
                                                 <a href="serie.php">
-                                                    <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-plus"></i> <?= $_["add_series"] ?>
                                                     </button>
                                                 </a>
@@ -79,20 +85,26 @@ if ($rSettings["sidebar"]) { ?>
                                     <form id="series_form">
                                         <div class="form-group row mb-4">
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" id="series_search" value="" placeholder="<?= $_["search_series"] ?>">
+                                                <input type="text" class="form-control" id="series_search" value=""
+                                                    placeholder="<?= $_["search_series"] ?>">
                                             </div>
                                             <div class="col-md-3">
-                                                <select id="series_category_id" class="form-control" data-toggle="select2">
+                                                <select id="series_category_id" class="form-control"
+                                                    data-toggle="select2">
                                                     <option value="" selected><?= $_["all_categories"] ?></option>
                                                     <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                     <?php foreach ($rCategories as $rCategory) { ?>
-                                                        <option value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                        <option value="<?= $rCategory["id"] ?>">
+                                                            <?= $rCategory["category_name"] ?>
+                                                        </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
-                                            <label class="col-md-1 col-form-label text-center" for="series_show_entries"><?= $_["show"] ?></label>
+                                            <label class="col-md-1 col-form-label text-center"
+                                                for="series_show_entries"><?= $_["show"] ?></label>
                                             <div class="col-md-2">
-                                                <select id="series_show_entries" class="form-control" data-toggle="select2">
+                                                <select id="series_show_entries" class="form-control"
+                                                    data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                     echo $_["selected"];
@@ -102,7 +114,8 @@ if ($rSettings["sidebar"]) { ?>
                                             </div>
                                         </div>
                                     </form>
-                                    <table id="datatable-streampage" class="table table-hover dt-responsive nowrap font-normal">
+                                    <table id="datatable-streampage"
+                                        class="table table-hover dt-responsive nowrap font-normal">
                                         <thead>
                                             <tr>
                                                 <th class="text-center"><?= $_["id"] ?></th>
