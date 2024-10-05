@@ -133,6 +133,8 @@ define('CACHE_STREAMS_TIME', 10);
 define('STREAM_TYPE', array('live', 'series', 'movie', 'created_live', 'radio_streams'));
 
 $rShowErrors = false;
+
+global $argc;
 if (!$argc) {
     $rIP = $_SERVER['REMOTE_ADDR'];
     if (empty($rIP) || !file_exists(FLOOD_TMP_PATH . 'block_' . $rIP)) {
