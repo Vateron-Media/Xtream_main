@@ -1092,7 +1092,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('131','mag_security','0'),
 ('132','logo_url_sidebar',''),
 ('133','page_mannuals','<p><br /></p>'),
-('134','debug_show_errors','0');
+('134','debug_show_errors','0'),
 ('135', 'monitor_connection_status', '1'),
 ('136', 'segment_wait_time', '20'),
 ('137', 'disable_ts', '0'),
@@ -1120,7 +1120,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('159', 'fps_delay', '600'),
 ('160', 'kill_rogue_ffmpeg', '1'),
 ('161', 'segment_type', '1'),
-('162', 'vod_limit_perc', '150'),
+('162', 'vod_limit_perc', '150');
 
 -- --------------------------------------------------------
 
