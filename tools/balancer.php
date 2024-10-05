@@ -90,7 +90,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     if (stripos(runCommand($rConn, 'sudo cat /etc/fstab')['output'], STREAMS_PATH) == false) {
                         echo 'Adding ramdisk mounts' . "\n";
                         runCommand($rConn, 'sudo echo "tmpfs ' . STREAMS_PATH . ' tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=90% 0 0" >> /etc/fstab');
-                        runCommand($rConn, 'sudo echo "tmpfs ' . TMP_PATH . ' tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=2G 0 0" >> /etc/fstab');
+                        runCommand($rConn, 'sudo echo "tmpfs ' . TMP_PATH . ' tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777,size=6G 0 0" >> /etc/fstab');
                     }
                     if (stripos(runCommand($rConn, 'sudo cat /etc/sysctl.conf')['output'], 'XtreamCodes') === false) {
                         if ($rUpdateSysctl) {
