@@ -91,7 +91,7 @@ if (ipTV_streaming::isStreamRunning($rPID, $streamID)) {
 } else {
     file_put_contents(STREAMS_PATH . $streamID . '_.monitor', getmypid());
 }
-if (KILL_ROQUE_FFMPEG) {
+if (ipTV_lib::$settings["kill_rogue_ffmpeg"]) {
     exec('ps aux | grep -v grep | grep \'/' . $streamID . '_.m3u8\' | awk \'{print $2}\'', $rFFMPEG);
     foreach ($rFFMPEG as $roguePID) {
         if ((is_numeric($roguePID) && (0 < intval($roguePID)) && (intval($roguePID) != intval($rPID)))) {
@@ -159,7 +159,7 @@ if (true) {
             file_put_contents(STREAMS_PATH . $streamID . '_.monitor', getmypid());
         }
     }
-    if (!(($streamInfo['fps_restart'] == 1) && (FPS_DELLAY < (time() - $startedTime)) && file_exists(STREAMS_PATH . $streamID . '_.progress_check'))) {
+    if (!(($streamInfo['fps_restart'] == 1) && (ipTV_lib::$settings["fps_delay"] < (time() - $startedTime)) && file_exists(STREAMS_PATH . $streamID . '_.progress_check'))) {
         goto label298;
     }
     echo 'Checking FPS...' . "\n";

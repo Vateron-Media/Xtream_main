@@ -96,6 +96,7 @@ define('SIGNALS_TMP_PATH', TMP_PATH . 'signals/');
 define('STREAMS_TMP_PATH', CACHE_TMP_PATH . 'streams/');
 define('USER_TMP_PATH', CACHE_TMP_PATH . 'users/');
 define('SERIES_TMP_PATH', CACHE_TMP_PATH . 'series/');
+define('LINES_TMP_PATH', CACHE_TMP_PATH . 'lines/');
 // -------------------
 
 //CONTENT FOLDERS
@@ -120,23 +121,9 @@ define('MONITOR_CALLS', 3);
 
 // Temporary variables that should be added to the panel settings
 define('ENABLE_CACHE', true);
-define('FPS_DELLAY', 600);
-define('KILL_ROQUE_FFMPEG', true);
-define('PROBE_EXTRA_WAIT', 7);
-define('FFMPEG_WARNINGS', true);
-define('SEG_DELETE_THRESHOLD', 4);
-define('IGNORE_KEYFRAMES', 0);
 define('CACHE_PLAYLIST', 60);
-define('CREATE_EXPIRATION', 5);
-define('ON_DEMAND_WAIT_TIME', 20);
-define('ON_DEMAND_INSTANT_OFF', false);
-define('SEGMENT_WAIT_TIME', 20);
-define('MONITOR_CONNECTION_STATUS', true);
 // -------------------
 
-if (!defined('USE_CACHE')) {
-    define('USE_CACHE', true);
-}
 if (!defined('FETCH_BOUQUETS')) {
     define('FETCH_BOUQUETS', true);
 }

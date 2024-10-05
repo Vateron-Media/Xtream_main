@@ -1900,17 +1900,6 @@ function flushEvents() {
     $db->query("DELETE FROM `mag_events`;");
 }
 
-function updateTables() {
-    global $db;
-    // Update table settings etc.
-    //checkTable("languages");
-    //priority backup
-    //$db->query("UPDATE settings SET priority_backup = 1;");
-
-    // Update Categories
-    updateTMDbCategories();
-}
-
 function updateTMDbCategories() {
     global $db, $rAdminSettings, $rSettings;
     include "tmdb.php";
@@ -1949,17 +1938,18 @@ function updateTMDbCategories() {
     }
 }
 
-function forceSecurity() {
-    global $db;
-    setSettings(["double_auth" => 1, "mag_security" => 1]);
-    $db->query("UPDATE `admin_settings` SET `pass_length` = 8 WHERE `pass_length` < 8;");
-}
-
 if (file_exists("/home/xtreamcodes/admin/.update")) {
     unlink("/home/xtreamcodes/admin/.update");
     if (!file_exists("/home/xtreamcodes/admin/.update")) {
-        updateTables();
-        forceSecurity();
+        // Update table settings etc.
+        //checkTable("languages");
+        //priority backup
+        //$db->query("UPDATE settings SET priority_backup = 1;");
+
+        // Update Categories
+        updateTMDbCategories();
+        setSettings(["double_auth" => 1, "mag_security" => 1]);
+        $db->query("UPDATE `admin_settings` SET `pass_length` = 8 WHERE `pass_length` < 8;");
     }
 }
 

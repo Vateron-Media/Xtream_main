@@ -8,6 +8,7 @@ if ((!hasPermissions("adv", "settings")) && (!hasPermissions("adv", "database"))
     exit;
 }
 
+$rGeoCountries = array('ALL' => 'All Countries', 'A1' => 'Anonymous Proxy', 'A2' => 'Satellite Provider', 'O1' => 'Other Country', 'AF' => 'Afghanistan', 'AX' => 'Aland Islands', 'AL' => 'Albania', 'DZ' => 'Algeria', 'AS' => 'American Samoa', 'AD' => 'Andorra', 'AO' => 'Angola', 'AI' => 'Anguilla', 'AQ' => 'Antarctica', 'AG' => 'Antigua And Barbuda', 'AR' => 'Argentina', 'AM' => 'Armenia', 'AW' => 'Aruba', 'AU' => 'Australia', 'AT' => 'Austria', 'AZ' => 'Azerbaijan', 'BS' => 'Bahamas', 'BH' => 'Bahrain', 'BD' => 'Bangladesh', 'BB' => 'Barbados', 'BY' => 'Belarus', 'BE' => 'Belgium', 'BZ' => 'Belize', 'BJ' => 'Benin', 'BM' => 'Bermuda', 'BT' => 'Bhutan', 'BO' => 'Bolivia', 'BA' => 'Bosnia And Herzegovina', 'BW' => 'Botswana', 'BV' => 'Bouvet Island', 'BR' => 'Brazil', 'IO' => 'British Indian Ocean Territory', 'BN' => 'Brunei Darussalam', 'BG' => 'Bulgaria', 'BF' => 'Burkina Faso', 'BI' => 'Burundi', 'KH' => 'Cambodia', 'CM' => 'Cameroon', 'CA' => 'Canada', 'CV' => 'Cape Verde', 'KY' => 'Cayman Islands', 'CF' => 'Central African Republic', 'TD' => 'Chad', 'CL' => 'Chile', 'CN' => 'China', 'CX' => 'Christmas Island', 'CC' => 'Cocos (Keeling) Islands', 'CO' => 'Colombia', 'KM' => 'Comoros', 'CG' => 'Congo', 'CD' => 'Congo, Democratic Republic', 'CK' => 'Cook Islands', 'CR' => 'Costa Rica', 'CI' => "Cote D'Ivoire", 'HR' => 'Croatia', 'CU' => 'Cuba', 'CY' => 'Cyprus', 'CZ' => 'Czech Republic', 'DK' => 'Denmark', 'DJ' => 'Djibouti', 'DM' => 'Dominica', 'DO' => 'Dominican Republic', 'EC' => 'Ecuador', 'EG' => 'Egypt', 'SV' => 'El Salvador', 'GQ' => 'Equatorial Guinea', 'ER' => 'Eritrea', 'EE' => 'Estonia', 'ET' => 'Ethiopia', 'FK' => 'Falkland Islands (Malvinas)', 'FO' => 'Faroe Islands', 'FJ' => 'Fiji', 'FI' => 'Finland', 'FR' => 'France', 'GF' => 'French Guiana', 'PF' => 'French Polynesia', 'TF' => 'French Southern Territories', 'MK' => 'Fyrom', 'GA' => 'Gabon', 'GM' => 'Gambia', 'GE' => 'Georgia', 'DE' => 'Germany', 'GH' => 'Ghana', 'GI' => 'Gibraltar', 'GR' => 'Greece', 'GL' => 'Greenland', 'GD' => 'Grenada', 'GP' => 'Guadeloupe', 'GU' => 'Guam', 'GT' => 'Guatemala', 'GG' => 'Guernsey', 'GN' => 'Guinea', 'GW' => 'Guinea-Bissau', 'GY' => 'Guyana', 'HT' => 'Haiti', 'HM' => 'Heard Island & Mcdonald Islands', 'VA' => 'Holy See (Vatican City State)', 'HN' => 'Honduras', 'HK' => 'Hong Kong', 'HU' => 'Hungary', 'IS' => 'Iceland', 'IN' => 'India', 'ID' => 'Indonesia', 'IR' => 'Iran, Islamic Republic Of', 'IQ' => 'Iraq', 'IE' => 'Ireland', 'IM' => 'Isle Of Man', 'IL' => 'Israel', 'IT' => 'Italy', 'JM' => 'Jamaica', 'JP' => 'Japan', 'JE' => 'Jersey', 'JO' => 'Jordan', 'KZ' => 'Kazakhstan', 'KE' => 'Kenya', 'KI' => 'Kiribati', 'KR' => 'Korea', 'KW' => 'Kuwait', 'KG' => 'Kyrgyzstan', 'LA' => "Lao People's Democratic Republic", 'LV' => 'Latvia', 'LB' => 'Lebanon', 'LS' => 'Lesotho', 'LR' => 'Liberia', 'LY' => 'Libyan Arab Jamahiriya', 'LI' => 'Liechtenstein', 'LT' => 'Lithuania', 'LU' => 'Luxembourg', 'MO' => 'Macao', 'MG' => 'Madagascar', 'MW' => 'Malawi', 'MY' => 'Malaysia', 'MV' => 'Maldives', 'ML' => 'Mali', 'MT' => 'Malta', 'MH' => 'Marshall Islands', 'MQ' => 'Martinique', 'MR' => 'Mauritania', 'MU' => 'Mauritius', 'YT' => 'Mayotte', 'MX' => 'Mexico', 'FM' => 'Micronesia, Federated States Of', 'MD' => 'Moldova', 'MC' => 'Monaco', 'MN' => 'Mongolia', 'ME' => 'Montenegro', 'MS' => 'Montserrat', 'MA' => 'Morocco', 'MZ' => 'Mozambique', 'MM' => 'Myanmar', 'NA' => 'Namibia', 'NR' => 'Nauru', 'NP' => 'Nepal', 'NL' => 'Netherlands', 'AN' => 'Netherlands Antilles', 'NC' => 'New Caledonia', 'NZ' => 'New Zealand', 'NI' => 'Nicaragua', 'NE' => 'Niger', 'NG' => 'Nigeria', 'NU' => 'Niue', 'NF' => 'Norfolk Island', 'MP' => 'Northern Mariana Islands', 'NO' => 'Norway', 'OM' => 'Oman', 'PK' => 'Pakistan', 'PW' => 'Palau', 'PS' => 'Palestinian Territory, Occupied', 'PA' => 'Panama', 'PG' => 'Papua New Guinea', 'PY' => 'Paraguay', 'PE' => 'Peru', 'PH' => 'Philippines', 'PN' => 'Pitcairn', 'PL' => 'Poland', 'PT' => 'Portugal', 'PR' => 'Puerto Rico', 'QA' => 'Qatar', 'RE' => 'Reunion', 'RO' => 'Romania', 'RU' => 'Russian Federation', 'RW' => 'Rwanda', 'BL' => 'Saint Barthelemy', 'SH' => 'Saint Helena', 'KN' => 'Saint Kitts And Nevis', 'LC' => 'Saint Lucia', 'MF' => 'Saint Martin', 'PM' => 'Saint Pierre And Miquelon', 'VC' => 'Saint Vincent And Grenadines', 'WS' => 'Samoa', 'SM' => 'San Marino', 'ST' => 'Sao Tome And Principe', 'SA' => 'Saudi Arabia', 'SN' => 'Senegal', 'RS' => 'Serbia', 'SC' => 'Seychelles', 'SL' => 'Sierra Leone', 'SG' => 'Singapore', 'SK' => 'Slovakia', 'SI' => 'Slovenia', 'SB' => 'Solomon Islands', 'SO' => 'Somalia', 'ZA' => 'South Africa', 'GS' => 'South Georgia And Sandwich Isl.', 'ES' => 'Spain', 'LK' => 'Sri Lanka', 'SD' => 'Sudan', 'SR' => 'Suriname', 'SJ' => 'Svalbard And Jan Mayen', 'SZ' => 'Swaziland', 'SE' => 'Sweden', 'CH' => 'Switzerland', 'SY' => 'Syrian Arab Republic', 'TW' => 'Taiwan', 'TJ' => 'Tajikistan', 'TZ' => 'Tanzania', 'TH' => 'Thailand', 'TL' => 'Timor-Leste', 'TG' => 'Togo', 'TK' => 'Tokelau', 'TO' => 'Tonga', 'TT' => 'Trinidad And Tobago', 'TN' => 'Tunisia', 'TR' => 'Turkey', 'TM' => 'Turkmenistan', 'TC' => 'Turks And Caicos Islands', 'TV' => 'Tuvalu', 'UG' => 'Uganda', 'UA' => 'Ukraine', 'AE' => 'United Arab Emirates', 'GB' => 'United Kingdom', 'US' => 'United States', 'UM' => 'United States Outlying Islands', 'UY' => 'Uruguay', 'UZ' => 'Uzbekistan', 'VU' => 'Vanuatu', 'VE' => 'Venezuela', 'VN' => 'Viet Nam', 'VG' => 'Virgin Islands, British', 'VI' => 'Virgin Islands, U.S.', 'WF' => 'Wallis And Futuna', 'EH' => 'Western Sahara', 'YE' => 'Yemen', 'ZM' => 'Zambia', 'ZW' => 'Zimbabwe');
 $rTMDBLanguages = array("" => "Default - EN", "aa" => "Afar", "af" => "Afrikaans", "ak" => "Akan", "an" => "Aragonese", "as" => "Assamese", "av" => "Avaric", "ae" => "Avestan", "ay" => "Aymara", "az" => "Azerbaijani", "ba" => "Bashkir", "bm" => "Bambara", "bi" => "Bislama", "bo" => "Tibetan", "br" => "Breton", "ca" => "Catalan", "cs" => "Czech", "ce" => "Chechen", "cu" => "Slavic", "cv" => "Chuvash", "kw" => "Cornish", "co" => "Corsican", "cr" => "Cree", "cy" => "Welsh", "da" => "Danish", "de" => "German", "dv" => "Divehi", "dz" => "Dzongkha", "eo" => "Esperanto", "et" => "Estonian", "eu" => "Basque", "fo" => "Faroese", "fj" => "Fijian", "fi" => "Finnish", "fr" => "French", "fy" => "Frisian", "ff" => "Fulah", "gd" => "Gaelic", "ga" => "Irish", "gl" => "Galician", "gv" => "Manx", "gn" => "Guarani", "gu" => "Gujarati", "ht" => "Haitian", "ha" => "Hausa", "sh" => "Serbo-Croatian", "hz" => "Herero", "ho" => "Hiri Motu", "hr" => "Croatian", "hu" => "Hungarian", "ig" => "Igbo", "io" => "Ido", "ii" => "Yi", "iu" => "Inuktitut", "ie" => "Interlingue", "ia" => "Interlingua", "id" => "Indonesian", "ik" => "Inupiaq", "is" => "Icelandic", "it" => "Italian", "ja" => "Japanese", "kl" => "Kalaallisut", "kn" => "Kannada", "ks" => "Kashmiri", "kr" => "Kanuri", "kk" => "Kazakh", "km" => "Khmer", "ki" => "Kikuyu", "rw" => "Kinyarwanda", "ky" => "Kirghiz", "kv" => "Komi", "kg" => "Kongo", "ko" => "Korean", "kj" => "Kuanyama", "ku" => "Kurdish", "lo" => "Lao", "la" => "Latin", "lv" => "Latvian", "li" => "Limburgish", "ln" => "Lingala", "lt" => "Lithuanian", "lb" => "Letzeburgesch", "lu" => "Luba-Katanga", "lg" => "Ganda", "mh" => "Marshall", "ml" => "Malayalam", "mr" => "Marathi", "mg" => "Malagasy", "mt" => "Maltese", "mo" => "Moldavian", "mn" => "Mongolian", "mi" => "Maori", "ms" => "Malay", "my" => "Burmese", "na" => "Nauru", "nv" => "Navajo", "nr" => "Ndebele", "nd" => "Ndebele", "ng" => "Ndonga", "ne" => "Nepali", "nl" => "Dutch", "nn" => "Norwegian Nynorsk", "nb" => "Norwegian Bokmal", "no" => "Norwegian", "ny" => "Chichewa", "oc" => "Occitan", "oj" => "Ojibwa", "or" => "Oriya", "om" => "Oromo", "os" => "Ossetian; Ossetic", "pi" => "Pali", "pl" => "Polish", "pt" => "Portuguese", "pt-BR" => "Portuguese - Brazil", "qu" => "Quechua", "rm" => "Raeto-Romance", "ro" => "Romanian", "rn" => "Rundi", "ru" => "Russian", "sg" => "Sango", "sa" => "Sanskrit", "si" => "Sinhalese", "sk" => "Slovak", "sl" => "Slovenian", "se" => "Northern Sami", "sm" => "Samoan", "sn" => "Shona", "sd" => "Sindhi", "so" => "Somali", "st" => "Sotho", "es" => "Spanish", "sq" => "Albanian", "sc" => "Sardinian", "sr" => "Serbian", "ss" => "Swati", "su" => "Sundanese", "sw" => "Swahili", "sv" => "Swedish", "ty" => "Tahitian", "ta" => "Tamil", "tt" => "Tatar", "te" => "Telugu", "tg" => "Tajik", "tl" => "Tagalog", "th" => "Thai", "ti" => "Tigrinya", "to" => "Tonga", "tn" => "Tswana", "ts" => "Tsonga", "tk" => "Turkmen", "tr" => "Turkish", "tw" => "Twi", "ug" => "Uighur", "uk" => "Ukrainian", "ur" => "Urdu", "uz" => "Uzbek", "ve" => "Venda", "vi" => "Vietnamese", "vo" => "Volapük", "wa" => "Walloon", "wo" => "Wolof", "xh" => "Xhosa", "yi" => "Yiddish", "za" => "Zhuang", "zu" => "Zulu", "ab" => "Abkhazian", "zh" => "Mandarin", "ps" => "Pushto", "am" => "Amharic", "ar" => "Arabic", "bg" => "Bulgarian", "cn" => "Cantonese", "mk" => "Macedonian", "el" => "Greek", "fa" => "Persian", "he" => "Hebrew", "hi" => "Hindi", "hy" => "Armenian", "en" => "English", "ee" => "Ewe", "ka" => "Georgian", "pa" => "Punjabi", "bn" => "Bengali", "bs" => "Bosnian", "ch" => "Chamorro", "be" => "Belarusian", "yo" => "Yoruba");
 $rMAGs = array("MAG200", "MAG245", "MAG245D", "MAG250", "MAG254", "MAG255", "MAG256", "MAG257", "MAG260", "MAG270", "MAG275", "MAG322", "MAG322w1", "MAG322w2", "MAG323", "MAG324", "MAG324C", "MAG324w2", "MAG325", "MAG349", "MAG350", "MAG351", "MAG352", "MAG420", "MAG420w1", "MAG420w2", "MAG422", "MAG422A", "MAG422Aw1", "MAG424", "MAG424w1", "MAG424w2", "MAG424w3", "MAG424A", "MAG424Aw3", "MAG425", "MAG425A", "AuraHD", "AuraHD0", "AuraHD1", "AuraHD2", "AuraHD3", "AuraHD4", "AuraHD5", "AuraHD6", "AuraHD7", "AuraHD8", "AuraHD9", "WR320", "IM2100", "IM2100w1", "IM2100V", "IM2100VI", "IM2101", "IM2101V", "IM2101VI", "IM2101VO", "IM2101w2", "IM2102", "IM4410", "IM4410w3", "IM4411", "IM4411w1", "IM4412", "IM4414", "IM4414w1", "IP_STB_HD");
 
@@ -41,7 +42,7 @@ if (isset($_GET["panel_version"])) {
 
 if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rArray = getSettings();
-    foreach (array("disallow_empty_user_agents", "persistent_connections", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "new_sorting_bouquet", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "use_mdomain_in_lists", "hash_lb", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup", "debug_show_errors") as $rSetting) {
+    foreach (array("kill_rogue_ffmpeg", "ignore_keyframes", "ffmpeg_warnings", "ondemand_balance_equal", "on_demand_failure_exit", "on_demand_instant_off", "restrict_playlists", "encrypt_playlist_restreamer", "encrypt_playlist", "encrypt_hls", "disable_ts_allow_restream", "disable_ts", "disable_hls", "disable_hls_allow_restream", "disallow_empty_user_agents", "persistent_connections", "monitor_connection_status", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "new_sorting_bouquet", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "use_mdomain_in_lists", "hash_lb", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup", "debug_show_errors") as $rSetting) {
         if (isset($_POST[$rSetting])) {
             $rArray[$rSetting] = 1;
             unset($_POST[$rSetting]);
@@ -512,6 +513,19 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 </option>
                                                                             <?php } ?>
                                                                         </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="message_of_day"><?= $_["message_of_the_day"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["message_to_display_api"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-8">
+                                                                        <input type="text" class="form-control"
+                                                                            id="message_of_day" name="message_of_day"
+                                                                            value="<?= htmlspecialchars($rSettings["message_of_day"]) ?>">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -992,6 +1006,60 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="allowed_ips_admin"><?= $_["admin_streaming_ips"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["allowed_ip_to_access"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-8">
+                                                                        <input type="text" class="form-control"
+                                                                            id="allowed_ips_admin" name="allowed_ips_admin"
+                                                                            value="<?= htmlspecialchars($rSettings["allowed_ips_admin"]) ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="api_ips"><?= $_["api_ips"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["allowed_ip_to_access_api"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-8">
+                                                                        <input type="text" class="form-control" id="api_ips"
+                                                                            name="api_ips"
+                                                                            value="<?= htmlspecialchars($rSettings["api_ips"]) ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="save_closed_connection"><?= $_["save_connection_logs"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["save_closed_connection_database"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="save_closed_connection"
+                                                                            id="save_closed_connection" type="checkbox" <?php if ($rSettings["save_closed_connection"] == 1) {
+                                                                                                                            echo "checked ";
+                                                                                                                        } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="client_logs_save"><?= $_["save_client_logs"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["save_client_logs_to_database"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="client_logs_save" id="client_logs_save"
+                                                                            type="checkbox" <?php if ($rSettings["client_logs_save"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <ul class="list-inline wizard mb-0">
@@ -1192,18 +1260,135 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="tab-pane" id="streaming">
                                                         <div class="row">
                                                             <div class="col-12">
+                                                                </br>
+                                                                <h5 class="card-title mb-4">Preferences</h5>
+                                                                </br>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="user_auto_kick_hours"><?= $_["auto_kick_users"] ?>
+                                                                        for="enable_isp_lock"><?= $_["enable_isp_lock1"] ?>
                                                                         <i data-toggle="tooltip" data-placement="top"
                                                                             title=""
-                                                                            data-original-title="<?= $_["automatically_kick_users"] ?> class="
-                                                                            mdi mdi-information"></i></label>
+                                                                            data-original-title="<?= $_["enable_isp_lock_msg"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input type="text" class="form-control"
-                                                                            id="user_auto_kick_hours"
-                                                                            name="user_auto_kick_hours"
-                                                                            value="<?= htmlspecialchars($rSettings["user_auto_kick_hours"]) ?>">
+                                                                        <input name="enable_isp_lock" id="enable_isp_lock"
+                                                                            type="checkbox" <?php if ($rSettings["enable_isp_lock"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="block_svp"><?= $_["block_svp"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["block_svp_desc"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="block_svp" id="block_svp"
+                                                                            type="checkbox" <?php if ($rSettings["block_svp"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="disable_ts"><?= $_["disable_ts"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_disable_ts"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="disable_ts" id="disable_ts"
+                                                                            type="checkbox" <?php if ($rSettings["disable_ts"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="disable_ts_allow_restream"><?= $_["disable_ts_allow_restream"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_disable_ts_allow_restream"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="disable_ts_allow_restream" id="disable_ts_allow_restream"
+                                                                            type="checkbox" <?php if ($rSettings["disable_ts_allow_restream"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="disable_hls"><?= $_["disable_hls"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_disable_hls"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="disable_hls" id="disable_hls"
+                                                                            type="checkbox" <?php if ($rSettings["disable_hls"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="disable_hls_allow_restream"><?= $_["disable_hls_allow_restream"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_disable_hls_allow_restream"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="disable_hls_allow_restream" id="disable_hls_allow_restream"
+                                                                            type="checkbox" <?php if ($rSettings["disable_disable_hls_allow_restreamts_allow_restream"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="case_sensitive_line"><?= $_["case_sensitive_line"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_case_sensitive_line"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="case_sensitive_line" id="case_sensitive_line"
+                                                                            type="checkbox" <?php if ($rSettings["case_sensitive_line"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="county_override_1st"><?= $_["override_country_with_first"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["override_country_with_connected"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="county_override_1st"
+                                                                            id="county_override_1st" type="checkbox"
+                                                                            <?php if ($rSettings["county_override_1st"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="encrypt_hls"><?= $_["encrypt_hls"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_encrypt_hls"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="encrypt_hls"
+                                                                            id="encrypt_hls" type="checkbox" <?php if ($rSettings["encrypt_hls"] == 1) {
+                                                                                                                    echo "checked ";
+                                                                                                                } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="disallow_empty_user_agents"><?= $_["disallow_empty_ua"] ?>
@@ -1216,6 +1401,102 @@ if ($rSettings["sidebar"]) { ?>
                                                                             id="disallow_empty_user_agents" type="checkbox" <?php if ($rSettings["disallow_empty_user_agents"] == 1) {
                                                                                                                                 echo "checked ";
                                                                                                                             } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="vod_bitrate_plus">VOD Download Speed <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="Specify the bitrate here in kbps. Enter number only. 2000 kB/s = 2 MB/s."
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="vod_bitrate_plus" name="vod_bitrate_plus"
+                                                                            value="<?= htmlspecialchars($rSettings["vod_bitrate_plus"]) ?>">
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="vod_limit_perc"><?= $_["vod_limit_perc"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_vod_limit_perc"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="vod_limit_perc" name="vod_limit_perc"
+                                                                            value="<?= htmlspecialchars($rSettings["vod_limit_perc"]) ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="user_auto_kick_hours"><?= $_["auto_kick_users"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["automatically_kick_users"] ?> "
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="user_auto_kick_hours"
+                                                                            name="user_auto_kick_hours"
+                                                                            value="<?= htmlspecialchars($rSettings["user_auto_kick_hours"]) ?>">
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="use_mdomain_in_lists"><?= $_["use_domain_in_lists"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["use_domaine_name"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="use_mdomain_in_lists"
+                                                                            id="use_mdomain_in_lists" type="checkbox"
+                                                                            <?php if ($rSettings["use_mdomain_in_lists"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="encrypt_playlist"><?= $_["encrypt_playlist"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_encrypt_playlist"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="encrypt_playlist" id="encrypt_playlist"
+                                                                            type="checkbox" <?php if ($rSettings["encrypt_playlist"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="encrypt_playlist_restreamer"><?= $_["encrypt_playlist_restreamer"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_encrypt_playlist_restreamer"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="encrypt_playlist_restreamer"
+                                                                            id="encrypt_playlist_restreamer" type="checkbox"
+                                                                            <?php if ($rSettings["encrypt_playlist_restreamer"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="restrict_playlists"><?= $_["restrict_playlists"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_restrict_playlists"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="restrict_playlists" id="restrict_playlists"
+                                                                            type="checkbox" <?php if ($rSettings["restrict_playlists"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1246,22 +1527,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="split_clients"><?= $_["split_clients"] ?></label>
-                                                                    <div class="col-md-2">
-                                                                        <select name="split_clients" id="split_clients"
-                                                                            class="form-control" data-toggle="select2">
-                                                                            <option<?php if ($rSettings["split_clients"] == "equal") {
-                                                                                        echo " selected";
-                                                                                    } ?> value="equal">
-                                                                                <?= $_["equally"] ?></option>
-                                                                                <option<?php if ($rSettings["split_clients"] == "load") {
-                                                                                            echo " selected";
-                                                                                        } ?> value="load">
-                                                                                    <?= $_["load"] ?></option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="split_by"><?= $_["split_by"] ?></label>
+                                                                        for="split_by"><?= $_["split_by"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_split_by"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <select name="split_by" id="split_by"
                                                                             class="form-control" data-toggle="select2">
@@ -1297,15 +1567,231 @@ if ($rSettings["sidebar"]) { ?>
                                                                                     <?= $_["manual"] ?></option>
                                                                         </select>
                                                                     </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="new_sorting_bouquet"><?= $_["new_sorting_bouquet"] ?></label>
+                                                                        for="use_buffer"><?= $_["use_nginx_buffer"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["proxy_buffering"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="new_sorting_bouquet"
-                                                                            id="new_sorting_bouquet" type="checkbox"
-                                                                            <?php if ($rSettings["new_sorting_bouquet"] == 1) {
+                                                                        <input name="use_buffer" id="use_buffer"
+                                                                            type="checkbox" <?php if ($rSettings["use_buffer"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="show_isps"><?= $_["enable_isps"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["grab_isp_information"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="show_isps" id="show_isps"
+                                                                            type="checkbox" <?php if ($rSettings["show_isps"] == 1) {
+                                                                                                echo "checked ";
+                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="online_capacity_interval"><?= $_["online_capacity_interval"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["interval_at_which_to_check"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="online_capacity_interval"
+                                                                            name="online_capacity_interval"
+                                                                            value="<?= htmlspecialchars($rSettings["online_capacity_interval"]) ?>">
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="monitor_connection_status"><?= $_["monitor_connection_status"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_monitor_connection_status"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="monitor_connection_status"
+                                                                            id="monitor_connection_status" type="checkbox" <?php if ($rSettings["monitor_connection_status"] == 1) {
+                                                                                                                                echo "checked ";
+                                                                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="kill_rogue_ffmpeg"><?= $_["kill_rogue_ffmpeg"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_kill_rogue_ffmpeg"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="kill_rogue_ffmpeg"
+                                                                            id="kill_rogue_ffmpeg" type="checkbox" <?php if ($rSettings["kill_rogue_ffmpeg"] == 1) {
+                                                                                                                        echo "checked ";
+                                                                                                                    } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="create_expiration"><?= $_["create_expiration"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_create_expiration"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="create_expiration"
+                                                                            name="create_expiration"
+                                                                            value="<?= htmlspecialchars($rSettings["create_expiration"]) ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="read_buffer_size"><?= $_["read_buffer_size"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_read_buffer_size"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="read_buffer_size"
+                                                                            name="read_buffer_size"
+                                                                            value="<?= htmlspecialchars($rSettings["read_buffer_size"]) ?>">
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="stop_failures"><?= $_["stop_failures"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_stop_failures"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="stop_failures"
+                                                                            name="stop_failures"
+                                                                            value="<?= htmlspecialchars($rSettings["stop_failures"]) ?>">
+                                                                    </div>
+                                                                </div>
+                                                                </br>
+                                                                <h5 class="card-title mb-4">On-Demand Settings(not working)</h5>
+                                                                </br>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="on_demand_instant_off"><?= $_["on_demand_instant_off"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_on_demand_instant_off"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="on_demand_instant_off"
+                                                                            id="on_demand_instant_off" type="checkbox"
+                                                                            <?php if ($rSettings["on_demand_instant_off"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="on_demand_failure_exit"><?= $_["on_demand_failure_exit"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_on_demand_failure_exit"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="on_demand_failure_exit"
+                                                                            id="on_demand_failure_exit" type="checkbox"
+                                                                            <?php if ($rSettings["on_demand_failure_exit"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="on_demand_wait_time"><?= $_["on_demand_wait_time"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_on_demand_wait_time"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="on_demand_wait_time"
+                                                                            name="on_demand_wait_time"
+                                                                            value="<?= htmlspecialchars($rSettings["on_demand_wait_time"]) ?>">
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="ondemand_balance_equal"><?= $_["ondemand_balance_equal"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_ondemand_balance_equal"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="ondemand_balance_equal"
+                                                                            id="ondemand_balance_equal" type="checkbox"
+                                                                            <?php if ($rSettings["ondemand_balance_equal"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                </br>
+                                                                <h5 class="card-title mb-4">Segment Settings</h5>
+                                                                </br>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="seg_time"><?= $_["seg_time"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_seg_time"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="seg_time"
+                                                                            name="seg_time"
+                                                                            value="<?= htmlspecialchars($rSettings["seg_time"]) ?>">
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="seg_list_size"><?= $_["seg_list_size"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_seg_list_size"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="seg_list_size"
+                                                                            name="seg_list_size"
+                                                                            value="<?= htmlspecialchars($rSettings["seg_list_size"]) ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="seg_delete_threshold"><?= $_["seg_delete_threshold"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_seg_delete_threshold"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="seg_delete_threshold"
+                                                                            name="seg_delete_threshold"
+                                                                            value="<?= htmlspecialchars($rSettings["seg_delete_threshold"]) ?>">
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="segment_wait_time"><?= $_["segment_wait_time"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_segment_wait_time"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="segment_wait_time"
+                                                                            name="segment_wait_time"
+                                                                            value="<?= htmlspecialchars($rSettings["segment_wait_time"]) ?>">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -1335,60 +1821,57 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="persistent_connections"><?= $_["persistent_connections"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["enable_PHP_persistent_connections"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="persistent_connections"
-                                                                            id="persistent_connections" type="checkbox" <?php if ($rSettings["persistent_connections"] == 1) {
-                                                                                                                            echo "checked ";
-                                                                                                                        } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="stream_start_delay"><?= $_["stream_start_delay"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["before_starting_stream"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input type="text" class="form-control"
-                                                                            id="stream_start_delay"
-                                                                            name="stream_start_delay"
-                                                                            value="<?= htmlspecialchars($rSettings["stream_start_delay"]) ?>">
-                                                                    </div>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="online_capacity_interval"><?= $_["online_capacity_interval"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["interval_at_which_to_check"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input type="text" class="form-control"
-                                                                            id="online_capacity_interval"
-                                                                            name="online_capacity_interval"
-                                                                            value="<?= htmlspecialchars($rSettings["online_capacity_interval"]) ?>">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="use_buffer"><?= $_["use_nginx_buffer"] ?> <i
+                                                                        for="segment_type"><?= $_["segment_type"] ?> <i
                                                                             data-toggle="tooltip" data-placement="top"
                                                                             title=""
-                                                                            data-original-title="<?= $_["proxy_buffering"] ?>"
+                                                                            data-original-title="<?= $_["desc_segment_type"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="use_buffer" id="use_buffer"
-                                                                            type="checkbox" <?php if ($rSettings["use_buffer"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                        <select name="segment_type" id="segment_type"
+                                                                            class="form-control" data-toggle="select2">
+                                                                            <option<?php if ($rSettings["segment_type"] == "0") {
+                                                                                        echo " selected";
+                                                                                    } ?> value="0">-f hls</option>
+                                                                                <option<?php if ($rSettings["segment_type"] == "1") {
+                                                                                            echo " selected";
+                                                                                        } ?> value="1">-f segment</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="ffmpeg_warnings"><?= $_["ffmpeg_warnings"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_ffmpeg_warnings"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="ffmpeg_warnings"
+                                                                            id="ffmpeg_warnings" type="checkbox"
+                                                                            <?php if ($rSettings["ffmpeg_warnings"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="ignore_keyframes"><?= $_["ignore_keyframes"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_ignore_keyframes"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input name="ignore_keyframes"
+                                                                            id="ignore_keyframes" type="checkbox"
+                                                                            <?php if ($rSettings["ignore_keyframes"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
+                                                                            class="js-switch" data-color="#039cfd" />
+                                                                    </div>
+                                                                </div>
+                                                                </br>
+                                                                <h5 class="card-title mb-4">Stream Monitor Settings</h5>
+                                                                </br>
+                                                                <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="audio_restart_loss"><?= $_["restart_on_audio_loss"] ?>
                                                                         <i data-toggle="tooltip" data-placement="top"
@@ -1403,161 +1886,6 @@ if ($rSettings["sidebar"]) { ?>
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="save_closed_connection"><?= $_["save_connection_logs"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["save_closed_connection_database"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="save_closed_connection"
-                                                                            id="save_closed_connection" type="checkbox" <?php if ($rSettings["save_closed_connection"] == 1) {
-                                                                                                                            echo "checked ";
-                                                                                                                        } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="client_logs_save"><?= $_["save_client_logs"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["save_client_logs_to_database"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="client_logs_save" id="client_logs_save"
-                                                                            type="checkbox" <?php if ($rSettings["client_logs_save"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="case_sensitive_line"><?= $_["case_sensitive_details"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["case_sensitive"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="case_sensitive_line"
-                                                                            id="case_sensitive_line" type="checkbox"
-                                                                            <?php if ($rSettings["case_sensitive_line"] == 1) {
-                                                                                echo "checked ";
-                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="county_override_1st"><?= $_["override_country_with_first"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["override_country_with_connected"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="county_override_1st"
-                                                                            id="county_override_1st" type="checkbox"
-                                                                            <?php if ($rSettings["county_override_1st"] == 1) {
-                                                                                echo "checked ";
-                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="block_svp"><?= $_["block_svp"] ?> <i
-                                                                            data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["block_svp_desc"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="block_svp" id="block_svp"
-                                                                            type="checkbox" <?php if ($rSettings["block_svp"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="use_mdomain_in_lists"><?= $_["use_domain_in_lists"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["use_domaine_name"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="use_mdomain_in_lists"
-                                                                            id="use_mdomain_in_lists" type="checkbox"
-                                                                            <?php if ($rSettings["use_mdomain_in_lists"] == 1) {
-                                                                                echo "checked ";
-                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="hash_lb"><?= $_["hash_load_balancers"] ?> <i
-                                                                            data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["any_client_is_being_redirected"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="hash_lb" id="hash_lb" type="checkbox" <?php if ($rSettings["hash_lb"] == 1) {
-                                                                                                                                echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="show_isps"><?= $_["enable_isps"] ?> <i
-                                                                            data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["grab_isp_information"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="show_isps" id="show_isps"
-                                                                            type="checkbox" <?php if ($rSettings["show_isps"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="enable_isp_lock"><?= $_["enable_isp_lock1"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["enable_isp_lock_msg"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="enable_isp_lock" id="enable_isp_lock"
-                                                                            type="checkbox" <?php if ($rSettings["enable_isp_lock"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="vod_bitrate_plus">VOD Download Speed <i
-                                                                            data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="Specify the bitrate here in kbps. Enter number only. 2000 kB/s = 2 MB/s."
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input type="text" class="form-control"
-                                                                            id="vod_bitrate_plus" name="vod_bitrate_plus"
-                                                                            value="<?= htmlspecialchars($rSettings["vod_bitrate_plus"]) ?>">
-                                                                    </div>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="vod_limit_at">VOD Download Limit <i
-                                                                            data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="Specify the percentage. Enter number only. Enter 0 to disable."
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input type="text" class="form-control"
-                                                                            id="vod_limit_at" name="vod_limit_at"
-                                                                            value="<?= htmlspecialchars($rSettings["vod_limit_at"]) ?>">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="priority_backup">Priority Backup Stream <i
                                                                             data-toggle="tooltip" data-placement="top"
@@ -1572,6 +1900,65 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="probe_extra_wait"><?= $_["probe_extra_wait"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_probe_extra_wait"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="probe_extra_wait" name="probe_extra_wait"
+                                                                            value="<?= htmlspecialchars($rSettings["probe_extra_wait"]) ?>">
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="stream_fail_sleep"><?= $_["stream_fail_sleep"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_stream_fail_sleep"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="stream_fail_sleep" name="stream_fail_sleep"
+                                                                            value="<?= htmlspecialchars($rSettings["stream_fail_sleep"]) ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="fps_delay"><?= $_["fps_delay"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_fps_delay"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <input type="text" class="form-control"
+                                                                            id="fps_delay" name="fps_delay"
+                                                                            value="<?= htmlspecialchars($rSettings["fps_delay"]) ?>">
+                                                                    </div>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="fps_check_type"><?= $_["fps_check_type"] ?> <i
+                                                                            data-toggle="tooltip" data-placement="top"
+                                                                            title=""
+                                                                            data-original-title="<?= $_["desc_fps_check_type"] ?>"
+                                                                            class="mdi mdi-information"></i></label>
+                                                                    <div class="col-md-2">
+                                                                        <select name="fps_check_type" id="fps_check_type"
+                                                                            class="form-control" data-toggle="select2">
+                                                                            <option<?php if ($rSettings["fps_check_type"] == "0") {
+                                                                                        echo " selected";
+                                                                                    } ?> value="0">
+                                                                                <?= $_["fps_check_type_0"] ?></option>
+                                                                                <option<?php if ($rSettings["fps_check_type"] == "1") {
+                                                                                            echo " selected";
+                                                                                        } ?> value="1">
+                                                                                    <?= $_["fps_check_type_1"] ?></option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                </br>
+                                                                <h5 class="card-title mb-4">Off Air Videos</h5>
+                                                                </br>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="show_not_on_air_video"><?= $_["stream_down_video"] ?>
@@ -1637,43 +2024,52 @@ if ($rSettings["sidebar"]) { ?>
                                                                             value="<?= htmlspecialchars($rSettings["expired_video_path"]) ?>">
                                                                     </div>
                                                                 </div>
+                                                                </br>
+                                                                <h5 class="card-title mb-4">Allowed Countries <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["desc_allow_countries"] ?>"
+                                                                        class="mdi mdi-information"></i></h5>
+                                                                </br>
+                                                                <div class="col-md-12">
+                                                                    <select name="allow_countries[]"
+                                                                        id="allow_countries"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>...">
+                                                                        <?php foreach ($rGeoCountries as $rValue => $rText) { ?>
+                                                                            <option <?php if (in_array($rValue, json_decode($rSettings["allow_countries"], True))) {
+                                                                                        echo "selected ";
+                                                                                    } ?>value="<?= $rValue ?>">
+                                                                                <?= $rText ?></option>
+                                                                        <?php } ?>
+                                                                    </select>
+                                                                </div>
+                                                                </br>
+                                                                <h5 class="card-title mb-4">Other</h5>
+                                                                </br>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="allowed_ips_admin"><?= $_["admin_streaming_ips"] ?>
+                                                                        for="stream_start_delay"><?= $_["stream_start_delay"] ?>
                                                                         <i data-toggle="tooltip" data-placement="top"
                                                                             title=""
-                                                                            data-original-title="<?= $_["allowed_ip_to_access"] ?>"
+                                                                            data-original-title="<?= $_["before_starting_stream"] ?>"
                                                                             class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-8">
+                                                                    <div class="col-md-2">
                                                                         <input type="text" class="form-control"
-                                                                            id="allowed_ips_admin" name="allowed_ips_admin"
-                                                                            value="<?= htmlspecialchars($rSettings["allowed_ips_admin"]) ?>">
+                                                                            id="stream_start_delay"
+                                                                            name="stream_start_delay"
+                                                                            value="<?= htmlspecialchars($rSettings["stream_start_delay"]) ?>">
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="api_ips"><?= $_["api_ips"] ?> <i
+                                                                        for="vod_limit_at">VOD Download Limit <i
                                                                             data-toggle="tooltip" data-placement="top"
                                                                             title=""
-                                                                            data-original-title="<?= $_["allowed_ip_to_access_api"] ?>"
+                                                                            data-original-title="Specify the percentage. Enter number only. Enter 0 to disable."
                                                                             class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-8">
-                                                                        <input type="text" class="form-control" id="api_ips"
-                                                                            name="api_ips"
-                                                                            value="<?= htmlspecialchars($rSettings["api_ips"]) ?>">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="message_of_day"><?= $_["message_of_the_day"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["message_to_display_api"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-8">
+                                                                    <div class="col-md-2">
                                                                         <input type="text" class="form-control"
-                                                                            id="message_of_day" name="message_of_day"
-                                                                            value="<?= htmlspecialchars($rSettings["message_of_day"]) ?>">
+                                                                            id="vod_limit_at" name="vod_limit_at"
+                                                                            value="<?= htmlspecialchars($rSettings["vod_limit_at"]) ?>">
                                                                     </div>
                                                                 </div>
                                                             </div> <!-- end col -->

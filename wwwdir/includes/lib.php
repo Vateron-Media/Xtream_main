@@ -11,6 +11,7 @@ class ipTV_lib {
     public static $blockedISP = array();
     public static $blockedIPs = array();
     public static $categories = array();
+    public static $cached = null;
 
     public static function init() {
         global $_INFO;
@@ -31,6 +32,7 @@ class ipTV_lib {
         $input = @self::parseIncomingRecursively($_GET, array());
         self::$request = @self::parseIncomingRecursively($_POST, $input);
         self::$settings = self::getSettings();
+        self::$cached = ENABLE_CACHE;
         date_default_timezone_set(self::$settings["default_timezone"]);
         self::$StreamingServers = self::getServers();
         self::$blockedISP = self::getBlockedISP();
@@ -65,12 +67,9 @@ class ipTV_lib {
     public static function calculateSegNumbers() {
         $segments_settings = array();
 
-        #seg_type = 0  // -f hls
-        #seg_type = 1  // -f segment
-
-        $segments_settings['seg_type'] = 1;
-        $segments_settings["seg_time"] = 10;
-        $segments_settings["seg_list_size"] = 6;
+        $segments_settings['seg_type'] = self::$settings["seg_type"];
+        $segments_settings["seg_time"] = intval(self::$settings["seg_time"]);
+        $segments_settings["seg_list_size"] = intval(self::$settings["seg_list_size"]);
         return $segments_settings;
     }
     public static function GetIspAddon($rForce = false) {

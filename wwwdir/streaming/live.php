@@ -7,7 +7,7 @@ unset(ipTV_lib::$settings["watchdog_data"]);
 unset(ipTV_lib::$settings["server_hardware"]);
 header("Access-Control-Allow-Origin: *");
 
-$rCreateExpiration = CREATE_EXPIRATION ?: 5;
+$rCreateExpiration = ipTV_lib::$settings["create_expiration"] ?: 5;
 
 $rIP = ipTV_streaming::getUserIP();
 $rUserAgent = empty($_SERVER["HTTP_USER_AGENT"]) ? "" : htmlentities(trim($_SERVER["HTTP_USER_AGENT"]));
@@ -90,7 +90,7 @@ if ($rChannelInfo) {
         if (!file_exists($playlist)) {
             $rFirstTS = STREAMS_PATH . $streamID . "_0.ts";
             $rFP = NULL;
-            while ($rRetries < (int) ON_DEMAND_WAIT_TIME * 10) {
+            while ($rRetries < (int) ipTV_lib::$settings["on_demand_wait_time"] * 10) {
                 if (file_exists($rFirstTS) && !$rFP) {
                     $rFP = fopen($rFirstTS, "r");
                 }
@@ -107,11 +107,11 @@ if ($rChannelInfo) {
             }
         }
     } else {
-        for ($rFirstTS = STREAMS_PATH . $streamID . "_.m3u8"; !file_exists($playlist) && !file_exists($rFirstTS) && $rRetries < (int) ON_DEMAND_WAIT_TIME * 10; $rRetries++) {
+        for ($rFirstTS = STREAMS_PATH . $streamID . "_.m3u8"; !file_exists($playlist) && !file_exists($rFirstTS) && $rRetries < (int) ipTV_lib::$settings["on_demand_wait_time"] * 10; $rRetries++) {
             usleep(100000);
         }
     }
-    if ($rRetries == (int) ON_DEMAND_WAIT_TIME * 10) {
+    if ($rRetries == (int) ipTV_lib::$settings["on_demand_wait_time"] * 10) {
         generateError("WAIT_TIME_EXPIRED");
     }
     if (!$rChannelInfo["pid"]) {
@@ -214,7 +214,7 @@ if ($rChannelInfo) {
             $ipTV_db->close_mysql();
 
             $closeCon = true;
-            if (MONITOR_CONNECTION_STATUS) {
+            if (ipTV_lib::$settings["monitor_connection_status"]) {
                 ob_implicit_flush(true);
                 while (ob_get_level()) {
                     ob_end_clean();
@@ -276,8 +276,8 @@ if ($rChannelInfo) {
             $rFails = 0;
             $rTotalFails = ipTV_lib::$SegmentsSettings["seg_time"] * 2;
 
-            if ($rTotalFails < (int) SEGMENT_WAIT_TIME ?: 20) {
-                $rTotalFails = (int) SEGMENT_WAIT_TIME ?: 20;
+            if ($rTotalFails < (int) ipTV_lib::$settings["segment_wait_time"] ?: 20) {
+                $rTotalFails = (int) ipTV_lib::$settings["segment_wait_time"] ?: 20;
             }
             $rMonitorCheck = $rLastCheck = time();
             while (true) {
@@ -347,7 +347,7 @@ if ($rChannelInfo) {
                     fclose($rFP);
                     $rFails = 0;
                     $rCurrent++;
-                    if (MONITOR_CONNECTION_STATUS && 5 < time() - $rMonitorCheck) {
+                    if (ipTV_lib::$settings["monitor_connection_status"] && 5 < time() - $rMonitorCheck) {
                         if (connection_status() == CONNECTION_NORMAL) {
                             $rMonitorCheck = time();
                         } else {
