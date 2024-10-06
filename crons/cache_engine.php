@@ -1,18 +1,18 @@
 <?php
 if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc) {
-        $PID = getmypid();
+        $rPID = getmypid();
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 0);
-        $rSplit = 10000;
-        $rThreadCount = 10;
+        $rSplit = 1000;
+        $rThreadCount = (ipTV_lib::$settings['cache_thread_count'] ?: 10);
         ipTV_lib::$settings = ipTV_lib::getSettings(true);
         $rGroupStart = $rGroupMax = $rType = null;
         if (1 < count($argv)) {
             $rType = $argv[1];
-            if ($rType == 'streams_update' || $rType == 'lines_update') {
+            if ($rType == 'streams_update' || $rType == 'users_update') {
                 $rUpdateIDs = array_map('intval', explode(',', $argv[2]));
             } else {
                 if (count($argv) > 2) {
@@ -20,8 +20,12 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     $rGroupMax = intval($argv[3]);
                 }
             }
+            if ($rType == 'force') {
+                echo 'Forcing cache regen...' . "\n";
+                ipTV_lib::$settings['cache_changes'] = false;
+            }
         } else {
-            shell_exec("kill -9 \$(ps aux | grep 'cache_engine' | grep -v grep | grep -v " . $PID . " | awk '{print \$2}')");
+            shell_exec("kill -9 \$(ps aux | grep 'cache_engine' | grep -v grep | grep -v " . $rPID . " | awk '{print \$2}')");
         }
         loadCron($rType, $rGroupStart, $rGroupMax);
     } else {
@@ -172,176 +176,213 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
     global $rUpdateIDs;
     global $rThreadCount;
     $rStartTime = time();
-    if (isset($rUpdateIDs)) {
-        switch ($rType) {
-            case 'lines':
-                generateLines($rGroupStart, $rGroupMax);
-                break;
-            case 'lines_update':
-                generateLines(null, null, $rUpdateIDs);
-                break;
-            case 'series':
-                generateSeries($rGroupStart, $rGroupMax);
-                break;
-            case 'streams':
-                generateStreams($rGroupStart, $rGroupMax);
-                break;
-            case 'streams_update':
-                generateStreams(null, null, $rUpdateIDs);
-                break;
-            case 'groups':
-                generateGroups();
-                break;
-            case 'lines_per_ip':
-                generateLinesPerIP();
-                break;
-            case 'theft_detection':
-                generateTheftDetection();
-                break;
-            default:
-                $cacheInitTime = $rSeriesCategories = array();
-                $ipTV_db->query('SELECT `series_id`, MAX(`streams`.`added`) AS `last_modified` FROM `streams_episodes` LEFT JOIN `streams` ON `streams`.`id` = `streams_episodes`.`stream_id` GROUP BY `series_id`;');
-                foreach ($ipTV_db->get_rows() as $rRow) {
-                    $cacheInitTime[$rRow['series_id']] = $rRow['last_modified'];
-                }
-                $ipTV_db->query('SELECT * FROM `streams_series`;');
-                if ($ipTV_db->result) {
-                    if ($ipTV_db->num_rows() > 0) {
-                        foreach ($ipTV_db->get_rows() as $rRow) {
-                            if (isset($cacheInitTime[$rRow['id']])) {
-                                $rRow['last_modified'] = $cacheInitTime[$rRow['id']];
+    if (ipTV_lib::isRunning()) {
+        if (ipTV_lib::$cached || isset($rUpdateIDs)) {
+            switch ($rType) {
+                case 'users':
+                    generateUsers($rGroupStart, $rGroupMax);
+                    break;
+                case 'users_update':
+                    generateUsers(null, null, $rUpdateIDs);
+                    break;
+                case 'series':
+                    generateSeries($rGroupStart, $rGroupMax);
+                    break;
+                case 'streams':
+                    generateStreams($rGroupStart, $rGroupMax);
+                    break;
+                case 'streams_update':
+                    generateStreams(null, null, $rUpdateIDs);
+                    break;
+                case 'groups':
+                    generateGroups();
+                    break;
+                case 'users_per_ip':
+                    generateUsersPerIP();
+                    break;
+                case 'theft_detection':
+                    generateTheftDetection();
+                    break;
+                default:
+                    // $cacheInitTime = $rSeriesCategories = array();
+                    // $ipTV_db->query('SELECT `series_id`, MAX(`streams`.`added`) AS `last_modified` FROM `streams_episodes` LEFT JOIN `streams` ON `streams`.`id` = `streams_episodes`.`stream_id` GROUP BY `series_id`;');
+                    // foreach ($ipTV_db->get_rows() as $rRow) {
+                    //     $cacheInitTime[$rRow['series_id']] = $rRow['last_modified'];
+                    // }
+                    // $ipTV_db->query('SELECT * FROM `streams_series`;');
+                    // if ($ipTV_db->result) {
+                    //     if ($ipTV_db->num_rows() > 0) {
+                    //         foreach ($ipTV_db->get_rows() as $rRow) {
+                    //             if (isset($cacheInitTime[$rRow['id']])) {
+                    //                 $rRow['last_modified'] = $cacheInitTime[$rRow['id']];
+                    //             }
+                    //             $rSeriesCategories[$rRow['id']] = json_decode($rRow['category_id'], true);
+                    //             file_put_contents(SERIES_TMP_PATH . 'series_' . $rRow['id'], serialize($rRow));
+                    //         }
+                    //     }
+                    // }
+                    // file_put_contents(SERIES_TMP_PATH . 'series_categories', serialize($rSeriesCategories));
+                    $rDelete = array('streams' => array(), 'users_i' => array(), 'users_c' => array(), 'users_t' => array());
+                    $cacheDataKey = array();
+                    if (ipTV_lib::$settings['cache_changes']) {
+                        $rChanges = getChangedUsers();
+                        $rDelete['users_i'] = $rChanges['delete_i'];
+                        $rDelete['users_c'] = $rChanges['delete_c'];
+                        $rDelete['users_t'] = $rChanges['delete_t'];
+                        if (count($rChanges['changes']) > 0) {
+                            foreach (array_chunk($rChanges['changes'], $rSplit) as $rChunk) {
+                                $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "users_update" "' . implode(',', $rChunk) . '"';
                             }
-                            $rSeriesCategories[$rRow['id']] = json_decode($rRow['category_id'], true);
-                            file_put_contents(SERIES_TMP_PATH . 'series_' . $rRow['id'], serialize($rRow));
+                        }
+                    } else {
+                        $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `users`;');
+                        $rUsersCount = $ipTV_db->get_row()['count'];
+
+                        // Calculate the number of iterations needed
+                        $numIterations = ceil($rUsersCount / $rSplit);
+                        for ($i = 0; $i < $numIterations; $i++) {
+                            $rStart = $i * $rSplit;
+                            $rMax = min($rSplit, $rUsersCount - $rStart); // Calculate max for the last iteration
+                            $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "users" ' . $rStart . ' ' . $rMax;
                         }
                     }
-                }
-                file_put_contents(SERIES_TMP_PATH . 'series_categories', serialize($rSeriesCategories));
-                $rDelete = array('streams' => array(), 'lines_i' => array(), 'lines_c' => array(), 'lines_t' => array());
-                $cacheDataKey = array();
-                $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `users`;');
-                $rLinesCount = $ipTV_db->get_row()['count'];
-                $cacheValidityCheck = range(0, $rLinesCount, $rSplit);
-                if (!$cacheValidityCheck) {
-                    $cacheValidityCheck = array(0);
-                }
-                foreach ($cacheValidityCheck as $rStart) {
-                    $rMax = $rSplit;
-                    if ($rLinesCount < $rStart + $rMax) {
-                        $rMax = $rLinesCount - $rStart;
-                    }
-                    $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "lines" ' . $rStart . ' ' . $rMax;
-                }
-                $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `streams_episodes` WHERE `stream_id` IN (SELECT `id` FROM `streams` WHERE `type` = 5);');
-                $cacheRetrieveMethod = $ipTV_db->get_row()['count'];
-                $cacheStoreMethod = range(0, $cacheRetrieveMethod, $rSplit);
-                if (!$cacheStoreMethod) {
-                    $cacheStoreMethod = array(0);
-                }
-                foreach ($cacheStoreMethod as $rStart) {
-                    $rMax = $rSplit;
-                    if ($cacheRetrieveMethod < $rStart + $rMax) {
-                        $rMax = $cacheRetrieveMethod - $rStart;
-                    }
-                    $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "series" ' . $rStart . ' ' . $rMax;
-                }
-
-                $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `streams`;');
-                $cacheDeleteMethod = $ipTV_db->get_row()['count'];
-                $cacheCleanupTrigger = range(0, $cacheDeleteMethod, $rSplit);
-                if (!$cacheCleanupTrigger) {
-                    $cacheCleanupTrigger = array(0);
-                }
-                foreach ($cacheCleanupTrigger as $rStart) {
-                    $rMax = $rSplit;
-                    if ($cacheDeleteMethod < $rStart + $rMax) {
-                        $rMax = $cacheDeleteMethod - $rStart;
-                    }
-                    $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "streams" ' . $rStart . ' ' . $rMax;
-                }
-
-                $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "groups"';
-                $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "lines_per_ip"';
-                $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "theft_detection"';
-                $cacheMetadataKey = new Multithread($cacheDataKey, $rThreadCount);
-                $cacheMetadataKey->run();
-                unset($cacheDataKey);
-                $rSeriesEpisodes = $rSeriesMap = array();
-                foreach ($cacheStoreMethod as $rStart) {
-                    if (file_exists(SERIES_TMP_PATH . 'series_map_' . $rStart)) {
-                        foreach (unserialize(file_get_contents(SERIES_TMP_PATH . 'series_map_' . $rStart)) as $rStreamID => $rSeriesID) {
-                            $rSeriesMap[$rStreamID] = $rSeriesID;
-                        }
-                        unlink(SERIES_TMP_PATH . 'series_map_' . $rStart);
-                    }
-                    if (file_exists(SERIES_TMP_PATH . 'series_episodes_' . $rStart)) {
-                        $rSeasonData = unserialize(file_get_contents(SERIES_TMP_PATH . 'series_episodes_' . $rStart));
-                        foreach (array_keys($rSeasonData) as $rSeriesID) {
-                            if (!isset($rSeriesEpisodes[$rSeriesID])) {
-                                $rSeriesEpisodes[$rSeriesID] = array();
+                    // $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `streams_episodes` WHERE `stream_id` IN (SELECT `id` FROM `streams` WHERE `type` = 5);');
+                    // $cacheRetrieveMethod = $ipTV_db->get_row()['count'];
+                    // $cacheStoreMethod = range(0, $cacheRetrieveMethod, $rSplit);
+                    // if (!$cacheStoreMethod) {
+                    //     $cacheStoreMethod = array(0);
+                    // }
+                    // foreach ($cacheStoreMethod as $rStart) {
+                    //     $rMax = $rSplit;
+                    //     if ($cacheRetrieveMethod >= $rStart + $rMax) {
+                    //     } else {
+                    //         $rMax = $cacheRetrieveMethod - $rStart;
+                    //     }
+                    //     $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "series" ' . $rStart . ' ' . $rMax;
+                    // }
+                    if (ipTV_lib::$settings['cache_changes']) {
+                        $rChanges = getchangedstreams();
+                        $rDelete['streams'] = $rChanges['delete'];
+                        if (count($rChanges['changes']) > 0) {
+                            foreach (array_chunk($rChanges['changes'], $rSplit) as $rChunk) {
+                                $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "streams_update" "' . implode(',', $rChunk) . '"';
                             }
-                            foreach (array_keys($rSeasonData[$rSeriesID]) as $rSeasonNum) {
-                                foreach ($rSeasonData[$rSeriesID][$rSeasonNum] as $rEpisode) {
-                                    $rSeriesEpisodes[$rSeriesID][$rSeasonNum][] = $rEpisode;
+                        }
+                    } else {
+                        $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `streams`;');
+                        $cacheDeleteMethod = $ipTV_db->get_row()['count'];
+
+                        // Calculate the number of iterations needed
+                        $numIterations = ceil($cacheDeleteMethod / $rSplit);
+                        for ($i = 0; $i < $numIterations; $i++) {
+                            $rStart = $i * $rSplit;
+                            $rMax = min($rSplit, $cacheDeleteMethod - $rStart); // Calculate max for the last iteration
+                            $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "streams" ' . $rStart . ' ' . $rMax;
+                        }
+                    }
+                    $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "groups"';
+                    $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "users_per_ip"';
+                    $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "theft_detection"';
+                    $cacheMetadataKey = new Multithread($cacheDataKey, $rThreadCount);
+                    $cacheMetadataKey->run();
+                    unset($cacheDataKey);
+                    // $rSeriesEpisodes = $rSeriesMap = array();
+                    // foreach ($cacheStoreMethod as $rStart) {
+                    //     if (file_exists(SERIES_TMP_PATH . 'series_map_' . $rStart)) {
+                    //         foreach (unserialize(file_get_contents(SERIES_TMP_PATH . 'series_map_' . $rStart)) as $rStreamID => $rSeriesID) {
+                    //             $rSeriesMap[$rStreamID] = $rSeriesID;
+                    //         }
+                    //         unlink(SERIES_TMP_PATH . 'series_map_' . $rStart);
+                    //     }
+                    //     if (file_exists(SERIES_TMP_PATH . 'series_episodes_' . $rStart)) {
+                    //         $rSeasonData = unserialize(file_get_contents(SERIES_TMP_PATH . 'series_episodes_' . $rStart));
+                    //         foreach (array_keys($rSeasonData) as $rSeriesID) {
+                    //             if (!isset($rSeriesEpisodes[$rSeriesID])) {
+                    //                 $rSeriesEpisodes[$rSeriesID] = array();
+                    //             }
+                    //             foreach (array_keys($rSeasonData[$rSeriesID]) as $rSeasonNum) {
+                    //                 foreach ($rSeasonData[$rSeriesID][$rSeasonNum] as $rEpisode) {
+                    //                     $rSeriesEpisodes[$rSeriesID][$rSeasonNum][] = $rEpisode;
+                    //                 }
+                    //             }
+                    //         }
+                    //         unlink(SERIES_TMP_PATH . 'series_episodes_' . $rStart);
+                    //     }
+                    // }
+                    // file_put_contents(SERIES_TMP_PATH . 'series_map', serialize($rSeriesMap));
+                    // foreach ($rSeriesEpisodes as $rSeriesID => $rSeasons) {
+                    //     file_put_contents(SERIES_TMP_PATH . 'episodes_' . $rSeriesID, serialize($rSeasons));
+                    // }
+                    if (ipTV_lib::$settings['cache_changes']) {
+                        foreach ($rDelete['streams'] as $rStreamID) {
+                            @unlink(STREAMS_TMP_PATH . 'stream_' . $rStreamID);
+                        }
+                        foreach ($rDelete['users_i'] as $rUserID) {
+                            @unlink(USER_TMP_PATH . 'user_i_' . $rUserID);
+                        }
+                        foreach ($rDelete['users_c'] as $cacheExpirationTime) {
+                            @unlink(USER_TMP_PATH . 'user_c_' . $cacheExpirationTime);
+                        }
+                        foreach ($rDelete['users_t'] as $rToken) {
+                            @unlink(USER_TMP_PATH . 'user_t_' . $rToken);
+                        }
+                    } else {
+                        foreach (array(STREAMS_TMP_PATH, USER_TMP_PATH, SERIES_TMP_PATH) as $rTmpPath) {
+                            foreach (scandir($rTmpPath) as $rFile) {
+                                if (filemtime($rTmpPath . $rFile) < $rStartTime - 1) {
+                                    if (is_file($rTmpPath . $rFile)) {
+                                        unlink($rTmpPath . $rFile);
+                                    }
                                 }
                             }
                         }
-                        unlink(SERIES_TMP_PATH . 'series_episodes_' . $rStart);
                     }
-                }
-                file_put_contents(SERIES_TMP_PATH . 'series_map', serialize($rSeriesMap));
-                foreach ($rSeriesEpisodes as $rSeriesID => $rSeasons) {
-                    file_put_contents(SERIES_TMP_PATH . 'episodes_' . $rSeriesID, serialize($rSeasons));
-                }
-
-                foreach (array(STREAMS_TMP_PATH, USER_TMP_PATH, SERIES_TMP_PATH) as $rTmpPath) {
-                    foreach (scandir($rTmpPath) as $rFile) {
-                        if (filemtime($rTmpPath . $rFile) < $rStartTime - 1) {
-                            unlink($rTmpPath . $rFile);
-                        }
+                    echo 'Cache updated!' . "\n";
+                    file_put_contents(CACHE_TMP_PATH . 'cache_complete', time());
+                    ipTV_lib::setSettings(["last_cache" => time(), "last_cache_taken" => time() - $rStartTime]);
+                    break;
+            }
+        } else {
+            echo 'Cache is disabled.' . "\n";
+            echo 'Generating group permissions...' . "\n";
+            generateGroups();
+            echo 'Generating users per ip...' . "\n";
+            generateUsersPerIP();
+            echo 'Detecting theft of VOD...' . "\n";
+            generateTheftDetection();
+            echo 'Clearing old data...' . "\n";
+            foreach (array(STREAMS_TMP_PATH, USER_TMP_PATH, SERIES_TMP_PATH) as $rTmpPath) {
+                foreach (scandir($rTmpPath) as $rFile) {
+                    if (is_file($rTmpPath . $rFile)) {
+                        unlink($rTmpPath . $rFile);
                     }
-                }
-
-                echo 'Cache updated!' . "\n";
-                file_put_contents(CACHE_TMP_PATH . 'cache_complete', time());
-                ipTV_lib::setSettings(["last_cache" => time(), "last_cache_taken" => time() - $rStartTime]);
-                break;
-        }
-    } else {
-        echo 'Cache is disabled.' . "\n";
-        echo 'Generating group permissions...' . "\n";
-        generateGroups();
-        echo 'Generating lines per ip...' . "\n";
-        generateLinesPerIP();
-        echo 'Detecting theft of VOD...' . "\n";
-        generateTheftDetection();
-        echo 'Clearing old data...' . "\n";
-        foreach (array(STREAMS_TMP_PATH, USER_TMP_PATH, SERIES_TMP_PATH) as $rTmpPath) {
-            foreach (scandir($rTmpPath) as $rFile) {
-                if (is_file($rTmpPath . $rFile)) {
-                    unlink($rTmpPath . $rFile);
                 }
             }
+            file_put_contents(CACHE_TMP_PATH . 'cache_complete', time());
+            exit();
         }
-        file_put_contents(CACHE_TMP_PATH . 'cache_complete', time());
+    } else {
+        echo 'XtreamCodes not running...' . "\n";
         exit();
     }
 }
-function generateLines($rStart = null, $rCount = null, $cacheLockMechanism = array()) {
+function generateUsers($rStart = null, $rCount = null, $cacheLockMechanism = array()) {
     global $ipTV_db;
     global $rSplit;
     if (is_null($rCount)) {
         $rCount = count($cacheLockMechanism);
     }
     if ($rCount > 0) {
+        $rSteps = [];
         if (!is_null($rStart)) {
-            $rSteps = range($rStart, ($rStart + $rCount) - 1, $rSplit);
-            if (!$rSteps) {
-                $rSteps = array($rStart);
+            $rEnd = $rStart + $rCount - 1;
+            for ($i = $rStart; $i <= $rEnd; $i += $rSplit) {
+                $rSteps[] = $i;
             }
         } else {
-            $rSteps = array(null);
+            $rSteps = [null];
         }
+    
         $rExists = array();
         foreach ($rSteps as $rStep) {
             if (!is_null($rStep)) {
@@ -358,11 +399,11 @@ function generateLines($rStart = null, $rCount = null, $cacheLockMechanism = arr
                 if ($ipTV_db->num_rows() > 0) {
                     foreach ($ipTV_db->get_rows() as $rUserInfo) {
                         $rExists[] = $rUserInfo['id'];
-                        file_put_contents(USER_TMP_PATH . 'line_i_' . $rUserInfo['id'], serialize($rUserInfo));
+                        file_put_contents(USER_TMP_PATH . 'user_i_' . $rUserInfo['id'], serialize($rUserInfo));
                         $rKey = (ipTV_lib::$settings['case_sensitive_line'] ? $rUserInfo['username'] . '_' . $rUserInfo['password'] : strtolower($rUserInfo['username'] . '_' . $rUserInfo['password']));
-                        file_put_contents(USER_TMP_PATH . 'line_c_' . $rKey, $rUserInfo['id']);
+                        file_put_contents(USER_TMP_PATH . 'user_c_' . $rKey, $rUserInfo['id']);
                         if (!empty($rUserInfo['access_token'])) {
-                            file_put_contents(USER_TMP_PATH . 'line_t_' . $rUserInfo['access_token'], $rUserInfo['id']);
+                            file_put_contents(USER_TMP_PATH . 'user_t_' . $rUserInfo['access_token'], $rUserInfo['id']);
                         }
                     }
                 }
@@ -371,8 +412,8 @@ function generateLines($rStart = null, $rCount = null, $cacheLockMechanism = arr
         }
         if (count($cacheLockMechanism) > 0) {
             foreach ($cacheLockMechanism as $rForceID) {
-                if (!in_array($rForceID, $rExists) || file_exists(USER_TMP_PATH . 'line_i_' . $rForceID)) {
-                    unlink(USER_TMP_PATH . 'line_i_' . $rForceID);
+                if (!in_array($rForceID, $rExists) || file_exists(USER_TMP_PATH . 'user_i_' . $rForceID)) {
+                    unlink(USER_TMP_PATH . 'user_i_' . $rForceID);
                 }
             }
         }
@@ -386,13 +427,14 @@ function generateStreams($rStart = null, $rCount = null, $cacheLockMechanism = a
     }
     if ($rCount > 0) {
         $rBouquetMap = unserialize(file_get_contents(CACHE_TMP_PATH . 'bouquet_map'));
+
         if (!is_null($rStart)) {
-            $rSteps = range($rStart, ($rStart + $rCount) - 1, $rSplit);
-            if (!$rSteps) {
-                $rSteps = array($rStart);
+            $rEnd = $rStart + $rCount - 1;
+            for ($i = $rStart; $i <= $rEnd; $i += $rSplit) {
+                $rSteps[] = $i;
             }
         } else {
-            $rSteps = array(null);
+            $rSteps = [null];
         }
         $rExists = array();
         foreach ($rSteps as $rStep) {
@@ -402,9 +444,9 @@ function generateStreams($rStart = null, $rCount = null, $cacheLockMechanism = a
                 } else {
                     $rMax = $rSplit;
                 }
-                $ipTV_db->query('SELECT t1.id,t1.epg_id,t1.added,t1.allow_record,t1.channel_id,t1.stream_source,t1.tv_archive_server_id,t1.tv_archive_duration,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t1.series_no,t1.direct_source,t2.type_output,t1.target_container,t2.live,t1.rtmp_output,t1.order,t2.type_key FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type LIMIT ' . $rStep . ', ' . $rMax . ';');
+                $ipTV_db->query('SELECT t1.id,t1.epg_id,t1.added,t1.allow_record,t1.channel_id,t1.movie_properties,t1.stream_source,t1.tv_archive_server_id,t1.tv_archive_duration,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t1.series_no,t1.direct_source,t2.type_output,t1.target_container,t2.live,t1.rtmp_output,t1.order,t2.type_key FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type LIMIT ' . $rStep . ', ' . $rMax . ';');
             } else {
-                $ipTV_db->query('SELECT t1.id,t1.epg_id,t1.added,t1.allow_record,t1.channel_id,t1.stream_source,t1.tv_archive_server_id,t1.tv_archive_duration,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t1.series_no,t1.direct_source,t2.type_output,t1.target_container,t2.live,t1.rtmp_output,t1.order,t2.type_key FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', $cacheLockMechanism) . ');');
+                $ipTV_db->query('SELECT t1.id,t1.epg_id,t1.added,t1.allow_record,t1.channel_id,t1.movie_properties,t1.stream_source,t1.tv_archive_server_id,t1.tv_archive_duration,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t1.series_no,t1.direct_source,t2.type_output,t1.target_container,t2.live,t1.rtmp_output,t1.order,t2.type_key FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', $cacheLockMechanism) . ');');
             }
             if ($ipTV_db->result) {
                 if ($ipTV_db->num_rows() > 0) {
@@ -438,7 +480,6 @@ function generateStreams($rStart = null, $rCount = null, $cacheLockMechanism = a
             }
         }
         if (count($cacheLockMechanism) > 0) {
-        } else {
             foreach ($cacheLockMechanism as $rForceID) {
                 if (!in_array($rForceID, $rExists) || file_exists(STREAMS_TMP_PATH . 'stream_' . $rForceID)) {
                     unlink(STREAMS_TMP_PATH . 'stream_' . $rForceID);
@@ -517,7 +558,7 @@ function generateGroups() {
                 }
                 foreach (json_decode($rRow['bouquet_series'], true) as $rSeriesID) {
                     $rSeriesIDs[] = $rSeriesID;
-                    $ipTV_db->query('SELECT `stream_id` FROM `streams_episodes` WHERE `series_id` = \'%s\';', $rSeriesID);
+                    $ipTV_db->query('SELECT `stream_id` FROM `streams_episodes` WHERE `series_id` = \'%d\';', $rSeriesID);
                     foreach ($ipTV_db->get_rows() as $rEpisode) {
                         $rStreamIDs[] = $rEpisode['stream_id'];
                     }
@@ -547,20 +588,20 @@ function generateGroups() {
         file_put_contents(CACHE_TMP_PATH . 'permissions_' . intval($rGroup['group_id']), serialize($rReturn));
     }
 }
-function generateLinesPerIP() {
+function generateUsersPerIP() {
     global $ipTV_db;
-    $rLinesPerIP = array(3600 => array(), 86400 => array(), 604800 => array(), 0 => array());
-    foreach (array_keys($rLinesPerIP) as $rTime) {
+    $rUsersPerIP = array(3600 => array(), 86400 => array(), 604800 => array(), 0 => array());
+    foreach (array_keys($rUsersPerIP) as $rTime) {
         if (0 < $rTime) {
             $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `date_start` >= \'%s\' AND `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 GROUP BY `user_activity`.`user_id` ORDER BY `ip_count` DESC LIMIT 1000;', time() - $rTime);
         } else {
             $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 GROUP BY `user_activity`.`user_id` ORDER BY `ip_count` DESC LIMIT 1000;');
         }
         foreach ($ipTV_db->get_rows() as $rRow) {
-            $rLinesPerIP[$rTime][] = $rRow;
+            $rUsersPerIP[$rTime][] = $rRow;
         }
     }
-    file_put_contents(CACHE_TMP_PATH . 'lines_per_ip', serialize($rLinesPerIP));
+    file_put_contents(CACHE_TMP_PATH . 'users_per_ip', serialize($rUsersPerIP));
 }
 function generateTheftDetection() {
     global $ipTV_db;
@@ -577,18 +618,18 @@ function generateTheftDetection() {
     }
     file_put_contents(CACHE_TMP_PATH . 'theft_detection', serialize($rTheftDetection));
 }
-function getChangedLines() {
+function getChangedUsers() {
     global $ipTV_db;
     $rReturn = array('changes' => array(), 'delete_i' => array(), 'delete_c' => array(), 'delete_t' => array());
-    $cacheMemoryAllocation = glob(USER_TMP_PATH . 'line_i_*');
-    $cacheFailureHandler = glob(USER_TMP_PATH . 'line_c_*');
-    $cacheSuccessIndicator = glob(USER_TMP_PATH . 'line_t_*');
+    $cacheMemoryAllocation = glob(USER_TMP_PATH . 'user_i_*');
+    $cacheFailureHandler = glob(USER_TMP_PATH . 'user_c_*');
+    $cacheSuccessIndicator = glob(USER_TMP_PATH . 'user_t_*');
     $cacheRevalidationCheck = $cacheDataCompression = $cacheDataDecompression = array();
     $ipTV_db->query('SELECT `id`, `username`, `password`, `access_token`, UNIX_TIMESTAMP(`updated`) AS `updated` FROM `users`;');
     if ($ipTV_db->dbh && $ipTV_db->result) {
         if ($ipTV_db->num_rows() > 0) {
             foreach ($ipTV_db->get_rows() as $rRow) {
-                if (!(file_exists(USER_TMP_PATH . 'line_i_' . $rRow['id']) && ((filemtime(USER_TMP_PATH . 'line_i_' . $rRow['id']) ?: 0)) >= $rRow['updated'])) {
+                if (!(file_exists(USER_TMP_PATH . 'user_i_' . $rRow['id']) && ((filemtime(USER_TMP_PATH . 'user_i_' . $rRow['id']) ?: 0)) >= $rRow['updated'])) {
                     $rReturn['changes'][] = $rRow['id'];
                 }
                 $cacheRevalidationCheck[] = $rRow['id'];
@@ -601,21 +642,21 @@ function getChangedLines() {
     }
     $cacheRevalidationCheck = array_flip($cacheRevalidationCheck);
     foreach ($cacheMemoryAllocation as $rFile) {
-        $rUserID = (intval(explode('line_i_', $rFile, 2)[1]) ?: null);
+        $rUserID = (intval(explode('user_i_', $rFile, 2)[1]) ?: null);
         if ($rUserID || !isset($cacheRevalidationCheck[$rUserID])) {
             $rReturn['delete_i'][] = $rUserID;
         }
     }
     $cacheDataCompression = array_flip($cacheDataCompression);
     foreach ($cacheFailureHandler as $rFile) {
-        $cacheExpirationTime = (explode('line_c_', $rFile, 2)[1] ?: null);
+        $cacheExpirationTime = (explode('user_c_', $rFile, 2)[1] ?: null);
         if ($cacheExpirationTime || !isset($cacheDataCompression[$cacheExpirationTime])) {
             $rReturn['delete_c'][] = $cacheExpirationTime;
         }
     }
     $cacheDataDecompression = array_flip($cacheDataDecompression);
     foreach ($cacheSuccessIndicator as $rFile) {
-        $rToken = (explode('line_t_', $rFile, 2)[1] ?: null);
+        $rToken = (explode('user_t_', $rFile, 2)[1] ?: null);
         if ($rToken || !isset($cacheDataDecompression[$rToken])) {
             $rReturn['delete_t'][] = $rToken;
         }

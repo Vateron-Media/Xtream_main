@@ -89,6 +89,11 @@
                                 <a href="./settings.php" class="dropdown-item notify-item"><span
                                         class="mdi mdi-wrench-outline mdi-rotate-90 mdi-18px"> <?= $_["settings"] ?></span></a>
                             <?php }
+                            if ((hasPermissions("adv", "settings"))) { ?>
+                                <a href="./cache.php" class="dropdown-item notify-item"><span
+                                        class="mdi mdi-wrench-outline mdi-rotate-90 mdi-18px">
+                                        <?= $_["cache_cron_settings"] ?></span></a>
+                            <?php }
                             if (hasPermissions("adv", "mng_packages")) { ?>
                                 <a href="./packages.php" class="dropdown-item notify-item"><span class="mdi mdi-package mdi-18px">
                                         <?= $_["packages"] ?></span></a>

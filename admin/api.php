@@ -1268,6 +1268,50 @@ if (isset($_GET["action"])) {
                 echo json_encode(array("result" => False));
                 exit;
             }
+        case "enable_cache":
+            if (hasPermissions('adv', 'backups')) {
+                setSettings(["enable_cache" => 1]);
+
+                shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php');
+
+                // $rCache = intval(trim(shell_exec('pgrep -U xui | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
+                // if ($rCache == 0) {
+                //     shell_exec(PHP_BIN . ' ' . TOOL_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
+                // }
+
+                echo json_encode(array('result' => true));
+
+                exit();
+            }
+
+            echo json_encode(array('result' => false));
+
+            exit();
+
+        case "disable_cache":
+            if (hasPermissions('adv', 'backups')) {
+                setSettings(["enable_cache" => 0]);
+
+                shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache.php');
+                echo json_encode(array('result' => true));
+
+                exit();
+            }
+
+            echo json_encode(array('result' => false));
+
+            exit();
+        case 'regenerate_cache':
+            if (hasPermissions('adv', 'backups')) {
+                shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "force"');
+                echo json_encode(array('result' => true));
+
+                exit();
+            }
+
+            echo json_encode(array('result' => false));
+
+            exit();
     }
 }
 

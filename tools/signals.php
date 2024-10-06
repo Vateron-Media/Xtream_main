@@ -72,7 +72,7 @@ if ($argc) {
                         shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "streams_update" "' . implode(',', $rUpdatedStreams) . '"');
                     }
                     if (count($rUpdatedLines) > 0) {
-                        shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "lines_update" "' . implode(',', $rUpdatedLines) . '"');
+                        shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "users_update" "' . implode(',', $rUpdatedLines) . '"');
                     }
                     if (count($rIDs) > 0) {
                         $ipTV_db->query('DELETE FROM `signals` WHERE `signal_id` IN (' . implode(',', $rIDs) . ')');

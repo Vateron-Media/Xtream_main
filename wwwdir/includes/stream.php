@@ -76,22 +76,17 @@ class ipTV_stream {
 
         return 2;
     }
-    /** 
-     * Analyze a stream using FFprobe. 
-     * 
-     * @param string $InputFileUrl The URL of the input file 
-     * @param int $serverId The ID of the server 
-     * @param array $options Additional options for FFprobe 
-     * @param string $dir The directory path 
-     * @return array The parsed codecs from the analyzed stream 
-     */
-    static function analyzeStream(string $InputFileUrl, int $serverId, $options = [], string $dir = '') {
-        $streamMaxAnalyze = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
-        $streamProbesize = abs(intval(ipTV_lib::$settings['probesize']));
-        $timeout = intval($streamMaxAnalyze / 1000000) + 5;
-        $command = "{$dir}/usr/bin/timeout {$timeout}s " . FFPROBE_PATH . " -probesize {$streamProbesize} -analyzeduration {$streamMaxAnalyze} " . implode(' ', $options) . " -i \"{$InputFileUrl}\" -v quiet -print_format json -show_streams -show_format";
-        $result = ipTV_servers::RunCommandServer($serverId, $command, 'raw');
-        return self::parseFFProbe(json_decode($result[$serverId], true));
+    public static function probeStream($rSourceURL, $rFetchArguments = array(), $rPrepend = '', $rParse = true) {
+        $rAnalyseDuration = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
+        $rProbesize = abs(intval(ipTV_lib::$settings['probesize']));
+        $rTimeout = intval($rAnalyseDuration / 1000000) + ipTV_lib::$settings['probe_extra_wait'];
+        $rCommand = $rPrepend . 'timeout ' . $rTimeout . ' ' . FFPROBE_PATH . ' -probesize ' . $rProbesize . ' -analyzeduration ' . $rAnalyseDuration . ' ' . implode(' ', $rFetchArguments) . ' -i "' . $rSourceURL . '" -v quiet -print_format json -show_streams -show_format';
+        exec($rCommand, $rReturn);
+        $result = implode("\n", $rReturn);
+        if ($rParse) {
+            return self::parseFFProbe(json_decode($result, true));
+        }
+        return json_decode($result, true);
     }
     public static function parseFFProbe($data) {
         if (!empty($data)) {

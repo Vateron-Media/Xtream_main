@@ -208,6 +208,13 @@ ini_set('default_socket_timeout', $rTimeout);
 
 define("MAIN_DIR", "/home/xtreamcodes/");
 define("CONFIG_PATH", MAIN_DIR . "config/");
+define('TMP_PATH', MAIN_DIR . 'tmp/');
+define('CRON_PATH', MAIN_DIR . 'crons/');
+define('CACHE_TMP_PATH', TMP_PATH . 'cache/');
+define('STREAMS_TMP_PATH', CACHE_TMP_PATH . 'streams/');
+define('USER_TMP_PATH', CACHE_TMP_PATH . 'users/');
+define('SERIES_TMP_PATH', CACHE_TMP_PATH . 'series/');
+define('PHP_BIN', '/home/xtreamcodes/bin/php/bin/php');
 
 require_once realpath(dirname(__FILE__)) . "/mobiledetect.php";
 require_once realpath(dirname(__FILE__)) . "/gauth.php";
@@ -1639,25 +1646,31 @@ function checkTable($rTable) {
         }
     }
 }
-
-function secondsToTime($inputSeconds) {
-    $secondsInAMinute = 60;
-    $secondsInAnHour = 60 * $secondsInAMinute;
-    $secondsInADay = 24 * $secondsInAnHour;
-    $days = floor($inputSeconds / $secondsInADay);
-    $hourSeconds = $inputSeconds % $secondsInADay;
-    $hours = floor($hourSeconds / $secondsInAnHour);
-    $minuteSeconds = $hourSeconds % $secondsInAnHour;
-    $minutes = floor($minuteSeconds / $secondsInAMinute);
-    $remainingSeconds = $minuteSeconds % $secondsInAMinute;
-    $seconds = ceil($remainingSeconds);
-    $obj = array(
-        'd' => (int) $days,
-        'h' => (int) $hours,
-        'm' => (int) $minutes,
-        's' => (int) $seconds,
-    );
-    return $obj;
+function secondsToTime($rInputSeconds, $rInclSecs = true) {
+    $rSecondsInAMinute = 60;
+    $rSecondsInAnHour = 60 * $rSecondsInAMinute;
+    $rSecondsInADay = 24 * $rSecondsInAnHour;
+    $rDays = (int) floor($rInputSeconds / (($rSecondsInADay ?: 1)));
+    $rHourSeconds = $rInputSeconds % $rSecondsInADay;
+    $rHours = (int) floor($rHourSeconds / (($rSecondsInAnHour ?: 1)));
+    $rMinuteSeconds = $rHourSeconds % $rSecondsInAnHour;
+    $rMinutes = (int) floor($rMinuteSeconds / (($rSecondsInAMinute ?: 1)));
+    $rRemaining = $rMinuteSeconds % $rSecondsInAMinute;
+    $rSeconds = (int) ceil($rRemaining);
+    $rOutput = '';
+    if ($rDays != 0) {
+        $rOutput .= $rDays . 'd ';
+    }
+    if ($rHours != 0) {
+        $rOutput .= $rHours . 'h ';
+    }
+    if ($rMinutes != 0) {
+        $rOutput .= $rMinutes . 'm ';
+    }
+    if ($rInclSecs) {
+        $rOutput .= $rSeconds . 's';
+    }
+    return $rOutput;
 }
 
 function getWorldMapLive() {

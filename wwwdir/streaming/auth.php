@@ -268,7 +268,7 @@ if ($rExtension) {
             if (!($rUserInfo['is_restreamer'] || in_array($userIP, ipTV_streaming::getAllowedIPs()))) {
                 if ($rRestreamDetect) {
                     if (ipTV_lib::$settings['detect_restream_block_user']) {
-                        $ipTV_db->query('UPDATE `lines` SET `admin_enabled` = 0 WHERE `id` = \'%s\';', $rUserInfo['id']);
+                        $ipTV_db->query('UPDATE `users` SET `admin_enabled` = 0 WHERE `id` = \'%s\';', $rUserInfo['id']);
                     }
 
                     if ((ipTV_lib::$settings['restream_deny_unauthorised'] || ipTV_lib::$settings['detect_restream_block_user'])) {
@@ -289,7 +289,7 @@ if ($rExtension) {
 
         if (($rType == 'live' && ipTV_lib::$settings['show_expiring_video'] && !$rUserInfo['is_trial'] && !is_null($rUserInfo['exp_date']) && $rUserInfo['exp_date'] - 86400 * 7 <= time() && (86400 <= time() - $rUserInfo['last_expiration_video'] || !$rUserInfo['last_expiration_video']))) {
 
-            $ipTV_db->query('UPDATE `lines` SET `last_expiration_video` = \'%s\' WHERE `id` = \'%s\';', time(), $rUserInfo['id']);
+            $ipTV_db->query('UPDATE `users` SET `last_expiration_video` = \'%s\' WHERE `id` = \'%s\';', time(), $rUserInfo['id']);
 
             ipTV_streaming::ShowVideo($user_info["is_restreamer"], 'show_expiring_video', 'expiring_video_path', $rExtension);
         }

@@ -96,7 +96,6 @@ define('SIGNALS_TMP_PATH', TMP_PATH . 'signals/');
 define('STREAMS_TMP_PATH', CACHE_TMP_PATH . 'streams/');
 define('USER_TMP_PATH', CACHE_TMP_PATH . 'users/');
 define('SERIES_TMP_PATH', CACHE_TMP_PATH . 'series/');
-define('LINES_TMP_PATH', CACHE_TMP_PATH . 'lines/');
 // -------------------
 
 //CONTENT FOLDERS
@@ -120,7 +119,6 @@ define('MONITOR_CALLS', 3);
 // -------------------
 
 // Temporary variables that should be added to the panel settings
-define('ENABLE_CACHE', true);
 define('CACHE_PLAYLIST', 60);
 // -------------------
 

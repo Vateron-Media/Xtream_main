@@ -242,7 +242,7 @@ INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
 (5, 'epg.php', '0 0 * * *', 1),
 (6, 'errors.php', '* * * * *', 1),
 (7, 'kill_leaks.php', '* * * * *', 1),
-(8, 'lines_logs.php', '* * * * *', 1),
+(8, 'user_logs.php', '* * * * *', 1),
 (9, 'pid_monitor.php', '0 * * * *', 1),
 (10, 'servers.php', '* * * * *', 1),
 (11, 'stats.php', '0 * * * *', 1),
@@ -1120,7 +1120,12 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('159', 'fps_delay', '600'),
 ('160', 'kill_rogue_ffmpeg', '1'),
 ('161', 'segment_type', '1'),
-('162', 'vod_limit_perc', '150');
+('162', 'vod_limit_perc', '150'),
+('163', 'enable_cache', '1'),
+('164', 'last_cache', '0'),
+('165', 'last_cache_taken', '0'),
+('166', 'cache_thread_count', '4'),
+('167', 'cache_changes', '1');
 
 -- --------------------------------------------------------
 

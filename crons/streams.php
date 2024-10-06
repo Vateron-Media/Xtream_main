@@ -84,7 +84,7 @@ function loadCron() {
     // if (0 < $ipTV_db->num_rows()) {
     //     foreach ($ipTV_db->get_rows() as $stream) {
     //         if (file_exists(STREAMS_PATH . $stream['id'] . '.analyse')) {
-    //             $FFProbeOutput = ipTV_stream::analyzeStream(STREAMS_PATH . $stream['id'] . '.analyse', SERVER_ID);
+    //             $FFProbeOutput = ipTV_stream::probeStream(STREAMS_PATH . $stream['id'] . '.analyse');
     //             if ($FFProbeOutput) {
     //                 $Bitrate = $FFProbeOutput['bitrate'] / 1024;
     //             }

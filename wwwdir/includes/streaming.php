@@ -275,16 +275,16 @@ class ipTV_streaming {
         if (ipTV_lib::$cached) {
             if (empty($password) && empty($userID) && strlen($username) == 32) {
                 if (ipTV_lib::$settings['case_sensitive_line']) {
-                    $userID = intval(file_get_contents(LINES_TMP_PATH . 'line_t_' . $username));
+                    $userID = intval(file_get_contents(USER_TMP_PATH . 'user_t_' . $username));
                 } else {
-                    $userID = intval(file_get_contents(LINES_TMP_PATH . 'line_t_' . strtolower($username)));
+                    $userID = intval(file_get_contents(USER_TMP_PATH . 'user_t_' . strtolower($username)));
                 }
             } else {
                 if (!empty($username) && !empty($password)) {
                     if (ipTV_lib::$settings['case_sensitive_line']) {
-                        $userID = intval(file_get_contents(LINES_TMP_PATH . 'line_c_' . $username . '_' . $password));
+                        $userID = intval(file_get_contents(USER_TMP_PATH . 'user_c_' . $username . '_' . $password));
                     } else {
-                        $userID = intval(file_get_contents(LINES_TMP_PATH . 'line_c_' . strtolower($username) . '_' . strtolower($password)));
+                        $userID = intval(file_get_contents(USER_TMP_PATH . 'user_c_' . strtolower($username) . '_' . strtolower($password)));
                     }
                 } else {
                     if (empty($userID)) {
@@ -293,7 +293,7 @@ class ipTV_streaming {
                 }
             }
             if ($userID) {
-                $userInfo = unserialize(file_get_contents(LINES_TMP_PATH . 'line_i_' . $userID));
+                $userInfo = unserialize(file_get_contents(USER_TMP_PATH . 'user_i_' . $userID));
             }
         } else {
             if (empty($password) && empty($userID) && strlen($username) == 32) {
