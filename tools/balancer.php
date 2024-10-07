@@ -52,6 +52,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 "libzip5",
                 "mariadb-server",
                 "rsync",
+                "libmaxminddb0",
+                "libmaxminddb-dev",
             ];
             $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $lastVersion['sub'] . '/sub_xui.tar.gz';
 

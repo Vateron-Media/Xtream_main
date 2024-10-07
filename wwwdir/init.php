@@ -24,12 +24,6 @@ ipTV_streaming::$ipTV_db = &$ipTV_db;
 ipTV_stream::$ipTV_db = &$ipTV_db;
 ipTV_lib::init();
 
-include IPTV_INCLUDES_PATH . 'geo/Reader.php';
-include IPTV_INCLUDES_PATH . 'geo/Decoder.php';
-include IPTV_INCLUDES_PATH . 'geo/Util.php';
-include IPTV_INCLUDES_PATH . 'geo/Metadata.php';
-include IPTV_INCLUDES_PATH . 'geo/InvalidDatabaseException.php';
-
 $FILES = array('live.php', 'clients_movie.php', 'timeshift.php', 'admin_live.php', 'admin_movie.php', 'xmltv.php', 'panel_api.php', 'enigma2.php', 'portal.php', 'get.php');
 
 if (empty($argc)) {

@@ -11,7 +11,7 @@ if (!isset(ipTV_lib::$request['start']) || !isset(ipTV_lib::$request['duration']
 if (ipTV_lib::$settings['use_buffer'] == 0) {
     header('X-Accel-Buffering: no');
 }
-$geoip = new Reader(GEOIP2COUNTRY_FILENAME);
+$geoip = MaxMind\Db\Reader(GEOIP2COUNTRY_FILENAME);
 $activity_id = 0;
 $connection_speed_file = null;
 $container_priority = null;

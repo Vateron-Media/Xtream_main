@@ -49,7 +49,7 @@ if ($user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, f
         http_response_code(404);
         die;
     }
-    $geoip = new Reader(GEOIP2COUNTRY_FILENAME);
+    $geoip = MaxMind\Db\Reader(GEOIP2COUNTRY_FILENAME);
     $geoip_country_code = $geoip->getWithPrefixLen($user_ip)[0]['registered_country']['iso_code'];
     $geoip->close();
     if (!empty($user_info['allowed_ips']) && !in_array($user_ip, array_map('gethostbyname', $user_info['allowed_ips']))) {

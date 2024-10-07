@@ -494,7 +494,6 @@ class ipTV_streaming {
         } else {
             return null;
         }
-
         $IP = self::getUserIP();
         $rKilled = 0;
         $rDelSID = $rDelUUID = $IDs = array();
@@ -926,18 +925,18 @@ class ipTV_streaming {
     public static function getUserIP() {
         return !empty(ipTV_lib::$settings['get_real_ip_client']) && !empty($_SERVER[ipTV_lib::$settings['get_real_ip_client']]) ? $_SERVER[ipTV_lib::$settings['get_real_ip_client']] : $_SERVER['REMOTE_ADDR'];
     }
-    public static function getIPInfo($user_ip) {
-        if (!empty($user_ip)) {
-            if (!file_exists(USER_TMP_PATH . md5($user_ip) . '_geo2')) {
-                $geoip_country_code = new Reader(GEOIP2COUNTRY_FILENAME);
-                $rResponse = $geoip_country_code->get($user_ip);
-                $geoip_country_code->close();
+    public static function getIPInfo($IP) {
+        if (!empty($IP)) {
+            if (!file_exists(CONS_TMP_PATH . md5($IP) . '_geo2')) {
+                $rGeoIP =  new MaxMind\Db\Reader(GEOIP2COUNTRY_FILENAME);
+                $rResponse = $rGeoIP->get($IP);
+                $rGeoIP->close();
                 if ($rResponse) {
-                    file_put_contents(USER_TMP_PATH . md5($user_ip) . '_geo2', json_encode($rResponse));
+                    file_put_contents(CONS_TMP_PATH . md5($IP) . '_geo2', json_encode($rResponse));
                 }
                 return $rResponse;
             }
-            return json_decode(file_get_contents(USER_TMP_PATH . md5($user_ip) . '_geo2'), true);
+            return json_decode(file_get_contents(CONS_TMP_PATH . md5($IP) . '_geo2'), true);
         }
         return false;
     }
