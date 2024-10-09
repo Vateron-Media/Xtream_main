@@ -118,10 +118,10 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                         <tr>
                                                             <td class="text-center"><?= $_["cache_cron_thread_count"] ?></td>
                                                             <td><input type="text" class="form-control text-center" id="cache_thread_count" name="cache_thread_count" value="<?= intval($rSettings['cache_thread_count']) ?>"></td>
-                                                            <!-- <td class="text-center">Update Changes Only</td>
+                                                            <td class="text-center">Update Changes Only</td>
                                                             <td>
                                                                 <input name="cache_changes" id="cache_changes" type="checkbox" <?= $rSettings['cache_changes'] == 1 ? 'checked' : '' ?> data-plugin="switchery" class="js-switch" data-color="#039cfd" />
-                                                            </td> -->
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="text-center"><?= $_["cache_cron_streams"] ?></td>

@@ -990,7 +990,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('29','default_locale','en_GB.utf8'),
 ('30','allowed_stb_types','[\"MAG200\",\"MAG245\",\"MAG245D\",\"MAG250\",\"MAG254\",\"MAG255\",\"MAG256\",\"MAG257\",\"MAG260\",\"MAG270\",\"MAG275\",\"MAG322\",\"MAG323\",\"MAG324\",\"MAG325\",\"MAG349\",\"MAG350\",\"MAG351\",\"MAG352\",\"AuraHD\",\"AuraHD2\",\"AuraHD3\",\"AuraHD4\",\"AuraHD5\",\"AuraHD6\",\"AuraHD7\",\"AuraHD8\",\"AuraHD9\",\"WR320\"]'),
 ('31','client_prebuffer','30'),
-('32','split_clients','equal'),
+('32', 'mag_disable_ssl', '0')
 ('33','stream_max_analyze','5000000'),
 ('34','show_not_on_air_video','0'),
 ('35','not_on_air_video_path',''),
@@ -1046,7 +1046,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('85','stalker_theme','default'),
 ('86','rtmp_random','1'),
 ('87','api_ips',''),
-('88','crypt_load_balancing',''),
+('88', 'disallow_2nd_ip_max', '1')
 ('89','use_buffer','0'),
 ('90','restreamer_prebuffer','0'),
 ('91','audio_restart_loss','0'),
@@ -1076,7 +1076,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('115','case_sensitive_line','1'),
 ('116','county_override_1st','0'),
 ('117','disallow_2nd_ip_con','0'),
-('118','new_sorting_bouquet','1'),
+('118', 'ip_subnet_match', '0'),
 ('119','split_by','conn'),
 ('120','use_mdomain_in_lists','0'),
 ('121','use_https',''),
@@ -1125,7 +1125,15 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('164', 'last_cache', '0'),
 ('165', 'last_cache_taken', '0'),
 ('166', 'cache_thread_count', '4'),
-('167', 'cache_changes', '1');
+('167', 'cache_changes', '1'),
+('168', 'restrict_same_ip', '1'),
+('169', 'api_container', 'ts'),
+('170', 'allow_cdn_access', '0'),
+('171', 'detect_restream_block_user', '0'),
+('172', 'block_streaming_servers', '0'),
+('173', 'block_proxies', '0'),
+('174', 'ignore_invalid_users', '0'),
+('175', 'disable_mag_token', '0');
 
 -- --------------------------------------------------------
 
