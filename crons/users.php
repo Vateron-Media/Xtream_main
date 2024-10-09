@@ -101,7 +101,7 @@ function loadCron() {
                                             $rIsRunning = true;
                                         }
                                     }
-                                    if ($rConnection['hls_end'] == 1 && 300 <= $rStartTime - $rConnection['hls_last_read'] && !$rIsRunning) {
+                                    if (($rConnection['hls_end'] == 1 && 300 <= $rStartTime - $rConnection['hls_last_read']) && !$rIsRunning) {
                                         echo 'Close connection: ' . $rConnection['uuid'] . "\n";
                                         ipTV_streaming::closeConnection($rConnection, false, false);
 
@@ -152,9 +152,9 @@ function loadCron() {
                 $rDelete = processDeletions($rDelete, $rDeleteStream);
             }
         }
-        if (count($rDelete) > 0) {
-            processDeletions($rDelete, $rDeleteStream);
-        }
+            if (count($rDelete) > 0) {
+                processDeletions($rDelete, $rDeleteStream);
+            }
     }
     $rConnectionSpeeds = glob(DIVERGENCE_TMP_PATH . '*');
     if (count($rConnectionSpeeds) > 0) {
@@ -205,8 +205,7 @@ function loadCron() {
 function shutdown() {
     global $ipTV_db;
     global $unique_id;
-    if (!is_object($ipTV_db)) {
-    } else {
+    if (is_object($ipTV_db)) {
         $ipTV_db->close_mysql();
     }
     @unlink($unique_id);

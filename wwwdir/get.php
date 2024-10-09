@@ -43,7 +43,7 @@ if ($rUserInfo) {
     $rDeny = false;
 
     // if ($rUserInfo['bypass_ua'] == 0) {
-    //     if (checkBlockedUAs($rUserAgent, true)) {
+    //     if (ipTV_streaming::checkBlockedUAs($rUserAgent)) {
     //         generateError('BLOCKED_USER_AGENT');
     //     }
     // }

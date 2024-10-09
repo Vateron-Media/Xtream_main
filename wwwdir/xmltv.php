@@ -48,7 +48,7 @@ if ($rUserInfo) {
     $deny = false;
 
     // if ($rUserInfo['bypass_ua'] == 0) {
-    //     if (xtreamui::checkBlockedUAs($rUserAgent, true)) {
+    //     if (ipTV_streaming::checkBlockedUAs($rUserAgent)) {
     //         generateError('BLOCKED_USER_AGENT');
     //     }
     // }

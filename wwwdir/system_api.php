@@ -12,7 +12,7 @@ if (empty(ipTV_lib::$request['password']) || ipTV_lib::$request['password'] != i
 
 unset(ipTV_lib::$request['password']);
 
-if (!in_array($rIP, ipTV_streaming::getAllowedIPs())) {
+if (!in_array($rIP, ipTV_lib::$allowedIPs)) {
     generateError('API_IP_NOT_ALLOWED');
 }
 

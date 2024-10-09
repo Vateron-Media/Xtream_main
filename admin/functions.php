@@ -1150,14 +1150,14 @@ function getOutputs($rUser = null) {
     global $db;
     $return = array();
     if ($rUser) {
-        $result = $db->query("SELECT `access_output_id` FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
+        $result = $db->query("SELECT `allowed_outputs` FROM `users` WHERE `id` = " . intval($rUser) . ";");
     } else {
         $result = $db->query("SELECT * FROM `access_output` ORDER BY `access_output_id` ASC;");
     }
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             if ($rUser) {
-                $return[] = $row["access_output_id"];
+                $return = json_decode($row["allowed_outputs"]);
             } else {
                 $return[] = $row;
             }

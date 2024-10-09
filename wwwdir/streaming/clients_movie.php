@@ -58,11 +58,7 @@ if (ipTV_lib::$settings['use_buffer'] == 0) {
 }
 
 if ($rChannelInfo) {
-    if ($rChannelInfo['originator_id']) {
-        $serverID = $rChannelInfo['originator_id'];
-    } else {
-        $serverID = ($rChannelInfo['redirect_id'] ?: SERVER_ID);
-    }
+    $serverID = ($rChannelInfo['redirect_id'] ?: SERVER_ID);
 
     $ipTV_db->query('SELECT `server_id`, `activity_id`, `pid`, `user_ip` FROM `lines_live` WHERE `uuid` = \'%s\';', $rTokenData['uuid']);
 

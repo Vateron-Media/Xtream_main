@@ -55,13 +55,12 @@ function loadCron() {
 
 
         if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
-
-            // $rOutputFormats = array();
-            // $ipTV_db->query('SELECT `access_output_id`, `output_key` FROM `output_formats`;');
-            // foreach ($ipTV_db->get_rows() as $rRow) {
-            //     $rOutputFormats[] = $rRow;
-            // }
-            // file_put_contents(CACHE_TMP_PATH . 'output_formats', serialize($rOutputFormats));
+            $rOutputFormats = array();
+            $ipTV_db->query('SELECT `access_output_id`, `output_key` FROM `access_output`;');
+            foreach ($ipTV_db->get_rows() as $rRow) {
+                $rOutputFormats[] = $rRow;
+            }
+            file_put_contents(CACHE_TMP_PATH . 'access_output', serialize($rOutputFormats));
 
             // $rRTMPIPs = array();
             // $ipTV_db->query('SELECT `ip`, `password`, `push`, `pull` FROM `rtmp_ips`');

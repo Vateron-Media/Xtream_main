@@ -112,6 +112,14 @@ if (isset($_POST["submit_user"])) {
     } else {
         $rArray["allowed_ua"] = "[]";
     }
+    if (isset($_POST["access_output"])) {
+        if (!is_array($_POST["access_output"])) {
+            $_POST["access_output"] = array($_POST["access_output"]);
+        }
+        $rArray["allowed_outputs"] = json_encode($_POST["access_output"]);
+    } else {
+        $rArray["allowed_outputs"] = "[]";
+    }
     //isp lock_device
     if (isset($_POST["is_isplock"])) {
         $rArray["is_isplock"] = true;
@@ -154,10 +162,6 @@ if (isset($_POST["submit_user"])) {
                 $rInsertID = $db->insert_id;
             }
             if ((isset($rInsertID)) && (isset($_POST["access_output"]))) {
-                $db->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rInsertID) . ";");
-                foreach ($_POST["access_output"] as $rOutputID) {
-                    $db->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rInsertID) . ", " . intval($rOutputID) . ");");
-                }
                 if ($rArray["is_mag"] == 1) {
                     if (hasPermissions("adv", "add_mag")) {
                         if (isset($_POST["lock_device"])) {

@@ -1596,6 +1596,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_ip` varchar(255) DEFAULT NULL,
   `last_activity` int(11) DEFAULT NULL,
   `last_activity_array` mediumtext DEFAULT NULL,
+  `allowed_outputs` mediumtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
   KEY `exp_date` (`exp_date`),

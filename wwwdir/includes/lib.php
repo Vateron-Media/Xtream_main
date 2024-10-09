@@ -11,6 +11,7 @@ class ipTV_lib {
     public static $blockedISP = array();
     public static $blockedIPs = array();
     public static $categories = array();
+    public static $allowedIPs = array();
     public static $cached = null;
 
     public static function init() {
@@ -38,6 +39,7 @@ class ipTV_lib {
         self::$blockedISP = self::getBlockedISP();
         self::$blockedIPs = self::getBlockedIPs();
         self::$categories = self::getCategories();
+        self::$allowedIPs = self::getAllowedIPs();
 
         if (FETCH_BOUQUETS) {
             self::$Bouquets = self::getBouquets();
@@ -335,6 +337,30 @@ class ipTV_lib {
 
         return $servers;
     }
+    public static function getAllowedIPs() {
+        $rCache = self::getCache('allowed_ips', 60);
+        if (!empty($cache)) {
+            return $rCache;
+        }
+
+        $IPs = array('127.0.0.1', $_SERVER['SERVER_ADDR']);
+        foreach (self::$StreamingServers as $rServerID => $serverInfo) {
+            if (!empty($serverInfo['whitelist_ips'])) {
+                $IPs = array_merge($IPs, json_decode($serverInfo['whitelist_ips'], true));
+            }
+            $IPs[] = $serverInfo['server_ip'];
+            foreach (explode(',', $serverInfo['domain_name']) as $IP) {
+                if (filter_var($IP, FILTER_VALIDATE_IP)) {
+                    $IPs[] = $IP;
+                }
+            }
+        }
+        if (!empty(self::$settings['allowed_ips_admin'])) {
+            $IPs = array_merge($IPs, explode(',', self::$settings['allowed_ips_admin']));
+        }
+        self::setCache('allowed_ips', $IPs);
+        return array_unique($IPs);
+    }
     public static function seriesData() {
         $output = array();
         if (file_exists(TMP_PATH . "series_data.php")) {
@@ -580,13 +606,11 @@ class ipTV_lib {
     }
     public static function confirmIDs($rIDs) {
         $rReturn = array();
-
         foreach ($rIDs as $rID) {
             if (intval($rID) > 0) {
                 $rReturn[] = $rID;
             }
         }
-
         return $rReturn;
     }
     /**
@@ -601,7 +625,7 @@ class ipTV_lib {
      */
     public static function unlink_file($filePath) {
         if (file_exists($filePath)) {
-            unlink($filePath);
+            @unlink($filePath);
         }
     }
     public static function isRunning() {
@@ -638,5 +662,8 @@ class ipTV_lib {
         } else {
             return false;
         }
+    }
+    public static function setSignal($rKey, $rData) {
+        file_put_contents(SIGNALS_TMP_PATH . 'cache_' . md5($rKey), json_encode(array($rKey, $rData)));
     }
 }

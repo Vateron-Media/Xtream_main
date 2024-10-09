@@ -1,14 +1,12 @@
 <?php
 
-register_shutdown_function('shutdown');
+register_shutdown_function("shutdown");
 set_time_limit(0);
-require '../init.php';
+require_once "../init.php";
 unset(ipTV_lib::$settings["watchdog_data"]);
 unset(ipTV_lib::$settings["server_hardware"]);
 header("Access-Control-Allow-Origin: *");
-
 $rCreateExpiration = ipTV_lib::$settings["create_expiration"] ?: 5;
-
 $rIP = ipTV_streaming::getUserIP();
 $rUserAgent = empty($_SERVER["HTTP_USER_AGENT"]) ? "" : htmlentities(trim($_SERVER["HTTP_USER_AGENT"]));
 $rConSpeedFile = NULL;
@@ -45,9 +43,14 @@ if (isset(ipTV_lib::$request["token"])) {
 } else {
     generateError("NO_TOKEN_SPECIFIED");
 }
-
+// if (!$rExtension[["ts" => true, "m3u8" => true]]) {
+//     $rExtension = ipTV_lib::$settings["api_container"];
+// }
+// if ($rChannelInfo["proxy"] && $rExtension != "ts") {
+//     generateError("USER_DISALLOW_EXT");
+// }
 if (ipTV_lib::$settings["use_buffer"] == 0) {
-    header('X-Accel-Buffering: no');
+    header("X-Accel-Buffering: no");
 }
 if ($rChannelInfo) {
 
@@ -58,6 +61,9 @@ if ($rChannelInfo) {
     }
     if (file_exists(STREAMS_PATH . $streamID . "_.monitor")) {
         $rChannelInfo["monitor_pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.monitor");
+    }
+    if (ipTV_lib::$settings["on_demand_instant_off"] && $rChannelInfo["on_demand"] == 1) {
+        ipTV_streaming::addToQueue($streamID, $PID);
     }
     if (!ipTV_streaming::isStreamRunning($rChannelInfo["pid"], $streamID)) {
         $rChannelInfo["pid"] = NULL;
@@ -73,15 +79,17 @@ if ($rChannelInfo) {
                 $rChannelInfo["monitor_pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.monitor") ?: NULL;
             }
             if (!$rChannelInfo["monitor_pid"]) {
-                ipTV_streaming::ShowVideo($userInfo["is_restreamer"], 'show_not_on_air_video', 'not_on_air_video_path', $rExtension);
+                ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
             }
             for ($rRetries = 0; !file_exists(STREAMS_PATH . (int) $streamID . "_.pid") && $rRetries < 300; $rRetries++) {
                 usleep(10000);
             }
             $rChannelInfo["pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.pid") ?: NULL;
             if (!$rChannelInfo["pid"]) {
-                ipTV_streaming::ShowVideo($userInfo["is_restreamer"], 'show_not_on_air_video', 'not_on_air_video_path', $rExtension);
+                ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
             }
+        } else {
+            ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
         }
     }
     $rRetries = 0;
@@ -95,7 +103,7 @@ if ($rChannelInfo) {
                     $rFP = fopen($rFirstTS, "r");
                 }
                 if (!(ipTV_streaming::CheckMonitorRunning($rChannelInfo["monitor_pid"], $streamID) && ipTV_streaming::isStreamRunning($rChannelInfo["pid"], $streamID))) {
-                    ipTV_streaming::ShowVideo($userInfo["is_restreamer"], 'show_not_on_air_video', 'not_on_air_video_path', $rExtension);
+                    ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
                 }
                 if (!($rFP && fread($rFP, 1))) {
                     usleep(100000);
@@ -130,9 +138,11 @@ if ($rChannelInfo) {
         if ($ipTV_db->num_rows() == 1) {
             $rAcceptIP = $ipTV_db->get_row()["user_ip"];
         }
-        if ($rAcceptIP && $rAcceptIP != $rIP) {
+
+        $rIPMatch = ipTV_lib::$settings["ip_subnet_match"] ? implode(".", array_slice(explode(".", $rAcceptIP), 0, -1)) == implode(".", array_slice(explode(".", $rIP), 0, -1)) : $rAcceptIP == $rIP;
+        if ($rAcceptIP && !$rIPMatch) {
             ipTV_streaming::clientLog($streamID, $userInfo["id"], "USER_ALREADY_CONNECTED", $rIP);
-            ipTV_streaming::ShowVideo($userInfo["is_restreamer"], 'show_not_on_air_video', 'not_on_air_video_path', $rExtension);
+            ipTV_streaming::ShowVideoServer("show_connected_video", "connected_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
         }
     }
     switch ($rExtension) {
@@ -153,14 +163,14 @@ if ($rChannelInfo) {
                 }
                 $rResult = $ipTV_db->query("INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`,`external_device`,`hls_last_read`) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", $userInfo["id"], $streamID, $rServerID, $rUserAgent, $rIP, "hls", NULL, $tokenData["uuid"], $rActivityStart, $rCountryCode, $userInfo["con_isp_name"], $rExternalDevice, time() - (int) ipTV_lib::$StreamingServers[SERVER_ID]["time_offset"]);
             } else {
-                if ($rConnection["user_ip"] != $rIP && ipTV_lib::$settings["restrict_same_ip"]) {
+                $rIPMatch = ipTV_lib::$settings["ip_subnet_match"] ? implode(".", array_slice(explode(".", $rConnection["user_ip"]), 0, -1)) == implode(".", array_slice(explode(".", $rIP), 0, -1)) : $rConnection["user_ip"] == $rIP;
+                if (!$rIPMatch && ipTV_lib::$settings["restrict_same_ip"]) {
                     ipTV_streaming::clientLog($streamID, $userInfo["id"], "IP_MISMATCH", $rIP);
                     generateError("IP_MISMATCH");
                 }
 
                 $rResult = $ipTV_db->query("UPDATE `lines_live` SET `hls_last_read` = '%s', `hls_end` = 0, `server_id` = '%s' WHERE `activity_id` = '%s'", time() - (int) ipTV_lib::$StreamingServers[SERVER_ID]["time_offset"], $rServerID, $rConnection["activity_id"]);
             }
-
             if (!$rResult) {
                 ipTV_streaming::clientLog($streamID, $userInfo["id"], "LINE_CREATE_FAIL", $rIP);
                 generateError("LINE_CREATE_FAIL");
@@ -178,7 +188,7 @@ if ($rChannelInfo) {
                 header("Cache-Control: no-store, no-cache, must-revalidate");
                 echo $rHLS;
             } else {
-                ipTV_streaming::ShowVideo($userInfo["is_restreamer"], 'show_not_on_air_video', 'not_on_air_video_path', $rExtension);
+                ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
             }
             exit;
         default:
@@ -194,8 +204,8 @@ if ($rChannelInfo) {
                 }
                 $rResult = $ipTV_db->query("INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $userInfo["id"], $streamID, $rServerID, $rUserAgent, $rIP, $rExtension, $PID, $tokenData["uuid"], $rActivityStart, $rCountryCode, $userInfo["con_isp_name"], $rExternalDevice);
             } else {
-
-                if ($rConnection["user_ip"] != $rIP && ipTV_lib::$settings["restrict_same_ip"]) {
+                $rIPMatch = ipTV_lib::$settings["ip_subnet_match"] ? implode(".", array_slice(explode(".", $rConnection["user_ip"]), 0, -1)) == implode(".", array_slice(explode(".", $rIP), 0, -1)) : $rConnection["user_ip"] == $rIP;
+                if (!$rIPMatch && ipTV_lib::$settings["restrict_same_ip"]) {
                     ipTV_streaming::clientLog($streamID, $userInfo["id"], "IP_MISMATCH", $rIP);
                     generateError("IP_MISMATCH");
                 }
@@ -375,14 +385,16 @@ if ($rChannelInfo) {
             }
     }
 } else {
-    ipTV_streaming::ShowVideo($userInfo["is_restreamer"], 'show_not_on_air_video', 'not_on_air_video_path', $rExtension);
+    ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
 }
 function shutdown() {
     global $closeCon;
     global $tokenData;
     global $PID;
+    global $rChannelInfo;
     global $streamID;
     global $ipTV_db;
+
     if ($closeCon) {
         if (!is_object($ipTV_db)) {
             $ipTV_db->db_connect();
@@ -392,7 +404,8 @@ function shutdown() {
         ipTV_lib::unlink_file(CONS_TMP_PATH . $tokenData["uuid"]);
         ipTV_lib::unlink_file(CONS_TMP_PATH . $streamID . "/" . $tokenData["uuid"]);
     }
-    if (is_object($ipTV_db)) {
-        $ipTV_db->close_mysql();
+    if (ipTV_lib::$settings["on_demand_instant_off"] && $rChannelInfo["on_demand"] == 1) {
+        ipTV_streaming::removeFromQueue($streamID, $PID);
     }
+    $ipTV_db->close_mysql();
 }

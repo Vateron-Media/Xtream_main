@@ -108,6 +108,7 @@ define('STREAMS_PATH', CONTENT_PATH . 'streams/');
 define('TV_ARCHIVE', CONTENT_PATH . 'tv_archive/');
 define('VOD_PATH', CONTENT_PATH . 'vod/');
 define('CREATED_PATH', CONTENT_PATH . 'created/');
+define('VIDEO_PATH', CONTENT_PATH . 'video/');
 // -------------------
 
 // CONSTANTS VAR

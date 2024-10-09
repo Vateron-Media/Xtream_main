@@ -371,12 +371,12 @@ class ipTV_stream {
             $probeArguments = $stream['stream_arguments'];
             foreach (array_keys($probeArguments) as $rID) {
                 if ($probeArguments[$rID]['argument_key'] == 'headers') {
-                    $probeArguments[$rID]['value'] .= "\r\n" . 'X-XUI-Prebuffer:1';
+                    $probeArguments[$rID]['value'] .= "\r\n" . 'X-XTREAMUI-Prebuffer:1';
                     $processed = true;
                 }
             }
             if (!$processed) {
-                $probeArguments[] = array('value' => 'X-XUI-Prebuffer:1', 'argument_key' => 'headers', 'argument_cat' => 'fetch', 'argument_wprotocol' => 'http', 'argument_type' => 'text', 'argument_cmd' => "-headers '%s" . "\r\n" . "'");
+                $probeArguments[] = array('value' => 'X-XTREAMUI-Prebuffer:1', 'argument_key' => 'headers', 'argument_cat' => 'fetch', 'argument_wprotocol' => 'http', 'argument_type' => 'text', 'argument_cmd' => "-headers '%s" . "\r\n" . "'");
             }
 
             $protocol = strtolower(substr($streamSource, 0, strpos($streamSource, '://')));
