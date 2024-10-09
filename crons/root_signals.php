@@ -19,8 +19,6 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 
 function loadCron() {
     global $ipTV_db;
-    // XtreamCodes::$rServers = ipTV_lib::getServers(true);
-
     if ($ipTV_db->query("SELECT `signal_id`, `custom_data` FROM `signals` WHERE `server_id` = '%s' AND `custom_data` <> '' AND `cache` = 0 ORDER BY signal_id ASC;", SERVER_ID)) {
         $rRows = $ipTV_db->get_rows();
         if (file_exists(TMP_PATH . 'crontab')) {

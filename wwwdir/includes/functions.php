@@ -117,7 +117,11 @@ function checkFlood($rIP = null) {
                             file_put_contents($rIPFile, json_encode($rFloodRow), LOCK_EX);
                         } else {
                             if (!in_array($rIP, ipTV_lib::$blockedISP)) {
-                                $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%d\')', $rIP, 'FLOOD ATTACK', time());
+                                if (ipTV_lib::$cached) {
+                                    ipTV_lib::setSignal('flood_attack/' . $rIP, 1);
+                                } else {
+                                    $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%d\')', $rIP, 'FLOOD ATTACK', time());
+                                }
                                 touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                             }
                             ipTV_lib::unlink_file($rIPFile);
@@ -229,7 +233,11 @@ function checkBruteforce($rIP = null, $rMAC = null, $rUsername = null) {
                                     file_put_contents($rIPFile, json_encode($rFloodRow), LOCK_EX);
                                 } else {
                                     if (!in_array($rIP, ipTV_lib::$blockedIPs)) {
-                                        $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%s\')', $rIP, 'BRUTEFORCE ' . strtoupper($rFloodType) . ' ATTACK', time());
+                                        if (ipTV_lib::$cached) {
+                                            ipTV_lib::setSignal('bruteforce_attack/' . $rIP, 1);
+                                        } else {
+                                            $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%s\')', $rIP, 'BRUTEFORCE ' . strtoupper($rFloodType) . ' ATTACK', time());
+                                        }
                                         touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                                     }
                                     ipTV_lib::unlink_file($rIPFile);

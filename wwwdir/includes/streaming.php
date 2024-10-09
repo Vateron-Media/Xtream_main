@@ -294,8 +294,11 @@ class ipTV_streaming {
         }
         if (ipTV_lib::$settings['county_override_1st'] == 1 && empty($userInfo['forced_country']) && !empty($IP) && $userInfo['max_connections'] == 1) {
             $userInfo['forced_country'] = self::getIPInfo($IP)['registered_country']['iso_code'];
-
-            self::$ipTV_db->query('UPDATE `users` SET `forced_country` = \'%s\' WHERE `id` = \'%s\'', $userInfo['forced_country'], $userInfo['id']);
+            if (ipTV_lib::$cached) {
+                ipTV_lib::setSignal('forced_country/' . $userInfo['id'], $userInfo['forced_country']);
+            } else {
+                self::$ipTV_db->query('UPDATE `users` SET `forced_country` = \'%s\' WHERE `id` = \'%s\'', $userInfo['forced_country'], $userInfo['id']);
+            }
         }
         $userInfo['bouquet'] = json_decode($userInfo['bouquet'], true);
         $userInfo['allowed_ips'] = @array_filter(@array_map('trim', @json_decode($userInfo['allowed_ips'], true)));
@@ -345,7 +348,11 @@ class ipTV_streaming {
                 $userInfo['isp_violate'] = 1;
             }
             if ($userInfo['isp_violate'] == 0 && strtolower($userInfo['con_isp_name']) != strtolower($userInfo['isp_desc'])) {
-                self::$ipTV_db->query('UPDATE `users` SET `isp_desc` = \'%s\', `as_number` = \'%s\' WHERE `id` = \'%s\'', $userInfo['con_isp_name'], $userInfo['isp_asn'], $userInfo['id']);
+                if (ipTV_lib::$cached) {
+                    ipTV_lib::setSignal('isp/' . $userInfo['id'], json_encode(array($userInfo['con_isp_name'], $userInfo['isp_asn'])));
+                } else {
+                    self::$ipTV_db->query('UPDATE `users` SET `isp_desc` = \'%s\', `as_number` = \'%s\' WHERE `id` = \'%s\'', $userInfo['con_isp_name'], $userInfo['isp_asn'], $userInfo['id']);
+                }
             }
         }
 
@@ -1176,7 +1183,7 @@ class ipTV_streaming {
         return self::$ipTV_db->get_rows(true, 'user_id', false);
     }
     public static function updateStream($streamID) {
-        self::$ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = \'%s\' AND `cache` = 1 AND `custom_data` = \'%s\';', self::getMainID(), json_encode(array('type' => 'update_stream', 'id' => $streamID)));
+        self::$ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = \'%d\' AND `cache` = 1 AND `custom_data` = \'%s\';', self::getMainID(), json_encode(array('type' => 'update_stream', 'id' => $streamID)));
         if (self::$ipTV_db->get_row()['count'] == 0) {
             self::$ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(\'%s\', 1, \'%s\', \'%s\');', self::getMainID(), time(), json_encode(array('type' => 'update_stream', 'id' => $streamID)));
         }

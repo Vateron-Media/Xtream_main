@@ -666,4 +666,15 @@ class ipTV_lib {
     public static function setSignal($rKey, $rData) {
         file_put_contents(SIGNALS_TMP_PATH . 'cache_' . md5($rKey), json_encode(array($rKey, $rData)));
     }
+    public static function updateLine($rUserID, $rForce = false) {
+        global $ipTV_db;
+        if (self::$cached) {
+            $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = \'%s\' AND `cache` = 1 AND `custom_data` = \'%s\';', ipTV_streaming::getMainID(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
+            if ($ipTV_db->get_row()['count'] == 0) {
+                $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(\'%s\', 1, \'%s\', \'%s\');', ipTV_streaming::getMainID(), time(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
+            }
+            return true;
+        }
+        return false;
+    }
 }
