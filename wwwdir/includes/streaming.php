@@ -777,17 +777,17 @@ class ipTV_streaming {
             return false;
         }
     }
-    public static function generateHLS($rM3U8, $username, $password, $streamID, $rUUID, $IP, $rVideoCodec = 'h264', $rOnDemand = 0, $rServerID = null, $rProxyID = null) {
+    public static function generateHLS($rM3U8, $username, $password, $streamID, $rUUID, $IP, $rVideoCodec = 'h264', $rOnDemand = 0, $rServerID = null) {
         if (file_exists($rM3U8)) {
             $rSource = file_get_contents($rM3U8);
-            if ($rOnDemand) {
+            if (ipTV_lib::$settings['encrypt_hls'] || $rOnDemand) {
                 $rKeyToken = encryptData($IP . '/' . $streamID, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                $rSource = "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"" . (($rProxyID ? '/' . md5($rProxyID . '_' . $rServerID . '_' . OPENSSL_EXTRA) : '')) . '/key/' . $rKeyToken . '",IV=0x' . bin2hex(file_get_contents(STREAMS_PATH . $streamID . '_.iv')) . "\n" . substr($rSource, 8, strlen($rSource) - 8);
+                $rSource = "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\" /key/" . $rKeyToken . '",IV=0x' . bin2hex(file_get_contents(STREAMS_PATH . $streamID . '_.iv')) . "\n" . substr($rSource, 8, strlen($rSource) - 8);
             }
             if (preg_match_all('/(.*?)\\.ts/', $rSource, $rMatches)) {
                 foreach ($rMatches[0] as $rMatch) {
-                    $rToken = encryptData($username . '/' . $password . '/' . $IP . '/' . $streamID . '/' . $rMatch . '/' . $rUUID . '/' . SERVER_ID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                    $rSource = str_replace($rMatch, (($rProxyID ? '/' . md5($rProxyID . '_' . $rServerID . '_' . OPENSSL_EXTRA) : '')) . '/hls/' . $rToken, $rSource);
+                    $rToken = encryptData($username . '/' . $password . '/' . $IP . '/' . $streamID . '/' . $rMatch . '/' . $rUUID . '/' . $rServerID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                    $rSource = str_replace($rMatch, '/hls/' . $rToken, $rSource);
                 }
                 return $rSource;
             }

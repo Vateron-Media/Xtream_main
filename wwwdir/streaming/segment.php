@@ -3,6 +3,7 @@
 header('Access-Control-Allow-Origin: *');
 set_time_limit(0);
 require '../init.php';
+
 $rSettings = unserialize(file_get_contents(CACHE_TMP_PATH . 'settings'));
 $rServers = unserialize(file_get_contents(CACHE_TMP_PATH . 'servers'));
 
@@ -29,7 +30,7 @@ if (isset($_GET['token'])) {
                 list(, $rUsername, $rPassword, $rUserIP, $rDuration, $rStartDate, $rSegmentData, $rUUID) = $rTokenArray;
                 list($rStreamID, $rSegmentID, $rOffset) = explode('_', $rSegmentData);
                 $rStreamID = intval($rStreamID);
-                $rSegment = TV_ARCHIVE . $rStreamID . '/' . $rSegmentID;
+                $rSegment = ARCHIVE_PATH . $rStreamID . '/' . $rSegmentID;
 
                 if (!file_exists($rSegment)) {
                     generate404();
@@ -46,7 +47,7 @@ if (isset($_GET['token'])) {
                 $rSegment = STREAMS_PATH . $rSegmentID;
                 $rSegmentData = explode('_', $rSegmentID);
 
-                if (!file_exists($rSegment) && $rSegmentData[0] != $rStreamID) {
+                if (!(file_exists($rSegment) && $rSegmentData[0] == $rStreamID)) {
                     generate404();
                 }
             }
@@ -56,8 +57,9 @@ if (isset($_GET['token'])) {
             }
 
             $rFilesize = filesize($rSegment);
+            $rIPMatch = ($rSettings['ip_subnet_match'] ? implode('.', array_slice(explode('.', $rUserIP), 0, -1)) == implode('.', array_slice(explode('.', getuserip()), 0, -1)) : $rUserIP == getuserip());
 
-            if ($rUserIP != getuserip() || $rSettings['restrict_same_ip']) {
+            if (!$rIPMatch && $rSettings['restrict_same_ip']) {
                 generate404();
             }
 

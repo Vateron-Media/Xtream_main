@@ -55,7 +55,7 @@ $self = $_SERVER['PHP_SELF'];
 
 $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
 @session_set_cookie_params(0, null, null, $secure, true);
-ini_set('session.use_only_cookies', 1);
+// ini_set('session.use_only_cookies', 1);
 @session_start();
 
 if (!isset($_SESSION['XSS'])) $_SESSION['XSS'] = get_rand_str(16);

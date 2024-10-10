@@ -136,7 +136,7 @@ if (!is_numeric($start)) {
     $start_timestamp = mktime($Ed62709841469f20fe0f7a17a4268692, $minutes, 0, $month, $day, $year);
 } else {
     $duration *= 24;
-    $files = array_values(array_filter(explode('', shell_exec('ls -tr ' . TV_ARCHIVE . $stream_id . ' | sed -e \'s/\\s\\+/\\n/g\''))));
+    $files = array_values(array_filter(explode('', shell_exec('ls -tr ' . ARCHIVE_PATH . $stream_id . ' | sed -e \'s/\\s\\+/\\n/g\''))));
     $start_time = $start * 24;
     if (count($files) >= $start_time) {
         $start_time = $files[count($files) - $start_time];
@@ -150,7 +150,7 @@ if (!is_numeric($start)) {
     }
 }
 $queue = array();
-$file = TV_ARCHIVE . $stream_id . '/' . date('Y-m-d:H-i', $start_timestamp) . '.ts';
+$file = ARCHIVE_PATH . $stream_id . '/' . date('Y-m-d:H-i', $start_timestamp) . '.ts';
 if (empty($stream_id) || empty($start_timestamp) || empty($duration)) {
     header('HTTP/1.1 400 Bad Request');
     die;
@@ -162,7 +162,7 @@ if (!file_exists($file) || !is_readable($file)) {
 $queue = array();
 $index = 0;
 while ($index < $duration) {
-    $file = TV_ARCHIVE . $stream_id . '/' . date('Y-m-d:H-i', $start_timestamp + $index * 60) . '.ts';
+    $file = ARCHIVE_PATH . $stream_id . '/' . date('Y-m-d:H-i', $start_timestamp + $index * 60) . '.ts';
     if (file_exists($file)) {
         $queue[] = array('filename' => $file, 'filesize' => filesize($file));
     }

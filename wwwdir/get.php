@@ -1,7 +1,7 @@
 <?php
 
-register_shutdown_function('shutdown');
 require 'init.php';
+register_shutdown_function('shutdown');
 set_time_limit(0);
 header('Access-Control-Allow-Origin: *');
 $rDeny = true;
@@ -13,7 +13,6 @@ $rDeviceKey = (empty(ipTV_lib::$request['type']) ? 'm3u_plus' : ipTV_lib::$reque
 $rTypeKey = (empty(ipTV_lib::$request['key']) ? null : explode(',', ipTV_lib::$request['key']));
 $rOutputKey = (empty(ipTV_lib::$request['output']) ? '' : ipTV_lib::$request['output']);
 $rNoCache = !empty(ipTV_lib::$request['nocache']);
-
 if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'])) {
     $rUsername = ipTV_lib::$request['username'];
     $rPassword = ipTV_lib::$request['password'];
@@ -74,12 +73,10 @@ if ($rUserInfo) {
         generateError('NOT_IN_ALLOWED_IPS');
     }
 
-    if (empty($rCountryCode)) {
-    } else {
+    if (!empty($rCountryCode)) {
         $rForceCountry = !empty($rUserInfo['forced_country']);
 
-        if (!($rForceCountry && $rUserInfo['forced_country'] != 'ALL' && $rCountryCode != $rUserInfo['forced_country'])) {
-        } else {
+        if ($rForceCountry && $rUserInfo['forced_country'] != 'ALL' && $rCountryCode != $rUserInfo['forced_country']) {
             generateError('FORCED_COUNTRY_INVALID');
         }
 

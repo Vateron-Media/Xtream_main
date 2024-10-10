@@ -105,7 +105,7 @@ define('DELAY_PATH', CONTENT_PATH . 'delayed/');
 define('EPG_PATH', CONTENT_PATH . 'epg/');
 define('PLAYLIST_PATH', CONTENT_PATH . 'playlists/');
 define('STREAMS_PATH', CONTENT_PATH . 'streams/');
-define('TV_ARCHIVE', CONTENT_PATH . 'tv_archive/');
+define('ARCHIVE_PATH', CONTENT_PATH . 'tv_archive/');
 define('VOD_PATH', CONTENT_PATH . 'vod/');
 define('CREATED_PATH', CONTENT_PATH . 'created/');
 define('VIDEO_PATH', CONTENT_PATH . 'video/');
@@ -130,8 +130,6 @@ if (!defined('FETCH_BOUQUETS')) {
 define('CACHE_STREAMS', false);
 define('CACHE_STREAMS_TIME', 10);
 define('STREAM_TYPE', array('live', 'series', 'movie', 'created_live', 'radio_streams'));
-
-$rShowErrors = false;
 
 global $argc;
 if (!$argc) {
