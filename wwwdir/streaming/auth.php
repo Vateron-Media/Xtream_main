@@ -94,8 +94,8 @@ if ($rExtension) {
     }
 
     if ((ipTV_lib::$settings['enable_cache'] && !ipTV_lib::$settings['show_not_on_air_video'] && file_exists(CACHE_TMP_PATH . 'servers'))) {
-        $rServers = unserialize(file_get_contents(CACHE_TMP_PATH . 'servers'));
-        $rStream = (unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . $streamID)) ?: null);
+        $rServers = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'servers'));
+        $rStream = (igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . $streamID)) ?: null);
         $rAvailableServers = array();
 
         if ($rType == 'archive') {
@@ -557,7 +557,7 @@ if ($rExtension) {
             $rStreamInfo = null;
 
             if (ipTV_lib::$cached) {
-                $rStreamInfo = unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . $streamID));
+                $rStreamInfo = igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . $streamID));
             } else {
                 $ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 1 LEFT JOIN `profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = ?', $streamID);
 

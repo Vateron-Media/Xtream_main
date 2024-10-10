@@ -151,7 +151,7 @@ if ($rReqType == 'stb' && $rReqAction == 'handshake') {
 
     if ($rDevice) {
         $rDevice['token'] = strtoupper(md5(uniqid(rand(), true)));
-        $rVerifyToken = encryptData(serialize(array('id' => $rDevice['mag_id'], 'token' => $rDevice['token'])), ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+        $rVerifyToken = encryptData(igbinary_serialize(array('id' => $rDevice['mag_id'], 'token' => $rDevice['token'])), ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
         $rDevice['authenticated'] = false;
         $ipTV_db->query('UPDATE `mag_devices` SET `token` = \'%s\' WHERE `mag_id` = \'%s\'', $rDevice['token'], $rDevice['mag_id']);
         $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(\'%s\', 1, \'%s\', \'%s\');', SERVER_ID, time(), json_encode(array('type' => 'update_line', 'id' => $rDevice['user_id'])));
@@ -182,7 +182,7 @@ if ($rAuthHeader && preg_match('/Bearer\\s+(.*)$/i', $rAuthHeader, $rMatches)) {
 }
 
 if ($rAuthToken) {
-    $rVerify = unserialize(decryptData($rAuthToken, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA));
+    $rVerify = igbinary_unserialize(decryptData($rAuthToken, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA));
     $rDevice = (isset($rVerify['id']) ? getDevice($rVerify['id']) : array());
 
     if ($rDevice['token'] != $rVerify['token']) {
@@ -639,7 +639,7 @@ switch ($rReqType) {
                                 $rEPGData = array();
 
                                 if (file_exists(EPG_PATH . 'stream_' . intval($rChannelID))) {
-                                    $rRows = unserialize(file_get_contents(EPG_PATH . 'stream_' . $rChannelID));
+                                    $rRows = igbinary_unserialize(file_get_contents(EPG_PATH . 'stream_' . $rChannelID));
 
                                     foreach ($rRows as $rRow) {
                                         if ($rRow['start'] <= $rTime && $rTime <= $rRow['end'] || $rTime <= $rRow['start']) {
@@ -1093,7 +1093,7 @@ switch ($rReqType) {
                             $rEndTime = strtotime($rReqDate . ' 23:59:59');
 
                             if (file_exists(EPG_PATH . 'stream_' . intval($rChannelID))) {
-                                $rRows = unserialize(file_get_contents(EPG_PATH . 'stream_' . $rChannelID));
+                                $rRows = igbinary_unserialize(file_get_contents(EPG_PATH . 'stream_' . $rChannelID));
 
                                 foreach ($rRows as $rRow) {
                                     if ($rStartTime <= $rRow['start'] && $rRow['start'] <= $rEndTime) {
@@ -1105,7 +1105,7 @@ switch ($rReqType) {
                             }
 
                             if (file_exists(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID))) {
-                                $rStreamRow = unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID)))['info'];
+                                $rStreamRow = igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID)))['info'];
                             } else {
                                 $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = \'%s\';', ipTV_lib::$request['ch_id']);
 
@@ -1199,7 +1199,7 @@ switch ($rReqType) {
                             $rTimeDifference = ipTV_lib::getDiffTimezone($rTimezone);
 
                             if (file_exists(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID))) {
-                                $rStreamRow = unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID)))['info'];
+                                $rStreamRow = igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID)))['info'];
                             } else {
                                 $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = \'%s\';', ipTV_lib::$request['ch_id']);
 
@@ -1211,7 +1211,7 @@ switch ($rReqType) {
                             $rTime = strtotime(date('Y-m-d 00:00:00'));
 
                             if (file_exists(EPG_PATH . 'stream_' . intval($rChannelID))) {
-                                $rRows = unserialize(file_get_contents(EPG_PATH . 'stream_' . $rChannelID));
+                                $rRows = igbinary_unserialize(file_get_contents(EPG_PATH . 'stream_' . $rChannelID));
 
                                 foreach ($rRows as $rRow) {
                                     if ($rTime < $rRow['start']) {
@@ -1519,7 +1519,7 @@ function sortArrayStreamAdded($a, $b) {
 function getDevice($rID = null, $rMAC = null) {
     global $ipTV_db;
     global $rIP;
-    $rDevice = ($rID && file_exists(STALKER_TMP_PATH . 'stalker_' . $rID) ? ($rDevice = unserialize(file_get_contents(STALKER_TMP_PATH . 'stalker_' . $rID))) : null);
+    $rDevice = ($rID && file_exists(STALKER_TMP_PATH . 'stalker_' . $rID) ? ($rDevice = igbinary_unserialize(file_get_contents(STALKER_TMP_PATH . 'stalker_' . $rID))) : null);
     $rMAC = base64_encode(strtoupper(urldecode($rMAC)));
 
     if (!$rDevice && $rMAC || $rDevice && 600 < time() - $rDevice['generated']) {
@@ -1594,7 +1594,7 @@ function getDevice($rID = null, $rMAC = null) {
 
 function getEPG($rStreamID, $rStartDate = null, $rFinishDate = null, $rByID = false) {
     $rReturn = array();
-    $rData = (file_exists(EPG_PATH . 'stream_' . $rStreamID) ? unserialize(file_get_contents(EPG_PATH . 'stream_' . $rStreamID)) : array());
+    $rData = (file_exists(EPG_PATH . 'stream_' . $rStreamID) ? igbinary_unserialize(file_get_contents(EPG_PATH . 'stream_' . $rStreamID)) : array());
 
     foreach ($rData as $rItem) {
         if (!$rStartDate && !($rStartDate > $rItem['end'] && $rItem['start'] > $rFinishDate)) {
@@ -1629,7 +1629,7 @@ function getProgramme($rStreamID, $rProgrammeID) {
 
 function updateCache() {
     global $rDevice;
-    file_put_contents(STALKER_TMP_PATH . 'stalker_' . $rDevice['mag_id'], serialize($rDevice));
+    file_put_contents(STALKER_TMP_PATH . 'stalker_' . $rDevice['mag_id'], igbinary_serialize($rDevice));
 }
 
 function getMovies($rCategoryID = null, $rFav = null, $rOrderBy = null, $rSearchBy = null, $rPicking = array()) {

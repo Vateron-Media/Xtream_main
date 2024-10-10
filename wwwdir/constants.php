@@ -138,7 +138,7 @@ if (!$argc) {
         define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
         if (file_exists(CACHE_TMP_PATH . 'settings')) {
             $data = file_get_contents(CACHE_TMP_PATH . 'settings');
-            $settings = unserialize($data);
+            $settings = igbinary_unserialize($data);
             $showErrors = (isset($settings['debug_show_errors']) ? $settings['debug_show_errors'] : false);
         }
     } else {

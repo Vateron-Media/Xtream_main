@@ -59,7 +59,7 @@ class ipTV_streaming {
     public static function getStreamData($streamID) {
         if (CACHE_STREAMS) {
             if (file_exists(TMP_PATH . $streamID . "_cacheStream") && time() - filemtime(TMP_PATH . $streamID . "_cacheStream") <= CACHE_STREAMS_TIME) {
-                return unserialize(file_get_contents(TMP_PATH . $streamID . "_cacheStream"));
+                return igbinary_unserialize(file_get_contents(TMP_PATH . $streamID . "_cacheStream"));
             }
         }
         $rOutput = array();
@@ -77,7 +77,7 @@ class ipTV_streaming {
             $rOutput['info'] = $rStreamInfo;
             $rOutput['servers'] = $rServers;
             if (CACHE_STREAMS) {
-                file_put_contents(TMP_PATH . $streamID . "_cacheStream", serialize($rOutput), LOCK_EX);
+                file_put_contents(TMP_PATH . $streamID . "_cacheStream", igbinary_serialize($rOutput), LOCK_EX);
             }
         }
         return (!empty($rOutput) ? $rOutput : false);
@@ -269,7 +269,7 @@ class ipTV_streaming {
                 }
             }
             if ($userID) {
-                $userInfo = unserialize(file_get_contents(USER_TMP_PATH . 'user_i_' . $userID));
+                $userInfo = igbinary_unserialize(file_get_contents(USER_TMP_PATH . 'user_i_' . $userID));
             }
         } else {
             if (empty($password) && empty($userID) && strlen($username) == 32) {
@@ -306,7 +306,7 @@ class ipTV_streaming {
         $userInfo['allowed_outputs'] = array_map('intval', json_decode($userInfo['allowed_outputs'], true));
         $userInfo['output_formats'] = array();
         if (ipTV_lib::$cached) {
-            foreach (unserialize(file_get_contents(CACHE_TMP_PATH . 'access_output')) as $rRow) {
+            foreach (igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'access_output')) as $rRow) {
                 if (in_array(intval($rRow['access_output_id']), $userInfo['allowed_outputs'])) {
                     $userInfo['output_formats'][] = $rRow['output_key'];
                 }
@@ -382,7 +382,7 @@ class ipTV_streaming {
             $userInfo['radio_ids'] = array_map('intval', array_unique($rRadioIDs));
         }
         $rAllowedCategories = array();
-        $rCategoryMap = unserialize(file_get_contents(CACHE_TMP_PATH . 'category_map'));
+        $rCategoryMap = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'category_map'));
         foreach ($userInfo['bouquet'] as $ID) {
             $rAllowedCategories = array_merge($rAllowedCategories, ($rCategoryMap[$ID] ?: array()));
         }
@@ -396,7 +396,7 @@ class ipTV_streaming {
         if (!is_array($bouquets)) {
             $bouquets = json_decode($bouquets, true);
         }
-        $output = unserialize(file_get_contents(TMP_PATH . 'categories_bouq'));
+        $output = igbinary_unserialize(file_get_contents(TMP_PATH . 'categories_bouq'));
         foreach ($bouquets as $bouquet) {
             if (isset($output[$bouquet])) {
                 if (in_array($category_id, $output[$bouquet])) {
@@ -541,7 +541,7 @@ class ipTV_streaming {
         $rActivePIDs = $rPIDs = array();
         if (!file_exists(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID))) {
         } else {
-            $rPIDs = unserialize(file_get_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID)));
+            $rPIDs = igbinary_unserialize(file_get_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID)));
         }
         foreach ($rPIDs as $rPID) {
             if (!self::isProcessRunning($rPID, 'php-fpm')) {
@@ -553,17 +553,17 @@ class ipTV_streaming {
         } else {
             $rActivePIDs[] = $rAddPID;
         }
-        file_put_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID), serialize($rActivePIDs));
+        file_put_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID), igbinary_serialize($rActivePIDs));
     }
     public static function removeFromQueue($rStreamID, $rPID) {
         $rActivePIDs = array();
-        foreach ((unserialize(file_get_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID))) ?: array()) as $rActivePID) {
+        foreach ((igbinary_unserialize(file_get_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID))) ?: array()) as $rActivePID) {
             if (self::isProcessRunning($rActivePID, 'php-fpm') && $rPID != $rActivePID) {
                 $rActivePIDs[] = $rActivePID;
             }
         }
         if (0 < count($rActivePIDs)) {
-            file_put_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID), serialize($rActivePIDs));
+            file_put_contents(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID), igbinary_serialize($rActivePIDs));
         } else {
             unlink(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID));
         }
@@ -1133,7 +1133,7 @@ class ipTV_streaming {
     public static function getISP($user_ip) {
         if (!empty($user_ip)) {
             if (file_exists(CONS_TMP_PATH . md5($user_ip) . '_isp')) {
-                return unserialize(file_get_contents(CONS_TMP_PATH . md5($user_ip) . '_isp'));
+                return igbinary_unserialize(file_get_contents(CONS_TMP_PATH . md5($user_ip) . '_isp'));
             }
             if ((isset($user_ip)) && (filter_var($user_ip, FILTER_VALIDATE_IP))) {
                 $rData = json_decode(file_get_contents("https://db-ip.com/demo/home.php?s=" . $user_ip), True);
@@ -1151,7 +1151,7 @@ class ipTV_streaming {
                             // note: if api is not returning correct usagetype, try another isp api source.
                         )
                     );
-                    file_put_contents(CONS_TMP_PATH . md5($user_ip) . '_isp', serialize($json));
+                    file_put_contents(CONS_TMP_PATH . md5($user_ip) . '_isp', igbinary_serialize($json));
                 }
             }
             return $json;
@@ -1221,7 +1221,7 @@ class ipTV_streaming {
         }
     }
     public static function getBouquetMap($streamID) {
-        $rBouquetMap = unserialize(file_get_contents(CACHE_TMP_PATH . 'bouquet_map'));
+        $rBouquetMap = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'bouquet_map'));
         $rReturn = ($rBouquetMap[$streamID] ?: array());
         unset($rBouquetMap);
         return $rReturn;

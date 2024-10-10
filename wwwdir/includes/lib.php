@@ -370,7 +370,7 @@ class ipTV_lib {
     }
     public static function sortChannels($rChannels) {
         if (0 < count($rChannels) && file_exists(CACHE_TMP_PATH . 'channel_order') && self::$settings['channel_number_type'] != 'bouquet') {
-            $order = unserialize(file_get_contents(CACHE_TMP_PATH . 'channel_order'));
+            $order = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'channel_order'));
             $rChannels = array_flip($rChannels);
             $rNewOrder = array();
             foreach ($order as $rID) {
@@ -387,7 +387,7 @@ class ipTV_lib {
     public static function movieProperties($stream_id) {
         $movie_properties = array();
         if (file_exists(TMP_PATH . $stream_id . "_cache_properties")) {
-            $movie_properties = unserialize(file_get_contents(TMP_PATH . $stream_id . "_cache_properties"));
+            $movie_properties = igbinary_unserialize(file_get_contents(TMP_PATH . $stream_id . "_cache_properties"));
         }
         return isset($movie_properties) && is_array($movie_properties) ? $movie_properties : array();
     }
@@ -399,7 +399,7 @@ class ipTV_lib {
      * @return void 
      */
     public static function setCache($cache, $data) {
-        $serializedData = serialize($data);
+        $serializedData = igbinary_serialize($data);
         if (!file_exists(CACHE_TMP_PATH)) {
             mkdir(CACHE_TMP_PATH);
         }
@@ -416,7 +416,7 @@ class ipTV_lib {
         if (file_exists(CACHE_TMP_PATH . $cache)) {
             if (!($rSeconds && time() - filemtime(CACHE_TMP_PATH . $cache) >= $rSeconds)) {
                 $data = file_get_contents(CACHE_TMP_PATH . $cache);
-                return unserialize($data);
+                return igbinary_unserialize($data);
             }
         }
         return null;
@@ -432,7 +432,7 @@ class ipTV_lib {
             $rDecrypted = substr($rDecrypted, 0, -64);
             $rCalcHMAC = hash_hmac('sha256', $rDecrypted, substr(bin2hex($key), -32));
             if ($rCalcHMAC === $rMAC) {
-                $rDecrypted = unserialize($rDecrypted);
+                $rDecrypted = igbinary_unserialize($rDecrypted);
                 return $rDecrypted;
             }
             return false;

@@ -266,7 +266,7 @@ if ($rUserInfo) {
 
                     foreach ($rStreamIDs as $rStreamID) {
                         if (file_exists(EPG_PATH . 'stream_' . intval($rStreamID))) {
-                            $rRows = unserialize(file_get_contents(EPG_PATH . 'stream_' . $rStreamID));
+                            $rRows = igbinary_unserialize(file_get_contents(EPG_PATH . 'stream_' . $rStreamID));
 
                             foreach ($rRows as $rEPGData) {
                                 $rNowPlaying = $rHasArchive = 0;
@@ -320,7 +320,7 @@ if ($rUserInfo) {
 
                     foreach ($rStreamIDs as $rStreamID) {
                         if (file_exists(EPG_PATH . 'stream_' . intval($rStreamID))) {
-                            $rRows = unserialize(file_get_contents(EPG_PATH . 'stream_' . $rStreamID));
+                            $rRows = igbinary_unserialize(file_get_contents(EPG_PATH . 'stream_' . $rStreamID));
 
                             foreach ($rRows as $rRow) {
                                 if ($rRow['start'] <= $rTime && $rTime <= $rRow['end'] || $rTime <= $rRow['start']) {

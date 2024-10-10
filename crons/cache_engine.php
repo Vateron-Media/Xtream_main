@@ -217,11 +217,11 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
                     //                 $rRow['last_modified'] = $cacheInitTime[$rRow['id']];
                     //             }
                     //             $rSeriesCategories[$rRow['id']] = json_decode($rRow['category_id'], true);
-                    //             file_put_contents(SERIES_TMP_PATH . 'series_' . $rRow['id'], serialize($rRow));
+                    //             file_put_contents(SERIES_TMP_PATH . 'series_' . $rRow['id'], igbinary_serialize($rRow));
                     //         }
                     //     }
                     // }
-                    // file_put_contents(SERIES_TMP_PATH . 'series_categories', serialize($rSeriesCategories));
+                    // file_put_contents(SERIES_TMP_PATH . 'series_categories', igbinary_serialize($rSeriesCategories));
                     $rDelete = array('streams' => array(), 'users_i' => array(), 'users_c' => array(), 'users_t' => array());
                     $cacheDataKey = array();
                     if (ipTV_lib::$settings['cache_changes']) {
@@ -289,13 +289,13 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
                     // $rSeriesEpisodes = $rSeriesMap = array();
                     // foreach ($cacheStoreMethod as $rStart) {
                     //     if (file_exists(SERIES_TMP_PATH . 'series_map_' . $rStart)) {
-                    //         foreach (unserialize(file_get_contents(SERIES_TMP_PATH . 'series_map_' . $rStart)) as $rStreamID => $rSeriesID) {
+                    //         foreach (igbinary_unserialize(file_get_contents(SERIES_TMP_PATH . 'series_map_' . $rStart)) as $rStreamID => $rSeriesID) {
                     //             $rSeriesMap[$rStreamID] = $rSeriesID;
                     //         }
                     //         unlink(SERIES_TMP_PATH . 'series_map_' . $rStart);
                     //     }
                     //     if (file_exists(SERIES_TMP_PATH . 'series_episodes_' . $rStart)) {
-                    //         $rSeasonData = unserialize(file_get_contents(SERIES_TMP_PATH . 'series_episodes_' . $rStart));
+                    //         $rSeasonData = igbinary_unserialize(file_get_contents(SERIES_TMP_PATH . 'series_episodes_' . $rStart));
                     //         foreach (array_keys($rSeasonData) as $rSeriesID) {
                     //             if (!isset($rSeriesEpisodes[$rSeriesID])) {
                     //                 $rSeriesEpisodes[$rSeriesID] = array();
@@ -309,9 +309,9 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
                     //         unlink(SERIES_TMP_PATH . 'series_episodes_' . $rStart);
                     //     }
                     // }
-                    // file_put_contents(SERIES_TMP_PATH . 'series_map', serialize($rSeriesMap));
+                    // file_put_contents(SERIES_TMP_PATH . 'series_map', igbinary_serialize($rSeriesMap));
                     // foreach ($rSeriesEpisodes as $rSeriesID => $rSeasons) {
-                    //     file_put_contents(SERIES_TMP_PATH . 'episodes_' . $rSeriesID, serialize($rSeasons));
+                    //     file_put_contents(SERIES_TMP_PATH . 'episodes_' . $rSeriesID, igbinary_serialize($rSeasons));
                     // }
                     if (ipTV_lib::$settings['cache_changes']) {
                         foreach ($rDelete['streams'] as $rStreamID) {
@@ -382,7 +382,7 @@ function generateUsers($rStart = null, $rCount = null, $cacheLockMechanism = arr
         } else {
             $rSteps = [null];
         }
-    
+
         $rExists = array();
         foreach ($rSteps as $rStep) {
             if (!is_null($rStep)) {
@@ -399,7 +399,7 @@ function generateUsers($rStart = null, $rCount = null, $cacheLockMechanism = arr
                 if ($ipTV_db->num_rows() > 0) {
                     foreach ($ipTV_db->get_rows() as $rUserInfo) {
                         $rExists[] = $rUserInfo['id'];
-                        file_put_contents(USER_TMP_PATH . 'user_i_' . $rUserInfo['id'], serialize($rUserInfo));
+                        file_put_contents(USER_TMP_PATH . 'user_i_' . $rUserInfo['id'], igbinary_serialize($rUserInfo));
                         $rKey = (ipTV_lib::$settings['case_sensitive_line'] ? $rUserInfo['username'] . '_' . $rUserInfo['password'] : strtolower($rUserInfo['username'] . '_' . $rUserInfo['password']));
                         file_put_contents(USER_TMP_PATH . 'user_c_' . $rKey, $rUserInfo['id']);
                         if (!empty($rUserInfo['access_token'])) {
@@ -426,7 +426,7 @@ function generateStreams($rStart = null, $rCount = null, $cacheLockMechanism = a
         $rCount = count($cacheLockMechanism);
     }
     if ($rCount > 0) {
-        $rBouquetMap = unserialize(file_get_contents(CACHE_TMP_PATH . 'bouquet_map'));
+        $rBouquetMap = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'bouquet_map'));
 
         if (!is_null($rStart)) {
             $rEnd = $rStart + $rCount - 1;
@@ -472,7 +472,7 @@ function generateStreams($rStart = null, $rCount = null, $cacheLockMechanism = a
                             unset($rStreamInfo['stream_source']);
                         }
                         $rOutput = array('info' => $rStreamInfo, 'bouquets' => ($rBouquetMap[intval($rStreamInfo['id'])] ?: array()), 'servers' => (isset($rStreamMap[intval($rStreamInfo['id'])]) ? $rStreamMap[intval($rStreamInfo['id'])] : array()));
-                        file_put_contents(STREAMS_TMP_PATH . 'stream_' . $rStreamInfo['id'], serialize($rOutput));
+                        file_put_contents(STREAMS_TMP_PATH . 'stream_' . $rStreamInfo['id'], igbinary_serialize($rOutput));
                     }
                     unset($rRows, $rStreamMap, $rStreamIDs);
                 }
@@ -516,8 +516,8 @@ function generateSeries($rStart, $rCount) {
             }
         }
     }
-    file_put_contents(SERIES_TMP_PATH . 'series_episodes_' . $rStart, serialize($rSeriesEpisodes));
-    file_put_contents(SERIES_TMP_PATH . 'series_map_' . $rStart, serialize($rSeriesMap));
+    file_put_contents(SERIES_TMP_PATH . 'series_episodes_' . $rStart, igbinary_serialize($rSeriesEpisodes));
+    file_put_contents(SERIES_TMP_PATH . 'series_map_' . $rStart, igbinary_serialize($rSeriesMap));
     unset($rSeriesMap);
 }
 function generateGroups() {
@@ -585,7 +585,7 @@ function generateGroups() {
             }
             $rReturn['category_ids'] = array_unique($rCategories);
         }
-        file_put_contents(CACHE_TMP_PATH . 'permissions_' . intval($rGroup['group_id']), serialize($rReturn));
+        file_put_contents(CACHE_TMP_PATH . 'permissions_' . intval($rGroup['group_id']), igbinary_serialize($rReturn));
     }
 }
 function generateUsersPerIP() {
@@ -601,7 +601,7 @@ function generateUsersPerIP() {
             $rUsersPerIP[$rTime][] = $rRow;
         }
     }
-    file_put_contents(CACHE_TMP_PATH . 'users_per_ip', serialize($rUsersPerIP));
+    file_put_contents(CACHE_TMP_PATH . 'users_per_ip', igbinary_serialize($rUsersPerIP));
 }
 function generateTheftDetection() {
     global $ipTV_db;
@@ -616,7 +616,7 @@ function generateTheftDetection() {
             $rTheftDetection[$rTime][] = $rRow;
         }
     }
-    file_put_contents(CACHE_TMP_PATH . 'theft_detection', serialize($rTheftDetection));
+    file_put_contents(CACHE_TMP_PATH . 'theft_detection', igbinary_serialize($rTheftDetection));
 }
 function getChangedUsers() {
     global $ipTV_db;

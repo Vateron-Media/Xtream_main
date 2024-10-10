@@ -24,7 +24,7 @@ function loadCron() {
     if (defined('CACHE_TMP_PATH')) {
         if ($rStartup && file_exists(CACHE_TMP_PATH . 'settings')) {
             echo 'Checking cache readability...' . "\n";
-            $rSerialize = unserialize(file_get_contents(CACHE_TMP_PATH . 'settings'));
+            $rSerialize = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'settings'));
             if (!is_array($rSerialize) && !isset($rSerialize['server_name'])) {
                 echo 'Clearing cache...' . "\n\n";
                 foreach (array(STREAMS_TMP_PATH, USER_TMP_PATH, SERIES_TMP_PATH) as $rTmpPath) {
@@ -60,14 +60,14 @@ function loadCron() {
             foreach ($ipTV_db->get_rows() as $rRow) {
                 $rOutputFormats[] = $rRow;
             }
-            file_put_contents(CACHE_TMP_PATH . 'access_output', serialize($rOutputFormats));
+            file_put_contents(CACHE_TMP_PATH . 'access_output', igbinary_serialize($rOutputFormats));
 
             // $rRTMPIPs = array();
             // $ipTV_db->query('SELECT `ip`, `password`, `push`, `pull` FROM `rtmp_ips`');
             // foreach ($ipTV_db->get_rows() as $rRow) {
             //     $rRTMPIPs[gethostbyname($rRow['ip'])] = array('password' => $rRow['password'], 'push' => boolval($rRow['push']), 'pull' => boolval($rRow['pull']));
             // }
-            // file_put_contents(CACHE_TMP_PATH . 'rtmp_ips', serialize($rRTMPIPs));
+            // file_put_contents(CACHE_TMP_PATH . 'rtmp_ips', igbinary_serialize($rRTMPIPs));
 
             $rChannelOrder = array();
             if (ipTV_lib::$settings['channel_number_type'] == 'manual') {
@@ -189,11 +189,11 @@ function loadCron() {
             foreach ($ipTV_db->get_rows() as $rRow) {
                 $rResellerDomains[] = strtolower($rRow['reseller_dns']);
             }
-            file_put_contents(CACHE_TMP_PATH . 'reseller_domains', serialize($rResellerDomains));
-            file_put_contents(CACHE_TMP_PATH . 'channel_order', serialize($rChannelOrder));
-            file_put_contents(CACHE_TMP_PATH . 'bouquet_map', serialize($rBouquetMap));
-            file_put_contents(CACHE_TMP_PATH . 'category_map', serialize($rCategoryMap));
-            file_put_contents(STREAMS_TMP_PATH . 'channels_categories', serialize($rCategoryChannels));
+            file_put_contents(CACHE_TMP_PATH . 'reseller_domains', igbinary_serialize($rResellerDomains));
+            file_put_contents(CACHE_TMP_PATH . 'channel_order', igbinary_serialize($rChannelOrder));
+            file_put_contents(CACHE_TMP_PATH . 'bouquet_map', igbinary_serialize($rBouquetMap));
+            file_put_contents(CACHE_TMP_PATH . 'category_map', igbinary_serialize($rCategoryMap));
+            file_put_contents(STREAMS_TMP_PATH . 'channels_categories', igbinary_serialize($rCategoryChannels));
         }
     } else {
         exit();

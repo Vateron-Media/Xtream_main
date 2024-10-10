@@ -4,8 +4,8 @@ header('Access-Control-Allow-Origin: *');
 set_time_limit(0);
 require '../init.php';
 
-$rSettings = unserialize(file_get_contents(CACHE_TMP_PATH . 'settings'));
-$rServers = unserialize(file_get_contents(CACHE_TMP_PATH . 'servers'));
+$rSettings = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'settings'));
+$rServers = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'servers'));
 
 if (empty($rSettings['live_streaming_pass'])) {
     generate404();
