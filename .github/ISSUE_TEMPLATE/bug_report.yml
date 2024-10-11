@@ -27,8 +27,7 @@ body:
     attributes:
       label: Possible fixes or solutions
       description: List any possible fixes/suggestions that you have in mind that could solve this issue.
-    validations:
-      required: true
+
 
   - type: textarea
     id: extrainformation
