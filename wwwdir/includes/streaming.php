@@ -1077,7 +1077,16 @@ class ipTV_streaming {
         return self::isProcessRunning($PID, FFMPEG_PATH) && file_exists($playlist);
     }
     public static function getUserIP() {
-        return !empty(ipTV_lib::$settings['get_real_ip_client']) && !empty($_SERVER[ipTV_lib::$settings['get_real_ip_client']]) ? $_SERVER[ipTV_lib::$settings['get_real_ip_client']] : $_SERVER['REMOTE_ADDR'];
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } elseif (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
     }
     public static function getIPInfo($IP) {
         if (!empty($IP)) {

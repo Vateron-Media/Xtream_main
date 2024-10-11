@@ -1072,7 +1072,6 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('111','userpanel_mainpage','[]'),
 ('112','save_closed_connection','1'),
 ('113','client_logs_save','1'),
-('114','get_real_ip_client','HTTP_CF_CONNECTING_IP'),
 ('115','case_sensitive_line','1'),
 ('116','county_override_1st','0'),
 ('117','disallow_2nd_ip_con','0'),
