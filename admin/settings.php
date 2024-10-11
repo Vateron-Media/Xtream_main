@@ -12,18 +12,10 @@ $rGeoCountries = array('ALL' => 'All Countries', 'A1' => 'Anonymous Proxy', 'A2'
 $rTMDBLanguages = array("" => "Default - EN", "aa" => "Afar", "af" => "Afrikaans", "ak" => "Akan", "an" => "Aragonese", "as" => "Assamese", "av" => "Avaric", "ae" => "Avestan", "ay" => "Aymara", "az" => "Azerbaijani", "ba" => "Bashkir", "bm" => "Bambara", "bi" => "Bislama", "bo" => "Tibetan", "br" => "Breton", "ca" => "Catalan", "cs" => "Czech", "ce" => "Chechen", "cu" => "Slavic", "cv" => "Chuvash", "kw" => "Cornish", "co" => "Corsican", "cr" => "Cree", "cy" => "Welsh", "da" => "Danish", "de" => "German", "dv" => "Divehi", "dz" => "Dzongkha", "eo" => "Esperanto", "et" => "Estonian", "eu" => "Basque", "fo" => "Faroese", "fj" => "Fijian", "fi" => "Finnish", "fr" => "French", "fy" => "Frisian", "ff" => "Fulah", "gd" => "Gaelic", "ga" => "Irish", "gl" => "Galician", "gv" => "Manx", "gn" => "Guarani", "gu" => "Gujarati", "ht" => "Haitian", "ha" => "Hausa", "sh" => "Serbo-Croatian", "hz" => "Herero", "ho" => "Hiri Motu", "hr" => "Croatian", "hu" => "Hungarian", "ig" => "Igbo", "io" => "Ido", "ii" => "Yi", "iu" => "Inuktitut", "ie" => "Interlingue", "ia" => "Interlingua", "id" => "Indonesian", "ik" => "Inupiaq", "is" => "Icelandic", "it" => "Italian", "ja" => "Japanese", "kl" => "Kalaallisut", "kn" => "Kannada", "ks" => "Kashmiri", "kr" => "Kanuri", "kk" => "Kazakh", "km" => "Khmer", "ki" => "Kikuyu", "rw" => "Kinyarwanda", "ky" => "Kirghiz", "kv" => "Komi", "kg" => "Kongo", "ko" => "Korean", "kj" => "Kuanyama", "ku" => "Kurdish", "lo" => "Lao", "la" => "Latin", "lv" => "Latvian", "li" => "Limburgish", "ln" => "Lingala", "lt" => "Lithuanian", "lb" => "Letzeburgesch", "lu" => "Luba-Katanga", "lg" => "Ganda", "mh" => "Marshall", "ml" => "Malayalam", "mr" => "Marathi", "mg" => "Malagasy", "mt" => "Maltese", "mo" => "Moldavian", "mn" => "Mongolian", "mi" => "Maori", "ms" => "Malay", "my" => "Burmese", "na" => "Nauru", "nv" => "Navajo", "nr" => "Ndebele", "nd" => "Ndebele", "ng" => "Ndonga", "ne" => "Nepali", "nl" => "Dutch", "nn" => "Norwegian Nynorsk", "nb" => "Norwegian Bokmal", "no" => "Norwegian", "ny" => "Chichewa", "oc" => "Occitan", "oj" => "Ojibwa", "or" => "Oriya", "om" => "Oromo", "os" => "Ossetian; Ossetic", "pi" => "Pali", "pl" => "Polish", "pt" => "Portuguese", "pt-BR" => "Portuguese - Brazil", "qu" => "Quechua", "rm" => "Raeto-Romance", "ro" => "Romanian", "rn" => "Rundi", "ru" => "Russian", "sg" => "Sango", "sa" => "Sanskrit", "si" => "Sinhalese", "sk" => "Slovak", "sl" => "Slovenian", "se" => "Northern Sami", "sm" => "Samoan", "sn" => "Shona", "sd" => "Sindhi", "so" => "Somali", "st" => "Sotho", "es" => "Spanish", "sq" => "Albanian", "sc" => "Sardinian", "sr" => "Serbian", "ss" => "Swati", "su" => "Sundanese", "sw" => "Swahili", "sv" => "Swedish", "ty" => "Tahitian", "ta" => "Tamil", "tt" => "Tatar", "te" => "Telugu", "tg" => "Tajik", "tl" => "Tagalog", "th" => "Thai", "ti" => "Tigrinya", "to" => "Tonga", "tn" => "Tswana", "ts" => "Tsonga", "tk" => "Turkmen", "tr" => "Turkish", "tw" => "Twi", "ug" => "Uighur", "uk" => "Ukrainian", "ur" => "Urdu", "uz" => "Uzbek", "ve" => "Venda", "vi" => "Vietnamese", "vo" => "Volapük", "wa" => "Walloon", "wo" => "Wolof", "xh" => "Xhosa", "yi" => "Yiddish", "za" => "Zhuang", "zu" => "Zulu", "ab" => "Abkhazian", "zh" => "Mandarin", "ps" => "Pushto", "am" => "Amharic", "ar" => "Arabic", "bg" => "Bulgarian", "cn" => "Cantonese", "mk" => "Macedonian", "el" => "Greek", "fa" => "Persian", "he" => "Hebrew", "hi" => "Hindi", "hy" => "Armenian", "en" => "English", "ee" => "Ewe", "ka" => "Georgian", "pa" => "Punjabi", "bn" => "Bengali", "bs" => "Bosnian", "ch" => "Chamorro", "be" => "Belarusian", "yo" => "Yoruba");
 $rMAGs = array("MAG200", "MAG245", "MAG245D", "MAG250", "MAG254", "MAG255", "MAG256", "MAG257", "MAG260", "MAG270", "MAG275", "MAG322", "MAG322w1", "MAG322w2", "MAG323", "MAG324", "MAG324C", "MAG324w2", "MAG325", "MAG349", "MAG350", "MAG351", "MAG352", "MAG420", "MAG420w1", "MAG420w2", "MAG422", "MAG422A", "MAG422Aw1", "MAG424", "MAG424w1", "MAG424w2", "MAG424w3", "MAG424A", "MAG424Aw3", "MAG425", "MAG425A", "AuraHD", "AuraHD0", "AuraHD1", "AuraHD2", "AuraHD3", "AuraHD4", "AuraHD5", "AuraHD6", "AuraHD7", "AuraHD8", "AuraHD9", "WR320", "IM2100", "IM2100w1", "IM2100V", "IM2100VI", "IM2101", "IM2101V", "IM2101VI", "IM2101VO", "IM2101w2", "IM2102", "IM4410", "IM4410w3", "IM4411", "IM4411w1", "IM4412", "IM4414", "IM4414w1", "IP_STB_HD");
 
-#Geolite2 Update
-$context = stream_context_create(
-    array(
-        "http" => array(
-            "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
-        )
-    )
-);
-$URLTagsRelease = "https://api.github.com/repos/Vateron-Media/Xtream_Update/git/refs/tags";
-$tags = json_decode(file_get_contents($URLTagsRelease, false, $context), True);
-$latestTag = $tags[0]['ref'];
-$rGeoLite2 = str_replace("refs/tags/", "", $latestTag);
+#Get versions
+$rGeoLite2 = get_recent_stable_release("https://github.com/Vateron-Media/Xtream_Update/releases/latest");
+$rUpdatePanel = mb_substr(get_recent_stable_release("https://github.com/Vateron-Media/Xtream_main/releases/latest"), 1);
+$rInfosUpdate = array();
 
 
 if (isset($_GET["geolite2"])) {
@@ -334,11 +326,7 @@ if ($rSettings["sidebar"]) { ?>
                                         </button>
                                         <?= $_["there_was_an_error_saving_settings"] ?>
                                     </div>
-                                <?php }
-                                $rContext = stream_context_create(array('http' => array('timeout' => 3)));
-                                $rUpdatePanel = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json", false, $rContext), True);
-                                $rInfos = array(); //json_decode(file_get_contents("http://xtream-ui.mine.nu/Update/infos.json", false, $rContext), True);
-                                ?>
+                                <?php } ?>
                                 <?php if (isUpdateNeeded($rAdminSettings["geolite2_version"], $rGeoLite2)) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -348,12 +336,12 @@ if ($rSettings["sidebar"]) { ?>
                                         <a href="./settings.php?geolite2"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
-                                <?php if (isUpdateNeeded($rUpdatePanel["main"], getScriptVer())) { ?>
+                                <?php if (isUpdateNeeded($rUpdatePanel, getScriptVer())) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        A new version (<?= $rUpdatePanel["main"] ?>) <?= $_["is_available"] ?> <a
+                                        A new version (<?= $rUpdatePanel ?>) <?= $_["is_available"] ?> <a
                                             href="./settings.php?panel_version"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
@@ -374,7 +362,7 @@ if ($rSettings["sidebar"]) { ?>
                                                     <h2 class="font-weight-normal mb-3">
                                                         <small
                                                             class="mdi mdi-checkbox-blank-circle text-info align-middle mr-1"></small>
-                                                        <span><?= $rUpdatePanel["main"] ?></span>
+                                                        <span><?= $rUpdatePanel ?></span>
                                                     </h2>
                                                 </div>
                                                 <div class="col-md-4">
@@ -2506,12 +2494,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                                     <p
                                                                                         class="text-muted mb-0 mt-3 text-left">
                                                                                         </small><b><a
-                                                                                                class="text-dark"><?= $rInfos["title"][0] ?></a></b>
+                                                                                                class="text-dark"><?= $rInfosUpdate["title"][0] ?></a></b>
                                                                                     </p>
                                                                                     <h5 class="font-weight-normal mb-3">
-                                                                                        <span><?= $rInfos["infos"][0] ?><sup
+                                                                                        <span><?= $rInfosUpdate["infos"][0] ?><sup
                                                                                                 class="font-13">
-                                                                                                <?= $rInfos["infos"][1] ?></sup></span>
+                                                                                                <?= $rInfosUpdate["infos"][1] ?></sup></span>
                                                                                     </h5>
                                                                                 </div>
                                                                             </div>

@@ -11,7 +11,59 @@ function getScriptVer() {
     $rVersion = $db->query("SELECT `script_version` FROM `streaming_servers` WHERE `is_main` = '1'")->fetch_assoc()["script_version"];
     return $rVersion;
 }
+/**
+ * Retrieves the most recent stable release version from a given URL.
+ *
+ * This function sends a HEAD request to the provided URL, follows any redirects,
+ * and attempts to extract the version number from the final URL's basename.
+ * It assumes the version is the basename of the URL, minus the first character.
+ *
+ * @param string $url The URL to check for the latest stable release.
+ *
+ * @return string|false The extracted version number as a string, or false on failure.
+ *                      The returned version string does not include the first character
+ *                      of the basename (typically removing a 'v' prefix if present).
+ *
+ * @throws Exception If there's an issue with the cURL request or version extraction.
+ *                   The exception message will be logged using error_log().
+ *
+ */
+function get_recent_stable_release(string $url) {
+    // Initialize cURL session
+    $ch = curl_init();
 
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+
+    // Execute cURL request
+    $result = curl_exec($ch);
+
+    if ($result === false) {
+        error_log("cURL Error: " . curl_error($ch));
+        curl_close($ch);
+        return false;
+    }
+
+    // Get the effective URL after following redirects
+    $effective_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+
+    // Close cURL session
+    curl_close($ch);
+
+    // Extract the version from the URL
+    $version = basename($effective_url);
+
+    if (empty($version)) {
+        error_log("Error: Could not extract version from URL");
+        return false;
+    }
+
+    return $version;
+}
 /**
  * Determines if an update is needed based on the current version and the required version.
  *
