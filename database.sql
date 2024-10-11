@@ -989,7 +989,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('28','default_timezone','Europe/London'),
 ('29','default_locale','en_GB.utf8'),
 ('30','allowed_stb_types','[\"MAG200\",\"MAG245\",\"MAG245D\",\"MAG250\",\"MAG254\",\"MAG255\",\"MAG256\",\"MAG257\",\"MAG260\",\"MAG270\",\"MAG275\",\"MAG322\",\"MAG323\",\"MAG324\",\"MAG325\",\"MAG349\",\"MAG350\",\"MAG351\",\"MAG352\",\"AuraHD\",\"AuraHD2\",\"AuraHD3\",\"AuraHD4\",\"AuraHD5\",\"AuraHD6\",\"AuraHD7\",\"AuraHD8\",\"AuraHD9\",\"WR320\"]'),
-('31','client_prebuffer','30'),
+('31','client_prebuffer','15'),
 ('32', 'mag_disable_ssl', '0')
 ('33','stream_max_analyze','5000000'),
 ('34','show_not_on_air_video','0'),

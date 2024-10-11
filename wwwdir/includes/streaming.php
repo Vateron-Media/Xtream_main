@@ -30,18 +30,18 @@ class ipTV_streaming {
             }
         }
         $IPs = array('127.0.0.1', $_SERVER['SERVER_ADDR']);
-        foreach (ipTV_lib::$StreamingServers as $rServerInfo) {
-            if (!empty($rServerInfo['whitelist_ips'])) {
-                $whitelist_ips = json_decode($rServerInfo['whitelist_ips'], true);
+        foreach (ipTV_lib::$StreamingServers as $serverInfo) {
+            if (!empty($serverInfo['whitelist_ips'])) {
+                $whitelist_ips = json_decode($serverInfo['whitelist_ips'], true);
                 if (is_array($whitelist_ips)) {
                     $IPs = array_merge($IPs, $whitelist_ips);
                 }
             }
-            $IPs[] = $rServerInfo['server_ip'];
-            if ($rServerInfo['private_ip']) {
-                $IPs[] = $rServerInfo['private_ip'];
+            $IPs[] = $serverInfo['server_ip'];
+            if ($serverInfo['private_ip']) {
+                $IPs[] = $serverInfo['private_ip'];
             }
-            foreach (explode(',', $rServerInfo['domain_name']) as $IP) {
+            foreach (explode(',', $serverInfo['domain_name']) as $IP) {
                 if (filter_var($IP, FILTER_VALIDATE_IP)) {
                     $IPs[] = $IP;
                 }
@@ -82,8 +82,13 @@ class ipTV_streaming {
         }
         return (!empty($rOutput) ? $rOutput : false);
     }
-    public static function ChannelInfo($streamID, $extension, $userInfo, $rCountryCode, $rUserISP = '', $rType = '') {
-        $rStream = self::getStreamData($streamID);
+    public static function ChannelInfo($rStreamID, $extension, $userInfo, $rCountryCode, $rUserISP = '', $rType = '') {
+        if (ipTV_lib::$cached) {
+            $rStream = (igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . $rStreamID)) ?: null);
+            $rStream['bouquets'] = self::getBouquetMap($rStreamID);
+        } else {
+            $rStream = self::getStreamData($rStreamID);
+        }
         if ($rStream) {
             $rStream['info']['bouquets'] = $rStream['bouquets'];
             $rAvailableServers = array();
@@ -92,18 +97,16 @@ class ipTV_streaming {
                     $rAvailableServers = array($rStream['info']['tv_archive_server_id']);
                 }
             } else {
-
-                if ($rStream['info']['direct_source'] == 0) {
-                    foreach (ipTV_lib::$StreamingServers as $rServerID => $serverInfo) {
-                        if (array_key_exists($rServerID, $rStream['servers']) || $serverInfo['server_online'] || $serverInfo['server_type'] == 0) {
-
+                if ($rStream['info']['direct_source'] != 1) {
+                    foreach (ipTV_lib::$StreamingServers  as $rServerID => $serverInfo) {
+                        if (!(!array_key_exists($rServerID, $rStream['servers']) || !$serverInfo['server_online'] || $serverInfo['server_type'] != 0)) {
                             if (isset($rStream['servers'][$rServerID])) {
                                 if ($rType == 'movie') {
-                                    if ((!empty($rStream['servers'][$rServerID]['pid']) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && $rStream['servers'][$rServerID]['stream_status'] == 0 || $rStream['info']['direct_source'] == 1) && ($rStream['info']['target_container'] == $extension || ($extension = 'srt')) && $serverInfo['timeshift_only'] == 0) {
+                                    if ((!empty($rStream['servers'][$rServerID]['pid']) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && $rStream['servers'][$rServerID]['stream_status'] == 0) && ($rStream['info']['target_container'] == $extension || ($extension = 'srt')) && $serverInfo['timeshift_only'] == 0) {
                                         $rAvailableServers[] = $rServerID;
                                     }
                                 } else {
-                                    if (($rStream['servers'][$rServerID]['on_demand'] == 1 && $rStream['servers'][$rServerID]['stream_status'] != 1 || 0 < $rStream['servers'][$rServerID]['pid'] && $rStream['servers'][$rServerID]['stream_status'] == 0) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && (int) $rStream['servers'][$rServerID]['delay_available_at'] <= time() && $serverInfo['timeshift_only'] == 0 || $rStream['info']['direct_source'] == 1) {
+                                    if (($rStream['servers'][$rServerID]['on_demand'] == 1 && $rStream['servers'][$rServerID]['stream_status'] != 1 || 0 < $rStream['servers'][$rServerID]['pid'] && $rStream['servers'][$rServerID]['stream_status'] == 0) && $rStream['servers'][$rServerID]['to_analyze'] == 0 && (int) $rStream['servers'][$rServerID]['delay_available_at'] <= time() && $serverInfo['timeshift_only'] == 0) {
                                         $rAvailableServers[] = $rServerID;
                                     }
                                 }
@@ -696,10 +699,10 @@ class ipTV_streaming {
         }
         return false;
     }
-    public static function writeOfflineActivity($serverID, $userID, $streamID, $start, $userAgent, $IP, $rExtension, $GeoIP, $rISP, $rExternalDevice = '', $rDivergence = 0) {
+    public static function writeOfflineActivity($serverID, $userID, $streamID, $start, $userAgent, $IP, $extension, $GeoIP, $rISP, $rExternalDevice = '', $rDivergence = 0) {
         if (ipTV_lib::$settings['save_closed_connection'] != 0) {
             if ($serverID && $userID && $streamID) {
-                $rActivityInfo = array('user_id' => intval($userID), 'stream_id' => intval($streamID), 'server_id' => intval($serverID), 'date_start' => intval($start), 'user_agent' => $userAgent, 'user_ip' => htmlentities($IP), 'date_end' => time(), 'container' => $rExtension, 'geoip_country_code' => $GeoIP, 'isp' => $rISP, 'external_device' => htmlentities($rExternalDevice), 'divergence' => intval($rDivergence));
+                $rActivityInfo = array('user_id' => intval($userID), 'stream_id' => intval($streamID), 'server_id' => intval($serverID), 'date_start' => intval($start), 'user_agent' => $userAgent, 'user_ip' => htmlentities($IP), 'date_end' => time(), 'container' => $extension, 'geoip_country_code' => $GeoIP, 'isp' => $rISP, 'external_device' => htmlentities($rExternalDevice), 'divergence' => intval($rDivergence));
                 file_put_contents(LOGS_TMP_PATH . 'activity', base64_encode(json_encode($rActivityInfo)) . "\n", FILE_APPEND | LOCK_EX);
             }
         } else {
@@ -926,7 +929,7 @@ class ipTV_streaming {
         }
         die;
     }
-    public static function showVideoServer($video_id_setting, $video_path_id, $rExtension, $userInfo, $rIP, $rCountryCode, $rISP, $rServerID = null, $rProxyID = null) {
+    public static function showVideoServer($video_id_setting, $video_path_id, $extension, $userInfo, $rIP, $rCountryCode, $rISP, $rServerID = null) {
         $video_path_id = self::B97D7AcBCF7C7A5e($video_path_id);
         if (!(!$userInfo['is_restreamer'] && ipTV_lib::$settings[$video_id_setting] && 0 < strlen($video_path_id))) {
             switch ($video_id_setting) {
@@ -957,7 +960,7 @@ class ipTV_streaming {
             }
             $rTokenData = array('expires' => time() + 10, 'video_path' => $video_path_id);
             $rToken = encryptData(json_encode($rTokenData), ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-            if ($rExtension == 'm3u8') {
+            if ($extension == 'm3u8') {
                 $rM3U8 = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-MEDIA-SEQUENCE:0\n#EXT-X-ALLOW-CACHE:YES\n#EXT-X-TARGETDURATION:10\n#EXTINF:10.0,\n" . $rURL . '/auth/' . $rToken . "\n#EXT-X-ENDLIST";
                 header('Content-Type: application/x-mpegurl');
                 header('Content-Length: ' . strlen($rM3U8));
@@ -970,8 +973,8 @@ class ipTV_streaming {
     }
     public static function F4221e28760B623E($userInfo, $rUserIP, $rCountryCode, $rUserISP = '') {
         $rAvailableServers = array();
-        foreach (ipTV_lib::$StreamingServers as $rServerID => $rServerInfo) {
-            if ($rServerInfo['server_online'] && $rServerInfo['server_type'] == 0) {
+        foreach (ipTV_lib::$StreamingServers as $rServerID => $serverInfo) {
+            if ($serverInfo['server_online'] && $serverInfo['server_type'] == 0) {
                 $rAvailableServers[] = $rServerID;
             }
         }
