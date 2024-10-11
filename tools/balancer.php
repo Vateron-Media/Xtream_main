@@ -18,7 +18,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
             $rUpdateSysctl = (empty($argv[7]) ? 0 : intval($argv[7]));
             $rSysCtl = '# XtreamCodes' . PHP_EOL . PHP_EOL . 'net.ipv4.tcp_congestion_control = bbr' . PHP_EOL . 'net.core.default_qdisc = fq' . PHP_EOL . 'net.ipv4.tcp_rmem = 8192 87380 134217728' . PHP_EOL . 'net.ipv4.udp_rmem_min = 16384' . PHP_EOL . 'net.core.rmem_default = 262144' . PHP_EOL . 'net.core.rmem_max = 268435456' . PHP_EOL . 'net.ipv4.tcp_wmem = 8192 65536 134217728' . PHP_EOL . 'net.ipv4.udp_wmem_min = 16384' . PHP_EOL . 'net.core.wmem_default = 262144' . PHP_EOL . 'net.core.wmem_max = 268435456' . PHP_EOL . 'net.core.somaxconn = 1000000' . PHP_EOL . 'net.core.netdev_max_backlog = 250000' . PHP_EOL . 'net.core.optmem_max = 65535' . PHP_EOL . 'net.ipv4.tcp_max_tw_buckets = 1440000' . PHP_EOL . 'net.ipv4.tcp_max_orphans = 16384' . PHP_EOL . 'net.ipv4.ip_local_port_range = 2000 65000' . PHP_EOL . 'net.ipv4.tcp_no_metrics_save = 1' . PHP_EOL . 'net.ipv4.tcp_slow_start_after_idle = 0' . PHP_EOL . 'net.ipv4.tcp_fin_timeout = 15' . PHP_EOL . 'net.ipv4.tcp_keepalive_time = 300' . PHP_EOL . 'net.ipv4.tcp_keepalive_probes = 5' . PHP_EOL . 'net.ipv4.tcp_keepalive_intvl = 15' . PHP_EOL . 'fs.file-max=20970800' . PHP_EOL . 'fs.nr_open=20970800' . PHP_EOL . 'fs.aio-max-nr=20970800' . PHP_EOL . 'net.ipv4.tcp_timestamps = 1' . PHP_EOL . 'net.ipv4.tcp_window_scaling = 1' . PHP_EOL . 'net.ipv4.tcp_mtu_probing = 1' . PHP_EOL . 'net.ipv4.route.flush = 1' . PHP_EOL . 'net.ipv6.route.flush = 1';
             $rInstallDir = BIN_PATH . 'install/';
-            $lastVersion = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json", false, $rContext), True);
+            $lastVersion = mb_substr(get_recent_stable_release("https://github.com/Vateron-Media/Xtream_sub/releases/latest"), 1);
 
             $rPackages = [
                 "cpufrequtils",
@@ -207,6 +207,59 @@ function runCommand($rConn, $rCommand) {
     stream_set_blocking($rError, true);
     stream_set_blocking($rStream, true);
     return array('output' => stream_get_contents($rStream), 'error' => stream_get_contents($rError));
+}
+/**
+ * Retrieves the most recent stable release version from a given URL.
+ *
+ * This function sends a HEAD request to the provided URL, follows any redirects,
+ * and attempts to extract the version number from the final URL's basename.
+ * It assumes the version is the basename of the URL, minus the first character.
+ *
+ * @param string $url The URL to check for the latest stable release.
+ *
+ * @return string|false The extracted version number as a string, or false on failure.
+ *                      The returned version string does not include the first character
+ *                      of the basename (typically removing a 'v' prefix if present).
+ *
+ * @throws Exception If there's an issue with the cURL request or version extraction.
+ *                   The exception message will be logged using error_log().
+ *
+ */
+function get_recent_stable_release(string $url) {
+    // Initialize cURL session
+    $ch = curl_init();
+
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+
+    // Execute cURL request
+    $result = curl_exec($ch);
+
+    if ($result === false) {
+        error_log("cURL Error: " . curl_error($ch));
+        curl_close($ch);
+        return false;
+    }
+
+    // Get the effective URL after following redirects
+    $effective_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+
+    // Close cURL session
+    curl_close($ch);
+
+    // Extract the version from the URL
+    $version = basename($effective_url);
+
+    if (empty($version)) {
+        error_log("Error: Could not extract version from URL");
+        return false;
+    }
+
+    return $version;
 }
 function shutdown() {
     global $ipTV_db;
