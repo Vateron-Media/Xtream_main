@@ -1,38 +1,37 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: bug
-assignees: ''
+name: Bug Report
+description: Report a bug/issue that you found in the SVGs, CSS files, or any other bug you encounter.
+title: '[BUG]: bug name'
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "## Before you continue, please search our open/closed issues to see if a similar issue has been addressed."
 
----
+  - type: checkboxes
+    attributes:
+      label: I have searched through the issues and didn't find my problem.
+      options:
+        - label: Confirm
+          required: true
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug description
+      description: Short description of the bug. Provide images/code if applicable.
+    validations:
+      required: true
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+  - type: textarea
+    id: howtoreplicate
+    attributes:
+      label: Possible fixes or solutions
+      description: List any possible fixes/suggestions that you have in mind that could solve this issue.
+    validations:
+      required: true
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
+  - type: textarea
+    id: extrainformation
+    attributes:
+      label: Additional information
+      description: Is there anything else we should know about this bug?
