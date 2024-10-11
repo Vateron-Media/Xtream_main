@@ -12,7 +12,7 @@ if __name__ == "__main__":
     os.system(f"rsync -a {baseDir}update/ {baseDir}")
     # add permissions
     os.system('sudo chown -R xtreamcodes:xtreamcodes "%s"' % baseDir)
-    os.system(f"sudo sh {baseDir}permissions.sh")
+    # os.system(f"sudo sh {baseDir}permissions.sh")
     # Transferring control further
     os.system("sudo %s %stools/update.php post-update" % (PHPDir, baseDir))
     # start xtreamcodes
