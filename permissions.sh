@@ -16,7 +16,7 @@ chmod 0551 /home/xtreamcodes/bin/ffprobe
 
 chmod 0660 /home/xtreamcodes/bin/php/sockets/*
 
-chmod 0644 /home/xtreamcodes/database.sql
+# chmod 0644 /home/xtreamcodes/database.sql
 # chmod 0755 /home/xtreamcodes/bin/php/*.pid
 chmod a+x /home/xtreamcodes/status
 
