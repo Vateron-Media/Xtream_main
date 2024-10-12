@@ -220,9 +220,10 @@ function getAdminSettings() {
 function getSettings() {
     global $db;
     $result = $db->query("SELECT * FROM `settings`;");
-    $data = $result->fetch_all(MYSQLI_ASSOC);
-    foreach ($data as $value) {
-        $return[$value["name"]] = $value["value"];
+    if (($result) && ($result->num_rows > 0)) {
+        while ($row = $result->fetch_assoc()) {
+            $return[$row["name"]] = $row["value"];
+        }
     }
     return $return;
 }
