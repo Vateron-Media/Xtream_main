@@ -327,7 +327,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["there_was_an_error_saving_settings"] ?>
                                     </div>
                                 <?php } ?>
-                                <?php if (isUpdateNeeded($rAdminSettings["geolite2_version"], $rGeoLite2)) { ?>
+                                <?php if (isUpdateNeeded($rGeoLite2, $rAdminSettings["geolite2_version"] ? $rAdminSettings["geolite2_version"] : "0.0.0")) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>

@@ -948,8 +948,8 @@ CREATE TABLE IF NOT EXISTS `server_activity` (
 
 CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` mediumtext NOT NULL,
-  `value` mediumtext,
+  `name` varchar(128) NOT NULL DEFAULT '',
+  `value` varchar(4096) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1263,6 +1263,7 @@ CREATE TABLE IF NOT EXISTS `streams` (
   `custom_map` text NOT NULL,
   `external_push` mediumtext NOT NULL,
   `delay_minutes` int(11) NOT NULL DEFAULT 0,
+  `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `type` (`type`),
   KEY `created_channel_location` (`created_channel_location`),
@@ -1372,6 +1373,7 @@ CREATE TABLE IF NOT EXISTS `streams_servers` (
   `on_demand` tinyint(4) NOT NULL DEFAULT 0,
   `delay_pid` int(11) DEFAULT NULL,
   `delay_available_at` int(11) DEFAULT NULL,
+  `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`server_stream_id`),
   UNIQUE KEY `stream_id_2` (`stream_id`,`server_id`),
   KEY `stream_id` (`stream_id`),
@@ -1603,6 +1605,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_activity` int(11) DEFAULT NULL,
   `last_activity_array` mediumtext DEFAULT NULL,
   `allowed_outputs` mediumtext COLLATE utf8_unicode_ci,
+  `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
   KEY `exp_date` (`exp_date`),

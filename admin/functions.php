@@ -81,7 +81,10 @@ function get_recent_stable_release(string $url) {
  * @param string $currentVersion The current version string.
  * @return bool Returns true if an update is needed, false otherwise.
  */
-function isUpdateNeeded(string $requiredVersion, string $currentVersion): bool {
+function isUpdateNeeded(string $requiredVersion = NULL, string $currentVersion = NULL): bool {
+    if ($requiredVersion == NULL && $currentVersion == NULL) {
+        return false;
+    }
     // Convert version strings to arrays of integers
     $currentVersionArray = array_map('intval', explode('.', $currentVersion));
     $requiredVersionArray = array_map('intval', explode('.', $requiredVersion));
