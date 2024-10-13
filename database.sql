@@ -946,11 +946,10 @@ CREATE TABLE IF NOT EXISTS `server_activity` (
 -- Table structure for table `settings`
 --
 
-CREATE TABLE IF NOT EXISTS `settings`;
-CREATE TABLE `settings_new` (
+CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` mediumtext NOT NULL,
-  `value` mediumtext NOT NULL,
+  `value` mediumtext,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -990,7 +989,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('29','default_locale','en_GB.utf8'),
 ('30','allowed_stb_types','[\"MAG200\",\"MAG245\",\"MAG245D\",\"MAG250\",\"MAG254\",\"MAG255\",\"MAG256\",\"MAG257\",\"MAG260\",\"MAG270\",\"MAG275\",\"MAG322\",\"MAG323\",\"MAG324\",\"MAG325\",\"MAG349\",\"MAG350\",\"MAG351\",\"MAG352\",\"AuraHD\",\"AuraHD2\",\"AuraHD3\",\"AuraHD4\",\"AuraHD5\",\"AuraHD6\",\"AuraHD7\",\"AuraHD8\",\"AuraHD9\",\"WR320\"]'),
 ('31','client_prebuffer','15'),
-('32', 'mag_disable_ssl', '0')
+('32', 'mag_disable_ssl', '0'),
 ('33','stream_max_analyze','5000000'),
 ('34','show_not_on_air_video','0'),
 ('35','not_on_air_video_path',''),
@@ -1046,7 +1045,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('85','stalker_theme','default'),
 ('86','rtmp_random','1'),
 ('87','api_ips',''),
-('88', 'disallow_2nd_ip_max', '1')
+('88', 'disallow_2nd_ip_max', '1'),
 ('89','use_buffer','0'),
 ('90','restreamer_prebuffer','0'),
 ('91','audio_restart_loss','0'),
