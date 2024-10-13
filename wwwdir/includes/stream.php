@@ -59,7 +59,7 @@ class ipTV_stream {
 
         return 2;
     }
-    public static function c($rSourceURL, $rFetchArguments = array(), $rPrepend = '', $rParse = true) {
+    public static function probeStream($rSourceURL, $rFetchArguments = array(), $rPrepend = '', $rParse = true) {
         $rAnalyseDuration = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
         $rProbesize = abs(intval(ipTV_lib::$settings['probesize']));
         $rTimeout = intval($rAnalyseDuration / 1000000) + ipTV_lib::$settings['probe_extra_wait'];
