@@ -25,6 +25,8 @@
 * You cannot use Cyrillic and special characters in the name of the source media file to be used in the panel
 
 # Stream URL
+* XtreamCodes
+  - http://ip:25500
 
 * MAG or Stalker Portal
   - http://ip:25461/stalker_portal/c/index.html
