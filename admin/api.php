@@ -1274,10 +1274,10 @@ if (isset($_GET["action"])) {
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php');
 
-                // $rCache = intval(trim(shell_exec('pgrep -U xui | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
-                // if ($rCache == 0) {
-                //     shell_exec(PHP_BIN . ' ' . TOOL_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
-                // }
+                $rCache = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
+                if ($rCache == 0) {
+                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
+                }
 
                 echo json_encode(array('result' => true));
 

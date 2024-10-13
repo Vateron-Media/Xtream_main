@@ -3,23 +3,6 @@
 class ipTV_stream {
     public static $ipTV_db;
     /**
-     * Deletes files based on the provided sources.
-     *
-     * This function takes an array of file sources and deletes the corresponding files from the STREAMS_PATH directory if they exist.
-     *
-     * @param array $sources An array of file sources to be deleted.
-     * @return void
-     */
-    static function deleteCache($sources) {
-        if (!empty($sources)) {
-            foreach ($sources as $source) {
-                ipTV_lib::unlink_file(STREAMS_PATH . md5($source));
-            }
-        } else {
-            return null;
-        }
-    }
-    /**
      * Transcodes and builds a stream based on the provided stream ID.
      *
      * This function retrieves stream data from the database, transcodes the stream using FFmpeg with specified attributes, creates a new MPEG-TS file, and updates the stream information in the database accordingly.
@@ -44,7 +27,7 @@ class ipTV_stream {
         }
 
         // Construct FFmpeg command
-        $ffmpegCommand = FFMPEG_PATH . ' -fflags +genpts -async 1 -y -nostdin -hide_banner -loglevel quiet -i "{INPUT}" ';
+        $ffmpegCommand = ipTV_lib::$FFMPEG_CPU . ' -fflags +genpts -async 1 -y -nostdin -hide_banner -loglevel quiet -i "{INPUT}" ';
         $ffmpegCommand .= implode(' ', self::parseTranscode($stream['transcode_attributes'])) . ' ';
         $ffmpegCommand .= '-strict -2 -mpegts_flags +initial_discontinuity -f mpegts "' . CREATED_CHANNELS . $streamID . '_{INPUT_MD5}.ts" >/dev/null 2>/dev/null & jobs -p';
 
@@ -66,7 +49,7 @@ class ipTV_stream {
             return 1;
         } else if (!empty($stream['pids_create_channel'])) {
             foreach ($stream['pids_create_channel'] as $key => $pid) {
-                if (!ipTV_servers::PidsChannels($stream['created_channel_location'], $pid, FFMPEG_PATH)) {
+                if (!ipTV_servers::PidsChannels($stream['created_channel_location'], $pid, ipTV_lib::$FFMPEG_CPU)) {
                     unset($stream['pids_create_channel'][$key]);
                 }
             }
@@ -76,11 +59,11 @@ class ipTV_stream {
 
         return 2;
     }
-    public static function probeStream($rSourceURL, $rFetchArguments = array(), $rPrepend = '', $rParse = true) {
+    public static function c($rSourceURL, $rFetchArguments = array(), $rPrepend = '', $rParse = true) {
         $rAnalyseDuration = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
         $rProbesize = abs(intval(ipTV_lib::$settings['probesize']));
         $rTimeout = intval($rAnalyseDuration / 1000000) + ipTV_lib::$settings['probe_extra_wait'];
-        $rCommand = $rPrepend . 'timeout ' . $rTimeout . ' ' . FFPROBE_PATH . ' -probesize ' . $rProbesize . ' -analyzeduration ' . $rAnalyseDuration . ' ' . implode(' ', $rFetchArguments) . ' -i "' . $rSourceURL . '" -v quiet -print_format json -show_streams -show_format';
+        $rCommand = $rPrepend . 'timeout ' . $rTimeout . ' ' . ipTV_lib::$FFPROBE . ' -probesize ' . $rProbesize . ' -analyzeduration ' . $rAnalyseDuration . ' ' . implode(' ', $rFetchArguments) . ' -i "' . $rSourceURL . '" -v quiet -print_format json -show_streams -show_format';
         exec($rCommand, $rReturn);
         $result = implode("\n", $rReturn);
         if ($rParse) {
@@ -200,7 +183,7 @@ class ipTV_stream {
                     }
                     $rLogoOptions = (isset($stream['stream_info']['transcode_attributes'][16]) ? $stream['stream_info']['transcode_attributes'][16]['cmd'] : '');
                     $rInputCodec = '';
-                    $rFFMPEG = FFMPEG_PATH . ' -y -nostdin -hide_banner -loglevel warning -err_detect ignore_err {FETCH_OPTIONS} -fflags +genpts -async 1 {READ_NATIVE} -i {STREAM_SOURCE} {LOGO} ' . $subtitlesImport;
+                    $rFFMPEG = ipTV_lib::$FFMPEG_CPU . ' -y -nostdin -hide_banner -loglevel warning -err_detect ignore_err {FETCH_OPTIONS} -fflags +genpts -async 1 {READ_NATIVE} -i {STREAM_SOURCE} {LOGO} ' . $subtitlesImport;
                     $map = '-map 0 -copy_unknown ';
                     if (!empty($stream['stream_info']['custom_map'])) {
                         $map = escapeshellcmd($stream['stream_info']['custom_map']) . ' -copy_unknown ';
@@ -277,8 +260,8 @@ class ipTV_stream {
             $analyseDuration = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
             $probesize = abs(intval(ipTV_lib::$settings['probesize']));
         }
-        $streamTimeout = intval($analyseDuration / 1000000) + ipTV_lib::$settings["probe_extra_wait"];
-        $rFFProbee = "/usr/bin/timeout {$streamTimeout}s " . FFPROBE_PATH . " {FETCH_OPTIONS} -probesize {$probesize} -analyzeduration {$analyseDuration} {CONCAT} -i {STREAM_SOURCE} -v quiet -print_format json -show_streams -show_format";
+        $streamTimeout = intval($analyseDuration / 1000000) + ipTV_lib::$settings['probe_extra_wait'];
+        $rFFProbee = 'timeout ' . $streamTimeout . ' ' . ipTV_lib::$FFPROBE . ' {FETCH_OPTIONS} -probesize ' . $probesize . ' -analyzeduration ' . $analyseDuration . ' {CONCAT} -i {STREAM_SOURCE} -v quiet -print_format json -show_streams -show_format';
         $rFetchOptions = array();
         $rLoopback = false;
         $rOffset = 0;
@@ -303,7 +286,7 @@ class ipTV_stream {
                                     $rOffset = $rTimer;
                                     $rCCOutput[] = $path;
                                 } else {
-                                    if ($rTimer + $rDuration < $startPos) {
+                                    if ($startPos < $rTimer + $rDuration) {
                                         $rCCOutput[] = $path;
                                     }
                                 }
@@ -358,7 +341,7 @@ class ipTV_stream {
             ipTV_lib::$SegmentsSettings['seg_type'] = 1;
         }
         if ($stream['stream_info']['type_key'] == 'created_live' && file_exists(CREATED_PATH . $streamID . '_.info')) {
-            self::$ipTV_db->query('UPDATE `streams_servers` SET `cc_info` = \'%d\' WHERE `server_id` = \'%d\' AND `stream_id` = \'%d\';', file_get_contents(CREATED_PATH . $streamID . '_.info'), SERVER_ID, $streamID);
+            self::$ipTV_db->query('UPDATE `streams_servers` SET `cc_info` = \'%s\' WHERE `server_id` = \'%d\' AND `stream_id` = \'%d\';', file_get_contents(CREATED_PATH . $streamID . '_.info'), SERVER_ID, $streamID);
         }
         if (!$rFromCache) {
             self::deleteCache($sources);
@@ -378,7 +361,6 @@ class ipTV_stream {
             if (!$processed) {
                 $probeArguments[] = array('value' => 'X-XTREAMUI-Prebuffer:1', 'argument_key' => 'headers', 'argument_cat' => 'fetch', 'argument_wprotocol' => 'http', 'argument_type' => 'text', 'argument_cmd' => "-headers '%s" . "\r\n" . "'");
             }
-
             $protocol = strtolower(substr($streamSource, 0, strpos($streamSource, '://')));
             $probeOptions = implode(' ', self::getFormattedStreamArguments($probeArguments, $protocol, 'fetch'));
             $rFetchOptions = implode(' ', self::getFormattedStreamArguments($stream['stream_arguments'], $protocol, 'fetch'));
@@ -414,11 +396,13 @@ class ipTV_stream {
             }
         }
         $rExternalPush = json_decode($stream['stream_info']['external_push'], true);
-        $progressURL = 'http://127.0.0.1:' . intval(ipTV_lib::$StreamingServers[SERVER_ID]['http_broadcast_port']) . '/progress.php?stream_id=' . intval($streamID);
-
+        $progressURL = 'http://127.0.0.1:' . intval(ipTV_lib::$StreamingServers[SERVER_ID]['http_broadcast_port']) . '/progress?stream_id=' . intval($streamID);
         if (empty($stream['stream_info']['custom_ffmpeg'])) {
-
-            // set map option ffmpeg
+            if ($rLoopback) {
+                $rOptions = '{FETCH_OPTIONS}';
+            } else {
+                $rOptions = '{GPU} {FETCH_OPTIONS}';
+            }
             if ($stream['stream_info']['stream_all'] == 1) {
                 $rMap = '-map 0 -copy_unknown ';
             } elseif (!empty($stream['stream_info']['custom_map'])) {
@@ -428,20 +412,21 @@ class ipTV_stream {
             } else {
                 $rMap = '';
             }
-
-            // set timestamps options ffmpeg
             if (($stream['stream_info']['gen_timestamps'] == 1 || empty($protocol)) && $stream['stream_info']['type_key'] != 'created_live') {
                 $rGenPTS = '-fflags +genpts -async 1';
             } else {
-                $rGenPTS = '-nofix_dts -start_at_zero -copyts -vsync 0 -correct_ts_overflow 0 -avoid_negative_ts disabled -max_interleave_delta 0';
+                if (in_array($rFFProbeOutput['codecs']['audio']['codec_name'], array('ac3', 'eac3')) && ipTV_lib::$settings['dts_legacy_ffmpeg']) {
+                    ipTV_lib::$FFMPEG_CPU = FFMPEG_BIN_40;
+                    ipTV_lib::$FFPROBE = FFPROBE_BIN_40;
+                }
+                $rNoFix = (ipTV_lib::$FFMPEG_CPU == FFMPEG_BIN_40 ? '-nofix_dts' : '');
+                $rGenPTS = $rNoFix . ' -start_at_zero -copyts -vsync 0 -correct_ts_overflow 0 -avoid_negative_ts disabled -max_interleave_delta 0';
             }
-
-            if (!$stream['server_info']['parent_id'] && ($stream['stream_info']['read_native'] == 1 || stristr($rFFProbeOutput['container'], 'hls') || empty($protocol) || stristr($rFFProbeOutput['container'], 'mp4') || stristr($rFFProbeOutput['container'], 'matroska'))) {
+            if (!$stream['server_info']['parent_id'] && ($stream['stream_info']['read_native'] == 1 || stristr($rFFProbeOutput['container'], 'hls') && ipTV_lib::$settings['read_native_hls'] || empty($protocol) || stristr($rFFProbeOutput['container'], 'mp4') || stristr($rFFProbeOutput['container'], 'matroska'))) {
                 $rReadNative = '-re';
             } else {
                 $rReadNative = '';
             }
-
             if (!$stream['server_info']['parent_id'] && $stream['stream_info']['enable_transcode'] == 1 && $stream['stream_info']['type_key'] != 'created_live') {
                 if ($stream['stream_info']['transcode_profile_id'] == -1) {
                     $stream['stream_info']['transcode_attributes'] = array_merge(self::getFormattedStreamArguments($stream['stream_arguments'], $protocol, 'transcode'), json_decode($stream['stream_info']['transcode_attributes'], true));
@@ -451,7 +436,7 @@ class ipTV_stream {
             } else {
                 $stream['stream_info']['transcode_attributes'] = array();
             }
-            $rFFMPEG = FFMPEG_PATH . ' -y -nostdin -hide_banner -loglevel ' . ((ipTV_lib::$settings['ffmpeg_warnings'] ? 'warning' : 'error')) . ' -err_detect ignore_err {FETCH_OPTIONS} {GEN_PTS} {READ_NATIVE} -probesize ' . $probesize . ' -analyzeduration ' . $analyseDuration . ' -progress "' . $progressURL . '" {CONCAT} -i {STREAM_SOURCE} {LOGO} ';
+            $rFFMPEG = ((isset($stream['stream_info']['transcode_attributes']['gpu']) ? ipTV_lib::$FFMPEG_GPU : ipTV_lib::$FFMPEG_CPU)) . ' -y -nostdin -hide_banner -loglevel ' . ((ipTV_lib::$settings['ffmpeg_warnings'] ? 'warning' : 'error')) . ' -err_detect ignore_err ' . $rOptions . ' {GEN_PTS} {READ_NATIVE} -probesize ' . $probesize . ' -analyzeduration ' . $analyseDuration . ' -progress "' . $progressURL . '" {CONCAT} -i {STREAM_SOURCE} {LOGO} ';
             if (!array_key_exists('-acodec', $stream['stream_info']['transcode_attributes'])) {
                 $stream['stream_info']['transcode_attributes']['-acodec'] = 'copy';
             }
@@ -467,31 +452,45 @@ class ipTV_stream {
             }
         } else {
             $stream['stream_info']['transcode_attributes'] = array();
-            $rFFMPEG = FFMPEG_PATH . ' -y -nostdin -hide_banner -loglevel ' . ((ipTV_lib::$settings['ffmpeg_warnings']  ? 'warning' : 'error')) . ' -progress "' . $progressURL . '" ' . $stream['stream_info']['custom_ffmpeg'];
+            $rFFMPEG = ((stripos($stream['stream_info']['custom_ffmpeg'], 'nvenc') !== false ? ipTV_lib::$FFMPEG_GPU : ipTV_lib::$FFMPEG_CPU)) . ' -y -nostdin -hide_banner -loglevel ' . ((ipTV_lib::$settings['ffmpeg_warnings'] ? 'warning' : 'error')) . ' -progress "' . $progressURL . '" ' . $stream['stream_info']['custom_ffmpeg'];
         }
         $rLLODOptions = ($rLLOD && !$rLoopback ? '-fflags nobuffer -flags low_delay -strict experimental' : '');
         $rOutputs = array();
-
-        if (ipTV_lib::$SegmentsSettings['seg_type'] == 0) {
-            $rKeyFrames = (ipTV_lib::$settings["ignore_keyframes"] ? '+split_by_time' : '');
-            $rOutputs['mpegts'][] = '{MAP} -individual_header_trailer 0 -f hls -hls_time ' . intval(ipTV_lib::$SegmentsSettings["seg_time"]) . ' -hls_list_size ' . intval(ipTV_lib::$SegmentsSettings["seg_list_size"]) . ' -hls_delete_threshold ' . intval(ipTV_lib::$settings["seg_delete_threshold"]) . ' -hls_flags delete_segments+discont_start+omit_endlist' . $rKeyFrames . ' -hls_segment_type mpegts -hls_segment_filename "' . STREAMS_PATH . intval($streamID) . '_%d.ts" "' . STREAMS_PATH . intval($streamID) . '_.m3u8" ';
+        if ($rLoopback) {
+            $rOptions = '{MAP}';
+            $rFLVOptions = '{MAP}';
+            $rMap = '-map 0 -copy_unknown ';
         } else {
-            $rKeyFrames = (ipTV_lib::$settings["ignore_keyframes"] ? ' -break_non_keyframes 1' : '');
-            $rOutputs['mpegts'][] = '{MAP} -individual_header_trailer 0 -f segment -segment_format mpegts -segment_time ' . intval(ipTV_lib::$SegmentsSettings["seg_time"]) . ' -segment_list_size ' . intval(ipTV_lib::$SegmentsSettings["seg_list_size"]) . ' -segment_format_options "mpegts_flags=+initial_discontinuity:mpegts_copyts=1" -segment_list_type m3u8 -segment_list_flags +live+delete' . $rKeyFrames . ' -segment_list "' . STREAMS_PATH . intval($streamID) . '_.m3u8" "' . STREAMS_PATH . intval($streamID) . '_%d.ts" ';
+            $rOptions = '{MAP} {LLOD}';
+            $rFLVOptions = '{MAP} {AAC_FILTER}';
+        }
+        if (ipTV_lib::$SegmentsSettings['seg_type'] == 0) {
+            $rKeyFrames = (ipTV_lib::$settings['ignore_keyframes'] ? '+split_by_time' : '');
+            $rOutputs['mpegts'][] = $rOptions . ' -individual_header_trailer 0 -f hls -hls_time ' . intval(ipTV_lib::$SegmentsSettings['seg_time']) . ' -hls_list_size ' . intval(ipTV_lib::$SegmentsSettings['seg_list_size']) . ' -hls_delete_threshold ' . intval(ipTV_lib::$SegmentsSettings['seg_delete_threshold']) . ' -hls_flags delete_segments+discont_start+omit_endlist' . $rKeyFrames . ' -hls_segment_type mpegts -hls_segment_filename "' . STREAMS_PATH . intval($streamID) . '_%d.ts" "' . STREAMS_PATH . intval($streamID) . '_.m3u8" ';
+        } else {
+            $rKeyFrames = (ipTV_lib::$settings['ignore_keyframes'] ? ' -break_non_keyframes 1' : '');
+            $rOutputs['mpegts'][] = $rOptions . ' -individual_header_trailer 0 -f segment -segment_format mpegts -segment_time ' . intval(ipTV_lib::$SegmentsSettings['seg_time']) . ' -segment_list_size ' . intval(ipTV_lib::$SegmentsSettings['seg_list_size']) . ' -segment_format_options "mpegts_flags=+initial_discontinuity:mpegts_copyts=1" -segment_list_type m3u8 -segment_list_flags +live+delete' . $rKeyFrames . ' -segment_list "' . STREAMS_PATH . intval($streamID) . '_.m3u8" "' . STREAMS_PATH . intval($streamID) . '_%d.ts" ';
         }
         if ($stream['stream_info']['rtmp_output'] == 1) {
-            $rOutputs['flv'][] = '{MAP} -f flv -flvflags no_duration_filesize rtmp://127.0.0.1:' . intval(ipTV_lib::$StreamingServers[$stream['server_info']['server_id']]['rtmp_port']) . '/live/' . intval($streamID) . '?password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . ' ';
+            $rOutputs['flv'][] = $rFLVOptions . ' -f flv -flvflags no_duration_filesize rtmp://127.0.0.1:' . intval(ipTV_lib::$StreamingServers[$stream['server_info']['server_id']]['rtmp_port']) . '/live/' . intval($streamID) . '?password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . ' ';
         }
         if (!empty($rExternalPush[SERVER_ID])) {
-            foreach ($rExternalPush[SERVER_ID] as $pushURL) {
-                $rOutputs['flv'][] = '{MAP} -f flv -flvflags no_duration_filesize ' . escapeshellarg($pushURL) . ' ';
+            foreach ($rExternalPush[SERVER_ID] as $rPushURL) {
+                $rOutputs['flv'][] = $rFLVOptions . ' -f flv -flvflags no_duration_filesize ' . escapeshellarg($rPushURL) . ' ';
             }
         }
         $rLogoOptions = (isset($stream['stream_info']['transcode_attributes'][16]) && !$rLoopback ? $stream['stream_info']['transcode_attributes'][16]['cmd'] : '');
+        $rGPUOptions = (isset($stream['stream_info']['transcode_attributes']['gpu']) ? $stream['stream_info']['transcode_attributes']['gpu']['cmd'] : '');
         $rInputCodec = '';
+        if (!empty($rGPUOptions) || in_array($rFFProbeOutput['codecs']['video']['codec_name'], array('h264', 'hevc', 'mjpeg', 'mpeg1', 'mpeg2', 'mpeg4', 'vc1', 'vp8', 'vp9'))) {
+            $rInputCodec = '-c:v ' . $rFFProbeOutput['codecs']['video']['codec_name'] . '_cuvid';
+        }
         if (0 >= $stream['stream_info']['delay_minutes'] || $stream['server_info']['parent_id']) {
             foreach ($rOutputs as $rOutputKey => $rOutputCommands) {
                 foreach ($rOutputCommands as $rOutputCommand) {
+                    if (isset($stream['stream_info']['transcode_attributes']['gpu'])) {
+                        $rFFMPEG .= '-gpu ' . intval($stream['stream_info']['transcode_attributes']['gpu']['device']) . ' ';
+                    }
                     $rFFMPEG .= implode(' ', self::parseTranscode($stream['stream_info']['transcode_attributes'])) . ' ';
                     $rFFMPEG .= $rOutputCommand;
                 }
@@ -519,9 +518,9 @@ class ipTV_stream {
             }
             $rFFMPEG .= implode(' ', self::parseTranscode($stream['stream_info']['transcode_attributes'])) . ' ';
             if (ipTV_lib::$SegmentsSettings['seg_type'] == 0) {
-                $rFFMPEG .= '{MAP} -individual_header_trailer 0 -f hls -hls_time ' . intval(ipTV_lib::$SegmentsSettings["seg_time"]) . ' -hls_list_size ' . intval($stream['stream_info']['delay_minutes']) * 6 . ' -hls_delete_threshold 4 -start_number ' . $segmentStart . ' -hls_flags delete_segments+discont_start+omit_endlist -hls_segment_type mpegts -hls_segment_filename "' . DELAY_PATH . intval($streamID) . '_%d.ts" "' . DELAY_PATH . intval($streamID) . '_.m3u8" ';
+                $rFFMPEG .= '{MAP} -individual_header_trailer 0 -f hls -hls_time ' . intval(ipTV_lib::$SegmentsSettings['seg_time']) . ' -hls_list_size ' . intval($stream['stream_info']['delay_minutes']) * 6 . ' -hls_delete_threshold 4 -start_number ' . $segmentStart . ' -hls_flags delete_segments+discont_start+omit_endlist -hls_segment_type mpegts -hls_segment_filename "' . DELAY_PATH . intval($streamID) . '_%d.ts" "' . DELAY_PATH . intval($streamID) . '_.m3u8" ';
             } else {
-                $rFFMPEG .= '{MAP} -individual_header_trailer 0 -f segment -segment_format mpegts -segment_time ' . intval(ipTV_lib::$SegmentsSettings["seg_time"]) . ' -segment_list_size ' . intval($stream['stream_info']['delay_minutes']) * 6 . ' -segment_start_number ' . $segmentStart . ' -segment_format_options "mpegts_flags=+initial_discontinuity:mpegts_copyts=1" -segment_list_type m3u8 -segment_list_flags +live+delete -segment_list "' . DELAY_PATH . intval($streamID) . '_.m3u8" "' . DELAY_PATH . intval($streamID) . '_%d.ts" ';
+                $rFFMPEG .= '{MAP} -individual_header_trailer 0 -f segment -segment_format mpegts -segment_time ' . intval(ipTV_lib::$SegmentsSettings['seg_time']) . ' -segment_list_size ' . intval($stream['stream_info']['delay_minutes']) * 6 . ' -segment_start_number ' . $segmentStart . ' -segment_format_options "mpegts_flags=+initial_discontinuity:mpegts_copyts=1" -segment_list_type m3u8 -segment_list_flags +live+delete -segment_list "' . DELAY_PATH . intval($streamID) . '_.m3u8" "' . DELAY_PATH . intval($streamID) . '_%d.ts" ';
             }
             $sleepTime = $stream['stream_info']['delay_minutes'] * 60;
             if ($segmentStart > 0) {
@@ -533,8 +532,7 @@ class ipTV_stream {
             }
         }
         $rFFMPEG .= ' >/dev/null 2>>' . STREAMS_PATH . intval($streamID) . '.errors & echo $! > ' . STREAMS_PATH . intval($streamID) . '_.pid';
-        $rFFMPEG = str_replace(array('{FETCH_OPTIONS}', '{GEN_PTS}', '{STREAM_SOURCE}', '{MAP}', '{READ_NATIVE}', '{CONCAT}', '{AAC_FILTER}', '{INPUT_CODEC}', '{LOGO}', '{LLOD}'), array((empty($stream['stream_info']['custom_ffmpeg']) ? $rFetchOptions : ''), (empty($stream['stream_info']['custom_ffmpeg']) ? $rGenPTS : ''), escapeshellarg($streamSource), (empty($stream['stream_info']['custom_ffmpeg']) ? $rMap : ''), (empty($stream['stream_info']['custom_ffmpeg']) ? $rReadNative : ''), ($stream['stream_info']['type_key'] == 'created_live' && !$stream['server_info']['parent_id'] ? '-safe 0 -f concat' : ''), (!stristr($rFFProbeOutput['container'], 'flv') && $rFFProbeOutput['codecs']['audio']['codec_name'] == 'aac' && $stream['stream_info']['transcode_attributes']['-acodec'] == 'copy' ? '-bsf:a aac_adtstoasc' : ''), $rInputCodec, $rLogoOptions, $rLLODOptions), $rFFMPEG);
-
+        $rFFMPEG = str_replace(array('{FETCH_OPTIONS}', '{GEN_PTS}', '{STREAM_SOURCE}', '{MAP}', '{READ_NATIVE}', '{CONCAT}', '{AAC_FILTER}', '{GPU}', '{INPUT_CODEC}', '{LOGO}', '{LLOD}'), array((empty($stream['stream_info']['custom_ffmpeg']) ? $rFetchOptions : ''), (empty($stream['stream_info']['custom_ffmpeg']) ? $rGenPTS : ''), escapeshellarg($streamSource), (empty($stream['stream_info']['custom_ffmpeg']) ? $rMap : ''), (empty($stream['stream_info']['custom_ffmpeg']) ? $rReadNative : ''), ($stream['stream_info']['type_key'] == 'created_live' && !$stream['server_info']['parent_id'] ? '-safe 0 -f concat' : ''), (!stristr($rFFProbeOutput['container'], 'flv') && $rFFProbeOutput['codecs']['audio']['codec_name'] == 'aac' && $stream['stream_info']['transcode_attributes']['-acodec'] == 'copy' ? '-bsf:a aac_adtstoasc' : ''), $rGPUOptions, $rInputCodec, $rLogoOptions, $rLLODOptions), $rFFMPEG);
         shell_exec($rFFMPEG);
         file_put_contents(STREAMS_PATH . $streamID . '_.ffmpeg', $rFFMPEG);
         $rKey = openssl_random_pseudo_bytes(16);
@@ -546,12 +544,26 @@ class ipTV_stream {
         if ($stream['stream_info']['tv_archive_server_id'] == SERVER_ID) {
             shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'archive.php ' . intval($streamID) . ' >/dev/null 2>/dev/null & echo $!');
         }
+        // if ($stream['stream_info']['vframes_server_id'] == SERVER_ID) {
+        //     self::startThumbnail($streamID);
+        // }
         $rDelayEnabled = 0 < $stream['stream_info']['delay_minutes'] && !$stream['server_info']['parent_id'];
         $rDelayStartAt = ($rDelayEnabled ? time() + $sleepTime : 0);
         if ($stream['stream_info']['enable_transcode']) {
             $rFFProbeOutput = array();
         }
-        self::$ipTV_db->query('UPDATE `streams_servers` SET `delay_available_at` = \'%d\',`to_analyze` = 0,`stream_started` = \'%d\',`stream_info` = \'%d\', `stream_status` = 2,`pid` = \'%d\',`progress_info` = \'%d\',`current_source` = \'%d\' WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $rDelayStartAt, time(), json_encode($rFFProbeOutput), $pID, json_encode(array()), $source, $streamID, SERVER_ID);
+        $rCompatible = 0;
+        $rAudioCodec = $rVideoCodec = $rResolution = null;
+        if ($rFFProbeOutput) {
+            $rCompatible = intval(self::checkCompatibility($rFFProbeOutput));
+            $rAudioCodec = ($rFFProbeOutput['codecs']['audio']['codec_name'] ?: null);
+            $rVideoCodec = ($rFFProbeOutput['codecs']['video']['codec_name'] ?: null);
+            $rResolution = ($rFFProbeOutput['codecs']['video']['height'] ?: null);
+            if ($rResolution) {
+                $rResolution = self::getNearest(array(240, 360, 480, 576, 720, 1080, 1440, 2160), $rResolution);
+            }
+        }
+        self::$ipTV_db->query('UPDATE `streams_servers` SET `delay_available_at` = \'%d\',`to_analyze` = 0,`stream_started` = \'%d\',`stream_info` = \'%d\',`audio_codec` = \'%d\', `video_codec` = \'%d\', `resolution` = \'%d\',`compatible` = \'%d\',`stream_status` = 2,`pid` = \'%d\',`progress_info` = \'%d\',`current_source` = \'%d\' WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $rDelayStartAt, time(), json_encode($rFFProbeOutput), $rAudioCodec, $rVideoCodec, $rResolution, $rCompatible, $pID, json_encode(array()), $source, $streamID, SERVER_ID);
         ipTV_streaming::updateStream($streamID);
         $playlist = (!$rDelayEnabled ? STREAMS_PATH . $streamID . '_.m3u8' : DELAY_PATH . $streamID . '_.m3u8');
         return array('main_pid' => $pID, 'stream_source' => $rRealSource, 'delay_enabled' => $rDelayEnabled, 'parent_id' => $stream['server_info']['parent_id'], 'delay_start_at' => $rDelayStartAt, 'playlist' => $playlist, 'transcode' => $stream['stream_info']['enable_transcode'], 'offset' => $rOffset);
@@ -711,5 +723,69 @@ class ipTV_stream {
         $rReturn = curl_exec($ch);
         curl_close($ch);
         return $rReturn;
+    }
+    /**
+     * The function `checkCompatibility` checks if the audio and video codecs in the provided data are
+     * compatible with the predefined arrays of supported codecs.
+     * 
+     * @param array rData is expected to be an array containing information about audio and video codecs.
+     * If  is not an array, the function attempts to decode it from JSON format. The function then
+     * checks if the audio and video codec names in the  array are compatible with the predefined
+     * lists of supported
+     * 
+     * @return bool The function `checkCompatibility` is returning a boolean value based on the conditions
+     * specified in the code. It checks if the input `` contains audio and video codec names that are
+     * present in the predefined arrays `` and `` respectively. If the codec
+     * names are found and meet the conditions, it returns `true`, otherwise it returns `false`.
+     */
+    public static function checkCompatibility($rData) {
+        if (!is_array($rData)) {
+            $rData = json_decode($rData, true);
+        }
+        $rAudioCodecs = array('aac', 'libfdk_aac', 'opus', 'vorbis', 'pcm_s16le', 'mp2', 'mp3', 'flac', null);
+        $rVideoCodecs = array('h264', 'vp8', 'vp9', 'ogg', 'av1', null);
+        if (ipTV_lib::$settings['player_allow_hevc']) {
+            $rVideoCodecs[] = 'hevc';
+            $rVideoCodecs[] = 'h265';
+            $rAudioCodecs[] = 'ac3';
+        }
+        return ($rData['codecs']['audio']['codec_name'] || $rData['codecs']['video']['codec_name']) && in_array(strtolower($rData['codecs']['audio']['codec_name']), $rAudioCodecs) && in_array(strtolower($rData['codecs']['video']['codec_name']), $rVideoCodecs);
+    }
+    /**
+     * Finds the nearest value in an array to a given search value.
+     *
+     * This method iterates through an array and finds the element that is
+     * closest in value to the given search parameter. It works with numeric values.
+     *
+     * @param array $arr    The input array of numbers to search through.
+     * @param float $search The value to find the nearest match for.
+     *
+     * @return float|int|null The nearest value found in the array. Returns null if the array is empty.
+     */
+    public static function getNearest($arr, $search) {
+        $closest = null;
+        foreach ($arr as $item) {
+            if ($closest === null || abs($item - $search) < abs($search - $closest)) {
+                $closest = $item;
+            }
+        }
+        return $closest;
+    }
+    /**
+     * Deletes files based on the provided sources.
+     *
+     * This function takes an array of file sources and deletes the corresponding files from the STREAMS_PATH directory if they exist.
+     *
+     * @param array $sources An array of file sources to be deleted.
+     * @return void
+     */
+    static function deleteCache($sources) {
+        if (!empty($sources)) {
+            foreach ($sources as $source) {
+                ipTV_lib::unlink_file(STREAMS_PATH . md5($source));
+            }
+        } else {
+            return null;
+        }
     }
 }

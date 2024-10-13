@@ -104,7 +104,7 @@ if ($ipTV_db->num_rows() > 0) {
                         echo $data;
                         $fails = 0;
                     }
-                    if (ipTV_streaming::isProcessRunning($channel_info["pid"], FFMPEG_PATH) && $fails <= $total_failed_tries && file_exists(STREAMS_PATH . $segment_file) && is_resource($fp)) {
+                    if (ipTV_streaming::isProcessRunning($channel_info["pid"], ipTV_lib::$FFMPEG_CPU) && $fails <= $total_failed_tries && file_exists(STREAMS_PATH . $segment_file) && is_resource($fp)) {
                         $size = filesize(STREAMS_PATH . $segment_file);
                         $line = $size - ftell($fp);
                         if ($line > 0) {

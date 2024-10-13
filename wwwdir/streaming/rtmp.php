@@ -113,7 +113,7 @@ if ($user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, f
     }
     if ($channel_info = ipTV_streaming::ChannelInfo($stream_id, $extension, $user_info, $user_ip, $geoip_country_code, $external_device, $user_info['con_isp_name'], 'live')) {
         $playlist = STREAMS_PATH . $stream_id . '_.m3u8';
-        if (!ipTV_streaming::isProcessRunning($channel_info['pid'], FFMPEG_PATH) && $channel_info['on_demand'] == 1) {
+        if (!ipTV_streaming::isProcessRunning($channel_info['pid'], ipTV_lib::$FFMPEG_CPU) && $channel_info['on_demand'] == 1) {
             ipTV_stream::startMonitor($stream_id);
             sleep(5);
         }

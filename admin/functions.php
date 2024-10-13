@@ -271,6 +271,7 @@ define('STREAMS_TMP_PATH', CACHE_TMP_PATH . 'streams/');
 define('USER_TMP_PATH', CACHE_TMP_PATH . 'users/');
 define('SERIES_TMP_PATH', CACHE_TMP_PATH . 'series/');
 define('PHP_BIN', '/home/xtreamcodes/bin/php/bin/php');
+define('TOOLS_PATH', MAIN_DIR . 'tools/');
 
 require_once realpath(dirname(__FILE__)) . "/mobiledetect.php";
 require_once realpath(dirname(__FILE__)) . "/gauth.php";

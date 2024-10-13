@@ -12,6 +12,9 @@ class ipTV_lib {
     public static $blockedIPs = array();
     public static $categories = array();
     public static $allowedIPs = array();
+    public static $FFMPEG_CPU = null;
+    public static $FFMPEG_GPU = null;
+    public static $FFPROBE = null;
     public static $cached = null;
 
     public static function init() {
@@ -35,6 +38,21 @@ class ipTV_lib {
         self::$settings = self::getSettings();
         self::$cached = self::$settings["enable_cache"];
         date_default_timezone_set(self::$settings["default_timezone"]);
+        switch (self::$settings['ffmpeg_cpu']) {
+            case '4.4':
+                self::$FFMPEG_CPU = FFMPEG_BIN_44;
+                self::$FFPROBE = FFPROBE_BIN_44;
+                break;
+            case '4.3':
+                self::$FFMPEG_CPU = FFMPEG_BIN_43;
+                self::$FFPROBE = FFPROBE_BIN_43;
+                break;
+            default:
+                self::$FFMPEG_CPU = FFMPEG_BIN_40;
+                self::$FFPROBE = FFPROBE_BIN_40;
+                break;
+        }
+        self::$FFMPEG_GPU = FFMPEG_BIN_40;
         self::$StreamingServers = self::getServers();
         self::$blockedISP = self::getBlockedISP();
         self::$blockedIPs = self::getBlockedIPs();
@@ -69,9 +87,10 @@ class ipTV_lib {
     public static function calculateSegNumbers() {
         $segments_settings = array();
 
-        $segments_settings['seg_type'] = self::$settings["seg_type"];
+        $segments_settings['seg_type'] = self::$settings["segment_type"];
         $segments_settings["seg_time"] = intval(self::$settings["seg_time"]);
         $segments_settings["seg_list_size"] = intval(self::$settings["seg_list_size"]);
+        $segments_settings["seg_delete_threshold"] = intval(self::$settings["seg_delete_threshold"]);
         return $segments_settings;
     }
     public static function GetIspAddon($rForce = false) {
