@@ -55,7 +55,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 "libmaxminddb0",
                 "libmaxminddb-dev",
             ];
-            $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $lastVersion['sub'] . '/sub_xui.tar.gz';
+            $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $lastVersion . '/sub_xui.tar.gz';
 
             file_put_contents($rInstallDir . $rServerID . '.json', json_encode(array('root_username' => $rUsername, 'root_password' => $rPassword, 'ssh_port' => $rPort)));
 
@@ -74,7 +74,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     runCommand($rConn, 'sudo killall -9 -u xtreamcodes');
                     echo "\n" . 'Updating system' . "\n";
                     runCommand($rConn, 'sudo rm /var/lib/dpkg/lock-frontend && sudo rm /var/cache/apt/archives/lock && sudo rm /var/lib/dpkg/lock');
-                    runCommand($rConn, 'sudo apt-get update');
+                    runCommand($rConn, 'sudo apt update && sudo apt full-upgrade -y');
                     foreach ($rPackages as $rPackage) {
                         echo 'Installing package: ' . $rPackage . "\n";
                         runCommand($rConn, 'sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install ' . $rPackage);
@@ -113,7 +113,6 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                         }
                     }
                     echo 'Generating configuration file' . "\n";
-                    // $rMasterConfig = parse_ini_file(CONFIG_PATH . 'config.ini');
 
                     $rNewConfig = '; XtreamCodes Configuration' . "\n" . '; -----------------' . "\n" . '; Your username and password will be encrypted and' . "\n" . "; saved to the 'credentials' file in this folder" . "\n" . '; automatically.' . "\n" . ';' . "\n" . '; To change your username or password, modify BOTH' . "\n" . '; below and XtreamCodes will read and re-encrypt them.' . "\n\n" . '[XtreamCodes]' . "\n" . 'hostname    =   "' . ipTV_lib::$StreamingServers[SERVER_ID]['server_ip'] . '"' . "\n" . 'database    =   "xtream_iptvpro"' . "\n" . 'port        =   ' . intval($_INFO['port']) . "\n" . 'server_id   =   ' . $rServerID . "\n" . 'is_lb       =   1' . "\n\n" . '[Encrypted]' . "\n" . 'username    =   "lb_' . $rServerID . '"' . "\n" . 'password    =   ""';
                     file_put_contents(TMP_PATH . 'config_' . $rServerID, $rNewConfig);

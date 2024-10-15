@@ -75,7 +75,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			$ipTV_db->query('UPDATE `streaming_servers` SET `server_ip`=\'%s\', `network_interface` = \'auto\' WHERE `id`=\'%s\';', $addr, SERVER_ID);
 		}
 
-		if (!$rFirstRun || $rServers[SERVER_ID]['is_main']) {
+		if (!$rFirstRun && $rServers[SERVER_ID]['is_main']) {
 			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 0 WHERE `id` <> \'%s\';', SERVER_ID);
 			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 1 WHERE `id` = \'%s\';', SERVER_ID);
 
