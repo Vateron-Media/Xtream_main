@@ -12,7 +12,7 @@ $update = $Config->checkUpdate();
     <title>Server Monitor</title>
     <link rel="stylesheet" href="web/css/utilities.css" type="text/css">
     <link rel="stylesheet" href="web/css/frontend.css" type="text/css">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
     <!--[if IE]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
