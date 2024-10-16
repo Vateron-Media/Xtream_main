@@ -29,6 +29,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 "gpg-agent",
                 "software-properties-common",
                 "libcurl4",
+                "libcurl4-gnu-utls",
                 "libxslt1-dev",
                 "libgeoip-dev",
                 "libonig-dev",
