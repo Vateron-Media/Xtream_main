@@ -396,7 +396,7 @@ class ipTV_stream {
             }
         }
         $rExternalPush = json_decode($stream['stream_info']['external_push'], true);
-        $progressURL = 'http://127.0.0.1:' . intval(ipTV_lib::$StreamingServers[SERVER_ID]['http_broadcast_port']) . '/progress?stream_id=' . intval($streamID);
+        $progressURL = 'http://127.0.0.1:' . intval(ipTV_lib::$StreamingServers[SERVER_ID]['http_broadcast_port']) . '/progress.php?stream_id=' . intval($streamID);
         if (empty($stream['stream_info']['custom_ffmpeg'])) {
             if ($rLoopback) {
                 $rOptions = '{FETCH_OPTIONS}';
