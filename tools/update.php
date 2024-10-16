@@ -13,8 +13,7 @@ function loadcli() {
     global $rCommand;
     switch ($rCommand) {
         case 'update':
-            $rContext = stream_context_create(array('http' => array('timeout' => 3)));
-            $updateVersion = json_decode(file_get_contents("https://raw.githubusercontent.com/Vateron-Media/Xtream_Update/main/version.json", false, $rContext), True)["main"];
+            $updateVersion = mb_substr(get_recent_stable_release("https://github.com/Vateron-Media/Xtream_main/releases/latest"), 1);
             $nextVersion = getNextVersionUpdate(SCRIPT_VERSION, $updateVersion);
             if (!$nextVersion) {
                 exit(1);
@@ -22,22 +21,13 @@ function loadcli() {
 
             $URL = "https://github.com/Vateron-Media/Xtream_main/releases/download/{$nextVersion}/update.tar.gz";
 
-            # make dir
-            if (!file_exists(UPDATE_PATH)) {
-                mkdir(UPDATE_PATH);
-            }
-
             echo 'Download Update.....' . "\n";
-            $data = file_get_contents($URL);
-            file_put_contents(UPDATE_PATH . "update.tar.gz", $data);
-
-            echo 'Unzip update.tar.gz' . "\n";
-            $phar = new PharData(UPDATE_PATH . 'update.tar.gz');
-            $phar->extractTo(UPDATE_PATH, null, true);
-
-            if (file_exists(UPDATE_PATH . "update.tar.gz")) {
-                unlink(UPDATE_PATH . "update.tar.gz");
-            }
+            $rData = fopen($URL, 'rb');
+            $rOutputDir = TMP_PATH . 'update.tar.gz';
+            $rOutput = fopen($rOutputDir, 'wb');
+            stream_copy_to_stream($rData, $rOutput);
+            fclose($rData);
+            fclose($rOutput);
 
             echo 'Run python update.py' . "\n";
             $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 5 WHERE `id` = \'%s\';', SERVER_ID);
@@ -93,6 +83,42 @@ function getNextVersionUpdate($curentVersion, $updateVersion) {
     } else {
         return false;
     }
+}
+function get_recent_stable_release(string $url) {
+    // Initialize cURL session
+    $ch = curl_init();
+
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+
+    // Execute cURL request
+    $result = curl_exec($ch);
+
+    if ($result === false) {
+        error_log("cURL Error: " . curl_error($ch));
+        curl_close($ch);
+        return false;
+    }
+
+    // Get the effective URL after following redirects
+    $effective_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+
+    // Close cURL session
+    curl_close($ch);
+
+    // Extract the version from the URL
+    $version = basename($effective_url);
+
+    if (empty($version)) {
+        error_log("Error: Could not extract version from URL");
+        return false;
+    }
+
+    return $version;
 }
 
 function shutdown() {
