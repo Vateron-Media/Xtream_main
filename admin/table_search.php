@@ -840,6 +840,9 @@ if ($rType == "users") {
                 }
                 $rStreamInfoText = "<div style='font-size: 10px;' class='text-center' align='center'><tbody><tr><td colspan='5' class='col'>No information available</td></tr></tbody></div>";
                 $rStreamInfo = json_decode($rRow["stream_info"], True);
+                if ($rStreamInfo == 0 || $rStreamInfo == "") {
+                    $rStreamInfo = [];
+                }
                 $rProgressInfo = json_decode($rRow["progress_info"], True);
                 if ($rActualStatus == 1) {
                     if (!isset($rStreamInfo["codecs"]["video"])) {

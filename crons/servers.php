@@ -13,22 +13,77 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
 } else {
     exit('Please run as XtreamCodes!' . "\n");
 }
+
 function loadCron() {
     global $ipTV_db;
+    ipTV_lib::$settings = ipTV_lib::getSettings(true);
     if (ipTV_lib::isRunning()) {
         $rServers = ipTV_lib::getServers(true);
-
+        // if ($rServers[SERVER_ID]['is_main'] && ipTV_lib::$settings['redis_handler']) {
+        //     exec('pgrep -u xtreamcodes redis-server', $rRedis);
+        //     if (count($rRedis) == 0) {
+        //         echo 'Restarting Redis!' . "\n";
+        //         shell_exec(MAIN_DIR . 'bin/redis/redis-server ' . MAIN_DIR . '/bin/redis/redis.conf > /dev/null 2>/dev/null &');
+        //     }
+        // }
         #create all network stats
         getNetworkStats();
-
-        $rSignals = intval(trim(shell_exec('ps aux | grep \'Signal Receiver\' | grep -v grep | wc -l')));
+        $rSignals = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep signals | grep -v grep | grep -v pgrep | wc -l')));
         if ($rSignals == 0) {
             shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'signals.php > /dev/null 2>/dev/null &');
         }
-        $rWatchdog = intval(trim(shell_exec('ps aux | grep \'Server WatchDog\' | grep -v grep | wc -l')));
+        if ($rServers[SERVER_ID]['is_main']) {
+            $rCache = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
+            if (ipTV_lib::$settings['enable_cache'] && $rCache == 0) {
+                shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
+            } else {
+                if (!ipTV_lib::$settings['enable_cache'] || $rCache > 0) {
+                    echo 'Killing Cache Handler' . "\n";
+                    exec("pgrep -U xtreamcodes | xargs ps | grep cache_handler | awk '{print \$1}'", $rPIDs);
+                    foreach ($rPIDs as $rPID) {
+                        if (intval($rPID) > 0) {
+                            shell_exec('kill -9 ' . intval($rPID));
+                        }
+                    }
+                }
+            }
+        }
+        $rWatchdog = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep watchdog | grep -v grep | grep -v pgrep | wc -l')));
         if ($rWatchdog == 0) {
             shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
         }
+        // $rQueue = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep queue | grep -v grep | grep -v pgrep | wc -l')));
+        // if ($rQueue == 0) {
+        //     shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'queue.php > /dev/null 2>/dev/null &');
+        // }
+        // $rOnDemand = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep ondemand | grep -v grep | grep -v pgrep | wc -l')));
+        // if (ipTV_lib::$settings['on_demand_instant_off'] && $rOnDemand == 0) {
+        //     shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'ondemand.php > /dev/null 2>/dev/null &');
+        // } else {
+        //     if (!ipTV_lib::$settings['on_demand_instant_off'] || $rOnDemand > 0) {
+        //         echo 'Killing On-Demand Instant-Off' . "\n";
+        //         exec("pgrep -U xtreamcodes | xargs ps | grep ondemand | awk '{print \$1}'", $rPIDs);
+        //         foreach ($rPIDs as $rPID) {
+        //             if (intval($rPID) > 0) {
+        //                 shell_exec('kill -9 ' . intval($rPID));
+        //             }
+        //         }
+        //     }
+        // }
+        // $rScanner = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep scanner | grep -v grep | grep -v pgrep | wc -l')));
+        // if (ipTV_lib::$settings['on_demand_checker'] && $rScanner == 0) {
+        //     shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'scanner.php > /dev/null 2>/dev/null &');
+        // } else {
+        //     if (!ipTV_lib::$settings['on_demand_checker'] || $rScanner > 0) {
+        //         echo 'Killing On-Demand Scanner' . "\n";
+        //         exec("pgrep -U xtreamcodes | xargs ps | grep scanner | awk '{print \$1}'", $rPIDs);
+        //         foreach ($rPIDs as $rPID) {
+        //             if (intval($rPID) > 0) {
+        //                 shell_exec('kill -9 ' . intval($rPID));
+        //             }
+        //         }
+        //     }
+        // }
         $rStats = getStats();
         $rWatchdog = json_decode($rServers[SERVER_ID]['watchdog_data'], true);
         $rCPUAverage = ($rWatchdog['cpu_average_array'] ?: array());
@@ -41,7 +96,25 @@ function loadCron() {
         } else {
             $rRemoteStatus = false;
         }
-
+        // if (ipTV_lib::$settings['redis_handler']) {
+        //     $rConnections = $rServers[SERVER_ID]['connections'];
+        //     $rUsers = $rServers[SERVER_ID]['users'];
+        //     $rAllUsers = 0;
+        //     foreach (array_keys($rServers) as $rServerID) {
+        //         if ($rServers[$rServerID]['server_online']) {
+        //             $rAllUsers += $rServers[$rServerID]['users'];
+        //         }
+        //     }
+        // } else {
+        $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = \'%s\' AND `hls_end` = 0;', SERVER_ID);
+        $rConnections = intval($ipTV_db->get_row()['count']);
+        $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `server_id` = \'%s\' AND `hls_end` = 0 GROUP BY `user_id`;', SERVER_ID);
+        $rUsers = intval($ipTV_db->num_rows());
+        $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
+        $rAllUsers = intval($ipTV_db->num_rows());
+        // }
+        $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = \'%s\' AND `pid` > 0 AND `type` = 1;', SERVER_ID);
+        $rStreams = intval($ipTV_db->get_row()['count']);
         $rPing = 0;
         if (!$rServers[SERVER_ID]['is_main']) {
             $rMainID = null;
@@ -52,11 +125,13 @@ function loadCron() {
                 }
             }
             if ($rMainID) {
-                $rPing = pingserver($rServers[$rMainID]['server_ip'], $rServers[$rMainID]['http_broadcast_port']);
+                $rPing = pingServer($rServers[$rMainID]['server_ip'], $rServers[$rMainID]['http_broadcast_port']);
             }
         }
+        $rSysCtl = file_get_contents('/etc/sysctl.conf');
         $rAddresses = array_values(array_unique(array_map('trim', explode("\n", shell_exec("ip -4 addr | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'")))));
-        $ipTV_db->query('UPDATE `streaming_servers` SET `remote_status` = \'%s\', `script_version` = \'%s\', `server_hardware` = \'%s\',`whitelist_ips` = \'%s\', `interfaces` = \'%s\', `time_offset` = ' . intval(time()) . ' - UNIX_TIMESTAMP(), `ping` = \'%s\' WHERE `id` = \'%s\'', $rRemoteStatus, SCRIPT_VERSION, json_encode($rHardware, JSON_UNESCAPED_UNICODE), json_encode($rAddresses, JSON_UNESCAPED_UNICODE), json_encode($rStats['interfaces'], JSON_UNESCAPED_UNICODE), $rPing, SERVER_ID);
+        // $ipTV_db->query('INSERT INTO `servers_stats`(`server_id`, `connections`, `total_users`, `users`, `streams`, `cpu`, `cpu_cores`, `cpu_avg`, `total_mem`, `total_mem_free`, `total_mem_used`, `total_mem_used_percent`, `total_disk_space`, `uptime`, `total_running_streams`, `bytes_sent`, `bytes_received`, `bytes_sent_total`, `bytes_received_total`, `cpu_load_average`, `gpu_info`, `iostat_info`, `time`) VALUES(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', UNIX_TIMESTAMP());', SERVER_ID, $rConnections, $rAllUsers, $rUsers, $rStreams, $rStats['cpu'], $rStats['cpu_cores'], $rStats['cpu_avg'], $rStats['total_mem'], $rStats['total_mem_free'], $rStats['total_mem_used'], $rStats['total_mem_used_percent'], $rStats['total_disk_space'], $rStats['uptime'], $rStats['total_running_streams'], $rStats['bytes_sent'], $rStats['bytes_received'], $rStats['bytes_sent_total'], $rStats['bytes_received_total'], $rStats['cpu_load_average'], json_encode($rStats['gpu_info'], JSON_UNESCAPED_UNICODE), json_encode($rStats['iostat_info'], JSON_UNESCAPED_UNICODE));
+        $ipTV_db->query('UPDATE `streaming_servers` SET `remote_status` = \'%s\', `script_version` = \'%s\', `server_hardware` = \'%s\',`whitelist_ips` = \'%s\', `sysctl` = \'%s\', `video_devices` = \'%s\', `audio_devices` = \'%s\', `gpu_info` = \'%s\', `interfaces` = \'%s\', `time_offset` = ' . intval(time()) . ' - UNIX_TIMESTAMP(), `ping` = \'%s\' WHERE `id` = \'%s\'', $rRemoteStatus, SCRIPT_VERSION, json_encode($rHardware, JSON_UNESCAPED_UNICODE), json_encode($rAddresses, JSON_UNESCAPED_UNICODE), $rSysCtl, json_encode($rStats['video_devices'], JSON_UNESCAPED_UNICODE), json_encode($rStats['audio_devices'], JSON_UNESCAPED_UNICODE), json_encode($rStats['gpu_info'], JSON_UNESCAPED_UNICODE), json_encode($rStats['interfaces'], JSON_UNESCAPED_UNICODE), $rPing, SERVER_ID);
         if ($rServers[SERVER_ID]['is_main']) {
             foreach ($rServers as $rServerID => $rServerArray) {
                 if ($rServerArray['server_online'] != $rServerArray['last_status']) {
@@ -110,7 +185,6 @@ function pingServer($rIP, $rPort) {
     }
     return $rStatus;
 }
-
 
 function shutdown() {
     global $ipTV_db;

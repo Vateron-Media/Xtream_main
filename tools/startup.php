@@ -18,6 +18,9 @@ if ($argc) {
         if (file_exists(CRON_PATH . 'root_signals.php')) {
             $rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_signals.php # XtreamCodes';
         }
+        // if (file_exists(CRON_PATH . 'root_mysql.php')) {
+        //     $rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_mysql.php # XtreamCodes';
+        // }
         $rWrite = false;
         exec('sudo crontab -l', $rOutput);
         foreach ($rCrons as $rCron) {
