@@ -943,6 +943,40 @@ CREATE TABLE IF NOT EXISTS `server_activity` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `servers_stats`
+--
+
+CREATE TABLE IF NOT EXISTS `servers_stats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `server_id` int(11) DEFAULT '0',
+  `connections` int(11) DEFAULT '0',
+  `streams` int(11) DEFAULT '0',
+  `users` int(11) DEFAULT '0',
+  `cpu` float DEFAULT '0',
+  `cpu_cores` int(11) DEFAULT '0',
+  `cpu_avg` float DEFAULT '0',
+  `total_mem` int(11) DEFAULT '0',
+  `total_mem_free` int(11) DEFAULT '0',
+  `total_mem_used` int(11) DEFAULT '0',
+  `total_mem_used_percent` float DEFAULT '0',
+  `total_disk_space` bigint(20) DEFAULT '0',
+  `uptime` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `total_running_streams` int(11) DEFAULT '0',
+  `bytes_sent` bigint(20) DEFAULT '0',
+  `bytes_received` bigint(20) DEFAULT '0',
+  `bytes_sent_total` bigint(128) DEFAULT '0',
+  `bytes_received_total` bigint(128) DEFAULT '0',
+  `cpu_load_average` float DEFAULT '0',
+  `gpu_info` mediumtext COLLATE utf8_unicode_ci,
+  `iostat_info` mediumtext COLLATE utf8_unicode_ci,
+  `time` int(16) DEFAULT '0',
+  `total_users` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `settings`
 --
 
@@ -1208,6 +1242,10 @@ CREATE TABLE IF NOT EXISTS `streaming_servers` (
   `last_status` tinyint(4) DEFAULT 1,
   `interfaces` mediumtext COLLATE utf8_unicode_ci,
   `ping` int(11) DEFAULT '0',
+  `video_devices` mediumtext COLLATE utf8_unicode_ci,
+  `sysctl` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `audio_devices` mediumtext COLLATE utf8_unicode_ci,
+  `gpu_info` mediumtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   UNIQUE KEY `server_ip` (`server_ip`,`http_broadcast_port`),
   KEY `total_clients` (`total_clients`),
@@ -1218,8 +1256,8 @@ CREATE TABLE IF NOT EXISTS `streaming_servers` (
 -- Dumping data for table `streaming_servers`
 --
 
-INSERT INTO `streaming_servers` (`id`, `server_name`, `domain_name`, `server_ip`, `vpn_ip`, `ssh_password`, `ssh_port`, `diff_time_main`, `http_broadcast_port`, `total_clients`, `system_os`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`, `http_isp_port`, `time_offset`, `script_version`, `is_main`, `php_pids`, `remote_status`, `last_status`, `interfaces`, `ping`) VALUES
-(1, 'Main Server', '', '127.0.0.1', '', NULL, NULL, 0, 25461, 1000, '', '', 0, 1, 0, '[]', 0, 0, '', 3, 0, 25462, 'low_priority', '[]', 'low_priority', 0, '', 0, 25463, '', '', '', 0, 8805, 0, 'NULL', 1, '', 1, 1, '', 0);
+INSERT INTO `streaming_servers` (`id`, `server_name`, `domain_name`, `server_ip`, `vpn_ip`, `ssh_password`, `ssh_port`, `diff_time_main`, `http_broadcast_port`, `total_clients`, `system_os`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`, `http_isp_port`, `time_offset`, `script_version`, `is_main`, `php_pids`, `remote_status`, `last_status`, `interfaces`, `ping`, `video_devices`, `sysctl`, `audio_devices`, `gpu_info`) VALUES
+(1, 'Main Server', '', '127.0.0.1', '', NULL, NULL, 0, 25461, 1000, '', '', 0, 1, 0, '[]', 0, 0, '', 3, 0, 25462, 'low_priority', '[]', 'low_priority', 0, '', 0, 25463, '', '', '', 0, 8805, 0, 'NULL', 1, '', 1, 1, '', 0, "", "", "", "");
 
 -- --------------------------------------------------------
 

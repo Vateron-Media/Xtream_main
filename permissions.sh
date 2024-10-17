@@ -6,13 +6,13 @@ chmod 0750 /home/xtreamcodes/bin
 chmod 0750 /home/xtreamcodes/config
 chmod 0750 /home/xtreamcodes/content
 chmod 0750 /home/xtreamcodes/signals
-# chmod 1777 /home/xtreamcodes/tmp
 
 # chmod 0550 /home/xtreamcodes/bin/nginx
 # chmod 0550 /home/xtreamcodes/bin/nginx_rtmp
 # chmod 0550 /home/xtreamcodes/bin/php
 chmod 0771 /home/xtreamcodes/bin/daemons.sh
 chmod 0660 /home/xtreamcodes/bin/php/sockets/*
+chmod 0755 /home/xtreamcodes/bin/redis/redis-server
 
 # chmod 0644 /home/xtreamcodes/database.sql
 # chmod 0755 /home/xtreamcodes/bin/php/*.pid

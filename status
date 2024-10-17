@@ -1,16 +1,11 @@
 #!/home/xtreamcodes/bin/php/bin/php
 <?php
 
-
-# os.system(
-#     "sudo mysql -u root%s -e \"USE xtream_iptvpro; UPDATE 'streaming_servers' SET 'server_ip'='%s', 'system_os'='%s', 'network_interface' = 'auto' WHERE 'id'=1\" > /dev/null"
-#     % (rExtra, getIP(), getVersion())
-# )
-
 if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 	set_time_limit(0);
 
 	if ($argc) {
+		$rReload = false;
 		$rFirstRun = false;
 
 		if (isset($argv[1])) {
@@ -35,8 +30,58 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 
 		$rServers = ServerInfo();
 
+		shell_exec('sudo chmod 0660 ' . MAIN_DIR . 'bin/php/sockets/*');
 		shell_exec('sudo chmod 0771 ' . MAIN_DIR . 'bin/daemons.sh');
-		// shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'config');
+		shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'config');
+		shell_exec("sudo echo 'net.ipv4.ip_unprivileged_port_start=0' > /etc/sysctl.d/50-allports-nonroot.conf && sudo sysctl --system 2> /dev/null");
+		$rSSLConfig = file_get_contents(MAIN_DIR . 'bin/nginx/conf/ssl.conf');
+
+		if (stripos($rSSLConfig, "\n" . 'ssl_stapling on;' . "\n" . 'ssl_stapling_verify on;') !== false || stripos($rSSLConfig, "\r\n" . 'ssl_stapling on;' . "\r\n" . 'ssl_stapling_verify on;') !== false) {
+			file_put_contents(MAIN_DIR . 'bin/nginx/conf/ssl.conf', str_replace("\r\n" . 'ssl_stapling on;' . "\r\n" . 'ssl_stapling_verify on;', '', str_replace("\n" . 'ssl_stapling on;' . "\n" . 'ssl_stapling_verify on;', '', $rSSLConfig)));
+			$rReload = true;
+		}
+
+		// foreach (array('http', 'https') as $rType) {
+		// 	$rPortConfig = file_get_contents(MAIN_DIR . 'bin/nginx/ports/' . $rType . '.conf');
+
+		// 	if (stripos($rPortConfig, ' reuseport') !== false) {
+		// 		file_put_contents(MAIN_DIR . 'bin/nginx/ports/' . $rType . '.conf', str_replace(' reuseport', '', $rPortConfig));
+		// 		$rReload = true;
+		// 	}
+		// }
+
+		if ($rReload) {
+			exec('sudo -u xtreamcodes ' . MAIN_DIR . 'bin/nginx/sbin/nginx -s reload');
+			exec('sudo service xtreamcodes restart');
+		}
+
+		$rCrons = array();
+		if (file_exists(CRON_PATH . 'root_signals.php')) {
+			$rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_signals.php # XtreamCodes';
+		}
+		// if (file_exists(CRON_PATH . 'root_mysql.php')) {
+		// 	$rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_mysql.php # XtreamCodes';
+		// }
+
+		$rWrite = false;
+		exec('sudo crontab -l', $rOutput);
+
+		foreach ($rCrons as $rCron) {
+			if (!in_array($rCron, $rOutput)) {
+				$rOutput[] = $rCron;
+				$rWrite = true;
+			}
+		}
+
+		if ($rWrite) {
+			$rCronFile = tempnam(TMP_PATH, 'crontab');
+			file_put_contents($rCronFile, implode("\n", $rOutput) . "\n");
+			exec('sudo chattr -i /var/spool/cron/crontabs/root');
+			exec('sudo crontab -r');
+			exec('sudo crontab ' . $rCronFile);
+			exec('sudo chattr +i /var/spool/cron/crontabs/root');
+			echo 'Root crontab installed.' . "\n\n";
+		}
 
 		$rFile = file('/etc/systemd/system.conf');
 		$db731ba4eed35cdc = false;
@@ -67,15 +112,60 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			}
 		}
 
-		if ($rFirstRun) {
-			$socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-			socket_connect($socket, '8.8.8.8', 80);
-			$name = socket_getsockname($socket, $addr, $port);
-			socket_close($socket);
-			$ipTV_db->query('UPDATE `streaming_servers` SET `server_ip`=\'%s\', `network_interface` = \'auto\' WHERE `id`=\'%s\';', $addr, SERVER_ID);
+		if ($rServers[SERVER_ID]['is_main']) {
+			// foreach ($rServers as $rServerID => $rServerArray) {
+			// 	$ipTV_db->query('DELETE FROM `signals` WHERE `custom_data` = ?;', json_encode(array('action' => 'update_binaries')));
+			// 	$ipTV_db->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', $rServerID, time(), json_encode(array('action' => 'update_binaries')));
+			// }
+
+			$rConfig = file_get_contents(MAIN_DIR . 'bin/redis/redis.conf');
+			if (stripos($rConfig, "\n" . 'save 60 1000') === false) {
+				$rWrite = true;
+				$rConfig .= "\n" . 'save 60 1000';
+				$rConfig = str_replace('stop-writes-on-bgsave-error yes', 'stop-writes-on-bgsave-error no', $rConfig);
+				echo 'Turning Redis Snapshots On!' . "\n\n";
+			}
+
+			if (stripos($rConfig, "\n" . 'save 60 1000') === false) {
+				$rWrite = true;
+				$rConfig .= "\n" . 'save 60 1000';
+				echo 'Turning Redis Snapshots On' . "\n\n";
+			}
+
+			if (stripos($rConfig, 'stop-writes-on-bgsave-error yes') !== false) {
+				$rWrite = true;
+				$rConfig = str_replace('stop-writes-on-bgsave-error yes', 'stop-writes-on-bgsave-error no', $rConfig);
+				echo 'Disabling failed write lock on Redis' . "\n\n";
+			}
+
+			if (stripos($rConfig, "\n" . 'server-threads') === false) {
+				$rWrite = true;
+				$rConfig .= "\n" . 'server-threads 4' . "\n" . 'server-thread-affinity true';
+				echo 'Enabling multithreading on Redis' . "\n\n";
+			}
+
+			$rPassword = trim(explode("\n", explode("\n" . 'requirepass ', $rConfig)[1])[0]);
+
+			if ($rPassword == '#PASSWORD#') {
+				$rWrite = true;
+				$rPassword = generateString(512);
+				$rConfig = str_replace('#PASSWORD#', $rPassword, $rConfig);
+				echo 'Generating a new Redis password' . "\n\n";
+			}
+
+			if ($rWrite) {
+				file_put_contents(MAIN_DIR . 'bin/redis/redis.conf', $rConfig);
+			}
+
+			// $ipTV_db->query('SELECT `redis_password` FROM `settings`;');
+
+			// if ($ipTV_db->get_row()['redis_password'] != $rPassword) {
+			// 	echo 'Updating Redis password in database' . "\n";
+			// 	$ipTV_db->query('UPDATE `settings` SET `redis_password` = ?;', $rPassword);
+			// }
 		}
 
-		if (!$rFirstRun && $rServers[SERVER_ID]['is_main']) {
+		if (!$rFirstRun || $rServers[SERVER_ID]['is_main']) {
 			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 0 WHERE `id` <> \'%s\';', SERVER_ID);
 			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 1 WHERE `id` = \'%s\';', SERVER_ID);
 
@@ -101,13 +191,13 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 				echo "\n";
 			}
 
-			echo 'Installed Version: ' . $rServers[SERVER_ID]['SCRIPT_VERSION'] . "\n" . '------------------------------' . "\n";
+			echo 'Installed Version: ' . $rServers[SERVER_ID]['script_version'] . "\n" . '------------------------------' . "\n";
 			$Df0cfbe079756478 = 0;
 
 			foreach ($rServers as $rServerID => $rServer) {
 				if ($rServerID != SERVER_ID) {
-					if ($rServer['server_type'] == 0 && $rServer['SCRIPT_VERSION'] && $rServer['SCRIPT_VERSION'] != $rServers[SERVER_ID]['SCRIPT_VERSION']) {
-						echo 'Server #' . $rServerID . ' - ' . $rServer['server_ip'] . ' - Running v' . $rServer['SCRIPT_VERSION'] . "\n";
+					if ($rServer['server_type'] == 0 && $rServer['script_version'] && $rServer['script_version'] != $rServers[SERVER_ID]['script_version']) {
+						echo 'Server #' . $rServerID . ' - ' . $rServer['server_ip'] . ' - Running v' . $rServer['script_version'] . "\n";
 						$Df0cfbe079756478++;
 					}
 				}
@@ -120,7 +210,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			}
 		}
 
-		$ipTV_db->query('UPDATE `streaming_servers` SET `SCRIPT_VERSION` = \'%s\' WHERE `id` = \'%s\';', SCRIPT_VERSION, SERVER_ID);
+		$ipTV_db->query('UPDATE `servers` SET `script_version` = \'%s\' WHERE `id` = \'%s\';', SCRIPT_VERSION, SERVER_ID);
 	} else {
 		exit(0);
 	}

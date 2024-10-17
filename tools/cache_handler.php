@@ -3,7 +3,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc) {
         set_time_limit(0);
         $rPID = getmypid();
-        require str_replace('\\', '/', dirname($argv[0])) . '/../../www/init.php';
+        require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         shell_exec('kill -9 $(ps aux | grep cache_handler | grep -v grep | grep -v ' . $rPID . " | awk '{print \$2}')");
         $rLastCheck = null;
         $rInterval = 60;
@@ -11,9 +11,6 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         ipTV_lib::$settings = ipTV_lib::getSettings(true);
         if (ipTV_lib::$settings['enable_cache']) {
             while (true) {
-                if (!$ipTV_db->ping()) {
-                    break;
-                }
                 if ($rLastCheck && $rInterval > time() - $rLastCheck) {
                 } else {
                     ipTV_lib::$settings = ipTV_lib::getSettings(true);
