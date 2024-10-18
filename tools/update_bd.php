@@ -7,6 +7,10 @@ $ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `sysctl` mediumtext CO
 $ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `video_devices` mediumtext COLLATE utf8_unicode_ci");
 $ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `audio_devices` mediumtext COLLATE utf8_unicode_ci");
 $ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `gpu_info` mediumtext COLLATE utf8_unicode_ci");
+$ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `limit_requests` INT(11) NULL DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `enable_gzip` TINYINT(1) NULL DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE settings ADD COLUMN `restart_php_fpm` TINYINT(4) NULL DEFAULT '1'");
+
 
 
 
