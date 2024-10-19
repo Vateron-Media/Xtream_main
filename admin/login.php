@@ -315,7 +315,7 @@ if (!isset($_STATUS)) {
 		</div>
 		<script src="assets/js/vendor.min.js"></script>
 		<script src="assets/libs/parsleyjs/parsley.min.js"></script>
-		<script src="assets/js/app.min.js?rid=<?= getID() ?>"></script>
+		<script src="assets/js/app.min.js"></script>
 		<?php if ($rAdminSettings["recaptcha_enable"]) { ?>
 			<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 		<?php } ?>

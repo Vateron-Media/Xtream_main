@@ -1617,13 +1617,6 @@ function getIP() {
     return $ip;
 }
 
-function getID() {
-    if (file_exists(MAIN_DIR . "adtools/settings.json")) {
-        return json_decode(file_get_contents(MAIN_DIR . "adtools/settings.json"), True)["rid"];
-    }
-    return 0;
-}
-
 function getPermissions($rID) {
     global $db;
     $result = $db->query("SELECT * FROM `member_groups` WHERE `group_id` = " . intval($rID) . ";");
