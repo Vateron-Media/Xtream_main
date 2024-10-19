@@ -676,7 +676,7 @@ class ipTV_lib {
             fclose($rHandle);
             shell_exec('crontab -u xtreamcodes ' . $rTempName);
             @unlink($rTempName);
-            file_put_contents(TMP_PATH . 'crontab', 1);
+            @file_put_contents(TMP_PATH . 'crontab', 1);
             return true;
         } else {
             return false;

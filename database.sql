@@ -858,6 +858,22 @@ CREATE TABLE IF NOT EXISTS `reseller_imex` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `queue`
+--
+
+CREATE TABLE IF NOT EXISTS `queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(32) DEFAULT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `stream_id` int(11) DEFAULT NULL,
+  `pid` int(11) DEFAULT NULL,
+  `added` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rtmp_ips`
 --
 

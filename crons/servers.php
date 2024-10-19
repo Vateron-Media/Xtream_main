@@ -52,10 +52,10 @@ function loadCron() {
         if ($rWatchdog == 0) {
             shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
         }
-        // $rQueue = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep queue | grep -v grep | grep -v pgrep | wc -l')));
-        // if ($rQueue == 0) {
-        //     shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'queue.php > /dev/null 2>/dev/null &');
-        // }
+        $rQueue = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep queue | grep -v grep | grep -v pgrep | wc -l')));
+        if ($rQueue == 0) {
+            shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'queue.php > /dev/null 2>/dev/null &');
+        }
         // $rOnDemand = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep ondemand | grep -v grep | grep -v pgrep | wc -l')));
         // if (ipTV_lib::$settings['on_demand_instant_off'] && $rOnDemand == 0) {
         //     shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'ondemand.php > /dev/null 2>/dev/null &');

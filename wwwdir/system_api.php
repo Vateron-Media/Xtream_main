@@ -42,15 +42,15 @@ switch ($action) {
             switch ($function) {
                 case 'start':
                     foreach ($streamIDs as $streamID) {
-                        ipTV_stream::stopVODstream($streamID);
-                        ipTV_stream::startVODstream($streamID);
+                        ipTV_stream::stopMovie($streamID);
+                        ipTV_stream::startMovie($streamID);
                         usleep(50000);
                     }
                     echo json_encode(array('result' => true));
                     exit();
                 case 'stop':
                     foreach ($streamIDs as $streamID) {
-                        ipTV_stream::stopVODstream($streamID);
+                        ipTV_stream::stopMovie($streamID);
                     }
                     echo json_encode(array('result' => true));
                     exit();

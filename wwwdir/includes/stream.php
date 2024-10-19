@@ -110,7 +110,7 @@ class ipTV_stream {
         }
         return false;
     }
-    static function startVODstream($streamID) {
+    static function startMovie($streamID) {
         $stream = array();
         self::$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 0 LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = \'%d\'', $streamID);
         if (self::$ipTV_db->num_rows() > 0) {
@@ -229,7 +229,7 @@ class ipTV_stream {
         }
         return false;
     }
-    static function stopVODstream($streamID) {
+    static function stopMovie($streamID) {
         if (file_exists(VOD_PATH . $streamID . '_.pid')) {
             $pid = (int) file_get_contents(VOD_PATH . $streamID . '_.pid');
             posix_kill($pid, 9);
