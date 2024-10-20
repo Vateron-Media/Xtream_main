@@ -1,7 +1,7 @@
 <?php
 class ipTV_lib {
     public static $request = array();
-    public static $ipTV_db;
+    public static $ipTV_db = null;
     public static $settings = array();
     public static $Bouquets = array();
     public static $StreamingServers = array();
@@ -16,6 +16,8 @@ class ipTV_lib {
     public static $FFMPEG_GPU = null;
     public static $FFPROBE = null;
     public static $cached = null;
+    public static $redis = null;
+    public static $config = array();
 
     public static function init() {
         global $_INFO;
@@ -35,6 +37,9 @@ class ipTV_lib {
 
         $input = @self::parseIncomingRecursively($_GET, array());
         self::$request = @self::parseIncomingRecursively($_POST, $input);
+        self::$config = parse_ini_file(
+            CONFIG_PATH . 'config.ini'
+        );
         self::$settings = self::getSettings();
         self::$cached = self::$settings["enable_cache"];
         date_default_timezone_set(self::$settings["default_timezone"]);
@@ -695,5 +700,25 @@ class ipTV_lib {
             return true;
         }
         return false;
+    }
+    public static function connectRedis() {
+        if (!is_object(self::$redis)) {
+            try {
+                self::$redis = new Redis();
+                self::$redis->connect(self::$config['hostname'], 6379);
+                self::$redis->auth(self::$settings['redis_password']);
+            } catch (Exception $e) {
+                self::$redis = null;
+                return false;
+            }
+        }
+        return true;
+    }
+    public static function closeRedis() {
+        if (is_object(self::$redis)) {
+            self::$redis->close();
+            self::$redis = null;
+        }
+        return true;
     }
 }

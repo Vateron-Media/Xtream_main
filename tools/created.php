@@ -31,8 +31,8 @@ function checkRunning($rStreamID) {
     file_put_contents(CREATED_PATH . $rStreamID . '_.create', getmypid());
 }
 function shutdown() {
-    global $db;
-    if (is_object($db)) {
-        $db->close_mysql();
+    global $ipTV_db;
+    if (is_object($ipTV_db)) {
+        $ipTV_db->close_mysql();
     }
 }

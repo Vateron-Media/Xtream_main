@@ -1,7 +1,7 @@
 <?php
 
 class ipTV_stream {
-    public static $ipTV_db;
+    public static $ipTV_db = null;
     /**
      * Transcodes and builds a stream based on the provided stream ID.
      *

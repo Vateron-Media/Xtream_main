@@ -1455,10 +1455,10 @@ $_ = array(
   "security" => "Security",
 
   //Cache
-  "cache_cron_settings" => "Cache Settings",
+  "cache_cron_redis_settings" => "Cache & Redis Settings",
   "cache_cron" => "Cache Cron Execution",
   "cache_cron_description" => "Your last cron execution was at <strong>{time}</strong>. If it takes longer to run a cron than the time between executions, you will have issues as the caching will be cut off before completion.<br><br>The default is to run the cron every 5 minutes, but when your Streams and Users tables grow larger it can take a fair amount of time to grab and cache this data. You can change the time to achieve a better balance between performance and data accuracy.<br><br><strong>Please ensure the cron format is correct, otherwise it won't run.</strong>",
-  "cache_cron_succefull_update" => "Cache settings successfully updated!",
+  "cache_cron_redis_succefull_update" => "Cache & Redis settings successfully updated!",
   "cache_cron_danger" => "Your cache tmpfs mount is <strong>{free_cache}% full</strong>! This can stop new users and streams from caching and when the mount is completely full cache will not work correctly.<br /><br /><strong>You should increase the size of your tmpfs size in /etc/fstab and reboot.</strong>",
   "cache_cron_warning" => "Cache isn't complete yet! If you have a lot of streams and users, the caching process can take a while to complete. For now, no users will be able to connect to the service.<br /><br />Player API and Playlist functionality will be limited until cache is complete. This is a requirement regardless of whether cache is enabled or not.",
   "cache_cron_minute" => "Minute",

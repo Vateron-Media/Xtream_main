@@ -1,6 +1,7 @@
 <?php
 class ipTV_streaming {
-    public static $ipTV_db;
+    public static $ipTV_db = null;
+
     public static function RtmpIps() {
         self::$ipTV_db->query("SELECT `ip` FROM `rtmp_ips`");
         return array_merge(array("127.0.0.1"), array_map("gethostbyname", ipTV_lib::array_values_recursive(self::$ipTV_db->get_rows())));

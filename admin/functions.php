@@ -2,10 +2,48 @@
 include_once("/home/xtreamcodes/admin/HTMLPurifier.standalone.php");
 require_once '/home/xtreamcodes/includes/admin.php';
 
-$rTimeout = 60;             // Seconds Timeout for Functions & Requests
-$rSQLTimeout = 5;           // Max execution time for MySQL queries.
-$rDebug = False;
 $rPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+$rTableSearch = strtolower(basename($_SERVER["SCRIPT_FILENAME"], '.php')) === "table_search";
+$_GET = XSSRow($_GET, $rTableSearch);
+$_POST = XSSRow($_POST, $rTableSearch); // Parse user input.
+
+
+if (isset($_SESSION['hash'])) {
+    $rUserInfo = getRegisteredUserHash($_SESSION['hash']);
+    $rAdminSettings["dark_mode"] = $rUserInfo["dark_mode"];
+    $rAdminSettings["expanded_sidebar"] = $rUserInfo["expanded_sidebar"];
+    $rSettings["sidebar"] = $rUserInfo["sidebar"];
+    $rPermissions = getPermissions($rUserInfo['member_group_id']);
+    if ($rPermissions["is_admin"]) {
+        $rPermissions["is_reseller"] = 0;
+    }
+    $rPermissions["advanced"] = json_decode($rPermissions["allowed_pages"], True);
+    if ((!$rUserInfo) or (!$rPermissions) or ((!$rPermissions["is_admin"]) && (!$rPermissions["is_reseller"])) or (($_SESSION['ip'] <> getIP()) && ($rAdminSettings["ip_logout"]))) {
+        unset($rUserInfo);
+        unset($rPermissions);
+        session_unset();
+        session_destroy();
+        header("Location: ./index.php");
+    }
+    $rCategories = getCategories();
+    $rServers = getStreamingServers();
+    $rServerError = False;
+    foreach ($rServers as $rServer) {
+        if (((((time() - $rServer["last_check_ago"]) > 360)) or ($rServer["status"] == 2)) and ($rServer["can_delete"] == 1) and ($rServer["status"] <> 3)) {
+            $rServerError = True;
+        }
+        if (($rServer["status"] == 3) && ($rServer["last_check_ago"] > 0)) {
+            $db->query("UPDATE `streaming_servers` SET `status` = 1 WHERE `id` = " . intval($rServer["id"]) . ";");
+            $rServers[intval($rServer["id"])]["status"] = 1;
+        }
+    }
+}
+
+
+
+
+
+
 
 function getScriptVer() {
     global $db;
@@ -208,18 +246,7 @@ function resetispnames($rID) {
     global $db;
     $db->query("UPDATE `users` SET `isp_desc` = NULL WHERE `id` = " . intval($rID) . ";");
 }
-//isp lock
-function getAdminSettings() {
-    global $db;
-    $return = array();
-    $result = $db->query("SELECT `type`, `value` FROM `admin_settings`;");
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
-            $return[$row["type"]] = $row["value"];
-        }
-    }
-    return $return;
-}
+
 
 function getSettings() {
     global $db;
@@ -244,34 +271,6 @@ function setSettings(array $settings) {
     return true;
 }
 
-if ($rDebug) {
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-} else {
-    ini_set('display_errors', 0);
-    ini_set('display_startup_errors', 0);
-    error_reporting(E_ERROR | E_WARNING | E_PARSE);
-}
-
-set_time_limit($rTimeout);
-ini_set('mysql.connect_timeout', $rSQLTimeout);
-ini_set('max_execution_time', $rTimeout);
-ini_set('default_socket_timeout', $rTimeout);
-
-define("CONFIG_PATH", MAIN_DIR . "config/");
-define('TMP_PATH', MAIN_DIR . 'tmp/');
-define('CRON_PATH', MAIN_DIR . 'crons/');
-define('CACHE_TMP_PATH', TMP_PATH . 'cache/');
-define('STREAMS_TMP_PATH', CACHE_TMP_PATH . 'streams/');
-define('USER_TMP_PATH', CACHE_TMP_PATH . 'users/');
-define('SERIES_TMP_PATH', CACHE_TMP_PATH . 'series/');
-define('PHP_BIN', '/home/xtreamcodes/bin/php/bin/php');
-define('TOOLS_PATH', MAIN_DIR . 'tools/');
-
-require_once realpath(dirname(__FILE__)) . "/mobiledetect.php";
-require_once realpath(dirname(__FILE__)) . "/gauth.php";
-
 function getTimezone() {
     global $db;
     $result = $db->query("SELECT * FROM `settings`WHERE name='default_timezone'");
@@ -291,16 +290,8 @@ function xor_parse($data, $key) {
     return $output;
 }
 
-$_INFO = parse_ini_file(CONFIG_PATH . 'config.ini');
-if (!$db = new mysqli($_INFO["hostname"], $_INFO["username"], $_INFO["password"], $_INFO["database"], $_INFO["port"])) {
-    exit("No MySQL connection!");
-}
-$db->set_charset("utf8");
-$db->query("SET GLOBAL MAX_EXECUTION_TIME=" . ($rSQLTimeout * 1000) . ";");
-date_default_timezone_set(getTimezone());
 
 $rAdminSettings = getAdminSettings();
-$rSettings = getSettings();
 $nabilos = getRegisteredUserHash($_SESSION['hash']);
 
 if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos["default_lang"] . ".php"))) {
@@ -678,35 +669,7 @@ function deleteMovieFile($rServerID, $rID) {
     return SystemAPIRequest($rServerID, array('action' => 'BackgroundCLI', 'action' => array($rCommand)));
 }
 
-function generateString($strength = 10) {
-    $input = '23456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
-    $input_length = strlen($input);
-    $random_string = '';
-    for ($i = 0; $i < $strength; $i++) {
-        $random_character = $input[mt_rand(0, $input_length - 1)];
-        $random_string .= $random_character;
-    }
-    return $random_string;
-}
 
-function getStreamingServers($rActive = false) {
-    global $db, $rPermissions;
-    $return = array();
-    if ($rActive) {
-        $result = $db->query("SELECT * FROM `streaming_servers` WHERE `status` = 1 ORDER BY `id` ASC;");
-    } else {
-        $result = $db->query("SELECT * FROM `streaming_servers` ORDER BY `id` ASC;");
-    }
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            if ($rPermissions["is_reseller"]) {
-                $row["server_name"] = "Server #" . $row["id"];
-            }
-            $return[$row["id"]] = $row;
-        }
-    }
-    return $return;
-}
 
 function getStreamingServersByID($rID) {
     global $db;
@@ -1056,15 +1019,6 @@ function getUser($rID) {
 function getRegisteredUser($rID) {
     global $db;
     $result = $db->query("SELECT * FROM `reg_users` WHERE `id` = " . intval($rID) . ";");
-    if (($result) && ($result->num_rows == 1)) {
-        return $result->fetch_assoc();
-    }
-    return null;
-}
-
-function getRegisteredUserHash($rHash) {
-    global $db;
-    $result = $db->query("SELECT * FROM `reg_users` WHERE MD5(`username`) = '" . ESC($rHash) . "' LIMIT 1;");
     if (($result) && ($result->num_rows == 1)) {
         return $result->fetch_assoc();
     }
@@ -1613,27 +1567,6 @@ function getIP() {
     return $ip;
 }
 
-function getPermissions($rID) {
-    global $db;
-    $result = $db->query("SELECT * FROM `member_groups` WHERE `group_id` = " . intval($rID) . ";");
-    if (($result) && ($result->num_rows == 1)) {
-        return $result->fetch_assoc();
-    }
-    return null;
-}
-
-function doLogin($rUsername, $rPassword) {
-    global $db;
-    $result = $db->query("SELECT `id`, `username`, `password`, `member_group_id`, `google_2fa_sec`, `status` FROM `reg_users` WHERE `username` = '" . ESC($rUsername) . "' LIMIT 1;");
-    if (($result) && ($result->num_rows == 1)) {
-        $rRow = $result->fetch_assoc();
-        if (cryptPassword($rPassword) == $rRow["password"]) {
-            return $rRow;
-        }
-    }
-    return null;
-}
-
 function getSubresellerSetups() {
     global $db;
     $return = array();
@@ -1691,32 +1624,6 @@ function checkTable($rTable) {
             $db->query($rQuery);
         }
     }
-}
-function secondsToTime($rInputSeconds, $rInclSecs = true) {
-    $rSecondsInAMinute = 60;
-    $rSecondsInAnHour = 60 * $rSecondsInAMinute;
-    $rSecondsInADay = 24 * $rSecondsInAnHour;
-    $rDays = (int) floor($rInputSeconds / (($rSecondsInADay ?: 1)));
-    $rHourSeconds = $rInputSeconds % $rSecondsInADay;
-    $rHours = (int) floor($rHourSeconds / (($rSecondsInAnHour ?: 1)));
-    $rMinuteSeconds = $rHourSeconds % $rSecondsInAnHour;
-    $rMinutes = (int) floor($rMinuteSeconds / (($rSecondsInAMinute ?: 1)));
-    $rRemaining = $rMinuteSeconds % $rSecondsInAMinute;
-    $rSeconds = (int) ceil($rRemaining);
-    $rOutput = '';
-    if ($rDays != 0) {
-        $rOutput .= $rDays . 'd ';
-    }
-    if ($rHours != 0) {
-        $rOutput .= $rHours . 'h ';
-    }
-    if ($rMinutes != 0) {
-        $rOutput .= $rMinutes . 'm ';
-    }
-    if ($rInclSecs) {
-        $rOutput .= $rSeconds . 's';
-    }
-    return $rOutput;
 }
 
 function getWorldMapLive() {
@@ -2012,78 +1919,10 @@ if (file_exists("/home/xtreamcodes/admin/.update")) {
     }
 }
 
-$rTableSearch = strtolower(basename($_SERVER["SCRIPT_FILENAME"], '.php')) === "table_search";
-$_GET = XSSRow($_GET, $rTableSearch);
-$_POST = XSSRow($_POST, $rTableSearch); // Parse user input.
-
-if (isset($_SESSION['hash'])) {
-    $rUserInfo = getRegisteredUserHash($_SESSION['hash']);
-    $rAdminSettings["dark_mode"] = $rUserInfo["dark_mode"];
-    $rAdminSettings["expanded_sidebar"] = $rUserInfo["expanded_sidebar"];
-    $rSettings["sidebar"] = $rUserInfo["sidebar"];
-    $rPermissions = getPermissions($rUserInfo['member_group_id']);
-    if ($rPermissions["is_admin"]) {
-        $rPermissions["is_reseller"] = 0;
-    }
-    $rPermissions["advanced"] = json_decode($rPermissions["allowed_pages"], True);
-    if ((!$rUserInfo) or (!$rPermissions) or ((!$rPermissions["is_admin"]) && (!$rPermissions["is_reseller"])) or (($_SESSION['ip'] <> getIP()) && ($rAdminSettings["ip_logout"]))) {
-        unset($rUserInfo);
-        unset($rPermissions);
-        session_unset();
-        session_destroy();
-        header("Location: ./index.php");
-    }
-    $rCategories = getCategories();
-    $rServers = getStreamingServers();
-    $rServerError = False;
-    foreach ($rServers as $rServer) {
-        if (((((time() - $rServer["last_check_ago"]) > 360)) or ($rServer["status"] == 2)) and ($rServer["can_delete"] == 1) and ($rServer["status"] <> 3)) {
-            $rServerError = True;
-        }
-        if (($rServer["status"] == 3) && ($rServer["last_check_ago"] > 0)) {
-            $db->query("UPDATE `streaming_servers` SET `status` = 1 WHERE `id` = " . intval($rServer["id"]) . ";");
-            $rServers[intval($rServer["id"])]["status"] = 1;
-        }
-    }
-}
 function getServerStatus() {
     global $db;
     $rResult = $db->query("SELECT `status` FROM `streaming_servers` WHERE `is_main` = 1;");
     if ($rResult->num_rows > 0) {
         return $rResult->fetch_assoc()['status'];
-    }
-}
-
-/**
- * Recursively removes a directory and all of its contents.
- *
- * This function takes a directory path as an argument and deletes all files and 
- * subdirectories within that directory. It first checks if the specified path 
- * is a directory. If it is, it scans the directory for its contents and iterates 
- * through each item. For each item, it checks if it is a directory or a file. 
- * If it is a directory, the function calls itself recursively to remove the 
- * subdirectory. If it is a file, it deletes the file. Once all contents are 
- * removed, the function deletes the original directory.
- *
- * @param string $dir The path to the directory to be removed.
- * 
- * @return void
- *
- * @throws ErrorException If the specified path is not a directory or if an 
- *                        error occurs during file or directory deletion.
- */
-function rrmdir($dir) {
-    if (is_dir($dir)) {
-        $objects = scandir($dir);
-        foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
-                if (filetype($dir . "/" . $object) == "dir")
-                    rrmdir($dir . "/" . $object);
-                else
-                    unlink($dir . "/" . $object);
-            }
-        }
-        reset($objects);
-        rmdir($dir);
     }
 }

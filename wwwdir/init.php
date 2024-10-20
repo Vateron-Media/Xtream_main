@@ -23,6 +23,7 @@ ipTV_lib::$ipTV_db = &$ipTV_db;
 ipTV_streaming::$ipTV_db = &$ipTV_db;
 ipTV_stream::$ipTV_db = &$ipTV_db;
 ipTV_lib::init();
+ipTV_lib::connectRedis();
 
 $FILES = array('live.php', 'clients_movie.php', 'timeshift.php', 'admin_live.php', 'admin_movie.php', 'xmltv.php', 'panel_api.php', 'enigma2.php', 'portal.php', 'get.php');
 

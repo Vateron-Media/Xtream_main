@@ -1278,14 +1278,10 @@ if (isset($_GET["action"])) {
                 if ($rCache == 0) {
                     shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
                 }
-
                 echo json_encode(array('result' => true));
-
                 exit();
             }
-
             echo json_encode(array('result' => false));
-
             exit();
 
         case "disable_cache":
@@ -1294,23 +1290,104 @@ if (isset($_GET["action"])) {
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache.php');
                 echo json_encode(array('result' => true));
-
                 exit();
             }
-
             echo json_encode(array('result' => false));
-
             exit();
         case 'regenerate_cache':
             if (hasPermissions('adv', 'backups')) {
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "force"');
                 echo json_encode(array('result' => true));
+                exit();
+            }
+            echo json_encode(array('result' => false));
+            exit();
+
+        case 'disable_handler':
+            if (hasPermissions('adv', 'backups')) {
+                setSettings(["redis_handler" => 0]);
+
+                if (file_exists(CACHE_TMP_PATH . 'settings')) {
+                    unlink(CACHE_TMP_PATH . 'settings');
+                }
+
+                exec('pgrep -u xtreamcodes redis-server', $rRedis);
+
+                if (0 < count($rRedis) && is_numeric($rRedis[0])) {
+                    $rPID = intval($rRedis[0]);
+                    shell_exec('kill -9 ' . $rPID);
+                }
+
+                exec("pgrep -U xtreamcodes | xargs ps | grep signals | awk '{print \$1}'", $rPID);
+
+                if (0 < count($rPID) && is_numeric($rPID[0])) {
+                    $rPID = intval($rPID[0]);
+                    shell_exec('kill -9 ' . $rPID);
+                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'signals.php > /dev/null 2>/dev/null &');
+                }
+
+                exec("pgrep -U xtreamcodes | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
+
+                if (0 < count($rPID) && is_numeric($rPID[0])) {
+                    $rPID = intval($rPID[0]);
+                    shell_exec('kill -9 ' . $rPID);
+                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
+                }
+
+                echo json_encode(array('result' => true));
+                exit();
+            }
+            echo json_encode(array('result' => false));
+            exit();
+
+        case 'enable_handler':
+            if (hasPermissions('adv', 'backups')) {
+                setSettings(["redis_handler" => 1]);
+
+                if (file_exists(CACHE_TMP_PATH . 'settings')) {
+                    unlink(CACHE_TMP_PATH . 'settings');
+                }
+
+                exec('pgrep -u xui redis-server', $rRedis);
+
+                if (count($rRedis) < 0 && !is_numeric($rRedis[0])) {
+                    $rPID = intval($rRedis[0]);
+                    shell_exec('kill -9 ' . $rPID);
+                }
+
+                shell_exec(BIN_PATH . 'redis/redis-server ' . BIN_PATH . 'redis/redis.conf > /dev/null 2>/dev/null &');
+                sleep(1);
+                exec("pgrep -U xui | xargs ps | grep signals | awk '{print \$1}'", $rPID);
+
+                if (0 < count($rPID) && is_numeric($rPID[0])) {
+                    $rPID = intval($rPID[0]);
+                    shell_exec('kill -9 ' . $rPID);
+                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'signals.php > /dev/null 2>/dev/null &');
+                }
+
+                exec("pgrep -U xui | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
+
+                if (0 < count($rPID) && is_numeric($rPID[0])) {
+                    $rPID = intval($rPID[0]);
+                    shell_exec('kill -9 ' . $rPID);
+                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
+                }
+
+                shell_exec(PHP_BIN . ' ' . CRON_PATH . 'users.php 1 > /dev/null 2>/dev/null &');
+                echo json_encode(array('result' => true));
 
                 exit();
             }
-
             echo json_encode(array('result' => false));
+            exit();
 
+        case 'clear_redis':
+            if (hasPermissions('adv', 'backups')) {
+                iptv_lib::$redis->flushAll();
+                echo json_encode(array('result' => true));
+                exit();
+            }
+            echo json_encode(array('result' => false));
             exit();
     }
 }
