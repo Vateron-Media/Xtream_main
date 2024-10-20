@@ -52,7 +52,7 @@ function loadcli() {
             //     }
             // }
 
-            exec('sudo ' . PHP_BIN . ' ' . TOOLS_PATH . '/update_bd.php');
+            exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . '/update_bd.php');
             exec('sudo ' . MAIN_DIR . 'status');
             break;
     }

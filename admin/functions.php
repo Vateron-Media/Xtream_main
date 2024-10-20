@@ -539,12 +539,8 @@ function getBackups() {
     return $rBackups;
 }
 
-function startcmd() {
-    echo shell_exec("nohup /usr/bin/python /home/xtreamcodes/pytools/balancer.py 2>&1");
-}
-
 function tmdbParseRelease($Release) {
-    $rCommand = "/usr/bin/python " . MAIN_DIR . "pytools2/release.py \"" . escapeshellcmd($Release) . "\"";
+    $rCommand = "/usr/bin/python " . INCLUDES_PATH . "python/release.py \"" . escapeshellcmd($Release) . "\"";
     return json_decode(shell_exec($rCommand), True);
 }
 
@@ -644,7 +640,7 @@ function getEncodeErrors($rID) {
         $rServerID = $rServer["server_id"];
         if (isset($rServers[$rServerID])) {
             if (!($rServer["pid"] > 0 && $rServer["to_analyze"] == 0 && $rServer["stream_status"] <> 1)) {
-                $rFilename = MAIN_DIR . "movies/" . intval($rID) . ".errors";
+                $rFilename = CONTENT_PATH . "vod/" . intval($rID) . ".errors";
                 $rError = SystemAPIRequest($rServerID, array('action' => 'getFile', 'filename' => $rFilename));
                 if (strlen($rError) > 0) {
                     $rErrors[$rServerID] = $rError;

@@ -98,7 +98,7 @@ class ipTV_stream {
         return false;
     }
     public static function startMonitor($streamID, $rRestart = 0) {
-        shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'monitor.php ' . intval($streamID) . ' ' . intval($rRestart) . ' >/dev/null 2>/dev/null &');
+        shell_exec(PHP_BIN . ' ' . CLI_PATH . 'monitor.php ' . intval($streamID) . ' ' . intval($rRestart) . ' >/dev/null 2>/dev/null &');
         return true;
     }
     static function checkPID($pid, $search) {
@@ -542,7 +542,7 @@ class ipTV_stream {
         file_put_contents(STREAMS_PATH . $streamID . '_.iv', $rIV);
         $pID = intval(file_get_contents(STREAMS_PATH . $streamID . '_.pid'));
         if ($stream['stream_info']['tv_archive_server_id'] == SERVER_ID) {
-            shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'archive.php ' . intval($streamID) . ' >/dev/null 2>/dev/null & echo $!');
+            shell_exec(PHP_BIN . ' ' . CLI_PATH . 'archive.php ' . intval($streamID) . ' >/dev/null 2>/dev/null & echo $!');
         }
         // if ($stream['stream_info']['vframes_server_id'] == SERVER_ID) {
         //     self::startThumbnail($streamID);

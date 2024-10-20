@@ -356,12 +356,12 @@ function loadCron() {
                             // case 'update_binaries':
                             //     echo 'Updating binaries...' . "\n";
                             //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'BINARIES', 'Updating XtreamCodes binaries from XtreamCodes server...', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
-                            //     shell_exec('sudo ' . PHP_BIN . ' ' . TOOLS_PATH . 'binaries.php 2>&1 &');
+                            //     shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'binaries.php 2>&1 &');
                             //     break;
                         case 'update':
                             echo 'Updating...' . "\n";
                             $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'UPDATE', 'Updating XtreamCodes...', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
-                            shell_exec('sudo ' . PHP_BIN . ' ' . TOOLS_PATH . 'update.php "update" 2>&1 &');
+                            shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" 2>&1 &');
                             break;
                             // case 'enable_ministra':
                             //     echo 'Enabling ministra /c...';

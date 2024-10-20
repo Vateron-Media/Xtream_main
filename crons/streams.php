@@ -31,7 +31,7 @@ function loadCron() {
                 }
                 // if ($stream["tv_archive_server_id"] == SERVER_ID || !ipTV_streaming::isArchiveRunning($stream["tv_archive_pid"], $stream["stream_id"])) {
                 //     echo 'Start TV Archive...' . "\n";
-                //     shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'archive.php ' . intval($stream["stream_id"]) . ' >/dev/null 2>/dev/null & echo $!');
+                //     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'archive.php ' . intval($stream["stream_id"]) . ' >/dev/null 2>/dev/null & echo $!');
                 // }
                 foreach (glob(STREAMS_PATH . $stream["stream_id"] . '_*.ts.enc') as $File) {
                     if (!file_exists(rtrim($File, '.enc'))) {

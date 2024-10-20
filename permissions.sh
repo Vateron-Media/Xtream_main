@@ -6,6 +6,7 @@ chmod 0750 /home/xtreamcodes/bin
 chmod 0750 /home/xtreamcodes/config
 chmod 0750 /home/xtreamcodes/content
 chmod 0750 /home/xtreamcodes/signals
+chmod -R 0777 /home/xtreamcodes/includes
 
 # chmod 0550 /home/xtreamcodes/bin/nginx
 # chmod 0550 /home/xtreamcodes/bin/nginx_rtmp

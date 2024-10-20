@@ -61,7 +61,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     //                 if (file_exists(CREATED_PATH . $rRow['stream_id'] . '_.create')) {
                     //                     unlink(CREATED_PATH . $rRow['stream_id'] . '_.create');
                     //                 }
-                    //                 shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'created.php ' . intval($rRow['stream_id']) . ' >/dev/null 2>/dev/null &');
+                    //                 shell_exec(PHP_BIN . ' ' . CLI_PATH . 'created.php ' . intval($rRow['stream_id']) . ' >/dev/null 2>/dev/null &');
                     //                 $rPID = null;
                     //                 foreach (range(1, 3) as $i) {
                     //                     if (!file_exists(CREATED_PATH . $rRow['stream_id'] . '_.create')) {

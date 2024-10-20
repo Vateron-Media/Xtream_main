@@ -1100,10 +1100,8 @@ if (isset($_GET["action"])) {
             //         $rServer = $rServers[$rServerID];
             //         $rJSON = array("status" => 0, "port" => intval($_GET["ssh_port"]), "host" => $rServer["server_ip"], "password" => $_GET["password"], "time" => intval(time()), "id" => $rServerID, "type" => "urelease");
             //         file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-            //         startcmd();
             //         echo json_encode(array("result" => True));
             //         exit;
-            //         startcmd();
             //     }
             //     echo json_encode(array("result" => False));
             //     exit;
@@ -1276,7 +1274,7 @@ if (isset($_GET["action"])) {
 
                 $rCache = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
                 if ($rCache == 0) {
-                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
+                    shell_exec(PHP_BIN . ' ' . CLI_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
                 }
                 echo json_encode(array('result' => true));
                 exit();
@@ -1323,7 +1321,7 @@ if (isset($_GET["action"])) {
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);
                     shell_exec('kill -9 ' . $rPID);
-                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'signals.php > /dev/null 2>/dev/null &');
+                    shell_exec(PHP_BIN . ' ' . CLI_PATH . 'signals.php > /dev/null 2>/dev/null &');
                 }
 
                 exec("pgrep -U xtreamcodes | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
@@ -1331,7 +1329,7 @@ if (isset($_GET["action"])) {
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);
                     shell_exec('kill -9 ' . $rPID);
-                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
+                    shell_exec(PHP_BIN . ' ' . CLI_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
                 }
 
                 echo json_encode(array('result' => true));
@@ -1362,7 +1360,7 @@ if (isset($_GET["action"])) {
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);
                     shell_exec('kill -9 ' . $rPID);
-                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'signals.php > /dev/null 2>/dev/null &');
+                    shell_exec(PHP_BIN . ' ' . CLI_PATH . 'signals.php > /dev/null 2>/dev/null &');
                 }
 
                 exec("pgrep -U xui | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
@@ -1370,7 +1368,7 @@ if (isset($_GET["action"])) {
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);
                     shell_exec('kill -9 ' . $rPID);
-                    shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
+                    shell_exec(PHP_BIN . ' ' . CLI_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
                 }
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'users.php 1 > /dev/null 2>/dev/null &');

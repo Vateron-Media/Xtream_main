@@ -151,7 +151,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     echo 'Installation complete! Starting XtreamCodes' . "\n";
                     runCommand($rConn, 'sudo systemctl start xtreamcodes');
                     runCommand($rConn, 'sudo ' . MAIN_DIR . 'status 1');
-                    runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . TOOLS_PATH . 'startup.php');
+                    runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . CLI_PATH . 'startup.php');
                     runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . CRON_PATH . 'servers.php');
 
                     $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 1, `http_broadcast_port` = \'%s\', `https_broadcast_port` = \'%s\', `total_services` = \'%s\' WHERE `id` = \'%s\';', $rHTTPPort, $rHTTPSPort, $rServices, $rServerID);

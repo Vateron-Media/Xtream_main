@@ -30,12 +30,12 @@ function loadCron() {
         getNetworkStats();
         $rSignals = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep signals | grep -v grep | grep -v pgrep | wc -l')));
         if ($rSignals == 0) {
-            shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'signals.php > /dev/null 2>/dev/null &');
+            shell_exec(PHP_BIN . ' ' . CLI_PATH . 'signals.php > /dev/null 2>/dev/null &');
         }
         if ($rServers[SERVER_ID]['is_main']) {
             $rCache = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
             if (ipTV_lib::$settings['enable_cache'] && $rCache == 0) {
-                shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
+                shell_exec(PHP_BIN . ' ' . CLI_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
             } else {
                 if (!ipTV_lib::$settings['enable_cache'] || $rCache > 0) {
                     echo 'Killing Cache Handler' . "\n";
@@ -50,15 +50,15 @@ function loadCron() {
         }
         $rWatchdog = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep watchdog | grep -v grep | grep -v pgrep | wc -l')));
         if ($rWatchdog == 0) {
-            shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
+            shell_exec(PHP_BIN . ' ' . CLI_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
         }
         $rQueue = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep queue | grep -v grep | grep -v pgrep | wc -l')));
         if ($rQueue == 0) {
-            shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'queue.php > /dev/null 2>/dev/null &');
+            shell_exec(PHP_BIN . ' ' . CLI_PATH . 'queue.php > /dev/null 2>/dev/null &');
         }
         // $rOnDemand = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep ondemand | grep -v grep | grep -v pgrep | wc -l')));
         // if (ipTV_lib::$settings['on_demand_instant_off'] && $rOnDemand == 0) {
-        //     shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'ondemand.php > /dev/null 2>/dev/null &');
+        //     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'ondemand.php > /dev/null 2>/dev/null &');
         // } else {
         //     if (!ipTV_lib::$settings['on_demand_instant_off'] || $rOnDemand > 0) {
         //         echo 'Killing On-Demand Instant-Off' . "\n";
@@ -72,7 +72,7 @@ function loadCron() {
         // }
         // $rScanner = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep scanner | grep -v grep | grep -v pgrep | wc -l')));
         // if (ipTV_lib::$settings['on_demand_checker'] && $rScanner == 0) {
-        //     shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'scanner.php > /dev/null 2>/dev/null &');
+        //     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'scanner.php > /dev/null 2>/dev/null &');
         // } else {
         //     if (!ipTV_lib::$settings['on_demand_checker'] || $rScanner > 0) {
         //         echo 'Killing On-Demand Scanner' . "\n";

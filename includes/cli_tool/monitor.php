@@ -202,7 +202,7 @@ if (true) {
     if (($rDelay && ($streamInfo['delay_available_at'] <= time()) && !ipTV_streaming::isDelayRunning($rDelayPID, $streamID))) {
         echo 'Start Delay' . "\n";
         ipTV_streaming::streamLog($streamID, SERVER_ID, 'DELAY_START');
-        $rDelayPID = intval(shell_exec(PHP_BIN . ' ' . TOOLS_PATH . 'delay.php ' . intval($streamID) . ' ' . intval($streamInfo['delay_minutes']) . ' >/dev/null 2>/dev/null & echo $!'));
+        $rDelayPID = intval(shell_exec(PHP_BIN . ' ' . CLI_PATH . 'delay.php ' . intval($streamID) . ' ' . intval($streamInfo['delay_minutes']) . ' >/dev/null 2>/dev/null & echo $!'));
     }
     sleep(1);
     goto label592;
