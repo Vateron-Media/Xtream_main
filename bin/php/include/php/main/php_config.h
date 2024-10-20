@@ -1,20 +1,18 @@
 /* main/php_config.h.  Generated from php_config.h.in by configure.  */
 /* main/php_config.h.in.  Generated from configure.ac by autoheader.  */
 
-
 #ifndef PHP_CONFIG_H
 #define PHP_CONFIG_H
 
 #if defined(__GNUC__) && __GNUC__ >= 4
-# define ZEND_API __attribute__ ((visibility("default")))
-# define ZEND_DLEXPORT __attribute__ ((visibility("default")))
+#define ZEND_API __attribute__((visibility("default")))
+#define ZEND_DLEXPORT __attribute__((visibility("default")))
 #else
-# define ZEND_API
-# define ZEND_DLEXPORT
+#define ZEND_API
+#define ZEND_DLEXPORT
 #endif
 
 #define ZEND_DLIMPORT
-
 
 /* */
 /* #undef CDB_INCLUDE_FILE */
@@ -373,7 +371,7 @@
 #define HAVE_ALLOCA 1
 
 /* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
-   */
+ */
 #define HAVE_ALLOCA_H 1
 
 /* Define to 1 if you have the `alphasort' function. */
@@ -529,15 +527,15 @@
 #define HAVE_DECL_ISFINITE 1
 
 /* Define to 1 if you have the declaration of `isinf', and to 0 if you don't.
-   */
+ */
 #define HAVE_DECL_ISINF 1
 
 /* Define to 1 if you have the declaration of `isnan', and to 0 if you don't.
-   */
+ */
 #define HAVE_DECL_ISNAN 1
 
 /* Define to 1 if you have the declaration of `tzname', and to 0 if you don't.
-   */
+ */
 /* #undef HAVE_DECL_TZNAME */
 
 /* do we have /dev/poll? */
@@ -970,7 +968,7 @@
 /* #undef HAVE_ISQL_H */
 
 /* whether to enable JavaScript Object Serialization support */
-#define HAVE_JSON 1 
+#define HAVE_JSON 1
 
 /* Define to 1 if you have the `kill' function. */
 #define HAVE_KILL 1
@@ -1135,7 +1133,7 @@
 #define HAVE_MBSTATE_T 1
 
 /* whether to have multibyte string support */
-/* #undef HAVE_MBSTRING */
+#define HAVE_MBSTRING 1
 
 /* Define to 1 if you have the `memmem' function. */
 #define HAVE_MEMMEM 1
@@ -2054,7 +2052,7 @@
 #define PHPDBG_DEBUG 0
 
 /* PHP build date */
-#define PHP_BUILD_DATE "2024-10-19"
+#define PHP_BUILD_DATE "2024-10-20"
 
 /* Define if your system has fork/vfork/CreateProcess */
 #define PHP_CAN_SUPPORT_PROC_OPEN 1
@@ -2218,9 +2216,9 @@
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
    automatically deduced at runtime.
-	STACK_DIRECTION > 0 => grows toward higher addresses
-	STACK_DIRECTION < 0 => grows toward lower addresses
-	STACK_DIRECTION = 0 => direction of growth unknown */
+   STACK_DIRECTION > 0 => grows toward higher addresses
+   STACK_DIRECTION < 0 => grows toward lower addresses
+   STACK_DIRECTION = 0 => direction of growth unknown */
 /* #undef STACK_DIRECTION */
 
 /* Define to 1 if you have the ANSI C header files. */
@@ -2246,25 +2244,24 @@
 
 /* Enable extensions on AIX 3, Interix.  */
 #ifndef _ALL_SOURCE
-# define _ALL_SOURCE 1
+#define _ALL_SOURCE 1
 #endif
 /* Enable GNU extensions on systems that have them.  */
 #ifndef _GNU_SOURCE
-# define _GNU_SOURCE 1
+#define _GNU_SOURCE 1
 #endif
 /* Enable threading extensions on Solaris.  */
 #ifndef _POSIX_PTHREAD_SEMANTICS
-# define _POSIX_PTHREAD_SEMANTICS 1
+#define _POSIX_PTHREAD_SEMANTICS 1
 #endif
 /* Enable extensions on HP NonStop.  */
 #ifndef _TANDEM_SOURCE
-# define _TANDEM_SOURCE 1
+#define _TANDEM_SOURCE 1
 #endif
 /* Enable general extensions on Solaris.  */
 #ifndef __EXTENSIONS__
-# define __EXTENSIONS__ 1
+#define __EXTENSIONS__ 1
 #endif
-
 
 /* Define if processor uses big-endian word */
 /* #undef WORDS_BIGENDIAN */
@@ -2315,13 +2312,12 @@
 /* Define to `int' if <sys/types.h> doesn't define. */
 /* #undef uid_t */
 
-
 #ifndef ZEND_ACCONFIG_H_NO_C_PROTOS
 
 #include <stdlib.h>
 
 #ifdef HAVE_SYS_TYPES_H
-# include <sys/types.h>
+#include <sys/types.h>
 #endif
 
 #ifdef HAVE_SYS_SELECT_H
@@ -2329,13 +2325,14 @@
 #endif
 
 #ifdef HAVE_IEEEFP_H
-# include <ieeefp.h>
+#include <ieeefp.h>
 #endif
 
 #include <string.h>
 
 #if defined(__cplusplus) && __cplusplus >= 201103L
-extern "C++" {
+extern "C++"
+{
 #include <cmath>
 #define zend_isnan std::isnan
 #define zend_isinf std::isinf
@@ -2358,7 +2355,7 @@ extern "C++" {
 #define zend_isinf(a) isinf(a)
 #elif defined(INFINITY)
 /* Might not work, but is required by ISO C99 */
-#define zend_isinf(a) (((a)==INFINITY || (a)==-INFINITY)?1:0)
+#define zend_isinf(a) (((a) == INFINITY || (a) == -INFINITY) ? 1 : 0)
 #elif defined(HAVE_FPCLASS)
 #define zend_isinf(a) ((fpclass(a) == FP_PINF) || (fpclass(a) == FP_NINF))
 #else
@@ -2370,13 +2367,13 @@ extern "C++" {
 #elif defined(HAVE_FINITE)
 #define zend_finite(a) finite(a)
 #elif defined(fpclassify)
-#define zend_finite(a) ((fpclassify((a))!=FP_INFINITE&&fpclassify((a))!=FP_NAN)?1:0)
+#define zend_finite(a) ((fpclassify((a)) != FP_INFINITE && fpclassify((a)) != FP_NAN) ? 1 : 0)
 #else
-#define zend_finite(a) (zend_isnan(a) ? 0 : zend_isinf(a) ? 0 : 1)
+#define zend_finite(a) (zend_isnan(a) ? 0 : zend_isinf(a) ? 0 \
+                                                          : 1)
 #endif
 
 #endif
 #endif /* ifndef ZEND_ACCONFIG_H_NO_C_PROTOS */
 
 #endif /* PHP_CONFIG_H */
-
