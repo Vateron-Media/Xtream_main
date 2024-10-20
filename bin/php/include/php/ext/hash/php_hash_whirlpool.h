@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -20,16 +20,14 @@
 #define PHP_HASH_WHIRLPOOL_H
 
 /* WHIRLPOOL context */
-typedef struct
-{
-   uint64_t state[8];
-   unsigned char bitlength[32];
-   struct
-   {
-      int pos;
-      int bits;
-      unsigned char data[64];
-   } buffer;
+typedef struct {
+	uint64_t state[8];
+	unsigned char bitlength[32];
+	struct {
+		int pos;
+		int bits;
+		unsigned char data[64];
+	} buffer;
 } PHP_WHIRLPOOL_CTX;
 
 PHP_HASH_API void PHP_WHIRLPOOLInit(PHP_WHIRLPOOL_CTX *);
@@ -37,12 +35,3 @@ PHP_HASH_API void PHP_WHIRLPOOLUpdate(PHP_WHIRLPOOL_CTX *, const unsigned char *
 PHP_HASH_API void PHP_WHIRLPOOLFinal(unsigned char[64], PHP_WHIRLPOOL_CTX *);
 
 #endif
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

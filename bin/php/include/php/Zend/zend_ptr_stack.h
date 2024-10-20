@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | Zend Engine                                                          |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1998-2018 Zend Technologies Ltd. (http://www.zend.com) |
+   | Copyright (c) Zend Technologies Ltd. (http://www.zend.com)           |
    +----------------------------------------------------------------------+
    | This source file is subject to version 2.00 of the Zend license,     |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -20,13 +20,13 @@
 #ifndef ZEND_PTR_STACK_H
 #define ZEND_PTR_STACK_H
 
-typedef struct _zend_ptr_stack
-{
+typedef struct _zend_ptr_stack {
 	int top, max;
 	void **elements;
 	void **top_element;
 	zend_bool persistent;
 } zend_ptr_stack;
+
 
 #define PTR_STACK_BLOCK_SIZE 64
 
@@ -42,16 +42,14 @@ ZEND_API void zend_ptr_stack_clean(zend_ptr_stack *stack, void (*func)(void *), 
 ZEND_API int zend_ptr_stack_num_elements(zend_ptr_stack *stack);
 END_EXTERN_C()
 
-#define ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, count)                                                              \
-	if (stack->top + count > stack->max)                                                                           \
-	{                                                                                                              \
-		/* we need to allocate more memory */                                                                      \
-		do                                                                                                         \
-		{                                                                                                          \
-			stack->max += PTR_STACK_BLOCK_SIZE;                                                                    \
-		} while (stack->top + count > stack->max);                                                                 \
-		stack->elements = (void **)perealloc(stack->elements, (sizeof(void *) * (stack->max)), stack->persistent); \
-		stack->top_element = stack->elements + stack->top;                                                         \
+#define ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, count)		\
+	if (stack->top+count > stack->max) {					\
+		/* we need to allocate more memory */				\
+		do {												\
+			stack->max += PTR_STACK_BLOCK_SIZE;				\
+		} while (stack->top+count > stack->max);			\
+		stack->elements = (void **) perealloc(stack->elements, (sizeof(void *) * (stack->max)), stack->persistent);	\
+		stack->top_element = stack->elements+stack->top;	\
 	}
 
 /*	Not doing this with a macro because of the loop unrolling in the element assignment.
@@ -114,17 +112,7 @@ static zend_always_inline void *zend_ptr_stack_pop(zend_ptr_stack *stack)
 
 static zend_always_inline void *zend_ptr_stack_top(zend_ptr_stack *stack)
 {
-	return stack->elements[stack->top - 1];
+    return stack->elements[stack->top - 1];
 }
 
 #endif /* ZEND_PTR_STACK_H */
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * indent-tabs-mode: t
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

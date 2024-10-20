@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -19,13 +19,13 @@
 #ifndef HEAD_H
 #define HEAD_H
 
-#define COOKIE_EXPIRES "; expires="
-#define COOKIE_MAX_AGE "; Max-Age="
-#define COOKIE_DOMAIN "; domain="
-#define COOKIE_PATH "; path="
-#define COOKIE_SECURE "; secure"
-#define COOKIE_HTTPONLY "; HttpOnly"
-#define COOKIE_SAMESITE "; SameSite="
+#define COOKIE_EXPIRES    "; expires="
+#define COOKIE_MAX_AGE    "; Max-Age="
+#define COOKIE_DOMAIN     "; domain="
+#define COOKIE_PATH       "; path="
+#define COOKIE_SECURE     "; secure"
+#define COOKIE_HTTPONLY   "; HttpOnly"
+#define COOKIE_SAMESITE   "; SameSite="
 
 extern PHP_RINIT_FUNCTION(head);
 PHP_FUNCTION(header);

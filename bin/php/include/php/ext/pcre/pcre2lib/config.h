@@ -2,26 +2,21 @@
 #include <php_compat.h>
 
 #ifdef PHP_WIN32
-#include <config.w32.h>
+# include <config.w32.h>
 #else
-#include <php_config.h>
+# include <php_config.h>
 #endif
-
-#undef PACKAGE_NAME
-#undef PACKAGE_VERSION
-#undef PACKAGE_TARNAME
-#undef PACKAGE_STRING
 
 #define SUPPORT_UNICODE 1
 #define SUPPORT_PCRE2_8 1
 
 #if defined(__GNUC__) && __GNUC__ >= 4
-#ifdef __cplusplus
-#define PCRE2_EXP_DECL extern "C" __attribute__((visibility("default")))
-#else
-#define PCRE2_EXP_DECL extern __attribute__((visibility("default")))
-#endif
-#define PCRE2_EXP_DEFN __attribute__((visibility("default")))
+# ifdef __cplusplus
+#  define PCRE2_EXP_DECL		extern "C" __attribute__ ((visibility("default")))
+# else
+#  define PCRE2_EXP_DECL		extern __attribute__ ((visibility("default")))
+# endif
+# define PCRE2_EXP_DEFN		__attribute__ ((visibility("default")))
 #endif
 
 /* Define to any value for valgrind support to find invalid memory reads. */
@@ -102,3 +97,4 @@
 #ifndef LINK_SIZE
 #define LINK_SIZE 2
 #endif
+

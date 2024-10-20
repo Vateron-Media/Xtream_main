@@ -2,17 +2,16 @@
 #define _CRYPT_FREESEC_H
 
 #ifdef PHP_WIN32
-#ifndef inline
-#define inline __inline
-#endif
+# ifndef inline
+# define inline __inline
+# endif
 #endif
 
 #include "php_stdint.h"
 
 #define MD5_HASH_MAX_LEN 120
 
-struct php_crypt_extended_data
-{
+struct php_crypt_extended_data {
 	int initialized;
 	uint32_t saltbits;
 	uint32_t old_salt;
@@ -29,7 +28,7 @@ struct php_crypt_extended_data
 
 void _crypt_extended_init(void);
 
-char *_crypt_extended_r(const char *key, const char *setting,
-						struct php_crypt_extended_data *data);
+char *_crypt_extended_r(const unsigned char *key, const char *setting,
+	struct php_crypt_extended_data *data);
 
 #endif

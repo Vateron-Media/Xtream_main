@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | Zend Engine                                                          |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1998-2018 Zend Technologies Ltd. (http://www.zend.com) |
+   | Copyright (c) Zend Technologies Ltd. (http://www.zend.com)           |
    +----------------------------------------------------------------------+
    | This source file is subject to version 2.00 of the Zend license,     |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -20,11 +20,11 @@
 #ifndef ZEND_STACK_H
 #define ZEND_STACK_H
 
-typedef struct _zend_stack
-{
-   int size, top, max;
-   void *elements;
+typedef struct _zend_stack {
+	int size, top, max;
+	void *elements;
 } zend_stack;
+
 
 #define STACK_BLOCK_SIZE 16
 
@@ -43,17 +43,7 @@ ZEND_API void zend_stack_apply_with_argument(zend_stack *stack, int type, int (*
 ZEND_API void zend_stack_clean(zend_stack *stack, void (*func)(void *), zend_bool free_elements);
 END_EXTERN_C()
 
-#define ZEND_STACK_APPLY_TOPDOWN 1
-#define ZEND_STACK_APPLY_BOTTOMUP 2
+#define ZEND_STACK_APPLY_TOPDOWN	1
+#define ZEND_STACK_APPLY_BOTTOMUP	2
 
 #endif /* ZEND_STACK_H */
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * indent-tabs-mode: t
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

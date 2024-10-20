@@ -1,24 +1,26 @@
 #! /bin/sh
 
-SED="/usr/bin/sed"
+SED="/bin/sed"
 prefix="/home/xtreamcodes/bin/php"
 datarootdir="/home/xtreamcodes/bin/php/php"
 exec_prefix="${prefix}"
-version="7.3.25"
-vernum="70325"
+version="7.4.33"
+vernum="70433"
 include_dir="${prefix}/include/php"
 includes="-I$include_dir -I$include_dir/main -I$include_dir/TSRM -I$include_dir/Zend -I$include_dir/ext -I$include_dir/ext/date/lib"
-ldflags=" -L/usr//usr/lib/x86_64-linux-gnu"
-libs="-lcrypt   -lzip -lzip -lz -lexslt -lresolv -lcrypt -lrt -lmcrypt -lGeoIP -lpng -lz -lbz2 -lz -lrt -lm -ldl -lnsl  -lxml2 -lssl -lcrypto -lcurl -lxml2 -lxml2 -lcrypt -lxml2 -lxml2 -lxml2 -lxml2 -lxslt -lxml2 -lssl -lcrypto -lcrypt "
-extension_dir='/home/xtreamcodes/bin/php/lib/php/extensions/no-debug-non-zts-20180731'
+ldflags=" -L/build/libjpeg-turbo-Iy19nI/libjpeg-turbo-2.0.3/obj-x86_64-linux-gnu/lib/x86_64-linux-gnu"
+libs="-lcrypt   -lresolv -lcrypt -lrt -lrt -lm -ldl  -lxml2 -lssl -lcrypto -lz -lcurl -lxml2 -lz -lpng16 -lz -ljpeg -lfreetype -lxml2 -lcrypt -lxml2 -lxml2 -lxml2 -lxml2 -lxslt -lxml2 -lexslt -lxslt -lxml2 -lz -lssl -lcrypto -lcrypt "
+extension_dir='/home/xtreamcodes/bin/php/lib/php/extensions/no-debug-non-zts-20190902'
 man_dir=`eval echo ${datarootdir}/man`
 program_prefix=""
 program_suffix=""
 exe_extension=""
 php_cli_binary=NONE
 php_cgi_binary=NONE
-configure_options=" '--prefix=/home/xtreamcodes/bin/php' '--with-zlib-dir' '--enable-mbstring' '--enable-calendar' '--with-curl' '--with-gd' '--disable-rpath' '--enable-inline-optimization' '--with-bz2' '--with-zlib' '--enable-sockets' '--enable-sysvsem' '--enable-sysvshm' '--enable-pcntl' '--enable-mbregex' '--enable-exif' '--enable-bcmath' '--with-mhash' '--enable-zip' '--with-pcre-regex' '--with-pdo-mysql=mysqlnd' '--with-mysqli=mysqlnd' '--with-openssl' '--with-fpm-user=xtreamcodes' '--with-fpm-group=xtreamcodes' '--with-libdir=/lib/x86_64-linux-gnu' '--with-gettext' '--with-xmlrpc' '--with-xsl' '--enable-opcache' '--enable-fpm' '--enable-libxml' '--enable-static' '--disable-shared' '--with-mcrypt' '--with-geoip'"
-php_sapis=" cli fpm phpdbg cgi"
+configure_options=" '--prefix=/home/xtreamcodes/bin/php' '--with-fpm-user=xtreamcodes' '--with-fpm-group=xtreamcodes' '--enable-gd' '--with-jpeg' '--with-freetype' '--enable-static' '--disable-shared' '--enable-opcache' '--enable-fpm' '--without-sqlite3' '--without-pdo-sqlite' '--enable-mysqlnd' '--with-mysqli' '--with-curl' '--disable-cgi' '--with-zlib' '--enable-sockets' '--with-openssl' '--enable-shmop' '--enable-sysvsem' '--enable-sysvshm' '--enable-sysvmsg' '--enable-calendar' '--disable-rpath' '--enable-inline-optimization' '--enable-pcntl' '--enable-mbregex' '--enable-exif' '--enable-bcmath' '--with-mhash' '--with-gettext' '--with-xmlrpc' '--with-xsl' '--with-libxml' '--with-pdo-mysql' '--disable-mbregex'"
+php_sapis=" cli fpm phpdbg"
+ini_dir=""
+ini_path="/home/xtreamcodes/bin/php/lib"
 
 # Set php_cli_binary and php_cgi_binary if available
 for sapi in $php_sapis; do
@@ -63,6 +65,10 @@ case "$1" in
   echo $configure_options;;
 --man-dir)
   echo $man_dir;;
+--ini-path)
+  echo $ini_path;;
+--ini-dir)
+  echo $ini_dir;;
 --version)
   echo $version;;
 --vernum)
@@ -80,6 +86,8 @@ Options:
   --man-dir           [$man_dir]
   --php-binary        [$php_binary]
   --php-sapis         [$php_sapis]
+  --ini-path          [$ini_path]
+  --ini-dir           [$ini_dir]
   --configure-options [$configure_options]
   --version           [$version]
   --vernum            [$vernum]

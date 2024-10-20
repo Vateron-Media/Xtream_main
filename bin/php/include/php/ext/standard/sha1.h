@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -22,11 +22,10 @@
 #include "ext/standard/basic_functions.h"
 
 /* SHA1 context. */
-typedef struct
-{
-   uint32_t state[5];        /* state (ABCD) */
-   uint32_t count[2];        /* number of bits, modulo 2^64 (lsb first) */
-   unsigned char buffer[64]; /* input buffer */
+typedef struct {
+	uint32_t state[5];		/* state (ABCD) */
+	uint32_t count[2];		/* number of bits, modulo 2^64 (lsb first) */
+	unsigned char buffer[64];	/* input buffer */
 } PHP_SHA1_CTX;
 
 PHPAPI void PHP_SHA1Init(PHP_SHA1_CTX *);

@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | Zend Engine                                                          |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1998-2018 Zend Technologies Ltd. (http://www.zend.com) |
+   | Copyright (c) Zend Technologies Ltd. (http://www.zend.com)           |
    +----------------------------------------------------------------------+
    | This source file is subject to version 2.00 of the Zend license,     |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -22,8 +22,8 @@
 
 /* Scanner modes */
 #define ZEND_INI_SCANNER_NORMAL 0 /* Normal mode. [DEFAULT] */
-#define ZEND_INI_SCANNER_RAW 1    /* Raw mode. Option values are not parsed */
-#define ZEND_INI_SCANNER_TYPED 2  /* Typed mode. */
+#define ZEND_INI_SCANNER_RAW    1 /* Raw mode. Option values are not parsed */
+#define ZEND_INI_SCANNER_TYPED  2 /* Typed mode. */
 
 BEGIN_EXTERN_C()
 ZEND_COLD int zend_ini_scanner_get_lineno(void);
@@ -35,13 +35,3 @@ void shutdown_ini_scanner(void);
 END_EXTERN_C()
 
 #endif /* _ZEND_INI_SCANNER_H */
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * indent-tabs-mode: t
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

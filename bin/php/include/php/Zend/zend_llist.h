@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | Zend Engine                                                          |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1998-2018 Zend Technologies Ltd. (http://www.zend.com) |
+   | Copyright (c) Zend Technologies Ltd. (http://www.zend.com)           |
    +----------------------------------------------------------------------+
    | This source file is subject to version 2.00 of the Zend license,     |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -20,11 +20,10 @@
 #ifndef ZEND_LLIST_H
 #define ZEND_LLIST_H
 
-typedef struct _zend_llist_element
-{
-   struct _zend_llist_element *next;
-   struct _zend_llist_element *prev;
-   char data[1]; /* Needs to always be last in the struct */
+typedef struct _zend_llist_element {
+	struct _zend_llist_element *next;
+	struct _zend_llist_element *prev;
+	char data[1]; /* Needs to always be last in the struct */
 } zend_llist_element;
 
 typedef void (*llist_dtor_func_t)(void *);
@@ -33,18 +32,17 @@ typedef void (*llist_apply_with_args_func_t)(void *data, int num_args, va_list a
 typedef void (*llist_apply_with_arg_func_t)(void *data, void *arg);
 typedef void (*llist_apply_func_t)(void *);
 
-typedef struct _zend_llist
-{
-   zend_llist_element *head;
-   zend_llist_element *tail;
-   size_t count;
-   size_t size;
-   llist_dtor_func_t dtor;
-   unsigned char persistent;
-   zend_llist_element *traverse_ptr;
+typedef struct _zend_llist {
+	zend_llist_element *head;
+	zend_llist_element *tail;
+	size_t count;
+	size_t size;
+	llist_dtor_func_t dtor;
+	unsigned char persistent;
+	zend_llist_element *traverse_ptr;
 } zend_llist;
 
-typedef zend_llist_element *zend_llist_position;
+typedef zend_llist_element* zend_llist_position;
 
 BEGIN_EXTERN_C()
 ZEND_API void zend_llist_init(zend_llist *l, size_t size, llist_dtor_func_t dtor, unsigned char persistent);
@@ -76,13 +74,3 @@ ZEND_API void *zend_llist_get_prev_ex(zend_llist *l, zend_llist_position *pos);
 END_EXTERN_C()
 
 #endif /* ZEND_LLIST_H */
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * indent-tabs-mode: t
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

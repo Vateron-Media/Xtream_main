@@ -2,7 +2,7 @@
   +----------------------------------------------------------------------+
   | PHP Version 7                                                        |
   +----------------------------------------------------------------------+
-  | Copyright (c) 1997-2018 The PHP Group                                |
+  | Copyright (c) The PHP Group                                          |
   +----------------------------------------------------------------------+
   | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
@@ -45,59 +45,40 @@ PHP_MINIT_FUNCTION(simplexml);
 PHP_MSHUTDOWN_FUNCTION(simplexml);
 PHP_MINFO_FUNCTION(simplexml);
 
-typedef enum
-{
-	SXE_ITER_NONE = 0,
-	SXE_ITER_ELEMENT = 1,
-	SXE_ITER_CHILD = 2,
+typedef enum {
+	SXE_ITER_NONE     = 0,
+	SXE_ITER_ELEMENT  = 1,
+	SXE_ITER_CHILD    = 2,
 	SXE_ITER_ATTRLIST = 3
 } SXE_ITER;
 
-typedef struct
-{
+typedef struct {
 	php_libxml_node_ptr *node;
 	php_libxml_ref_obj *document;
 	HashTable *properties;
 	xmlXPathContextPtr xpath;
-	struct
-	{
-		xmlChar *name;
-		xmlChar *nsprefix;
-		int isprefix;
-		SXE_ITER type;
-		zval data;
+	struct {
+		xmlChar               *name;
+		xmlChar               *nsprefix;
+		int                   isprefix;
+		SXE_ITER              type;
+		zval                  data;
 	} iter;
 	zval tmp;
 	zend_function *fptr_count;
 	zend_object zo;
 } php_sxe_object;
 
-#ifdef ZTS
-#define SIMPLEXML_G(v) TSRMG(simplexml_globals_id, zend_simplexml_globals *, v)
-#else
-#define SIMPLEXML_G(v) (simplexml_globals.v)
-#endif
-
 #ifdef PHP_WIN32
-#ifdef PHP_SIMPLEXML_EXPORTS
-#define PHP_SXE_API __declspec(dllexport)
+#	ifdef PHP_SIMPLEXML_EXPORTS
+#		define PHP_SXE_API __declspec(dllexport)
+#	else
+#		define PHP_SXE_API __declspec(dllimport)
+#	endif
 #else
-#define PHP_SXE_API __declspec(dllimport)
-#endif
-#else
-#define PHP_SXE_API ZEND_API
+#	define PHP_SXE_API ZEND_API
 #endif
 
 PHP_SXE_API zend_class_entry *sxe_get_element_class_entry();
 
 #endif
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * indent-tabs-mode: t
- * End:
- * vim600: fdm=marker
- * vim: noet sw=4 ts=4
- */

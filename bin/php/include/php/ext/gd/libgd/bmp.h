@@ -1,7 +1,6 @@
 /* $Id$ */
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 	/*
@@ -21,7 +20,7 @@ extern "C"
 	 */
 
 #ifndef BMP_H
-#define BMP_H 1
+#define BMP_H	1
 
 #define BMP_PALETTE_3 1
 #define BMP_PALETTE_4 2
@@ -48,8 +47,7 @@ extern "C"
 #define BMP_RLE_TYPE_RLE 1
 
 	/* BMP header. */
-	typedef struct
-	{
+	typedef struct {
 		/* 16 bit - header identifying the type */
 		signed short int magic;
 
@@ -66,8 +64,7 @@ extern "C"
 	} bmp_hdr_t;
 
 	/* BMP info. */
-	typedef struct
-	{
+	typedef struct {
 		/* 16bit - Type, ie Windows or OS/2 for the palette info */
 		signed short int type;
 		/* 32bit - The length of the bitmap information header in bytes. */

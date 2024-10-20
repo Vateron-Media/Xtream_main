@@ -2,7 +2,7 @@
   +----------------------------------------------------------------------+
   | PHP Version 7                                                        |
   +----------------------------------------------------------------------+
-  | Copyright (c) 1997-2018 The PHP Group                                |
+  | Copyright (c) The PHP Group                                          |
   +----------------------------------------------------------------------+
   | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
@@ -53,16 +53,16 @@ PHP_FUNCTION(filter_has_var);
 PHP_FUNCTION(filter_id);
 
 ZEND_BEGIN_MODULE_GLOBALS(filter)
-zval post_array;
-zval get_array;
-zval cookie_array;
-zval env_array;
-zval server_array;
+	zval post_array;
+	zval get_array;
+	zval cookie_array;
+	zval env_array;
+	zval server_array;
 #if 0
 	zval session_array;
 #endif
-zend_long default_filter;
-zend_long default_filter_flags;
+	zend_long default_filter;
+	zend_long default_filter_flags;
 ZEND_END_MODULE_GLOBALS(filter)
 
 #if defined(COMPILE_DL_FILTER) && defined(ZTS)
@@ -92,15 +92,8 @@ void php_filter_url(PHP_INPUT_FILTER_PARAM_DECL);
 void php_filter_number_int(PHP_INPUT_FILTER_PARAM_DECL);
 void php_filter_number_float(PHP_INPUT_FILTER_PARAM_DECL);
 void php_filter_add_slashes(PHP_INPUT_FILTER_PARAM_DECL);
+void php_filter_magic_quotes(PHP_INPUT_FILTER_PARAM_DECL);
 
 void php_filter_callback(PHP_INPUT_FILTER_PARAM_DECL);
 
-#endif /* FILTER_H */
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * indent-tabs-mode: t
- * End:
- */
+#endif	/* FILTER_H */

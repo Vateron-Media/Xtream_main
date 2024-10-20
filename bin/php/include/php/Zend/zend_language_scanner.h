@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | Zend Engine                                                          |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1998-2018 Zend Technologies Ltd. (http://www.zend.com) |
+   | Copyright (c) Zend Technologies Ltd. (http://www.zend.com)           |
    +----------------------------------------------------------------------+
    | This source file is subject to version 2.00 of the Zend license,     |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -20,8 +20,7 @@
 #ifndef ZEND_SCANNER_H
 #define ZEND_SCANNER_H
 
-typedef struct _zend_lex_state
-{
+typedef struct _zend_lex_state {
 	unsigned int yy_leng;
 	unsigned char *yy_start;
 	unsigned char *yy_text;
@@ -57,8 +56,7 @@ typedef struct _zend_lex_state
 	zend_arena *ast_arena;
 } zend_lex_state;
 
-typedef struct _zend_heredoc_label
-{
+typedef struct _zend_heredoc_label {
 	char *label;
 	int length;
 	int indentation;
@@ -76,13 +74,3 @@ ZEND_API void zend_lex_tstring(zval *zv);
 END_EXTERN_C()
 
 #endif
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * indent-tabs-mode: t
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

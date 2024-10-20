@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -27,7 +27,7 @@
 #include "php_lcg.h"
 #include "php_rand.h"
 
-#define PHP_MT_RAND_MAX ((zend_long)(0x7FFFFFFF)) /* (1<<31) - 1 */
+#define PHP_MT_RAND_MAX ((zend_long) (0x7FFFFFFF)) /* (1<<31) - 1 */
 
 #define MT_RAND_MT19937 0
 #define MT_RAND_PHP 1
@@ -39,4 +39,4 @@ PHPAPI zend_long php_mt_rand_common(zend_long min, zend_long max);
 
 PHP_MINIT_FUNCTION(mt_rand);
 
-#endif /* PHP_MT_RAND_H */
+#endif	/* PHP_MT_RAND_H */

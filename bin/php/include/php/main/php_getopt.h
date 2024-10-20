@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -23,29 +23,19 @@
 
 /* Define structure for one recognized option (both single char and long name).
  * If short_open is '-' this is the last option. */
-typedef struct _opt_struct
-{
-   char opt_char;
-   int need_param;
-   char *opt_name;
+typedef struct _opt_struct {
+	char opt_char;
+	int  need_param;
+	char * opt_name;
 } opt_struct;
 
 BEGIN_EXTERN_C()
 /* holds the index of the latest fetched element from the opts array */
 extern PHPAPI int php_optidx;
-PHPAPI int php_getopt(int argc, char *const *argv, const opt_struct opts[], char **optarg, int *optind, int show_err, int arg_start);
+PHPAPI int php_getopt(int argc, char* const *argv, const opt_struct opts[], char **optarg, int *optind, int show_err, int arg_start);
 END_EXTERN_C()
 
 /* php_getopt will return this value if there is an error in arguments */
 #define PHP_GETOPT_INVALID_ARG (-2)
 
 #endif
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: noet sw=4 ts=4 fdm=marker
- * vim<600: noet sw=4 ts=4
- */

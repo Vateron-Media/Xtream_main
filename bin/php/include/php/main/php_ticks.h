@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -26,16 +26,7 @@ void php_run_ticks(int count);
 
 BEGIN_EXTERN_C()
 PHPAPI void php_add_tick_function(void (*func)(int, void *), void *arg);
-PHPAPI void php_remove_tick_function(void (*func)(int, void *), void *arg);
+PHPAPI void php_remove_tick_function(void (*func)(int, void *), void * arg);
 END_EXTERN_C()
 
 #endif
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

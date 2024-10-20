@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -49,13 +49,6 @@
 
 BEGIN_EXTERN_C()
 
-#if defined(HAVE_POSIX_READDIR_R)
-#define php_readdir_r readdir_r
-#else
-PHPAPI int php_readdir_r(DIR *dirp, struct dirent *entry,
-                         struct dirent **result);
-#endif
-
 #if !defined(HAVE_LOCALTIME_R) && defined(HAVE_LOCALTIME)
 #define PHP_NEED_REENTRANCY 1
 PHPAPI struct tm *php_localtime_r(const time_t *const timep, struct tm *p_tm);
@@ -65,6 +58,7 @@ PHPAPI struct tm *php_localtime_r(const time_t *const timep, struct tm *p_tm);
 struct tm *localtime_r(const time_t *const timep, struct tm *p_tm);
 #endif
 #endif
+
 
 #if !defined(HAVE_CTIME_R) && defined(HAVE_CTIME)
 #define PHP_NEED_REENTRANCY 1
@@ -76,6 +70,7 @@ char *ctime_r(const time_t *clock, char *buf);
 #endif
 #endif
 
+
 #if !defined(HAVE_ASCTIME_R) && defined(HAVE_ASCTIME)
 #define PHP_NEED_REENTRANCY 1
 PHPAPI char *php_asctime_r(const struct tm *tm, char *buf);
@@ -85,6 +80,7 @@ PHPAPI char *php_asctime_r(const struct tm *tm, char *buf);
 char *asctime_r(const struct tm *tm, char *buf);
 #endif
 #endif
+
 
 #if !defined(HAVE_GMTIME_R) && defined(HAVE_GMTIME)
 #define PHP_NEED_REENTRANCY 1
@@ -126,11 +122,3 @@ void reentrancy_shutdown(void);
 #endif
 
 #endif
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

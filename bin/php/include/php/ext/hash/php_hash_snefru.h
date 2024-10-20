@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -26,12 +26,11 @@
 #include "ext/standard/basic_functions.h"
 
 /* SNEFRU context */
-typedef struct
-{
-   uint32_t state[16];
-   uint32_t count[2];
-   unsigned char length;
-   unsigned char buffer[32];
+typedef struct {
+	uint32_t state[16];
+	uint32_t count[2];
+	unsigned char length;
+	unsigned char buffer[32];
 } PHP_SNEFRU_CTX;
 
 PHP_HASH_API void PHP_SNEFRUInit(PHP_SNEFRU_CTX *);
@@ -39,12 +38,3 @@ PHP_HASH_API void PHP_SNEFRUUpdate(PHP_SNEFRU_CTX *, const unsigned char *, size
 PHP_HASH_API void PHP_SNEFRUFinal(unsigned char[32], PHP_SNEFRU_CTX *);
 
 #endif
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

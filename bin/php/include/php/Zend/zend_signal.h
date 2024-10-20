@@ -2,7 +2,7 @@
   +----------------------------------------------------------------------+
   | Zend Signal Handling                                                 |
   +----------------------------------------------------------------------+
-  | Copyright (c) 2008-2018 The PHP Group                                     |
+  | Copyright (c) The PHP Group                                          |
   +----------------------------------------------------------------------+
   | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
@@ -23,9 +23,7 @@
 
 #ifdef ZEND_SIGNALS
 
-#ifdef HAVE_SIGNAL_H
 #include <signal.h>
-#endif
 
 #ifndef NSIG
 #define NSIG 65
@@ -36,69 +34,54 @@
 #endif
 
 /* Signal structs */
-typedef struct _zend_signal_entry_t
-{
-  int flags;     /* sigaction style flags */
-  void *handler; /* signal handler or context */
+typedef struct _zend_signal_entry_t {
+	int   flags;          /* sigaction style flags */
+	void* handler;      /* signal handler or context */
 } zend_signal_entry_t;
 
-typedef struct _zend_signal_t
-{
-  int signo;
-  siginfo_t *siginfo;
-  void *context;
+typedef struct _zend_signal_t {
+	int signo;
+	siginfo_t *siginfo;
+	void* context;
 } zend_signal_t;
 
-typedef struct _zend_signal_queue_t
-{
-  zend_signal_t zend_signal;
-  struct _zend_signal_queue_t *next;
+typedef struct _zend_signal_queue_t {
+	zend_signal_t zend_signal;
+	struct _zend_signal_queue_t *next;
 } zend_signal_queue_t;
 
 /* Signal Globals */
-typedef struct _zend_signal_globals_t
-{
-  int depth;
-  int blocked;     /* 1==TRUE, 0==FALSE */
-  int running;     /* in signal handler execution */
-  int active;      /* internal signal handling is enabled */
-  zend_bool check; /* check for replaced handlers on shutdown */
-  zend_signal_entry_t handlers[NSIG];
-  zend_signal_queue_t pstorage[ZEND_SIGNAL_QUEUE_SIZE], *phead, *ptail, *pavail; /* pending queue */
+typedef struct _zend_signal_globals_t {
+	int depth;
+	int blocked;            /* 1==TRUE, 0==FALSE */
+	int running;            /* in signal handler execution */
+	int active;             /* internal signal handling is enabled */
+	zend_bool check;        /* check for replaced handlers on shutdown */
+	zend_bool reset;        /* reset signal handlers on each request */
+	zend_signal_entry_t handlers[NSIG];
+	zend_signal_queue_t pstorage[ZEND_SIGNAL_QUEUE_SIZE], *phead, *ptail, *pavail; /* pending queue */
 } zend_signal_globals_t;
 
-#ifdef ZTS
-#define SIGG(v) ZEND_TSRMG(zend_signal_globals_id, zend_signal_globals_t *, v)
+# ifdef ZTS
+#  define SIGG(v) ZEND_TSRMG_FAST(zend_signal_globals_offset, zend_signal_globals_t *, v)
 BEGIN_EXTERN_C()
 ZEND_API extern int zend_signal_globals_id;
+ZEND_API extern size_t zend_signal_globals_offset;
 END_EXTERN_C()
-#else
-#define SIGG(v) (zend_signal_globals.v)
+# else
+#  define SIGG(v) (zend_signal_globals.v)
 BEGIN_EXTERN_C()
 ZEND_API extern zend_signal_globals_t zend_signal_globals;
 END_EXTERN_C()
-#endif /* not ZTS */
+# endif /* not ZTS */
 
-#ifdef ZTS
-#define ZEND_SIGNAL_BLOCK_INTERRUPTIONS() \
-  if (EXPECTED(zend_signal_globals_id))   \
-  {                                       \
-    SIGG(depth)                           \
-    ++;                                   \
-  }
-#define ZEND_SIGNAL_UNBLOCK_INTERRUPTIONS()                                               \
-  if (EXPECTED(zend_signal_globals_id) && UNEXPECTED(((SIGG(depth)--) == SIGG(blocked)))) \
-  {                                                                                       \
-    zend_signal_handler_unblock();                                                        \
-  }
-#else /* ZTS */
-#define ZEND_SIGNAL_BLOCK_INTERRUPTIONS() SIGG(depth)++;
-#define ZEND_SIGNAL_UNBLOCK_INTERRUPTIONS() \
-  if (((SIGG(depth)--) == SIGG(blocked)))   \
-  {                                         \
-    zend_signal_handler_unblock();          \
-  }
-#endif /* not ZTS */
+# ifdef ZTS
+#  define ZEND_SIGNAL_BLOCK_INTERRUPTIONS() if (EXPECTED(zend_signal_globals_id)) { SIGG(depth)++; }
+#  define ZEND_SIGNAL_UNBLOCK_INTERRUPTIONS() if (EXPECTED(zend_signal_globals_id) && UNEXPECTED(((SIGG(depth)--) == SIGG(blocked)))) { zend_signal_handler_unblock(); }
+# else /* ZTS */
+#  define ZEND_SIGNAL_BLOCK_INTERRUPTIONS()  SIGG(depth)++;
+#  define ZEND_SIGNAL_UNBLOCK_INTERRUPTIONS() if (((SIGG(depth)--) == SIGG(blocked))) { zend_signal_handler_unblock(); }
+# endif /* not ZTS */
 
 ZEND_API void zend_signal_handler_unblock(void);
 void zend_signal_activate(void);
@@ -113,27 +96,17 @@ ZEND_API int zend_sigaction(int signo, const struct sigaction *act, struct sigac
 
 #else /* ZEND_SIGNALS */
 
-#define ZEND_SIGNAL_BLOCK_INTERRUPTIONS()
-#define ZEND_SIGNAL_UNBLOCK_INTERRUPTIONS()
+# define ZEND_SIGNAL_BLOCK_INTERRUPTIONS()
+# define ZEND_SIGNAL_UNBLOCK_INTERRUPTIONS()
 
-#define zend_signal_activate()
-#define zend_signal_deactivate()
-#define zend_signal_startup()
-#define zend_signal_init()
+# define zend_signal_activate()
+# define zend_signal_deactivate()
+# define zend_signal_startup()
+# define zend_signal_init()
 
-#define zend_signal(signo, handler) signal(signo, handler)
-#define zend_sigaction(signo, act, oldact) sigaction(signo, act, oldact)
+# define zend_signal(signo, handler)           signal(signo, handler)
+# define zend_sigaction(signo, act, oldact)    sigaction(signo, act, oldact)
 
 #endif /* ZEND_SIGNALS */
 
 #endif /* ZEND_SIGNAL_H */
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * indent-tabs-mode: t
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */

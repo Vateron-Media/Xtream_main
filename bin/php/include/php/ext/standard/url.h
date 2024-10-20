@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -19,23 +19,22 @@
 #ifndef URL_H
 #define URL_H
 
-typedef struct php_url
-{
-  zend_string *scheme;
-  zend_string *user;
-  zend_string *pass;
-  zend_string *host;
-  unsigned short port;
-  zend_string *path;
-  zend_string *query;
-  zend_string *fragment;
+typedef struct php_url {
+	zend_string *scheme;
+	zend_string *user;
+	zend_string *pass;
+	zend_string *host;
+	unsigned short port;
+	zend_string *path;
+	zend_string *query;
+	zend_string *fragment;
 } php_url;
 
 PHPAPI void php_url_free(php_url *theurl);
 PHPAPI php_url *php_url_parse(char const *str);
 PHPAPI php_url *php_url_parse_ex(char const *str, size_t length);
 PHPAPI php_url *php_url_parse_ex2(char const *str, size_t length, zend_bool *has_port);
-PHPAPI size_t php_url_decode(char *str, size_t len);     /* return value: length of decoded string */
+PHPAPI size_t php_url_decode(char *str, size_t len); /* return value: length of decoded string */
 PHPAPI size_t php_raw_url_decode(char *str, size_t len); /* return value: length of decoded string */
 PHPAPI zend_string *php_url_encode(char const *s, size_t len);
 PHPAPI zend_string *php_raw_url_encode(char const *s, size_t len);
@@ -61,10 +60,3 @@ PHP_FUNCTION(get_headers);
 #define PHP_QUERY_RFC3986 2
 
 #endif /* URL_H */
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- */

@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 7                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2018 The PHP Group                                |
+   | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -22,83 +22,78 @@
 #include "TSRM.h"
 #include <windows.h>
 #if HAVE_UTIME
-#include <sys/utime.h>
+# include <sys/utime.h>
 #endif
 #include "win32/ipc.h"
 
-struct ipc_perm
-{
-	key_t key;
-	unsigned short uid;
-	unsigned short gid;
-	unsigned short cuid;
-	unsigned short cgid;
-	unsigned short mode;
-	unsigned short seq;
+struct ipc_perm {
+	key_t		key;
+	unsigned short	uid;
+	unsigned short	gid;
+	unsigned short	cuid;
+	unsigned short	cgid;
+	unsigned short	mode;
+	unsigned short	seq;
 };
 
-struct shmid_ds
-{
-	struct ipc_perm shm_perm;
-	size_t shm_segsz;
-	time_t shm_atime;
-	time_t shm_dtime;
-	time_t shm_ctime;
-	unsigned short shm_cpid;
-	unsigned short shm_lpid;
-	short shm_nattch;
+struct shmid_ds {
+	struct	ipc_perm	shm_perm;
+	size_t			shm_segsz;
+	time_t			shm_atime;
+	time_t			shm_dtime;
+	time_t			shm_ctime;
+	unsigned short	shm_cpid;
+	unsigned short	shm_lpid;
+	short			shm_nattch;
 };
 
-typedef struct
-{
-	FILE *stream;
-	HANDLE prochnd;
+typedef struct {
+	FILE	*stream;
+	HANDLE	prochnd;
 } process_pair;
 
-typedef struct
-{
-	void *addr;
-	HANDLE info;
-	HANDLE segment;
-	struct shmid_ds *descriptor;
+typedef struct {
+	void	*addr;
+	HANDLE	info;
+	HANDLE	segment;
+	struct	shmid_ds	*descriptor;
 } shm_pair;
 
-typedef struct
-{
-	process_pair *process;
-	shm_pair *shm;
-	int process_size;
-	int shm_size;
-	char *comspec;
+typedef struct {
+	process_pair	*process;
+	shm_pair		*shm;
+	int				process_size;
+	int				shm_size;
+	char			*comspec;
 	HANDLE impersonation_token;
-	PSID impersonation_token_sid;
+	PSID			impersonation_token_sid;
 } tsrm_win32_globals;
 
 #ifdef ZTS
-#define TWG(v) TSRMG_STATIC(win32_globals_id, tsrm_win32_globals *, v)
+# define TWG(v) TSRMG_STATIC(win32_globals_id, tsrm_win32_globals *, v)
 TSRMLS_CACHE_EXTERN()
 #else
-#define TWG(v) (win32_globals.v)
+# define TWG(v) (win32_globals.v)
 #endif
 
-#define IPC_PRIVATE 0
-#define IPC_CREAT 00001000
-#define IPC_EXCL 00002000
-#define IPC_NOWAIT 00004000
+#define IPC_PRIVATE	0
+#define IPC_CREAT	00001000
+#define IPC_EXCL	00002000
+#define IPC_NOWAIT	00004000
 
-#define IPC_RMID 0
-#define IPC_SET 1
-#define IPC_STAT 2
-#define IPC_INFO 3
+#define IPC_RMID	0
+#define IPC_SET		1
+#define IPC_STAT	2
+#define IPC_INFO	3
 
-#define SHM_R PAGE_READONLY
-#define SHM_W PAGE_READWRITE
+#define SHM_R		PAGE_READONLY
+#define SHM_W		PAGE_READWRITE
 
-#define SHM_RDONLY FILE_MAP_READ
-#define SHM_RND FILE_MAP_WRITE
-#define SHM_REMAP FILE_MAP_COPY
+#define	SHM_RDONLY	FILE_MAP_READ
+#define	SHM_RND		FILE_MAP_WRITE
+#define	SHM_REMAP	FILE_MAP_COPY
 
-char *tsrm_win32_get_path_sid_key(const char *pathname, size_t pathname_len, size_t *key_len);
+char * tsrm_win32_get_path_sid_key(const char *pathname, size_t pathname_len, size_t *key_len);
 
 TSRM_API void tsrm_win32_startup(void);
 TSRM_API void tsrm_win32_shutdown(void);
@@ -114,12 +109,3 @@ TSRM_API void *shmat(int key, const void *shmaddr, int flags);
 TSRM_API int shmdt(const void *shmaddr);
 TSRM_API int shmctl(int key, int cmd, struct shmid_ds *buf);
 #endif
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: sw=4 ts=4 fdm=marker
- * vim<600: sw=4 ts=4
- */
