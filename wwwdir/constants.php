@@ -55,7 +55,7 @@ $rErrorCodes = array(
 // FOLDERS
 define('MAIN_DIR', '/home/xtreamcodes/');
 define('IPTV_ROOT_PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');
-define('IPTV_INCLUDES_PATH', IPTV_ROOT_PATH . 'includes' . '/');
+define('INCLUDES_PATH', MAIN_DIR . 'includes/');
 define('IPTV_TEMPLATES_PATH', IPTV_ROOT_PATH . 'templates' . '/');
 define('MOVIES_IMAGES', MAIN_DIR . 'wwwdir/images/');
 define('ENIGMA2_PLUGIN_DIR', MOVIES_IMAGES . 'enigma2/');

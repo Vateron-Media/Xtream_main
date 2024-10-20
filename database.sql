@@ -1188,8 +1188,9 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('180', 'bruteforce_mac_attempts', '5'),
 ('181', 'bruteforce_username_attempts', '10'),
 ('182', 'bruteforce_frequency', '300'),
-('183', 'restart_php_fpm', 1);
-
+('183', 'restart_php_fpm', 1),
+('184', 'redis_password', ""),
+('185', 'redis_handler', 0);
 -- --------------------------------------------------------
 
 --

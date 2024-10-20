@@ -118,13 +118,13 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			// 	$ipTV_db->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', $rServerID, time(), json_encode(array('action' => 'update_binaries')));
 			// }
 
-			// $rConfig = file_get_contents(MAIN_DIR . 'bin/redis/redis.conf');
-			// if (stripos($rConfig, "\n" . 'save 60 1000') === false) {
-			// 	$rWrite = true;
-			// 	$rConfig .= "\n" . 'save 60 1000';
-			// 	$rConfig = str_replace('stop-writes-on-bgsave-error yes', 'stop-writes-on-bgsave-error no', $rConfig);
-			// 	echo 'Turning Redis Snapshots On!' . "\n\n";
-			// }
+			$rConfig = file_get_contents(MAIN_DIR . 'bin/redis/redis.conf');
+			if (stripos($rConfig, "\n" . 'save 60 1000') === false) {
+				$rWrite = true;
+				$rConfig .= "\n" . 'save 60 1000';
+				$rConfig = str_replace('stop-writes-on-bgsave-error yes', 'stop-writes-on-bgsave-error no', $rConfig);
+				echo 'Turning Redis Snapshots On!' . "\n\n";
+			}
 
 			if (stripos($rConfig, "\n" . 'save 60 1000') === false) {
 				$rWrite = true;
@@ -157,12 +157,12 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 				file_put_contents(MAIN_DIR . 'bin/redis/redis.conf', $rConfig);
 			}
 
-			// $ipTV_db->query('SELECT `redis_password` FROM `settings`;');
+			$ipTV_db->query("SELECT * FROM `settings` WHERE `name` = 'redis_password'");
 
-			// if ($ipTV_db->get_row()['redis_password'] != $rPassword) {
-			// 	echo 'Updating Redis password in database' . "\n";
-			// 	$ipTV_db->query('UPDATE `settings` SET `redis_password` = ?;', $rPassword);
-			// }
+			if ($ipTV_db->get_row()['value'] != $rPassword) {
+				echo 'Updating Redis password in database' . "\n";
+				ipTV_lib::setSettings(["redis_password" => $rPassword]);
+			}
 		}
 
 		if (!$rFirstRun || $rServers[SERVER_ID]['is_main']) {

@@ -1,5 +1,6 @@
 <?php
 include_once("/home/xtreamcodes/admin/HTMLPurifier.standalone.php");
+require_once '/home/xtreamcodes/includes/admin.php';
 
 $rTimeout = 60;             // Seconds Timeout for Functions & Requests
 $rSQLTimeout = 5;           // Max execution time for MySQL queries.
@@ -243,10 +244,6 @@ function setSettings(array $settings) {
     return true;
 }
 
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
 if ($rDebug) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -262,7 +259,6 @@ ini_set('mysql.connect_timeout', $rSQLTimeout);
 ini_set('max_execution_time', $rTimeout);
 ini_set('default_socket_timeout', $rTimeout);
 
-define("MAIN_DIR", "/home/xtreamcodes/");
 define("CONFIG_PATH", MAIN_DIR . "config/");
 define('TMP_PATH', MAIN_DIR . 'tmp/');
 define('CRON_PATH', MAIN_DIR . 'crons/');

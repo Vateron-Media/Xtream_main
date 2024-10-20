@@ -1,11 +1,11 @@
 <?php
 require_once 'constants.php';
-require IPTV_INCLUDES_PATH . 'functions.php';
-require IPTV_INCLUDES_PATH . 'lib.php';
-require IPTV_INCLUDES_PATH . 'mysql.php';
-require IPTV_INCLUDES_PATH . 'streaming.php';
-require IPTV_INCLUDES_PATH . 'servers.php';
-require IPTV_INCLUDES_PATH . 'stream.php';
+require INCLUDES_PATH . 'functions.php';
+require INCLUDES_PATH . 'lib.php';
+require INCLUDES_PATH . 'pdo.php';
+require INCLUDES_PATH . 'streaming.php';
+require INCLUDES_PATH . 'servers.php';
+require INCLUDES_PATH . 'stream.php';
 require IPTV_ROOT_PATH . 'langs/English.php';
 
 $_INFO = array();

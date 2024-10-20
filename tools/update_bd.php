@@ -10,10 +10,12 @@ $ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `audio_devices` medium
 $ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `gpu_info` mediumtext COLLATE utf8_unicode_ci");
 $ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `limit_requests` INT(11) NULL DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE streaming_servers ADD COLUMN `enable_gzip` TINYINT(1) NULL DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE settings ADD COLUMN `restart_php_fpm` TINYINT(4) NULL DEFAULT '1'");
-$ipTV_db->query("ALTER TABLE settings ADD COLUMN `max_encode_movies` TINYINT(4) NULL DEFAULT '10'");
-$ipTV_db->query("ALTER TABLE settings ADD COLUMN `max_encode_cc` TINYINT(4) NULL DEFAULT '1'");
-$ipTV_db->query("ALTER TABLE settings ADD COLUMN `queue_loop` TINYINT(4) NULL DEFAULT '1'");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('restart_php_fpm', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('max_encode_movies', '10')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('max_encode_cc', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('queue_loop', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('redis_password', '')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('redis_handler', '0')");
 
 
 return true;

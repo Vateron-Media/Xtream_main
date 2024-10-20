@@ -19,13 +19,13 @@ function loadCron() {
     ipTV_lib::$settings = ipTV_lib::getSettings(true);
     if (ipTV_lib::isRunning()) {
         $rServers = ipTV_lib::getServers(true);
-        // if ($rServers[SERVER_ID]['is_main'] && ipTV_lib::$settings['redis_handler']) {
-        //     exec('pgrep -u xtreamcodes redis-server', $rRedis);
-        //     if (count($rRedis) == 0) {
-        //         echo 'Restarting Redis!' . "\n";
-        //         shell_exec(MAIN_DIR . 'bin/redis/redis-server ' . MAIN_DIR . '/bin/redis/redis.conf > /dev/null 2>/dev/null &');
-        //     }
-        // }
+        if ($rServers[SERVER_ID]['is_main'] && ipTV_lib::$settings['redis_handler']) {
+            exec('pgrep -u xtreamcodes redis-server', $rRedis);
+            if (count($rRedis) == 0) {
+                echo 'Restarting Redis!' . "\n";
+                shell_exec(MAIN_DIR . 'bin/redis/redis-server ' . MAIN_DIR . '/bin/redis/redis.conf > /dev/null 2>/dev/null &');
+            }
+        }
         #create all network stats
         getNetworkStats();
         $rSignals = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep signals | grep -v grep | grep -v pgrep | wc -l')));
@@ -96,23 +96,23 @@ function loadCron() {
         } else {
             $rRemoteStatus = false;
         }
-        // if (ipTV_lib::$settings['redis_handler']) {
-        //     $rConnections = $rServers[SERVER_ID]['connections'];
-        //     $rUsers = $rServers[SERVER_ID]['users'];
-        //     $rAllUsers = 0;
-        //     foreach (array_keys($rServers) as $rServerID) {
-        //         if ($rServers[$rServerID]['server_online']) {
-        //             $rAllUsers += $rServers[$rServerID]['users'];
-        //         }
-        //     }
-        // } else {
-        $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = \'%s\' AND `hls_end` = 0;', SERVER_ID);
-        $rConnections = intval($ipTV_db->get_row()['count']);
-        $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `server_id` = \'%s\' AND `hls_end` = 0 GROUP BY `user_id`;', SERVER_ID);
-        $rUsers = intval($ipTV_db->num_rows());
-        $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
-        $rAllUsers = intval($ipTV_db->num_rows());
-        // }
+        if (ipTV_lib::$settings['redis_handler']) {
+            $rConnections = $rServers[SERVER_ID]['connections'];
+            $rUsers = $rServers[SERVER_ID]['users'];
+            $rAllUsers = 0;
+            foreach (array_keys($rServers) as $rServerID) {
+                if ($rServers[$rServerID]['server_online']) {
+                    $rAllUsers += $rServers[$rServerID]['users'];
+                }
+            }
+        } else {
+            $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = \'%s\' AND `hls_end` = 0;', SERVER_ID);
+            $rConnections = intval($ipTV_db->get_row()['count']);
+            $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `server_id` = \'%s\' AND `hls_end` = 0 GROUP BY `user_id`;', SERVER_ID);
+            $rUsers = intval($ipTV_db->num_rows());
+            $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
+            $rAllUsers = intval($ipTV_db->num_rows());
+        }
         $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = \'%s\' AND `pid` > 0 AND `type` = 1;', SERVER_ID);
         $rStreams = intval($ipTV_db->get_row()['count']);
         $rPing = 0;
