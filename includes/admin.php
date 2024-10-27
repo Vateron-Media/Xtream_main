@@ -52,6 +52,7 @@ API::init();
 ipTV_lib::init();
 ipTV_lib::connectRedis();
 
+$rProtocol = getProtocol();
 $rSettings = ipTV_lib::$settings;
 $detect = new Mobile_Detect;
 
@@ -183,4 +184,60 @@ function shutdown_admin() {
     if (is_object($ipTV_db_admin)) {
         $ipTV_db_admin->close_mysql();
     }
+}
+
+function issecure() {
+    return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443;
+}
+
+/** 
+ * Encrypts the provided data using AES-256-CBC encryption with a given decryption key and device ID. 
+ *  
+ * @param string $rData The data to be encrypted. 
+ * @param string $decryptionKey The decryption key used to encrypt the data. 
+ * @param string $rDeviceID The device ID used in the encryption process. 
+ * @return string The encrypted data in base64url encoding. 
+ */
+function encryptData($rData, $decryptionKey, $rDeviceID) {
+    return base64url_encode(openssl_encrypt($rData, 'aes-256-cbc', md5(sha1($rDeviceID) . $decryptionKey), OPENSSL_RAW_DATA, substr(md5(sha1($decryptionKey)), 0, 16)));
+}
+/** 
+ * Decrypts the provided data using AES-256-CBC decryption with a given decryption key and device ID. 
+ *  
+ * @param string $rData The data to be decrypted. 
+ * @param string $decryptionKey The decryption key used to decrypt the data. 
+ * @param string $rDeviceID The device ID used in the decryption process. 
+ * @return string The decrypted data. 
+ */
+function decryptData($rData, $decryptionKey, $rDeviceID) {
+    return openssl_decrypt(base64url_decode($rData), 'aes-256-cbc', md5(sha1($rDeviceID) . $decryptionKey), OPENSSL_RAW_DATA, substr(md5(sha1($decryptionKey)), 0, 16));
+}
+/** 
+ * Encodes the input data using base64url encoding. 
+ * 
+ * This function takes the input data and encodes it using base64 encoding. It then replaces the characters '+' and '/' with '-' and '_', respectively, to make the encoding URL-safe. Finally, it removes any padding '=' characters at the end of the encoded string. 
+ * 
+ * @param string $rData The input data to be encoded. 
+ * @return string The base64url encoded string. 
+ */
+function base64url_encode($rData) {
+    return rtrim(strtr(base64_encode($rData), '+/', '-_'), '=');
+}
+/** 
+ * Decodes the input data encoded using base64url encoding. 
+ * 
+ * This function takes the input data encoded using base64url encoding and decodes it. It first replaces the characters '-' and '_' back to '+' and '/' respectively, to revert the URL-safe encoding. Then, it decodes the base64 encoded string to retrieve the original data. 
+ * 
+ * @param string $rData The base64url encoded data to be decoded. 
+ * @return string|false The decoded original data, or false if decoding fails. 
+ */
+function base64url_decode($rData) {
+    return base64_decode(strtr($rData, '-_', '+/'));
+}
+
+function getProtocol() {
+    if (issecure()) {
+        return 'https';
+    }
+    return 'http';
 }

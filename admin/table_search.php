@@ -830,7 +830,7 @@ if ($rType == "users") {
                 }
                 $rButtons .= '</div>';
                 if (hasPermissions("adv", "player")) {
-                    if (((intval($rActualStatus) == 1) or ($rRow["on_demand"] == 1) or ($rActualStatus == 5)) && ((strlen($rAdminSettings["admin_username"]) > 0) && (strlen($rAdminSettings["admin_password"]) > 0))) {
+                    if (((intval($rActualStatus) == 1) or ($rRow["on_demand"] == 1) or ($rActualStatus == 5))) {
                         $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ');"><i class="mdi mdi-play"></i></button>';
                     } else {
                         $rPlayer = '<button type="button" disabled class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-play"></i></button>';
@@ -1247,7 +1247,7 @@ if ($rType == "users") {
                 }
                 $rButtons .= '</div>';
                 if (hasPermissions("adv", "player")) {
-                    if (((intval($rActualStatus) == 1) or ($rActualStatus == 3)) && ((strlen($rAdminSettings["admin_username"]) > 0) && (strlen($rAdminSettings["admin_password"]) > 0))) {
+                    if (((intval($rActualStatus) == 1) or ($rActualStatus == 3))) {
                         $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ', \'' . json_decode($rRow["target_container"], True)[0] . '\');"><i class="mdi mdi-play"></i></button>';
                     } else {
                         $rPlayer = '<button type="button" disabled class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-play"></i></button>';
@@ -2509,7 +2509,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                 }
                 $rButtons .= '</div>';
                 if (hasPermissions("adv", "player")) {
-                    if (((intval($rActualStatus) == 1) or ($rActualStatus == 3)) && ((strlen($rAdminSettings["admin_username"]) > 0) && (strlen($rAdminSettings["admin_password"]) > 0))) {
+                    if (((intval($rActualStatus) == 1) or ($rActualStatus == 3))) {
                         $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ', \'' . json_decode($rRow["target_container"], True)[0] . '\');"><i class="mdi mdi-play"></i></button>';
                     } else {
                         $rPlayer = '<button type="button" disabled class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-play"></i></button>';

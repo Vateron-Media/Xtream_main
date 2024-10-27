@@ -757,29 +757,21 @@ class ipTV_streaming {
             }
         }
     }
-    /** 
-     * Generates a playlist with authentication for an admin stream. 
-     * 
-     * This function takes the path to an M3U8 file, a password, and a stream ID as parameters. 
-     * It reads the content of the M3U8 file, searches for .ts segments, and replaces them with authenticated URLs. 
-     * The authenticated URLs include the admin_live.php script with the provided password, extension, segment, and stream ID. 
-     * 
-     * @param string $M3U8 The path to the M3U8 file. 
-     * @param string $password The password for authentication. 
-     * @param int $streamID The ID of the stream. 
-     * @return string|false The generated playlist with authentication URLs or false if the M3U8 file does not exist. 
-     */
-    public static function GeneratePlayListWithAuthenticationAdmin($M3U8, $password, $streamID) {
-        if (file_exists($M3U8)) {
-            $source = file_get_contents($M3U8);
-            if (preg_match_all('/(.*?)\\.ts/', $source, $matches)) {
-                foreach ($matches[0] as $match) {
-                    $source = str_replace($match, "/streaming/admin_live.php?password={$password}&extension=m3u8&segment={$match}&stream={$streamID}", $source);
+    public static function generateAdminHLS($rM3U8, $rPassword, $rStreamID, $rUIToken) {
+        if (file_exists($rM3U8)) {
+            $rSource = file_get_contents($rM3U8);
+            if (preg_match_all('/(.*?)\\.ts/', $rSource, $rMatches)) {
+                foreach ($rMatches[0] as $rMatch) {
+                    if ($rUIToken) {
+                        $rSource = str_replace($rMatch, '/admin/live.php?extension=m3u8&segment=' . $rMatch . '&uitoken=' . $rUIToken, $rSource);
+                    } else {
+                        $rSource = str_replace($rMatch, '/admin/live.php?password=' . $rPassword . '&extension=m3u8&segment=' . $rMatch . '&stream=' . $rStreamID, $rSource);
+                    }
                 }
-                return $source;
+                return $rSource;
             }
-            return false;
         }
+        return false;
     }
     public static function generateHLS($rM3U8, $username, $password, $streamID, $rUUID, $IP, $rVideoCodec = 'h264', $rOnDemand = 0, $rServerID = null) {
         if (file_exists($rM3U8)) {

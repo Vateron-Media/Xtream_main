@@ -161,14 +161,6 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     if (isset($_POST["default_entries"])) {
         $rAdminSettings["default_entries"] = $_POST["default_entries"];
     }
-    if (isset($_POST["admin_username"])) {
-        $rAdminSettings["admin_username"] = $_POST["admin_username"];
-        unset($_POST["admin_username"]);
-    }
-    if (isset($_POST["admin_password"])) {
-        $rAdminSettings["admin_password"] = $_POST["admin_password"];
-        unset($_POST["admin_password"]);
-    }
     if (isset($_POST["tmdb_language"])) {
         $rAdminSettings["tmdb_language"] = $_POST["tmdb_language"];
         unset($_POST["tmdb_language"]);
@@ -901,28 +893,6 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </select>
                                                             </div>
                                                             </div>-->
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="admin_username"><?= $_["player_credentials"] ?><i
-                                                                            data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["play_live_streams"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-4">
-                                                                        <input type="text"
-                                                                            placeholder="<?= $_["line_username"] ?>"
-                                                                            class="form-control" id="admin_username"
-                                                                            name="admin_username"
-                                                                            value="<?= htmlspecialchars($rAdminSettings["admin_username"]) ?>">
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <input type="text"
-                                                                            placeholder="<?= $_["line_password"] ?>"
-                                                                            class="form-control" id="admin_password"
-                                                                            name="admin_password"
-                                                                            value="<?= htmlspecialchars($rAdminSettings["admin_password"]) ?>">
-                                                                    </div>
-                                                                </div>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="tmdb_api_key"><?= $_["tmdb_api_key"] ?></label>
