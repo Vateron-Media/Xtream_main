@@ -1912,6 +1912,7 @@ if (file_exists("/home/xtreamcodes/admin/.update")) {
         updateTMDbCategories();
         setSettings(["double_auth" => 1, "mag_security" => 1]);
         $db->query("UPDATE `admin_settings` SET `pass_length` = 8 WHERE `pass_length` < 8;");
+        $db->query('UPDATE `streaming_servers` SET `server_ip` = "' . $rIP . '" WHERE `id` = 1;');
     }
 }
 

@@ -128,10 +128,6 @@ define('RESTART_TAKE_CACHE', 5);
 define('MONITOR_CALLS', 3);
 // -------------------
 
-if (!defined('FETCH_BOUQUETS')) {
-    define('FETCH_BOUQUETS', true);
-}
-
 define('CACHE_STREAMS', false);
 define('CACHE_STREAMS_TIME', 10);
 define('STREAM_TYPE', array('live', 'series', 'movie', 'created_live', 'radio_streams'));

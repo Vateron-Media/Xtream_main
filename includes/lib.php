@@ -19,7 +19,7 @@ class ipTV_lib {
     public static $redis = null;
     public static $config = array();
 
-    public static function init() {
+    public static function init($useCache = false) {
         global $_INFO;
 
         if (!empty($_GET)) {
@@ -40,9 +40,18 @@ class ipTV_lib {
         self::$config = parse_ini_file(
             CONFIG_PATH . 'config.ini'
         );
-        self::$settings = self::getSettings();
-        self::$cached = self::$settings["enable_cache"];
-        date_default_timezone_set(self::$settings["default_timezone"]);
+        if ($useCache) {
+            self::$settings = self::getCache('settings');
+        } else {
+            self::$settings = self::getSettings();
+        }
+        if (!empty(self::$settings['default_timezone'])) {
+            date_default_timezone_set(self::$settings["default_timezone"]);
+        }
+        if (self::$settings['on_demand_wait_time'] == 0) {
+            self::$settings['on_demand_wait_time'] = 15;
+        }
+        self::$SegmentsSettings = self::calculateSegNumbers();
         switch (self::$settings['ffmpeg_cpu']) {
             case '4.4':
                 self::$FFMPEG_CPU = FFMPEG_BIN_44;
@@ -58,17 +67,29 @@ class ipTV_lib {
                 break;
         }
         self::$FFMPEG_GPU = FFMPEG_BIN_40;
-        self::$StreamingServers = self::getServers();
-        self::$blockedISP = self::getBlockedISP();
-        self::$blockedIPs = self::getBlockedIPs();
-        self::$categories = self::getCategories();
-        self::$allowedIPs = self::getAllowedIPs();
+        self::$cached = self::$settings["enable_cache"];
 
-        if (FETCH_BOUQUETS) {
+        if ($useCache) {
+            self::$StreamingServers = self::getCache('servers');
+            self::$Bouquets = self::getCache('bouquets');
+            self::$blockedISP = self::getCache('blocked_isp');
+            self::$blockedIPs = self::getCache('blocked_ips');
+            self::$categories = self::getCache('categories');
+            self::$allowedIPs = self::getCache('allowed_ips');
+            self::$blockedUA = self::getCache('blocked_ua');
+            self::$customISP = self::getCache('customisp');
+        } else {
+            self::$StreamingServers = self::getServers();
             self::$Bouquets = self::getBouquets();
+            self::$blockedISP = self::getBlockedISP();
+            self::$blockedIPs = self::getBlockedIPs();
+            self::$categories = self::getCategories();
+            self::$allowedIPs = self::getAllowedIPs();
+            self::$blockedUA = self::GetBlockedUserAgents();
+            self::$customISP = self::GetIspAddon();
+            self::generateCron();
         }
-        self::$blockedUA = self::GetBlockedUserAgents();
-        self::$customISP = self::GetIspAddon();
+
 
         if (!isset($_INFO["pconnect"])) {
             $_INFO["pconnect"] = null;
@@ -81,8 +102,6 @@ class ipTV_lib {
         //     }
         // }
 
-        self::$SegmentsSettings = self::calculateSegNumbers();
-        self::generateCron();
     }
     public static function getDiffTimezone($rTimezone) {
         $rServerTZ = new DateTime('UTC', new DateTimeZone(date_default_timezone_get()));
