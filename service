@@ -19,7 +19,7 @@ start() {
   sudo chown -R xtreamcodes:xtreamcodes $SCRIPT/content/streams
   sudo chown -R xtreamcodes:xtreamcodes $SCRIPT/tmp
   if [ -f $SCRIPT/bin/redis/redis-server ]; then
-    sudo -u xtreamcodes $SCRIPT/bin/redis/redis-server $SCRIPT/bin/redis/redis.conf >/dev/null 2>/dev/null
+    sudo -u xtreamcodes $SCRIPT/bin/redis/redis-server $SCRIPT/bin/redis/redis.conf >/dev/null 2>/dev/null &
   fi
   sudo -u xtreamcodes $SCRIPT/bin/nginx/sbin/nginx >/dev/null 2>/dev/null
   sudo -u xtreamcodes $SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp >/dev/null 2>/dev/null
