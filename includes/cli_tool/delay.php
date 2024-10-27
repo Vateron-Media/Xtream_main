@@ -74,7 +74,6 @@ function getPlaylistSegments($playlist, $segment_count = 0) {
 
 if (@$argc) {
     if ($argc > 2) {
-        define("FETCH_BOUQUETS", false);
         $stream_id = intval($argv[1]);
         $stream_minutes = intval(abs($argv[2]));
         killStreamProcess($stream_id);
