@@ -250,7 +250,7 @@ if ($rChannelInfo) {
                         ipTV_lib::$SegmentsSettings["seg_time"] = $rDuration;
                     }
                 }
-                $rSegments = ipTV_streaming::GetSegmentsOfPlaylist($playlist, $rPrebuffer, ipTV_lib::$SegmentsSettings["seg_time"]);
+                $rSegments = ipTV_streaming::getPlaylistSegments($playlist, $rPrebuffer, ipTV_lib::$SegmentsSettings["seg_time"]);
             } else {
                 $rSegments = NULL;
             }

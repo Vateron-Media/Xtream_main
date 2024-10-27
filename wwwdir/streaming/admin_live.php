@@ -57,7 +57,7 @@ if ($ipTV_db->num_rows() > 0) {
             break;
         default:
             header("Content-Type: video/mp2t");
-            $segmentsOfPlaylist = ipTV_streaming::GetSegmentsOfPlaylist($playlist, ipTV_lib::$settings["client_prebuffer"]);
+            $segmentsOfPlaylist = ipTV_streaming::getPlaylistSegments($playlist, ipTV_lib::$settings["client_prebuffer"]);
             if (empty($segmentsOfPlaylist)) {
                 if (!file_exists($playlist)) {
                     $current = -1;

@@ -1,5 +1,4 @@
 <?php
-
 function checkRunning($streamID) {
     clearstatcache(true);
     if (file_exists(STREAMS_PATH . $streamID . '_.monitor')) {
@@ -39,7 +38,6 @@ $ipTV_db->query('UPDATE `streams_servers` SET `monitor_pid` = \'%d\' WHERE `serv
 if (ipTV_lib::$settings["enable_cache"]) {
     ipTV_streaming::updateStream($streamID);
 }
-
 
 $rPID = (file_exists(STREAMS_PATH . $streamID . '_.pid') ? intval(file_get_contents(STREAMS_PATH . $streamID . '_.pid')) : $streamInfo['pid']);
 $rAutoRestart = json_decode($streamInfo['auto_restart'], true);
@@ -91,7 +89,7 @@ if (ipTV_streaming::isStreamRunning($rPID, $streamID)) {
 } else {
     file_put_contents(STREAMS_PATH . $streamID . '_.monitor', getmypid());
 }
-if (ipTV_lib::$settings["kill_rogue_ffmpeg"]) {
+if (ipTV_lib::$settings['kill_rogue_ffmpeg']) {
     exec('ps aux | grep -v grep | grep \'/' . $streamID . '_.m3u8\' | awk \'{print $2}\'', $rFFMPEG);
     foreach ($rFFMPEG as $roguePID) {
         if ((is_numeric($roguePID) && (0 < intval($roguePID)) && (intval($roguePID) != intval($rPID)))) {
@@ -132,7 +130,7 @@ if (true) {
     label195:
     if (($streamProbe || (!file_exists(STREAMS_PATH . $streamID . '_.dur') && (300 < (time() - $rDurationChecked))))) {
         echo 'Probe Stream' . "\n";
-        $segment = ipTV_streaming::GetSegmentsOfPlaylist($rPlaylist, 10)[0];
+        $segment = ipTV_streaming::getPlaylistSegments($rPlaylist, 10)[0];
         if (!empty($segment)) {
             if (((300 < (time() - $rDurationChecked)) && ($segment == $rLastSegment))) {
                 ipTV_streaming::streamLog($streamID, SERVER_ID, 'FFMPEG_ERROR', $rCurrentSource);
@@ -159,7 +157,7 @@ if (true) {
             file_put_contents(STREAMS_PATH . $streamID . '_.monitor', getmypid());
         }
     }
-    if (!(($streamInfo['fps_restart'] == 1) && (ipTV_lib::$settings["fps_delay"] < (time() - $startedTime)) && file_exists(STREAMS_PATH . $streamID . '_.progress_check'))) {
+    if (!(($streamInfo['fps_restart'] == 1) && (ipTV_lib::$settings['fps_delay'] < (time() - $startedTime)) && file_exists(STREAMS_PATH . $streamID . '_.progress_check'))) {
         goto label298;
     }
     echo 'Checking FPS...' . "\n";
@@ -209,9 +207,11 @@ if (true) {
 }
 goto label1880;
 label1:
-if ($streamInfo['parent_id']) {
-    $rForceSource = (!is_null(ipTV_lib::$StreamingServers[SERVER_ID]['private_url_ip']) && !is_null(ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['private_url_ip']) ? ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['private_url_ip'] : ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['public_url_ip']) . 'admin/live?stream=' . intval($streamID) . '&password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . '&extension=ts';
+if (!$streamInfo['parent_id']) {
+    goto label49;
 }
+$rForceSource = (!is_null(ipTV_lib::$StreamingServers[SERVER_ID]['private_url_ip']) && !is_null(ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['private_url_ip']) ? ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['private_url_ip'] : ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['public_url_ip']) . 'admin/live?stream=' . intval($streamID) . '&password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . '&extension=ts';
+label49:
 $rData = ipTV_stream::startLLOD($streamID, $streamInfo, $streamInfo['parent_id'] ? array() : $streamArguments, $rForceSource);
 goto label644;
 label1512:
@@ -400,7 +400,7 @@ if (ipTV_lib::$settings['fps_check_type'] == 1) {
 $b4015d24aedaf0db = $d75674a646265e7b;
 goto label1847;
 label1094:
-$segment = ipTV_streaming::GetSegmentsOfPlaylist($rPlaylist, 10)[0];
+$segment = ipTV_streaming::getPlaylistSegments($rPlaylist, 10)[0];
 if (empty($segment)) {
     goto label1847;
 }
@@ -436,7 +436,7 @@ if ($rFirstRun) {
 } else {
     ipTV_streaming::streamLog($streamID, SERVER_ID, 'STREAM_RESTART', $rCurrentSource);
 }
-$segment = $rFolder . ipTV_streaming::GetSegmentsOfPlaylist($rPlaylist, 10)[0];
+$segment = $rFolder . ipTV_streaming::getPlaylistSegments($rPlaylist, 10)[0];
 $streamInfo['stream_info'] = null;
 if (file_exists($segment)) {
     $E02429d2ee600884 = ipTV_stream::probeStream($segment);
@@ -454,14 +454,29 @@ if (file_exists($segment)) {
         $rDurationChecked = time();
     }
 }
+$rCompatible = 0;
+$rAudioCodec = $rVideoCodec = $rResolution = null;
+if (!$streamInfo['stream_info']) {
+    goto label430;
+}
+$rStreamJSON = json_decode($streamInfo['stream_info'], true);
+$rCompatible = intval(ipTV_stream::checkCompatibility($rStreamJSON));
+$rAudioCodec = $rStreamJSON['codecs']['audio']['codec_name'] ?: null;
+$rVideoCodec = $rStreamJSON['codecs']['video']['codec_name'] ?: null;
+$rResolution = $rStreamJSON['codecs']['video']['height'] ?: null;
+if (!$rResolution) {
+    goto label430;
+}
+$rResolution = ipTV_stream::getNearest(array(240, 360, 480, 576, 720, 1080, 1440, 2160), $rResolution);
+label430:
 if (!$ea6de21e70c530a9 && $streamInfo['stream_info'] && $streamInfo['on_demand']) {
     if ($streamInfo['stream_info']) {
-        $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = \'%d\', `bitrate` = \'%d\', `stream_status` = 0, `stream_started` = \'%d\' WHERE `server_stream_id` = \'%d\'', $streamInfo['stream_info'], intval($rBitrate), time() - $rOffset, $streamInfo['server_stream_id']);
+        $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = \'%s\', `compatible` = \'%s\', `audio_codec` = \'%s\', `video_codec` = \'%s\', `resolution` = \'%s\', `bitrate` = \'%s\', `stream_status` = 0, `stream_started` = \'%s\' WHERE `server_stream_id` = \'%b\'', $streamInfo['stream_info'], $rCompatible, $rAudioCodec, $rVideoCodec, $rResolution, intval($rBitrate), time() - $rOffset, $streamInfo['server_stream_id']);
     } else {
-        $ipTV_db->query('UPDATE `streams_servers` SET `stream_status` = 0, `stream_info` = NULL, `compatible` = 0, `audio_codec` = NULL, `video_codec` = NULL, `resolution` = NULL, `stream_started` = \'%d\' WHERE `server_stream_id` = \'%d\'', time() - $rOffset, $streamInfo['server_stream_id']);
+        $ipTV_db->query('UPDATE `streams_servers` SET `stream_status` = 0, `stream_info` = NULL, `compatible` = 0, `audio_codec` = NULL, `video_codec` = NULL, `resolution` = NULL, `stream_started` = \'%s\' WHERE `server_stream_id` = \'%d\'', time() - $rOffset, $streamInfo['server_stream_id']);
     }
 } else {
-    $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = \'%d\', `bitrate` = \'%d\', `stream_status` = 0 WHERE `server_stream_id` = \'%d\'', $streamInfo['stream_info'], intval($rBitrate), $streamInfo['server_stream_id']);
+    $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = \'%s\', `compatible` = \'%s\', `audio_codec` = \'%s\', `video_codec` = \'%s\', `resolution` = \'%s\', `bitrate` = \'%s\', `stream_status` = 0 WHERE `server_stream_id` = \'%d\'', $streamInfo['stream_info'], $rCompatible, $rAudioCodec, $rVideoCodec, $rResolution, intval($rBitrate), $streamInfo['server_stream_id']);
 }
 if (ipTV_lib::$settings["enable_cache"]) {
     ipTV_streaming::updateStream($streamID);
@@ -475,7 +490,7 @@ if (!((ipTV_lib::$settings['audio_restart_loss'] == 1) && (300 < (time() - $rAud
     goto label617;
 }
 echo 'Checking audio...' . "\n";
-$segment = ipTV_streaming::GetSegmentsOfPlaylist($rPlaylist, 10)[0];
+$segment = ipTV_streaming::getPlaylistSegments($rPlaylist, 10)[0];
 if (!empty($segment)) {
     $E02429d2ee600884 = ipTV_stream::probeStream($rFolder . $segment);
     if ((!isset($E02429d2ee600884['codecs']['audio']) || empty($E02429d2ee600884['codecs']['audio']))) {
@@ -490,6 +505,7 @@ if (!empty($segment)) {
         if ($rMD5 != $Fcfb63b23cad3c6e) {
             $rMD5 = $Fcfb63b23cad3c6e;
             $rCheckedTime = time();
+            label1851:
             if (ipTV_lib::$settings['encrypt_hls']) {
                 foreach (glob(STREAMS_PATH . $streamID . '_*.ts.enc') as $rFile) {
                     if (!file_exists(rtrim($rFile, '.enc'))) {

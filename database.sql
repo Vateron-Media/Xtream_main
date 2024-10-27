@@ -1195,7 +1195,8 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('183', 'restart_php_fpm', 1),
 ('184', 'redis_password', ""),
 ('185', 'redis_handler', 0),
-('186', 'cache_playlists', 0);
+('186', 'cache_playlists', 0),
+('187', 'php_loopback', 1);
 -- --------------------------------------------------------
 
 --

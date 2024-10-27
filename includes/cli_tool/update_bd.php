@@ -21,6 +21,8 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('queue_loop', 
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('redis_password', '')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('redis_handler', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('cache_playlists', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('php_loopback', '1')");
+
 
 
 return true;

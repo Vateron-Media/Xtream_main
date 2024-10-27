@@ -738,7 +738,7 @@ class ipTV_streaming {
             return null;
         }
     }
-    public static function GetSegmentsOfPlaylist($playlist, $prebuffer = 0, $segmentDuration = 10) {
+    public static function getPlaylistSegments($playlist, $prebuffer = 0, $segmentDuration = 10) {
         if (file_exists($playlist)) {
             $source = file_get_contents($playlist);
             if (preg_match_all('/(.*?).ts/', $source, $rMatches)) {
