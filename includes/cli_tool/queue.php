@@ -2,7 +2,7 @@
 if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc) {
         set_time_limit(0);
-        require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
+        require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
         shell_exec('kill -9 $(ps aux | grep queue | grep -v grep | grep -v ' . getmypid() . " | awk '{print \$2}')");
         $rLastCheck = null;
         $rInterval = 60;

@@ -7,7 +7,7 @@ if ($argc) {
             $rFixCron = true;
         }
     }
-    require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
+    require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     if (file_exists(MAIN_DIR . 'status')) {

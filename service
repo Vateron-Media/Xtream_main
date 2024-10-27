@@ -24,12 +24,12 @@ start() {
   sudo -u xtreamcodes $SCRIPT/bin/nginx/sbin/nginx >/dev/null 2>/dev/null
   sudo -u xtreamcodes $SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp >/dev/null 2>/dev/null
   sudo -u xtreamcodes $SCRIPT/bin/daemons.sh
-  sudo $SCRIPT/bin/php/bin/php $SCRIPT/tools/startup.php
-  sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/tools/signals.php >/dev/null 2>/dev/null &
-  sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/tools/watchdog.php >/dev/null 2>/dev/null &
-  sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/tools/queue.php >/dev/null 2>/dev/null &
-  if [ -f $SCRIPT/tools/cache_handler.php ]; then
-    sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/tools/cache_handler.php >/dev/null 2>/dev/null &
+  sudo $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/startup.php
+  sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/signals.php >/dev/null 2>/dev/null &
+  sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/watchdog.php >/dev/null 2>/dev/null &
+  sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/queue.php >/dev/null 2>/dev/null &
+  if [ -f $SCRIPT/includes/cli_tool/cache_handler.php ]; then
+    sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/cache_handler.php >/dev/null 2>/dev/null &
   fi
   echo 'Running in foreground...'
   sleep infinity

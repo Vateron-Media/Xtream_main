@@ -2,7 +2,7 @@
 if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc && $argc > 1) {
         register_shutdown_function('shutdown');
-        require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
+        require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
         $rStreamID = intval($argv[1]);
         checkRunning($rStreamID);
         set_time_limit(0);

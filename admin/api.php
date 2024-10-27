@@ -1346,7 +1346,7 @@ if (isset($_GET["action"])) {
                     unlink(CACHE_TMP_PATH . 'settings');
                 }
 
-                exec('pgrep -u xui redis-server', $rRedis);
+                exec('pgrep -u xtreamcodes redis-server', $rRedis);
 
                 if (count($rRedis) < 0 && !is_numeric($rRedis[0])) {
                     $rPID = intval($rRedis[0]);
@@ -1355,7 +1355,7 @@ if (isset($_GET["action"])) {
 
                 shell_exec(BIN_PATH . 'redis/redis-server ' . BIN_PATH . 'redis/redis.conf > /dev/null 2>/dev/null &');
                 sleep(1);
-                exec("pgrep -U xui | xargs ps | grep signals | awk '{print \$1}'", $rPID);
+                exec("pgrep -U xtreamcodes | xargs ps | grep signals | awk '{print \$1}'", $rPID);
 
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);
@@ -1363,7 +1363,7 @@ if (isset($_GET["action"])) {
                     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'signals.php > /dev/null 2>/dev/null &');
                 }
 
-                exec("pgrep -U xui | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
+                exec("pgrep -U xtreamcodes | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
 
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);

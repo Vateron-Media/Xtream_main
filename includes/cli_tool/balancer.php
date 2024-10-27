@@ -7,7 +7,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
             set_time_limit(0);
             cli_set_process_title('XtreamCodes Install[' . $rServerID . ']');
             register_shutdown_function('shutdown');
-            require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+            require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
             unlink(CACHE_TMP_PATH . 'servers');
             ipTV_lib::$StreamingServers = ipTV_lib::getServers();
             $rPort = intval($argv[2]);

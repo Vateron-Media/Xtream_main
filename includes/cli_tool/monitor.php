@@ -16,15 +16,15 @@ function checkRunning($streamID) {
         }
     }
 }
-// if ((posix_getpwuid(posix_geteuid())['name'] != 'xtreamcodes')) {
-//     exit('Please run as XtreamCodes!' . "\n");
-// }
+if ((posix_getpwuid(posix_geteuid())['name'] != 'xtreamcodes')) {
+    exit('Please run as XtreamCodes!' . "\n");
+}
 if ((!@$argc || ($argc <= 1))) {
     exit(0);
 }
 $streamID = intval($argv[1]);
 $restart = !empty($argv[2]);
-require str_replace('\\', '/', dirname($argv[0])) . "/../wwwdir/init.php";
+require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
 checkRunning($streamID);
 set_time_limit(0);
 cli_set_process_title('XtreamCodes[' . $streamID . ']');
@@ -212,7 +212,7 @@ label1:
 if ($streamInfo['parent_id']) {
     $rForceSource = (!is_null(ipTV_lib::$StreamingServers[SERVER_ID]['private_url_ip']) && !is_null(ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['private_url_ip']) ? ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['private_url_ip'] : ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['public_url_ip']) . 'admin/live?stream=' . intval($streamID) . '&password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . '&extension=ts';
 }
-$rData = XtreamCodes::startLLOD($streamID, $streamInfo, $streamInfo['parent_id'] ? array() : $streamArguments, $rForceSource);
+$rData = ipTV_stream::startLLOD($streamID, $streamInfo, $streamInfo['parent_id'] ? array() : $streamArguments, $rForceSource);
 goto label644;
 label1512:
 if ($rForceSource) {
@@ -224,7 +224,7 @@ $rData = ipTV_stream::startStream($streamID, false, $Ea84d0933a1ef2f0, true);
 label644:
 goto label1131;
 label1127:
-$rData = XtreamCodes::startLoopback($streamID);
+$rData = ipTV_stream::startLoopback($streamID);
 label1131:
 if ((is_numeric($rData) && ($rData == 0))) {
     $E9d347a502b13abd = true;
@@ -490,7 +490,6 @@ if (!empty($segment)) {
         if ($rMD5 != $Fcfb63b23cad3c6e) {
             $rMD5 = $Fcfb63b23cad3c6e;
             $rCheckedTime = time();
-            label1851:
             if (ipTV_lib::$settings['encrypt_hls']) {
                 foreach (glob(STREAMS_PATH . $streamID . '_*.ts.enc') as $rFile) {
                     if (!file_exists(rtrim($rFile, '.enc'))) {

@@ -1,6 +1,6 @@
 <?php
 if ($argc) {
-    require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+    require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
     cli_set_process_title('XtreamCodes[Server WatchDog]');
     shell_exec('kill $(ps aux | grep \'Server WatchDog\' | grep -v grep | grep -v ' . getmypid() . " | awk '{print \$2}')");
     $rInterval = (intval(ipTV_lib::$settings['online_capacity_interval']) ?: 10);

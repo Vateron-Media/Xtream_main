@@ -79,7 +79,7 @@ if (@$argc) {
         $stream_minutes = intval(abs($argv[2]));
         killStreamProcess($stream_id);
         cli_set_process_title("XtreamCodesDelay[" . $stream_id . "]");
-        require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
+        require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
         set_time_limit(0);
 
         $ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = '%d' WHERE t1.id = '%d'", SERVER_ID, $stream_id);

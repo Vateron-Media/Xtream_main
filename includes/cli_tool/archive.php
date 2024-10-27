@@ -15,7 +15,7 @@ if (@$argc) {
     if ($argc == 2) {
         define("FETCH_BOUQUETS", false);
         $stream_id = intval($argv[1]);
-        require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
+        require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
         cli_set_process_title("TVArchive[" . $stream_id . "]");
         if (!file_exists(ARCHIVE_PATH . $stream_id)) {
             mkdir(ARCHIVE_PATH . $stream_id);

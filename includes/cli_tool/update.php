@@ -2,7 +2,7 @@
 set_time_limit(0);
 if ($argc && count($argv) == 2) {
     register_shutdown_function('shutdown');
-    require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
+    require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
     $rCommand = $argv[1];
     loadcli();
 } else {
