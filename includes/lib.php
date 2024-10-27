@@ -120,7 +120,7 @@ class ipTV_lib {
     public static function GetIspAddon($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('customisp', 60);
-            if (!empty($cache)) {
+            if ($cache !== false) {
                 return $cache;
             }
         }
@@ -147,7 +147,7 @@ class ipTV_lib {
     public static function GetBlockedUserAgents($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('blocked_ua', 20);
-            if (!empty($cache)) {
+            if ($cache !== false) {
                 return $cache;
             }
         }
@@ -165,7 +165,7 @@ class ipTV_lib {
     public static function getBouquets($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('bouquets', 60);
-            if (!empty($cache)) {
+            if ($cache !== false) {
                 return $cache;
             }
         }
@@ -198,7 +198,7 @@ class ipTV_lib {
     public static function getBlockedIPs($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('blocked_ips', 20);
-            if (!empty($cache)) {
+            if ($cache !== false) {
                 return $cache;
             }
         }
@@ -218,7 +218,7 @@ class ipTV_lib {
     public static function getBlockedISP($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('blocked_isp', 20);
-            if (!empty($cache)) {
+            if ($cache !== false) {
                 return $cache;
             }
         }
@@ -246,7 +246,7 @@ class ipTV_lib {
     public static function getSettings($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('settings', 20);
-            if (!empty($cache)) {
+            if ($cache !== false) {
                 return $cache;
             }
         }
@@ -313,7 +313,7 @@ class ipTV_lib {
         }
         if (!$rForce) {
             $cache = self::getCache('categories', 20);
-            if (!empty($cache)) {
+            if ($cache !== false) {
                 return $cache;
             }
         }
@@ -339,7 +339,7 @@ class ipTV_lib {
     public static function getServers($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('servers', 20);
-            if (!empty($cache)) {
+            if ($cache !== false) {
                 return $cache;
             }
         }
@@ -381,9 +381,9 @@ class ipTV_lib {
         return $servers;
     }
     public static function getAllowedIPs() {
-        $rCache = self::getCache('allowed_ips', 60);
-        if (!empty($cache)) {
-            return $rCache;
+        $cache = self::getCache('allowed_ips', 60);
+        if ($cache !== false) {
+            return $cache;
         }
 
         $IPs = array('127.0.0.1', $_SERVER['SERVER_ADDR']);
@@ -453,7 +453,7 @@ class ipTV_lib {
      * 
      * @param string $cache The cache key. 
      * @param int|null $rSeconds The expiration time in seconds. 
-     * @return mixed|null The cached data if it exists and is not expired, null otherwise. 
+     * @return mixed|false The cached data if it exists and is not expired, null otherwise. 
      */
     public static function getCache($cache, $rSeconds = null) {
         if (file_exists(CACHE_TMP_PATH . $cache)) {
@@ -462,7 +462,7 @@ class ipTV_lib {
                 return igbinary_unserialize($data);
             }
         }
-        return null;
+        return false;
     }
     public static function mc_decrypt($data, $key) {
         $data = explode("|", $data . "|");

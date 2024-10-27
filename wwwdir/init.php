@@ -1,12 +1,31 @@
 <?php
 require_once 'constants.php';
-require INCLUDES_PATH . 'functions.php';
-require INCLUDES_PATH . 'lib.php';
-require INCLUDES_PATH . 'pdo.php';
-require INCLUDES_PATH . 'streaming.php';
-require INCLUDES_PATH . 'servers.php';
-require INCLUDES_PATH . 'stream.php';
-require IPTV_ROOT_PATH . 'langs/English.php';
+require_once INCLUDES_PATH . 'functions.php';
+require_once INCLUDES_PATH . 'lib.php';
+require_once INCLUDES_PATH . 'pdo.php';
+require_once INCLUDES_PATH . 'streaming.php';
+require_once INCLUDES_PATH . 'servers.php';
+require_once INCLUDES_PATH . 'stream.php';
+require_once IPTV_ROOT_PATH . 'langs/English.php';
+
+if (!function_exists('getallheaders')) {
+    function getallheaders() {
+        $rHeaders = array();
+
+        foreach ($_SERVER as $rName => $rValue) {
+            if (substr($rName, 0, 5) == 'HTTP_') {
+            } else {
+                $rHeaders[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($rName, 5)))))] = $rValue;
+            }
+        }
+
+        return $rHeaders;
+    }
+}
+
+if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
+    generate404();
+}
 
 $_INFO = array();
 
@@ -22,13 +41,11 @@ $ipTV_db = new ipTV_db($_INFO['username'], $_INFO['password'], $_INFO['database'
 ipTV_lib::$ipTV_db = &$ipTV_db;
 ipTV_streaming::$ipTV_db = &$ipTV_db;
 ipTV_stream::$ipTV_db = &$ipTV_db;
-ipTV_lib::init();
-ipTV_lib::connectRedis();
 
-$FILES = array('live.php', 'clients_movie.php', 'timeshift.php', 'admin_live.php', 'admin_movie.php', 'xmltv.php', 'panel_api.php', 'enigma2.php', 'portal.php', 'get.php');
+$rFilename = strtolower(basename(get_included_files()[0], '.php'));
 
-if (empty($argc)) {
-    if (!in_array(basename($_SERVER['SCRIPT_FILENAME']), $FILES)) {
-        CheckFlood();
-    }
+if (!in_array($rFilename, array('enigma2', 'epg', 'playlist', 'api', 'xplugin', 'live', 'thumb', 'timeshift', 'vod')) || $argc) {
+    ipTV_lib::init();
+} else {
+    ipTV_lib::init(true);
 }
