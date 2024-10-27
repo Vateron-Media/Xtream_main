@@ -46,7 +46,7 @@ if (isset($_POST["submit_server"])) {
             $db->query("GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO `" . $userBD . "`@`" . $rArray["server_ip"] . "` WITH GRANT OPTION;");
             $db->query("FLUSH PRIVILEGES;");
             // Run lb installer
-            $rCommand = '/home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/tools/balancer.php ' . intval($rInsertID) . ' ' . intval($_POST["ssh_port"]) . ' ' . escapeshellarg($_POST['root_username']) . ' ' . escapeshellarg($_POST['root_password']) . ' ' . $rArray["http_broadcast_port"] . ' ' . $rArray["https_broadcast_port"] . ' ' . intval($rUpdateSysctl) . ' > "/home/xtreamcodes/install/' . intval($rInsertID) . '.install" 2>/dev/null &';
+            $rCommand = '/home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/includes/cli_tool/balancer.php ' . intval($rInsertID) . ' ' . intval($_POST["ssh_port"]) . ' ' . escapeshellarg($_POST['root_username']) . ' ' . escapeshellarg($_POST['root_password']) . ' ' . $rArray["http_broadcast_port"] . ' ' . $rArray["https_broadcast_port"] . ' ' . intval($rUpdateSysctl) . ' > "/home/xtreamcodes/install/' . intval($rInsertID) . '.install" 2>/dev/null &';
 
             shell_exec($rCommand);
             header("Location: ./servers.php");

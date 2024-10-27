@@ -36,12 +36,11 @@ function loadCron() {
                 exec('sudo rm -rf ' . SIGNALS_PATH . '*');
             }
         }
-        foreach (array(CACHE_TMP_PATH, CONS_TMP_PATH, DIVERGENCE_TMP_PATH, FLOOD_TMP_PATH, STALKER_TMP_PATH, LOGS_TMP_PATH, CRONS_TMP_PATH, STREAMS_TMP_PATH, USER_TMP_PATH, SERIES_TMP_PATH, PLAYLIST_PATH, MOVIES_IMAGES, ENIGMA2_PLUGIN_DIR, EPG_PATH, VOD_PATH) as $rPath) {
+        foreach (array(EPG_PATH, VOD_PATH, ARCHIVE_PATH, CREATED_PATH, DELAY_PATH, VIDEO_PATH, PLAYLIST_PATH, CONS_TMP_PATH, CRONS_TMP_PATH, CACHE_TMP_PATH, DIVERGENCE_TMP_PATH, FLOOD_TMP_PATH, STALKER_TMP_PATH, SIGNALS_TMP_PATH, LOGS_TMP_PATH, CIDR_TMP_PATH, STREAMS_TMP_PATH, USER_TMP_PATH, SERIES_TMP_PATH) as $rPath) {
             if (!file_exists($rPath)) {
                 mkdir($rPath);
             }
         }
-
         ipTV_lib::setCache('settings', ipTV_lib::getSettings(true));
         ipTV_lib::setCache('bouquets', ipTV_lib::getBouquets(true));
         $rServers = ipTV_lib::getServers(true);
@@ -49,10 +48,9 @@ function loadCron() {
         ipTV_lib::setCache('servers', $rServers);
         ipTV_lib::setCache('blocked_ua', ipTV_lib::GetBlockedUserAgents(true));
         ipTV_lib::setCache('customisp', ipTV_lib::GetIspAddon(true));
-        ipTV_lib::setCache('blocked_ips', ipTV_lib::getBlockedIPs(true));
         ipTV_lib::setCache('blocked_isp', ipTV_lib::getBlockedISP(true));
+        ipTV_lib::setCache('blocked_ips', ipTV_lib::getBlockedIPs(true));
         ipTV_lib::setCache('categories', ipTV_lib::getCategories(null, true));
-
 
         if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
             $rOutputFormats = array();
@@ -61,14 +59,21 @@ function loadCron() {
                 $rOutputFormats[] = $rRow;
             }
             file_put_contents(CACHE_TMP_PATH . 'access_output', igbinary_serialize($rOutputFormats));
-
-            // $rRTMPIPs = array();
-            // $ipTV_db->query('SELECT `ip`, `password`, `push`, `pull` FROM `rtmp_ips`');
-            // foreach ($ipTV_db->get_rows() as $rRow) {
-            //     $rRTMPIPs[gethostbyname($rRow['ip'])] = array('password' => $rRow['password'], 'push' => boolval($rRow['push']), 'pull' => boolval($rRow['pull']));
-            // }
-            // file_put_contents(CACHE_TMP_PATH . 'rtmp_ips', igbinary_serialize($rRTMPIPs));
-
+            $rRTMPIPs = array();
+            $ipTV_db->query('SELECT `ip`, `password`, `push`, `pull` FROM `rtmp_ips`');
+            foreach ($ipTV_db->get_rows() as $rRow) {
+                $rRTMPIPs[gethostbyname($rRow['ip'])] = array('password' => $rRow['password'], 'push' => boolval($rRow['push']), 'pull' => boolval($rRow['pull']));
+            }
+            file_put_contents(CACHE_TMP_PATH . 'rtmp_ips', igbinary_serialize($rRTMPIPs));
+            if (file_exists(BIN_PATH . 'maxmind/cidr.db')) {
+                exec('ls ' . CIDR_TMP_PATH . ' | wc -l', $rOutput);
+                if (intval($rOutput[0]) == 0) {
+                    $rDatabase = json_decode(file_get_contents(BIN_PATH . 'maxmind/cidr.db'), true);
+                    foreach ($rDatabase as $rASN => $rData) {
+                        file_put_contents(CIDR_TMP_PATH . $rASN, json_encode($rData));
+                    }
+                }
+            }
             $rChannelOrder = array();
             if (ipTV_lib::$settings['channel_number_type'] == 'manual') {
                 $ipTV_db->query('SELECT `id`, `order` FROM `streams` ORDER BY `order` ASC;');
@@ -168,6 +173,20 @@ function loadCron() {
                         }
                     }
                 }
+                // if (ipTV_lib::$settings['vod_sort_newest']) {
+                //     $rStreamIDs['movies'] = array();
+                //     $rStreamIDs['episodes'] = array();
+                //     $ipTV_db->query('SELECT `type`, `id` FROM `streams` WHERE `type` IN (2,5) ORDER BY `added` DESC, `id` DESC;');
+                //     foreach ($ipTV_db->get_rows() as $rRow) {
+                //         $rStreamIDs[array(2 => 'movies', 5 => 'episodes')[$rRow['type']]][] = $rRow['id'];
+                //     }
+                //     $rSeriesOrder = array();
+                //     $ipTV_db->query('SELECT `id`, (SELECT MAX(`streams`.`added`) FROM `streams_episodes` LEFT JOIN `streams` ON `streams`.`id` = `streams_episodes`.`stream_id` WHERE `streams_episodes`.`series_id` = `streams_series`.`id`) AS `last_modified_stream` FROM `streams_series` ORDER BY `last_modified_stream` DESC, `last_modified` DESC, `id` DESC;');
+                //     foreach ($ipTV_db->get_rows() as $rRow) {
+                //         $rSeriesOrder[] = intval($rRow['id']);
+                //     }
+                //     file_put_contents(CACHE_TMP_PATH . 'series_order', igbinary_serialize($rSeriesOrder));
+                // }
                 foreach (array('channels', 'radios', 'movies', 'episodes') as $rKey) {
                     foreach ($rStreamIDs[$rKey] as $rStreamID) {
                         $rChannelOrder[] = intval($rStreamID);

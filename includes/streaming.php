@@ -1239,4 +1239,13 @@ class ipTV_streaming {
         unset($rBouquetMap);
         return $rReturn;
     }
+    public static function getEnded() {
+        if (!is_object(ipTV_lib::$redis)) {
+            ipTV_lib::connectRedis();
+        }
+        $rKeys = ipTV_lib::$redis->sMembers('ENDED');
+        if (count($rKeys) > 0) {
+            return array_map('igbinary_unserialize', ipTV_lib::$redis->mGet($rKeys));
+        }
+    }
 }

@@ -98,6 +98,7 @@ define('STALKER_TMP_PATH', TMP_PATH . 'stalker/');
 define('LOGS_TMP_PATH', TMP_PATH . 'logs/');
 define('CRONS_TMP_PATH', TMP_PATH . 'crons/');
 define('SIGNALS_TMP_PATH', TMP_PATH . 'signals/');
+define('CIDR_TMP_PATH', TMP_PATH . 'cidr/');
 // -------------------
 
 // CACHE FOLDERS
@@ -125,10 +126,6 @@ define('FFMPEG_FONTS_PATH', BIN_PATH . 'free-sans.ttf');
 define('OPENSSL_EXTRA', '5gd46z5s4fg6sd8f4gs6');
 define('RESTART_TAKE_CACHE', 5);
 define('MONITOR_CALLS', 3);
-// -------------------
-
-// Temporary variables that should be added to the panel settings
-define('CACHE_PLAYLIST', 60);
 // -------------------
 
 if (!defined('FETCH_BOUQUETS')) {

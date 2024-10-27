@@ -6,9 +6,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 0);
-        $rSplit = 1000;
-        $rThreadCount = (ipTV_lib::$settings['cache_thread_count'] ?: 10);
         ipTV_lib::$settings = ipTV_lib::getSettings(true);
+        $rSplit = 10000;
+        $rThreadCount = (ipTV_lib::$settings['cache_thread_count'] ?: 10);
         $rGroupStart = $rGroupMax = $rType = null;
         if (1 < count($argv)) {
             $rType = $argv[1];

@@ -879,11 +879,15 @@ CREATE TABLE IF NOT EXISTS `queue` (
 
 CREATE TABLE IF NOT EXISTS `rtmp_ips` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(255) NOT NULL,
-  `notes` text NOT NULL,
+  `ip` varchar(255) DEFAULT NULL,
+  `password` varchar(128) DEFAULT NULL,
+  `notes` mediumtext,
+  `push` tinyint(1) DEFAULT NULL,
+  `pull` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ip` (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 
 -- --------------------------------------------------------
 
@@ -1190,7 +1194,8 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('182', 'bruteforce_frequency', '300'),
 ('183', 'restart_php_fpm', 1),
 ('184', 'redis_password', ""),
-('185', 'redis_handler', 0);
+('185', 'redis_handler', 0),
+('186', 'cache_playlists', 0);
 -- --------------------------------------------------------
 
 --
@@ -1328,6 +1333,9 @@ CREATE TABLE IF NOT EXISTS `streams` (
   `external_push` mediumtext NOT NULL,
   `delay_minutes` int(11) NOT NULL DEFAULT 0,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `fps_restart` tinyint(1) DEFAULT '0',
+  `vframes_server_id` int(11) DEFAULT '0',
+  `vframes_pid` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `type` (`type`),
   KEY `created_channel_location` (`created_channel_location`),
