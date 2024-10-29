@@ -49,16 +49,7 @@ if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos[
 }
 
 $detect = new Mobile_Detect;
-$rClientFilters = array(
-    "NOT_IN_BOUQUET" => "Not in Bouquet",
-    "CON_SVP" => "Connection Issue",
-    "ISP_LOCK_FAILED" => "ISP Lock Failed",
-    "USER_DISALLOW_EXT" => "Extension Disallowed",
-    "AUTH_FAILED" => "Authentication Failed",
-    "USER_EXPIRED" => "User Expired",
-    "USER_DISABLED" => "User Disabled",
-    "USER_BAN" => "User Banned"
-);
+
 
 
 

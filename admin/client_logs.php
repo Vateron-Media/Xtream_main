@@ -82,7 +82,7 @@ if ($rSettings["sidebar"]) { ?>
                                                 <th><?= $_["username"] ?></th>
                                                 <th><?= $_["stream"] ?></th>
                                                 <th><?= $_["reason"] ?></th>
-                                                <th><?= $_["type"] ?></th>
+                                                <th><?= $_["user_agent"] ?></th>
                                                 <th class="text-center"><?= $_["ip"] ?></th>
                                                 <th class="text-center"><?= $_["date"] ?></th>
                                             </tr>

@@ -2010,7 +2010,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `client_logs`.`id`, `client_logs`.`user_id`, `client_logs`.`stream_id`, `streams`.`stream_display_name`, `users`.`username`, `client_logs`.`client_status`, `client_logs`.`query_string`, `client_logs`.`extra_data`, `client_logs`.`ip`, FROM_UNIXTIME(`client_logs`.`date`) AS `date` FROM `client_logs` LEFT JOIN `streams` ON `streams`.`id` = `client_logs`.`stream_id` LEFT JOIN `users` ON `users`.`id` = `client_logs`.`user_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `client_logs`.`id`, `client_logs`.`user_id`, `client_logs`.`stream_id`, `streams`.`stream_display_name`, `users`.`username`, `client_logs`.`client_status`, `client_logs`.`query_string`, `client_logs`.`user_agent`, `client_logs`.`ip`, FROM_UNIXTIME(`client_logs`.`date`) AS `date` FROM `client_logs` LEFT JOIN `streams` ON `streams`.`id` = `client_logs`.`stream_id` LEFT JOIN `users` ON `users`.`id` = `client_logs`.`user_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $rResult = $db->query($rQuery);
         if (($rResult) && ($rResult->num_rows > 0)) {
             while ($rRow = $rResult->fetch_assoc()) {
@@ -2019,7 +2019,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                 } else {
                     $rUsername = $rRow["username"];
                 }
-                $rReturn["data"][] = array($rRow["id"], $rUsername, $rRow["stream_display_name"], $rRow["client_status"], $rRow['extra_data'], "<a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $rRow["ip"] . "'>" . $rRow["ip"] . "</a>", $rRow["date"]);
+                $rReturn["data"][] = array($rRow["id"], $rUsername, $rRow["stream_display_name"], $clientFilters[$rRow['client_status']], $rRow['user_agent'], "<a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $rRow["ip"] . "'>" . $rRow["ip"] . "</a>", $rRow["date"]);
             }
         }
     }
