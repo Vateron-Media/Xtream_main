@@ -184,7 +184,8 @@ function loadCron() {
         if (ipTV_lib::$settings['kill_rogue_ffmpeg']) {
             exec("ps aux | grep -v grep | grep '/*_.m3u8' | awk '{print \$2}'", $rFFMPEG);
             foreach ($rFFMPEG as $PID) {
-                if ((is_numeric($PID) && 0 < intval($PID)) || !in_array($PID, $activePIDs)) {
+                $activePIDsMap = array_flip($activePIDs);
+                if (is_numeric($PID) && intval($PID) > 0 && !isset($activePIDsMap[$PID])) {
                     echo 'Kill Roque PID: ' . $PID . "\n";
                     shell_exec('kill -9 ' . $PID . ';');
                 }
