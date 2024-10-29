@@ -261,7 +261,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 data-toggle="select2">
                                                                 <option value="" selected><?= $_["all_categories"] ?>
                                                                 </option>
-                                                                <?php foreach (getCategories("movie") as $rCategory) { ?>
+                                                                <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
                                                                                                                 echo " selected";
                                                                                                             } ?>><?= $rCategory["category_name"] ?>
@@ -335,7 +335,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <option value="" selected><?= $_["all_categories"] ?>
                                                                 </option>
                                                                 <option value="-1"><?= $_["no_tmdb_match"] ?></option>
-                                                                <?php foreach (getCategories("series") as $rCategory) { ?>
+                                                                <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
                                                                                                                 echo " selected";
                                                                                                             } ?>><?= $rCategory["category_name"] ?>

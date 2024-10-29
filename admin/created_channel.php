@@ -5,7 +5,7 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "create_channel")) 
     exit;
 }
 
-$rCategories = getCategories("live");
+$rCategories = getCategories_admin("live");
 $rTranscodeProfiles = getTranscodeProfiles();
 
 if (isset($_POST["submit_stream"])) {
@@ -513,7 +513,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-toggle="select2">
                                                                         <option value="" selected><?= $_["no_filter"] ?>
                                                                         </option>
-                                                                        <?php foreach (getCategories("movie") as $rCategory) { ?>
+                                                                        <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                             <option value="0:<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?>
                                                                             </option>

@@ -5,7 +5,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_sedits_vod")))
     exit;
 }
 
-$rCategories = getCategories("movie");
+$rCategories = getCategories_admin("movie");
 
 if (isset($_POST["submit_stream"])) {
     $rArray = array();

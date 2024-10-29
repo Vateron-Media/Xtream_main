@@ -1268,7 +1268,7 @@ if (isset($_GET["action"])) {
             }
         case "enable_cache":
             if (hasPermissions('adv', 'backups')) {
-                setSettings(["enable_cache" => 1]);
+                ipTV_lib::setSettings(["enable_cache" => 1]);
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php');
 
@@ -1284,7 +1284,7 @@ if (isset($_GET["action"])) {
 
         case "disable_cache":
             if (hasPermissions('adv', 'backups')) {
-                setSettings(["enable_cache" => 0]);
+                ipTV_lib::setSettings(["enable_cache" => 0]);
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache.php');
                 echo json_encode(array('result' => true));
@@ -1303,7 +1303,7 @@ if (isset($_GET["action"])) {
 
         case 'disable_handler':
             if (hasPermissions('adv', 'backups')) {
-                setSettings(["redis_handler" => 0]);
+                ipTV_lib::setSettings(["redis_handler" => 0]);
 
                 if (file_exists(CACHE_TMP_PATH . 'settings')) {
                     unlink(CACHE_TMP_PATH . 'settings');
@@ -1340,7 +1340,7 @@ if (isset($_GET["action"])) {
 
         case 'enable_handler':
             if (hasPermissions('adv', 'backups')) {
-                setSettings(["redis_handler" => 1]);
+                ipTV_lib::setSettings(["redis_handler" => 1]);
 
                 if (file_exists(CACHE_TMP_PATH . 'settings')) {
                     unlink(CACHE_TMP_PATH . 'settings');

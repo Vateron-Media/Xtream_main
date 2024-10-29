@@ -8,7 +8,7 @@ if ((isset($_GET["import"])) && (!hasPermissions("adv", "import_movies"))) {
     exit;
 }
 
-$rCategories = getCategories("movie");
+$rCategories = getCategories_admin("movie");
 $rTranscodeProfiles = getTranscodeProfiles();
 
 if (isset($_POST["submit_movie"])) {
@@ -612,7 +612,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control select2-multiple"
                                                                         data-toggle="select2" multiple="multiple"
                                                                         data-placeholder="Choose...">
-                                                                        <?php foreach (getCategories('movie') as $rCategory): ?>
+                                                                        <?php foreach (getCategories_admin('movie') as $rCategory): ?>
                                                                             <option <?php if (isset($rMovie) && in_array(intval($rCategory['id']), json_decode($rMovie['category_id'], true))) {
                                                                                         echo 'selected ';
                                                                                     } ?>value="<?php echo $rCategory['id']; ?>">

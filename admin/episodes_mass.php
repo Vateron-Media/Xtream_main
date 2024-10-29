@@ -5,7 +5,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_sedits"))) {
     exit;
 }
 
-$rCategories = getCategories("series");
+$rCategories = getCategories_admin("series");
 $rSeries = getSeries();
 
 if (isset($_POST["submit_stream"])) {

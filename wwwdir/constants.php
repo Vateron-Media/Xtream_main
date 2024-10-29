@@ -154,7 +154,7 @@ set_exception_handler('log_exception');
 register_shutdown_function('log_fatal');
 
 if (PHP_ERRORS) {
-    error_reporting(1 | 4);
+    error_reporting(5);
     ini_set('display_errors', true);
     ini_set('display_startup_errors', true);
 } else {

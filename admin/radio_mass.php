@@ -5,7 +5,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_edit_radio")))
     exit;
 }
 
-$rCategories = getCategories("radio");
+$rCategories = getCategories_admin("radio");
 
 if (isset($_POST["submit_radio"])) {
     $rArray = array();

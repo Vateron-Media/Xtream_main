@@ -8,7 +8,7 @@ if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "radio"))) {
     exit;
 }
 
-$rCategories = getCategories("radio");
+$rCategories = getCategories_admin("radio");
 
 if ($rSettings["sidebar"]) {
     include "header_sidebar.php";

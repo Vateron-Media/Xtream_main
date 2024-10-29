@@ -190,7 +190,7 @@ if ($_GET["id"] == "mag_events") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "create_channel"))) {
         exit;
     }
-    $rCategoriesVOD = getCategories("movie");
+    $rCategoriesVOD = getCategories_admin("movie");
     $rSeriesList = getEpisodeParents();
     $table = 'streams';
     $get = $_GET["id"];
@@ -240,7 +240,7 @@ if ($_GET["id"] == "mag_events") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
         exit;
     }
-    $rCategoriesVOD = getCategories("movie");
+    $rCategoriesVOD = getCategories_admin("movie");
     $table = 'streams';
     $get = $_GET["id"];
     $primaryKey = 'id';
@@ -273,7 +273,7 @@ if ($_GET["id"] == "mag_events") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
         exit;
     }
-    $rCategoriesVOD = getCategories("series");
+    $rCategoriesVOD = getCategories_admin("series");
     $table = 'series';
     $get = $_GET["id"];
     $primaryKey = 'id';
@@ -306,7 +306,7 @@ if ($_GET["id"] == "mag_events") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
         exit;
     }
-    $rCategoriesVOD = getCategories("radio");
+    $rCategoriesVOD = getCategories_admin("radio");
     $table = 'streams';
     $get = $_GET["id"];
     $primaryKey = 'id';

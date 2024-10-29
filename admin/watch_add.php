@@ -264,7 +264,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                         echo "selected ";
                                                                                     }
                                                                                 } ?>value="0"><?= $_["do_not_use"] ?></option>
-                                                                        <?php foreach (getCategories("movie") as $rCategory) { ?>
+                                                                        <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
                                                                                         if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
                                                                                             echo "selected ";
@@ -289,7 +289,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                         echo "selected ";
                                                                                     }
                                                                                 } ?>value="0"><?= $_["do_not_use"] ?></option>
-                                                                        <?php foreach (getCategories("series") as $rCategory) { ?>
+                                                                        <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
                                                                                         if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
                                                                                             echo "selected ";
@@ -326,7 +326,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                         echo "selected ";
                                                                                     }
                                                                                 } ?>value="0"><?= $_["do_not_use"] ?></option>
-                                                                        <?php foreach (getCategories("movie") as $rCategory) { ?>
+                                                                        <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
                                                                                         if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
                                                                                             echo "selected ";
@@ -351,7 +351,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                         echo "selected ";
                                                                                     }
                                                                                 } ?>value="0"><?= $_["do_not_use"] ?></option>
-                                                                        <?php foreach (getCategories("series") as $rCategory) { ?>
+                                                                        <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
                                                                                         if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
                                                                                             echo $_["checked "];

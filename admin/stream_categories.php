@@ -19,7 +19,7 @@ if (isset($_POST["categories"])) {
     }
 }
 
-$rCategories = array(1 => getCategories(), 2 => getCategories("movie"), 3 => getCategories("series"), 4 => getCategories("radio"));
+$rCategories = array(1 => getCategories_admin(), 2 => getCategories_admin("movie"), 3 => getCategories_admin("series"), 4 => getCategories_admin("radio"));
 $rMainCategories = array(1 => array(), 2 => array(), 3 => array());
 $rSubCategories = array(1 => array(), 2 => array(), 3 => array(), 4 => array());
 

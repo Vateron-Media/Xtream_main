@@ -8,7 +8,7 @@ if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "series"))) {
     exit;
 }
 
-$rCategories = getCategories("series");
+$rCategories = getCategories_admin("series");
 
 if ($rSettings["sidebar"]) {
     include "header_sidebar.php";

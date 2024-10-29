@@ -15,6 +15,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 		require str_replace('\\', '/', dirname($argv[0])) . '/wwwdir/init.php';
 		ini_set('display_startup_errors', 1);
 		ini_set('display_errors', 1);
+		error_reporting(32767);
 
 		if (!$rFirstRun) {
 			echo "\n" . 'Status' . "\n" . '------------------------------' . "\n";
@@ -148,7 +149,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 
 			if ($rPassword == '#PASSWORD#') {
 				$rWrite = true;
-				$rPassword = generateString(512);
+				$rPassword = ipTV_lib::generateString(512);
 				$rConfig = str_replace('#PASSWORD#', $rPassword, $rConfig);
 				echo 'Generating a new Redis password' . "\n\n";
 			}
@@ -267,18 +268,4 @@ function ServerInfo() {
 	}
 
 	return $rServers;
-}
-
-function generateString($rLength = 10) {
-	$rCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789qwertyuiopasdfghjklzxcvbnm';
-	$rString = '';
-	$rMax = strlen($rCharacters) - 1;
-	$i = 0;
-
-	while ($i < $rLength) {
-		$rString .= $rCharacters[rand(0, $rMax)];
-		$i++;
-	}
-
-	return $rString;
 }

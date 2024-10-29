@@ -5,7 +5,7 @@ include "/home/xtreamcodes/admin/tmdb_release.php";
 
 $rAdminSettings = getAdminSettings();
 $rSettings = getSettings();
-$rCategories = getCategories();
+$rCategories = getCategories_admin();
 $rServers = getStreamingServers();
 
 $rResult = $db->query("SELECT * FROM `watch_settings`;");

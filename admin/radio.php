@@ -393,7 +393,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <label class="col-md-4 col-form-label" for="category_id"><?= $_["category_name"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <select name="category_id" id="category_id" class="form-control" data-toggle="select2">
-                                                                        <?php foreach (getCategories("radio") as $rCategory) { ?>
+                                                                        <?php foreach (getCategories_admin("radio") as $rCategory) { ?>
                                                                             <option <?php if (isset($rStation)) {
                                                                                         if (intval($rStation["category_id"]) == intval($rCategory["id"])) {
                                                                                             echo "selected ";

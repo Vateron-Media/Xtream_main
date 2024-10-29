@@ -282,7 +282,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <option value="" selected>
                                                                                 <?= $_["all_categories"] ?>
                                                                             </option>
-                                                                            <?php foreach (getCategories("movie") as $rCategory) { ?>
+                                                                            <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                                 <option value="<?= $rCategory["id"] ?>">
                                                                                     <?= $rCategory["category_name"] ?>
                                                                                 </option>
@@ -344,7 +344,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <option value="" selected>
                                                                                 <?= $_["all_categories"] ?>
                                                                             </option>
-                                                                            <?php foreach (getCategories("series") as $rCategory) { ?>
+                                                                            <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                                 <option value="<?= $rCategory["id"] ?>">
                                                                                     <?= $rCategory["category_name"] ?>
                                                                                 </option>
@@ -406,7 +406,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <option value="" selected>
                                                                                 <?= $_["all_categories"] ?>
                                                                             </option>
-                                                                            <?php foreach (getCategories("radio") as $rCategory) { ?>
+                                                                            <?php foreach (getCategories_admin("radio") as $rCategory) { ?>
                                                                                 <option value="<?= $rCategory["id"] ?>">
                                                                                     <?= $rCategory["category_name"] ?>
                                                                                 </option>

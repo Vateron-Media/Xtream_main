@@ -5,7 +5,7 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_series")) && (
     exit;
 }
 
-$rCategories = getCategories("series");
+$rCategories = getCategories_admin("series");
 
 if (isset($_POST["submit_series"])) {
     if (isset($_POST["edit"])) {

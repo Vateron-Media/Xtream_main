@@ -25,7 +25,7 @@ if (isset($_SESSION['hash'])) {
         session_destroy();
         header("Location: ./index.php");
     }
-    $rCategories = getCategories();
+    $rCategories = getCategories_admin();
     $rServers = getStreamingServers();
     $rServerError = False;
     foreach ($rServers as $rServer) {
@@ -39,17 +39,35 @@ if (isset($_SESSION['hash'])) {
     }
 }
 
+$rAdminSettings = getAdminSettings();
+$nabilos = getRegisteredUserHash($_SESSION['hash']);
 
-
-
-
-
-
-function getScriptVer() {
-    global $db;
-    $rVersion = $db->query("SELECT `script_version` FROM `streaming_servers` WHERE `is_main` = '1'")->fetch_assoc()["script_version"];
-    return $rVersion;
+if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos["default_lang"] . ".php"))) {
+    include "./lang/" . $nabilos["default_lang"] . ".php";
+} else {
+    include "/home/xtreamcodes/admin/lang/en.php";
 }
+
+$detect = new Mobile_Detect;
+$rClientFilters = array(
+    "NOT_IN_BOUQUET" => "Not in Bouquet",
+    "CON_SVP" => "Connection Issue",
+    "ISP_LOCK_FAILED" => "ISP Lock Failed",
+    "USER_DISALLOW_EXT" => "Extension Disallowed",
+    "AUTH_FAILED" => "Authentication Failed",
+    "USER_EXPIRED" => "User Expired",
+    "USER_DISABLED" => "User Disabled",
+    "USER_BAN" => "User Banned"
+);
+
+
+
+
+
+
+
+
+
 /**
  * Retrieves the most recent stable release version from a given URL.
  *
@@ -227,24 +245,9 @@ function updateGeoLite2() {
     return false;
 }
 
-function mapmap() {
-    global $db;
-    $rQuery = "SELECT geoip_country_code, count(geoip_country_code) AS total FROM lines_live GROUP BY geoip_country_code";
-    if ($rResult = $db->query($rQuery)) {
-        while ($row = $rResult->fetch_assoc()) {
-            $gggrr = "{\"code\":" . json_encode($row["geoip_country_code"]) . ",\"value\":" . json_encode($row["total"]) . "},";
-            echo $gggrr;
-        }
-    }
-}
 function resetSTB($rID) {
     global $db;
     $db->query("UPDATE `mag_devices` SET `ip` = NULL, `ver` = NULL, `image_version` = NULL, `stb_type` = NULL, `sn` = NULL, `device_id` = NULL, `device_id2` = NULL, `hw_version` = NULL, `token` = NULL WHERE `mag_id` = " . intval($rID) . ";");
-}
-//isp lock
-function resetispnames($rID) {
-    global $db;
-    $db->query("UPDATE `users` SET `isp_desc` = NULL WHERE `id` = " . intval($rID) . ";");
 }
 
 
@@ -264,7 +267,7 @@ function setSettings(array $settings) {
         if (is_array($value)) {
             $value = json_encode($value);
         }
-        if (!$db->query("UPDATE `settings` SET `value` = '" . ESC($value) . "' WHERE `name` = '" . ESC($key) . "'")) {
+        if (!$db->query("UPDATE `settings` SET `value` = '" . $value . "' WHERE `name` = '" . $key . "'")) {
             return false;
         }
     }
@@ -280,37 +283,6 @@ function getTimezone() {
         return "Europe/London";
     }
 }
-
-function xor_parse($data, $key) {
-    $i = 0;
-    $output = '';
-    foreach (str_split($data) as $char) {
-        $output .= chr(ord($char) ^ ord($key[$i++ % strlen($key)]));
-    }
-    return $output;
-}
-
-
-$rAdminSettings = getAdminSettings();
-$nabilos = getRegisteredUserHash($_SESSION['hash']);
-
-if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos["default_lang"] . ".php"))) {
-    include "./lang/" . $nabilos["default_lang"] . ".php";
-} else {
-    include "/home/xtreamcodes/admin/lang/en.php";
-}
-
-$detect = new Mobile_Detect;
-$rClientFilters = array(
-    "NOT_IN_BOUQUET" => "Not in Bouquet",
-    "CON_SVP" => "Connection Issue",
-    "ISP_LOCK_FAILED" => "ISP Lock Failed",
-    "USER_DISALLOW_EXT" => "Extension Disallowed",
-    "AUTH_FAILED" => "Authentication Failed",
-    "USER_EXPIRED" => "User Expired",
-    "USER_DISABLED" => "User Disabled",
-    "USER_BAN" => "User Banned"
-);
 
 function APIRequest($rData) {
     global $rAdminSettings, $rServers, $_INFO;
@@ -375,6 +347,8 @@ function netnet($rServerID) {
     return $ttt;
 }
 //network interface 2	
+
+
 
 function changePort($rServerID, $rType, $rOldPort, $rNewPort) {
     if ($rType == 0) {
@@ -691,7 +665,7 @@ function getStreamList() {
 function getConnections($rServerID) {
     global $db;
     $return = array();
-    $result = $db->query("SELECT * FROM `lines_live` WHERE `server_id` = '" . ESC($rServerID) . "';");
+    $result = $db->query("SELECT * FROM `lines_live` WHERE `server_id` = '" . $rServerID . "';");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             $return[] = $row;
@@ -703,7 +677,7 @@ function getConnections($rServerID) {
 function getUserConnections($rUserID) {
     global $db;
     $return = array();
-    $result = $db->query("SELECT * FROM `lines_live` WHERE `user_id` = '" . ESC($rUserID) . "';");
+    $result = $db->query("SELECT * FROM `lines_live` WHERE `user_id` = '" . $rUserID . "';");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
             $return[] = $row;
@@ -1003,23 +977,7 @@ function getStream($rID) {
     return null;
 }
 
-function getUser($rID) {
-    global $db;
-    $result = $db->query("SELECT * FROM `users` WHERE `id` = " . intval($rID) . ";");
-    if (($result) && ($result->num_rows == 1)) {
-        return $result->fetch_assoc();
-    }
-    return null;
-}
 
-function getRegisteredUser($rID) {
-    global $db;
-    $result = $db->query("SELECT * FROM `reg_users` WHERE `id` = " . intval($rID) . ";");
-    if (($result) && ($result->num_rows == 1)) {
-        return $result->fetch_assoc();
-    }
-    return null;
-}
 
 function getEPG($rID) {
     global $db;
@@ -1350,22 +1308,6 @@ function getEPGs() {
     return $return;
 }
 
-function getCategories($rType = "live") {
-    global $db;
-    $return = array();
-    if ($rType) {
-        $result = $db->query("SELECT * FROM `stream_categories` WHERE `category_type` = '" . ESC($rType) . "' ORDER BY `cat_order` ASC;");
-    } else {
-        $result = $db->query("SELECT * FROM `stream_categories` ORDER BY `cat_order` ASC;");
-    }
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
-            $return[intval($row["id"])] = $row;
-        }
-    }
-    return $return;
-}
-
 function getChannels($rType = "live") {
     global $db;
     $return = array();
@@ -1542,27 +1484,6 @@ function checkTrials() {
     return false;
 }
 
-function cryptPassword($password, $salt = "xtreamcodes", $rounds = 20000) {
-    if ($salt == "") {
-        $salt = substr(bin2hex(openssl_random_pseudo_bytes(16)), 0, 16);
-    }
-    $hash = crypt($password, sprintf('$6$rounds=%d$%s$', $rounds, $salt));
-    return $hash;
-}
-
-function getIP() {
-    if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
-        $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-    } else if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    return $ip;
-}
-
 function getSubresellerSetups() {
     global $db;
     $return = array();
@@ -1717,15 +1638,7 @@ function updateSeries($rID) {
     }
 }
 
-function getFooter() {
-    // Don't be a dick. Leave it.
-    global $rAdminSettings, $rPermissions, $rSettings, $_;
-    if ($rPermissions["is_admin"]) {
-        return $_["copyright"] . " &copy; 2023 - " . date("Y") . " - <a href=\"https://github.com/Vateron-Media/Xtream_main\">Xtream UI</a> " . getScriptVer() . " - " . $_["free_forever"];
-    } else {
-        return $rSettings["copyrights_text"];
-    }
-}
+
 
 function getURL() {
     global $rServers, $_INFO;
@@ -1854,13 +1767,6 @@ function flushLogins() {
     $db->query("DELETE FROM `login_flood`;");
 }
 
-function flushEvents() {
-    global $db, $rServers;
-    foreach ($rServers as $rServer) {
-        sexec($rServer["id"], $rCommand);
-    }
-    $db->query("DELETE FROM `mag_events`;");
-}
 
 function updateTMDbCategories() {
     global $db, $rAdminSettings, $rSettings;

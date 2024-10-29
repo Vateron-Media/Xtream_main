@@ -653,7 +653,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control select2-multiple"
                                                                         data-toggle="select2" multiple="multiple"
                                                                         data-placeholder="Choose...">
-                                                                        <?php foreach (getCategories('live') as $rCategory): ?>
+                                                                        <?php foreach (getCategories_admin('live') as $rCategory): ?>
                                                                             <option <?php if (isset($rStream) && in_array(intval($rCategory['id']), json_decode($rStream['category_id'], true))) {
                                                                                         echo 'selected ';
                                                                                     } ?>value="<?php echo $rCategory['id']; ?>">

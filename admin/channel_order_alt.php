@@ -97,7 +97,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <select name="select_category" id="select_category"
                                                                         class="form-control select2"
                                                                         data-toggle="select2">>
-                                                                        <?php foreach (getCategories() as $rCategory) { ?>
+                                                                        <?php foreach (getCategories_admin() as $rCategory) { ?>
                                                                             <option value="<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?>
                                                                             </option>

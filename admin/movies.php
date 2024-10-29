@@ -8,7 +8,7 @@ if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "movies"))) {
     exit;
 }
 
-$rCategories = getCategories("movie");
+$rCategories = getCategories_admin("movie");
 
 if ($rSettings["sidebar"]) {
     include "header_sidebar.php";

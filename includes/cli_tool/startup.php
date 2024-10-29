@@ -10,6 +10,7 @@ if ($argc) {
     require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
+    error_reporting(32767);
     if (file_exists(MAIN_DIR . 'status')) {
         exec('sudo ' . MAIN_DIR . 'status 1');
     }
