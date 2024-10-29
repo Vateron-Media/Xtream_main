@@ -350,7 +350,7 @@ function loadCron() {
             unset($rStreamMap);
         } else {
             $rBitrates = array();
-            $ipTV_db->query('SELECT `lines_live`.`uuid`, `streams_servers`.`bitrate` FROM `lines_live` LEFT JOIN `streams_servers` ON `lines_live`.`stream_id` = `streams_servers`.`stream_id` AND `lines_live`.`server_id` = `streams_servers`.`server_id` WHERE `lines_live`.`server_id` = ?;', SERVER_ID);
+            $ipTV_db->query('SELECT `lines_live`.`uuid`, `streams_servers`.`bitrate` FROM `lines_live` LEFT JOIN `streams_servers` ON `lines_live`.`stream_id` = `streams_servers`.`stream_id` AND `lines_live`.`server_id` = `streams_servers`.`server_id` WHERE `lines_live`.`server_id` = \'%d\';', SERVER_ID);
             foreach ($ipTV_db->get_rows() as $rRow) {
                 $rBitrates[$rRow['uuid']] = intval($rRow['bitrate'] / 8 * 0.92);
             }
@@ -372,7 +372,7 @@ function loadCron() {
                     $rDivergence = 0;
                 }
                 $rDivergenceUpdate[] = "('" . $rUUID . "', " . abs($rDivergence) . ')';
-                if (!ipTV_lib::$settings['redis_handler'] || isset($rUUIDMap[$rUUID])) {
+                if (!ipTV_lib::$settings['redis_handler'] && isset($rUUIDMap[$rUUID])) {
                     $rLiveQuery[] = '(' . $rUUIDMap[$rUUID] . ', ' . abs($rDivergence) . ')';
                 }
             }
@@ -381,7 +381,7 @@ function loadCron() {
             $rUpdateQuery = implode(',', $rDivergenceUpdate);
             $ipTV_db->query('INSERT INTO `lines_divergence`(`uuid`,`divergence`) VALUES ' . $rUpdateQuery . ' ON DUPLICATE KEY UPDATE `divergence`=VALUES(`divergence`);');
         }
-        if (!ipTV_lib::$settings['redis_handler'] || count($rLiveQuery) > 0) {
+        if (!ipTV_lib::$settings['redis_handler'] && count($rLiveQuery) > 0) {
             $rLiveQuery = implode(',', $rLiveQuery);
             $ipTV_db->query('INSERT INTO `lines_live`(`activity_id`,`divergence`) VALUES ' . $rLiveQuery . ' ON DUPLICATE KEY UPDATE `divergence`=VALUES(`divergence`);');
         }
@@ -389,9 +389,6 @@ function loadCron() {
     }
     if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
         if (ipTV_lib::$settings['redis_handler']) {
-            $log = date('Y-m-d H:i:s') . ' ' . print_r($rLiveKeys, true);
-            file_put_contents(__DIR__ . '/log.txt', $log . PHP_EOL, FILE_APPEND);
-
             $ipTV_db->query("DELETE FROM `lines_divergence` WHERE `uuid` NOT IN ('" . implode("','", $rLiveKeys) . "');");
         } else {
             $ipTV_db->query('DELETE FROM `lines_divergence` WHERE `uuid` NOT IN (SELECT `uuid` FROM `lines_live`);');
