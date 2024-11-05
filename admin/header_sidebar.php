@@ -310,7 +310,7 @@
                             <a href="#"> <i class="mdi mdi-account-outline mdi-18px text-pink"></i><span><?= $_["users"] ?>
                                 </span><span class="arrow-down"></span></a>
                             <ul class="nav-second-level" aria-expanded="false">
-                                <?php if ((!$rAdminSettings["disable_trial"]) && ($rPermissions["total_allowed_gen_trials"] > 0) && ($rUserInfo["credits"] >= $rPermissions["minimum_trial_credits"])) { ?>
+                                <?php if ((!$rSettings["disable_trial"]) && ($rPermissions["total_allowed_gen_trials"] > 0) && ($rUserInfo["credits"] >= $rPermissions["minimum_trial_credits"])) { ?>
                                     <li><a href="./user_reseller.php?trial"><span
                                                 class="mdi mdi-account-plus-outline mdi-18px"></span>
                                             <?= $_["generate_trial"] ?></a></li>

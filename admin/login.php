@@ -18,8 +18,8 @@ if (intval($rAdminSettings["login_flood"]) > 0) {
 if (!isset($_STATUS)) {
 	$rGA = new PHPGangsta_GoogleAuthenticator();
 	if ((isset($_POST["username"])) && (isset($_POST["password"]))) {
-		if ($rAdminSettings["recaptcha_enable"]) {
-			$rResponse = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $rAdminSettings["recaptcha_v2_secret_key"] . '&response=' . $_POST['g-recaptcha-response']), True);
+		if ($rSettings["recaptcha_enable"]) {
+			$rResponse = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $rSettings["recaptcha_v2_secret_key"] . '&response=' . $_POST['g-recaptcha-response']), True);
 			if ((!$rResponse["success"]) && (!in_array("invalid-input-secret", $rResponse["error-codes"]))) {
 				$_STATUS = 5;
 			}
@@ -37,7 +37,7 @@ if (!isset($_STATUS)) {
 					}
 					$rQR = $rGA->getQRCodeGoogleUrl('Xtream UI', $rUserInfo["google_2fa_sec"]);
 					$rAuth = md5($rUserInfo["password"]);
-				} else if ((strlen($_POST["password"]) < intval($rAdminSettings["pass_length"])) && (intval($rAdminSettings["pass_length"]) > 0)) {
+				} else if ((strlen($_POST["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
 					$rChangePass = md5($rUserInfo["password"]);
 				} else {
 					$rPermissions = getPermissions($rUserInfo["member_group_id"]);
@@ -111,7 +111,7 @@ if (!isset($_STATUS)) {
 		$rUserInfo = getRegisteredUserHash($_POST["hash"]);
 		$rChangePass = $_POST["change"];
 		if (($rUserInfo) && ($rChangePass == md5($rUserInfo["password"]))) {
-			if (($_POST["newpass"] == $_POST["confirm"]) && (strlen($_POST["newpass"]) >= intval($rAdminSettings["pass_length"]))) {
+			if (($_POST["newpass"] == $_POST["confirm"]) && (strlen($_POST["newpass"]) >= intval($rSettings["pass_length"]))) {
 				$rPermissions = getPermissions($rUserInfo["member_group_id"]);
 				if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
 					$db->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . ESC(cryptPassword($_POST["newpass"])) . "', `ip` = '" . ESC(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
@@ -228,7 +228,7 @@ if (!isset($_STATUS)) {
 							role="alert">
 							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
 									aria-hidden="true">&times;</span></button>
-							<?= str_replace("{num}", $rAdminSettings["pass_length"], $_["login_message_8"]) ?>
+							<?= str_replace("{num}", $rSettings["pass_length"], $_["login_message_8"]) ?>
 						</div>
 					<?php } ?>
 					<div class="card-login">
@@ -258,17 +258,17 @@ if (!isset($_STATUS)) {
 												data-parsley-trigger="change" id="password" name="password"
 												placeholder="<?= $_["enter_your_password"] ?>">
 										</div>
-										<?php if ($rAdminSettings["recaptcha_enable"]) { ?>
+										<?php if ($rSettings["recaptcha_enable"]) { ?>
 											<h5 class="auth-title text-center">
 												<div class="g-recaptcha" id="verification"
-													data-sitekey="<?= $rAdminSettings["recaptcha_v2_site_key"] ?>"></div>
+													data-sitekey="<?= $rSettings["recaptcha_v2_site_key"] ?>"></div>
 											</h5>
 										<?php }
 									} else if (isset($rChangePass)) { ?>
 										<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
 										<input type="hidden" name="change" value="<?= $rChangePass ?>" />
 										<div class="form-group mb-3 text-center">
-											<p><?= str_replace("{num}", $rAdminSettings["pass_length"], $_["login_message_9"]) ?>
+											<p><?= str_replace("{num}", $rSettings["pass_length"], $_["login_message_9"]) ?>
 											</p>
 										</div>
 										<div class="form-group mb-3">
@@ -316,7 +316,7 @@ if (!isset($_STATUS)) {
 		<script src="assets/js/vendor.min.js"></script>
 		<script src="assets/libs/parsleyjs/parsley.min.js"></script>
 		<script src="assets/js/app.min.js"></script>
-		<?php if ($rAdminSettings["recaptcha_enable"]) { ?>
+		<?php if ($rSettings["recaptcha_enable"]) { ?>
 			<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 		<?php } ?>
 		<script>

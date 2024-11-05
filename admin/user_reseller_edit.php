@@ -11,7 +11,7 @@ if (($rPermissions["is_reseller"]) && (!$rPermissions["reseller_can_select_bouqu
 $rRegisteredUsers = getRegisteredUsers($rUserInfo["id"]);
 
 if ((isset($_GET["trial"])) or (isset($_POST["trial"]))) {
-    if ($rAdminSettings["disable_trial"]) {
+    if ($rSettings["disable_trial"]) {
         $canGenerateTrials = False;
     } else if (floatval($rUserInfo["credits"]) < floatval($rPermissions["minimum_trial_credits"])) {
         $canGenerateTrials = False;

@@ -238,3 +238,49 @@ function changePort_new($rServerID, $rType, $rPorts, $rReload = false) {
     global $ipTV_db_admin;
     $ipTV_db_admin->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(\'%d\', \'%s\', \'%s\');', $rServerID, time(), json_encode(array('action' => 'set_port', 'type' => intval($rType), 'ports' => $rPorts, 'reload' => $rReload)));
 }
+
+function scanBouquets() {
+    shell_exec(PHP_BIN . ' ' . CLI_PATH . 'tools.php "bouquets" > /dev/null 2>/dev/null &');
+}
+
+function scanBouquet($rID) {
+    global $ipTV_db_admin;
+    $rBouquet = getBouquet($rID);
+    if ($rBouquet) {
+        $rStreamIDs = array();
+        $ipTV_db_admin->query("SELECT `id` FROM `streams`;");
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $row) {
+                $rStreamIDs[0][] = intval($row['id']);
+            }
+        }
+        $ipTV_db_admin->query("SELECT `id` FROM `series`;");
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $row) {
+                $rStreamIDs[1][] = intval($row['id']);
+            }
+        }
+        $rUpdate = array(array(), array(), array(), array());
+        foreach (json_decode($rBouquet['bouquet_channels'], true) as $rID) {
+            if (in_array(intval($rID), $rStreamIDs[0])) {
+                $rUpdate[0][] = intval($rID);
+            }
+        }
+        foreach (json_decode($rBouquet['bouquet_movies'], true) as $rID) {
+            if (in_array(intval($rID), $rStreamIDs[0])) {
+                $rUpdate[1][] = intval($rID);
+            }
+        }
+        foreach (json_decode($rBouquet['bouquet_radios'], true) as $rID) {
+            if (in_array(intval($rID), $rStreamIDs[0])) {
+                $rUpdate[2][] = intval($rID);
+            }
+        }
+        foreach (json_decode($rBouquet['bouquet_series'], true) as $rID) {
+            if (in_array(intval($rID), $rStreamIDs[1])) {
+                $rUpdate[3][] = intval($rID);
+            }
+        }
+        $ipTV_db_admin->query("UPDATE `bouquets` SET `bouquet_channels` = '" . json_encode($rUpdate[0]) . "', `bouquet_movies` = '" . json_encode($rUpdate[1]) . "', `bouquet_radios` = '" . json_encode($rUpdate[2]) . "', `bouquet_series` = '" . json_encode($rUpdate[3]) . "' WHERE `id` = " . intval($rBouquet["id"]) . ";");
+    }
+}

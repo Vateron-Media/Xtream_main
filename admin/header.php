@@ -330,7 +330,7 @@
                                     <div class="arrow-down"></div>
                                 </a>
                                 <ul class="submenu">
-                                    <?php if ((!$rAdminSettings["disable_trial"]) && ($rPermissions["total_allowed_gen_trials"] > 0) && ($rUserInfo["credits"] >= $rPermissions["minimum_trial_credits"])) { ?>
+                                    <?php if ((!$rSettings["disable_trial"]) && ($rPermissions["total_allowed_gen_trials"] > 0) && ($rUserInfo["credits"] >= $rPermissions["minimum_trial_credits"])) { ?>
                                         <li><a href="./user_reseller.php?trial"><span
                                                     class="mdi mdi-account-plus-outline mdi-18px"></span>
                                                 <?= $_["generate_trial"] ?></a></li>

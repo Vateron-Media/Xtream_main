@@ -22,8 +22,28 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('redis_passwor
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('redis_handler', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('cache_playlists', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('php_loopback', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('pass_length', '8')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('disable_trial', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('automatic_backups', 'off')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('cc_time', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_v2_secret_key', '')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_v2_site_key', '')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_enable', '0')");
+
+
+
 $ipTV_db->query("UPDATE `crontab` SET `filename`='series.php' WHERE `filename`='vod_cc_series.php'");
 
-
+$ipTV_db->query("SHOW TABLES LIKE 'admin_settings';");
+if ($ipTV_db->num_rows() > 0) {
+    $rAdminSettings = array();
+    $ipTV_db->query('SELECT * FROM `admin_settings`;');
+    foreach ($ipTV_db->get_rows() as $rRow) {
+        $rAdminSettings[$rRow['type']] = $rRow['value'];
+    }
+    if (0 < strlen($rAdminSettings['recaptcha_v2_secret_key']) && 0 < strlen($rAdminSettings['recaptcha_v2_site_key'])) {
+        $ipTV_db->query('UPDATE `settings` SET `recaptcha_v2_secret_key` = \'%s\', `recaptcha_v2_site_key` = \'%s\';', $rAdminSettings['recaptcha_v2_secret_key'], $rAdminSettings['recaptcha_v2_site_key']);
+    }
+}
 
 return true;

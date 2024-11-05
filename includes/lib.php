@@ -274,13 +274,19 @@ class ipTV_lib {
      *
      * @param array $settings An associative array of setting names and values.
      *
-     * @return void
+     * @return bool
      */
     public static function setSettings(array $settings) {
         foreach ($settings as $key => $value) {
-            self::$ipTV_db->query("UPDATE `settings` SET `value` = '%s' WHERE `name` = '%s'", $value, $key);
+            if (is_array($value)) {
+                $value = json_encode($value);
+            }
+            if (!self::$ipTV_db->query("UPDATE `settings` SET `value` = '%s' WHERE `name` = '%s'", $value, $key)) {
+                return false;
+            }
         }
         self::getSettings(true);
+        return true;
     }
     /**
      * Retrieves stream categories from the database.

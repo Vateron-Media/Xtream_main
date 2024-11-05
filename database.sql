@@ -1115,7 +1115,6 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('104','e2_arm',''),
 ('105','api_pass',''),
 ('106','message_of_day','Welcome to Xtream Codes Reborn'),
-('107','double_auth','1'),
 ('108','mysql_remote_sec','0'),
 ('109','enable_isp_lock','0'),
 ('110','show_isps','1'),
@@ -1138,7 +1137,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('128','gen_container_priority','[\"mp4\",\"mkv\",\"avi\"]'),
 ('129','tmdb_default','en'),
 ('130','series_custom_name','0'),
-('131','mag_security','0'),
+('131','mag_security','1'),
 ('132','logo_url_sidebar',''),
 ('133','page_mannuals','<p><br /></p>'),
 ('134','debug_show_errors','0'),
@@ -1194,7 +1193,14 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('184', 'redis_password', ""),
 ('185', 'redis_handler', 0),
 ('186', 'cache_playlists', 0),
-('187', 'php_loopback', 1);
+('187', 'php_loopback', 1),
+('188', 'pass_length', 8),
+('189', 'disable_trial', 0),
+('190', 'automatic_backups', 'off'),
+('191', 'cc_time', 0),
+('192', 'recaptcha_v2_secret_key', ''),
+('193', 'recaptcha_v2_site_key', ''),
+('194', 'recaptcha_enable', '0');
 -- --------------------------------------------------------
 
 --

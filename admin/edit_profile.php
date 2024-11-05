@@ -5,7 +5,7 @@ include "functions.php";
 $nabillangues = array("" => "Default - EN", "fr" => "French", "es" => "Spanish", "it" => "Italian", "pt" => "Portuguese", "ru" => "Русский");
 
 if (isset($_POST["submit_profile"])) {
-    if ((strlen($_POST["password"]) < intval($rAdminSettings["pass_length"])) && (intval($rAdminSettings["pass_length"]) > 0)) {
+    if ((strlen($_POST["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
         $_STATUS = 1;
     }
     if (((strlen($_POST["email"]) == 0) or (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))) && (($rAdminSettings["change_own_email"]) or ($rPermissions["is_admin"]))) {
@@ -62,7 +62,7 @@ if (isset($_POST["submit_profile"])) {
         } else {
             $portadmin = $rSettings["port_admin"];
         }
-        setSettings(["port_admin" => $portadmin]);
+        ipTV_lib::setSettings(["port_admin" => $portadmin]);
         $db->query("UPDATE `reg_users` SET `password` = '" . ESC($rPassword) . "', `email` = '" . ESC($rEmail) . "', `reseller_dns` = '" . ESC($rDNS) . "', `default_lang` = '" . ESC($bob) . "', `dark_mode` = " . intval($rDarkMode) . ", `sidebar` = " . intval($rSidebar) . ", `expanded_sidebar` = " . intval($rExpanded) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
         $rUserInfo = getRegisteredUser($rUserInfo["id"]);
         $rAdminSettings["dark_mode"] = $rUserInfo["dark_mode"];
@@ -109,7 +109,7 @@ if ($rSettings["sidebar"]) { ?>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
-                                    <?= str_replace("{num}", $rAdminSettings["pass_length"], $_["profile_fail_1"]) ?>
+                                    <?= str_replace("{num}", $rSettings["pass_length"], $_["profile_fail_1"]) ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">

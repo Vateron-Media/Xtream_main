@@ -166,15 +166,15 @@ function XSS($rString, $rSQL = False) {
     }
 }
 
-function XSSRow($rRow, $rSQL = False) {
-    foreach ($rRow as $rKey => $rValue) {
+function XSSRow($row, $rSQL = False) {
+    foreach ($row as $rKey => $rValue) {
         if (is_array($rValue)) {
-            $rRow[$rKey] = XSSRow($rValue, $rSQL);
+            $row[$rKey] = XSSRow($rValue, $rSQL);
         } else {
-            $rRow[$rKey] = XSS($rValue, $rSQL);
+            $row[$rKey] = XSS($rValue, $rSQL);
         }
     }
-    return $rRow;
+    return $row;
 }
 
 function ESC($rString) {
@@ -253,18 +253,6 @@ function getSettings() {
         }
     }
     return $return;
-}
-function setSettings(array $settings) {
-    global $db;
-    foreach ($settings as $key => $value) {
-        if (is_array($value)) {
-            $value = json_encode($value);
-        }
-        if (!$db->query("UPDATE `settings` SET `value` = '" . $value . "' WHERE `name` = '" . $key . "'")) {
-            return false;
-        }
-    }
-    return true;
 }
 
 function getTimezone() {
@@ -490,14 +478,14 @@ function getBackups() {
     $rBackups = array();
 
     # create directory backups
-    if (!is_dir(MAIN_DIR . "adtools/backups/")) {
-        mkdir(MAIN_DIR . "adtools/backups/");
+    if (!is_dir(MAIN_DIR . "backups/")) {
+        mkdir(MAIN_DIR . "backups/");
     }
 
-    foreach (scandir(MAIN_DIR . "adtools/backups/") as $rBackup) {
-        $rInfo = pathinfo(MAIN_DIR . "adtools/backups/" . $rBackup);
+    foreach (scandir(MAIN_DIR . "backups/") as $rBackup) {
+        $rInfo = pathinfo(MAIN_DIR . "backups/" . $rBackup);
         if ($rInfo["extension"] == "sql") {
-            $rBackups[] = array("filename" => $rBackup, "timestamp" => filemtime(MAIN_DIR . "adtools/backups/" . $rBackup), "date" => date("Y-m-d H:i:s", filemtime(MAIN_DIR . "adtools/backups/" . $rBackup)), "filesize" => filesize(MAIN_DIR . "adtools/backups/" . $rBackup));
+            $rBackups[] = array("filename" => $rBackup, "timestamp" => filemtime(MAIN_DIR . "backups/" . $rBackup), "date" => date("Y-m-d H:i:s", filemtime(MAIN_DIR . "backups/" . $rBackup)), "filesize" => filesize(MAIN_DIR . "backups/" . $rBackup));
         }
     }
     usort($rBackups, function ($a, $b) {
@@ -1644,68 +1632,6 @@ function getURL() {
     }
 }
 
-function scanBouquets() {
-    global $db;
-    $rStreamIDs = array(0 => array(), 1 => array());
-    $result = $db->query("SELECT `id` FROM `streams`;");
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
-            $rStreamIDs[0][] = intval($row["id"]);
-        }
-    }
-    $result = $db->query("SELECT `id` FROM `series`;");
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
-            $rStreamIDs[1][] = intval($row["id"]);
-        }
-    }
-    foreach (getBouquets() as $rID => $rBouquet) {
-        $rUpdate = array(0 => array(), 1 => array());
-        foreach (json_decode($rBouquet["bouquet_channels"], True) as $rID) {
-            if (in_array(intval($rID), $rStreamIDs[0])) {
-                $rUpdate[0][] = intval($rID);
-            }
-        }
-        foreach (json_decode($rBouquet["bouquet_series"], True) as $rID) {
-            if (in_array(intval($rID), $rStreamIDs[1])) {
-                $rUpdate[1][] = intval($rID);
-            }
-        }
-        $db->query("UPDATE `bouquets` SET `bouquet_channels` = '" . ESC(json_encode($rUpdate[0])) . "', `bouquet_series` = '" . ESC(json_encode($rUpdate[1])) . "' WHERE `id` = " . intval($rBouquet["id"]) . ";");
-    }
-}
-
-function scanBouquet($rID) {
-    global $db;
-    $rBouquet = getBouquet($rID);
-    if ($rBouquet) {
-        $rStreamIDs = array();
-        $result = $db->query("SELECT `id` FROM `streams`;");
-        if (($result) && ($result->num_rows > 0)) {
-            while ($row = $result->fetch_assoc()) {
-                $rStreamIDs[0][] = intval($row["id"]);
-            }
-        }
-        $result = $db->query("SELECT `id` FROM `series`;");
-        if (($result) && ($result->num_rows > 0)) {
-            while ($row = $result->fetch_assoc()) {
-                $rStreamIDs[1][] = intval($row["id"]);
-            }
-        }
-        $rUpdate = array(0 => array(), 1 => array());
-        foreach (json_decode($rBouquet["bouquet_channels"], True) as $rID) {
-            if (in_array(intval($rID), $rStreamIDs[0])) {
-                $rUpdate[0][] = intval($rID);
-            }
-        }
-        foreach (json_decode($rBouquet["bouquet_series"], True) as $rID) {
-            if (in_array(intval($rID), $rStreamIDs[1])) {
-                $rUpdate[1][] = intval($rID);
-            }
-        }
-        $db->query("UPDATE `bouquets` SET `bouquet_channels` = '" . ESC(json_encode($rUpdate[0])) . "', `bouquet_series` = '" . ESC(json_encode($rUpdate[1])) . "' WHERE `id` = " . intval($rBouquet["id"]) . ";");
-    }
-}
 
 function getNextOrder() {
     global $db;
@@ -1772,11 +1698,11 @@ function updateTMDbCategories() {
     $rCurrentCats = array(1 => array(), 2 => array());
     $rResult = $db->query("SELECT `id`, `type`, `genre_id` FROM `watch_categories`;");
     if (($rResult) && ($rResult->num_rows > 0)) {
-        while ($rRow = $rResult->fetch_assoc()) {
-            if (in_array($rRow["genre_id"], $rCurrentCats[$rRow["type"]])) {
-                $db->query("DELETE FROM `watch_categories` WHERE `id` = " . intval($rRow["id"]) . ";");
+        while ($row = $rResult->fetch_assoc()) {
+            if (in_array($row["genre_id"], $rCurrentCats[$row["type"]])) {
+                $db->query("DELETE FROM `watch_categories` WHERE `id` = " . intval($row["id"]) . ";");
             }
-            $rCurrentCats[$rRow["type"]][] = $rRow["genre_id"];
+            $rCurrentCats[$row["type"]][] = $row["genre_id"];
         }
     }
     $rMovieGenres = $rTMDB->getMovieGenres();
@@ -1809,8 +1735,6 @@ if (file_exists("/home/xtreamcodes/admin/.update")) {
 
         // Update Categories
         updateTMDbCategories();
-        setSettings(["double_auth" => 1, "mag_security" => 1]);
-        $db->query("UPDATE `admin_settings` SET `pass_length` = 8 WHERE `pass_length` < 8;");
         $db->query('UPDATE `streaming_servers` SET `server_ip` = "' . $rIP . '" WHERE `id` = 1;');
     }
 }

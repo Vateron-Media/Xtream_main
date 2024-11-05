@@ -31,7 +31,7 @@ if (isset($_GET["panel_version"])) {
 
 if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rArray = getSettings();
-    foreach (array("mag_disable_ssl", "disable_mag_token", "ignore_invalid_users", "block_streaming_servers", "block_proxies", "detect_restream_block_user", "allow_cdn_access", "restrict_same_ip", "ip_subnet_match", "kill_rogue_ffmpeg", "ignore_keyframes", "ffmpeg_warnings", "ondemand_balance_equal", "on_demand_failure_exit", "on_demand_instant_off", "restrict_playlists", "encrypt_playlist_restreamer", "encrypt_playlist", "encrypt_hls", "disable_ts_allow_restream", "disable_ts", "disable_hls", "disable_hls_allow_restream", "disallow_empty_user_agents", "persistent_connections", "monitor_connection_status", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "use_mdomain_in_lists", "hash_lb", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup", "debug_show_errors") as $rSetting) {
+    foreach (array("recaptcha_enable", "disable_trial", "mag_disable_ssl", "disable_mag_token", "ignore_invalid_users", "block_streaming_servers", "block_proxies", "detect_restream_block_user", "allow_cdn_access", "restrict_same_ip", "ip_subnet_match", "kill_rogue_ffmpeg", "ignore_keyframes", "ffmpeg_warnings", "ondemand_balance_equal", "on_demand_failure_exit", "on_demand_instant_off", "restrict_playlists", "encrypt_playlist_restreamer", "encrypt_playlist", "encrypt_hls", "disable_ts_allow_restream", "disable_ts", "disable_hls", "disable_hls_allow_restream", "disallow_empty_user_agents", "persistent_connections", "monitor_connection_status", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "use_mdomain_in_lists", "hash_lb", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup", "debug_show_errors") as $rSetting) {
         if (isset($_POST[$rSetting])) {
             $rArray[$rSetting] = 1;
             unset($_POST[$rSetting]);
@@ -44,12 +44,6 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     }
     if (!isset($_POST["allowed_stb_types"])) {
         $rArray["allowed_stb_types"] = array();
-    }
-    if (isset($_POST["disable_trial"])) {
-        $rAdminSettings["disable_trial"] = true;
-        unset($_POST["disable_trial"]);
-    } else {
-        $rAdminSettings["disable_trial"] = false;
     }
     //next 6 lines are for reseller mag events
     if (isset($_POST["reseller_mag_events"])) {
@@ -70,12 +64,6 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
         unset($_POST["alternate_scandir"]);
     } else {
         $rAdminSettings["alternate_scandir"] = false;
-    }
-    if (isset($_POST["recaptcha_enable"])) {
-        $rAdminSettings["recaptcha_enable"] = true;
-        unset($_POST["recaptcha_enable"]);
-    } else {
-        $rAdminSettings["recaptcha_enable"] = false;
     }
     if (isset($_POST["download_images"])) {
         $rAdminSettings["download_images"] = true;
@@ -166,10 +154,6 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
         $rAdminSettings["release_parser"] = $_POST["release_parser"];
         unset($_POST["release_parser"]);
     }
-    if (isset($_POST["automatic_backups"])) {
-        $rAdminSettings["automatic_backups"] = $_POST["automatic_backups"];
-        unset($_POST["automatic_backups"]);
-    }
     if (isset($_POST["backups_to_keep"])) {
         $rAdminSettings["backups_to_keep"] = $_POST["backups_to_keep"];
         unset($_POST["backups_to_keep"]);
@@ -204,21 +188,9 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     } else {
         $rAdminSettings["reseller_reset_isplock"] = false;
     }
-    if (isset($_POST["recaptcha_v2_site_key"])) {
-        $rAdminSettings["recaptcha_v2_site_key"] = $_POST["recaptcha_v2_site_key"];
-        unset($_POST["recaptcha_v2_site_key"]);
-    }
-    if (isset($_POST["recaptcha_v2_secret_key"])) {
-        $rAdminSettings["recaptcha_v2_secret_key"] = $_POST["recaptcha_v2_secret_key"];
-        unset($_POST["recaptcha_v2_secret_key"]);
-    }
     if (isset($_POST["login_flood"])) {
         $rAdminSettings["login_flood"] = $_POST["login_flood"];
         unset($_POST["login_flood"]);
-    }
-    if (isset($_POST["pass_length"])) {
-        $rAdminSettings["pass_length"] = $_POST["pass_length"];
-        unset($_POST["pass_length"]);
     }
     if (isset($_POST["dashboard_stats_frequency"])) {
         $rAdminSettings["dashboard_stats_frequency"] = $_POST["dashboard_stats_frequency"];
@@ -230,7 +202,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
             $rArray[$rKey] = $rValue;
         }
     }
-    if (setSettings($rArray)) {
+    if (ipTV_lib::setSettings($rArray)) {
         $_STATUS = 0;
     } else {
         $_STATUS = 1;
@@ -625,7 +597,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-target=".bs-domains"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="recaptcha_enable" id="recaptcha_enable"
-                                                                            type="checkbox" <?php if ($rAdminSettings["recaptcha_enable"] == 1) {
+                                                                            type="checkbox" <?php if ($rSettings["recaptcha_enable"] == 1) {
                                                                                                 echo "checked ";
                                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -642,7 +614,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input type="text" class="form-control"
                                                                             id="recaptcha_v2_site_key"
                                                                             name="recaptcha_v2_site_key"
-                                                                            value="<?= htmlspecialchars($rAdminSettings["recaptcha_v2_site_key"]) ?>">
+                                                                            value="<?= htmlspecialchars($rSettings["recaptcha_v2_site_key"]) ?>">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -656,7 +628,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input type="text" class="form-control"
                                                                             id="recaptcha_v2_secret_key"
                                                                             name="recaptcha_v2_secret_key"
-                                                                            value="<?= htmlspecialchars($rAdminSettings["recaptcha_v2_secret_key"]) ?>">
+                                                                            value="<?= htmlspecialchars($rSettings["recaptcha_v2_secret_key"]) ?>">
                                                                     </div>
                                                                 </div>
                                                                 </br>
@@ -948,7 +920,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input type="text" class="form-control"
                                                                             id="pass_length" name="pass_length"
-                                                                            value="<?= htmlspecialchars($rAdminSettings["pass_length"]) ?: 0 ?>">
+                                                                            value="<?= htmlspecialchars($rSettings["pass_length"]) ?: 0 ?>">
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="api_container"><?= $_["api_container"] ?>
@@ -1137,7 +1109,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="disable_trial" id="disable_trial"
-                                                                            type="checkbox" <?php if ($rAdminSettings["disable_trial"] == 1) {
+                                                                            type="checkbox" <?php if ($rSettings["disable_trial"] == 1) {
                                                                                                 echo "checked ";
                                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -2403,7 +2375,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             id="automatic_backups" class="form-control"
                                                                             data-toggle="select2">
                                                                             <?php foreach (array("off" => "Off", "hourly" => "Hourly", "daily" => "Daily", "weekly" => "Weekly", "monthly" => "Monthly") as $rType => $rText) { ?>
-                                                                                <option<?php if ($rAdminSettings["automatic_backups"] == $rType) {
+                                                                                <option<?php if ($rSettings["automatic_backups"] == $rType) {
                                                                                             echo " selected";
                                                                                         } ?> value="<?= $rType ?>">
                                                                                     <?= $rText ?></option>

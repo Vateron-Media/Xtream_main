@@ -1168,20 +1168,20 @@ if (isset($_GET["action"])) {
             //     $rSub = $_GET["sub"];
             //     if ($rSub == "delete") {
             //         $rBackup = pathinfo($_GET["filename"])["filename"];
-            //         if (file_exists(MAIN_DIR . "adtools/backups/" . $rBackup . ".sql")) {
-            //             unlink(MAIN_DIR . "adtools/backups/" . $rBackup . ".sql");
+            //         if (file_exists(MAIN_DIR . "backups/" . $rBackup . ".sql")) {
+            //             unlink(MAIN_DIR . "backups/" . $rBackup . ".sql");
             //         }
             //         echo json_encode(array("result" => True));
             //         exit;
             //     } else if ($rSub == "restore") {
             //         $rBackup = pathinfo($_GET["filename"])["filename"];
-            //         $rFilename = MAIN_DIR . "adtools/backups/" . $rBackup . ".sql";
+            //         $rFilename = MAIN_DIR . "backups/" . $rBackup . ".sql";
             //         $rCommand = "mysql -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " < \"" . $rFilename . "\"";
             //         $rRet = shell_exec($rCommand);
             //         echo json_encode(array("result" => True));
             //         exit;
             //     } else if ($rSub == "backup") {
-            //         $rFilename = MAIN_DIR . "adtools/backups/backup_" . date("Y-m-d_H:i:s") . ".sql";
+            //         $rFilename = MAIN_DIR . "backups/backup_" . date("Y-m-d_H:i:s") . ".sql";
             //         $rCommand = "mysqldump -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " --ignore-table=xtream_iptvpro.user_activity --ignore-table=xtream_iptvpro.stream_logs --ignore-table=xtream_iptvpro.panel_logs --ignore-table=xtream_iptvpro.client_logs --ignore-table=xtream_iptvpro.epg_data > \"" . $rFilename . "\"";
             //         $rRet = shell_exec($rCommand);
             //         if (file_exists($rFilename)) {
@@ -1189,8 +1189,8 @@ if (isset($_GET["action"])) {
             //             if ((count($rBackups) > intval($rAdminSettings["backups_to_keep"])) && (intval($rAdminSettings["backups_to_keep"]) > 0)) {
             //                 $rDelete = array_slice($rBackups, 0, count($rBackups) - intval($rAdminSettings["backups_to_keep"]));
             //                 foreach ($rDelete as $rItem) {
-            //                     if (file_exists(MAIN_DIR . "adtools/backups/" . $rItem["filename"])) {
-            //                         unlink(MAIN_DIR . "adtools/backups/" . $rItem["filename"]);
+            //                     if (file_exists(MAIN_DIR . "backups/" . $rItem["filename"])) {
+            //                         unlink(MAIN_DIR . "backups/" . $rItem["filename"]);
             //                     }
             //                 }
             //             }
