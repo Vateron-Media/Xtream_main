@@ -9,7 +9,8 @@ if ((!hasPermissions("adv", "settings")) && (!hasPermissions("adv", "database"))
 }
 
 #Get versions
-$rGeoLite2 = get_recent_stable_release("https://github.com/Vateron-Media/Xtream_Update/releases/latest");
+$rGeoLite2Latest = get_recent_stable_release("https://github.com/Vateron-Media/Xtream_Update/releases/latest");
+$rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true);
 $rUpdatePanel = mb_substr(get_recent_stable_release("https://github.com/Vateron-Media/Xtream_main/releases/latest"), 1);
 $rInfosUpdate = array();
 
@@ -315,12 +316,12 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["there_was_an_error_saving_settings"] ?>
                                     </div>
                                 <?php } ?>
-                                <?php if (isUpdateNeeded($rGeoLite2, $rAdminSettings["geolite2_version"] ? $rAdminSettings["geolite2_version"] : "0.0.0")) { ?>
+                                <?php if (isUpdateNeeded($rGeoLite2Latest, $rGeoLite2Curent["geolite2_version"] ? $rGeoLite2Curent["geolite2_version"] : "0.0.0")) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        <?= $_["a_new_version_of_GeoLite2"] ?> (<?= $rGeoLite2 ?>) <?= $_["is_available"] ?>
+                                        <?= $_["a_new_version_of_GeoLite2"] ?> (<?= $rGeoLite2Latest ?>) <?= $_["is_available"] ?>
                                         <a href="./settings.php?geolite2"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
@@ -358,7 +359,7 @@ if ($rSettings["sidebar"]) { ?>
                                                     <h2 class="font-weight-normal mb-3">
                                                         <small
                                                             class="mdi mdi-checkbox-blank-circle text-pink align-middle mr-1"></small>
-                                                        <span><?= $rAdminSettings["geolite2_version"] ?></span>
+                                                        <span><?= $rGeoLite2Curent["geolite2_version"] ?></span>
                                                     </h2>
                                                 </div>
                                             </div>

@@ -226,8 +226,10 @@ function updateGeoLite2() {
             }
         }
         if ($checker[0] && $checker[1] && $checker[2]) {
-            $rAdminSettings["geolite2_version"] = $rGeoLite2_version;
-            writeAdminSettings();
+            # create json version file and write version geolite
+            $data = ["geolite2_version" => $rGeoLite2_version];
+            $json = json_encode($data);
+            file_put_contents("/home/xtreamcodes/bin/maxmind/version.json", $json);
             return true;
         } else {
             return false;
