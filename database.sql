@@ -250,7 +250,7 @@ INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
 (13, 'tmdb_async.php', '0 * * * *', 1),
 (14, 'tmp.php', '* * * * *', 1),
 (15, 'users.php', '* * * * *', 1),
-(16, 'vod_cc_series.php', '* * * * *', 1),
+(16, 'series.php', '* * * * *', 1),
 (17, 'vod.php', '* * * * *', 1),
 (18, 'watch_folder.php', '*/5 * * * *', 1);
 
