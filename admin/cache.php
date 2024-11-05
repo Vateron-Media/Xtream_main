@@ -113,13 +113,13 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                     <li class="nav-item">
                                         <a href="#cache" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                             <i class="mdi mdi-cached mr-1"></i>
-                                            <span class="d-none d-sm-inline">XUI Caching System</span>
+                                            <span class="d-none d-sm-inline">Caching System</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="#connections" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                             <i class="mdi mdi-lan-connect mr-1"></i>
-                                            <span class="d-none d-sm-inline">Redis Connection Handler</span>
+                                            <span class="d-none d-sm-inline">Redis Connection Handler (not worked)</span>
                                         </a>
                                     </li>
                                 </ul>

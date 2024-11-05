@@ -329,7 +329,7 @@ function loadCron() {
     if (count($rConnectionSpeeds) > 0) {
         if (ipTV_lib::$settings['redis_handler']) {
             $rStreamMap = $rBitrates = array();
-            $ipTV_db->query('SELECT `stream_id`, `bitrate` FROM `streams_servers` WHERE `server_id` = ? AND `bitrate` IS NOT NULL;', SERVER_ID);
+            $ipTV_db->query('SELECT `stream_id`, `bitrate` FROM `streams_servers` WHERE `server_id` = \'%d\' AND `bitrate` IS NOT NULL;', SERVER_ID);
             foreach ($ipTV_db->get_rows() as $rRow) {
                 $rStreamMap[intval($rRow['stream_id'])] = intval($rRow['bitrate'] / 8 * 0.92);
             }
@@ -389,9 +389,9 @@ function loadCron() {
     }
     if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
         if (ipTV_lib::$settings['redis_handler']) {
-            $ipTV_db->query("DELETE FROM `lines_divergence` WHERE `uuid` NOT IN ('" . implode("','", $rLiveKeys) . "');");
-        } else {
             $ipTV_db->query('DELETE FROM `lines_divergence` WHERE `uuid` NOT IN (SELECT `uuid` FROM `lines_live`);');
+        } else {
+            $ipTV_db->query("DELETE FROM `lines_divergence` WHERE `uuid` NOT IN ('" . implode("','", $rLiveKeys) . "');");
         }
     }
     if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
