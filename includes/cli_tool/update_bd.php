@@ -33,6 +33,7 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_ena
 
 
 $ipTV_db->query("UPDATE `crontab` SET `filename`='series.php' WHERE `filename`='vod_cc_series.php'");
+$ipTV_db->query("UPDATE `crontab` SET `filename`='backups.php' WHERE `filename`='auto_backups.php'");
 
 $ipTV_db->query("SHOW TABLES LIKE 'admin_settings';");
 if ($ipTV_db->num_rows() > 0) {
