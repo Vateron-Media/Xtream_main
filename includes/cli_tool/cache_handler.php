@@ -14,7 +14,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 if ($rLastCheck && $rInterval > time() - $rLastCheck) {
                 } else {
                     ipTV_lib::$settings = ipTV_lib::getSettings(true);
-                    ipTV_lib::$StreamingServers = ipTV_lib::getServers(true);
+                    ipTV_lib::$Servers = ipTV_lib::getServers(true);
                     if (ipTV_lib::$settings['enable_cache']) {
                         if (md5_file(__FILE__) == $rMD5) {
                             $rLastCheck = time();

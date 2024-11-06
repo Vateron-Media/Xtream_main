@@ -8,8 +8,8 @@ class ipTV_servers {
         $PIDs = array_map('intval', $PIDs);
         $output = array();
         foreach ($serverIDS as $serverID) {
-            if (array_key_exists($serverID, ipTV_lib::$StreamingServers)) {
-                $esponse = self::serverRequest($serverID, ipTV_lib::$StreamingServers[$serverID]['api_url_ip'] . '&action=pidsAreRunning', array('program' => $eXE, 'pids' => $PIDs));
+            if (array_key_exists($serverID, ipTV_lib::$Servers)) {
+                $esponse = self::serverRequest($serverID, ipTV_lib::$Servers[$serverID]['api_url_ip'] . '&action=pidsAreRunning', array('program' => $eXE, 'pids' => $PIDs));
                 if ($esponse) {
                     $output[$serverID] = array_map('trim', json_decode($esponse, true));
                 } else {
@@ -20,7 +20,7 @@ class ipTV_servers {
         return $output;
     }
     static function PidsChannels($createdChannelLocation, $pid, $ffmpeg_path) {
-        if (is_null($pid) || !is_numeric($pid) || !array_key_exists($createdChannelLocation, ipTV_lib::$StreamingServers)) {
+        if (is_null($pid) || !is_numeric($pid) || !array_key_exists($createdChannelLocation, ipTV_lib::$Servers)) {
             return false;
         }
         if ($output = self::isPIDsRunning($createdChannelLocation, array($pid), $ffmpeg_path)) {
@@ -45,10 +45,10 @@ class ipTV_servers {
         }
         foreach ($serverIDS as $server_id) {
             if (!($server_id == SERVER_ID)) {
-                if (!array_key_exists($server_id, ipTV_lib::$StreamingServers)) {
+                if (!array_key_exists($server_id, ipTV_lib::$Servers)) {
                     continue;
                 }
-                $esponse = self::serverRequest($server_id, ipTV_lib::$StreamingServers[$server_id]['api_url_ip'] . '&action=runCMD', array('command' => $cmd));
+                $esponse = self::serverRequest($server_id, ipTV_lib::$Servers[$server_id]['api_url_ip'] . '&action=runCMD', array('command' => $cmd));
                 if ($esponse) {
                     $esult = json_decode($esponse, true);
                     $output[$server_id] = $type == 'array' ? $esult : implode('', $esult);
@@ -63,7 +63,7 @@ class ipTV_servers {
         return $output;
     }
     public static function serverRequest($serverID, $rURL, $postData = array()) {
-        if (ipTV_lib::$StreamingServers[$serverID]['server_online']) {
+        if (ipTV_lib::$Servers[$serverID]['server_online']) {
             $output = false;
             $i = 1;
             while ($i <= 2) {

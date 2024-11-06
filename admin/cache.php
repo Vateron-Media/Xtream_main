@@ -233,7 +233,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                 <?php if ($rSettings['redis_handler']):
                                                     try {
                                                         ipTV_lib::$redis = new Redis();
-                                                        ipTV_lib::$redis->connect(ipTV_lib::$StreamingServers[SERVER_ID]['server_ip'], 6379);
+                                                        ipTV_lib::$redis->connect(ipTV_lib::$Servers[SERVER_ID]['server_ip'], 6379);
                                                         $rStatus = true;
                                                     } catch (Exception $e) {
                                                         $rStatus = false;

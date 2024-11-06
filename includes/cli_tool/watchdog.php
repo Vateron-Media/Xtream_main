@@ -6,7 +6,7 @@ if ($argc) {
     $rInterval = (intval(ipTV_lib::$settings['online_capacity_interval']) ?: 10);
     $rPrevStat = $rLastCheck = null;
     $rMD5 = md5_file(__FILE__);
-    $rWatchdog = json_decode(ipTV_lib::$StreamingServers[SERVER_ID]['watchdog_data'], true);
+    $rWatchdog = json_decode(ipTV_lib::$Servers[SERVER_ID]['watchdog_data'], true);
     $rCPUAverage = ($rWatchdog['cpu_average_array'] ?: array());
     while (true) {
         if ($rLastCheck && $rInterval > time() - $rLastCheck) {
@@ -50,7 +50,7 @@ if ($argc) {
             break;
         }
         if (md5_file(__FILE__) == $rMD5) {
-            ipTV_lib::$StreamingServers = ipTV_lib::getServers(true);
+            ipTV_lib::$Servers = ipTV_lib::getServers(true);
             ipTV_lib::$settings = ipTV_lib::getSettings(true);
             ipTV_streaming::getCapacity();
             $rLastCheck = time();

@@ -203,7 +203,7 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
                     if (!empty($epgData[$channel["channel_id"]])) {
                         goto d4dac59fb3f7384deef8b104782422cc;
                     }
-                    $e3539ad64f4d9fc6c2e465986c622369 = ipTV_lib::$StreamingServers[SERVER_ID]["site_url"] . "live/{$_SESSION["cl_data"]["username"]}/{$_SESSION["cl_data"]["password"]}/{$channel["id"]}." . $B8bfd81380fdac631e9d094da9da7ee1;
+                    $e3539ad64f4d9fc6c2e465986c622369 = ipTV_lib::$Servers[SERVER_ID]["site_url"] . "live/{$_SESSION["cl_data"]["username"]}/{$_SESSION["cl_data"]["password"]}/{$channel["id"]}." . $B8bfd81380fdac631e9d094da9da7ee1;
                     $onClickData = !$isMobileDevice ? "post('player.php',{link:'{$e3539ad64f4d9fc6c2e465986c622369}',display_name:'{$channel["stream_display_name"]}'});" : "window.location.href='{$e3539ad64f4d9fc6c2e465986c622369}'";
                     echo "<div class=\"channel_Line\"></div>\n                   <div class=\"channel_Live_Now\"></br><p>No Data</p><p><br/></p>\n                   <div class=\"Play_Live_Button\"  onclick=\"{$onClickData}\">\n                   </div></div>\n                   <div class=\"channel_Line\"></div>";
                     echo "<div class=\"channel_Coming_Next\"></br><p>No Data</p><p><br/></p></div><div class=\"channel_Line\"></div>";
@@ -213,7 +213,7 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
                     foreach ($epgData[$channel["channel_id"]] as $af3d6b1e7696873385892872e750dd94) {
                         if (!($Af236a5462da6c610990628f594f801e > 3)) {
                             if ($Af236a5462da6c610990628f594f801e === 0) {
-                                $e3539ad64f4d9fc6c2e465986c622369 = ipTV_lib::$StreamingServers[SERVER_ID]["site_url"] . "live/{$_SESSION["cl_data"]["username"]}/{$_SESSION["cl_data"]["password"]}/{$channel["id"]}." . $B8bfd81380fdac631e9d094da9da7ee1;
+                                $e3539ad64f4d9fc6c2e465986c622369 = ipTV_lib::$Servers[SERVER_ID]["site_url"] . "live/{$_SESSION["cl_data"]["username"]}/{$_SESSION["cl_data"]["password"]}/{$channel["id"]}." . $B8bfd81380fdac631e9d094da9da7ee1;
                                 $onClickData = !$isMobileDevice ? "post('player.php',{link:'{$e3539ad64f4d9fc6c2e465986c622369}',display_name:'{$channel["stream_display_name"]}'});" : "window.location.href='{$e3539ad64f4d9fc6c2e465986c622369}'";
                                 echo "<div class=\"channel_Line\"></div>\n                   <div class=\"channel_Live_Now\"><p style=\"margin-top:10px;\">" . date("H:i", $af3d6b1e7696873385892872e750dd94["start_timestamp"]) . " - " . date("H:i", $af3d6b1e7696873385892872e750dd94["stop_timestamp"]) . "</p><now><p>" . base64_decode($af3d6b1e7696873385892872e750dd94["title"]) . "</p>\n                   <div class=\"Play_Live_Button\"  onclick=\"{$onClickData}\">\n                   </div></div>\n                   <div class=\"channel_Line\"></div></now>";
                                 goto Ed86656f7afcc6bd26252e78add4bca4;

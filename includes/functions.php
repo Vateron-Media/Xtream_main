@@ -39,7 +39,7 @@ function getStats() {
         $rJSON['total_mem_used_percent'] = 100;
     }
 
-    $rJSON['network_info'] = getNetwork((ipTV_lib::$StreamingServers[SERVER_ID]['network_interface'] == 'auto' ? null : ipTV_lib::$StreamingServers[SERVER_ID]['network_interface']));
+    $rJSON['network_info'] = getNetwork((ipTV_lib::$Servers[SERVER_ID]['network_interface'] == 'auto' ? null : ipTV_lib::$Servers[SERVER_ID]['network_interface']));
     foreach ($rJSON['network_info'] as $rInterface => $rData) {
         $rJSON['bytes_sent_total'] = (intval(trim(file_get_contents('/sys/class/net/' . $rInterface . '/statistics/tx_bytes'))) ?: 0);
         $rJSON['bytes_received_total'] = (intval(trim(file_get_contents('/sys/class/net/' . $rInterface . '/statistics/tx_bytes'))) ?: 0);
@@ -368,10 +368,10 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                 $rEncryptPlaylist = false;
             }
             if (ipTV_lib::$settings['use_mdomain_in_lists'] == 1) {
-                $rDomainName = ipTV_lib::$StreamingServers[SERVER_ID]['site_url'];
+                $rDomainName = ipTV_lib::$Servers[SERVER_ID]['site_url'];
             } else {
                 list($host, $act) = explode(':', $_SERVER['HTTP_HOST']);
-                $rDomainName = ipTV_lib::$StreamingServers[SERVER_ID]['server_protocol'] . '://' . $host . ':' . ipTV_lib::$StreamingServers[SERVER_ID]['request_port'] . '/';
+                $rDomainName = ipTV_lib::$Servers[SERVER_ID]['server_protocol'] . '://' . $host . ':' . ipTV_lib::$Servers[SERVER_ID]['request_port'] . '/';
             }
             if ($rDomainName) {
                 $rRTMPRows = array();
@@ -622,14 +622,14 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                                     }
                                                 }
                                                 if (strlen($rUserInfo['access_token']) == 32) {
-                                                    $rURL = ipTV_lib::$StreamingServers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rUserInfo['access_token'];
+                                                    $rURL = ipTV_lib::$Servers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rUserInfo['access_token'];
                                                 } else {
                                                     if ($rEncryptPlaylist) {
                                                         $rEncData = $rUserInfo['username'] . '/' . $rUserInfo['password'];
                                                         $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                                                        $rURL = ipTV_lib::$StreamingServers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rToken;
+                                                        $rURL = ipTV_lib::$Servers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rToken;
                                                     } else {
-                                                        $rURL = ipTV_lib::$StreamingServers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?username=' . $rUserInfo['username'] . '&password=' . $rUserInfo['password'];
+                                                        $rURL = ipTV_lib::$Servers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?username=' . $rUserInfo['username'] . '&password=' . $rUserInfo['password'];
                                                     }
                                                 }
                                             }

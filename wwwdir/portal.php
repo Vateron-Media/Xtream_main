@@ -326,7 +326,7 @@ switch ($rReqType) {
                 $rTotal['enable_buffering_indication'] = 1;
                 $rTotal['watchdog_timeout'] = mt_rand(80, 120);
 
-                if (empty($rTotal['aspect']) && ipTV_lib::$StreamingServers[SERVER_ID]['server_protocol'] == 'https') {
+                if (empty($rTotal['aspect']) && ipTV_lib::$Servers[SERVER_ID]['server_protocol'] == 'https') {
                     $rTotal['aspect'] = '16';
                 }
 
@@ -577,7 +577,7 @@ switch ($rReqType) {
                             if (empty($rStreamValue)) {
                                 $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStreamID . '/' . ipTV_lib::$settings['mag_container'] . '/' . $rDevice['token'];
                                 $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                                $rURL = $rPlayer . ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$StreamingServers[SERVER_ID]['http_url'] : ipTV_lib::$StreamingServers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+                                $rURL = $rPlayer . ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
                                 if (ipTV_lib::$settings['mag_keep_extension']) {
                                     $rURL .= '?ext=.' . ipTV_lib::$settings['mag_container'];
@@ -844,7 +844,7 @@ switch ($rReqType) {
                             }
                             $rEncData = 'ministra::' . $rCommand['type'] . '/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rCommand['stream_id'] . '/' . $rCommand['target_container'] . '/' . $rDevice['token'];
                             $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                            $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$StreamingServers[SERVER_ID]['http_url'] : ipTV_lib::$StreamingServers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+                            $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
                             if (ipTV_lib::$settings['mag_keep_extension']) {
                                 $rURL .= '?ext=.' . $rCommand['target_container'];
@@ -1007,7 +1007,7 @@ switch ($rReqType) {
                                     $rTitle = $rRow['title'];
                                     $rEncData = 'ministra::timeshift/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rDuration . '/' . $rProgramStart . '/' . $rStreamID . '/' . $rDevice['token'];
                                     $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                                    $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$StreamingServers[SERVER_ID]['http_url'] : ipTV_lib::$StreamingServers[SERVER_ID]['site_url'])) . 'play/' . $rToken . '?&osd_title=' . $rTitle;
+                                    $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken . '?&osd_title=' . $rTitle;
 
                                     if (ipTV_lib::$settings['mag_keep_extension']) {
                                         $rURL .= '&ext=.ts';
@@ -1032,7 +1032,7 @@ switch ($rReqType) {
                             $rDuration = intval(($rRow['end'] - $rRow['start']) / 60);
                             $rEncData = 'ministra::timeshift/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rDuration . '/' . $rStart . '/' . $rStreamID . '/' . $rDevice['token'];
                             $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                            $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$StreamingServers[SERVER_ID]['http_url'] : ipTV_lib::$StreamingServers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+                            $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
                             if (ipTV_lib::$settings['mag_keep_extension']) {
                                 $rURL .= '?ext=.ts';
@@ -1048,7 +1048,7 @@ switch ($rReqType) {
                             $rStart = strtotime(date('Ymd-H'));
                             $rEncData = 'ministra::timeshift/' . $rDevice['username'] . '/' . $rDevice['password'] . '/60/' . $rStart . '/' . $rChannelID . '/' . $rDevice['token'];
                             $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                            $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$StreamingServers[SERVER_ID]['http_url'] : ipTV_lib::$StreamingServers[SERVER_ID]['site_url'])) . 'play/' . $rToken . ((ipTV_lib::$settings['mag_keep_extension'] ? '?ext=.ts' : '')) . ' position:' . (intval(date('i')) * 60 + intval(date('s'))) . ' media_len:' . (intval(date('H')) * 3600 + intval(date('i')) * 60 + intval(date('s')));
+                            $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken . ((ipTV_lib::$settings['mag_keep_extension'] ? '?ext=.ts' : '')) . ' position:' . (intval(date('i')) * 60 + intval(date('s'))) . ' media_len:' . (intval(date('H')) * 3600 + intval(date('i')) * 60 + intval(date('s')));
                             $rOutput['js'] = array('id' => 0, 'cmd' => $rPlayer . $rURL, 'storage_id' => '', 'load' => 0, 'error' => '');
 
                             exit(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
@@ -1842,7 +1842,7 @@ function getStations($rCategoryID = null, $rFav = null, $rOrderBy = null) {
         if (ipTV_lib::$settings['mag_security'] == 0) {
             $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStream['id'] . '/' . ipTV_lib::$settings['mag_container'] . '/' . $rDevice['token'];
             $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-            $rStreamURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$StreamingServers[SERVER_ID]['http_url'] : ipTV_lib::$StreamingServers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+            $rStreamURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
             if (ipTV_lib::$settings['mag_keep_extension']) {
                 $rStreamURL .= '?ext=.' . ipTV_lib::$settings['mag_container'];
@@ -1916,7 +1916,7 @@ function getStreams($rCategoryID = null, $rAll = false, $rFav = null, $rOrderBy 
         if (ipTV_lib::$settings['mag_security'] == 0) {
             $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStream['id'] . '/' . ipTV_lib::$settings['mag_container'] . '/' . $rDevice['token'];
             $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-            $rStreamURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$StreamingServers[SERVER_ID]['http_url'] : ipTV_lib::$StreamingServers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+            $rStreamURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
             if (ipTV_lib::$settings['mag_keep_extension']) {
                 $rStreamURL .= '?ext=.' . ipTV_lib::$settings['mag_container'];

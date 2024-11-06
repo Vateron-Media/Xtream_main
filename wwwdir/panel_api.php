@@ -35,8 +35,8 @@ if (!empty(ipTV_lib::$request["username"]) && !empty(ipTV_lib::$request["passwor
                 }
             default:
                 $categories = GetCategories();
-                $url = empty(ipTV_lib::$StreamingServers[SERVER_ID]["domain_name"]) ? ipTV_lib::$StreamingServers[SERVER_ID]["server_ip"] : ipTV_lib::$StreamingServers[SERVER_ID]["domain_name"];
-                $output["server_info"] = array("url" => $url, "port" => ipTV_lib::$StreamingServers[SERVER_ID]["http_broadcast_port"], "https_port" => ipTV_lib::$StreamingServers[SERVER_ID]["https_broadcast_port"], "server_protocol" => ipTV_lib::$StreamingServers[SERVER_ID]["server_protocol"]);
+                $url = empty(ipTV_lib::$Servers[SERVER_ID]["domain_name"]) ? ipTV_lib::$Servers[SERVER_ID]["server_ip"] : ipTV_lib::$Servers[SERVER_ID]["domain_name"];
+                $output["server_info"] = array("url" => $url, "port" => ipTV_lib::$Servers[SERVER_ID]["http_broadcast_port"], "https_port" => ipTV_lib::$Servers[SERVER_ID]["https_broadcast_port"], "server_protocol" => ipTV_lib::$Servers[SERVER_ID]["server_protocol"]);
                 $output["user_info"]["username"] = $result["username"];
                 $output["user_info"]["password"] = $result["password"];
                 $output["user_info"]["auth"] = 1;

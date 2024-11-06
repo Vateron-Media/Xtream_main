@@ -17,10 +17,10 @@ $rOffset = (empty(ipTV_lib::$request['params']['offset']) ? 0 : abs(intval(ipTV_
 $rLimit = (empty(ipTV_lib::$request['params']['items_per_page']) ? 0 : abs(intval(ipTV_lib::$request['params']['items_per_page'])));
 $rNameTypes = array('live' => 'Live Streams', 'movie' => 'Movies', 'created_live' => 'Created Channels', 'radio_streams' => 'Radio Stations', 'series' => 'TV Series');
 if (ipTV_lib::$settings['use_mdomain_in_lists'] == 1) {
-    $rDomainName = ipTV_lib::$StreamingServers[SERVER_ID]['site_url'];
+    $rDomainName = ipTV_lib::$Servers[SERVER_ID]['site_url'];
 } else {
     list($host, $act) = explode(':', $_SERVER['HTTP_HOST']);
-    $rDomainName = ipTV_lib::$StreamingServers[SERVER_ID]['server_protocol'] . '://' . $host . ':' . ipTV_lib::$StreamingServers[SERVER_ID]['request_port'] . '/';
+    $rDomainName = ipTV_lib::$Servers[SERVER_ID]['server_protocol'] . '://' . $host . ':' . ipTV_lib::$Servers[SERVER_ID]['request_port'] . '/';
 }
 $rDomain = parse_url($rDomainName)['host'];
 $rValidActions = array(200 => 'get_vod_categories', 201 => 'get_live_categories', 202 => 'get_live_streams', 203 => 'get_vod_streams', 204 => 'get_series_info', 205 => 'get_short_epg', 206 => 'get_series_categories', 207 => 'get_simple_data_table', 208 => 'get_series', 209 => 'get_vod_info');
@@ -511,8 +511,8 @@ if ($rUserInfo) {
 
         default:
             $output['user_info'] = array();
-            $url = empty(ipTV_lib::$StreamingServers[SERVER_ID]['domain_name']) ? ipTV_lib::$StreamingServers[SERVER_ID]['server_ip'] : ipTV_lib::$StreamingServers[SERVER_ID]['domain_name'];
-            $output['server_info'] = array('url' => $url, 'port' => ipTV_lib::$StreamingServers[SERVER_ID]['http_broadcast_port'], 'https_port' => ipTV_lib::$StreamingServers[SERVER_ID]['https_broadcast_port'], 'server_protocol' => ipTV_lib::$StreamingServers[SERVER_ID]['server_protocol'], 'rtmp_port' => ipTV_lib::$StreamingServers[SERVER_ID]['rtmp_port'], 'timezone' => ipTV_lib::$settings['default_timezone'], 'timestamp_now' => time(), 'time_now' => date('Y-m-d H:i:s'));
+            $url = empty(ipTV_lib::$Servers[SERVER_ID]['domain_name']) ? ipTV_lib::$Servers[SERVER_ID]['server_ip'] : ipTV_lib::$Servers[SERVER_ID]['domain_name'];
+            $output['server_info'] = array('url' => $url, 'port' => ipTV_lib::$Servers[SERVER_ID]['http_broadcast_port'], 'https_port' => ipTV_lib::$Servers[SERVER_ID]['https_broadcast_port'], 'server_protocol' => ipTV_lib::$Servers[SERVER_ID]['server_protocol'], 'rtmp_port' => ipTV_lib::$Servers[SERVER_ID]['rtmp_port'], 'timezone' => ipTV_lib::$settings['default_timezone'], 'timestamp_now' => time(), 'time_now' => date('Y-m-d H:i:s'));
             if ($mobile_apps == 1) {
                 $output['server_info']['process'] = true;
             }

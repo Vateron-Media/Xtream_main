@@ -19,7 +19,7 @@ $cat_id = !empty(ipTV_lib::$request['cat_id']) ? intval(ipTV_lib::$request['cat_
 $scat_id = !empty(ipTV_lib::$request['scat_id']) ? intval(ipTV_lib::$request['scat_id']) : null;
 $series_id = !empty(ipTV_lib::$request['series_id']) ? intval(ipTV_lib::$request['series_id']) : null;
 $id = !empty(ipTV_lib::$request['season']) ? intval(ipTV_lib::$request['season']) : null;
-$url = !empty($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] . '/' : ipTV_lib::$StreamingServers[SERVER_ID]['site_url'];
+$url = !empty($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] . '/' : ipTV_lib::$Servers[SERVER_ID]['site_url'];
 ini_set('memory_limit', -1);
 if ($user_infos = ipTV_streaming::GetUserInfo(null, $username, $password, true, true, false)) {
     $streaming_block = false;

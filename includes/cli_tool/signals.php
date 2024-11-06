@@ -17,7 +17,7 @@ if ($argc) {
                             shell_exec('kill -9 ' . intval($PID));
                         }
                     } else {
-                        shell_exec('wget --timeout=2 -O /dev/null -o /dev/null "' . ipTV_lib::$StreamingServers[SERVER_ID]['rtmp_mport_url'] . 'control/drop/client?clientid=' . intval($PID) . '" >/dev/null 2>/dev/null &');
+                        shell_exec('wget --timeout=2 -O /dev/null -o /dev/null "' . ipTV_lib::$Servers[SERVER_ID]['rtmp_mport_url'] . 'control/drop/client?clientid=' . intval($PID) . '" >/dev/null 2>/dev/null &');
                     }
                 }
                 if (count($rIDs) > 0) {

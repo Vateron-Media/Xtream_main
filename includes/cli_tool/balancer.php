@@ -9,7 +9,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
             register_shutdown_function('shutdown');
             require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
             unlink(CACHE_TMP_PATH . 'servers');
-            ipTV_lib::$StreamingServers = ipTV_lib::getServers();
+            ipTV_lib::$Servers = ipTV_lib::getServers();
             $rPort = intval($argv[2]);
             $rUsername = $argv[3];
             $rPassword = $argv[4];
@@ -60,7 +60,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
 
             file_put_contents($rInstallDir . $rServerID . '.json', json_encode(array('root_username' => $rUsername, 'root_password' => $rPassword, 'ssh_port' => $rPort)));
 
-            $rHost = ipTV_lib::$StreamingServers[$rServerID]['server_ip'];
+            $rHost = ipTV_lib::$Servers[$rServerID]['server_ip'];
             echo 'Connecting to ' . $rHost . ':' . $rPort . "\n";
             if ($rConn = ssh2_connect($rHost, $rPort)) {
                 if ($rUsername == 'root') {
@@ -115,7 +115,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     }
                     echo 'Generating configuration file' . "\n";
 
-                    $rNewConfig = '; XtreamCodes Configuration' . "\n" . '; -----------------' . "\n" . '; Your username and password will be encrypted and' . "\n" . "; saved to the 'credentials' file in this folder" . "\n" . '; automatically.' . "\n" . ';' . "\n" . '; To change your username or password, modify BOTH' . "\n" . '; below and XtreamCodes will read and re-encrypt them.' . "\n\n" . '[XtreamCodes]' . "\n" . 'hostname    =   "' . ipTV_lib::$StreamingServers[SERVER_ID]['server_ip'] . '"' . "\n" . 'database    =   "xtream_iptvpro"' . "\n" . 'port        =   ' . intval($_INFO['port']) . "\n" . 'server_id   =   ' . $rServerID . "\n" . 'is_lb       =   1' . "\n\n" . '[Encrypted]' . "\n" . 'username    =   "lb_' . $rServerID . '"' . "\n" . 'password    =   ""';
+                    $rNewConfig = '; XtreamCodes Configuration' . "\n" . '; -----------------' . "\n" . '; Your username and password will be encrypted and' . "\n" . "; saved to the 'credentials' file in this folder" . "\n" . '; automatically.' . "\n" . ';' . "\n" . '; To change your username or password, modify BOTH' . "\n" . '; below and XtreamCodes will read and re-encrypt them.' . "\n\n" . '[XtreamCodes]' . "\n" . 'hostname    =   "' . ipTV_lib::$Servers[SERVER_ID]['server_ip'] . '"' . "\n" . 'database    =   "xtream_iptvpro"' . "\n" . 'port        =   ' . intval($_INFO['port']) . "\n" . 'server_id   =   ' . $rServerID . "\n" . 'is_lb       =   1' . "\n\n" . '[Encrypted]' . "\n" . 'username    =   "lb_' . $rServerID . '"' . "\n" . 'password    =   ""';
                     file_put_contents(TMP_PATH . 'config_' . $rServerID, $rNewConfig);
                     sendfile($rConn, TMP_PATH . 'config_' . $rServerID, CONFIG_PATH . 'config.ini');
                     echo 'Installing service' . "\n";

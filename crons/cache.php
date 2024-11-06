@@ -52,7 +52,7 @@ function loadCron() {
         ipTV_lib::setCache('blocked_ips', ipTV_lib::getBlockedIPs(true));
         ipTV_lib::setCache('categories', ipTV_lib::getCategories(null, true));
 
-        if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
+        if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
             $rOutputFormats = array();
             $ipTV_db->query('SELECT `access_output_id`, `output_key` FROM `access_output`;');
             foreach ($ipTV_db->get_rows() as $rRow) {

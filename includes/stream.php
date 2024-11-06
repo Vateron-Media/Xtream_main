@@ -131,7 +131,7 @@ class ipTV_stream {
                     $movieSource = explode(':', $streamSource, 3);
                     $movieServerID = $movieSource[1];
                     if ($movieServerID != SERVER_ID) {
-                        $moviePath = ipTV_lib::$StreamingServers[$movieServerID]['api_url'] . '&action=getFile&filename=' . urlencode($movieSource[2]);
+                        $moviePath = ipTV_lib::$Servers[$movieServerID]['api_url'] . '&action=getFile&filename=' . urlencode($movieSource[2]);
                     } else {
                         $moviePath = $movieSource[2];
                     }
@@ -160,7 +160,7 @@ class ipTV_stream {
                             if ($subtitles['location'] == SERVER_ID) {
                                 $subtitlesImport .= '-sub_charenc ' . $rInputCharset . ' -i ' . $subtitleFile . ' ';
                             } else {
-                                $subtitlesImport .= '-sub_charenc ' . $rInputCharset . ' -i "' . ipTV_lib::$StreamingServers[$subtitles['location']]['api_url'] . '&action=getFile&filename=' . urlencode($subtitleFile) . '" ';
+                                $subtitlesImport .= '-sub_charenc ' . $rInputCharset . ' -i "' . ipTV_lib::$Servers[$subtitles['location']]['api_url'] . '&action=getFile&filename=' . urlencode($subtitleFile) . '" ';
                             }
                         }
                         for ($i = 0; $i < count($subtitles['files']); $i++) {
@@ -334,7 +334,7 @@ class ipTV_stream {
             if ($stream['server_info']['on_demand']) {
                 $rLLOD = true;
             }
-            $rLoopURL = (!is_null(ipTV_lib::$StreamingServers[SERVER_ID]['private_url_ip']) && !is_null(ipTV_lib::$StreamingServers[$stream['server_info']['parent_id']]['private_url_ip']) ? ipTV_lib::$StreamingServers[$stream['server_info']['parent_id']]['private_url_ip'] : ipTV_lib::$StreamingServers[$stream['server_info']['parent_id']]['public_url_ip']);
+            $rLoopURL = (!is_null(ipTV_lib::$Servers[SERVER_ID]['private_url_ip']) && !is_null(ipTV_lib::$Servers[$stream['server_info']['parent_id']]['private_url_ip']) ? ipTV_lib::$Servers[$stream['server_info']['parent_id']]['private_url_ip'] : ipTV_lib::$Servers[$stream['server_info']['parent_id']]['public_url_ip']);
             $sources = array($rLoopURL . 'admin/live?stream=' . intval($streamID) . '&password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . '&extension=ts');
         }
         if ($stream['server_info']['on_demand']) {
@@ -396,7 +396,7 @@ class ipTV_stream {
             }
         }
         $rExternalPush = json_decode($stream['stream_info']['external_push'], true);
-        $progressURL = 'http://127.0.0.1:' . intval(ipTV_lib::$StreamingServers[SERVER_ID]['http_broadcast_port']) . '/progress.php?stream_id=' . intval($streamID);
+        $progressURL = 'http://127.0.0.1:' . intval(ipTV_lib::$Servers[SERVER_ID]['http_broadcast_port']) . '/progress.php?stream_id=' . intval($streamID);
         if (empty($stream['stream_info']['custom_ffmpeg'])) {
             if ($rLoopback) {
                 $rOptions = '{FETCH_OPTIONS}';
@@ -472,7 +472,7 @@ class ipTV_stream {
             $rOutputs['mpegts'][] = $rOptions . ' -individual_header_trailer 0 -f segment -segment_format mpegts -segment_time ' . intval(ipTV_lib::$SegmentsSettings['seg_time']) . ' -segment_list_size ' . intval(ipTV_lib::$SegmentsSettings['seg_list_size']) . ' -segment_format_options "mpegts_flags=+initial_discontinuity:mpegts_copyts=1" -segment_list_type m3u8 -segment_list_flags +live+delete' . $rKeyFrames . ' -segment_list "' . STREAMS_PATH . intval($streamID) . '_.m3u8" "' . STREAMS_PATH . intval($streamID) . '_%d.ts" ';
         }
         if ($stream['stream_info']['rtmp_output'] == 1) {
-            $rOutputs['flv'][] = $rFLVOptions . ' -f flv -flvflags no_duration_filesize rtmp://127.0.0.1:' . intval(ipTV_lib::$StreamingServers[$stream['server_info']['server_id']]['rtmp_port']) . '/live/' . intval($streamID) . '?password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . ' ';
+            $rOutputs['flv'][] = $rFLVOptions . ' -f flv -flvflags no_duration_filesize rtmp://127.0.0.1:' . intval(ipTV_lib::$Servers[$stream['server_info']['server_id']]['rtmp_port']) . '/live/' . intval($streamID) . '?password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . ' ';
         }
         if (!empty($rExternalPush[SERVER_ID])) {
             foreach ($rExternalPush[SERVER_ID] as $rPushURL) {
@@ -832,7 +832,7 @@ class ipTV_stream {
                     file_put_contents(STREAMS_PATH . $rStreamID . '_.iv', $rIV);
                     self::$ipTV_db->query('UPDATE `streams_servers` SET `delay_available_at` = ?,`to_analyze` = 0,`stream_started` = ?,`stream_info` = ?,`stream_status` = 2,`pid` = ?,`progress_info` = ?,`current_source` = ? WHERE `stream_id` = ? AND `server_id` = ?', null, time(), null, $rPID, json_encode(array()), $rSources[0], $rStreamID, SERVER_ID);
                     ipTV_streaming::updateStream($rStreamID);
-                    $rLoopURL = (!is_null(ipTV_lib::$StreamingServers[SERVER_ID]['private_url_ip']) && !is_null(ipTV_lib::$StreamingServers[$rStream['server_info']['parent_id']]['private_url_ip']) ? ipTV_lib::$StreamingServers[$rStream['server_info']['parent_id']]['private_url_ip'] : ipTV_lib::$StreamingServers[$rStream['server_info']['parent_id']]['public_url_ip']);
+                    $rLoopURL = (!is_null(ipTV_lib::$Servers[SERVER_ID]['private_url_ip']) && !is_null(ipTV_lib::$Servers[$rStream['server_info']['parent_id']]['private_url_ip']) ? ipTV_lib::$Servers[$rStream['server_info']['parent_id']]['private_url_ip'] : ipTV_lib::$Servers[$rStream['server_info']['parent_id']]['public_url_ip']);
                     return array('main_pid' => $rPID, 'stream_source' => $rLoopURL . 'admin/live?stream=' . intval($rStreamID) . '&password=' . urlencode(self::$rSettings['live_streaming_pass']) . '&extension=ts', 'delay_enabled' => false, 'parent_id' => 0, 'delay_start_at' => null, 'playlist' => STREAMS_PATH . $rStreamID . '_.m3u8', 'transcode' => false, 'offset' => 0);
                 }
                 return 0;

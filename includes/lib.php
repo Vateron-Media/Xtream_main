@@ -4,7 +4,7 @@ class ipTV_lib {
     public static $ipTV_db = null;
     public static $settings = array();
     public static $Bouquets = array();
-    public static $StreamingServers = array();
+    public static $Servers = array();
     public static $SegmentsSettings = array();
     public static $blockedUA = array();
     public static $customISP = array();
@@ -70,7 +70,7 @@ class ipTV_lib {
         self::$cached = self::$settings["enable_cache"];
 
         if ($useCache) {
-            self::$StreamingServers = self::getCache('servers');
+            self::$Servers = self::getCache('servers');
             self::$Bouquets = self::getCache('bouquets');
             self::$blockedISP = self::getCache('blocked_isp');
             self::$blockedIPs = self::getCache('blocked_ips');
@@ -79,7 +79,7 @@ class ipTV_lib {
             self::$blockedUA = self::getCache('blocked_ua');
             self::$customISP = self::getCache('customisp');
         } else {
-            self::$StreamingServers = self::getServers();
+            self::$Servers = self::getServers();
             self::$Bouquets = self::getBouquets();
             self::$blockedISP = self::getBlockedISP();
             self::$blockedIPs = self::getBlockedIPs();
@@ -95,8 +95,8 @@ class ipTV_lib {
             $_INFO["pconnect"] = null;
         }
 
-        // if (self::$StreamingServers[SERVER_ID]["persistent_connections"] != $_INFO["pconnect"]) {
-        //     $_INFO["pconnect"] = self::$StreamingServers[SERVER_ID]["persistent_connections"];
+        // if (self::$Servers[SERVER_ID]["persistent_connections"] != $_INFO["pconnect"]) {
+        //     $_INFO["pconnect"] = self::$Servers[SERVER_ID]["persistent_connections"];
         //     if (!empty($_INFO) && is_array($_INFO) && !empty($_INFO['username'])) {
         //         file_put_contents(MAIN_DIR . "config", $_INFO, LOCK_EX);
         //     }
@@ -393,7 +393,7 @@ class ipTV_lib {
         }
 
         $IPs = array('127.0.0.1', $_SERVER['SERVER_ADDR']);
-        foreach (self::$StreamingServers as $rServerID => $serverInfo) {
+        foreach (self::$Servers as $rServerID => $serverInfo) {
             if (!empty($serverInfo['whitelist_ips'])) {
                 $IPs = array_merge($IPs, json_decode($serverInfo['whitelist_ips'], true));
             }
@@ -505,7 +505,7 @@ class ipTV_lib {
         $results = array();
         $mh = curl_multi_init();
         foreach ($urls as $key => $val) {
-            if (ipTV_lib::$StreamingServers[$key]["server_online"]) {
+            if (ipTV_lib::$Servers[$key]["server_online"]) {
                 $ch[$key] = curl_init();
                 curl_setopt($ch[$key], CURLOPT_URL, $val["url"]);
                 curl_setopt($ch[$key], CURLOPT_RETURNTRANSFER, true);

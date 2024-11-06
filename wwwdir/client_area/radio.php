@@ -91,7 +91,7 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
                     <radio>
                         <?php
                         foreach ($Bf4bb0ad11102aaccbf77b6cdc1fd66f["channels"] as $E4166ae9900ab98d72b3688948a70564) {
-                            $e3539ad64f4d9fc6c2e465986c622369 = ipTV_lib::$StreamingServers[SERVER_ID]["site_url"] . "live/{$_SESSION["cl_data"]["username"]}/{$_SESSION["cl_data"]["password"]}/{$E4166ae9900ab98d72b3688948a70564["id"]}.ts";
+                            $e3539ad64f4d9fc6c2e465986c622369 = ipTV_lib::$Servers[SERVER_ID]["site_url"] . "live/{$_SESSION["cl_data"]["username"]}/{$_SESSION["cl_data"]["password"]}/{$E4166ae9900ab98d72b3688948a70564["id"]}.ts";
                             echo "<div class=\"Radio_Frame\">\n            \t\t<div class=\"Radio_Icon\">";
                             if (!empty($E4166ae9900ab98d72b3688948a70564["stream_icon"]) && @getimagesize($E4166ae9900ab98d72b3688948a70564["stream_icon"])) {
                                 echo "<img src=\"" . $E4166ae9900ab98d72b3688948a70564["stream_icon"] . "\"></div>";

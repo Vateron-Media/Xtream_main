@@ -210,7 +210,7 @@ label1:
 if (!$streamInfo['parent_id']) {
     goto label49;
 }
-$rForceSource = (!is_null(ipTV_lib::$StreamingServers[SERVER_ID]['private_url_ip']) && !is_null(ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['private_url_ip']) ? ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['private_url_ip'] : ipTV_lib::$StreamingServers[$streamInfo['parent_id']]['public_url_ip']) . 'admin/live?stream=' . intval($streamID) . '&password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . '&extension=ts';
+$rForceSource = (!is_null(ipTV_lib::$Servers[SERVER_ID]['private_url_ip']) && !is_null(ipTV_lib::$Servers[$streamInfo['parent_id']]['private_url_ip']) ? ipTV_lib::$Servers[$streamInfo['parent_id']]['private_url_ip'] : ipTV_lib::$Servers[$streamInfo['parent_id']]['public_url_ip']) . 'admin/live?stream=' . intval($streamID) . '&password=' . urlencode(ipTV_lib::$settings['live_streaming_pass']) . '&extension=ts';
 label49:
 $rData = ipTV_stream::startLLOD($streamID, $streamInfo, $streamInfo['parent_id'] ? array() : $streamArguments, $rForceSource);
 goto label644;

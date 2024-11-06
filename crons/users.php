@@ -9,7 +9,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
         ipTV_lib::check_cron($unique_id);
         $rSync = null;
-        if (count($argv) == 2 && ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
+        if (count($argv) == 2 && ipTV_lib::$Servers[SERVER_ID]['is_main']) {
             ipTV_lib::connectRedis();
             if (is_object(ipTV_lib::$redis)) {
                 $rSync = intval($argv[1]);
@@ -62,10 +62,10 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 exit("Couldn't connect to Redis." . "\n");
             }
         }
-        if (ipTV_lib::$settings['redis_handler'] && ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
-            ipTV_lib::$StreamingServers = ipTV_lib::getServers(true);
+        if (ipTV_lib::$settings['redis_handler'] && ipTV_lib::$Servers[SERVER_ID]['is_main']) {
+            ipTV_lib::$Servers = ipTV_lib::getServers(true);
             $rPHPPIDs = array();
-            foreach (ipTV_lib::$StreamingServers as $rServer) {
+            foreach (ipTV_lib::$Servers as $rServer) {
                 $rPHPPIDs[$rServer['id']] = (array_map('intval', json_decode($rServer['php_pids'], true)) ?: array());
             }
         }
@@ -137,7 +137,7 @@ function loadCron() {
         ipTV_lib::connectRedis();
     }
     $rStartTime = time();
-    if (!ipTV_lib::$settings['redis_handler'] && ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
+    if (!ipTV_lib::$settings['redis_handler'] && ipTV_lib::$Servers[SERVER_ID]['is_main']) {
         $rAutoKick = ipTV_lib::$settings['user_auto_kick_hours'] * 3600;
         $rLiveKeys = $rDelete = $rDeleteStream = array();
         if (ipTV_lib::$settings['redis_handler']) {
@@ -157,7 +157,7 @@ function loadCron() {
             }
             unset($rConnections);
         } else {
-            $rUsers = ipTV_streaming::getConnections((ipTV_lib::$StreamingServers[SERVER_ID]['is_main'] ? null : SERVER_ID));
+            $rUsers = ipTV_streaming::getConnections((ipTV_lib::$Servers[SERVER_ID]['is_main'] ? null : SERVER_ID));
         }
         $rRestreamerArray = $rMaxConnectionsArray = array();
         $rUserIDs = ipTV_lib::confirmIDs(array_keys($rUsers));
@@ -168,7 +168,7 @@ function loadCron() {
                 $rRestreamerArray[$rRow['id']] = $rRow['is_restreamer'];
             }
         }
-        if (ipTV_lib::$settings['redis_handler'] && ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
+        if (ipTV_lib::$settings['redis_handler'] && ipTV_lib::$Servers[SERVER_ID]['is_main']) {
             foreach (ipTV_streaming::getEnded() as $rConnection) {
                 if (is_array($rConnection)) {
                     if (!in_array($rConnection['container'], array('ts', 'hls', 'rtmp')) && time() - $rConnection['hls_last_read'] < 300) {
@@ -223,7 +223,7 @@ function loadCron() {
                                     if ($rConnection['server_id'] == SERVER_ID) {
                                         $rIsRunning = ipTV_streaming::isProcessRunning($rConnection['pid'], 'php-fpm');
                                     } else {
-                                        if ($rConnection['date_start'] <= ipTV_lib::$StreamingServers[$rConnection['server_id']]['last_check_ago'] - 1 && 0 < count($rPHPPIDs[$rConnection['server_id']])) {
+                                        if ($rConnection['date_start'] <= ipTV_lib::$Servers[$rConnection['server_id']]['last_check_ago'] - 1 && 0 < count($rPHPPIDs[$rConnection['server_id']])) {
                                             $rIsRunning = in_array(intval($rConnection['pid']), $rPHPPIDs[$rConnection['server_id']]);
                                         } else {
                                             $rIsRunning = true;
@@ -287,7 +287,7 @@ function loadCron() {
                     $rActiveCount++;
                 }
             }
-            if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main'] && 0 < $rMaxConnections && $rMaxConnections < $rActiveCount) {
+            if (ipTV_lib::$Servers[SERVER_ID]['is_main'] && 0 < $rMaxConnections && $rMaxConnections < $rActiveCount) {
                 foreach ($rConnections as $rKey => $rConnection) {
                     if (!$rConnection['hls_end']) {
                         echo 'Close connection: ' . $rConnection['uuid'] . "\n";
@@ -387,14 +387,14 @@ function loadCron() {
         }
         shell_exec('rm -f ' . DIVERGENCE_TMP_PATH . '*');
     }
-    if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
+    if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
         if (ipTV_lib::$settings['redis_handler']) {
             $ipTV_db->query('DELETE FROM `lines_divergence` WHERE `uuid` NOT IN (SELECT `uuid` FROM `lines_live`);');
         } else {
             $ipTV_db->query("DELETE FROM `lines_divergence` WHERE `uuid` NOT IN ('" . implode("','", $rLiveKeys) . "');");
         }
     }
-    if (ipTV_lib::$StreamingServers[SERVER_ID]['is_main']) {
+    if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
         $ipTV_db->query('DELETE FROM `lines_live` WHERE `uuid` IS NULL;');
     }
 }

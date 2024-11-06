@@ -171,7 +171,7 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
           <?php
           foreach ($D465fc5085f41251c6fa7c77b8333b0f as $c3a18c26bfa971a25d2e6ada870ff735) {
             $E2e6656d8b1675f70c487f89e4f27a3b = $c3a18c26bfa971a25d2e6ada870ff735["target_container"];
-            $e3539ad64f4d9fc6c2e465986c622369 = ipTV_lib::$StreamingServers[SERVER_ID]["site_url"] . "movie/{$_SESSION["cl_data"]["username"]}/{$_SESSION["cl_data"]["password"]}/{$c3a18c26bfa971a25d2e6ada870ff735["id"]}.{$E2e6656d8b1675f70c487f89e4f27a3b}";
+            $e3539ad64f4d9fc6c2e465986c622369 = ipTV_lib::$Servers[SERVER_ID]["site_url"] . "movie/{$_SESSION["cl_data"]["username"]}/{$_SESSION["cl_data"]["password"]}/{$c3a18c26bfa971a25d2e6ada870ff735["id"]}.{$E2e6656d8b1675f70c487f89e4f27a3b}";
             $e79b00eede3b88257cb3495721e75fe1 = json_decode($c3a18c26bfa971a25d2e6ada870ff735["movie_properties"], true);
             $B64c0bedcb468022a4c21a174e659580 = ipTV_lib::$settings["client_area_plugin"] == "vlc" ? "post('player.php',{link:'{$e3539ad64f4d9fc6c2e465986c622369}',display_name:'{$c3a18c26bfa971a25d2e6ada870ff735["stream_display_name"]}'});" : "window.location.href='{$e3539ad64f4d9fc6c2e465986c622369}'";
             echo "<div class=\"movie_Frame\"><div class=\"movie_thump\">";

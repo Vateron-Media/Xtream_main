@@ -16,7 +16,7 @@ switch ($action) {
         switch ($sub) {
             case 'list':
                 $output = array();
-                foreach (ipTV_lib::$StreamingServers as $server_id => $server) {
+                foreach (ipTV_lib::$Servers as $server_id => $server) {
                     $output[] = array('id' => $server_id, 'server_name' => $server['server_name'], 'online' => $server['server_online'], 'info' => json_decode($server['server_hardware'], true));
                 }
                 echo json_encode($output);
@@ -28,9 +28,9 @@ switch ($action) {
         switch ($sub) {
             case 'start':
             case 'stop':
-                $servers = empty(ipTV_lib::$request['servers']) ? array_keys(ipTV_lib::$StreamingServers) : array_map('intval', ipTV_lib::$request['servers']);
+                $servers = empty(ipTV_lib::$request['servers']) ? array_keys(ipTV_lib::$Servers) : array_map('intval', ipTV_lib::$request['servers']);
                 foreach ($servers as $server_id) {
-                    $urls[$server_id] = array('url' => ipTV_lib::$StreamingServers[$server_id]['api_url_ip'] . '&action=vod', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
+                    $urls[$server_id] = array('url' => ipTV_lib::$Servers[$server_id]['api_url_ip'] . '&action=vod', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
                 }
                 ipTV_lib::curlMultiRequest($urls);
                 echo json_encode(array('result' => true));
@@ -43,9 +43,9 @@ switch ($action) {
             case 'start':
             case 'stop':
                 $stream_ids = array_map('intval', ipTV_lib::$request['stream_ids']);
-                $servers = empty(ipTV_lib::$request['servers']) ? array_keys(ipTV_lib::$StreamingServers) : array_map('intval', ipTV_lib::$request['servers']);
+                $servers = empty(ipTV_lib::$request['servers']) ? array_keys(ipTV_lib::$Servers) : array_map('intval', ipTV_lib::$request['servers']);
                 foreach ($servers as $server_id) {
-                    $urls[$server_id] = array('url' => ipTV_lib::$StreamingServers[$server_id]['api_url_ip'] . '&action=stream', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
+                    $urls[$server_id] = array('url' => ipTV_lib::$Servers[$server_id]['api_url_ip'] . '&action=stream', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
                 }
                 // $urls = array(
                 //     1 => array(

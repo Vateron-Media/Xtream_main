@@ -24,7 +24,7 @@ if (isset(ipTV_lib::$request['token'])) {
         generateError('LB_TOKEN_INVALID');
     }
 
-    if (isset($rTokenData['expires']) && $rTokenData['expires'] < time() - intval(ipTV_lib::$StreamingServers[SERVER_ID]['time_offset'])) {
+    if (isset($rTokenData['expires']) && $rTokenData['expires'] < time() - intval(ipTV_lib::$Servers[SERVER_ID]['time_offset'])) {
         generateError('TOKEN_EXPIRED');
     }
 
@@ -76,7 +76,7 @@ if ($rChannelInfo) {
 
 
     if (!$rConnection) {
-        if (!(file_exists(CONS_TMP_PATH . $rTokenData['uuid']) || ($activityStart + $rCreateExpiration) - intval(ipTV_lib::$StreamingServers[SERVER_ID]['time_offset']) >= time())) {
+        if (!(file_exists(CONS_TMP_PATH . $rTokenData['uuid']) || ($activityStart + $rCreateExpiration) - intval(ipTV_lib::$Servers[SERVER_ID]['time_offset']) >= time())) {
             generateError('TOKEN_EXPIRED');
         }
         $rResult = $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');', $rUserInfo['id'], $streamID, $serverID, $rUserAgent, $IP, 'VOD', $rPID, $rTokenData['uuid'], $activityStart, $rCountryCode, $rUserInfo['con_isp_name']);
@@ -270,7 +270,7 @@ function shutdown() {
     ipTV_lib::$settings = ipTV_lib::getCache('settings');
 
     if ($rCloseCon) {
-        $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = \'%s\' WHERE `uuid` = \'%s\' AND `pid` = \'%s\';', time() - intval(ipTV_lib::$StreamingServers[SERVER_ID]['time_offset']), $rTokenData['uuid'], $rPID);
+        $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = \'%s\' WHERE `uuid` = \'%s\' AND `pid` = \'%s\';', time() - intval(ipTV_lib::$Servers[SERVER_ID]['time_offset']), $rTokenData['uuid'], $rPID);
     }
 
     if (is_object($ipTV_db)) {

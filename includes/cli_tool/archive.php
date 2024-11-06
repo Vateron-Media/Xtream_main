@@ -34,7 +34,7 @@ if (@$argc) {
             $ipTV_db->close_mysql();
             delete_old_segments($stream_id, $stream["tv_archive_duration"]);
             $time_file = date("Y-m-d:H-i");
-            $fp = @fopen("http://127.0.0.1:" . ipTV_lib::$StreamingServers[SERVER_ID]["http_broadcast_port"] . "/streaming/admin_live.php?password=" . ipTV_lib::$settings["live_streaming_pass"] . "&stream=" . $stream_id . "&extension=ts", "r");
+            $fp = @fopen("http://127.0.0.1:" . ipTV_lib::$Servers[SERVER_ID]["http_broadcast_port"] . "/streaming/admin_live.php?password=" . ipTV_lib::$settings["live_streaming_pass"] . "&stream=" . $stream_id . "&extension=ts", "r");
             if ($fp) {
                 $file_pointer = fopen(ARCHIVE_PATH . $stream_id . "/" . $time_file . ".ts", "a");
                 while (feof($fp)) {
