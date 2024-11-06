@@ -1531,12 +1531,12 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         if (($rResult) && ($rResult->num_rows > 0)) {
             while ($rRow = $rResult->fetch_assoc()) {
                 // Format Rows
-                if ($rRow["divergence"] <= 10) {
-                    $rDivergence = '<i class="text-success fas fa-circle"></i>';
-                } else if ($rRow["divergence"] <= 50) {
-                    $rDivergence = '<i class="text-warning fas fa-circle"></i>';
+                if ($rRow['divergence'] <= 50) {
+                    $rDivergence = '<button type="button" class="btn btn-outline-success btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';;
+                } else if ($rRow['divergence'] <= 80) {
+                    $rDivergence = '<button type="button" class="btn btn-outline-warning btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
                 } else {
-                    $rDivergence = '<i class="text-danger fas fa-circle"></i>';
+                    $rDivergence = '<button type="button" class="btn btn-outline-danger btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
                 }
                 if ($rPermissions["is_admin"]) {
                     if (hasPermissions("adv", "edit_user")) {
@@ -1559,21 +1559,47 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                 } else {
                     $rServer = "Server #" . $rRow["server_id"];
                 }
+                if (0 < strlen($rRow['geoip_country_code'])) {
+                    $rGeoCountry = "<img loading='lazy' src='assets/images/countries/" . strtolower($rRow['geoip_country_code']) . ".png'></img> &nbsp;";
+                } else {
+                    $rGeoCountry = '';
+                }
                 if ($rRow["user_ip"]) {
-                    $rIP = "<a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $rRow["user_ip"] . "'>" . $rRow["user_ip"] . "</a>";
+                    $rIP = $rGeoCountry . "<a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $rRow["user_ip"] . "'>" . $rRow["user_ip"] . "</a>";
                 } else {
                     $rIP = "";
                 }
-                if (strlen($rRow["geoip_country_code"]) > 0) {
-                    $rGeoCountry = $rRow["geoip_country_code"];
+                $rPlayer = trim(explode('(', $rRow['user_agent'])[0]);
+                $rDuration = intval(time()) - intval($rRow['date_start']);
+                $rColour = 'success';
+                if ($rRow['hls_end']) {
+                    $rDuration = "<button type='button' class='btn btn-secondary btn-xs waves-effect waves-light btn-fixed'>CLOSED</button>";
                 } else {
-                    $rGeoCountry = "";
+                    if (86400 <= $rDuration) {
+                        $rDuration = sprintf('%02dd %02dh', $rDuration / 86400, ($rDuration / 3600) % 24);
+                        $rColour = 'danger';
+                    } else {
+                        if (3600 <= $rDuration) {
+                            if (14400 < $rDuration) {
+                                $rColour = 'warning';
+                            } else if (43200 < $rDuration) {
+                                $rColour = 'danger';
+                            }
+                            $rDuration = sprintf('%02dh %02dm', $rDuration / 3600, ($rDuration / 60) % 60);
+                        } else {
+                            $rDuration = sprintf('%02dm %02ds', ($rDuration / 60) % 60, $rDuration % 60);
+                        }
+                    }
+                    if (!$rRow['is_restreamer']) {
+                    } else {
+                        $rColour = 'success';
+                    }
+                    $rDuration = "<button type='button' class='btn btn-" . $rColour . " btn-xs waves-effect waves-light btn-fixed'>" . $rDuration . '</button>';
                 }
-                if ($rRow["date_start"]) {
-                    $rTime = intval(time()) - intval($rRow["date_start"]);
-                    $rTime = sprintf('%02d:%02d:%02d', ($rTime / 3600), ($rTime / 60 % 60), $rTime % 60);
+                if ($rRow['is_restreamer'] == 1) {
+                    $rRestreamer = '<i class="text-info fas fa-square"></i>';
                 } else {
-                    $rTime = "";
+                    $rRestreamer = '<i class="text-secondary fas fa-square"></i>';
                 }
                 if ($rRow["isp"]) {
                     $rnisp2 = "<span>" . $rRow["isp"] . "</span>";
@@ -1585,7 +1611,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                 } else {
                     $rButtons = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Kill Connection" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["pid"] . ', \'kill\');"><i class="fas fa-hammer"></i></button>';
                 }
-                $rReturn["data"][] = array($rRow["activity_id"], $rDivergence, $rUsername, $rChannel, $rServer, $rRow["user_agent"], $rTime, $rIP, $rGeoCountry, $rnisp2, $rButtons);
+                $rReturn['data'][] = array($rRow['activity_id'], $rDivergence, $rUsername, $rChannel, $rServer, $rPlayer, $rRow['isp'], $rIP, $rDuration, strtoupper($rRow['container']), $rRestreamer, $rButtons);
             }
         }
     }

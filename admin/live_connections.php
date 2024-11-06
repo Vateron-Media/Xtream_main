@@ -98,15 +98,16 @@ if ($rSettings["sidebar"]) { ?>
                                         <thead>
                                             <tr>
                                                 <th class="text-center"><?= $_["id"] ?></th>
-                                                <th class="text-center"><?= $_["status"] ?></th>
+                                                <th class="text-center">Quality</th>
                                                 <th><?= $_["username"] ?></th>
                                                 <th><?= $_["stream"] ?></th>
                                                 <th><?= $_["server"] ?></th>
-                                                <th><?= $_["useragent"] ?></th>
-                                                <th class="text-center"><?= $_["time"] ?></th>
-                                                <th class="text-center"><?= $_["ip"] ?></th>
-                                                <th class="text-center"><?= $_["country"] ?></th>
+                                                <th>Player</th>
                                                 <th class="text-center">ISP</th>
+                                                <th class="text-center"><?= $_["ip"] ?></th>
+                                                <th class="text-center">Duration</th>
+                                                <th class="text-center">Output</th>
+                                                <th class="text-center">Restreamer</th>
                                                 <th class="text-center"><?= $_["actions"] ?></th>
                                             </tr>
                                         </thead>
@@ -249,7 +250,7 @@ if ($rSettings["sidebar"]) { ?>
                             },
                             columnDefs: [{
                                     "className": "dt-center",
-                                    "targets": [0, 1, 6, 7, 8, 10]
+                                    "targets": [0, 1, 6, 7, 8, 9, 10, 11]
                                 },
                                 {
                                     "className": "ellipsis",
