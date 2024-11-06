@@ -52,31 +52,31 @@ function inArray($needles, $haystack) {
 function loadCron() {
     global $rIgnoreErrors;
     global $ipTV_db;
-    // $rQuery = '';
-    // foreach (array(STREAMS_PATH) as $rPath) {
-    //     if ($rHandle = opendir($rPath)) {
-    //         while (false !== ($fileEntry = readdir($rHandle))) {
-    //             if ($fileEntry != '.' && $fileEntry != '..' && is_file($rPath . $fileEntry)) {
-    //                 $rFile = $rPath . $fileEntry;
-    //                 list($rStreamID, $rExtension) = explode('.', $fileEntry);
-    //                 if ($rExtension == 'errors') {
-    //                     $rErrors = array_values(array_unique(array_map('trim', explode("\n", file_get_contents($rFile)))));
-    //                     foreach ($rErrors as $rError) {
-    //                         if (!(empty($rError) || inArray($rIgnoreErrors, $rError))) {
-    //                             $rQuery .= '(' . $rStreamID . ',' . SERVER_ID . ',' . time() . ', \'' . $ipTV_db->escape($rError) . '\'),';
-    //                         }
-    //                     }
-    //                     unlink($rFile);
-    //                 }
-    //             }
-    //         }
-    //         closedir($rHandle);
-    //     }
-    // }
-    // if (!empty($rQuery)) {
-    //     $rQuery = rtrim($rQuery, ',');
-    //     $ipTV_db->query('INSERT INTO `stream_logs` (`stream_id`,`server_id`,`date`,`error`) VALUES ' . $rQuery . ';');
-    // }
+    $rQuery = '';
+    foreach (array(STREAMS_PATH) as $rPath) {
+        if ($rHandle = opendir($rPath)) {
+            while (false !== ($fileEntry = readdir($rHandle))) {
+                if ($fileEntry != '.' && $fileEntry != '..' && is_file($rPath . $fileEntry)) {
+                    $rFile = $rPath . $fileEntry;
+                    list($rStreamID, $rExtension) = explode('.', $fileEntry);
+                    if ($rExtension == 'errors') {
+                        $rErrors = array_values(array_unique(array_map('trim', explode("\n", file_get_contents($rFile)))));
+                        foreach ($rErrors as $rError) {
+                            if (!(empty($rError) || inArray($rIgnoreErrors, $rError))) {
+                                $rQuery .= '(' . $rStreamID . ',' . SERVER_ID . ',' . time() . ', \'' . $ipTV_db->escape($rError) . '\'),';
+                            }
+                        }
+                        unlink($rFile);
+                    }
+                }
+            }
+            closedir($rHandle);
+        }
+    }
+    if (!empty($rQuery)) {
+        $rQuery = rtrim($rQuery, ',');
+        $ipTV_db->query('INSERT INTO `stream_logs` (`stream_id`,`server_id`,`date`,`error`) VALUES ' . $rQuery . ';');
+    }
     $rLog = LOGS_TMP_PATH . 'error_log.log';
     if (file_exists($rLog)) {
         $rQuery = rtrim(parseLog($rLog), ',');
