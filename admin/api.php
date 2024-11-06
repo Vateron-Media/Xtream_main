@@ -1160,48 +1160,42 @@ if (isset($_GET["action"])) {
             }
             echo json_encode(array("result" => True));
             exit;
-            // case "backup":
-            //     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
-            //         echo json_encode(array("result" => False));
-            //         exit;
-            //     }
-            //     $rSub = $_GET["sub"];
-            //     if ($rSub == "delete") {
-            //         $rBackup = pathinfo($_GET["filename"])["filename"];
-            //         if (file_exists(MAIN_DIR . "backups/" . $rBackup . ".sql")) {
-            //             unlink(MAIN_DIR . "backups/" . $rBackup . ".sql");
-            //         }
-            //         echo json_encode(array("result" => True));
-            //         exit;
-            //     } else if ($rSub == "restore") {
-            //         $rBackup = pathinfo($_GET["filename"])["filename"];
-            //         $rFilename = MAIN_DIR . "backups/" . $rBackup . ".sql";
-            //         $rCommand = "mysql -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " < \"" . $rFilename . "\"";
-            //         $rRet = shell_exec($rCommand);
-            //         echo json_encode(array("result" => True));
-            //         exit;
-            //     } else if ($rSub == "backup") {
-            //         $rFilename = MAIN_DIR . "backups/backup_" . date("Y-m-d_H:i:s") . ".sql";
-            //         $rCommand = "mysqldump -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " --ignore-table=xtream_iptvpro.user_activity --ignore-table=xtream_iptvpro.stream_logs --ignore-table=xtream_iptvpro.panel_logs --ignore-table=xtream_iptvpro.client_logs --ignore-table=xtream_iptvpro.epg_data > \"" . $rFilename . "\"";
-            //         $rRet = shell_exec($rCommand);
-            //         if (file_exists($rFilename)) {
-            //             $rBackups = getBackups();
-            //             if ((count($rBackups) > intval($rAdminSettings["backups_to_keep"])) && (intval($rAdminSettings["backups_to_keep"]) > 0)) {
-            //                 $rDelete = array_slice($rBackups, 0, count($rBackups) - intval($rAdminSettings["backups_to_keep"]));
-            //                 foreach ($rDelete as $rItem) {
-            //                     if (file_exists(MAIN_DIR . "backups/" . $rItem["filename"])) {
-            //                         unlink(MAIN_DIR . "backups/" . $rItem["filename"]);
-            //                     }
-            //                 }
-            //             }
-            //             echo json_encode(array("result" => True, "data" => array("filename" => pathinfo($rFilename)["filename"] . ".sql", "timestamp" => filemtime($rFilename), "date" => date("Y-m-d H:i:s", filemtime($rFilename)))));
-            //             exit;
-            //         }
-            //         echo json_encode(array("result" => True));
-            //         exit;
-            //     }
-            //     echo json_encode(array("result" => False));
-            //     exit;
+        case 'backup':
+            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
+                echo json_encode(array('result' => false));
+                exit();
+            }
+            $rSub = $_GET['sub'];
+
+            if ($rSub == 'delete') {
+                $rBackup = pathinfo($_GET['filename'])['filename'];
+
+                if (file_exists(MAIN_DIR . 'backups/' . $rBackup . '.sql')) {
+                    unlink(MAIN_DIR . 'backups/' . $rBackup . '.sql');
+                }
+                echo json_encode(array('result' => true));
+
+                exit();
+            }
+
+            if ($rSub == 'restore') {
+                $rBackup = pathinfo($_GET["filename"])["filename"];
+                $rFilename = MAIN_DIR . "backups/" . $rBackup . ".sql";
+                $rCommand = "mysql -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " < \"" . $rFilename . "\"";
+                $rRet = shell_exec($rCommand);
+                echo json_encode(array("result" => True));
+                exit;
+            }
+
+            if ($rSub == 'backup') {
+                $rCommand = PHP_BIN . ' ' . CRON_PATH . 'backups.php 1 > /dev/null 2>/dev/null &';
+                $rRet = shell_exec($rCommand);
+                echo json_encode(array('result' => true));
+                exit();
+            }
+            echo json_encode(array('result' => false));
+            exit();
+
             /* 
      case "send_event":
         if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "manage_events"))) { echo json_encode(Array("result" => False)); exit; }
