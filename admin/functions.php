@@ -474,26 +474,6 @@ function getSelections($rSources) {
     return $return;
 }
 
-function getBackups() {
-    $rBackups = array();
-
-    # create directory backups
-    if (!is_dir(MAIN_DIR . "backups/")) {
-        mkdir(MAIN_DIR . "backups/");
-    }
-
-    foreach (scandir(MAIN_DIR . "backups/") as $rBackup) {
-        $rInfo = pathinfo(MAIN_DIR . "backups/" . $rBackup);
-        if ($rInfo["extension"] == "sql") {
-            $rBackups[] = array("filename" => $rBackup, "timestamp" => filemtime(MAIN_DIR . "backups/" . $rBackup), "date" => date("Y-m-d H:i:s", filemtime(MAIN_DIR . "backups/" . $rBackup)), "filesize" => filesize(MAIN_DIR . "backups/" . $rBackup));
-        }
-    }
-    usort($rBackups, function ($a, $b) {
-        return $a['timestamp'] <=> $b['timestamp'];
-    });
-    return $rBackups;
-}
-
 function tmdbParseRelease($Release) {
     $rCommand = "/usr/bin/python " . INCLUDES_PATH . "python/release.py \"" . escapeshellcmd($Release) . "\"";
     return json_decode(shell_exec($rCommand), True);

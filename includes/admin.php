@@ -284,3 +284,22 @@ function scanBouquet($rID) {
         $ipTV_db_admin->query("UPDATE `bouquets` SET `bouquet_channels` = '" . json_encode($rUpdate[0]) . "', `bouquet_movies` = '" . json_encode($rUpdate[1]) . "', `bouquet_radios` = '" . json_encode($rUpdate[2]) . "', `bouquet_series` = '" . json_encode($rUpdate[3]) . "' WHERE `id` = " . intval($rBouquet["id"]) . ";");
     }
 }
+function getBackups() {
+    $rBackups = array();
+
+    # create directory backups
+    if (!is_dir(MAIN_DIR . "backups/")) {
+        mkdir(MAIN_DIR . "backups/");
+    }
+
+    foreach (scandir(MAIN_DIR . "backups/") as $rBackup) {
+        $rInfo = pathinfo(MAIN_DIR . "backups/" . $rBackup);
+        if ($rInfo["extension"] == "sql") {
+            $rBackups[] = array("filename" => $rBackup, "timestamp" => filemtime(MAIN_DIR . "backups/" . $rBackup), "date" => date("Y-m-d H:i:s", filemtime(MAIN_DIR . "backups/" . $rBackup)), "filesize" => filesize(MAIN_DIR . "backups/" . $rBackup));
+        }
+    }
+    usort($rBackups, function ($a, $b) {
+        return $a['timestamp'] <=> $b['timestamp'];
+    });
+    return $rBackups;
+}
