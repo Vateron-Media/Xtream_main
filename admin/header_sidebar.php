@@ -226,7 +226,7 @@
                                     <?php if (hasPermissions("adv", "add_server")) { ?>
                                         <li><a href="./server.php"><span class="mdi mdi-upload-network-outline mdi-18px"></span>
                                                 <?= $_["add_existing_lb"] ?></a></li>
-                                        <li><a href="./install_server.php"><span class="mdi mdi-plus-network-outline mdi-18px">
+                                        <li><a href="./server_install.php"><span class="mdi mdi-plus-network-outline mdi-18px">
                                                     <?= $_["install_load_balancer"] ?></a></li>
                                     <?php }
                                     if (hasPermissions("adv", "servers")) { ?>

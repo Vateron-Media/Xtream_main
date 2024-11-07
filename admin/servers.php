@@ -38,7 +38,7 @@ if ($rSettings["sidebar"]) { ?>
                                                         <i class="mdi mdi-plus"></i> <?= $_["add_server"] ?>
                                                     </button>
                                                 </a>
-                                                <a href="install_server.php">
+                                                <a href="server_install.php">
                                                     <button type="button"
                                                         class="btn btn-info waves-effect waves-light btn-sm">
                                                         <i class="mdi mdi-creation"></i> <?= $_["install_lb"] ?>
