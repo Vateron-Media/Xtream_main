@@ -1,59 +1,9 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_server"))) {
-    exit;
-}
 
-if (isset($_POST["submit_server"])) {
-    $rArray = array("server_name" => "", "domain_name" => "", "server_ip" => "", "vpn_ip" => "", "diff_time_main" => 0, "http_broadcast_port" => 25461, "total_clients" => 1000, "system_os" => "", "network_interface" => "auto", "status" => 3, "enable_geoip" => 0, "can_delete" => 1, "rtmp_port" => 25462, "enable_isp" => 0, "network_guaranteed_speed" => 1000, "https_broadcast_port" => 25463, "whitelist_ips" => array(), "timeshift_only" => 0);
-    if ((strlen($_POST["server_name"]) == 0) or (strlen($_POST["server_ip"]) == 0) or (strlen($_POST["ssh_port"]) == 0) or (strlen($_POST["http_broadcast_port"]) == 0) or (strlen($_POST["https_broadcast_port"]) == 0) or (strlen($_POST["rtmp_port"]) == 0) or (strlen($_POST["root_password"]) == 0)) {
-        $_STATUS = 1;
-    }
-    if (!isset($_STATUS)) {
-        $rArray["server_ip"] = $_POST["server_ip"];
-        $rArray["server_name"] = $_POST["server_name"];
-        if (isset($_POST["http_broadcast_port"])) {
-            $rArray["http_broadcast_port"] = intval($_POST["http_broadcast_port"]);
-            unset($_POST["http_broadcast_port"]);
-        }
-        if (isset($_POST["https_broadcast_port"])) {
-            $rArray["https_broadcast_port"] = intval($_POST["https_broadcast_port"]);
-            unset($_POST["https_broadcast_port"]);
-        }
-        if (isset($_POST["rtmp_port"])) {
-            $rArray["rtmp_port"] = intval($_POST["rtmp_port"]);
-            unset($_POST["rtmp_port"]);
-        }
-        $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
-        foreach (array_values($rArray) as $rValue) {
-            isset($rValues) ? $rValues .= ',' : $rValues = '';
-            if (is_array($rValue)) {
-                $rValue = json_encode($rValue);
-            }
-            if (is_null($rValue)) {
-                $rValues .= 'NULL';
-            } else {
-                $rValues .= '\'' . ESC($rValue) . '\'';
-            }
-        }
-        $rQuery = "INSERT INTO `streaming_servers`(" . $rCols . ") VALUES(" . $rValues . ");";
-        if ($db->query($rQuery)) {
-            $rInsertID = intval($db->insert_id);
-            //Create user and add permisions
-            $userBD = "lb_" . intval($rInsertID);
-            $db->query("CREATE USER `" . $userBD . "`@`" . $rArray["server_ip"] . "`;");
-            $db->query("GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO `" . $userBD . "`@`" . $rArray["server_ip"] . "` WITH GRANT OPTION;");
-            $db->query("FLUSH PRIVILEGES;");
-            // Run lb installer
-            $rCommand = '/home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/includes/cli_tool/balancer.php ' . intval($rInsertID) . ' ' . intval($_POST["ssh_port"]) . ' ' . escapeshellarg($_POST['root_username']) . ' ' . escapeshellarg($_POST['root_password']) . ' ' . $rArray["http_broadcast_port"] . ' ' . $rArray["https_broadcast_port"] . ' ' . intval($rUpdateSysctl) . ' > "/home/xtreamcodes/install/' . intval($rInsertID) . '.install" 2>/dev/null &';
-
-            shell_exec($rCommand);
-            header("Location: ./servers.php");
-        } else {
-            $_STATUS = 2;
-        }
-    }
+if (!checkPermissions()) {
+    goHome();
 }
 
 if ($rSettings["sidebar"]) {
@@ -100,6 +50,7 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body">
                                     <form action="./install_server.php" method="POST" id="server_form"
                                         data-parsley-validate="">
+                                        <input type="hidden" name="type" value="1" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
@@ -115,52 +66,58 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label"
+                                                                <label class="col-md-3 col-form-label"
                                                                     for="server_name"><?= $_["server_name"] ?></label>
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-9">
                                                                     <input type="text" class="form-control"
                                                                         id="server_name" name="server_name" value=""
                                                                         required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label"
+                                                                <label class="col-md-3 col-form-label"
                                                                     for="server_ip"><?= $_["server_ip"] ?></label>
-                                                                <div class="col-md-8">
+                                                                <div class="col-md-3">
                                                                     <input type="text" class="form-control"
                                                                         id="server_ip" name="server_ip" value=""
                                                                         required data-parsley-trigger="change">
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label"
-                                                                    for="root_username"><?= $_["root_username"] ?></label>
-                                                                <div class="col-md-8">
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="ssh_port"><?= $_["ssh_port"] ?></label>
+                                                                <div class="col-md-3">
                                                                     <input type="text" class="form-control"
-                                                                        id="root_username" name="root_username" value=""
+                                                                        id="ssh_port" name="ssh_port" value="22"
                                                                         required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label"
-                                                                    for="root_password"><?= $_["root_password"] ?></label>
-                                                                <div class="col-md-8">
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="root_username"><?= $_["ssh_username"] ?></label>
+                                                                <div class="col-md-3">
+                                                                    <input type="text" class="form-control"
+                                                                        id="root_username" name="root_username" value="root"
+                                                                        required data-parsley-trigger="change">
+                                                                </div>
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="root_password"><?= $_["ssh_password"] ?></label>
+                                                                <div class="col-md-3">
                                                                     <input type="text" class="form-control"
                                                                         id="root_password" name="root_password" value=""
                                                                         required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
+
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label"
-                                                                    for="ssh_port"><?= $_["ssh_port"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input type="text" class="form-control"
-                                                                        id="ssh_port" name="ssh_port" value="22"
-                                                                        required data-parsley-trigger="change">
+                                                                <label class="col-md-3 col-form-label" for="update_sysctl">Update
+                                                                    sysctl.conf</label>
+                                                                <div class="col-md-3">
+                                                                    <input name="update_sysctl" id="update_sysctl" type="checkbox"
+                                                                        data-plugin="switchery" class="js-switch" checked
+                                                                        data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label"
+                                                                <label class="col-md-3 col-form-label"
                                                                     for="http_broadcast_port"><?= $_["http_port"] ?></label>
-                                                                <div class="col-md-2">
+                                                                <div class="col-md-3">
                                                                     <input type="text" class="form-control"
                                                                         id="http_broadcast_port"
                                                                         name="http_broadcast_port" value="25461"
@@ -168,17 +125,17 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label"
+                                                                <label class="col-md-3 col-form-label"
                                                                     for="https_broadcast_port"><?= $_["https_port"] ?></label>
-                                                                <div class="col-md-2">
+                                                                <div class="col-md-3">
                                                                     <input type="text" class="form-control"
                                                                         id="https_broadcast_port"
                                                                         name="https_broadcast_port" value="25463"
                                                                         required data-parsley-trigger="change">
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label"
+                                                                <label class="col-md-3 col-form-label"
                                                                     for="rtmp_port"><?= $_["rtmp_port"] ?></label>
-                                                                <div class="col-md-2">
+                                                                <div class="col-md-3">
                                                                     <input type="text" class="form-control"
                                                                         id="rtmp_port" name="rtmp_port" value="25462"
                                                                         required data-parsley-trigger="change">
@@ -234,6 +191,7 @@ if ($rSettings["sidebar"]) { ?>
                 <script src="assets/js/pages/form-wizard.init.js"></script>
                 <script src="assets/libs/parsleyjs/parsley.min.js"></script>
                 <script src="assets/js/app.min.js"></script>
+                <?php include 'post.php'; ?>
 
                 <script>
                     (function($) {
@@ -259,16 +217,62 @@ if ($rSettings["sidebar"]) { ?>
                             return /^\d*$/.test(value);
                         });
                         $("#rtmp_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
+                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
                         });
                         $("#http_broadcast_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
+                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
                         });
                         $("#https_broadcast_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
+                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
                         });
                         $("form").attr('autocomplete', 'off');
+                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+                        elems.forEach(function(html) {
+                            var switchery = new Switchery(html);
+                        });
+                        $("form").submit(function(e) {
+                            e.preventDefault();
+                            $(':input[type="submit"]').prop('disabled', true);
+                            submitForm(window.rCurrentPage, new FormData($("form")[0]));
+                        });
                     });
+
+                    function hideModal(rName, rDispose = false) {
+                        $(rName).modal("hide");
+                        if (rDispose) {
+                            $(rName).modal("dispose");
+                        }
+                        $(rName).css("display", "none");
+                    }
+
+                    function closeEditModal() {
+                        $('.modal').modal('hide');
+                        if ($("#datatable-users").length) {
+                            $("#datatable-users").DataTable().ajax.reload(null, false);
+                        }
+                        if ($("#datatable-streampage").length) {
+                            $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                        }
+                    }
+
+                    function showError(rText) {
+                        $.toast({
+                            text: rText,
+                            icon: 'warning',
+                            loader: true,
+                            loaderBg: '#c62828',
+                            hideAfter: 8000
+                        })
+                    }
+
+                    function showSuccess(rText) {
+                        $.toast({
+                            text: rText,
+                            icon: 'success',
+                            loader: true,
+                            hideAfter: 5000
+                        })
+                    }
                 </script>
                 </body>
 

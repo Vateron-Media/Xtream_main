@@ -29,7 +29,12 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('cc_time', '0'
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_v2_secret_key', '')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_v2_site_key', '')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_enable', '0')");
-
+$ipTV_db->query("ALTER TABLE streaming_servers ALTER http_broadcast_port SET DEFAULT 25461;");
+$ipTV_db->query("ALTER TABLE streaming_servers ALTER https_broadcast_port SET DEFAULT 25463;");
+$ipTV_db->query("ALTER TABLE streaming_servers ALTER total_clients SET DEFAULT 250;");
+$ipTV_db->query("ALTER TABLE streaming_servers ALTER network_interface SET DEFAULT 'auto';");
+$ipTV_db->query("ALTER TABLE streaming_servers ALTER rtmp_port SET DEFAULT 25462;");
+$ipTV_db->query("ALTER TABLE streaming_servers ALTER network_guaranteed_speed SET DEFAULT 1000;");
 
 
 $ipTV_db->query("UPDATE `crontab` SET `filename`='series.php' WHERE `filename`='vod_cc_series.php'");

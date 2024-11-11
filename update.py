@@ -11,8 +11,6 @@ if __name__ == "__main__":
     os.system("sudo systemctl stop xtreamcodes")
     # extract archive
     os.system('sudo tar -zxvf "%s" -C "%s"' % (archive_file, baseDir))
-    # move update files
-    # os.system(f"rsync -a {baseDir}update/ {baseDir}")
     # add permissions
     os.system('sudo chown -R xtreamcodes:xtreamcodes "%s"' % baseDir)
     # os.system(f"sudo sh {baseDir}permissions.sh")

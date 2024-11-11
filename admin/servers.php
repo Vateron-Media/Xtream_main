@@ -197,7 +197,7 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="modal-body">
                                 <div class="form-group row mb-4">
                                     <label class="col-md-3 col-form-label"
-                                        for="root_password"><?= $_["root_password"] ?></label>
+                                        for="root_password"><?= $_["ssh_password"] ?></label>
                                     <div class="col-md-5">
                                         <input type="text" class="form-control" id="root_password" value="">
                                     </div>
