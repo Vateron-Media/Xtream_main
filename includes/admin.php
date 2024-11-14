@@ -45,11 +45,11 @@ $db->query("SET GLOBAL MAX_EXECUTION_TIME=" . ($rSQLTimeout * 1000) . ";");
 
 
 ipTV_lib::$ipTV_db = &$ipTV_db_admin;
+ipTV_lib::init();
 // ipTV_streaming::$ipTV_db = &$ipTV_db_admin;
 // ipTV_stream::$ipTV_db = &$ipTV_db_admin;
 API::$ipTV_db = &$ipTV_db_admin;
 API::init();
-ipTV_lib::init();
 ipTV_lib::connectRedis();
 
 $rProtocol = getProtocol();

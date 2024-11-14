@@ -689,11 +689,10 @@ class ipTV_lib {
         return $rNginx > 0;
     }
     public static function generateCron() {
-        global $ipTV_db;
         if (!file_exists(TMP_PATH . 'crontab')) {
             $rJobs = array();
-            $ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
-            foreach ($ipTV_db->get_rows() as $rRow) {
+            self::$ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
+            foreach (self::$ipTV_db->get_rows() as $rRow) {
                 $rFullPath = CRON_PATH . $rRow['filename'];
                 if (pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && file_exists($rFullPath)) {
                     $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XtreamCodes';
@@ -716,11 +715,10 @@ class ipTV_lib {
         file_put_contents(SIGNALS_TMP_PATH . 'cache_' . md5($rKey), json_encode(array($rKey, $rData)));
     }
     public static function updateLine($rUserID, $rForce = false) {
-        global $ipTV_db;
         if (self::$cached) {
-            $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = \'%s\' AND `cache` = 1 AND `custom_data` = \'%s\';', ipTV_streaming::getMainID(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
-            if ($ipTV_db->get_row()['count'] == 0) {
-                $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(\'%s\', 1, \'%s\', \'%s\');', ipTV_streaming::getMainID(), time(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
+            self::$ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = \'%s\' AND `cache` = 1 AND `custom_data` = \'%s\';', ipTV_streaming::getMainID(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
+            if (self::$ipTV_db->get_row()['count'] == 0) {
+                self::$ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(\'%s\', 1, \'%s\', \'%s\');', ipTV_streaming::getMainID(), time(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
             }
             return true;
         }
