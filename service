@@ -3,66 +3,69 @@
 SCRIPT=/home/xtreamcodes
 USER=$(whoami)
 
-if [ $USER != "root" ]; then
+if [ "$USER" != "root" ]; then
   echo "Please run as root!"
-  exit 0
+  exit 1
 fi
+
+log() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
+}
 
 start() {
   pids=$(pgrep -u xtreamcodes nginx | wc -l)
-  if [ $pids != 0 ]; then
-    echo 'XtreamCodes is already running'
+  if [ "$pids" -ne 0 ]; then
+    log "XtreamCodes is already running"
     return 1
   fi
-  echo 'Starting XtreamCodes...'
-  sudo chown -R xtreamcodes:xtreamcodes /sys/class/net
-  sudo chown -R xtreamcodes:xtreamcodes $SCRIPT/content/streams
-  sudo chown -R xtreamcodes:xtreamcodes $SCRIPT/tmp
+
+  log "Starting XtreamCodes..."
+  sudo chown -R xtreamcodes:xtreamcodes /sys/class/net || exit 1
+  sudo chown -R xtreamcodes:xtreamcodes "$SCRIPT/content/streams" || exit 1
+  sudo chown -R xtreamcodes:xtreamcodes "$SCRIPT/tmp" || exit 1
   if [ -f $SCRIPT/bin/redis/redis-server ]; then
-    sudo -u xtreamcodes $SCRIPT/bin/redis/redis-server $SCRIPT/bin/redis/redis.conf >/dev/null 2>/dev/null &
+    sudo -u xtreamcodes $SCRIPT/bin/redis/redis-server $SCRIPT/bin/redis/redis.conf >/dev/null 2>&1 &
   fi
-  sudo -u xtreamcodes $SCRIPT/bin/nginx/sbin/nginx >/dev/null 2>/dev/null
-  sudo -u xtreamcodes $SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp >/dev/null 2>/dev/null
-  sudo -u xtreamcodes $SCRIPT/bin/daemons.sh
-  sudo $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/startup.php
-  sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/signals.php >/dev/null 2>/dev/null &
-  sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/watchdog.php >/dev/null 2>/dev/null &
-  sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/queue.php >/dev/null 2>/dev/null &
-  if [ -f $SCRIPT/includes/cli_tool/cache_handler.php ]; then
-    sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/cache_handler.php >/dev/null 2>/dev/null &
+  sudo -u xtreamcodes "$SCRIPT/bin/nginx/sbin/nginx" >/dev/null 2>&1 || log "Failed to start nginx"
+  sudo -u xtreamcodes "$SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp" >/dev/null 2>&1 || log "Failed to start nginx_rtmp"
+  sudo -u xtreamcodes "$SCRIPT/bin/daemons.sh" || log "Failed to start daemons.sh"
+  sudo "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/startup.php" || log "Failed to start startup.php"
+  sudo -u xtreamcodes "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/signals.php" >/dev/null 2>&1 &
+  sudo -u xtreamcodes "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/watchdog.php" >/dev/null 2>&1 &
+  sudo -u xtreamcodes "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/queue.php" >/dev/null 2>&1 &
+    if [ -f $SCRIPT/includes/cli_tool/cache_handler.php ]; then
+    sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/cache_handler.php >/dev/null 2>&1 &
   fi
-  echo 'Running in foreground...'
+  log "XtreamCodes started in foreground."
   sleep infinity
 }
 
 stop() {
   pids=$(pgrep -u xtreamcodes nginx | wc -l)
-  if [ $pids = 0 ]; then
-    echo 'XtreamCodes is not running'
+  if [ "$pids" -eq 0 ]; then
+    log "XtreamCodes is not running"
     return 1
   fi
-  echo 'Stopping XtreamCodes...'
-  sudo killall -u xtreamcodes
+  log "Stopping XtreamCodes..."
+  sudo pkill -u xtreamcodes nginx
+  sudo pkill -u xtreamcodes nginx_rtmp
   sleep 1
-  sudo killall -u xtreamcodes
-  sleep 1
-  sudo killall -u xtreamcodes
 }
 
 restart() {
-  ps -U xtreamcodes | egrep -v "ffmpeg|PID" | awk '{print $1}' | xargs kill -9
+  stop
   start
 }
 
 reload() {
   pids=$(pgrep -u xtreamcodes nginx | wc -l)
-  if [ $pids = 0 ]; then
-    echo 'XtreamCodes is not running'
+  if [ "$pids" -eq 0 ]; then
+    log "XtreamCodes is not running"
     return 1
   fi
-  echo 'Reloading XtreamCodes...'
-  sudo -u xtreamcodes $SCRIPT/bin/nginx/sbin/nginx -s reload
-  sudo -u xtreamcodes $SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp -s reload
+  log "Reloading XtreamCodes..."
+  sudo -u xtreamcodes "$SCRIPT/bin/nginx/sbin/nginx" -s reload
+  sudo -u xtreamcodes "$SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp" -s reload
 }
 
 case "$1" in
@@ -80,6 +83,7 @@ case "$1" in
     ;;
   *)
     echo "Usage: $0 {start|stop|restart|reload}"
+    ;;
 esac
 
 exit 0

@@ -380,7 +380,13 @@ function loadCron() {
                                 shell_exec('sudo systemctl stop xtreamcodes');
                             }
                             shell_exec('sudo rm ' . MAIN_DIR . 'bin/php/etc/*.conf');
-                            $rNewScript = '#! /bin/bash' . "\n";
+                            $rNewScript = "#! /bin/bash\n\n"
+                                . "if pgrep -u xtreamcodes php-fpm > /dev/null; then\n"
+                                . "    echo \"PHP-FPM is already running, stopping existing instances...\"\n"
+                                . "    pkill -u xtreamcodes php-fpm\n"
+                                . "    sleep 2\n"
+                                . "fi\n\n"
+                                . "# Now start PHP-FPM instances\n";
                             $rNewBalance = 'upstream php {' . "\n" . '    least_conn;' . "\n";
                             $rTemplate = file_get_contents(MAIN_DIR . 'bin/php/etc/template');
                             foreach (range(1, $rServices) as $i) {

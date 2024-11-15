@@ -171,7 +171,14 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                         runCommand($rConn, 'sudo echo "on_play http://' . $rIP . '/streaming/rtmp.php; on_publish http://' . $rIP . '/streaming/rtmp.php; on_play_done http://' . $rIP . '/streaming/rtmp.php;" > "/home/xtreamcodes/bin/nginx_rtmp/conf/live.conf"');
                         $rServices = (intval(runCommand($rConn, 'sudo cat /proc/cpuinfo | grep "^processor" | wc -l')['output']) ?: 4);
                         runCommand($rConn, 'sudo rm ' . MAIN_DIR . 'bin/php/etc/*.conf');
-                        $rNewScript = '#! /bin/bash' . "\n";
+                        $rNewScript = "#! /bin/bash\n\n"
+                            . "if pgrep -u xtreamcodes php-fpm > /dev/null; then\n"
+                            . "    echo \"PHP-FPM is already running, stopping existing instances...\"\n"
+                            . "    pkill -u xtreamcodes php-fpm\n"
+                            . "    sleep 2\n"
+                            . "fi\n\n"
+                            . "# Now start PHP-FPM instances\n";
+
                         $rNewBalance = 'upstream php {' . "\n" . '    least_conn;' . "\n";
                         $rTemplate = file_get_contents(MAIN_DIR . 'bin/php/etc/template');
                         foreach (range(1, $rServices) as $i) {
@@ -185,6 +192,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                         $rTmpPath = TMP_PATH . md5(time() . 'daemons.sh');
                         file_put_contents($rTmpPath, $rNewScript);
                         sendfile($rConn, $rTmpPath, MAIN_DIR . 'bin/daemons.sh');
+
                         $rTmpPath = TMP_PATH . md5(time() . 'balance.conf');
                         file_put_contents($rTmpPath, $rNewBalance);
                         sendfile($rConn, $rTmpPath, MAIN_DIR . 'bin/nginx/conf/balance.conf');
