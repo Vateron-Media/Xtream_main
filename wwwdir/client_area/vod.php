@@ -3,7 +3,7 @@
 require "../init.php";
 session_start();
 if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != true && empty($_SESSION["cl_data"]))) {
-  $Bf4bb0ad11102aaccbf77b6cdc1fd66f = ipTV_streaming::GetUserInfo(null, $_SESSION["cl_data"]["username"], $_SESSION["cl_data"]["password"], true, true, true, array("movie"));
+  $Bf4bb0ad11102aaccbf77b6cdc1fd66f = ipTV_streaming::getUserInfo(null, $_SESSION["cl_data"]["username"], $_SESSION["cl_data"]["password"], true, true, true, array("movie"));
   $afdd6246d0a110a7f7c2599f764bb8e9 = array();
   $Bbb2d0a1dd6b9567deea1c5361ce620f = array();
   $D465fc5085f41251c6fa7c77b8333b0f = array();

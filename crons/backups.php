@@ -9,7 +9,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
             cli_set_process_title('XtreamCodes[Backups]');
             $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-            ipTV_lib::check_cron($unique_id);
+            ipTV_lib::checkCron($unique_id);
             $rForce = false;
             if (count($argv) > 1) {
                 if (intval($argv[1]) == 1) {

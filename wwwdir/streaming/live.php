@@ -80,7 +80,7 @@ if ($rChannelInfo) {
     if (!ipTV_streaming::isStreamRunning($rChannelInfo["pid"], $streamID)) {
         $rChannelInfo["pid"] = NULL;
         if ($rChannelInfo["on_demand"] == 1) {
-            if (!ipTV_streaming::CheckMonitorRunning($rChannelInfo["monitor_pid"], $streamID)) {
+            if (!ipTV_streaming::checkMonitorRunning($rChannelInfo["monitor_pid"], $streamID)) {
                 if (time() > $rActivityStart + $rCreateExpiration - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"]) {
                     generateError("TOKEN_EXPIRED");
                 }
@@ -114,7 +114,7 @@ if ($rChannelInfo) {
                 if (file_exists($rFirstTS) && !$rFP) {
                     $rFP = fopen($rFirstTS, "r");
                 }
-                if (!(ipTV_streaming::CheckMonitorRunning($rChannelInfo["monitor_pid"], $streamID) && ipTV_streaming::isStreamRunning($rChannelInfo["pid"], $streamID))) {
+                if (!(ipTV_streaming::checkMonitorRunning($rChannelInfo["monitor_pid"], $streamID) && ipTV_streaming::isStreamRunning($rChannelInfo["pid"], $streamID))) {
                     ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
                 }
                 if (!($rFP && fread($rFP, 1))) {
@@ -477,8 +477,8 @@ function shutdown() {
             }
             $ipTV_db->query("UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = '%s' WHERE `uuid` = '%s' AND `pid` = '%s';", time() - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"], $tokenData["uuid"], $PID);
         }
-        ipTV_lib::unlink_file(CONS_TMP_PATH . $tokenData["uuid"]);
-        ipTV_lib::unlink_file(CONS_TMP_PATH . $streamID . "/" . $tokenData["uuid"]);
+        ipTV_lib::unlinkFile(CONS_TMP_PATH . $tokenData["uuid"]);
+        ipTV_lib::unlinkFile(CONS_TMP_PATH . $streamID . "/" . $tokenData["uuid"]);
     }
     if (ipTV_lib::$settings["on_demand_instant_off"] && $rChannelInfo["on_demand"] == 1) {
         ipTV_streaming::removeFromQueue($streamID, $PID);

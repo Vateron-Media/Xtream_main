@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
         cli_set_process_title('XtreamCodes[Live Checker]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::check_cron($unique_id);
+        ipTV_lib::checkCron($unique_id);
         loadCron();
     } else {
         exit(0);
@@ -30,7 +30,7 @@ function loadCron() {
             foreach ($ipTV_db->get_rows() as $stream) {
                 echo 'Stream ID: ' . $stream['stream_id'] . "\n";
                 $streamIDs[] = $stream['stream_id'];
-                if (ipTV_streaming::CheckMonitorRunning($stream['monitor_pid'], $stream['stream_id']) || $stream['on_demand']) {
+                if (ipTV_streaming::checkMonitorRunning($stream['monitor_pid'], $stream['stream_id']) || $stream['on_demand']) {
                     if ($stream['on_demand'] == 1 && $stream['attached'] == 0) {
                         if (ipTV_lib::$settings['redis_handler']) {
                             $rCount = 0;

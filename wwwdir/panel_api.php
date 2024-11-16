@@ -10,7 +10,7 @@ if (!empty(ipTV_lib::$request["username"]) && !empty(ipTV_lib::$request["passwor
     $action = !empty(ipTV_lib::$request["action"]) && in_array(ipTV_lib::$request["action"], $valid_actions) ? ipTV_lib::$request["action"] : '';
     $output = array();
     $output["user_info"] = array();
-    if ($result = ipTV_streaming::GetUserInfo(null, $username, $password, true, true, true)) {
+    if ($result = ipTV_streaming::getUserInfo(null, $username, $password, true, true, true)) {
         $streaming_block = false;
         switch ($action) {
             case "get_epg":

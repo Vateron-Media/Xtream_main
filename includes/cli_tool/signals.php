@@ -56,7 +56,7 @@ if ($argc) {
                                 }
                                 break;
                             case 'delete_con':
-                                ipTV_lib::unlink_file(CONS_TMP_PATH . $rCustomData['uuid']);
+                                ipTV_lib::unlinkFile(CONS_TMP_PATH . $rCustomData['uuid']);
                                 break;
                             case 'delete_vod':
                                 exec('rm ' . VOD_PATH . intval($rCustomData['id']) . '.*');

@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::check_cron($unique_id);
+        ipTV_lib::checkCron($unique_id);
         shell_exec("sudo kill -9 `ps -ef | grep 'XtreamCodesSignals' | grep -v grep | awk '{print \$2}'`;");
         cli_set_process_title('XtreamCodesSignals');
         file_put_contents(CONFIG_PATH . 'signals.last', time());

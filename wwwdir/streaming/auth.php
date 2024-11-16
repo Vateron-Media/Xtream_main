@@ -389,7 +389,7 @@ if ($rExtension) {
 
     switch ($rType) {
         case 'live':
-            $rChannelInfo = ipTV_streaming::ChannelInfo($streamID, $rExtension, $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'live');
+            $rChannelInfo = ipTV_streaming::channelInfo($streamID, $rExtension, $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'live');
             if (is_array($rChannelInfo)) {
                 if (count(array_keys($rChannelInfo)) == 0) {
                     generateError('NO_SERVERS_AVAILABLE');
@@ -415,7 +415,7 @@ if ($rExtension) {
 
                             foreach (array_merge(array($streamID), $rAdaptive) as $rAdaptiveID) {
                                 if ($rAdaptiveID != $streamID) {
-                                    $rAdaptiveInfo = ipTV_streaming::ChannelInfo($rAdaptiveID, $rExtension, $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'live');
+                                    $rAdaptiveInfo = ipTV_streaming::channelInfo($rAdaptiveID, $rExtension, $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'live');
                                     $rURL = ipTV_streaming::getStreamingURL($rAdaptiveInfo['redirect_id'], $rForceHTTP);
                                 } else {
                                     $rAdaptiveInfo = $rChannelInfo;
@@ -485,7 +485,7 @@ if ($rExtension) {
 
         case 'movie':
         case 'series':
-            $rChannelInfo = ipTV_streaming::ChannelInfo($streamID, $rExtension, $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'movie');
+            $rChannelInfo = ipTV_streaming::channelInfo($streamID, $rExtension, $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'movie');
 
             if ($rChannelInfo) {
                 $rURL = ipTV_streaming::getStreamingURL($rChannelInfo['redirect_id'], $rForceHTTP);
@@ -505,7 +505,7 @@ if ($rExtension) {
             break;
 
         case 'timeshift':
-            $rRedirectID = ipTV_streaming::ChannelInfo($streamID, $rExtension, $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'archive');
+            $rRedirectID = ipTV_streaming::channelInfo($streamID, $rExtension, $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'archive');
             if (!$rRedirectID) {
                 ipTV_streaming::showVideoServer('show_not_on_air_video', 'not_on_air_video_path', $rExtension, $rUserInfo, $IP, $rCountryCode, $rUserInfo['con_isp_name'], SERVER_ID);
                 break;
@@ -583,7 +583,7 @@ if ($rExtension) {
             exit();
 
         case 'subtitle':
-            $rChannelInfo = ipTV_streaming::ChannelInfo($streamID, 'srt', $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'movie');
+            $rChannelInfo = ipTV_streaming::channelInfo($streamID, 'srt', $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'movie');
 
             if ($rChannelInfo) {
                 $rURL = ipTV_streaming::getStreamingURL($rChannelInfo['redirect_id'], $rForceHTTP);

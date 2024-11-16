@@ -68,7 +68,7 @@ class ipTV_db {
             $this->result = mysqli_query($this->dbh, $query);
         }
         if (!$this->result) {
-            ipTV_lib::SaveLog("MySQL Query Failed [" . $query . "]: " . mysqli_error($this->dbh));
+            ipTV_lib::saveLog("MySQL Query Failed [" . $query . "]: " . mysqli_error($this->dbh));
             return false;
         }
         return true;
@@ -132,7 +132,7 @@ class ipTV_db {
         $this->db_connect();
         $this->result = mysqli_query($this->dbh, $query);
         if (!$this->result) {
-            ipTV_lib::SaveLog("MySQL Query Failed [" . $query . "]: " . mysqli_error($this->dbh));
+            ipTV_lib::saveLog("MySQL Query Failed [" . $query . "]: " . mysqli_error($this->dbh));
             return false;
         }
         return true;

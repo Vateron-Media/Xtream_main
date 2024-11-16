@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../includes/admin.php';
         cli_set_process_title('XtreamCodes[Series]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::check_cron($unique_id);
+        ipTV_lib::checkCron($unique_id);
         loadCron();
         @unlink($unique_id);
     } else {

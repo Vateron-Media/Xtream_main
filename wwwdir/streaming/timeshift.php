@@ -31,89 +31,89 @@ $user_agent = empty($_SERVER['HTTP_USER_AGENT']) ? '' : htmlentities(trim($_SERV
 $geoip_country_code = $geoip->getWithPrefixLen($user_ip)[0]['registered_country']['iso_code'];
 $geoip->close();
 $play_token = empty(ipTV_lib::$request['play_token']) ? null : ipTV_lib::$request['play_token'];
-if ($user_info = ipTV_streaming::GetUserInfo(null, $username, $password, true, false, true, array(), false, $user_ip, $user_agent, array(), $play_token, $stream_id)) {
+if ($user_info = ipTV_streaming::getUserInfo(null, $username, $password, true, false, true, array(), false, $user_ip, $user_agent, array(), $play_token, $stream_id)) {
     if (isset($user_info['mag_invalid_token'])) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'MAG_TOKEN_INVALID', $user_ip);
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'MAG_TOKEN_INVALID', $user_ip);
         die;
     }
     if (!is_null($user_info['exp_date']) && time() >= $user_info['exp_date']) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'USER_EXPIRED', $user_ip);
-        ipTV_streaming::ShowVideo($user_info['is_restreamer'], 'show_expired_video', 'expired_video_path');
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'USER_EXPIRED', $user_ip);
+        ipTV_streaming::showVideo($user_info['is_restreamer'], 'show_expired_video', 'expired_video_path');
         die;
     }
     if ($user_info['admin_enabled'] == 0) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'USER_BAN', $user_ip);
-        ipTV_streaming::ShowVideo($user_info['is_restreamer'], 'show_banned_video', 'banned_video_path');
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'USER_BAN', $user_ip);
+        ipTV_streaming::showVideo($user_info['is_restreamer'], 'show_banned_video', 'banned_video_path');
         die;
     }
     if ($user_info['enabled'] == 0) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'USER_DISABLED', $user_ip);
-        ipTV_streaming::ShowVideo($user_info['is_restreamer'], 'show_banned_video', 'banned_video_path');
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'USER_DISABLED', $user_ip);
+        ipTV_streaming::showVideo($user_info['is_restreamer'], 'show_banned_video', 'banned_video_path');
         die;
     }
     if (empty($user_agent) && ipTV_lib::$settings['disallow_empty_user_agents'] == 1) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'EMPTY_UA', $user_ip);
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'EMPTY_UA', $user_ip);
         die;
     }
     if (!empty($user_info['allowed_ips']) && !in_array($user_ip, array_map('gethostbyname', $user_info['allowed_ips']))) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'IP_BAN', $user_ip);
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'IP_BAN', $user_ip);
         die;
     }
     if (!empty($geoip_country_code)) {
         $forced_country = !empty($user_info['forced_country']) ? true : false;
         if ($forced_country && $user_info['forced_country'] != 'ALL' && $geoip_country_code != $user_info['forced_country']) {
-            ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'COUNTRY_DISALLOW', $user_ip);
+            ipTV_streaming::clientLog($stream_id, $user_info['id'], 'COUNTRY_DISALLOW', $user_ip);
             die;
         }
         if (!$forced_country && !in_array('ALL', ipTV_lib::$settings['allow_countries']) && !in_array($geoip_country_code, ipTV_lib::$settings['allow_countries'])) {
-            ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'COUNTRY_DISALLOW', $user_ip);
+            ipTV_streaming::clientLog($stream_id, $user_info['id'], 'COUNTRY_DISALLOW', $user_ip);
             die;
         }
     }
     if (!empty($user_info['allowed_ua']) && !in_array($user_agent, $user_info['allowed_ua'])) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'USER_AGENT_BAN', $user_ip);
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'USER_AGENT_BAN', $user_ip);
         die;
     }
     if (ipTV_streaming::checkIsCracked($user_ip)) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'CRACKED', $user_ip);
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'CRACKED', $user_ip);
         die;
     }
     if (isset($user_info['ip_limit_reached'])) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'USER_ALREADY_CONNECTED', $user_ip);
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'USER_ALREADY_CONNECTED', $user_ip);
         die;
     }
     $streaming_block = false;
     if (!in_array($stream_id, $user_info['channel_ids'])) {
         http_response_code(406);
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'NOT_IN_BOUQUET', $user_ip);
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'NOT_IN_BOUQUET', $user_ip);
         die;
     }
     if ($user_info['max_connections'] != 0) {
         if (!empty($user_info['pair_line_info'])) {
             if ($user_info['pair_line_info']['max_connections'] != 0) {
                 if ($user_info['pair_line_info']['active_cons'] >= $user_info['pair_line_info']['max_connections']) {
-                    ipTV_streaming::CloseLastCon($user_info['pair_id'], $user_info['pair_line_info']['max_connections']);
+                    ipTV_streaming::closeLastCon($user_info['pair_id'], $user_info['pair_line_info']['max_connections']);
                 }
             }
         }
         if ($user_info['active_cons'] >= $user_info['max_connections']) {
-            ipTV_streaming::CloseLastCon($user_info['id'], $user_info['max_connections']);
+            ipTV_streaming::closeLastCon($user_info['id'], $user_info['max_connections']);
         }
     }
     if ($user_info['isp_violate'] == 1) {
         http_response_code(401);
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'ISP_LOCK_FAILED', $user_ip, json_encode(array('old' => $user_info['isp_desc'], 'new' => $user_info['con_isp_name'])));
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'ISP_LOCK_FAILED', $user_ip, json_encode(array('old' => $user_info['isp_desc'], 'new' => $user_info['con_isp_name'])));
         die;
     }
     if ($user_info['isp_is_server'] == 1) {
-        ipTV_streaming::ClientLog($stream_id, $user_info['id'], 'CON_SVP', $user_ip, json_encode(array('user_agent' => $user_agent, 'isp' => $user_info['con_isp_name'], 'type' => $user_info['con_isp_type'])), true);
+        ipTV_streaming::clientLog($stream_id, $user_info['id'], 'CON_SVP', $user_ip, json_encode(array('user_agent' => $user_agent, 'isp' => $user_info['con_isp_name'], 'type' => $user_info['con_isp_type'])), true);
         http_response_code(401);
         die;
     }
 } else {
     die;
 }
-$channel_info = ipTV_streaming::ChannelInfo($stream_id, 'ts', $user_info, $user_ip, $geoip_country_code, '', $user_info['con_isp_name'], 'archive');
+$channel_info = ipTV_streaming::channelInfo($stream_id, 'ts', $user_info, $user_ip, $geoip_country_code, '', $user_info['con_isp_name'], 'archive');
 if (empty($channel_info)) {
     http_response_code(403);
     die;
@@ -340,9 +340,9 @@ function shutdown() {
     }
     $ipTV_db->close_mysql();
     if ($activity_id !== false) {
-        ipTV_streaming::CloseAndTransfer($activity_id);
+        ipTV_streaming::closeAndTransfer($activity_id);
         ipTV_streaming::writeOfflineActivity(SERVER_ID, $user_info['id'], $stream_id, $date, $user_agent, $user_ip, $container_priority, $geoip_country_code, $user_info['con_isp_name'], $external_device);
-        ipTV_lib::unlink_file($connection_speed_file);
+        ipTV_lib::unlinkFile($connection_speed_file);
     }
     fastcgi_finish_request();
     posix_kill(getmypid(), 9);

@@ -21,7 +21,7 @@ if (!empty(ipTV_lib::$request['action']) && ipTV_lib::$request['action'] == 'aut
     $dn = !empty(ipTV_lib::$request['dn']) ? htmlentities(ipTV_lib::$request['dn']) : '-';
     $cmac = !empty(ipTV_lib::$request['cmac']) ? htmlentities(strtoupper(ipTV_lib::$request['cmac'])) : '';
     $json = array();
-    if ($enigma_devices = ipTV_streaming::EnigmaDevices(array('device_id' => null, 'mac' => strtoupper($mac)))) {
+    if ($enigma_devices = ipTV_streaming::enigmaDevices(array('device_id' => null, 'mac' => strtoupper($mac)))) {
         if ($enigma_devices['enigma2']['lock_device'] == 1) {
             if (!empty($enigma_devices['enigma2']['modem_mac']) && $enigma_devices['enigma2']['modem_mac'] !== $mmac) {
                 die(json_encode(array()));

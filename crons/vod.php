@@ -6,7 +6,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XtreamCodes[VOD CC Checker]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::check_cron($unique_id);
+        ipTV_lib::checkCron($unique_id);
         ini_set('memory_limit', -1);
         loadCron();
     } else {
@@ -23,8 +23,8 @@ function loadCron() {
         $streams = $ipTV_db->get_rows();
         foreach ($streams as $stream) {
             echo "\n\n[*] Checking Stream " . $stream['stream_display_name'] . "\n";
-            ipTV_stream::TranscodeBuild($stream['id']);
-            switch (ipTV_stream::TranscodeBuild($stream['id'])) {
+            ipTV_stream::transcodeBuild($stream['id']);
+            switch (ipTV_stream::transcodeBuild($stream['id'])) {
                 case 1:
                     echo "\tBuild Is Still Going!\n";
                     break;

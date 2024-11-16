@@ -7,7 +7,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XtreamCodes[Users Parser]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::check_cron($unique_id);
+        ipTV_lib::checkCron($unique_id);
         $rSync = null;
         if (count($argv) == 2 && ipTV_lib::$Servers[SERVER_ID]['is_main']) {
             ipTV_lib::connectRedis();
@@ -122,7 +122,7 @@ function processDeletions($rDelete, $rDelStream = array()) {
     }
     foreach ($rDelStream as $rStreamID => $rConnections) {
         foreach ($rConnections as $rConnection) {
-            ipTV_lib::unlink_file(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
+            ipTV_lib::unlinkFile(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
         }
     }
     if (ipTV_lib::$settings['redis_handler']) {

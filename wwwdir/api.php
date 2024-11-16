@@ -93,7 +93,7 @@ switch ($action) {
             case 'info':
                 if (!empty(ipTV_lib::$request['mac'])) {
                     $mac = ipTV_lib::$request['mac'];
-                    $user_info = ipTV_streaming::GetMagInfo(false, $mac, true, false, true);
+                    $user_info = ipTV_streaming::getMagInfo(false, $mac, true, false, true);
                     if (!empty($user_info)) {
                         echo json_encode(array_merge(array('result' => true), $user_info));
                     } else {
@@ -129,8 +129,8 @@ switch ($action) {
                     $output_formats_types = array(1, 2, 3);
                     $mac = base64_encode(strtoupper($user_data['mac']));
                     unset($user_data['mac']);
-                    $user_data['username'] = ipTV_lib::GenerateString(10);
-                    $user_data['password'] = ipTV_lib::GenerateString(10);
+                    $user_data['username'] = ipTV_lib::generateString(10);
+                    $user_data['password'] = ipTV_lib::generateString(10);
                     if (!array_key_exists('allowed_ips', $user_data) || !parseJson($user_data['allowed_ips'])) {
                         $user_data['allowed_ips'] = json_encode(array());
                     }
@@ -178,7 +178,7 @@ switch ($action) {
                 if (!empty(ipTV_lib::$request['username']) && !empty(ipTV_lib::$request['password'])) {
                     $username = ipTV_lib::$request['username'];
                     $password = ipTV_lib::$request['password'];
-                    $user_info = ipTV_streaming::GetUserInfo(false, $username, $password, true, false, true);
+                    $user_info = ipTV_streaming::getUserInfo(false, $username, $password, true, false, true);
                     if (!empty($user_info)) {
                         echo json_encode(array('result' => true, 'user_info' => $user_info));
                     } else {
@@ -213,10 +213,10 @@ switch ($action) {
                 $output_formats_types = array(1, 2, 3);
                 $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
                 if (!array_key_exists('username', $user_data)) {
-                    $user_data['username'] = ipTV_lib::GenerateString(10);
+                    $user_data['username'] = ipTV_lib::generateString(10);
                 }
                 if (!array_key_exists('password', $user_data)) {
-                    $user_data['password'] = ipTV_lib::GenerateString(10);
+                    $user_data['password'] = ipTV_lib::generateString(10);
                 }
                 if (!array_key_exists('allowed_ips', $user_data) || !parseJson($user_data['allowed_ips'])) {
                     $user_data['allowed_ips'] = json_encode(array());

@@ -124,7 +124,7 @@ function checkFlood($rIP = null) {
                                 }
                                 touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                             }
-                            ipTV_lib::unlink_file($rIPFile);
+                            ipTV_lib::unlinkFile($rIPFile);
                             return null;
                         }
                     } else {
@@ -240,7 +240,7 @@ function checkBruteforce($rIP = null, $rMAC = null, $rUsername = null) {
                                         }
                                         touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                                     }
-                                    ipTV_lib::unlink_file($rIPFile);
+                                    ipTV_lib::unlinkFile($rIPFile);
                                     return null;
                                 }
                             }

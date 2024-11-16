@@ -21,7 +21,7 @@ if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'
         generateError('NO_CREDENTIALS');
     }
 
-    $rUserInfo = ipTV_streaming::GetUserInfo(null, $rUsername, $rPassword, true, false, $rIP);
+    $rUserInfo = ipTV_streaming::getUserInfo(null, $rUsername, $rPassword, true, false, $rIP);
 } else {
     if (isset(ipTV_lib::$request['token'])) {
         $rToken = ipTV_lib::$request['token'];
@@ -30,7 +30,7 @@ if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'
             generateError('NO_CREDENTIALS');
         }
 
-        $rUserInfo = ipTV_streaming::GetUserInfo(null, $rToken, null, true, false, $rIP);
+        $rUserInfo = ipTV_streaming::getUserInfo(null, $rToken, null, true, false, $rIP);
     } else {
         generateError('NO_CREDENTIALS');
     }

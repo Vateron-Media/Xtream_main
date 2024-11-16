@@ -11,7 +11,7 @@ function truncateWithLineBreak($text, $maxLength) {
 }
 
 if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != true && empty($_SESSION["cl_data"]))) {
-    $userInfo = ipTV_streaming::GetUserInfo(null, $_SESSION["cl_data"]["username"], $_SESSION["cl_data"]["password"], true, true, true, array("live", "created_live"));
+    $userInfo = ipTV_streaming::getUserInfo(null, $_SESSION["cl_data"]["username"], $_SESSION["cl_data"]["password"], true, true, true, array("live", "created_live"));
     $channelsByCategory = array();
     $categoriesArr = array();
     $channelsAll = array();

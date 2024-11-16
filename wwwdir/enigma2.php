@@ -21,7 +21,7 @@ $series_id = !empty(ipTV_lib::$request['series_id']) ? intval(ipTV_lib::$request
 $id = !empty(ipTV_lib::$request['season']) ? intval(ipTV_lib::$request['season']) : null;
 $url = !empty($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] . '/' : ipTV_lib::$Servers[SERVER_ID]['site_url'];
 ini_set('memory_limit', -1);
-if ($user_infos = ipTV_streaming::GetUserInfo(null, $username, $password, true, true, false)) {
+if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, true, false)) {
     $streaming_block = false;
     $live_categories = GetCategories('live');
     $vod_categories = GetCategories('movie');
@@ -49,7 +49,7 @@ if ($user_infos = ipTV_streaming::GetUserInfo(null, $username, $password, true, 
             $cdata = $value->addchild('playlist_url');
             $cdata->addCData($url . "enigma2.php?username={$username}&password={$password}&type=get_live_streams&cat_id=0" . $category['id']);
             foreach ($live_categories as $cat_id => $category) {
-                if (!ipTV_streaming::CategoriesBouq($cat_id, $user_infos['bouquet'])) {
+                if (!ipTV_streaming::categoriesBouq($cat_id, $user_infos['bouquet'])) {
                     continue;
                 }
                 $value = $xml->addchild('channel');
@@ -75,7 +75,7 @@ if ($user_infos = ipTV_streaming::GetUserInfo(null, $username, $password, true, 
             $cdata = $value->addchild('playlist_url');
             $cdata->addCData($url . "enigma2.php?username={$username}&password={$password}&type=get_vod_streams&cat_id=0" . $category['id']);
             foreach ($vod_categories as $key => $category) {
-                if (!ipTV_streaming::CategoriesBouq($key, $user_infos['bouquet'])) {
+                if (!ipTV_streaming::categoriesBouq($key, $user_infos['bouquet'])) {
                     continue;
                 }
                 $value = $xml->addchild('channel');

@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XtreamCodes[TMP]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::check_cron($unique_id);
+        ipTV_lib::checkCron($unique_id);
         foreach (array(TMP_PATH, CRONS_TMP_PATH, DIVERGENCE_TMP_PATH, FLOOD_TMP_PATH, STALKER_TMP_PATH, SIGNALS_TMP_PATH, LOGS_TMP_PATH) as $tmpPath) {
             foreach (scandir($tmpPath) as $file) {
                 if (600 <= time() - filemtime($tmpPath . $file) && stripos($file, 'stalker_') === false) {

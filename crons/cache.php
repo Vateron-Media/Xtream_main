@@ -10,7 +10,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         }
         cli_set_process_title('XtreamCodes[Cache Builder]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::check_cron($unique_id);
+        ipTV_lib::checkCron($unique_id);
         loadCron();
     } else {
         exit(0);
@@ -46,8 +46,8 @@ function loadCron() {
         $rServers = ipTV_lib::getServers(true);
         unset($rServers['php_pids']);
         ipTV_lib::setCache('servers', $rServers);
-        ipTV_lib::setCache('blocked_ua', ipTV_lib::GetBlockedUserAgents(true));
-        ipTV_lib::setCache('customisp', ipTV_lib::GetIspAddon(true));
+        ipTV_lib::setCache('blocked_ua', ipTV_lib::getBlockedUserAgents(true));
+        ipTV_lib::setCache('customisp', ipTV_lib::getIspAddon(true));
         ipTV_lib::setCache('blocked_isp', ipTV_lib::getBlockedISP(true));
         ipTV_lib::setCache('blocked_ips', ipTV_lib::getBlockedIPs(true));
         ipTV_lib::setCache('categories', ipTV_lib::getCategories(null, true));

@@ -85,8 +85,8 @@ class ipTV_lib {
             self::$blockedIPs = self::getBlockedIPs();
             self::$categories = self::getCategories();
             self::$allowedIPs = self::getAllowedIPs();
-            self::$blockedUA = self::GetBlockedUserAgents();
-            self::$customISP = self::GetIspAddon();
+            self::$blockedUA = self::getBlockedUserAgents();
+            self::$customISP = self::getIspAddon();
             self::generateCron();
         }
 
@@ -117,7 +117,7 @@ class ipTV_lib {
         $segments_settings["seg_delete_threshold"] = intval(self::$settings["seg_delete_threshold"]);
         return $segments_settings;
     }
-    public static function GetIspAddon($rForce = false) {
+    public static function getIspAddon($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('customisp', 60);
             if ($cache !== false) {
@@ -144,7 +144,7 @@ class ipTV_lib {
      *               the IDs of the user agents and the values are the user agent strings 
      *               in lowercase. Returns an empty array if no blocked user agents are found.
      */
-    public static function GetBlockedUserAgents($rForce = false) {
+    public static function getBlockedUserAgents($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('blocked_ua', 20);
             if ($cache !== false) {
@@ -609,10 +609,10 @@ class ipTV_lib {
         $val = preg_replace("/&#(\\d+?)([^\\d;])/i", "&#\\1;\\2", $val);
         return trim($val);
     }
-    public static function SaveLog($msg) {
+    public static function saveLog($msg) {
         self::$ipTV_db->query('INSERT INTO `panel_logs` (`log_message`,`date`) VALUES(\'%s\',\'%d\')', $msg, time());
     }
-    public static function GenerateString($length = 10) {
+    public static function generateString($length = 10) {
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789qwertyuiopasdfghjklzxcvbnm";
         $str = '';
         $max = strlen($chars) - 1;
@@ -623,7 +623,7 @@ class ipTV_lib {
         }
         return $str;
     }
-    public static function array_values_recursive($array) {
+    public static function arrayValuesRecursive($array) {
         if (!is_array($array)) {
             return $array;
         }
@@ -632,12 +632,12 @@ class ipTV_lib {
             if ((is_scalar($value) or is_resource($value))) {
                 $arrayValues[] = $value;
             } else if (is_array($value)) {
-                $arrayValues = array_merge($arrayValues, self::array_values_recursive($value));
+                $arrayValues = array_merge($arrayValues, self::arrayValuesRecursive($value));
             }
         }
         return $arrayValues;
     }
-    public static function check_cron($rFilename, $rTime = 1800) {
+    public static function checkCron($rFilename, $rTime = 1800) {
         if (file_exists($rFilename)) {
             $PID = trim(file_get_contents($rFilename));
             if (file_exists('/proc/' . $PID)) {
@@ -672,7 +672,7 @@ class ipTV_lib {
      * @return void This function does not return a value. It performs the deletion 
      *              operation and will not raise an error if the file does not exist.
      */
-    public static function unlink_file($filePath) {
+    public static function unlinkFile($filePath) {
         if (file_exists($filePath)) {
             @unlink($filePath);
         }

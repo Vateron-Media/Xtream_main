@@ -67,7 +67,7 @@ if (0 < $ipTV_db->num_rows()) {
         $rChannelInfo['pid'] = null;
 
         if ($rChannelInfo['on_demand'] == 1) {
-            if (!ipTV_streaming::CheckMonitorRunning($rChannelInfo['monitor_pid'], $rStreamID)) {
+            if (!ipTV_streaming::checkMonitorRunning($rChannelInfo['monitor_pid'], $rStreamID)) {
                 ipTV_stream::startMonitor($rStreamID);
 
                 for ($rRetries = 0; !file_exists(STREAMS_PATH . intval($rStreamID) . '_.monitor') && $rRetries < 300; $rRetries++) {

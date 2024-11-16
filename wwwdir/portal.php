@@ -271,7 +271,7 @@ if ($rDevice && $rReqType == 'stb' && $rReqAction == 'get_profile') {
         $ipTV_db->query('UPDATE `mag_devices` SET `ip` = \'%s\', `stb_type` = \'%s\', `sn` = \'%s\', `ver` = \'%s\', `image_version` = \'%s\', `device_id` = \'%s\', `device_id2` = \'%s\', `hw_version` = \'%s\' WHERE `mag_id` = \'%s\';', $rIP, $rSTBType, $rSerialNumber, $rVersion, $rImageVersion, $rDeviceID, $rDeviceID2, $rHWVersion, $rDevice['mag_id']);
         updatecache();
     } else {
-        ipTV_lib::unlink_file(STALKER_TMP_PATH . 'stalker_' . $rDevice['id']);
+        ipTV_lib::unlinkFile(STALKER_TMP_PATH . 'stalker_' . $rDevice['id']);
         $rDevice = array();
     }
 }

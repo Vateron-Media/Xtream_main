@@ -20,7 +20,7 @@ if (isset(ipTV_lib::$request['token'])) {
     $rTokenData = json_decode(decryptData(ipTV_lib::$request['token'], ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA), true);
 
     if (!is_array($rTokenData)) {
-        ipTV_streaming::ClientLog(0, 0, "LB_TOKEN_INVALID", $IP);
+        ipTV_streaming::clientLog(0, 0, "LB_TOKEN_INVALID", $IP);
         generateError('LB_TOKEN_INVALID');
     }
 
@@ -84,7 +84,7 @@ if ($rChannelInfo) {
         $IPMatch = (ipTV_lib::$settings['ip_subnet_match'] ? implode('.', array_slice(explode('.', $rConnection['user_ip']), 0, -1)) == implode('.', array_slice(explode('.', $IP), 0, -1)) : $rConnection['user_ip'] == $IP);
 
         if (!$IPMatch || ipTV_lib::$settings['restrict_same_ip']) {
-            ipTV_streaming::ClientLog($streamID, $rUserInfo['id'], 'IP_MISMATCH', $IP);
+            ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'IP_MISMATCH', $IP);
             generateError('IP_MISMATCH');
         }
 
@@ -100,7 +100,7 @@ if ($rChannelInfo) {
     }
 
     if (!$rResult) {
-        ipTV_streaming::ClientLog($streamID, $rUserInfo['id'], 'LINE_CREATE_FAIL', $IP);
+        ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'LINE_CREATE_FAIL', $IP);
         generateError('LINE_CREATE_FAIL');
     }
 

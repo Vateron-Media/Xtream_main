@@ -10,7 +10,7 @@ class ipTV_stream {
      * @param int $streamID The ID of the stream to transcode and build.
      * @return int Returns 1 if the stream is successfully transcoded and built, 2 if there are no PIDs for the channel, or 2 if there are no differences in stream sources.
      */
-    static function TranscodeBuild($streamID) {
+    static function transcodeBuild($streamID) {
         self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `transcoding_profiles` t3 ON t1.transcode_profile_id = t3.profile_id WHERE t1.`id` = \'%d\'', $streamID);
         $stream = self::$ipTV_db->get_row();
         $stream['cchannel_rsources'] = json_decode($stream['cchannel_rsources'], true);
@@ -238,7 +238,7 @@ class ipTV_stream {
         self::$ipTV_db->query('UPDATE `streams_servers` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`stream_status` = 0 WHERE `stream_id` = \'%d\' AND `server_id` = \'%d\'', $streamID, SERVER_ID);
     }
     public static function startStream($streamID, $rFromCache = false, $rForceSource = null, $rLLOD = false, $startPos = 0) {
-        ipTV_lib::unlink_file(STREAMS_PATH . $streamID . '_.pid');
+        ipTV_lib::unlinkFile(STREAMS_PATH . $streamID . '_.pid');
 
         $stream = array();
         self::$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 1 LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = \'%d\'', $streamID);
@@ -782,7 +782,7 @@ class ipTV_stream {
     static function deleteCache($sources) {
         if (!empty($sources)) {
             foreach ($sources as $source) {
-                ipTV_lib::unlink_file(STREAMS_PATH . md5($source));
+                ipTV_lib::unlinkFile(STREAMS_PATH . md5($source));
             }
         } else {
             return null;
