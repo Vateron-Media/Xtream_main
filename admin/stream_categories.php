@@ -425,83 +425,83 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/nestable2/jquery.nestable.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/nestable2/jquery.nestable.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    function deleteCategory(rID) {
-                        if (confirm("<?= $_["are_you_sure_you_want_to_delete_this_category"] ?>")) {
-                            $.getJSON("./api.php?action=category&sub=delete&category_id=" + rID, function(data) {
-                                if (data.result === true) {
-                                    $(".category-" + rID).remove();
-                                    $.toast("<?= $_["category_successfully_deleted"] ?>");
-                                    $.each($('.tooltip'), function(index, element) {
-                                        $(this).remove();
-                                    });
-                                    $('[data-toggle="tooltip"]').tooltip();
-                                } else {
-                                    $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                                }
-                            });
-                        }
+            <script>
+                function deleteCategory(rID) {
+                    if (confirm("<?= $_["are_you_sure_you_want_to_delete_this_category"] ?>")) {
+                        $.getJSON("./api.php?action=category&sub=delete&category_id=" + rID, function (data) {
+                            if (data.result === true) {
+                                $(".category-" + rID).remove();
+                                $.toast("<?= $_["category_successfully_deleted"] ?>");
+                                $.each($('.tooltip'), function (index, element) {
+                                    $(this).remove();
+                                });
+                                $('[data-toggle="tooltip"]').tooltip();
+                            } else {
+                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                            }
+                        });
                     }
-                    $(document).ready(function() {
-                        $("#category_order-1").nestable({
-                            maxDepth: 1
-                        });
-                        $("#category_order-2").nestable({
-                            maxDepth: 2
-                        });
-                        $("#category_order-3").nestable({
-                            maxDepth: 2
-                        });
-                        $("#category_order-4").nestable({
-                            maxDepth: 1
-                        });
-                        $("#stream_categories_form-1").submit(function(e) {
-                            $("#categories_input-1").val(JSON.stringify($('#category_order-1.dd').nestable('serialize')));
-                        });
-                        $("#stream_categories_form-2").submit(function(e) {
-                            $("#categories_input-2").val(JSON.stringify($('#category_order-2.dd').nestable('serialize')));
-                        });
-                        $("#stream_categories_form-3").submit(function(e) {
-                            $("#categories_input-3").val(JSON.stringify($('#category_order-3.dd').nestable('serialize')));
-                        });
-                        $("#stream_categories_form-4").submit(function(e) {
-                            $("#categories_input-4").val(JSON.stringify($('#category_order-4.dd').nestable('serialize')));
-                        });
+                }
+                $(document).ready(function () {
+                    $("#category_order-1").nestable({
+                        maxDepth: 1
                     });
-                </script>
-                </body>
+                    $("#category_order-2").nestable({
+                        maxDepth: 2
+                    });
+                    $("#category_order-3").nestable({
+                        maxDepth: 2
+                    });
+                    $("#category_order-4").nestable({
+                        maxDepth: 1
+                    });
+                    $("#stream_categories_form-1").submit(function (e) {
+                        $("#categories_input-1").val(JSON.stringify($('#category_order-1.dd').nestable('serialize')));
+                    });
+                    $("#stream_categories_form-2").submit(function (e) {
+                        $("#categories_input-2").val(JSON.stringify($('#category_order-2.dd').nestable('serialize')));
+                    });
+                    $("#stream_categories_form-3").submit(function (e) {
+                        $("#categories_input-3").val(JSON.stringify($('#category_order-3.dd').nestable('serialize')));
+                    });
+                    $("#stream_categories_form-4").submit(function (e) {
+                        $("#categories_input-4").val(JSON.stringify($('#category_order-4.dd').nestable('serialize')));
+                    });
+                });
+            </script>
+            </body>
 
-                </html>
+            </html>

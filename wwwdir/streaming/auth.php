@@ -460,7 +460,7 @@ if ($rExtension) {
                             exit();
                         }
 
-                        // no break
+                    // no break
                     case 'ts':
                         if ((ipTV_lib::$settings['disable_ts'] && (!$rUserInfo['is_restreamer'] || !ipTV_lib::$settings['disable_ts_allow_restream']))) {
                             generateError('TS_DISABLED');
@@ -510,7 +510,7 @@ if ($rExtension) {
                 ipTV_streaming::showVideoServer('show_not_on_air_video', 'not_on_air_video_path', $rExtension, $rUserInfo, $IP, $rCountryCode, $rUserInfo['con_isp_name'], SERVER_ID);
                 break;
             }
-            $rURL = ipTV_streaming::getStreamingURL($rRedirectID,  $rForceHTTP);
+            $rURL = ipTV_streaming::getStreamingURL($rRedirectID, $rForceHTTP);
             $rStartDate = ipTV_lib::$request['start'];
             $rDuration = intval(ipTV_lib::$request['duration']);
 
@@ -552,7 +552,7 @@ if ($rExtension) {
 
                     exit();
             }
-            // no break
+        // no break
         case 'thumb':
             $rStreamInfo = null;
 

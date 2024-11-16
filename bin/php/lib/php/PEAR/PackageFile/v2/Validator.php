@@ -103,7 +103,7 @@ class PEAR_PackageFile_v2_Validator {
                 '*providesextension',
                 '*srcpackage|*srcuri',
                 '+phprelease|+extsrcrelease|+extbinrelease|' .
-                    '+zendextsrcrelease|+zendextbinrelease|bundle', //special validation needed
+                '+zendextsrcrelease|+zendextbinrelease|bundle', //special validation needed
                 '*changelog',
             );
         $test = $this->_packageInfo;
@@ -271,7 +271,7 @@ class PEAR_PackageFile_v2_Validator {
                             'version' => $valpack['attribs']['version']
                         ),
                         'package "%channel%/%package%" cannot be properly validated without ' .
-                            'validation package "%channel%/%name%-%version%"'
+                        'validation package "%channel%/%name%-%version%"'
                     );
                     return $this->_isValid = 0;
                 }
@@ -1259,7 +1259,7 @@ class PEAR_PackageFile_v2_Validator {
                                             'package' => $this->_pf->_registry->parsedPackageNameToString(
                                                 array(
                                                     'package' =>
-                                                    $role['package'],
+                                                        $role['package'],
                                                     'channel' => $role['channel']
                                                 ),
                                                 true
@@ -1325,7 +1325,7 @@ class PEAR_PackageFile_v2_Validator {
                                                 'package' => $this->_pf->_registry->parsedPackageNameToString(
                                                     array(
                                                         'package' =>
-                                                        $role['package'],
+                                                            $role['package'],
                                                         'channel' => $role['channel']
                                                     ),
                                                     true
@@ -1529,7 +1529,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array('version' => $version),
             'This package.xml requires PEAR version %version% to parse properly, we are ' .
-                'version 1.10.12'
+            'version 1.10.12'
         );
     }
 
@@ -1548,7 +1548,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array('type' => $type),
             '<%type%> is not allowed inside global <contents>, only inside ' .
-                '<phprelease>/<extbinrelease>/<zendextbinrelease>, use <dir> and <file> only'
+            '<phprelease>/<extbinrelease>/<zendextbinrelease>, use <dir> and <file> only'
         );
     }
 
@@ -1558,7 +1558,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array('type' => $type),
             '<%type%> is not allowed inside release <filelist>, only inside ' .
-                '<contents>, use <ignore> and <install> only'
+            '<contents>, use <ignore> and <install> only'
         );
     }
 
@@ -1568,7 +1568,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array(),
             'Old-style <file>name</file> is not allowed.  Use' .
-                '<file name="name" role="role"/>'
+            '<file name="name" role="role"/>'
         );
     }
 
@@ -1660,7 +1660,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array('tag' => $filelist),
             '<%tag%> can only contain <dir>, contains <file>.  Use ' .
-                '<dir name="/"> as the first dir element'
+            '<dir name="/"> as the first dir element'
         );
     }
 
@@ -1670,7 +1670,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array('tag' => $filelist),
             '<%tag%> must contain <dir>.  Use <dir name="/"> as the ' .
-                'first dir element'
+            'first dir element'
         );
     }
 
@@ -1692,7 +1692,7 @@ class PEAR_PackageFile_v2_Validator {
                 'name' => $name
             ),
             'Required dependency <%type%> "%name%" can have either url OR ' .
-                'channel attributes, and not both'
+            'channel attributes, and not both'
         );
     }
 
@@ -1705,7 +1705,7 @@ class PEAR_PackageFile_v2_Validator {
                 'name' => $name
             ),
             'Required dependency <%type%> "%name%" must have either url OR ' .
-                'channel attributes'
+            'channel attributes'
         );
     }
 
@@ -1719,7 +1719,7 @@ class PEAR_PackageFile_v2_Validator {
                 'group' => $group
             ),
             'Group "%group%" dependency <%type%> "%name%" can have either url OR ' .
-                'channel attributes, and not both'
+            'channel attributes, and not both'
         );
     }
 
@@ -1733,7 +1733,7 @@ class PEAR_PackageFile_v2_Validator {
                 'group' => $group
             ),
             'Group "%group%" dependency <%type%> "%name%" must have either url OR ' .
-                'channel attributes'
+            'channel attributes'
         );
     }
 
@@ -1822,7 +1822,7 @@ class PEAR_PackageFile_v2_Validator {
                 'types' => $states
             ),
             'Stability type <%type%> is not a valid stability (%value%), must be one of ' .
-                '%types%'
+            '%types%'
         );
     }
 
@@ -1870,7 +1870,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array('name' => $name),
             'Subpackage dependency "%name%" cannot use <providesextension>, ' .
-                'only package dependencies can use this tag'
+            'only package dependencies can use this tag'
         );
     }
 
@@ -1880,7 +1880,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array('name' => $name),
             'Subpackage dependency "%name%" cannot use <conflicts/>, ' .
-                'only package dependencies can use this tag'
+            'only package dependencies can use this tag'
         );
     }
 
@@ -1944,7 +1944,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array('type' => $type),
             '%type%: conflicting dependencies cannot have versioning info, use <exclude> to ' .
-                'exclude specific versions of a dependency'
+            'exclude specific versions of a dependency'
         );
     }
 
@@ -1954,7 +1954,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array('type' => $type),
             '%type%: channel cannot be __uri, this is a pseudo-channel reserved for uri ' .
-                'dependencies only'
+            'dependencies only'
         );
     }
 
@@ -1964,7 +1964,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array(),
             '<bundledpackage> tags must contain only the filename of a package release ' .
-                'in the bundle'
+            'in the bundle'
         );
     }
 
@@ -1974,7 +1974,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array(),
             '<binarypackage> tags must contain the name of a package that is ' .
-                'a compiled version of this extsrc/zendextsrc package'
+            'a compiled version of this extsrc/zendextsrc package'
         );
     }
 
@@ -2056,7 +2056,7 @@ class PEAR_PackageFile_v2_Validator {
             'error',
             array(),
             'Multiple top-level <dir> tags are not allowed.  Enclose them ' .
-                'in a <dir name="/">'
+            'in a <dir name="/">'
         );
     }
 
@@ -2115,7 +2115,7 @@ class PEAR_PackageFile_v2_Validator {
                 call_user_func_array($log, array(
                     0,
                     "ERROR: package $package is not a valid " .
-                        'package'
+                    'package'
                 ));
                 $inf = $ret->getUserInfo();
                 if (is_array($inf)) {
@@ -2251,7 +2251,7 @@ class PEAR_PackageFile_v2_Validator {
                     'warning',
                     array('file' => $file, 'package' => $pn),
                     'in %file%: Could not process file for unknown reasons,' .
-                        ' possibly a PHP parse error in %file% from %package%'
+                    ' possibly a PHP parse error in %file% from %package%'
                 );
             }
         }

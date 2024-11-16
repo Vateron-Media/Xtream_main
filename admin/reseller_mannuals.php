@@ -56,73 +56,73 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col -->
                     </div>
                     <!-- end row -->
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
-                <script>
-                    function api(rID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('Are you sure you want to delete this ticket?') == false) {
-                                return;
-                            }
+                </div>
+            </footer>
+            <!-- end Footer -->
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
+            <script>
+                function api(rID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('Are you sure you want to delete this ticket?') == false) {
+                            return;
                         }
-                        $.getJSON("./api.php?action=ticket&sub=" + rType + "&ticket_id=" + rID, function(data) {
-                            if (data.result == true) {
-                                location.reload();
-                            } else {
-                                $.toast("An error occured while processing your request.");
-                            }
-                        }).fail(function() {
+                    }
+                    $.getJSON("./api.php?action=ticket&sub=" + rType + "&ticket_id=" + rID, function (data) {
+                        if (data.result == true) {
+                            location.reload();
+                        } else {
                             $.toast("An error occured while processing your request.");
-                        });
-                    }
-                    $(document).ready(function() {
-                        $("#tickets-table").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                            },
-                            order: [
-                                [0, "desc"]
-                            ],
-                            stateSave: true
-                        });
-                        $("#tickets-table").css("width", "100%");
+                        }
+                    }).fail(function () {
+                        $.toast("An error occured while processing your request.");
                     });
-                </script>
-                <!-- copiar comando -->
-                <script>
-                    function myFunction() {
-                        var copyText = document.getElementById("myInput");
-                        copyText.select();
-                        copyText.setSelectionRange(0, 99999)
-                        document.execCommand("copy");
-                        alert("Copiou o texto: " + copyText.value);
-                    }
-                </script>
-                </body>
+                }
+                $(document).ready(function () {
+                    $("#tickets-table").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+                        },
+                        order: [
+                            [0, "desc"]
+                        ],
+                        stateSave: true
+                    });
+                    $("#tickets-table").css("width", "100%");
+                });
+            </script>
+            <!-- copiar comando -->
+            <script>
+                function myFunction() {
+                    var copyText = document.getElementById("myInput");
+                    copyText.select();
+                    copyText.setSelectionRange(0, 99999)
+                    document.execCommand("copy");
+                    alert("Copiou o texto: " + copyText.value);
+                }
+            </script>
+            </body>
 
-                </html>
+            </html>

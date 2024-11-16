@@ -20,8 +20,8 @@
 #ifndef ZEND_CONFIG_NW_H
 #define ZEND_CONFIG_NW_H
 
-#include <string.h>
 #include <float.h>
+#include <string.h>
 
 typedef unsigned long ulong;
 typedef unsigned int uint;

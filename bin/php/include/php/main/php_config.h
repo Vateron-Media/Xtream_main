@@ -2157,7 +2157,9 @@
 #define PHP_SIGCHILD 0
 
 /* uname -a output */
-#define PHP_UNAME "Linux vm589243.cloud.nuxt.network 5.4.0-169-generic #187-Ubuntu SMP Thu Nov 23 14:52:28 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux"
+#define PHP_UNAME                                                              \
+  "Linux vm589243.cloud.nuxt.network 5.4.0-169-generic #187-Ubuntu SMP Thu "   \
+  "Nov 23 14:52:28 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux"
 
 /* Whether PHP has to use its own crypt_r for blowfish, des and ext des */
 #define PHP_USE_PHP_CRYPT_R 1
@@ -2331,8 +2333,7 @@
 #include <string.h>
 
 #if defined(__cplusplus) && __cplusplus >= 201103L
-extern "C++"
-{
+extern "C++" {
 #include <cmath>
 #define zend_isnan std::isnan
 #define zend_isinf std::isinf
@@ -2367,10 +2368,10 @@ extern "C++"
 #elif defined(HAVE_FINITE)
 #define zend_finite(a) finite(a)
 #elif defined(fpclassify)
-#define zend_finite(a) ((fpclassify((a)) != FP_INFINITE && fpclassify((a)) != FP_NAN) ? 1 : 0)
+#define zend_finite(a)                                                         \
+  ((fpclassify((a)) != FP_INFINITE && fpclassify((a)) != FP_NAN) ? 1 : 0)
 #else
-#define zend_finite(a) (zend_isnan(a) ? 0 : zend_isinf(a) ? 0 \
-                                                          : 1)
+#define zend_finite(a) (zend_isnan(a) ? 0 : zend_isinf(a) ? 0 : 1)
 #endif
 
 #endif

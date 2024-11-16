@@ -61,7 +61,7 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
             return array(
                 PEAR_TASK_ERROR_INVALID,
                 'Post-install script "' .
-                    $fileXml['name'] . '" must be role="php"',
+                $fileXml['name'] . '" must be role="php"',
             );
         }
         PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
@@ -72,14 +72,14 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
             return array(
                 PEAR_TASK_ERROR_INVALID,
                 'Post-install script "' .
-                    $fileXml['name'] . '" is not valid: ' .
-                    $file->getMessage(),
+                $fileXml['name'] . '" is not valid: ' .
+                $file->getMessage(),
             );
         } elseif ($file === null) {
             return array(
                 PEAR_TASK_ERROR_INVALID,
                 'Post-install script "' .
-                    $fileXml['name'] . '" could not be retrieved for processing!',
+                $fileXml['name'] . '" could not be retrieved for processing!',
             );
         } else {
             $analysis = $pkg->analyzeSourceCode($file, true);
@@ -93,7 +93,7 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                 return array(
                     PEAR_TASK_ERROR_INVALID,
                     'Analysis of post-install script "' .
-                        $fileXml['name'] . '" failed: ' . $warnings,
+                    $fileXml['name'] . '" failed: ' . $warnings,
                 );
             }
             if (count($analysis['declared_classes']) != 1) {
@@ -102,7 +102,7 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                 return array(
                     PEAR_TASK_ERROR_INVALID,
                     'Post-install script "' .
-                        $fileXml['name'] . '" must declare exactly 1 class',
+                    $fileXml['name'] . '" must declare exactly 1 class',
                 );
             }
             $class = $analysis['declared_classes'][0];
@@ -118,12 +118,12 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                 return array(
                     PEAR_TASK_ERROR_INVALID,
                     'Post-install script "' .
-                        $fileXml['name'] . '" class "' . $class . '" must be named "' .
-                        str_replace(
-                            array('/', '.php'),
-                            array('_', ''),
-                            $fileXml['name']
-                        ) . '_postinstall"',
+                    $fileXml['name'] . '" class "' . $class . '" must be named "' .
+                    str_replace(
+                        array('/', '.php'),
+                        array('_', ''),
+                        $fileXml['name']
+                    ) . '_postinstall"',
                 );
             }
             if (!isset($analysis['declared_methods'][$class])) {
@@ -132,7 +132,7 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                 return array(
                     PEAR_TASK_ERROR_INVALID,
                     'Post-install script "' .
-                        $fileXml['name'] . '" must declare methods init() and run()',
+                    $fileXml['name'] . '" must declare methods init() and run()',
                 );
             }
             $methods = array('init' => 0, 'run' => 1);
@@ -147,7 +147,7 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                 return array(
                     PEAR_TASK_ERROR_INVALID,
                     'Post-install script "' .
-                        $fileXml['name'] . '" must declare methods init() and run()',
+                    $fileXml['name'] . '" must declare methods init() and run()',
                 );
             }
         }
@@ -169,8 +169,8 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                     return array(
                         PEAR_TASK_ERROR_INVALID,
                         'Post-install script "' .
-                            $fileXml['name'] . '" <paramgroup> must have ' .
-                            'an ' . $tasksNamespace . 'id> tag',
+                        $fileXml['name'] . '" <paramgroup> must have ' .
+                        'an ' . $tasksNamespace . 'id> tag',
                     );
                 }
                 if (isset($param[$tasksNamespace . 'name'])) {
@@ -178,21 +178,21 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                         return array(
                             PEAR_TASK_ERROR_INVALID,
                             'Post-install script "' .
-                                $fileXml['name'] . '" ' . $tasksNamespace .
-                                'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
-                                '" parameter "' . $param[$tasksNamespace . 'name'] .
-                                '" has not been previously defined',
+                            $fileXml['name'] . '" ' . $tasksNamespace .
+                            'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
+                            '" parameter "' . $param[$tasksNamespace . 'name'] .
+                            '" has not been previously defined',
                         );
                     }
                     if (!isset($param[$tasksNamespace . 'conditiontype'])) {
                         return array(
                             PEAR_TASK_ERROR_INVALID,
                             'Post-install script "' .
-                                $fileXml['name'] . '" ' . $tasksNamespace .
-                                'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
-                                '" must have a ' . $tasksNamespace .
-                                'conditiontype> tag containing either "=", ' .
-                                '"!=", or "preg_match"',
+                            $fileXml['name'] . '" ' . $tasksNamespace .
+                            'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
+                            '" must have a ' . $tasksNamespace .
+                            'conditiontype> tag containing either "=", ' .
+                            '"!=", or "preg_match"',
                         );
                     }
                     if (
@@ -204,21 +204,21 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                         return array(
                             PEAR_TASK_ERROR_INVALID,
                             'Post-install script "' .
-                                $fileXml['name'] . '" ' . $tasksNamespace .
-                                'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
-                                '" must have a ' . $tasksNamespace .
-                                'conditiontype> tag containing either "=", ' .
-                                '"!=", or "preg_match"',
+                            $fileXml['name'] . '" ' . $tasksNamespace .
+                            'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
+                            '" must have a ' . $tasksNamespace .
+                            'conditiontype> tag containing either "=", ' .
+                            '"!=", or "preg_match"',
                         );
                     }
                     if (!isset($param[$tasksNamespace . 'value'])) {
                         return array(
                             PEAR_TASK_ERROR_INVALID,
                             'Post-install script "' .
-                                $fileXml['name'] . '" ' . $tasksNamespace .
-                                'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
-                                '" must have a ' . $tasksNamespace .
-                                'value> tag containing expected parameter value',
+                            $fileXml['name'] . '" ' . $tasksNamespace .
+                            'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
+                            '" must have a ' . $tasksNamespace .
+                            'value> tag containing expected parameter value',
                         );
                     }
                 }
@@ -227,9 +227,9 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                         return array(
                             PEAR_TASK_ERROR_INVALID,
                             'Post-install script "' .
-                                $fileXml['name'] . '" ' . $tasksNamespace .
-                                'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
-                                '" ' . $tasksNamespace . 'instructions> must be simple text',
+                            $fileXml['name'] . '" ' . $tasksNamespace .
+                            'paramgroup> id "' . $param[$tasksNamespace . 'id'] .
+                            '" ' . $tasksNamespace . 'instructions> must be simple text',
                         );
                     }
                 }
@@ -245,10 +245,10 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                         return array(
                             PEAR_TASK_ERROR_INVALID,
                             'Post-install script "' .
-                                $fileXml['name'] . '" parameter for ' .
-                                $tasksNamespace . 'paramgroup> id "' .
-                                $param[$tasksNamespace . 'id'] . '" must have ' .
-                                'a ' . $tasksNamespace . 'name> tag',
+                            $fileXml['name'] . '" parameter for ' .
+                            $tasksNamespace . 'paramgroup> id "' .
+                            $param[$tasksNamespace . 'id'] . '" must have ' .
+                            'a ' . $tasksNamespace . 'name> tag',
                         );
                     }
                     if (
@@ -260,33 +260,33 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
                         return array(
                             PEAR_TASK_ERROR_INVALID,
                             'Post-install script "' .
-                                $fileXml['name'] . '" parameter "' .
-                                $subparam[$tasksNamespace . 'name'] .
-                                '" for ' . $tasksNamespace . 'paramgroup> id "' .
-                                $param[$tasksNamespace . 'id'] .
-                                '" is not a valid name.  Must contain only alphanumeric characters',
+                            $fileXml['name'] . '" parameter "' .
+                            $subparam[$tasksNamespace . 'name'] .
+                            '" for ' . $tasksNamespace . 'paramgroup> id "' .
+                            $param[$tasksNamespace . 'id'] .
+                            '" is not a valid name.  Must contain only alphanumeric characters',
                         );
                     }
                     if (!isset($subparam[$tasksNamespace . 'prompt'])) {
                         return array(
                             PEAR_TASK_ERROR_INVALID,
                             'Post-install script "' .
-                                $fileXml['name'] . '" parameter "' .
-                                $subparam[$tasksNamespace . 'name'] .
-                                '" for ' . $tasksNamespace . 'paramgroup> id "' .
-                                $param[$tasksNamespace . 'id'] .
-                                '" must have a ' . $tasksNamespace . 'prompt> tag',
+                            $fileXml['name'] . '" parameter "' .
+                            $subparam[$tasksNamespace . 'name'] .
+                            '" for ' . $tasksNamespace . 'paramgroup> id "' .
+                            $param[$tasksNamespace . 'id'] .
+                            '" must have a ' . $tasksNamespace . 'prompt> tag',
                         );
                     }
                     if (!isset($subparam[$tasksNamespace . 'type'])) {
                         return array(
                             PEAR_TASK_ERROR_INVALID,
                             'Post-install script "' .
-                                $fileXml['name'] . '" parameter "' .
-                                $subparam[$tasksNamespace . 'name'] .
-                                '" for ' . $tasksNamespace . 'paramgroup> id "' .
-                                $param[$tasksNamespace . 'id'] .
-                                '" must have a ' . $tasksNamespace . 'type> tag',
+                            $fileXml['name'] . '" parameter "' .
+                            $subparam[$tasksNamespace . 'name'] .
+                            '" for ' . $tasksNamespace . 'paramgroup> id "' .
+                            $param[$tasksNamespace . 'id'] .
+                            '" must have a ' . $tasksNamespace . 'type> tag',
                         );
                     }
                     $definedparams[] = $param[$tasksNamespace . 'id'] . '::' .
@@ -366,7 +366,7 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
         $this->logger->log(
             0,
             'Including external post-installation script "' .
-                $contents . '" - any errors are in this script'
+            $contents . '" - any errors are in this script'
         );
         include_once $contents;
         if (class_exists($this->_class)) {
@@ -374,7 +374,7 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
         } else {
             return $this->throwError(
                 'init of post-install script class "' . $this->_class
-                    . '" failed'
+                . '" failed'
             );
         }
         $this->_obj = new $this->_class();
@@ -387,7 +387,7 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common {
         } else {
             return $this->throwError(
                 'init of post-install script "' . $this->_class .
-                    '->init()" failed'
+                '->init()" failed'
             );
         }
         $this->_contents = $contents;

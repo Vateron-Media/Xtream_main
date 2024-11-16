@@ -188,10 +188,10 @@ function loadCron() {
                 case 'enable_ramdisk':
                     $rCheck['ramdisk'] = false;
                     break;
-                    // case 'enable_ministra':
-                    // case 'disable_ministra':
-                    //     $rCheck['mag'] = false;
-                    //     break;
+                // case 'enable_ministra':
+                // case 'disable_ministra':
+                //     $rCheck['mag'] = false;
+                //     break;
                 case 'set_services':
                     $rCheck['services'] = false;
                     break;
@@ -353,26 +353,26 @@ function loadCron() {
                             shell_exec('sudo mount ' . STREAMS_PATH);
                             shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . STREAMS_PATH);
                             break;
-                            // case 'update_binaries':
-                            //     echo 'Updating binaries...' . "\n";
-                            //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'BINARIES', 'Updating XtreamCodes binaries from XtreamCodes server...', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
-                            //     shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'binaries.php 2>&1 &');
-                            //     break;
+                        // case 'update_binaries':
+                        //     echo 'Updating binaries...' . "\n";
+                        //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'BINARIES', 'Updating XtreamCodes binaries from XtreamCodes server...', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+                        //     shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'binaries.php 2>&1 &');
+                        //     break;
                         case 'update':
                             echo 'Updating...' . "\n";
                             $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'UPDATE', 'Updating XtreamCodes...', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
                             shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" 2>&1 &');
                             break;
-                            // case 'enable_ministra':
-                            //     echo 'Enabling ministra /c...';
-                            //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra ' . MAIN_DIR . 'www/c');
-                            //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra/portal.php ' . MAIN_DIR . 'www/portal.php');
-                            //     break;
-                            // case 'disable_ministra':
-                            //     echo 'Disabling ministra /c...';
-                            //     shell_exec('sudo rm ' . MAIN_DIR . 'www/c');
-                            //     shell_exec('sudo rm ' . MAIN_DIR . 'www/portal.php');
-                            //     break;
+                        // case 'enable_ministra':
+                        //     echo 'Enabling ministra /c...';
+                        //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra ' . MAIN_DIR . 'www/c');
+                        //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra/portal.php ' . MAIN_DIR . 'www/portal.php');
+                        //     break;
+                        // case 'disable_ministra':
+                        //     echo 'Disabling ministra /c...';
+                        //     shell_exec('sudo rm ' . MAIN_DIR . 'www/c');
+                        //     shell_exec('sudo rm ' . MAIN_DIR . 'www/portal.php');
+                        //     break;
                         case 'set_services':
                             echo 'Setting PHP Services' . "\n";
                             $rServices = intval($rData['count']);
@@ -449,7 +449,7 @@ function loadCron() {
                                     }
                                 }
                             }
-                            // no break
+                        // no break
                         default:
                             break;
                     }

@@ -23,4 +23,4 @@
 #define phpext_mysqlnd_ptr &mysqlnd_module_entry
 extern zend_module_entry mysqlnd_module_entry;
 
-#endif	/* PHP_MYSQLND_H */
+#endif /* PHP_MYSQLND_H */

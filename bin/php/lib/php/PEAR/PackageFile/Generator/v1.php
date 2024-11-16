@@ -197,10 +197,10 @@ class PEAR_PackageFile_Generator_v1 {
         }
         $pkginfo = $this->_packagefile->getArray();
         static $maint_map = array(
-            "handle" => "user",
-            "name" => "name",
-            "email" => "email",
-            "role" => "role",
+        "handle" => "user",
+        "name" => "name",
+        "email" => "email",
+        "role" => "role",
         );
         $ret = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
         $ret .= "<!DOCTYPE package SYSTEM \"http://pear.php.net/dtd/package-1.0\">\n";
@@ -507,7 +507,7 @@ class PEAR_PackageFile_Generator_v1 {
             if (!$this->_packagefile->validate()) {
                 $a = PEAR::raiseError(
                     'invalid package.xml version 1.0 cannot be converted' .
-                        ' to version 2.0',
+                    ' to version 2.0',
                     null,
                     null,
                     null,
@@ -613,7 +613,7 @@ class PEAR_PackageFile_Generator_v1 {
             $arr['license'] = array(
                 'attribs' => array(
                     'uri' =>
-                    $licensemap[strtolower($this->_packagefile->getLicense())]
+                        $licensemap[strtolower($this->_packagefile->getLicense())]
                 ),
                 '_content' => $this->_packagefile->getLicense()
             );
@@ -714,7 +714,7 @@ class PEAR_PackageFile_Generator_v1 {
     function _convertDependencies2_0(&$release, $internal = false) {
         $peardep = array(
             'pearinstaller' =>
-            array('min' => '1.4.0b1')
+                array('min' => '1.4.0b1')
         ); // this is a lot safer
         $required = $optional = array();
         $release['dependencies'] = array('required' => array());
@@ -806,10 +806,10 @@ class PEAR_PackageFile_Generator_v1 {
     function _convertFilelist2_0(&$package) {
         $ret = array(
             'dir' =>
-            array(
-                'attribs' => array('name' => '/'),
-                'file' => array()
-            )
+                array(
+                    'attribs' => array('name' => '/'),
+                    'file' => array()
+                )
         );
         $package['platform'] =
             $package['install-as'] = array();

@@ -275,109 +275,109 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/nestable2/jquery.nestable.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.rowReorder.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/nestable2/jquery.nestable.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.rowReorder.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    function AtoZ(rType) {
-                        $("#sort_" + rType).append($("#sort_" + rType + " option").remove().sort(function(a, b) {
-                            var at = $(a).text().toUpperCase(),
-                                bt = $(b).text().toUpperCase();
-                            return (at > bt) ? 1 : ((at < bt) ? -1 : 0);
-                        }));
-                    }
+            <script>
+                function AtoZ(rType) {
+                    $("#sort_" + rType).append($("#sort_" + rType + " option").remove().sort(function (a, b) {
+                        var at = $(a).text().toUpperCase(),
+                            bt = $(b).text().toUpperCase();
+                        return (at > bt) ? 1 : ((at < bt) ? -1 : 0);
+                    }));
+                }
 
-                    function MoveUp(rType) {
-                        var rSelected = $('#sort_' + rType + ' option:selected');
-                        if (rSelected.length) {
-                            var rPrevious = rSelected.first().prev()[0];
-                            if ($(rPrevious).html() != '') {
-                                rSelected.first().prev().before(rSelected);
-                            }
+                function MoveUp(rType) {
+                    var rSelected = $('#sort_' + rType + ' option:selected');
+                    if (rSelected.length) {
+                        var rPrevious = rSelected.first().prev()[0];
+                        if ($(rPrevious).html() != '') {
+                            rSelected.first().prev().before(rSelected);
                         }
                     }
+                }
 
-                    function MoveDown(rType) {
-                        var rSelected = $('#sort_' + rType + ' option:selected');
-                        if (rSelected.length) {
-                            rSelected.last().next().after(rSelected);
-                        }
+                function MoveDown(rType) {
+                    var rSelected = $('#sort_' + rType + ' option:selected');
+                    if (rSelected.length) {
+                        rSelected.last().next().after(rSelected);
                     }
+                }
 
-                    function MoveTop(rType) {
-                        var rSelected = $('#sort_' + rType + ' option:selected');
-                        if (rSelected.length) {
-                            rSelected.prependTo($('#sort_' + rType));
-                        }
+                function MoveTop(rType) {
+                    var rSelected = $('#sort_' + rType + ' option:selected');
+                    if (rSelected.length) {
+                        rSelected.prependTo($('#sort_' + rType));
                     }
+                }
 
-                    function MoveBottom(rType) {
-                        var rSelected = $('#sort_' + rType + ' option:selected');
-                        if (rSelected.length) {
-                            rSelected.appendTo($('#sort_' + rType));
-                        }
+                function MoveBottom(rType) {
+                    var rSelected = $('#sort_' + rType + ' option:selected');
+                    if (rSelected.length) {
+                        rSelected.appendTo($('#sort_' + rType));
                     }
-                    $(document).ready(function() {
-                        $("#channel_order_form").submit(function(e) {
-                            rOrder = [];
-                            $('#sort_stream option').each(function() {
-                                rOrder.push($(this).val());
-                            });
-                            $('#sort_movie option').each(function() {
-                                rOrder.push($(this).val());
-                            });
-                            $('#sort_series option').each(function() {
-                                rOrder.push($(this).val());
-                            });
-                            $('#sort_radios option').each(function() {
-                                rOrder.push($(this).val());
-                            });
-                            $("#stream_order_array").val(JSON.stringify(rOrder));
+                }
+                $(document).ready(function () {
+                    $("#channel_order_form").submit(function (e) {
+                        rOrder = [];
+                        $('#sort_stream option').each(function () {
+                            rOrder.push($(this).val());
                         });
+                        $('#sort_movie option').each(function () {
+                            rOrder.push($(this).val());
+                        });
+                        $('#sort_series option').each(function () {
+                            rOrder.push($(this).val());
+                        });
+                        $('#sort_radios option').each(function () {
+                            rOrder.push($(this).val());
+                        });
+                        $("#stream_order_array").val(JSON.stringify(rOrder));
                     });
-                </script>
-                </body>
+                });
+            </script>
+            </body>
 
-                </html>
+            </html>

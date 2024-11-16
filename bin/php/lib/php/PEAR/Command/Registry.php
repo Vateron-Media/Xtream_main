@@ -372,7 +372,7 @@ installed package.'
                     if (PEAR::isError($dest)) {
                         $dest = '(Unknown role "' . $att['role'] . ')';
                     } else {
-                        list(,, $dest) = $dest;
+                        list(, , $dest) = $dest;
                     }
                 }
                 $data['data'][] = array($file, $dest);
@@ -514,106 +514,106 @@ installed package.'
             if (is_array($info[$key])) {
                 switch ($key) {
                     case 'maintainers': {
-                            $i = 0;
-                            $mstr = '';
-                            foreach ($info[$key] as $m) {
-                                if ($i++ > 0) {
-                                    $mstr .= "\n";
-                                }
-                                $mstr .= $m['name'] . " <";
-                                if (isset($m['email'])) {
-                                    $mstr .= $m['email'];
-                                } else {
-                                    $mstr .= $m['handle'] . '@php.net';
-                                }
-                                $mstr .= "> ($m[role])";
+                        $i = 0;
+                        $mstr = '';
+                        foreach ($info[$key] as $m) {
+                            if ($i++ > 0) {
+                                $mstr .= "\n";
                             }
-                            $info[$key] = $mstr;
-                            break;
-                        }
-                    case 'release_deps': {
-                            $i = 0;
-                            $dstr = '';
-                            foreach ($info[$key] as $d) {
-                                if (isset($this->_deps_rel_trans[$d['rel']])) {
-                                    $rel = $this->_deps_rel_trans[$d['rel']];
-                                } else {
-                                    $rel = $d['rel'];
-                                }
-                                if (isset($this->_deps_type_trans[$d['type']])) {
-                                    $type = ucfirst($this->_deps_type_trans[$d['type']]);
-                                } else {
-                                    $type = $d['type'];
-                                }
-                                if (isset($d['name'])) {
-                                    $name = $d['name'] . ' ';
-                                } else {
-                                    $name = '';
-                                }
-                                if (isset($d['version'])) {
-                                    $version = $d['version'] . ' ';
-                                } else {
-                                    $version = '';
-                                }
-                                if (isset($d['optional']) && $d['optional'] == 'yes') {
-                                    $optional = ' (optional)';
-                                } else {
-                                    $optional = '';
-                                }
-                                $dstr .= "$type $name$rel $version$optional\n";
-                            }
-                            $info[$key] = $dstr;
-                            break;
-                        }
-                    case 'provides': {
-                            $debug = $this->config->get('verbose');
-                            if ($debug < 2) {
-                                $pstr = 'Classes: ';
+                            $mstr .= $m['name'] . " <";
+                            if (isset($m['email'])) {
+                                $mstr .= $m['email'];
                             } else {
-                                $pstr = '';
+                                $mstr .= $m['handle'] . '@php.net';
                             }
-                            $i = 0;
-                            foreach ($info[$key] as $p) {
-                                if ($debug < 2 && $p['type'] != "class") {
-                                    continue;
-                                }
-                                // Only print classes when verbosity mode is < 2
-                                if ($debug < 2) {
-                                    if ($i++ > 0) {
-                                        $pstr .= ", ";
-                                    }
-                                    $pstr .= $p['name'];
-                                } else {
-                                    if ($i++ > 0) {
-                                        $pstr .= "\n";
-                                    }
-                                    $pstr .= ucfirst($p['type']) . " " . $p['name'];
-                                    if (isset($p['explicit']) && $p['explicit'] == 1) {
-                                        $pstr .= " (explicit)";
-                                    }
-                                }
-                            }
-                            $info[$key] = $pstr;
-                            break;
+                            $mstr .= "> ($m[role])";
                         }
+                        $info[$key] = $mstr;
+                        break;
+                    }
+                    case 'release_deps': {
+                        $i = 0;
+                        $dstr = '';
+                        foreach ($info[$key] as $d) {
+                            if (isset($this->_deps_rel_trans[$d['rel']])) {
+                                $rel = $this->_deps_rel_trans[$d['rel']];
+                            } else {
+                                $rel = $d['rel'];
+                            }
+                            if (isset($this->_deps_type_trans[$d['type']])) {
+                                $type = ucfirst($this->_deps_type_trans[$d['type']]);
+                            } else {
+                                $type = $d['type'];
+                            }
+                            if (isset($d['name'])) {
+                                $name = $d['name'] . ' ';
+                            } else {
+                                $name = '';
+                            }
+                            if (isset($d['version'])) {
+                                $version = $d['version'] . ' ';
+                            } else {
+                                $version = '';
+                            }
+                            if (isset($d['optional']) && $d['optional'] == 'yes') {
+                                $optional = ' (optional)';
+                            } else {
+                                $optional = '';
+                            }
+                            $dstr .= "$type $name$rel $version$optional\n";
+                        }
+                        $info[$key] = $dstr;
+                        break;
+                    }
+                    case 'provides': {
+                        $debug = $this->config->get('verbose');
+                        if ($debug < 2) {
+                            $pstr = 'Classes: ';
+                        } else {
+                            $pstr = '';
+                        }
+                        $i = 0;
+                        foreach ($info[$key] as $p) {
+                            if ($debug < 2 && $p['type'] != "class") {
+                                continue;
+                            }
+                            // Only print classes when verbosity mode is < 2
+                            if ($debug < 2) {
+                                if ($i++ > 0) {
+                                    $pstr .= ", ";
+                                }
+                                $pstr .= $p['name'];
+                            } else {
+                                if ($i++ > 0) {
+                                    $pstr .= "\n";
+                                }
+                                $pstr .= ucfirst($p['type']) . " " . $p['name'];
+                                if (isset($p['explicit']) && $p['explicit'] == 1) {
+                                    $pstr .= " (explicit)";
+                                }
+                            }
+                        }
+                        $info[$key] = $pstr;
+                        break;
+                    }
                     case 'configure_options': {
-                            foreach ($info[$key] as $i => $p) {
-                                $info[$key][$i] = array_map(null, array_keys($p), array_values($p));
-                                $info[$key][$i] = array_map(
-                                    function ($a) {
-                                        return join(" = ", $a);
-                                    },
-                                    $info[$key][$i]
-                                );
-                                $info[$key][$i] = implode(', ', $info[$key][$i]);
-                            }
-                            $info[$key] = implode("\n", $info[$key]);
-                            break;
+                        foreach ($info[$key] as $i => $p) {
+                            $info[$key][$i] = array_map(null, array_keys($p), array_values($p));
+                            $info[$key][$i] = array_map(
+                                function ($a) {
+                                    return join(" = ", $a);
+                                },
+                                $info[$key][$i]
+                            );
+                            $info[$key][$i] = implode(', ', $info[$key][$i]);
                         }
+                        $info[$key] = implode("\n", $info[$key]);
+                        break;
+                    }
                     default: {
-                            $info[$key] = implode(", ", $info[$key]);
-                            break;
-                        }
+                        $info[$key] = implode(", ", $info[$key]);
+                        break;
+                    }
                 }
             }
 

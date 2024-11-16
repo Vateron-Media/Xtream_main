@@ -2,7 +2,7 @@
 error_reporting(E_ERROR | E_WARNING);
 
 $opt = getopt('', [
-    'handler:', 'save-path:', 'id:', 'sleep:', 'max-execution-time:' ,
+    'handler:', 'save-path:', 'id:', 'sleep:', 'max-execution-time:',
     'locking-enabled:', 'lock-wait-time:', 'lock-retries:', 'lock-expires:',
     'data:', 'lifetime:', 'compression:'
 ]);
@@ -20,10 +20,10 @@ $locking_enabled = $opt['locking-enabled'] ?? NULL;
 $lock_wait_time = $opt['lock-wait-time'] ?? 0;
 $compression = $opt['compression'] ?? NULL;
 
-if ( ! $handler) {
+if (!$handler) {
     fprintf(STDERR, "--handler is required\n");
     exit(1);
-} else if ( ! $save_path) {
+} else if (!$save_path) {
     fprintf(STDERR, "--save-path is required\n");
     exit(1);
 }

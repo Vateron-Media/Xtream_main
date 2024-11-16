@@ -19,85 +19,54 @@
 
 #ifndef MYSQLND_AUTH_H
 #define MYSQLND_AUTH_H
-enum_func_status
-mysqlnd_auth_handshake(MYSQLND_CONN_DATA * conn,
-						const char * const user,
-						const char * const passwd,
-						const size_t passwd_len,
-						const char * const db,
-						const size_t db_len,
-						const MYSQLND_SESSION_OPTIONS * const session_options,
-						const zend_ulong mysql_flags,
-						const unsigned int server_charset_no,
-						const zend_bool use_full_blown_auth_packet,
-						const char * const auth_protocol,
-						struct st_mysqlnd_authentication_plugin * auth_plugin,
-						const zend_uchar * const orig_auth_plugin_data,
-						const size_t orig_auth_plugin_data_len,
-						const zend_uchar * const auth_plugin_data,
-						const size_t auth_plugin_data_len,
-						char ** switch_to_auth_protocol,
-						size_t * const switch_to_auth_protocol_len,
-						zend_uchar ** switch_to_auth_protocol_data,
-						size_t * const switch_to_auth_protocol_data_len
-						);
+enum_func_status mysqlnd_auth_handshake(
+    MYSQLND_CONN_DATA *conn, const char *const user, const char *const passwd,
+    const size_t passwd_len, const char *const db, const size_t db_len,
+    const MYSQLND_SESSION_OPTIONS *const session_options,
+    const zend_ulong mysql_flags, const unsigned int server_charset_no,
+    const zend_bool use_full_blown_auth_packet, const char *const auth_protocol,
+    struct st_mysqlnd_authentication_plugin *auth_plugin,
+    const zend_uchar *const orig_auth_plugin_data,
+    const size_t orig_auth_plugin_data_len,
+    const zend_uchar *const auth_plugin_data, const size_t auth_plugin_data_len,
+    char **switch_to_auth_protocol, size_t *const switch_to_auth_protocol_len,
+    zend_uchar **switch_to_auth_protocol_data,
+    size_t *const switch_to_auth_protocol_data_len);
 
-enum_func_status
-mysqlnd_auth_change_user(MYSQLND_CONN_DATA * const conn,
-								const char * const user,
-								const size_t user_len,
-								const char * const passwd,
-								const size_t passwd_len,
-								const char * const db,
-								const size_t db_len,
-								const zend_bool silent,
-								const zend_bool use_full_blown_auth_packet,
-								const char * const auth_protocol,
-								struct st_mysqlnd_authentication_plugin * auth_plugin,
-								const zend_uchar * const orig_auth_plugin_data,
-								const size_t orig_auth_plugin_data_len,
-								const zend_uchar * auth_plugin_data,
-								const size_t auth_plugin_data_len,
-								char ** switch_to_auth_protocol,
-								size_t * const switch_to_auth_protocol_len,
-								zend_uchar ** switch_to_auth_protocol_data,
-								size_t * const switch_to_auth_protocol_data_len
-								);
+enum_func_status mysqlnd_auth_change_user(
+    MYSQLND_CONN_DATA *const conn, const char *const user,
+    const size_t user_len, const char *const passwd, const size_t passwd_len,
+    const char *const db, const size_t db_len, const zend_bool silent,
+    const zend_bool use_full_blown_auth_packet, const char *const auth_protocol,
+    struct st_mysqlnd_authentication_plugin *auth_plugin,
+    const zend_uchar *const orig_auth_plugin_data,
+    const size_t orig_auth_plugin_data_len, const zend_uchar *auth_plugin_data,
+    const size_t auth_plugin_data_len, char **switch_to_auth_protocol,
+    size_t *const switch_to_auth_protocol_len,
+    zend_uchar **switch_to_auth_protocol_data,
+    size_t *const switch_to_auth_protocol_data_len);
 
+enum_func_status mysqlnd_connect_run_authentication(
+    MYSQLND_CONN_DATA *const conn, const char *const user,
+    const char *const passwd, const char *const db, const size_t db_len,
+    const size_t passwd_len, const MYSQLND_STRING authentication_plugin_data,
+    const char *const authentication_protocol, const unsigned int charset_no,
+    const size_t server_capabilities,
+    const MYSQLND_SESSION_OPTIONS *const session_options,
+    const zend_ulong mysql_flags);
 
-enum_func_status
-mysqlnd_connect_run_authentication(
-			MYSQLND_CONN_DATA * const conn,
-			const char * const user,
-			const char * const passwd,
-			const char * const db,
-			const size_t db_len,
-			const size_t passwd_len,
-			const MYSQLND_STRING authentication_plugin_data,
-			const char * const authentication_protocol,
-			const unsigned int charset_no,
-			const size_t server_capabilities,
-			const MYSQLND_SESSION_OPTIONS * const session_options,
-			const zend_ulong mysql_flags
-			);
+enum_func_status mysqlnd_run_authentication(
+    MYSQLND_CONN_DATA *const conn, const char *const user,
+    const char *const passwd, const size_t passwd_len, const char *const db,
+    const size_t db_len, const MYSQLND_STRING auth_plugin_data,
+    const char *const auth_protocol, const unsigned int charset_no,
+    const MYSQLND_SESSION_OPTIONS *const session_options,
+    const zend_ulong mysql_flags, const zend_bool silent,
+    const zend_bool is_change_user);
 
-enum_func_status
-mysqlnd_run_authentication(
-			MYSQLND_CONN_DATA * const conn,
-			const char * const user,
-			const char * const passwd,
-			const size_t passwd_len,
-			const char * const db,
-			const size_t db_len,
-			const MYSQLND_STRING auth_plugin_data,
-			const char * const auth_protocol,
-			const unsigned int charset_no,
-			const MYSQLND_SESSION_OPTIONS * const session_options,
-			const zend_ulong mysql_flags,
-			const zend_bool silent,
-			const zend_bool is_change_user
-			);
-
-PHPAPI void php_mysqlnd_scramble(zend_uchar * const buffer, const zend_uchar * const scramble, const zend_uchar * const pass, const size_t pass_len);
+PHPAPI void php_mysqlnd_scramble(zend_uchar *const buffer,
+                                 const zend_uchar *const scramble,
+                                 const zend_uchar *const pass,
+                                 const size_t pass_len);
 
 #endif /* MYSQLND_AUTH_H */

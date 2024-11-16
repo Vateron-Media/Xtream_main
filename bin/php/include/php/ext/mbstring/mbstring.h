@@ -48,8 +48,8 @@
 
 #if HAVE_MBSTRING
 
-#include "libmbfl/mbfl/mbfilter.h"
 #include "SAPI.h"
+#include "libmbfl/mbfl/mbfilter.h"
 
 #define PHP_MBSTRING_API 20021024
 
@@ -110,23 +110,30 @@ PHP_FUNCTION(mb_chr);
 PHP_FUNCTION(mb_scrub);
 
 MBSTRING_API char *php_mb_safe_strrchr_ex(const char *s, unsigned int c,
-										  size_t nbytes, const mbfl_encoding *enc);
+                                          size_t nbytes,
+                                          const mbfl_encoding *enc);
 MBSTRING_API char *php_mb_safe_strrchr(const char *s, unsigned int c,
-									   size_t nbytes);
+                                       size_t nbytes);
 
 MBSTRING_API char *php_mb_convert_encoding_ex(
-	const char *input, size_t length,
-	const mbfl_encoding *to_encoding, const mbfl_encoding *from_encoding, size_t *output_len);
+    const char *input, size_t length, const mbfl_encoding *to_encoding,
+    const mbfl_encoding *from_encoding, size_t *output_len);
 MBSTRING_API char *php_mb_convert_encoding(const char *input, size_t length,
-										   const char *_to_encoding,
-										   const char *_from_encodings,
-										   size_t *output_len);
+                                           const char *_to_encoding,
+                                           const char *_from_encodings,
+                                           size_t *output_len);
 
-MBSTRING_API size_t php_mb_mbchar_bytes_ex(const char *s, const mbfl_encoding *enc);
+MBSTRING_API size_t php_mb_mbchar_bytes_ex(const char *s,
+                                           const mbfl_encoding *enc);
 MBSTRING_API size_t php_mb_mbchar_bytes(const char *s);
 
-MBSTRING_API size_t php_mb_stripos(int mode, const char *old_haystack, size_t old_haystack_len, const char *old_needle, size_t old_needle_len, zend_long offset, zend_string *from_encoding);
-MBSTRING_API int php_mb_check_encoding(const char *input, size_t length, const char *enc);
+MBSTRING_API size_t php_mb_stripos(int mode, const char *old_haystack,
+                                   size_t old_haystack_len,
+                                   const char *old_needle,
+                                   size_t old_needle_len, zend_long offset,
+                                   zend_string *from_encoding);
+MBSTRING_API int php_mb_check_encoding(const char *input, size_t length,
+                                       const char *enc);
 
 ZEND_BEGIN_MODULE_GLOBALS(mbstring)
 char *internal_encoding_name;
@@ -164,7 +171,8 @@ zend_long regex_stack_limit;
 #endif
 zend_string *last_used_encoding_name;
 const mbfl_encoding *last_used_encoding;
-/* Whether an explicit internal_encoding / http_output / http_input encoding was set. */
+/* Whether an explicit internal_encoding / http_output / http_input encoding was
+ * set. */
 zend_bool internal_encoding_set;
 zend_bool http_output_set;
 zend_bool http_input_set;
@@ -177,12 +185,11 @@ ZEND_END_MODULE_GLOBALS(mbstring)
 #define MB_OVERLOAD_STRING 2
 #define MB_OVERLOAD_REGEX 4
 
-struct mb_overload_def
-{
-	int type;
-	char *orig_func;
-	char *ovld_func;
-	char *save_func;
+struct mb_overload_def {
+  int type;
+  char *orig_func;
+  char *ovld_func;
+  char *save_func;
 };
 
 #define MBSTRG(v) ZEND_MODULE_GLOBALS_ACCESSOR(mbstring, v)

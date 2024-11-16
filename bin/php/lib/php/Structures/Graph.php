@@ -107,7 +107,7 @@ class Structures_Graph {
         if (!is_a($newNode, 'Structures_Graph_Node')) {
             return Pear::raiseError(
                 'Structures_Graph::addNode received an object that is not'
-                    . ' a Structures_Graph_Node',
+                . ' a Structures_Graph_Node',
                 STRUCTURES_GRAPH_ERROR_GENERIC
             );
         }
@@ -135,7 +135,7 @@ class Structures_Graph {
             if ($referenceIsEqualFlag) {
                 return Pear::raiseError(
                     'Structures_Graph::addNode received an object that is'
-                        . ' a duplicate for this dataset',
+                    . ' a duplicate for this dataset',
                     STRUCTURES_GRAPH_ERROR_GENERIC
                 );
             }

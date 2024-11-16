@@ -21,13 +21,13 @@
 #define PHP_FILTER_H
 
 #include "SAPI.h"
-#include "zend_API.h"
-#include "php.h"
-#include "php_ini.h"
+#include "ext/standard/html.h"
 #include "ext/standard/info.h"
 #include "ext/standard/php_string.h"
-#include "ext/standard/html.h"
+#include "php.h"
+#include "php_ini.h"
 #include "php_variables.h"
+#include "zend_API.h"
 
 extern zend_module_entry filter_module_entry;
 #define phpext_filter_ptr &filter_module_entry
@@ -53,16 +53,16 @@ PHP_FUNCTION(filter_has_var);
 PHP_FUNCTION(filter_id);
 
 ZEND_BEGIN_MODULE_GLOBALS(filter)
-	zval post_array;
-	zval get_array;
-	zval cookie_array;
-	zval env_array;
-	zval server_array;
+zval post_array;
+zval get_array;
+zval cookie_array;
+zval env_array;
+zval server_array;
 #if 0
 	zval session_array;
 #endif
-	zend_long default_filter;
-	zend_long default_filter_flags;
+zend_long default_filter;
+zend_long default_filter_flags;
 ZEND_END_MODULE_GLOBALS(filter)
 
 #if defined(COMPILE_DL_FILTER) && defined(ZTS)
@@ -71,7 +71,8 @@ ZEND_TSRMLS_CACHE_EXTERN()
 
 #define IF_G(v) ZEND_MODULE_GLOBALS_ACCESSOR(filter, v)
 
-#define PHP_INPUT_FILTER_PARAM_DECL zval *value, zend_long flags, zval *option_array, char *charset
+#define PHP_INPUT_FILTER_PARAM_DECL                                            \
+  zval *value, zend_long flags, zval *option_array, char *charset
 void php_filter_int(PHP_INPUT_FILTER_PARAM_DECL);
 void php_filter_boolean(PHP_INPUT_FILTER_PARAM_DECL);
 void php_filter_float(PHP_INPUT_FILTER_PARAM_DECL);
@@ -96,4 +97,4 @@ void php_filter_magic_quotes(PHP_INPUT_FILTER_PARAM_DECL);
 
 void php_filter_callback(PHP_INPUT_FILTER_PARAM_DECL);
 
-#endif	/* FILTER_H */
+#endif /* FILTER_H */

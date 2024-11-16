@@ -23,10 +23,10 @@
 BEGIN_EXTERN_C()
 
 typedef struct _zend_gc_status {
-	uint32_t runs;
-	uint32_t collected;
-	uint32_t threshold;
-	uint32_t num_roots;
+  uint32_t runs;
+  uint32_t collected;
+  uint32_t threshold;
+  uint32_t num_roots;
 } zend_gc_status;
 
 ZEND_API extern int (*gc_collect_cycles)(void);
@@ -43,7 +43,7 @@ ZEND_API zend_bool gc_protect(zend_bool protect);
 ZEND_API zend_bool gc_protected(void);
 
 /* The default implementation of the gc_collect_cycles callback. */
-ZEND_API int  zend_gc_collect_cycles(void);
+ZEND_API int zend_gc_collect_cycles(void);
 
 ZEND_API void zend_gc_get_status(zend_gc_status *status);
 
@@ -57,31 +57,31 @@ size_t zend_gc_globals_size(void);
 
 END_EXTERN_C()
 
-#define GC_REMOVE_FROM_BUFFER(p) do { \
-		zend_refcounted *_p = (zend_refcounted*)(p); \
-		if (GC_TYPE_INFO(_p) & GC_INFO_MASK) { \
-			gc_remove_from_buffer(_p); \
-		} \
-	} while (0)
+#define GC_REMOVE_FROM_BUFFER(p)                                               \
+  do {                                                                         \
+    zend_refcounted *_p = (zend_refcounted *)(p);                              \
+    if (GC_TYPE_INFO(_p) & GC_INFO_MASK) {                                     \
+      gc_remove_from_buffer(_p);                                               \
+    }                                                                          \
+  } while (0)
 
-#define GC_MAY_LEAK(ref) \
-	((GC_TYPE_INFO(ref) & \
-		(GC_INFO_MASK | (GC_COLLECTABLE << GC_FLAGS_SHIFT))) == \
-	(GC_COLLECTABLE << GC_FLAGS_SHIFT))
+#define GC_MAY_LEAK(ref)                                                       \
+  ((GC_TYPE_INFO(ref) &                                                        \
+    (GC_INFO_MASK | (GC_COLLECTABLE << GC_FLAGS_SHIFT))) ==                    \
+   (GC_COLLECTABLE << GC_FLAGS_SHIFT))
 
-static zend_always_inline void gc_check_possible_root(zend_refcounted *ref)
-{
-	if (EXPECTED(GC_TYPE_INFO(ref) == IS_REFERENCE)) {
-		zval *zv = &((zend_reference*)ref)->val;
+static zend_always_inline void gc_check_possible_root(zend_refcounted *ref) {
+  if (EXPECTED(GC_TYPE_INFO(ref) == IS_REFERENCE)) {
+    zval *zv = &((zend_reference *)ref)->val;
 
-		if (!Z_COLLECTABLE_P(zv)) {
-			return;
-		}
-		ref = Z_COUNTED_P(zv);
-	}
-	if (UNEXPECTED(GC_MAY_LEAK(ref))) {
-		gc_possible_root(ref);
-	}
+    if (!Z_COLLECTABLE_P(zv)) {
+      return;
+    }
+    ref = Z_COUNTED_P(zv);
+  }
+  if (UNEXPECTED(GC_MAY_LEAK(ref))) {
+    gc_possible_root(ref);
+  }
 }
 
 #endif /* ZEND_GC_H */

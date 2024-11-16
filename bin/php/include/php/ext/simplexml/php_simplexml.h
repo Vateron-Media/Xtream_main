@@ -34,49 +34,49 @@ extern zend_module_entry simplexml_module_entry;
 #include <libxml/parserInternals.h>
 #include <libxml/tree.h>
 #include <libxml/uri.h>
-#include <libxml/xmlerror.h>
 #include <libxml/xinclude.h>
+#include <libxml/xmlerror.h>
+#include <libxml/xmlschemas.h>
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 #include <libxml/xpointer.h>
-#include <libxml/xmlschemas.h>
 
 PHP_MINIT_FUNCTION(simplexml);
 PHP_MSHUTDOWN_FUNCTION(simplexml);
 PHP_MINFO_FUNCTION(simplexml);
 
 typedef enum {
-	SXE_ITER_NONE     = 0,
-	SXE_ITER_ELEMENT  = 1,
-	SXE_ITER_CHILD    = 2,
-	SXE_ITER_ATTRLIST = 3
+  SXE_ITER_NONE = 0,
+  SXE_ITER_ELEMENT = 1,
+  SXE_ITER_CHILD = 2,
+  SXE_ITER_ATTRLIST = 3
 } SXE_ITER;
 
 typedef struct {
-	php_libxml_node_ptr *node;
-	php_libxml_ref_obj *document;
-	HashTable *properties;
-	xmlXPathContextPtr xpath;
-	struct {
-		xmlChar               *name;
-		xmlChar               *nsprefix;
-		int                   isprefix;
-		SXE_ITER              type;
-		zval                  data;
-	} iter;
-	zval tmp;
-	zend_function *fptr_count;
-	zend_object zo;
+  php_libxml_node_ptr *node;
+  php_libxml_ref_obj *document;
+  HashTable *properties;
+  xmlXPathContextPtr xpath;
+  struct {
+    xmlChar *name;
+    xmlChar *nsprefix;
+    int isprefix;
+    SXE_ITER type;
+    zval data;
+  } iter;
+  zval tmp;
+  zend_function *fptr_count;
+  zend_object zo;
 } php_sxe_object;
 
 #ifdef PHP_WIN32
-#	ifdef PHP_SIMPLEXML_EXPORTS
-#		define PHP_SXE_API __declspec(dllexport)
-#	else
-#		define PHP_SXE_API __declspec(dllimport)
-#	endif
+#ifdef PHP_SIMPLEXML_EXPORTS
+#define PHP_SXE_API __declspec(dllexport)
 #else
-#	define PHP_SXE_API ZEND_API
+#define PHP_SXE_API __declspec(dllimport)
+#endif
+#else
+#define PHP_SXE_API ZEND_API
 #endif
 
 PHP_SXE_API zend_class_entry *sxe_get_element_class_entry();

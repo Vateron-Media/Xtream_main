@@ -328,7 +328,7 @@ if ($rChannelInfo) {
                     $rTotalTime = time() - $rStartTime;
                     $rDivergence = 0;
                     if ($rTotalTime > 0) {
-                        $rDivergence = (int)($rBytes / $rTotalTime / 1024);
+                        $rDivergence = (int) ($rBytes / $rTotalTime / 1024);
                     }
                     file_put_contents($rConSpeedFile, $rDivergence);
                     preg_match("/_(.*)\\./", array_pop($rSegments), $rCurrentSegment);

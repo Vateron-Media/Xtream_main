@@ -360,7 +360,7 @@ class PEAR_Installer extends PEAR_Downloader {
                     $to = '';
                     if ($a['type'] == 'php-const') {
                         if (preg_match('/^[a-z0-9_]+\\z/i', $a['to'])) {
-                            eval("\$to = $a[to];");
+                            eval ("\$to = $a[to];");
                         } else {
                             if (!isset($options['soft'])) {
                                 $this->log(0, "invalid php-const replacement: $a[to]");

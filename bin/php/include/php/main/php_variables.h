@@ -20,8 +20,8 @@
 #ifndef PHP_VARIABLES_H
 #define PHP_VARIABLES_H
 
-#include "php.h"
 #include "SAPI.h"
+#include "php.h"
 
 #define PARSE_POST 0
 #define PARSE_GET 1
@@ -36,13 +36,15 @@ void php_startup_auto_globals(void);
 extern PHPAPI void (*php_import_environment_variables)(zval *array_ptr);
 PHPAPI void php_register_variable(char *var, char *val, zval *track_vars_array);
 /* binary-safe version */
-PHPAPI void php_register_variable_safe(char *var, char *val, size_t val_len, zval *track_vars_array);
-PHPAPI void php_register_variable_ex(char *var, zval *val, zval *track_vars_array);
+PHPAPI void php_register_variable_safe(char *var, char *val, size_t val_len,
+                                       zval *track_vars_array);
+PHPAPI void php_register_variable_ex(char *var, zval *val,
+                                     zval *track_vars_array);
 
 PHPAPI void php_build_argv(char *s, zval *track_vars_array);
 PHPAPI int php_hash_environment(void);
 END_EXTERN_C()
 
-#define NUM_TRACK_VARS	6
+#define NUM_TRACK_VARS 6
 
 #endif /* PHP_VARIABLES_H */

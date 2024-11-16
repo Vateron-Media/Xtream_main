@@ -99,19 +99,19 @@ if ($rSettings["sidebar"]) { ?>
                                                 } else {
                                                     $rLatency = "--";
                                                 }
-                                            ?>
+                                                ?>
                                                 <tr id="server-<?= $rServer["id"] ?>">
                                                     <td class="text-center"><?= $rServer["id"] ?></td>
                                                     <td class="text-center"><?= $rServer["server_name"] ?></td>
                                                     <td class="text-center" data-toggle="tooltip" data-placement="top"
                                                         title="" data-original-title="<?= $rServerText ?>"><i
                                                             class="<?php if ($rServer["status"] == 1) {
-                                                                        echo "btn-outline-success";
-                                                                    } else if ($rServer["status"] == "3") {
-                                                                        echo "btn-outline-info";
-                                                                    } else {
-                                                                        echo "btn-outline-danger";
-                                                                    } ?> mdi mdi-<?= array(0 => "alarm-light-outline", 1 => "check-network", 2 => "alarm-light-outline", 3 => "creation")[$rServer["status"]] ?>"></i>
+                                                                echo "btn-outline-success";
+                                                            } else if ($rServer["status"] == "3") {
+                                                                echo "btn-outline-info";
+                                                            } else {
+                                                                echo "btn-outline-danger";
+                                                            } ?> mdi mdi-<?= array(0 => "alarm-light-outline", 1 => "check-network", 2 => "alarm-light-outline", 3 => "creation")[$rServer["status"]] ?>"></i>
                                                     </td>
                                                     <td class="text-center"><?= $rLatency ?></td>
                                                     <td class="text-center"><?= $rServer["domain_name"] ?></td>
@@ -122,11 +122,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                 / <?= $rServer["total_clients"] ?></a></td>
                                                     <?php } else { ?>
                                                         <td class="text-center"><?= count(getConnections($rServer["id"])) ?> /
-                                                            <?= $rServer["total_clients"] ?></td>
+                                                            <?= $rServer["total_clients"] ?>
+                                                        </td>
                                                     <?php } ?>
                                                     <td class="text-center"><?= intval($rWatchDog["cpu_avg"]) ?>%</td>
                                                     <td class="text-center">
-                                                        <?= intval($rWatchDog["total_mem_used_percent"]) ?>%</td>
+                                                        <?= intval($rWatchDog["total_mem_used_percent"]) ?>%
+                                                    </td>
                                                     <td class="text-center">
                                                         <?php if (hasPermissions("adv", "edit_server")) { ?>
                                                             <div class="btn-group">
@@ -183,192 +185,193 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col-->
                     </div>
                     <!-- end row-->
-                    </div> <!-- end container -->
-                </div>
-                <div class="modal fade bs-server-modal-center" tabindex="-1" role="dialog"
-                    aria-labelledby="restartServicesLabel" aria-hidden="true" style="display: none;" data-id="">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="restartServicesLabel">
-                                    <?= $_["advanced_functions_for_servers"] ?></h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div> <!-- end container -->
+            </div>
+            <div class="modal fade bs-server-modal-center" tabindex="-1" role="dialog"
+                aria-labelledby="restartServicesLabel" aria-hidden="true" style="display: none;" data-id="">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="restartServicesLabel">
+                                <?= $_["advanced_functions_for_servers"] ?>
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group row mb-4">
+                                <label class="col-md-3 col-form-label"
+                                    for="root_password"><?= $_["ssh_password"] ?></label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="root_password" value="">
+                                </div>
+                                <label class="col-md-2 col-form-label" for="ssh_port"><?= $_["ssh_port"] ?></label>
+                                <div class="col-md-2">
+                                    <input type="text" class="form-control" id="ssh_port" value="22"></p>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                                <div class="form-group row mb-4">
-                                    <label class="col-md-3 col-form-label"
-                                        for="root_password"><?= $_["ssh_password"] ?></label>
-                                    <div class="col-md-5">
-                                        <input type="text" class="form-control" id="root_password" value="">
-                                    </div>
-                                    <label class="col-md-2 col-form-label" for="ssh_port"><?= $_["ssh_port"] ?></label>
-                                    <div class="col-md-2">
-                                        <input type="text" class="form-control" id="ssh_port" value="22"></p>
-                                    </div>
+                            </p>
+                            <div class="form-group row mb-4">
+                                <div class="col-md-6">
+                                    <input id="restart_services_ssh" type="submit" class="btn btn-primary"
+                                        value="<?= $_["restart_services"] ?>" style="width:100%" /></p>
                                 </div>
-                                </p>
-                                <div class="form-group row mb-4">
-                                    <div class="col-md-6">
-                                        <input id="restart_services_ssh" type="submit" class="btn btn-primary"
-                                            value="<?= $_["restart_services"] ?>" style="width:100%" /></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input id="reboot_server_ssh" type="submit" class="btn btn-primary"
-                                            value="<?= $_["reboot_server"] ?>" style="width:100%" /></p>
-                                    </div>
+                                <div class="col-md-6">
+                                    <input id="reboot_server_ssh" type="submit" class="btn btn-primary"
+                                        value="<?= $_["reboot_server"] ?>" style="width:100%" /></p>
                                 </div>
-                                <!--<div class="form-group row mb-4">
+                            </div>
+                            <!--<div class="form-group row mb-4">
                             <div class="col-md-6 mx-auto">
                                 <input id="update_release_ssh" type="submit" class="btn btn-danger" value="<?= $_["update_release"] ?>" style="width:100%" />
                             </div>
                         </div>-->
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                         </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    function api(rID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_server"] ?>') == false) {
-                                return;
-                            }
-                        } else if (rType == "kill") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_kill_all_servers"] ?>') == false) {
-                                return;
-                            }
-                        } else if (rType == "start") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_start_all_severs"] ?>') == false) {
-                                return;
-                            }
-                        } else if (rType == "stop") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_stop_all_streams"] ?>') == false) {
-                                return;
-                            }
+            <script>
+                function api(rID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_server"] ?>') == false) {
+                            return;
                         }
-                        $.getJSON("./api.php?action=server&sub=" + rType + "&server_id=" + rID, function(data) {
-                            if (data.result === true) {
-                                if (rType == "delete") {
-                                    $("#server-" + rID).remove();
-                                    $.each($('.tooltip'), function(index, element) {
-                                        $(this).remove();
-                                    });
-                                    $('[data-toggle="tooltip"]').tooltip();
-                                    $.toast("<?= $_["server_successfully_deleted"] ?>");
-                                } else if (rType == "kill") {
-                                    $.toast("<?= $_["all_server_connections_have_been_killed"] ?>");
-                                } else if (rType == "start") {
-                                    $.toast("<?= $_["all_server_connections_have_been_started"] ?>");
-                                } else if (rType == "stop") {
-                                    $.toast("<?= $_["all_server_connections_have_been_stopped"] ?>");
-                                }
-                            } else {
-                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                            }
-                        });
+                    } else if (rType == "kill") {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_kill_all_servers"] ?>') == false) {
+                            return;
+                        }
+                    } else if (rType == "start") {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_start_all_severs"] ?>') == false) {
+                            return;
+                        }
+                    } else if (rType == "stop") {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_stop_all_streams"] ?>') == false) {
+                            return;
+                        }
                     }
-                    $("#restart_services_ssh").click(function() {
-                        $(".bs-server-modal-center").modal("hide");
-                        $.getJSON("./api.php?action=restart_services&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function(data) {
-                            if (data.result === true) {
-                                $.toast("<?= $_["services_will_be_restarted_shortly"] ?>");
-                            } else {
-                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                    $.getJSON("./api.php?action=server&sub=" + rType + "&server_id=" + rID, function (data) {
+                        if (data.result === true) {
+                            if (rType == "delete") {
+                                $("#server-" + rID).remove();
+                                $.each($('.tooltip'), function (index, element) {
+                                    $(this).remove();
+                                });
+                                $('[data-toggle="tooltip"]').tooltip();
+                                $.toast("<?= $_["server_successfully_deleted"] ?>");
+                            } else if (rType == "kill") {
+                                $.toast("<?= $_["all_server_connections_have_been_killed"] ?>");
+                            } else if (rType == "start") {
+                                $.toast("<?= $_["all_server_connections_have_been_started"] ?>");
+                            } else if (rType == "stop") {
+                                $.toast("<?= $_["all_server_connections_have_been_stopped"] ?>");
                             }
-                            $("#root_password").val("");
-                            $("#ssh_port").val("22");
-                            $(".bs-server-modal-center").data("id", "");
-                        });
+                        } else {
+                            $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                        }
                     });
-                    $("#reboot_server_ssh").click(function() {
-                        $(".bs-server-modal-center").modal("hide");
-                        $.getJSON("./api.php?action=reboot_server&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function(data) {
-                            if (data.result === true) {
-                                $.toast("<?= $_["server_will_be_restarted_shortly"] ?>");
-                            } else {
-                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                }
+                $("#restart_services_ssh").click(function () {
+                    $(".bs-server-modal-center").modal("hide");
+                    $.getJSON("./api.php?action=restart_services&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function (data) {
+                        if (data.result === true) {
+                            $.toast("<?= $_["services_will_be_restarted_shortly"] ?>");
+                        } else {
+                            $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                        }
+                        $("#root_password").val("");
+                        $("#ssh_port").val("22");
+                        $(".bs-server-modal-center").data("id", "");
+                    });
+                });
+                $("#reboot_server_ssh").click(function () {
+                    $(".bs-server-modal-center").modal("hide");
+                    $.getJSON("./api.php?action=reboot_server&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function (data) {
+                        if (data.result === true) {
+                            $.toast("<?= $_["server_will_be_restarted_shortly"] ?>");
+                        } else {
+                            $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                        }
+                        $("#root_password").val("");
+                        $("#ssh_port").val("22");
+                        $(".bs-server-modal-center").data("id", "");
+                    });
+                });
+                $("#update_release_ssh").click(function () {
+                    $(".bs-server-modal-center").modal("hide");
+                    $.getJSON("./api.php?action=update_release&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function (data) {
+                        if (data.result === true) {
+                            $.toast("Release will be updated shortly.");
+                        } else {
+                            $.toast("An error occured while processing your request.");
+                        }
+                        $("#root_password").val("");
+                        $("#ssh_port").val("22");
+                        $(".bs-server-modal-center").data("id", "");
+                    });
+                });
+                $(".btn-reboot-server").click(function () {
+                    $(".bs-server-modal-center").data("id", $(this).data("id"));
+                    $(".bs-server-modal-center").modal("show");
+                });
+                $(document).ready(function () {
+                    $("#datatable").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
                             }
-                            $("#root_password").val("");
-                            $("#ssh_port").val("22");
-                            $(".bs-server-modal-center").data("id", "");
-                        });
-                    });
-                    $("#update_release_ssh").click(function() {
-                        $(".bs-server-modal-center").modal("hide");
-                        $.getJSON("./api.php?action=update_release&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function(data) {
-                            if (data.result === true) {
-                                $.toast("Release will be updated shortly.");
-                            } else {
-                                $.toast("An error occured while processing your request.");
-                            }
-                            $("#root_password").val("");
-                            $("#ssh_port").val("22");
-                            $(".bs-server-modal-center").data("id", "");
-                        });
-                    });
-                    $(".btn-reboot-server").click(function() {
-                        $(".bs-server-modal-center").data("id", $(this).data("id"));
-                        $(".bs-server-modal-center").modal("show");
-                    });
-                    $(document).ready(function() {
-                        $("#datatable").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        pageLength: 50,
+                        lengthMenu: [10, 25, 50, 100, 250],
+                        responsive: false,
+                        columnDefs: [
+                            <?php if ($rPermissions["is_admin"]) { ?> {
+                                    "orderable": false,
+                                    "targets": [9]
                                 }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            pageLength: 50,
-                            lengthMenu: [10, 25, 50, 100, 250],
-                            responsive: false,
-                            columnDefs: [
-                                <?php if ($rPermissions["is_admin"]) { ?> {
-                                        "orderable": false,
-                                        "targets": [9]
-                                    }
                                 <?php } else { ?> {
-                                        "className": "dt-center",
-                                        "targets": []
-                                    }
+                                    "className": "dt-center",
+                                    "targets": []
+                                }
                                 <?php } ?>
-                            ],
-                            stateSave: true
+                        ],
+                        stateSave: true
 
-                        });
-                        $("#datatable").css("width", "100%");
                     });
-                </script>
-                </body>
+                    $("#datatable").css("width", "100%");
+                });
+            </script>
+            </body>
 
-                </html>
+            </html>

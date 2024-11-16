@@ -95,8 +95,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="root_username"><?= $_["ssh_username"] ?></label>
                                                                 <div class="col-md-3">
                                                                     <input type="text" class="form-control"
-                                                                        id="root_username" name="root_username" value="root"
-                                                                        required data-parsley-trigger="change">
+                                                                        id="root_username" name="root_username"
+                                                                        value="root" required
+                                                                        data-parsley-trigger="change">
                                                                 </div>
                                                                 <label class="col-md-3 col-form-label"
                                                                     for="root_password"><?= $_["ssh_password"] ?></label>
@@ -108,11 +109,13 @@ if ($rSettings["sidebar"]) { ?>
                                                             </div>
 
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-3 col-form-label" for="update_sysctl">Update
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="update_sysctl">Update
                                                                     sysctl.conf</label>
                                                                 <div class="col-md-3">
-                                                                    <input name="update_sysctl" id="update_sysctl" type="checkbox"
-                                                                        data-plugin="switchery" class="js-switch" checked
+                                                                    <input name="update_sysctl" id="update_sysctl"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" checked
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-3 col-form-label"
@@ -159,121 +162,121 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
-                <?php include 'post.php'; ?>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
+            <?php include 'post.php'; ?>
 
-                <script>
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
+            <script>
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                            }
+                        });
+                    };
+                }(jQuery));
 
-                    $(document).ready(function() {
-                        $(document).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        $("#ssh_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#rtmp_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
-                        });
-                        $("#http_broadcast_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
-                        });
-                        $("#https_broadcast_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
-                        });
-                        $("form").attr('autocomplete', 'off');
-                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                        elems.forEach(function(html) {
-                            var switchery = new Switchery(html);
-                        });
-                        $("form").submit(function(e) {
-                            e.preventDefault();
-                            $(':input[type="submit"]').prop('disabled', true);
-                            submitForm(window.rCurrentPage, new FormData($("form")[0]));
-                        });
+                $(document).ready(function () {
+                    $(document).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
                     });
+                    $("#ssh_port").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#rtmp_port").inputFilter(function (value) {
+                        return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
+                    });
+                    $("#http_broadcast_port").inputFilter(function (value) {
+                        return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
+                    });
+                    $("#https_broadcast_port").inputFilter(function (value) {
+                        return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
+                    });
+                    $("form").attr('autocomplete', 'off');
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+                    elems.forEach(function (html) {
+                        var switchery = new Switchery(html);
+                    });
+                    $("form").submit(function (e) {
+                        e.preventDefault();
+                        $(':input[type="submit"]').prop('disabled', true);
+                        submitForm(window.rCurrentPage, new FormData($("form")[0]));
+                    });
+                });
 
-                    function hideModal(rName, rDispose = false) {
-                        $(rName).modal("hide");
-                        if (rDispose) {
-                            $(rName).modal("dispose");
-                        }
-                        $(rName).css("display", "none");
+                function hideModal(rName, rDispose = false) {
+                    $(rName).modal("hide");
+                    if (rDispose) {
+                        $(rName).modal("dispose");
                     }
+                    $(rName).css("display", "none");
+                }
 
-                    function closeEditModal() {
-                        $('.modal').modal('hide');
-                        if ($("#datatable-users").length) {
-                            $("#datatable-users").DataTable().ajax.reload(null, false);
-                        }
-                        if ($("#datatable-streampage").length) {
-                            $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                        }
+                function closeEditModal() {
+                    $('.modal').modal('hide');
+                    if ($("#datatable-users").length) {
+                        $("#datatable-users").DataTable().ajax.reload(null, false);
                     }
-
-                    function showError(rText) {
-                        $.toast({
-                            text: rText,
-                            icon: 'warning',
-                            loader: true,
-                            loaderBg: '#c62828',
-                            hideAfter: 8000
-                        })
+                    if ($("#datatable-streampage").length) {
+                        $("#datatable-streampage").DataTable().ajax.reload(null, false);
                     }
+                }
 
-                    function showSuccess(rText) {
-                        $.toast({
-                            text: rText,
-                            icon: 'success',
-                            loader: true,
-                            hideAfter: 5000
-                        })
-                    }
-                </script>
-                </body>
+                function showError(rText) {
+                    $.toast({
+                        text: rText,
+                        icon: 'warning',
+                        loader: true,
+                        loaderBg: '#c62828',
+                        hideAfter: 8000
+                    })
+                }
 
-                </html>
+                function showSuccess(rText) {
+                    $.toast({
+                        text: rText,
+                        icon: 'success',
+                        loader: true,
+                        hideAfter: 5000
+                    })
+                }
+            </script>
+            </body>
+
+            </html>

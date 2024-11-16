@@ -527,7 +527,7 @@ class PEAR_Dependency2 {
 
                     return $this->warning(
                         'warning: %s is not compatible with PHP version ' .
-                            $exclude
+                        $exclude
                     );
                 }
             }
@@ -944,7 +944,7 @@ class PEAR_Dependency2 {
                 if (isset($this->_options['nodeps']) || isset($this->_options['force'])) {
                     return $this->warning(
                         'warning: %s should not be uninstalled, other installed packages depend ' .
-                            'on this package'
+                        'on this package'
                     );
                 }
 
@@ -1107,7 +1107,7 @@ class PEAR_Dependency2 {
                 if (isset($this->_options['nodeps']) || isset($this->_options['force'])) {
                     return $this->warning(
                         'warning: %s should not be uninstalled, other installed packages depend ' .
-                            'on this package'
+                        'on this package'
                     );
                 }
 

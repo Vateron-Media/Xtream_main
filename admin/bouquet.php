@@ -98,10 +98,10 @@ if ($rSettings["sidebar"]) { ?>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rBouquetArr)) {
-                                                            echo $_["edit_bouquet"];
-                                                        } else {
-                                                            echo $_["add_bouquet"];
-                                                        } ?></h4>
+                                    echo $_["edit_bouquet"];
+                                } else {
+                                    echo $_["add_bouquet"];
+                                } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -116,18 +116,18 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["bouquet_success"]; ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["generic_fail"]; ?>
-                                </div>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./bouquet.php<?php if (isset($_GET["id"])) {
-                                                                    echo "?id=" . $_GET["id"];
-                                                                } ?>" method="POST" id="bouquet_form" data-parsley-validate="">
+                                        echo "?id=" . $_GET["id"];
+                                    } ?>" method="POST" id="bouquet_form" data-parsley-validate="">
                                         <?php if (isset($rBouquetArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rBouquetArr["id"] ?>" />
                                             <input type="hidden" id="bouquet_data" name="bouquet_data" value="" />
@@ -189,8 +189,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control"
                                                                         id="bouquet_name" name="bouquet_name" value="<?php if (isset($rBouquetArr)) {
-                                                                                                                            echo htmlspecialchars($rBouquetArr["bouquet_name"]);
-                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                            echo htmlspecialchars($rBouquetArr["bouquet_name"]);
+                                                                        } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -484,10 +484,10 @@ if ($rSettings["sidebar"]) { ?>
                                                             <li class="next list-inline-item float-right">
                                                                 <input name="submit_bouquet" type="submit"
                                                                     class="btn btn-primary" value="<?php if (isset($rBouquetArr)) {
-                                                                                                        echo $_["edit"];
-                                                                                                    } else {
-                                                                                                        echo $_["add"];
-                                                                                                    } ?>" />
+                                                                        echo $_["edit"];
+                                                                    } else {
+                                                                        echo $_["add"];
+                                                                    } ?>" />
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -500,346 +500,346 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    <?php if (isset($rBouquetArr)) {
-                        if (!is_array(json_decode($rBouquetArr["bouquet_series"], True))) {
-                            $rBouquetArr["bouquet_series"] = "[]";
-                        }
-                        if (!is_array(json_decode($rBouquetArr["bouquet_channels"], True))) {
-                            $rBouquetArr["bouquet_channels"] = "[]";
-                        }
-                        if (!is_array(json_decode($rBouquetArr["bouquet_movies"], True))) {
-                            $rBouquetArr["bouquet_movies"] = "[]";
-                        }
-                        if (!is_array(json_decode($rBouquetArr["bouquet_radios"], True))) {
-                            $rBouquetArr["bouquet_radios"] = "[]";
-                        }
-                    ?>
-                        var rBouquet = {
-                            "stream": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_channels"]) ?>),
-                            "series": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_series"]) ?>),
-                            "vod": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_movies"]) ?>),
-                            "radios": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_radios"]) ?>)
-                        };
-                    <?php } ?>
-
-                    function reviewBouquet() {
-                        var rTable = $('#datatable-review').DataTable();
-                        rTable.clear();
-                        rTable.draw();
-                        $.post("./api.php?action=review_bouquet", {
-                            "data": rBouquet
-                        }, function(rData) {
-                            if (rData.result === true) {
-                                $(rData.streams).each(function(rIndex) {
-                                    rTable.row.add([rData.streams[rIndex].id, '<?= $_["stream"] ?>', rData.streams[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.streams[rIndex].id + ', \'stream\', true);"><i class="mdi mdi-minus"></i></button>']);
-                                });
-                                $(rData.vod).each(function(rIndex) {
-                                    rTable.row.add([rData.vod[rIndex].id, '<?= $_["vod"] ?>', rData.vod[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.vod[rIndex].id + ', \'vod\', true);"><i class="mdi mdi-minus"></i></button>']);
-                                });
-                                $(rData.radios).each(function(rIndex) {
-                                    rTable.row.add([rData.radios[rIndex].id, '<?= $_["radio"] ?>', rData.radios[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.radios[rIndex].id + ', \'radios\', true);"><i class="mdi mdi-minus"></i></button>']);
-                                });
-                                $(rData.series).each(function(rIndex) {
-                                    rTable.row.add([rData.series[rIndex].id, '<?= $_["series"] ?>', rData.series[rIndex].title, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.series[rIndex].id + ', \'series\', true);"><i class="mdi mdi-minus"></i></button>']);
-                                });
-                            } else {
-                                alert("<?= $_["bouquet_review_failed"] ?>");
-                            }
-                            rTable.draw();
-                        }, "json");
+            <script>
+                <?php if (isset($rBouquetArr)) {
+                    if (!is_array(json_decode($rBouquetArr["bouquet_series"], True))) {
+                        $rBouquetArr["bouquet_series"] = "[]";
                     }
+                    if (!is_array(json_decode($rBouquetArr["bouquet_channels"], True))) {
+                        $rBouquetArr["bouquet_channels"] = "[]";
+                    }
+                    if (!is_array(json_decode($rBouquetArr["bouquet_movies"], True))) {
+                        $rBouquetArr["bouquet_movies"] = "[]";
+                    }
+                    if (!is_array(json_decode($rBouquetArr["bouquet_radios"], True))) {
+                        $rBouquetArr["bouquet_radios"] = "[]";
+                    }
+                    ?>
+                    var rBouquet = {
+                        "stream": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_channels"]) ?>),
+                        "series": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_series"]) ?>),
+                        "vod": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_movies"]) ?>),
+                        "radios": $.parseJSON(<?= json_encode($rBouquetArr["bouquet_radios"]) ?>)
+                    };
+                <?php } ?>
 
-                    function toggleBouquet(rID, rType, rReview = false) {
-                        var rIndex = rBouquet[rType].indexOf(parseInt(rID));
-                        if (rIndex > -1) {
-                            rBouquet[rType] = jQuery.grep(rBouquet[rType], function(rValue) {
-                                return parseInt(rValue) != parseInt(rID);
+                function reviewBouquet() {
+                    var rTable = $('#datatable-review').DataTable();
+                    rTable.clear();
+                    rTable.draw();
+                    $.post("./api.php?action=review_bouquet", {
+                        "data": rBouquet
+                    }, function (rData) {
+                        if (rData.result === true) {
+                            $(rData.streams).each(function (rIndex) {
+                                rTable.row.add([rData.streams[rIndex].id, '<?= $_["stream"] ?>', rData.streams[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.streams[rIndex].id + ', \'stream\', true);"><i class="mdi mdi-minus"></i></button>']);
+                            });
+                            $(rData.vod).each(function (rIndex) {
+                                rTable.row.add([rData.vod[rIndex].id, '<?= $_["vod"] ?>', rData.vod[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.vod[rIndex].id + ', \'vod\', true);"><i class="mdi mdi-minus"></i></button>']);
+                            });
+                            $(rData.radios).each(function (rIndex) {
+                                rTable.row.add([rData.radios[rIndex].id, '<?= $_["radio"] ?>', rData.radios[rIndex].stream_display_name, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.radios[rIndex].id + ', \'radios\', true);"><i class="mdi mdi-minus"></i></button>']);
+                            });
+                            $(rData.series).each(function (rIndex) {
+                                rTable.row.add([rData.series[rIndex].id, '<?= $_["series"] ?>', rData.series[rIndex].title, '<button type="button" class="btn-remove btn btn-light waves-effect waves-light btn-xs" onClick="toggleBouquet(' + rData.series[rIndex].id + ', \'series\', true);"><i class="mdi mdi-minus"></i></button>']);
                             });
                         } else {
-                            rBouquet[rType].push(parseInt(rID));
+                            alert("<?= $_["bouquet_review_failed"] ?>");
                         }
-                        if (rReview == true) {
-                            $("#datatable-streams").DataTable().ajax.reload(null, false);
-                            $("#datatable-vod").DataTable().ajax.reload(null, false);
-                            $("#datatable-radios").DataTable().ajax.reload(null, false);
-                            $("#datatable-series").DataTable().ajax.reload(null, false);
-                            reviewBouquet()
-                        }
-                    }
+                        rTable.draw();
+                    }, "json");
+                }
 
-                    function toggleBouquets(rPage) {
-                        $("#" + rPage + " tr").each(function() {
-                            $(this).find("td:last-child button").filter(':visible').each(function() {
-                                toggleBouquet($(this).data("id"), $(this).data("type"), false);
-                            });
+                function toggleBouquet(rID, rType, rReview = false) {
+                    var rIndex = rBouquet[rType].indexOf(parseInt(rID));
+                    if (rIndex > -1) {
+                        rBouquet[rType] = jQuery.grep(rBouquet[rType], function (rValue) {
+                            return parseInt(rValue) != parseInt(rID);
                         });
-                        $("#" + rPage).DataTable().ajax.reload(null, false);
+                    } else {
+                        rBouquet[rType].push(parseInt(rID));
+                    }
+                    if (rReview == true) {
+                        $("#datatable-streams").DataTable().ajax.reload(null, false);
+                        $("#datatable-vod").DataTable().ajax.reload(null, false);
+                        $("#datatable-radios").DataTable().ajax.reload(null, false);
+                        $("#datatable-series").DataTable().ajax.reload(null, false);
                         reviewBouquet()
                     }
+                }
 
-                    $(document).ready(function() {
-                        $("#datatable-streams").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            createdRow: function(row, data, index) {
-                                $(row).addClass('stream-' + data[0]);
-                                var rIndex = rBouquet["stream"].indexOf(parseInt(data[0]));
-                                if (rIndex > -1) {
-                                    $(row).find(".btn-remove").show();
-                                } else {
-                                    $(row).find(".btn-add").show();
-                                }
-                            },
-                            bInfo: false,
-                            bAutoWidth: false,
-                            searching: true,
-                            pageLength: 100,
-                            lengthChange: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table.php",
-                                "data": function(d) {
-                                    d.id = "bouquets_streams";
-                                    d.category_id = $("#category_id").val();
-                                }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 3]
-                            }],
+                function toggleBouquets(rPage) {
+                    $("#" + rPage + " tr").each(function () {
+                        $(this).find("td:last-child button").filter(':visible').each(function () {
+                            toggleBouquet($(this).data("id"), $(this).data("type"), false);
                         });
-                        $("#datatable-vod").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            createdRow: function(row, data, index) {
-                                $(row).addClass('vod-' + data[0]);
-                                var rIndex = rBouquet["vod"].indexOf(parseInt(data[0]));
-                                if (rIndex > -1) {
-                                    $(row).find(".btn-remove").show();
-                                } else {
-                                    $(row).find(".btn-add").show();
-                                }
-                            },
-                            bInfo: false,
-                            bAutoWidth: false,
-                            searching: true,
-                            pageLength: 100,
-                            lengthChange: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table.php",
-                                "data": function(d) {
-                                    d.id = "bouquets_vod";
-                                    d.category_id = $("#category_idv").val();
-                                }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 3]
-                            }],
-                        });
-                        $("#datatable-series").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            createdRow: function(row, data, index) {
-                                $(row).addClass('series-' + data[0]);
-                                var rIndex = rBouquet["series"].indexOf(parseInt(data[0]));
-                                if (rIndex > -1) {
-                                    $(row).find(".btn-remove").show();
-                                } else {
-                                    $(row).find(".btn-add").show();
-                                }
-                            },
-                            bInfo: false,
-                            bAutoWidth: false,
-                            searching: true,
-                            pageLength: 100,
-                            lengthChange: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table.php",
-                                "data": function(d) {
-                                    d.id = "bouquets_series";
-                                    d.category_id = $("#category_ids").val();
-                                }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 3]
-                            }],
-                        });
-                        $("#datatable-radios").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            createdRow: function(row, data, index) {
-                                $(row).addClass('radios-' + data[0]);
-                                var rIndex = rBouquet["radios"].indexOf(parseInt(data[0]));
-                                if (rIndex > -1) {
-                                    $(row).find(".btn-remove").show();
-                                } else {
-                                    $(row).find(".btn-add").show();
-                                }
-                            },
-                            bInfo: false,
-                            bAutoWidth: false,
-                            searching: true,
-                            pageLength: 100,
-                            lengthChange: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table.php",
-                                "data": function(d) {
-                                    d.id = "bouquets_radios";
-                                    d.category_id = $("#category_idr").val();
-                                }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 3]
-                            }],
-                        });
-                        $("#datatable-review").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            bInfo: false,
-                            bAutoWidth: false,
-                            searching: true,
-                            pageLength: 100,
-                            lengthChange: false,
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 1, 3]
-                            }],
-                        });
-                        $('select').select2({
-                            width: '100%'
-                        });
-                        $("#category_id").on("select2:select", function(e) {
-                            $("#datatable-streams").DataTable().ajax.reload(null, false);
-                        });
-                        $('#stream_search').keyup(function() {
-                            $('#datatable-streams').DataTable().search($(this).val()).draw();
-                        })
-                        $("#category_idv").on("select2:select", function(e) {
-                            $("#datatable-vod").DataTable().ajax.reload(null, false);
-                        });
-                        $('#vod_search').keyup(function() {
-                            $('#datatable-vod').DataTable().search($(this).val()).draw();
-                        })
-                        $("#category_ids").on("select2:select", function(e) {
-                            $("#datatable-series").DataTable().ajax.reload(null, false);
-                        });
-                        $('#series_search').keyup(function() {
-                            $('#datatable-series').DataTable().search($(this).val()).draw();
-                        });
-                        $("#category_idr").on("select2:select", function(e) {
-                            $("#datatable-radios").DataTable().ajax.reload(null, false);
-                        });
-                        $('#radios_search').keyup(function() {
-                            $('#datatable-radios').DataTable().search($(this).val()).draw();
-                        });
-                        $(document).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                            if ($(e.target).attr("href") == "#review") {
-                                reviewBouquet();
-                            }
-                        });
-                        $("#bouquet_form").submit(function(e) {
-                            if ($("#bouquet_name").val().length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["enter_a_bouquet_name"] ?>");
-                            }
-                            $("#bouquet_data").val(JSON.stringify(rBouquet));
-                        });
-                        $("form").attr('autocomplete', 'off');
                     });
-                </script>
-                </body>
+                    $("#" + rPage).DataTable().ajax.reload(null, false);
+                    reviewBouquet()
+                }
 
-                </html>
+                $(document).ready(function () {
+                    $("#datatable-streams").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        createdRow: function (row, data, index) {
+                            $(row).addClass('stream-' + data[0]);
+                            var rIndex = rBouquet["stream"].indexOf(parseInt(data[0]));
+                            if (rIndex > -1) {
+                                $(row).find(".btn-remove").show();
+                            } else {
+                                $(row).find(".btn-add").show();
+                            }
+                        },
+                        bInfo: false,
+                        bAutoWidth: false,
+                        searching: true,
+                        pageLength: 100,
+                        lengthChange: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table.php",
+                            "data": function (d) {
+                                d.id = "bouquets_streams";
+                                d.category_id = $("#category_id").val();
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 3]
+                        }],
+                    });
+                    $("#datatable-vod").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        createdRow: function (row, data, index) {
+                            $(row).addClass('vod-' + data[0]);
+                            var rIndex = rBouquet["vod"].indexOf(parseInt(data[0]));
+                            if (rIndex > -1) {
+                                $(row).find(".btn-remove").show();
+                            } else {
+                                $(row).find(".btn-add").show();
+                            }
+                        },
+                        bInfo: false,
+                        bAutoWidth: false,
+                        searching: true,
+                        pageLength: 100,
+                        lengthChange: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table.php",
+                            "data": function (d) {
+                                d.id = "bouquets_vod";
+                                d.category_id = $("#category_idv").val();
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 3]
+                        }],
+                    });
+                    $("#datatable-series").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        createdRow: function (row, data, index) {
+                            $(row).addClass('series-' + data[0]);
+                            var rIndex = rBouquet["series"].indexOf(parseInt(data[0]));
+                            if (rIndex > -1) {
+                                $(row).find(".btn-remove").show();
+                            } else {
+                                $(row).find(".btn-add").show();
+                            }
+                        },
+                        bInfo: false,
+                        bAutoWidth: false,
+                        searching: true,
+                        pageLength: 100,
+                        lengthChange: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table.php",
+                            "data": function (d) {
+                                d.id = "bouquets_series";
+                                d.category_id = $("#category_ids").val();
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 3]
+                        }],
+                    });
+                    $("#datatable-radios").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        createdRow: function (row, data, index) {
+                            $(row).addClass('radios-' + data[0]);
+                            var rIndex = rBouquet["radios"].indexOf(parseInt(data[0]));
+                            if (rIndex > -1) {
+                                $(row).find(".btn-remove").show();
+                            } else {
+                                $(row).find(".btn-add").show();
+                            }
+                        },
+                        bInfo: false,
+                        bAutoWidth: false,
+                        searching: true,
+                        pageLength: 100,
+                        lengthChange: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table.php",
+                            "data": function (d) {
+                                d.id = "bouquets_radios";
+                                d.category_id = $("#category_idr").val();
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 3]
+                        }],
+                    });
+                    $("#datatable-review").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        bInfo: false,
+                        bAutoWidth: false,
+                        searching: true,
+                        pageLength: 100,
+                        lengthChange: false,
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 1, 3]
+                        }],
+                    });
+                    $('select').select2({
+                        width: '100%'
+                    });
+                    $("#category_id").on("select2:select", function (e) {
+                        $("#datatable-streams").DataTable().ajax.reload(null, false);
+                    });
+                    $('#stream_search').keyup(function () {
+                        $('#datatable-streams').DataTable().search($(this).val()).draw();
+                    })
+                    $("#category_idv").on("select2:select", function (e) {
+                        $("#datatable-vod").DataTable().ajax.reload(null, false);
+                    });
+                    $('#vod_search').keyup(function () {
+                        $('#datatable-vod').DataTable().search($(this).val()).draw();
+                    })
+                    $("#category_ids").on("select2:select", function (e) {
+                        $("#datatable-series").DataTable().ajax.reload(null, false);
+                    });
+                    $('#series_search').keyup(function () {
+                        $('#datatable-series').DataTable().search($(this).val()).draw();
+                    });
+                    $("#category_idr").on("select2:select", function (e) {
+                        $("#datatable-radios").DataTable().ajax.reload(null, false);
+                    });
+                    $('#radios_search').keyup(function () {
+                        $('#datatable-radios').DataTable().search($(this).val()).draw();
+                    });
+                    $(document).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+                    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                        if ($(e.target).attr("href") == "#review") {
+                            reviewBouquet();
+                        }
+                    });
+                    $("#bouquet_form").submit(function (e) {
+                        if ($("#bouquet_name").val().length == 0) {
+                            e.preventDefault();
+                            $.toast("<?= $_["enter_a_bouquet_name"] ?>");
+                        }
+                        $("#bouquet_data").val(JSON.stringify(rBouquet));
+                    });
+                    $("form").attr('autocomplete', 'off');
+                });
+            </script>
+            </body>
+
+            </html>

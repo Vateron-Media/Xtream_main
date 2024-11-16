@@ -25,14 +25,14 @@ if ($rSettings["sidebar"]) {
 }
 if ($rSettings["sidebar"]) { ?>
     <div class="content-page<?php if ($rPermissions["is_reseller"]) {
-                                echo " boxed-layout-ext";
-                            } ?>">
+        echo " boxed-layout-ext";
+    } ?>">
         <div class="content">
             <div class="container-fluid">
             <?php } else { ?>
                 <div class="wrapper<?php if ($rPermissions["is_reseller"]) {
-                                        echo " boxed-layout-ext";
-                                    } ?>">
+                    echo " boxed-layout-ext";
+                } ?>">
                     <div class="container-fluid">
                     <?php } ?>
                     <!-- start page title -->
@@ -68,7 +68,7 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?= $_["refresh"] ?>
                                                     </button>
                                                 </a>
-                                                <?php }
+                                            <?php }
                                             if ($rPermissions["is_admin"]) {
                                                 if (hasPermissions("adv", "add_stream")) { ?>
                                                     <a href="stream.php">
@@ -85,14 +85,14 @@ if ($rSettings["sidebar"]) { ?>
                                                             <?= $_["create"] ?>
                                                         </button>
                                                     </a>
-                                            <?php }
+                                                <?php }
                                             } ?>
                                         </li>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?= $_["streams"] ?> <?php if ($rCategory) {
-                                                                                echo " - " . $rCategory["category_name"];
-                                                                            } ?></h4>
+                                       echo " - " . $rCategory["category_name"];
+                                   } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -115,8 +115,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         <option value="" selected><?= $_["all_categories"] ?></option>
                                                         <?php foreach ($rCategories as $rCategory) { ?>
                                                             <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                                        echo " selected";
-                                                                                                    } ?>><?= $rCategory["category_name"] ?></option>
+                                                                  echo " selected";
+                                                              } ?>><?= $rCategory["category_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -126,8 +126,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         <option value="" selected><?= $_["all_servers"] ?></option>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
-                                                                                                        echo " selected";
-                                                                                                    } ?>><?= $rServer["server_name"] ?></option>
+                                                                  echo " selected";
+                                                              } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -138,8 +138,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         data-toggle="select2">
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                        echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                echo " selected";
+                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                             <?php } ?>
                                                     </select>
                                                 </div>
@@ -154,8 +154,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         <option value="" selected><?= $_["all_servers"] ?></option>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
-                                                                                                        echo " selected";
-                                                                                                    } ?>><?= $rServer["server_name"] ?></option>
+                                                                  echo " selected";
+                                                              } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -165,40 +165,40 @@ if ($rSettings["sidebar"]) { ?>
                                                         <option value="" selected><?= $_["all_categories"] ?></option>
                                                         <?php foreach ($rCategories as $rCategory) { ?>
                                                             <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                                        echo " selected";
-                                                                                                    } ?>><?= $rCategory["category_name"] ?></option>
+                                                                  echo " selected";
+                                                              } ?>><?= $rCategory["category_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <select id="stream_filter" class="form-control" data-toggle="select2">
                                                         <option value="" <?php if (!isset($_GET["filter"])) {
-                                                                                echo " selected";
-                                                                            } ?>><?= $_["no_filter"] ?></option>
+                                                            echo " selected";
+                                                        } ?>><?= $_["no_filter"] ?></option>
                                                         <option value="1" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 1)) {
-                                                                                echo " selected";
-                                                                            } ?>><?= $_["online"] ?></option>
+                                                            echo " selected";
+                                                        } ?>><?= $_["online"] ?></option>
                                                         <option value="2" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 2)) {
-                                                                                echo " selected";
-                                                                            } ?>><?= $_["down"] ?></option>
+                                                            echo " selected";
+                                                        } ?>><?= $_["down"] ?></option>
                                                         <option value="3" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 3)) {
-                                                                                echo " selected";
-                                                                            } ?>><?= $_["stopped"] ?></option>
+                                                            echo " selected";
+                                                        } ?>><?= $_["stopped"] ?></option>
                                                         <option value="4" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 4)) {
-                                                                                echo " selected";
-                                                                            } ?>><?= $_["starting"] ?></option>
+                                                            echo " selected";
+                                                        } ?>><?= $_["starting"] ?></option>
                                                         <option value="5" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 5)) {
-                                                                                echo " selected";
-                                                                            } ?>><?= $_["on_demand"] ?></option>
+                                                            echo " selected";
+                                                        } ?>><?= $_["on_demand"] ?></option>
                                                         <option value="6" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 6)) {
-                                                                                echo " selected";
-                                                                            } ?>><?= $_["direct"] ?></option>
+                                                            echo " selected";
+                                                        } ?>><?= $_["direct"] ?></option>
                                                         <option value="7" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 7)) {
-                                                                                echo " selected";
-                                                                            } ?>><?= $_["timeshift"] ?></option>
+                                                            echo " selected";
+                                                        } ?>><?= $_["timeshift"] ?></option>
                                                         <option value="8" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 8)) {
-                                                                                echo " selected";
-                                                                            } ?>><?= $_["created_channel"] ?></option>
+                                                            echo " selected";
+                                                        } ?>><?= $_["created_channel"] ?></option>
                                                     </select>
                                                 </div>
                                                 <label class="col-md-1 col-form-label text-center"
@@ -208,8 +208,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         data-toggle="select2">
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                        echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                echo " selected";
+                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                             <?php } ?>
                                                     </select>
                                                 </div>
@@ -241,249 +241,249 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col-->
                     </div>
                     <!-- end row-->
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
-                <script src="assets/js/pages/form-remember.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
+            <script src="assets/js/pages/form-remember.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var autoRefresh = true;
-                    var rClearing = false;
+            <script>
+                var autoRefresh = true;
+                var rClearing = false;
 
-                    function toggleAuto() {
-                        if (autoRefresh == true) {
-                            autoRefresh = false;
-                            $(".auto-text").html("Manual Mode");
-                        } else {
-                            autoRefresh = true;
-                            $(".auto-text").html("Auto-Refresh");
+                function toggleAuto() {
+                    if (autoRefresh == true) {
+                        autoRefresh = false;
+                        $(".auto-text").html("Manual Mode");
+                    } else {
+                        autoRefresh = true;
+                        $(".auto-text").html("Auto-Refresh");
+                    }
+                }
+
+                function api(rID, rServerID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_stream"] ?>') == false) {
+                            return;
                         }
                     }
-
-                    function api(rID, rServerID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_stream"] ?>') == false) {
-                                return;
+                    $.getJSON("./api.php?action=stream&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function (data) {
+                        if (data.result == true) {
+                            if (rType == "start") {
+                                $.toast("<?= $_["stream_successfully_started"] ?>");
+                            } else if (rType == "stop") {
+                                $.toast("<?= $_["stream_successfully_stopped"] ?>");
+                            } else if (rType == "restart") {
+                                $.toast("<?= $_["stream_successfully_restarted"] ?>");
+                            } else if (rType == "delete") {
+                                $.toast("<?= $_["stream_successfully_deleted"] ?>");
                             }
-                        }
-                        $.getJSON("./api.php?action=stream&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function(data) {
-                            if (data.result == true) {
-                                if (rType == "start") {
-                                    $.toast("<?= $_["stream_successfully_started"] ?>");
-                                } else if (rType == "stop") {
-                                    $.toast("<?= $_["stream_successfully_stopped"] ?>");
-                                } else if (rType == "restart") {
-                                    $.toast("<?= $_["stream_successfully_restarted"] ?>");
-                                } else if (rType == "delete") {
-                                    $.toast("<?= $_["stream_successfully_deleted"] ?>");
-                                }
-                                $.each($('.tooltip'), function(index, element) {
-                                    $(this).remove();
-                                });
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                            } else {
-                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                            }
-                        }).fail(function() {
-                            $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                        });
-                    }
-
-                    function player(rID) {
-                        $.magnificPopup.open({
-                            items: {
-                                src: "./player.php?type=live&id=" + rID,
-                                type: 'iframe'
-                            }
-                        });
-                    }
-
-                    function reloadStreams() {
-                        if (autoRefresh == true) {
+                            $.each($('.tooltip'), function (index, element) {
+                                $(this).remove();
+                            });
                             $('[data-toggle="tooltip"]').tooltip("hide");
                             $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                        }
-                        setTimeout(reloadStreams, 5000);
-                    }
-
-                    function getCategory() {
-                        return $("#stream_category_id").val();
-                    }
-
-                    function getFilter() {
-                        return $("#stream_filter").val();
-                    }
-
-                    function getServer() {
-                        return $("#stream_server_id").val();
-                    }
-
-                    function changeZoom() {
-                        if ($("#datatable-streampage").hasClass("font-large")) {
-                            $("#datatable-streampage").removeClass("font-large");
-                            $("#datatable-streampage").addClass("font-normal");
-                        } else if ($("#datatable-streampage").hasClass("font-normal")) {
-                            $("#datatable-streampage").removeClass("font-normal");
-                            $("#datatable-streampage").addClass("font-small");
                         } else {
-                            $("#datatable-streampage").removeClass("font-small");
-                            $("#datatable-streampage").addClass("font-large");
+                            $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
                         }
-                        $("#datatable-streampage").draw();
-                    }
+                    }).fail(function () {
+                        $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                    });
+                }
 
-                    function clearFilters() {
-                        window.rClearing = true;
-                        $("#stream_search").val("").trigger('change');
-                        $('#stream_filter').val("").trigger('change');
-                        $('#stream_server_id').val("").trigger('change');
-                        $('#stream_category_id').val("").trigger('change');
-                        $('#stream_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
-                        window.rClearing = false;
-                        $('#datatable-streampage').DataTable().search($("#stream_search").val());
-                        $('#datatable-streampage').DataTable().page.len($('#stream_show_entries').val());
-                        $("#datatable-streampage").DataTable().page(0).draw('page');
+                function player(rID) {
+                    $.magnificPopup.open({
+                        items: {
+                            src: "./player.php?type=live&id=" + rID,
+                            type: 'iframe'
+                        }
+                    });
+                }
+
+                function reloadStreams() {
+                    if (autoRefresh == true) {
                         $('[data-toggle="tooltip"]').tooltip("hide");
                         $("#datatable-streampage").DataTable().ajax.reload(null, false);
                     }
-                    $(document).ready(function() {
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        formCache.init();
-                        <?php if (!isset($_GET["filter"])) { ?>
-                            formCache.fetch();
-                        <?php } ?>
+                    setTimeout(reloadStreams, 5000);
+                }
 
-                        $('select').select2({
-                            width: '100%'
-                        });
-                        $("#datatable-streampage").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                                $('[data-toggle="tooltip"]').tooltip();
-                            },
-                            createdRow: function(row, data, index) {
-                                $(row).addClass('stream-' + data[0]);
-                            },
-                            responsive: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "streams",
-                                        d.category = getCategory();
-                                    <?php if ($rPermissions["is_admin"]) { ?>
-                                        d.filter = getFilter();
-                                    <?php } else { ?>
-                                        d.filter = 1;
-                                    <?php } ?>
-                                    d.server = getServer();
-                                }
-                            },
-                            columnDefs: [
-                                <?php if ($rPermissions["is_admin"]) { ?> {
-                                        "className": "dt-center",
-                                        "targets": [0, 1, 4, 5, 6, 7, 8, 9]
-                                    },
-                                    {
-                                        "orderable": false,
-                                        "targets": [6, 7]
-                                    }
-                                <?php } else { ?> {
-                                        "className": "dt-center",
-                                        "targets": [0, 1, 4]
-                                    }
+                function getCategory() {
+                    return $("#stream_category_id").val();
+                }
+
+                function getFilter() {
+                    return $("#stream_filter").val();
+                }
+
+                function getServer() {
+                    return $("#stream_server_id").val();
+                }
+
+                function changeZoom() {
+                    if ($("#datatable-streampage").hasClass("font-large")) {
+                        $("#datatable-streampage").removeClass("font-large");
+                        $("#datatable-streampage").addClass("font-normal");
+                    } else if ($("#datatable-streampage").hasClass("font-normal")) {
+                        $("#datatable-streampage").removeClass("font-normal");
+                        $("#datatable-streampage").addClass("font-small");
+                    } else {
+                        $("#datatable-streampage").removeClass("font-small");
+                        $("#datatable-streampage").addClass("font-large");
+                    }
+                    $("#datatable-streampage").draw();
+                }
+
+                function clearFilters() {
+                    window.rClearing = true;
+                    $("#stream_search").val("").trigger('change');
+                    $('#stream_filter').val("").trigger('change');
+                    $('#stream_server_id').val("").trigger('change');
+                    $('#stream_category_id').val("").trigger('change');
+                    $('#stream_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    window.rClearing = false;
+                    $('#datatable-streampage').DataTable().search($("#stream_search").val());
+                    $('#datatable-streampage').DataTable().page.len($('#stream_show_entries').val());
+                    $("#datatable-streampage").DataTable().page(0).draw('page');
+                    $('[data-toggle="tooltip"]').tooltip("hide");
+                    $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                }
+                $(document).ready(function () {
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+                    formCache.init();
+                    <?php if (!isset($_GET["filter"])) { ?>
+                        formCache.fetch();
+                    <?php } ?>
+
+                    $('select').select2({
+                        width: '100%'
+                    });
+                    $("#datatable-streampage").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                            $('[data-toggle="tooltip"]').tooltip();
+                        },
+                        createdRow: function (row, data, index) {
+                            $(row).addClass('stream-' + data[0]);
+                        },
+                        responsive: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "streams",
+                                    d.category = getCategory();
+                                <?php if ($rPermissions["is_admin"]) { ?>
+                                    d.filter = getFilter();
+                                <?php } else { ?>
+                                    d.filter = 1;
                                 <?php } ?>
-                            ],
-                            order: [
-                                [0, "desc"]
-                            ],
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
-                            lengthMenu: [10, 25, 50, 250, 500, 1000],
-                            stateSave: true
-                        });
-                        $("#datatable-streampage").css("width", "100%");
-                        $('#stream_search').keyup(function() {
-                            if (!window.rClearing) {
-                                $('#datatable-streampage').DataTable().search($(this).val()).draw();
+                                d.server = getServer();
                             }
-                        });
-                        $('#stream_show_entries').change(function() {
-                            if (!window.rClearing) {
-                                $('#datatable-streampage').DataTable().page.len($(this).val()).draw();
-                            }
-                        });
-                        $('#stream_category_id').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                            }
-                        });
-                        $('#stream_server_id').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                            }
-                        });
-                        $('#stream_filter').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                            }
-                        });
-                        <?php if (!$detect->isMobile()) { ?>
-                            setTimeout(reloadStreams, 5000);
-                        <?php }
-                        if (!$rAdminSettings["auto_refresh"]) { ?>
-                            toggleAuto();
-                        <?php } ?>
-                        if ($('#stream_search').val().length > 0) {
-                            $('#datatable-streampage').DataTable().search($('#stream_search').val()).draw();
+                        },
+                        columnDefs: [
+                            <?php if ($rPermissions["is_admin"]) { ?> {
+                                    "className": "dt-center",
+                                    "targets": [0, 1, 4, 5, 6, 7, 8, 9]
+                                },
+                                {
+                                    "orderable": false,
+                                    "targets": [6, 7]
+                                }
+                                <?php } else { ?> {
+                                    "className": "dt-center",
+                                    "targets": [0, 1, 4]
+                                }
+                                <?php } ?>
+                        ],
+                        order: [
+                            [0, "desc"]
+                        ],
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        lengthMenu: [10, 25, 50, 250, 500, 1000],
+                        stateSave: true
+                    });
+                    $("#datatable-streampage").css("width", "100%");
+                    $('#stream_search').keyup(function () {
+                        if (!window.rClearing) {
+                            $('#datatable-streampage').DataTable().search($(this).val()).draw();
                         }
                     });
-
-                    $(window).bind('beforeunload', function() {
-                        formCache.save();
+                    $('#stream_show_entries').change(function () {
+                        if (!window.rClearing) {
+                            $('#datatable-streampage').DataTable().page.len($(this).val()).draw();
+                        }
                     });
-                </script>
-                </body>
+                    $('#stream_category_id').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                        }
+                    });
+                    $('#stream_server_id').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                        }
+                    });
+                    $('#stream_filter').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                        }
+                    });
+                    <?php if (!$detect->isMobile()) { ?>
+                        setTimeout(reloadStreams, 5000);
+                    <?php }
+                    if (!$rAdminSettings["auto_refresh"]) { ?>
+                        toggleAuto();
+                    <?php } ?>
+                    if ($('#stream_search').val().length > 0) {
+                        $('#datatable-streampage').DataTable().search($('#stream_search').val()).draw();
+                    }
+                });
 
-                </html>
+                $(window).bind('beforeunload', function () {
+                    formCache.save();
+                });
+            </script>
+            </body>
+
+            </html>

@@ -99,7 +99,7 @@ class ipTV_streaming {
                 }
             } else {
                 if ($rStream['info']['direct_source'] != 1) {
-                    foreach (ipTV_lib::$Servers  as $serverID => $serverInfo) {
+                    foreach (ipTV_lib::$Servers as $serverID => $serverInfo) {
                         if (!(!array_key_exists($serverID, $rStream['servers']) || !$serverInfo['server_online'] || $serverInfo['server_type'] != 0)) {
                             if (isset($rStream['servers'][$serverID])) {
                                 if ($rType == 'movie') {
@@ -1131,7 +1131,7 @@ class ipTV_streaming {
     public static function getIPInfo($IP) {
         if (!empty($IP)) {
             if (!file_exists(CONS_TMP_PATH . md5($IP) . '_geo2')) {
-                $rGeoIP =  new MaxMind\Db\Reader(GEOIP2COUNTRY_FILENAME);
+                $rGeoIP = new MaxMind\Db\Reader(GEOIP2COUNTRY_FILENAME);
                 $rResponse = $rGeoIP->get($IP);
                 $rGeoIP->close();
                 if ($rResponse) {

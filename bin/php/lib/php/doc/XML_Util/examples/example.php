@@ -261,7 +261,7 @@ $tag = array(
     'qname' => 'foo',
     'attributes' => array('key' => 'value', 'argh' => 't�t�'),
     'content' =>
-    'Also XHTML-tags can be created '
+        'Also XHTML-tags can be created '
         . 'and HTML entities can be replaced � � � � <>.'
 );
 

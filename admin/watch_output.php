@@ -91,8 +91,8 @@ if ($rSettings["sidebar"]) { ?>
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                    echo " selected";
-                                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                            echo " selected";
+                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -118,253 +118,253 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col-->
                     </div>
                     <!-- end row-->
-                    </div> <!-- end container -->
-                </div>
-                <div class="modal fade bs-logs-modal-center" tabindex="-1" role="dialog" aria-labelledby="clearLogsLabel"
-                    aria-hidden="true" style="display: none;" data-id="">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="clearLogsLabel"><?= $_["clear_logs"] ?></h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group row mb-4">
-                                    <label class="col-md-4 col-form-label" for="range_clear"><?= $_["date_range"] ?></label>
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control text-center date" id="range_clear_from"
-                                            name="range_clear_from" data-toggle="date-picker" data-single-date-picker="true"
-                                            autocomplete="off" placeholder="From">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control text-center date" id="range_clear_to"
-                                            name="range_clear_to" data-toggle="date-picker" data-single-date-picker="true"
-                                            autocomplete="off" placeholder="To">
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <input id="clear_logs" type="submit" class="btn btn-primary" value="Clear"
-                                        style="width:100%" />
-                                </div>
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+                </div> <!-- end container -->
+            </div>
+            <div class="modal fade bs-logs-modal-center" tabindex="-1" role="dialog" aria-labelledby="clearLogsLabel"
+                aria-hidden="true" style="display: none;" data-id="">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="clearLogsLabel"><?= $_["clear_logs"] ?></h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         </div>
+                        <div class="modal-body">
+                            <div class="form-group row mb-4">
+                                <label class="col-md-4 col-form-label" for="range_clear"><?= $_["date_range"] ?></label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control text-center date" id="range_clear_from"
+                                        name="range_clear_from" data-toggle="date-picker" data-single-date-picker="true"
+                                        autocomplete="off" placeholder="From">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control text-center date" id="range_clear_to"
+                                        name="range_clear_to" data-toggle="date-picker" data-single-date-picker="true"
+                                        autocomplete="off" placeholder="To">
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <input id="clear_logs" type="submit" class="btn btn-primary" value="Clear"
+                                    style="width:100%" />
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/js/pages/form-remember.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/js/pages/form-remember.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var rClearing = false;
+            <script>
+                var rClearing = false;
 
-                    <?php if ($rPermissions["is_admin"]) { ?>
+                <?php if ($rPermissions["is_admin"]) { ?>
 
-                        function api(rID, rType) {
-                            if (rType == "delete") {
-                                if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_user_this_record"] ?>') == false) {
-                                    return;
-                                }
-                            }
-                            $.getJSON("./api.php?action=watch_output&sub=" + rType + "&result_id=" + rID, function(data) {
-                                if (data.result == true) {
-                                    if (rType == "delete") {
-                                        $.toast("Record successfully deleted.");
-                                    }
-                                    $.each($('.tooltip'), function(index, element) {
-                                        $(this).remove();
-                                    });
-                                    $('[data-toggle="tooltip"]').tooltip("hide");
-                                    $("#datatable-md1").DataTable().ajax.reload(null, false);
-                                } else {
-                                    $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                                }
-                            }).fail(function() {
-                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                            });
-                        }
-                    <?php } ?>
-
-                    function getServer() {
-                        return $("#result_server").val();
-                    }
-
-                    function getType() {
-                        return $("#result_type").val();
-                    }
-
-                    function getStatus() {
-                        return $("#result_status").val();
-                    }
-
-                    function clearFilters() {
-                        window.rClearing = true;
-                        $("#result_search").val("").trigger('change');
-                        $('#result_server').val("").trigger('change');
-                        $('#result_type').val("").trigger('change');
-                        $('#result_status').val("").trigger('change');
-                        $('#result_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
-                        window.rClearing = false;
-                        $('#datatable-md1').DataTable().search($("#result_search").val());
-                        $('#datatable-md1').DataTable().page.len($('#result_show_entries').val());
-                        $("#datatable-md1").DataTable().page(0).draw('page');
-                        $('[data-toggle="tooltip"]').tooltip("hide");
-                        $("#datatable-md1").DataTable().ajax.reload(null, false);
-                    }
-                    $(document).ready(function() {
-                        formCache.init();
-                        formCache.fetch();
-
-                        $('select').select2({
-                            width: '100%'
-                        });
-                        $("#datatable-md1").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                                $('[data-toggle="tooltip"]').tooltip();
-                            },
-                            createdRow: function(row, data, index) {
-                                $(row).addClass('result-' + data[0]);
-                            },
-                            responsive: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "watch_output";
-                                    d.server = getServer();
-                                    d.type = getType();
-                                    d.status = getStatus();
-                                }
-                            },
-                            columnDefs: [{
-                                    "className": "dt-center",
-                                    "targets": [0, 4, 5, 6]
-                                },
-                                {
-                                    "orderable": false,
-                                    "targets": [6]
-                                }
-                            ],
-                            order: [
-                                [5, "desc"]
-                            ],
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
-                            stateSave: true
-                        });
-                        $("#datatable-md1").css("width", "100%");
-                        $('#result_search').keyup(function() {
-                            if (!window.rClearing) {
-                                $('#datatable-md1').DataTable().search($(this).val()).draw();
-                            }
-                        })
-                        $('#result_show_entries').change(function() {
-                            if (!window.rClearing) {
-                                $('#datatable-md1').DataTable().page.len($(this).val()).draw();
-                            }
-                        })
-                        $('#result_server').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-md1").DataTable().ajax.reload(null, false);
-                            }
-                        })
-                        $('#result_type').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-md1").DataTable().ajax.reload(null, false);
-                            }
-                        })
-                        $('#result_status').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-md1").DataTable().ajax.reload(null, false);
-                            }
-                        })
-                        $('#datatable-md1').DataTable().search($(this).val()).draw();
-                        $('#range_clear_to').daterangepicker({
-                            singleDatePicker: true,
-                            showDropdowns: true,
-                            locale: {
-                                format: 'YYYY-MM-DD'
-                            },
-                            autoUpdateInput: false
-                        }).val("");
-                        $('#range_clear_from').daterangepicker({
-                            singleDatePicker: true,
-                            showDropdowns: true,
-                            locale: {
-                                format: 'YYYY-MM-DD'
-                            },
-                            autoUpdateInput: false
-                        }).val("");
-                        $('#range_clear_from').on('apply.daterangepicker', function(ev, picker) {
-                            $(this).val(picker.startDate.format('YYYY-MM-DD'));
-                        });
-                        $('#range_clear_from').on('cancel.daterangepicker', function(ev, picker) {
-                            $(this).val('');
-                        });
-                        $('#range_clear_to').on('apply.daterangepicker', function(ev, picker) {
-                            $(this).val(picker.startDate.format('YYYY-MM-DD'));
-                        });
-                        $('#range_clear_to').on('cancel.daterangepicker', function(ev, picker) {
-                            $(this).val('');
-                        });
-                        $(".btn-clear-logs").click(function() {
-                            $(".bs-logs-modal-center").modal("show");
-                        });
-                        $("#clear_logs").click(function() {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_clear_logs_for_this_period"] ?>') == false) {
+                    function api(rID, rType) {
+                        if (rType == "delete") {
+                            if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_user_this_record"] ?>') == false) {
                                 return;
                             }
-                            $(".bs-logs-modal-center").modal("hide");
-                            $.getJSON("./api.php?action=clear_logs&type=watch_output&from=" + encodeURIComponent($("#range_clear_from").val()) + "&to=" + encodeURIComponent($("#range_clear_to").val()), function(data) {
-                                $.toast("<?= $_["logs_have_been_cleared"] ?>");
-                                //window.location.href = './watch_output.php';
-                            });
+                        }
+                        $.getJSON("./api.php?action=watch_output&sub=" + rType + "&result_id=" + rID, function (data) {
+                            if (data.result == true) {
+                                if (rType == "delete") {
+                                    $.toast("Record successfully deleted.");
+                                }
+                                $.each($('.tooltip'), function (index, element) {
+                                    $(this).remove();
+                                });
+                                $('[data-toggle="tooltip"]').tooltip("hide");
+                                $("#datatable-md1").DataTable().ajax.reload(null, false);
+                            } else {
+                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                            }
+                        }).fail(function () {
+                            $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                        });
+                    }
+                <?php } ?>
+
+                function getServer() {
+                    return $("#result_server").val();
+                }
+
+                function getType() {
+                    return $("#result_type").val();
+                }
+
+                function getStatus() {
+                    return $("#result_status").val();
+                }
+
+                function clearFilters() {
+                    window.rClearing = true;
+                    $("#result_search").val("").trigger('change');
+                    $('#result_server').val("").trigger('change');
+                    $('#result_type').val("").trigger('change');
+                    $('#result_status').val("").trigger('change');
+                    $('#result_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    window.rClearing = false;
+                    $('#datatable-md1').DataTable().search($("#result_search").val());
+                    $('#datatable-md1').DataTable().page.len($('#result_show_entries').val());
+                    $("#datatable-md1").DataTable().page(0).draw('page');
+                    $('[data-toggle="tooltip"]').tooltip("hide");
+                    $("#datatable-md1").DataTable().ajax.reload(null, false);
+                }
+                $(document).ready(function () {
+                    formCache.init();
+                    formCache.fetch();
+
+                    $('select').select2({
+                        width: '100%'
+                    });
+                    $("#datatable-md1").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                            $('[data-toggle="tooltip"]').tooltip();
+                        },
+                        createdRow: function (row, data, index) {
+                            $(row).addClass('result-' + data[0]);
+                        },
+                        responsive: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "watch_output";
+                                d.server = getServer();
+                                d.type = getType();
+                                d.status = getStatus();
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 4, 5, 6]
+                        },
+                        {
+                            "orderable": false,
+                            "targets": [6]
+                        }
+                        ],
+                        order: [
+                            [5, "desc"]
+                        ],
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        stateSave: true
+                    });
+                    $("#datatable-md1").css("width", "100%");
+                    $('#result_search').keyup(function () {
+                        if (!window.rClearing) {
+                            $('#datatable-md1').DataTable().search($(this).val()).draw();
+                        }
+                    })
+                    $('#result_show_entries').change(function () {
+                        if (!window.rClearing) {
+                            $('#datatable-md1').DataTable().page.len($(this).val()).draw();
+                        }
+                    })
+                    $('#result_server').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-md1").DataTable().ajax.reload(null, false);
+                        }
+                    })
+                    $('#result_type').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-md1").DataTable().ajax.reload(null, false);
+                        }
+                    })
+                    $('#result_status').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-md1").DataTable().ajax.reload(null, false);
+                        }
+                    })
+                    $('#datatable-md1').DataTable().search($(this).val()).draw();
+                    $('#range_clear_to').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        },
+                        autoUpdateInput: false
+                    }).val("");
+                    $('#range_clear_from').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        },
+                        autoUpdateInput: false
+                    }).val("");
+                    $('#range_clear_from').on('apply.daterangepicker', function (ev, picker) {
+                        $(this).val(picker.startDate.format('YYYY-MM-DD'));
+                    });
+                    $('#range_clear_from').on('cancel.daterangepicker', function (ev, picker) {
+                        $(this).val('');
+                    });
+                    $('#range_clear_to').on('apply.daterangepicker', function (ev, picker) {
+                        $(this).val(picker.startDate.format('YYYY-MM-DD'));
+                    });
+                    $('#range_clear_to').on('cancel.daterangepicker', function (ev, picker) {
+                        $(this).val('');
+                    });
+                    $(".btn-clear-logs").click(function () {
+                        $(".bs-logs-modal-center").modal("show");
+                    });
+                    $("#clear_logs").click(function () {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_clear_logs_for_this_period"] ?>') == false) {
+                            return;
+                        }
+                        $(".bs-logs-modal-center").modal("hide");
+                        $.getJSON("./api.php?action=clear_logs&type=watch_output&from=" + encodeURIComponent($("#range_clear_from").val()) + "&to=" + encodeURIComponent($("#range_clear_to").val()), function (data) {
+                            $.toast("<?= $_["logs_have_been_cleared"] ?>");
+                            //window.location.href = './watch_output.php';
                         });
                     });
+                });
 
-                    $(window).bind('beforeunload', function() {
-                        formCache.save();
-                    });
-                </script>
-                </body>
+                $(window).bind('beforeunload', function () {
+                    formCache.save();
+                });
+            </script>
+            </body>
 
-                </html>
+            </html>

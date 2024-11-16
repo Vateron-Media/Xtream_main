@@ -411,8 +411,8 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="./streams.php<?php if (isset($_GET["category"])) {
-                                                                        echo "?category=" . $_GET["category"];
-                                                                    } ?>">
+                                                echo "?category=" . $_GET["category"];
+                                            } ?>">
                                                 <button type="button"
                                                     class="btn btn-primary waves-effect waves-light btn-sm">
                                                     <?= $_["permission_streams"] ?>
@@ -433,18 +433,18 @@ if ($rSettings["sidebar"]) { ?>
                                                             <?= $_["add_single"] ?>
                                                         </button>
                                                     </a>
-                                            <?php }
+                                                <?php }
                                             } ?>
                                         </li>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rStream["id"])) {
-                                                            echo $rStream["stream_display_name"] . ' &nbsp;<button type="button" class="btn btn-outline-info waves-effect waves-light btn-xs" onClick="player(' . $rStream["id"] . ');"><i class="mdi mdi-play"></i></button>';
-                                                        } else if (isset($_GET["import"])) {
-                                                            echo $_["import_streams"];
-                                                        } else {
-                                                            echo $_["add_stream"];
-                                                        } ?></h4>
+                                    echo $rStream["stream_display_name"] . ' &nbsp;<button type="button" class="btn btn-outline-info waves-effect waves-light btn-xs" onClick="player(' . $rStream["id"] . ');"><i class="mdi mdi-play"></i></button>';
+                                } else if (isset($_GET["import"])) {
+                                    echo $_["import_streams"];
+                                } else {
+                                    echo $_["add_stream"];
+                                } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -459,26 +459,26 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["stream_operation_was_completed_successfully"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["an_error_occured_while"] ?>
-                                </div>
+                                    </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                     <?= $_["the_stream_name_is_already_in_use"] ?>
-                                </div>
+                                        </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                     <?= $_["no_new_streams_were_imported"] ?>
-                                </div>
+                                            </div>
                             <?php }
                             if (isset($rStream["id"])) { ?>
                                 <div class="card text-xs-center">
@@ -499,7 +499,8 @@ if ($rSettings["sidebar"]) { ?>
                                             <tbody>
                                                 <tr>
                                                     <td colspan="9" class="text-center">
-                                                        <?= $_["loading_stream_information"] ?> </td>
+                                                        <?= $_["loading_stream_information"] ?>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -509,13 +510,12 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form<?php if (isset($_GET["import"])) {
-                                                echo " enctype=\"multipart/form-data\"";
-                                            } ?> action="./stream.php<?php if (isset($_GET["import"])) {
-                                                                            echo "?import";
-                                                                        } else if (isset($_GET["id"])) {
-                                                                            echo "?id=" . $_GET["id"];
-                                                                        } ?>" method="POST" id="stream_form"
-                                        data-parsley-validate="">
+                                        echo " enctype=\"multipart/form-data\"";
+                                    } ?> action="./stream.php<?php if (isset($_GET["import"])) {
+                                          echo "?import";
+                                      } else if (isset($_GET["id"])) {
+                                          echo "?id=" . $_GET["id"];
+                                      } ?>" method="POST" id="stream_form" data-parsley-validate="">
                                         <?php if (isset($rStream["id"])) { ?>
                                             <input type="hidden" name="edit" value="<?= $rStream["id"] ?>" />
                                         <?php } ?>
@@ -582,11 +582,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-8">
                                                                         <input type="text" class="form-control"
                                                                             id="stream_display_name"
-                                                                            name="stream_display_name"
-                                                                            value="<?php if (isset($rStream)) {
-                                                                                        echo htmlspecialchars($rStream["stream_display_name"]);
-                                                                                    } ?>"
-                                                                            required data-parsley-trigger="change">
+                                                                            name="stream_display_name" value="<?php if (isset($rStream)) {
+                                                                                echo htmlspecialchars($rStream["stream_display_name"]);
+                                                                            } ?>" required
+                                                                            data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
                                                                 <span class="streams">
@@ -602,7 +601,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     $i = 0;
                                                                     foreach ($rStreamSources as $rStreamSource) {
                                                                         $i++
-                                                                    ?>
+                                                                            ?>
                                                                         <div class="form-group row mb-4 stream-url">
                                                                             <label class="col-md-4 col-form-label"
                                                                                 for="stream_source"> <?= $_["stream_url"] ?>
@@ -655,8 +654,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-placeholder="Choose...">
                                                                         <?php foreach (getCategories_admin('live') as $rCategory): ?>
                                                                             <option <?php if (isset($rStream) && in_array(intval($rCategory['id']), json_decode($rStream['category_id'], true))) {
-                                                                                        echo 'selected ';
-                                                                                    } ?>value="<?php echo $rCategory['id']; ?>">
+                                                                                echo 'selected ';
+                                                                            } ?>value="<?php echo $rCategory['id']; ?>">
                                                                                 <?php echo $rCategory['category_name']; ?>
                                                                             </option>
                                                                         <?php endforeach; ?>
@@ -673,11 +672,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <option <?php if (isset($rStream)) {
-                                                                                        if (in_array($rStream["id"], json_decode($rBouquet["bouquet_channels"], True))) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rBouquet["id"] ?>">
-                                                                                <?= $rBouquet["bouquet_name"] ?></option>
+                                                                                if (in_array($rStream["id"], json_decode($rBouquet["bouquet_channels"], True))) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                <?= $rBouquet["bouquet_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -689,10 +689,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </label>
                                                                     <div class="col-md-8">
                                                                         <input type="text" class="form-control"
-                                                                            id="stream_icon" name="stream_icon"
-                                                                            value="<?php if (isset($rStream)) {
-                                                                                        echo htmlspecialchars($rStream["stream_icon"]);
-                                                                                    } ?>">
+                                                                            id="stream_icon" name="stream_icon" value="<?php if (isset($rStream)) {
+                                                                                echo htmlspecialchars($rStream["stream_icon"]);
+                                                                            } ?>">
                                                                     </div>
                                                                 </div>
                                                             <?php } ?>
@@ -701,10 +700,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="notes"><?= $_["notes"] ?> </label>
                                                                 <div class="col-md-8">
                                                                     <textarea id="notes" name="notes"
-                                                                        class="form-control" rows="3"
-                                                                        placeholder=""><?php if (isset($rStream)) {
-                                                                                            echo htmlspecialchars($rStream["notes"]);
-                                                                                        } ?></textarea>
+                                                                        class="form-control" rows="3" placeholder=""><?php if (isset($rStream)) {
+                                                                            echo htmlspecialchars($rStream["notes"]);
+                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -729,12 +727,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="gen_timestamps" id="gen_timestamps"
                                                                         type="checkbox" <?php if (isset($rStream)) {
-                                                                                            if ($rStream["gen_timestamps"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } else {
-                                                                                            echo "checked ";
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                            if ($rStream["gen_timestamps"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } else {
+                                                                            echo "checked ";
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -746,10 +744,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="read_native" id="read_native"
                                                                         type="checkbox" <?php if (isset($rStream)) {
-                                                                                            if ($rStream["read_native"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                            if ($rStream["read_native"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -763,10 +761,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="stream_all" id="stream_all"
                                                                         type="checkbox" <?php if (isset($rStream)) {
-                                                                                            if ($rStream["stream_all"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                            if ($rStream["stream_all"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -775,12 +773,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="allow_record" id="allow_record"
                                                                         type="checkbox" <?php if (isset($rStream)) {
-                                                                                            if ($rStream["allow_record"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } else {
-                                                                                            echo "checked ";
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                            if ($rStream["allow_record"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } else {
+                                                                            echo "checked ";
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -794,10 +792,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="rtmp_output" id="rtmp_output"
                                                                         type="checkbox" <?php if (isset($rStream)) {
-                                                                                            if ($rStream["rtmp_output"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                            if ($rStream["rtmp_output"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -809,10 +807,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="direct_source" id="direct_source"
                                                                         type="checkbox" <?php if (isset($rStream)) {
-                                                                                            if ($rStream["direct_source"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } ?>data-plugin="switchery"
+                                                                            if ($rStream["direct_source"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -825,10 +823,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input type="text" class="form-control"
-                                                                        id="custom_sid" name="custom_sid"
-                                                                        value="<?php if (isset($rStream)) {
-                                                                                    echo htmlspecialchars($rStream["custom_sid"]);
-                                                                                } ?>">
+                                                                        id="custom_sid" name="custom_sid" value="<?php if (isset($rStream)) {
+                                                                            echo htmlspecialchars($rStream["custom_sid"]);
+                                                                        } ?>">
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="delay_minutes"><?= $_["minute_delay"] ?> <i
@@ -838,12 +835,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input type="text" class="form-control"
-                                                                        id="delay_minutes" name="delay_minutes"
-                                                                        value="<?php if (isset($rStream)) {
-                                                                                    echo $rStream["delay_minutes"];
-                                                                                } else {
-                                                                                    echo "0";
-                                                                                } ?>">
+                                                                        id="delay_minutes" name="delay_minutes" value="<?php if (isset($rStream)) {
+                                                                            echo $rStream["delay_minutes"];
+                                                                        } else {
+                                                                            echo "0";
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -855,10 +851,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input type="text" class="form-control"
-                                                                        id="custom_ffmpeg" name="custom_ffmpeg"
-                                                                        value="<?php if (isset($rStream)) {
-                                                                                    echo htmlspecialchars($rStream["custom_ffmpeg"]);
-                                                                                } ?>">
+                                                                        id="custom_ffmpeg" name="custom_ffmpeg" value="<?php if (isset($rStream)) {
+                                                                            echo htmlspecialchars($rStream["custom_ffmpeg"]);
+                                                                        } ?>">
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="probesize_ondemand"><?= $_["on_demand_probesize"] ?>
@@ -869,12 +864,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input type="text" class="form-control"
                                                                         id="probesize_ondemand"
-                                                                        name="probesize_ondemand"
-                                                                        value="<?php if (isset($rStream)) {
-                                                                                    echo $rStream["probesize_ondemand"];
-                                                                                } else {
-                                                                                    echo "128000";
-                                                                                } ?>">
+                                                                        name="probesize_ondemand" value="<?php if (isset($rStream)) {
+                                                                            echo $rStream["probesize_ondemand"];
+                                                                        } else {
+                                                                            echo "128000";
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -882,12 +876,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="user_agent"><?= $_["user_agent"] ?> </label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control"
-                                                                        id="user_agent" name="user_agent"
-                                                                        value="<?php if (isset($rStreamOptions[1])) {
-                                                                                    echo htmlspecialchars($rStreamOptions[1]["value"]);
-                                                                                } else {
-                                                                                    echo htmlspecialchars($rStreamArguments["user_agent"]["argument_default_value"]);
-                                                                                } ?>">
+                                                                        id="user_agent" name="user_agent" value="<?php if (isset($rStreamOptions[1])) {
+                                                                            echo htmlspecialchars($rStreamOptions[1]["value"]);
+                                                                        } else {
+                                                                            echo htmlspecialchars($rStreamArguments["user_agent"]["argument_default_value"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -898,12 +891,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control"
-                                                                        id="http_proxy" name="http_proxy"
-                                                                        value="<?php if (isset($rStreamOptions[2])) {
-                                                                                    echo htmlspecialchars($rStreamOptions[2]["value"]);
-                                                                                } else {
-                                                                                    echo htmlspecialchars($rStreamArguments["proxy"]["argument_default_value"]);
-                                                                                } ?>">
+                                                                        id="http_proxy" name="http_proxy" value="<?php if (isset($rStreamOptions[2])) {
+                                                                            echo htmlspecialchars($rStreamOptions[2]["value"]);
+                                                                        } else {
+                                                                            echo htmlspecialchars($rStreamArguments["proxy"]["argument_default_value"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -915,12 +907,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="cookie"
-                                                                        name="cookie"
-                                                                        value="<?php if (isset($rStreamOptions[17])) {
-                                                                                    echo htmlspecialchars($rStreamOptions[17]["value"]);
-                                                                                } else {
-                                                                                    echo htmlspecialchars($rStreamArguments["cookie"]["argument_default_value"]);
-                                                                                } ?>">
+                                                                        name="cookie" value="<?php if (isset($rStreamOptions[17])) {
+                                                                            echo htmlspecialchars($rStreamOptions[17]["value"]);
+                                                                        } else {
+                                                                            echo htmlspecialchars($rStreamArguments["cookie"]["argument_default_value"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -932,12 +923,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="headers"
-                                                                        name="headers"
-                                                                        value="<?php if (isset($rStreamOptions[19])) {
-                                                                                    echo htmlspecialchars($rStreamOptions[19]["value"]);
-                                                                                } else {
-                                                                                    echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]);
-                                                                                } ?>">
+                                                                        name="headers" value="<?php if (isset($rStreamOptions[19])) {
+                                                                            echo htmlspecialchars($rStreamOptions[19]["value"]);
+                                                                        } else {
+                                                                            echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -952,18 +942,20 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="transcode_profile_id" class="form-control"
                                                                         data-toggle="select2">
                                                                         <option <?php if (isset($rStream)) {
-                                                                                    if (intval($rStream["transcode_profile_id"]) == 0) {
-                                                                                        echo "selected ";
-                                                                                    }
-                                                                                } ?>value="0">
-                                                                            <?= $_["transcoding_disabled"] ?></option>
+                                                                            if (intval($rStream["transcode_profile_id"]) == 0) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } ?>value="0">
+                                                                            <?= $_["transcoding_disabled"] ?>
+                                                                        </option>
                                                                         <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
                                                                             <option <?php if (isset($rStream)) {
-                                                                                        if (intval($rStream["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>">
-                                                                                <?= $rProfile["profile_name"] ?></option>
+                                                                                if (intval($rStream["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rProfile["profile_id"] ?>">
+                                                                                <?= $rProfile["profile_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -990,10 +982,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         for="custom_map"><?= $_["custom_map"] ?> </label>
                                                                     <div class="col-md-9 input-group">
                                                                         <input type="text" class="form-control"
-                                                                            id="custom_map" name="custom_map"
-                                                                            value="<?php if (isset($rStream)) {
-                                                                                        echo htmlspecialchars($rStream["custom_map"]);
-                                                                                    } ?>">
+                                                                            id="custom_map" name="custom_map" value="<?php if (isset($rStream)) {
+                                                                                echo htmlspecialchars($rStream["custom_map"]);
+                                                                            } ?>">
                                                                         <div class="input-group-append">
                                                                             <button
                                                                                 class="btn btn-primary waves-effect waves-light"
@@ -1059,8 +1050,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-placeholder="<?= $_["choose_"] ?>">
                                                                         <?php foreach (array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday") as $rDay) { ?>
                                                                             <option value="<?= $rDay ?>" <?php if (in_array($rDay, $rAutoRestart["days"])) {
-                                                                                                                echo " selected";
-                                                                                                            } ?>><?= $rDay ?></option>
+                                                                                  echo " selected";
+                                                                              } ?>><?= $rDay ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -1108,18 +1099,20 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <select name="epg_id" id="epg_id"
                                                                             class="form-control" data-toggle="select2">
                                                                             <option <?php if (isset($rStream)) {
-                                                                                        if (intval($rStream["epg_id"]) == 0) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="0">
-                                                                                <?= $_["no_epg"] ?> </option>
+                                                                                if (intval($rStream["epg_id"]) == 0) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="0">
+                                                                                <?= $_["no_epg"] ?>
+                                                                            </option>
                                                                             <?php foreach ($rEPGSources as $rEPG) { ?>
                                                                                 <option <?php if (isset($rStream)) {
-                                                                                            if (intval($rStream["epg_id"]) == $rEPG["id"]) {
-                                                                                                echo "selected ";
-                                                                                            }
-                                                                                        } ?>value="<?= $rEPG["id"] ?>">
-                                                                                    <?= $rEPG["epg_name"] ?></option>
+                                                                                    if (intval($rStream["epg_id"]) == $rEPG["id"]) {
+                                                                                        echo "selected ";
+                                                                                    }
+                                                                                } ?>value="<?= $rEPG["id"] ?>">
+                                                                                    <?= $rEPG["epg_name"] ?>
+                                                                                </option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
@@ -1134,10 +1127,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?php if (isset($rStream)) {
                                                                                 foreach ((array) json_decode($rEPGSources[intval($rStream["epg_id"])]["data"], True) as $rKey => $rEPGChannel) { ?>
                                                                                     <option value="<?= $rKey ?>" <?php if ($rStream["channel_id"] == $rKey) {
-                                                                                                                        echo " selected";
-                                                                                                                    } ?>>
-                                                                                        <?= $rEPGChannel["display_name"] ?></option>
-                                                                            <?php }
+                                                                                          echo " selected";
+                                                                                      } ?>>
+                                                                                        <?= $rEPGChannel["display_name"] ?>
+                                                                                    </option>
+                                                                                <?php }
                                                                             } ?>
                                                                         </select>
                                                                     </div>
@@ -1151,9 +1145,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?php if (isset($rStream)) {
                                                                                 foreach ((array) json_decode($rEPGSources[intval($rStream["epg_id"])]["data"], True)[$rStream["channel_id"]]["langs"] as $rID => $rLang) { ?>
                                                                                     <option value="<?= $rLang ?>" <?php if ($rStream["epg_lang"] == $rLang) {
-                                                                                                                        echo " selected";
-                                                                                                                    } ?>><?= $rLang ?></option>
-                                                                            <?php }
+                                                                                          echo " selected";
+                                                                                      } ?>><?= $rLang ?></option>
+                                                                                <?php }
                                                                             } ?>
                                                                         </select>
                                                                     </div>
@@ -1192,9 +1186,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-placeholder="<?= $_["bouquet_order"] ?>Choose ...">
                                                                         <?php foreach ($rServers as $rServerItem) { ?>
                                                                             <option value="<?= $rServerItem["id"] ?>" <?php if (in_array($rServerItem["id"], $rOnDemand)) {
-                                                                                                                            echo " selected";
-                                                                                                                        } ?>>
-                                                                                <?= $rServerItem["server_name"] ?></option>
+                                                                                  echo " selected";
+                                                                              } ?>>
+                                                                                <?= $rServerItem["server_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -1208,12 +1203,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="tv_archive_server_id" class="form-control"
                                                                         data-toggle="select2">
                                                                         <option value="0">
-                                                                            <?= $_["timeshift_disabled"] ?> </option>
+                                                                            <?= $_["timeshift_disabled"] ?>
+                                                                        </option>
                                                                         <?php foreach ($rServers as $rServer) { ?>
                                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($rStream)) && ($rStream["tv_archive_server_id"] == $rServer["id"])) {
-                                                                                                                        echo " selected";
-                                                                                                                    } ?>>
-                                                                                <?= $rServer["server_name"] ?></option>
+                                                                                  echo " selected";
+                                                                              } ?>>
+                                                                                <?= $rServer["server_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -1225,18 +1222,17 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input type="text" class="form-control"
                                                                         id="tv_archive_duration"
-                                                                        name="tv_archive_duration"
-                                                                        value="<?php if (isset($rStream)) {
-                                                                                    echo $rStream["tv_archive_duration"];
-                                                                                } else {
-                                                                                    echo "0";
-                                                                                } ?>">
+                                                                        name="tv_archive_duration" value="<?php if (isset($rStream)) {
+                                                                            echo $rStream["tv_archive_duration"];
+                                                                        } else {
+                                                                            echo "0";
+                                                                        } ?>">
                                                                     </select>
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="restart_on_edit"><?php if (isset($rStream["id"])) { ?><?= $_["restart_on_edit"] ?>
-                                                                <?php } else { ?> <?= $_["start_stream_now"] ?>
-                                                                <?php } ?></label>
+                                                                    <?php } else { ?>     <?= $_["start_stream_now"] ?>
+                                                                    <?php } ?></label>
                                                                 <div class="col-md-2">
                                                                     <input name="restart_on_edit" id="restart_on_edit"
                                                                         type="checkbox" data-plugin="switchery"
@@ -1252,12 +1248,11 @@ if ($rSettings["sidebar"]) { ?>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
                                                             <input name="submit_stream" type="submit"
-                                                                class="btn btn-primary"
-                                                                value="<?php if (isset($rStream["id"])) {
-                                                                            echo $_["edit"];
-                                                                        } else {
-                                                                            echo $_["add"];
-                                                                        } ?>" />
+                                                                class="btn btn-primary" value="<?php if (isset($rStream["id"])) {
+                                                                    echo $_["edit"];
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -1268,425 +1263,425 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- file preview template -->
-                <div class="d-none" id="uploadPreviewTemplate">
-                    <div class="card mt-1 mb-0 shadow-none border">
-                        <div class="p-2">
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <img data-dz-thumbnail class="avatar-sm rounded bg-light" alt="">
-                                </div>
-                                <div class="col pl-0">
-                                    <a href="javascript:void(0);" class="text-muted font-weight-bold" data-dz-name></a>
-                                    <p class="mb-0" data-dz-size></p>
-                                </div>
-                                <div class="col-auto">
-                                    <!-- Button -->
-                                    <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
-                                        <i class="mdi mdi-close-circle"></i>
-                                    </a>
-                                </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- file preview template -->
+            <div class="d-none" id="uploadPreviewTemplate">
+                <div class="card mt-1 mb-0 shadow-none border">
+                    <div class="p-2">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <img data-dz-thumbnail class="avatar-sm rounded bg-light" alt="">
+                            </div>
+                            <div class="col pl-0">
+                                <a href="javascript:void(0);" class="text-muted font-weight-bold" data-dz-name></a>
+                                <p class="mb-0" data-dz-size></p>
+                            </div>
+                            <div class="col-auto">
+                                <!-- Button -->
+                                <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                                    <i class="mdi mdi-close-circle"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var rEPG = <?= json_encode($rEPGJS) ?>;
-                    var rSwitches = [];
+            <script>
+                var rEPG = <?= json_encode($rEPGJS) ?>;
+                var rSwitches = [];
 
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                            }
+                        });
+                    };
+                }(jQuery));
 
-                    function moveUp(elem) {
-                        if ($(elem).parent().parent().parent().prevAll().length > 0) {
-                            $(elem).parent().parent().parent().insertBefore($('.streams>div').eq($(elem).parent().parent().parent().prevAll().length - 1));
+                function moveUp(elem) {
+                    if ($(elem).parent().parent().parent().prevAll().length > 0) {
+                        $(elem).parent().parent().parent().insertBefore($('.streams>div').eq($(elem).parent().parent().parent().prevAll().length - 1));
+                    }
+                }
+
+                function moveDown(elem) {
+                    if ($(elem).parent().parent().parent().prevAll().length < $(".streams>div").length) {
+                        $(elem).parent().parent().parent().insertAfter($('.streams>div').eq($(elem).parent().parent().parent().prevAll().length + 1));
+                    }
+                }
+
+                function addStream() {
+                    $(".stream-url:first").clone().appendTo(".streams");
+                    $(".stream-url:last label").html("Stream URL");
+                    $(".stream-url:last input").val("");
+                }
+
+                function removeStream(rField) {
+                    if ($('.stream-url').length > 1) {
+                        $(rField).parent().parent().parent().remove();
+                    } else {
+                        $(rField).parent().parent().find("#stream_source").val("");
+                    }
+                }
+
+                function selectEPGSource() {
+                    $("#channel_id").empty();
+                    $("#epg_lang").empty();
+                    if (rEPG[$("#epg_id").val()]) {
+                        $.each(rEPG[$("#epg_id").val()], function (key, data) {
+                            $("#channel_id").append(new Option(data["display_name"], key, false, false));
+                        });
+                        selectEPGID();
+                    }
+                }
+
+                function selectEPGID() {
+                    $("#epg_lang").empty();
+                    if (rEPG[$("#epg_id").val()][$("#channel_id").val()]) {
+                        $.each(rEPG[$("#epg_id").val()][$("#channel_id").val()]["langs"], function (i, data) {
+                            $("#epg_lang").append(new Option(data, data, false, false));
+                        });
+                    }
+                }
+
+                function reloadStream() {
+                    $("#datatable").DataTable().ajax.reload(null, false);
+                    setTimeout(reloadStream, 5000);
+                }
+
+                function api(rID, rServerID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_stream"] ?>') == false) {
+                            return;
                         }
                     }
-
-                    function moveDown(elem) {
-                        if ($(elem).parent().parent().parent().prevAll().length < $(".streams>div").length) {
-                            $(elem).parent().parent().parent().insertAfter($('.streams>div').eq($(elem).parent().parent().parent().prevAll().length + 1));
-                        }
-                    }
-
-                    function addStream() {
-                        $(".stream-url:first").clone().appendTo(".streams");
-                        $(".stream-url:last label").html("Stream URL");
-                        $(".stream-url:last input").val("");
-                    }
-
-                    function removeStream(rField) {
-                        if ($('.stream-url').length > 1) {
-                            $(rField).parent().parent().parent().remove();
+                    $.getJSON("./api.php?action=stream&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function (data) {
+                        if (data.result == true) {
+                            if (rType == "start") {
+                                $.toast("<?= $_["stream_successfully_started"] ?>");
+                            } else if (rType == "stop") {
+                                $.toast("<?= $_["stream_successfully_stopped"] ?>");
+                            } else if (rType == "restart") {
+                                $.toast("<?= $_["stream_successfully_restarted"] ?>");
+                            } else if (rType == "delete") {
+                                $("#stream-" + rID + "-" + rServerID).remove();
+                                $.toast("<?= $_["stream_successfully_deleted"] ?>");
+                            }
+                            $("#datatable").DataTable().ajax.reload(null, false);
                         } else {
-                            $(rField).parent().parent().find("#stream_source").val("");
-                        }
-                    }
-
-                    function selectEPGSource() {
-                        $("#channel_id").empty();
-                        $("#epg_lang").empty();
-                        if (rEPG[$("#epg_id").val()]) {
-                            $.each(rEPG[$("#epg_id").val()], function(key, data) {
-                                $("#channel_id").append(new Option(data["display_name"], key, false, false));
-                            });
-                            selectEPGID();
-                        }
-                    }
-
-                    function selectEPGID() {
-                        $("#epg_lang").empty();
-                        if (rEPG[$("#epg_id").val()][$("#channel_id").val()]) {
-                            $.each(rEPG[$("#epg_id").val()][$("#channel_id").val()]["langs"], function(i, data) {
-                                $("#epg_lang").append(new Option(data, data, false, false));
-                            });
-                        }
-                    }
-
-                    function reloadStream() {
-                        $("#datatable").DataTable().ajax.reload(null, false);
-                        setTimeout(reloadStream, 5000);
-                    }
-
-                    function api(rID, rServerID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_stream"] ?>') == false) {
-                                return;
-                            }
-                        }
-                        $.getJSON("./api.php?action=stream&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function(data) {
-                            if (data.result == true) {
-                                if (rType == "start") {
-                                    $.toast("<?= $_["stream_successfully_started"] ?>");
-                                } else if (rType == "stop") {
-                                    $.toast("<?= $_["stream_successfully_stopped"] ?>");
-                                } else if (rType == "restart") {
-                                    $.toast("<?= $_["stream_successfully_restarted"] ?>");
-                                } else if (rType == "delete") {
-                                    $("#stream-" + rID + "-" + rServerID).remove();
-                                    $.toast("<?= $_["stream_successfully_deleted"] ?>");
-                                }
-                                $("#datatable").DataTable().ajax.reload(null, false);
-                            } else {
-                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                            }
-                        }).fail(function() {
                             $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                        });
-                    }
-
-                    function player(rID) {
-                        $.magnificPopup.open({
-                            items: {
-                                src: "./player.php?type=live&id=" + rID,
-                                type: 'iframe'
-                            }
-                        });
-                    }
-
-                    function setSwitch(switchElement, checkedBool) {
-                        if ((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
-                            switchElement.setPosition(true);
-                            switchElement.handleOnchange(true);
                         }
+                    }).fail(function () {
+                        $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                    });
+                }
+
+                function player(rID) {
+                    $.magnificPopup.open({
+                        items: {
+                            src: "./player.php?type=live&id=" + rID,
+                            type: 'iframe'
+                        }
+                    });
+                }
+
+                function setSwitch(switchElement, checkedBool) {
+                    if ((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
+                        switchElement.setPosition(true);
+                        switchElement.handleOnchange(true);
                     }
-                    $(document).ready(function() {
-                        $('select').select2({
-                            width: '100%'
-                        });
-                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                        elems.forEach(function(html) {
-                            var switchery = new Switchery(html);
-                            window.rSwitches[$(html).attr("id")] = switchery;
-                        });
-                        $("#epg_id").on("select2:select", function(e) {
-                            selectEPGSource();
-                        });
-                        $("#channel_id").on("select2:select", function(e) {
-                            selectEPGID();
-                        });
+                }
+                $(document).ready(function () {
+                    $('select').select2({
+                        width: '100%'
+                    });
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+                    elems.forEach(function (html) {
+                        var switchery = new Switchery(html);
+                        window.rSwitches[$(html).attr("id")] = switchery;
+                    });
+                    $("#epg_id").on("select2:select", function (e) {
+                        selectEPGSource();
+                    });
+                    $("#channel_id").on("select2:select", function (e) {
+                        selectEPGID();
+                    });
 
-                        $(".clockpicker").clockpicker();
+                    $(".clockpicker").clockpicker();
 
-                        $('#server_tree').jstree({
-                            'core': {
-                                'check_callback': function(op, node, parent, position, more) {
-                                    switch (op) {
-                                        case 'move_node':
-                                            if (node.id == "source") {
-                                                return false;
-                                            }
-                                            return true;
-                                    }
-                                },
-                                'data': <?= json_encode($rServerTree) ?>
+                    $('#server_tree').jstree({
+                        'core': {
+                            'check_callback': function (op, node, parent, position, more) {
+                                switch (op) {
+                                    case 'move_node':
+                                        if (node.id == "source") {
+                                            return false;
+                                        }
+                                        return true;
+                                }
                             },
-                            "plugins": ["dnd"]
-                        });
+                            'data': <?= json_encode($rServerTree) ?>
+                        },
+                        "plugins": ["dnd"]
+                    });
 
-                        $("#direct_source").change(function() {
-                            evaluateDirectSource();
-                        });
-
-                        function evaluateDirectSource() {
-                            $(["read_native", "gen_timestamps", "stream_all", "allow_record", "rtmp_output", "delay_minutes", "custom_ffmpeg", "probesize_ondemand", "user_agent", "http_proxy", "cookie", "headers", "transcode_profile_id", "custom_map", "days_to_restart", "time_to_restart", "epg_id", "epg_lang", "channel_id", "on_demand", "tv_archive_duration", "tv_archive_server_id", "restart_on_edit"]).each(function(rID, rElement) {
-                                if ($(rElement)) {
-                                    if ($("#direct_source").is(":checked")) {
-                                        if (window.rSwitches[rElement]) {
-                                            setSwitch(window.rSwitches[rElement], false);
-                                            window.rSwitches[rElement].disable();
-                                        } else {
-                                            $("#" + rElement).prop("disabled", true);
-                                        }
-                                    } else {
-                                        if (window.rSwitches[rElement]) {
-                                            window.rSwitches[rElement].enable();
-                                        } else {
-                                            $("#" + rElement).prop("disabled", false);
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                        $("#load_maps").click(function() {
-                            rURL = $("#stream_source:eq(0)").val();
-                            if (rURL.length > 0) {
-                                $.toast("<?= $_["stream_map_has_started"] ?>");
-                                $("#datatable-map").DataTable().clear().draw();
-                                $.getJSON("./api.php?action=map_stream&stream=" + encodeURIComponent(rURL), function(data) {
-                                    $(data.streams).each(function(id, array) {
-                                        if (array.codec_type == "video") {
-                                            rString = array.codec_name.toUpperCase();
-                                            if (array.profile) {
-                                                rString += " (" + array.profile + ")";
-                                            }
-                                            if (array.pix_fmt) {
-                                                rString += " - " + array.pix_fmt;
-                                            }
-                                            if ((array.width) && (array.height)) {
-                                                rString += " - " + array.width + "x" + array.height;
-                                            }
-                                            if ((array.avg_frame_rate) && (array.avg_frame_rate.split("/")[0] > 0)) {
-                                                rString += " - " + array.avg_frame_rate.split("/")[0] + " fps";
-                                            }
-                                            $("#datatable-map").DataTable().row.add([array.index, "Video", rString]);
-                                        } else if (array.codec_type == "audio") {
-                                            rString = array.codec_name.toUpperCase();
-                                            if ((array.sample_rate) && (array.sample_rate > 0)) {
-                                                rString += " - " + array.sample_rate + " Hz";
-                                            }
-                                            if (array.channel_layout) {
-                                                rString += " - " + array.channel_layout;
-                                            }
-                                            if (array.sample_fmt) {
-                                                rString += " - " + array.sample_fmt;
-                                            }
-                                            if (array.bit_rate) {
-                                                rString += " - " + Math.ceil(array.bit_rate / 1000) + " kb/s";
-                                            }
-                                            if (array.disposition.visual_impaired) {
-                                                rString += " - Visual Impaired";
-                                            }
-                                            if (array.disposition.hearing_impaired) {
-                                                rString += " - Hearing Impaired";
-                                            }
-                                            if (array.disposition.dub) {
-                                                rString += " - Dub";
-                                            }
-                                            $("#datatable-map").DataTable().row.add([array.index, "Audio", rString]);
-                                        } else if ((array.codec_type == "audio") && (array.tags.language)) {
-                                            rString = array.codec_name.toUpperCase();
-                                            if (array.tags.language) {
-                                                rString += " - " + array.tags.language.toUpperCase();
-                                            }
-                                            if ((array.sample_rate) && (array.sample_rate > 0)) {
-                                                rString += " - " + array.sample_rate + " Hz";
-                                            }
-                                            if (array.channel_layout) {
-                                                rString += " - " + array.channel_layout;
-                                            }
-                                            if (array.sample_fmt) {
-                                                rString += " - " + array.sample_fmt;
-                                            }
-                                            if ((array.bit_rate) || (array.tags.variant_bitrate)) {
-                                                if (array.bit_rate) {
-                                                    rString += " - " + Math.ceil(array.bit_rate / 1000) + " kb/s";
-                                                } else {
-                                                    rString += " - " + Math.ceil(array.tags.variant_bitrate / 1000) + " vbr";
-                                                }
-                                            }
-                                            if (array.disposition.visual_impaired) {
-                                                rString += " - Visual Impaired";
-                                            }
-                                            if (array.disposition.hearing_impaired) {
-                                                rString += " - Hearing Impaired";
-                                            }
-                                            if (array.disposition.dub) {
-                                                rString += " - Dub";
-                                            }
-                                            $("#datatable-map").DataTable().row.add([array.index, "Audio", rString]);
-                                        } else if (array.codec_type == "subtitle") {
-                                            rString = array.codec_long_name.toUpperCase();
-                                            if (array.tags.language) {
-                                                rString += " - " + array.tags.language.toUpperCase();
-                                            }
-                                            $("#datatable-map").DataTable().row.add([array.index, "Subtitle", rString]);
-                                        } else {
-                                            rString = array.codec_long_name.toUpperCase();
-                                            if (array.tags.variant_bitrate) {
-                                                rString += " - " + Math.ceil(array.tags.variant_bitrate / 1000) + " vbr";
-                                            }
-                                            $("#datatable-map").DataTable().row.add([array.index, "Data", rString]);
-                                        }
-                                    });
-                                    $("#datatable-map").DataTable().draw();
-                                    if (data.streams.length > 0) {
-                                        $.toast("<?= $_["stream_map_complete"] ?>");
-                                    } else {
-                                        $.toast("<?= $_["stream_mapping"] ?>");
-                                    }
-                                }).fail(function() {
-                                    $.toast("<?= $_["an_error_occured_while_mapping_streams"] ?>");
-                                });
-                            }
-                        });
-
-                        $("#stream_form").submit(function(e) {
-                            <?php if (!isset($_GET["import"])) { ?>
-                                if ($("#stream_display_name").val().length == 0) {
-                                    e.preventDefault();
-                                    $.toast("Enter a stream name.");
-                                }
-                            <?php } else { ?>
-                                if ($("#m3u_file").val().length == 0) {
-                                    e.preventDefault();
-                                    $.toast("<?= $_["please_select_a_m3u"] ?>");
-                                }
-                            <?php } ?>
-                            $("#server_tree_data").val(JSON.stringify($('#server_tree').jstree(true).get_json('#', {
-                                flat: true
-                            })));
-                        });
-
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-
-                        $("#probesize_ondemand").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#delay_minutes").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#tv_archive_duration").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("form").attr('autocomplete', 'off');
-                        <?php if (isset($rStream["id"])) { ?>
-                            $("#datatable").DataTable({
-                                ordering: false,
-                                paging: false,
-                                searching: false,
-                                processing: true,
-                                serverSide: true,
-                                bInfo: false,
-                                ajax: {
-                                    url: "./table_search.php",
-                                    "data": function(d) {
-                                        d.id = "streams";
-                                        d.stream_id = <?= $rStream["id"] ?>;
-                                    }
-                                },
-                                columnDefs: [{
-                                        "className": "dt-center",
-                                        "targets": [0, 1, 2, 3, 4, 5, 6, 7]
-                                    },
-                                    {
-                                        "visible": false,
-                                        "targets": []
-                                    }
-                                ],
-                            });
-                            setTimeout(reloadStream, 5000);
-                        <?php } ?>
-                        $("#datatable-map").DataTable({
-                            paging: false,
-                            searching: false,
-                            bInfo: false,
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 1, 2]
-                            }, ],
-                            select: {
-                                style: 'multi'
-                            }
-                        }).on('select', function(e, dt, type, indexes) {
-                            var i;
-                            var rMap = "";
-                            for (i = 0; i < $("#datatable-map").DataTable().rows('.selected').data().length; i++) {
-                                rMap += "-map 0:" + $("#datatable-map").DataTable().rows('.selected').data()[i][0] + " ";
-                            }
-                            $("#custom_map").val(rMap.trim());
-                        });
+                    $("#direct_source").change(function () {
                         evaluateDirectSource();
                     });
-                </script>
-                </body>
 
-                </html>
+                    function evaluateDirectSource() {
+                        $(["read_native", "gen_timestamps", "stream_all", "allow_record", "rtmp_output", "delay_minutes", "custom_ffmpeg", "probesize_ondemand", "user_agent", "http_proxy", "cookie", "headers", "transcode_profile_id", "custom_map", "days_to_restart", "time_to_restart", "epg_id", "epg_lang", "channel_id", "on_demand", "tv_archive_duration", "tv_archive_server_id", "restart_on_edit"]).each(function (rID, rElement) {
+                            if ($(rElement)) {
+                                if ($("#direct_source").is(":checked")) {
+                                    if (window.rSwitches[rElement]) {
+                                        setSwitch(window.rSwitches[rElement], false);
+                                        window.rSwitches[rElement].disable();
+                                    } else {
+                                        $("#" + rElement).prop("disabled", true);
+                                    }
+                                } else {
+                                    if (window.rSwitches[rElement]) {
+                                        window.rSwitches[rElement].enable();
+                                    } else {
+                                        $("#" + rElement).prop("disabled", false);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    $("#load_maps").click(function () {
+                        rURL = $("#stream_source:eq(0)").val();
+                        if (rURL.length > 0) {
+                            $.toast("<?= $_["stream_map_has_started"] ?>");
+                            $("#datatable-map").DataTable().clear().draw();
+                            $.getJSON("./api.php?action=map_stream&stream=" + encodeURIComponent(rURL), function (data) {
+                                $(data.streams).each(function (id, array) {
+                                    if (array.codec_type == "video") {
+                                        rString = array.codec_name.toUpperCase();
+                                        if (array.profile) {
+                                            rString += " (" + array.profile + ")";
+                                        }
+                                        if (array.pix_fmt) {
+                                            rString += " - " + array.pix_fmt;
+                                        }
+                                        if ((array.width) && (array.height)) {
+                                            rString += " - " + array.width + "x" + array.height;
+                                        }
+                                        if ((array.avg_frame_rate) && (array.avg_frame_rate.split("/")[0] > 0)) {
+                                            rString += " - " + array.avg_frame_rate.split("/")[0] + " fps";
+                                        }
+                                        $("#datatable-map").DataTable().row.add([array.index, "Video", rString]);
+                                    } else if (array.codec_type == "audio") {
+                                        rString = array.codec_name.toUpperCase();
+                                        if ((array.sample_rate) && (array.sample_rate > 0)) {
+                                            rString += " - " + array.sample_rate + " Hz";
+                                        }
+                                        if (array.channel_layout) {
+                                            rString += " - " + array.channel_layout;
+                                        }
+                                        if (array.sample_fmt) {
+                                            rString += " - " + array.sample_fmt;
+                                        }
+                                        if (array.bit_rate) {
+                                            rString += " - " + Math.ceil(array.bit_rate / 1000) + " kb/s";
+                                        }
+                                        if (array.disposition.visual_impaired) {
+                                            rString += " - Visual Impaired";
+                                        }
+                                        if (array.disposition.hearing_impaired) {
+                                            rString += " - Hearing Impaired";
+                                        }
+                                        if (array.disposition.dub) {
+                                            rString += " - Dub";
+                                        }
+                                        $("#datatable-map").DataTable().row.add([array.index, "Audio", rString]);
+                                    } else if ((array.codec_type == "audio") && (array.tags.language)) {
+                                        rString = array.codec_name.toUpperCase();
+                                        if (array.tags.language) {
+                                            rString += " - " + array.tags.language.toUpperCase();
+                                        }
+                                        if ((array.sample_rate) && (array.sample_rate > 0)) {
+                                            rString += " - " + array.sample_rate + " Hz";
+                                        }
+                                        if (array.channel_layout) {
+                                            rString += " - " + array.channel_layout;
+                                        }
+                                        if (array.sample_fmt) {
+                                            rString += " - " + array.sample_fmt;
+                                        }
+                                        if ((array.bit_rate) || (array.tags.variant_bitrate)) {
+                                            if (array.bit_rate) {
+                                                rString += " - " + Math.ceil(array.bit_rate / 1000) + " kb/s";
+                                            } else {
+                                                rString += " - " + Math.ceil(array.tags.variant_bitrate / 1000) + " vbr";
+                                            }
+                                        }
+                                        if (array.disposition.visual_impaired) {
+                                            rString += " - Visual Impaired";
+                                        }
+                                        if (array.disposition.hearing_impaired) {
+                                            rString += " - Hearing Impaired";
+                                        }
+                                        if (array.disposition.dub) {
+                                            rString += " - Dub";
+                                        }
+                                        $("#datatable-map").DataTable().row.add([array.index, "Audio", rString]);
+                                    } else if (array.codec_type == "subtitle") {
+                                        rString = array.codec_long_name.toUpperCase();
+                                        if (array.tags.language) {
+                                            rString += " - " + array.tags.language.toUpperCase();
+                                        }
+                                        $("#datatable-map").DataTable().row.add([array.index, "Subtitle", rString]);
+                                    } else {
+                                        rString = array.codec_long_name.toUpperCase();
+                                        if (array.tags.variant_bitrate) {
+                                            rString += " - " + Math.ceil(array.tags.variant_bitrate / 1000) + " vbr";
+                                        }
+                                        $("#datatable-map").DataTable().row.add([array.index, "Data", rString]);
+                                    }
+                                });
+                                $("#datatable-map").DataTable().draw();
+                                if (data.streams.length > 0) {
+                                    $.toast("<?= $_["stream_map_complete"] ?>");
+                                } else {
+                                    $.toast("<?= $_["stream_mapping"] ?>");
+                                }
+                            }).fail(function () {
+                                $.toast("<?= $_["an_error_occured_while_mapping_streams"] ?>");
+                            });
+                        }
+                    });
+
+                    $("#stream_form").submit(function (e) {
+                        <?php if (!isset($_GET["import"])) { ?>
+                            if ($("#stream_display_name").val().length == 0) {
+                                e.preventDefault();
+                                $.toast("Enter a stream name.");
+                            }
+                        <?php } else { ?>
+                            if ($("#m3u_file").val().length == 0) {
+                                e.preventDefault();
+                                $.toast("<?= $_["please_select_a_m3u"] ?>");
+                            }
+                        <?php } ?>
+                        $("#server_tree_data").val(JSON.stringify($('#server_tree').jstree(true).get_json('#', {
+                            flat: true
+                        })));
+                    });
+
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+
+                    $("#probesize_ondemand").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#delay_minutes").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#tv_archive_duration").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("form").attr('autocomplete', 'off');
+                    <?php if (isset($rStream["id"])) { ?>
+                        $("#datatable").DataTable({
+                            ordering: false,
+                            paging: false,
+                            searching: false,
+                            processing: true,
+                            serverSide: true,
+                            bInfo: false,
+                            ajax: {
+                                url: "./table_search.php",
+                                "data": function (d) {
+                                    d.id = "streams";
+                                    d.stream_id = <?= $rStream["id"] ?>;
+                                }
+                            },
+                            columnDefs: [{
+                                "className": "dt-center",
+                                "targets": [0, 1, 2, 3, 4, 5, 6, 7]
+                            },
+                            {
+                                "visible": false,
+                                "targets": []
+                            }
+                            ],
+                        });
+                        setTimeout(reloadStream, 5000);
+                    <?php } ?>
+                    $("#datatable-map").DataTable({
+                        paging: false,
+                        searching: false,
+                        bInfo: false,
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 1, 2]
+                        },],
+                        select: {
+                            style: 'multi'
+                        }
+                    }).on('select', function (e, dt, type, indexes) {
+                        var i;
+                        var rMap = "";
+                        for (i = 0; i < $("#datatable-map").DataTable().rows('.selected').data().length; i++) {
+                            rMap += "-map 0:" + $("#datatable-map").DataTable().rows('.selected').data()[i][0] + " ";
+                        }
+                        $("#custom_map").val(rMap.trim());
+                    });
+                    evaluateDirectSource();
+                });
+            </script>
+            </body>
+
+            </html>

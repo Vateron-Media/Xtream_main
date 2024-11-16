@@ -7,15 +7,15 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
     $cfd246a8499e5bb4a9d89e37c524322a = !empty($_POST["display_name"]) ? $_POST["display_name"] : '';
     $a28758c1ab974badfc544e11aaf19a57 = "application/x-mpegurl";
     $Ac783e41c152569f224242dacb8b03d3 = "true";
-?>
+    ?>
     <!DOCTYPE html>
     <html>
 
     <head>
         <meta charset=" utf-8">
         <title><?php
-                echo $cfd246a8499e5bb4a9d89e37c524322a;
-                ?>
+        echo $cfd246a8499e5bb4a9d89e37c524322a;
+        ?>
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="css/functional.css">
@@ -52,16 +52,16 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
 
         <?php
         if (ipTV_lib::$settings["client_area_plugin"] == "vlc") {
-        ?>
+            ?>
             <object classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921"
                 codebase="http://download.videolan.org/pub/videolan/vlc/last/win32/axvlc.cab" id="vlc">
                 <embed type="application/x-vlc-plugin" pluginspage="http://www.videolan.org" name="vlc"
                     class="fullscreen-bg fullscreen-bg__video" target="<?php
-                                                                        echo $B80b91ec08fe2fc8b600751840264e3a;
-                                                                        ?>
+                    echo $B80b91ec08fe2fc8b600751840264e3a;
+                    ?>
 " />
             </object>
-        <?php
+            <?php
             goto bf9a385a4e688f089267117fc873dbea;
         }
         ?>
@@ -90,7 +90,7 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
     </body>
 
     </html>
-<?php
+    <?php
     // [PHPDeobfuscator] Implied script end
     return;
 }

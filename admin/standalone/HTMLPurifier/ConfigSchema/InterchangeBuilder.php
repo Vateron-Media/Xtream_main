@@ -171,7 +171,7 @@ class HTMLPurifier_ConfigSchema_InterchangeBuilder {
      * @param string $contents
      */
     protected function evalArray($contents) {
-        return eval('return array(' . $contents . ');');
+        return eval ('return array(' . $contents . ');');
     }
 
     /**

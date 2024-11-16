@@ -435,7 +435,8 @@ class PEAR_Downloader extends PEAR_Common {
             return $a;
         }
 
-        while (PEAR_Downloader_Package::mergeDependencies($params));
+        while (PEAR_Downloader_Package::mergeDependencies($params))
+            ;
         PEAR_Downloader_Package::removeDuplicates($params, true);
         $errorparams = array();
         if (PEAR_Downloader_Package::detectStupidDuplicates($params, $errorparams)) {

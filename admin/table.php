@@ -616,7 +616,7 @@ class SSP {
         } catch (PDOException $e) {
             SSP::fatal(
                 "An error occurred while connecting to the database. " .
-                    "The error reported by the server was: " . $e->getMessage()
+                "The error reported by the server was: " . $e->getMessage()
             );
         }
         return $db;

@@ -139,14 +139,14 @@ class Structures_Graph_Manipulator_TopologicalSorter {
         if (!is_a($graph, 'Structures_Graph')) {
             return Pear::raiseError(
                 'Structures_Graph_Manipulator_TopologicalSorter::sort received'
-                    . ' an object that is not a Structures_Graph',
+                . ' an object that is not a Structures_Graph',
                 STRUCTURES_GRAPH_ERROR_GENERIC
             );
         }
         if (!Structures_Graph_Manipulator_AcyclicTest::isAcyclic($graph)) {
             return Pear::raiseError(
                 'Structures_Graph_Manipulator_TopologicalSorter::sort'
-                    . ' received an graph that has cycles',
+                . ' received an graph that has cycles',
                 STRUCTURES_GRAPH_ERROR_GENERIC
             );
         }

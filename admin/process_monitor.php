@@ -83,10 +83,11 @@ if ($rSettings["sidebar"]) { ?>
                                                         <td class="text-center"><?= $rSystem["used"] ?></td>
                                                         <td class="text-center"><?= $rSystem["avail"] ?></td>
                                                         <td class="text-center"><?php if (intval(rtrim($rSystem["percentage"], "%")) >= 80) {
-                                                                                    echo "<span class='text-danger'>" . $rSystem["percentage"] . "</span>";
-                                                                                } else {
-                                                                                    echo $rSystem["percentage"];
-                                                                                }; ?></td>
+                                                            echo "<span class='text-danger'>" . $rSystem["percentage"] . "</span>";
+                                                        } else {
+                                                            echo $rSystem["percentage"];
+                                                        }
+                                                        ; ?></td>
                                                         <td class="text-center">
                                                             <div class="btn-group">
                                                                 <?php if (substr($rSystem["mount"], strlen($rSystem["mount"]) - 3, 3) == "tmp") { ?>
@@ -98,13 +99,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="btn btn-light waves-effect waves-light btn-xs"><i
                                                                                 class="mdi mdi-close"></i></button></a>
                                                                 <?php } else if (substr($rSystem["mount"], strlen($rSystem["mount"]) - 7, 7) == "streams") { ?>
-                                                                    <a
-                                                                        href="./process_monitor.php?server=<?= $_GET["server"] ?>&clear_s"><button
-                                                                            data-toggle="tooltip" data-placement="top" title=""
-                                                                            data-original-title="<?= $_["clear_streams"] ?>"
-                                                                            type="button"
-                                                                            class="btn btn-light waves-effect waves-light btn-xs"><i
-                                                                                class="mdi mdi-close"></i></button></a>
+                                                                        <a
+                                                                            href="./process_monitor.php?server=<?= $_GET["server"] ?>&clear_s"><button
+                                                                                data-toggle="tooltip" data-placement="top" title=""
+                                                                                data-original-title="<?= $_["clear_streams"] ?>"
+                                                                                type="button"
+                                                                                class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                                    class="mdi mdi-close"></i></button></a>
                                                                 <?php } ?>
                                                             </div>
                                                         </td>
@@ -129,8 +130,8 @@ if ($rSettings["sidebar"]) { ?>
                                                 <select id="live_filter" class="form-control" data-toggle="select2">
                                                     <?php foreach ($rServers as $rServer) { ?>
                                                         <option value="<?= $rServer["id"] ?>" <?php if ($_GET["server"] == $rServer["id"]) {
-                                                                                                    echo " selected";
-                                                                                                } ?>><?= $rServer["server_name"] ?></option>
+                                                              echo " selected";
+                                                          } ?>><?= $rServer["server_name"] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -141,8 +142,8 @@ if ($rSettings["sidebar"]) { ?>
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                    echo " selected";
-                                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                            echo " selected";
+                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -170,10 +171,10 @@ if ($rSettings["sidebar"]) { ?>
                                                     <td><?= array("pid" => $_["main"] . " - ", "monitor_pid" => $_["monitor"] . " - ", "delay_pid" => $_["delayed"] . " - ", "activity" => $_["user_activity"] . " - ", "timeshift" => $_["timeshift"] . " - ", null => "")[$rStreams[$rProcess["pid"]]["pid_type"]] . array(1 => $_["stream"], 2 => $_["movie"], 3 => $_["created_channel"], 4 => $_["radio"], 5 => $_["episode"], null => $_["system"])[$rStreams[$rProcess["pid"]]["type"]] ?>
                                                     </td>
                                                     <td><?php if (isset($rStreams[$rProcess["pid"]])) {
-                                                            echo "<a href='" . array(1 => "stream", 2 => "movie", 3 => "created_channel", 4 => "radio", 5 => "episode")[$rStreams[$rProcess["pid"]]["type"]] . ".php?id=" . $rStreams[$rProcess["pid"]]["id"] . "'>" . $rStreams[$rProcess["pid"]]["title"] . '</a>';
-                                                        } else {
-                                                            echo $rProcess["command"];
-                                                        } ?></td>
+                                                        echo "<a href='" . array(1 => "stream", 2 => "movie", 3 => "created_channel", 4 => "radio", 5 => "episode")[$rStreams[$rProcess["pid"]]["type"]] . ".php?id=" . $rStreams[$rProcess["pid"]]["id"] . "'>" . $rStreams[$rProcess["pid"]]["title"] . '</a>';
+                                                    } else {
+                                                        echo $rProcess["command"];
+                                                    } ?></td>
                                                     <td><?= number_format($rProcess["cpu"], 1) ?></td>
                                                     <td><?= number_format($rProcess["rss"] / 1024.0, 0) ?></td>
                                                     <td><?= $rProcess["time"] ?></td>
@@ -215,107 +216,107 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col-->
                     </div>
                     <!-- end row-->
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/js/pages/form-remember.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/js/pages/form-remember.js"></script>
 
-                <!-- Datatables init -->
-                <script>
-                    function kill(rServerID, rID) {
-                        $.getJSON("./api.php?action=process&pid=" + rID + "&server=" + rServerID, function(data) {
-                            if (data.result === true) {
-                                $.toast("<?= $_["connection_has_been_killed_wait"] ?>");
-                                $.each($('.tooltip'), function(index, element) {
-                                    $(this).remove();
-                                });
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                            } else {
-                                $.toast("<?= $_["error_occured"] ?>");
-                            }
-                        });
-                    }
-                    $(document).ready(function() {
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        $('select').select2({
-                            width: '100%'
-                        });
-                        $("#datatable-activity").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                },
-                                infoFiltered: ""
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                                $('[data-toggle="tooltip"]').tooltip();
-                            },
-                            responsive: false,
-                            processing: true,
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 1, 2, 4, 5, 6, 7]
-                            }],
-
-                            <?php if (isset($_GET["mem"])) { ?>
-                                order: [
-                                    [5, "desc"]
-                                ],
-                            <?php } else { ?>
-                                order: [
-                                    [4, "desc"]
-                                ],
-                            <?php } ?>
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
-                            lengthMenu: [10, 25, 50, 250, 500, 1000]
-                        });
-                        $("#datatable-activity").css("width", "100%");
-                        $('#live_search').keyup(function() {
-                            $('#datatable-activity').DataTable().search($(this).val()).draw();
-                        });
-                        $('#live_show_entries').change(function() {
-                            $('#datatable-activity').DataTable().page.len($(this).val()).draw();
-                        });
-                        $('#live_filter').change(function() {
-                            window.location.href = "./process_monitor.php?server=" + $(this).val();
-                        });
-                        $('#datatable-activity').DataTable().search($('#live_search').val()).draw();
+            <!-- Datatables init -->
+            <script>
+                function kill(rServerID, rID) {
+                    $.getJSON("./api.php?action=process&pid=" + rID + "&server=" + rServerID, function (data) {
+                        if (data.result === true) {
+                            $.toast("<?= $_["connection_has_been_killed_wait"] ?>");
+                            $.each($('.tooltip'), function (index, element) {
+                                $(this).remove();
+                            });
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                        } else {
+                            $.toast("<?= $_["error_occured"] ?>");
+                        }
                     });
-                </script>
+                }
+                $(document).ready(function () {
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+                    $('select').select2({
+                        width: '100%'
+                    });
+                    $("#datatable-activity").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            },
+                            infoFiltered: ""
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                            $('[data-toggle="tooltip"]').tooltip();
+                        },
+                        responsive: false,
+                        processing: true,
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 1, 2, 4, 5, 6, 7]
+                        }],
 
-                <!-- App js-->
-                <script src="assets/js/app.min.js"></script>
-                </body>
+                        <?php if (isset($_GET["mem"])) { ?>
+                                        order: [
+                                [5, "desc"]
+                            ],
+                        <?php } else { ?>
+                                        order: [
+                                [4, "desc"]
+                            ],
+                        <?php } ?>
+                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        lengthMenu: [10, 25, 50, 250, 500, 1000]
+                    });
+                    $("#datatable-activity").css("width", "100%");
+                    $('#live_search').keyup(function () {
+                        $('#datatable-activity').DataTable().search($(this).val()).draw();
+                    });
+                    $('#live_show_entries').change(function () {
+                        $('#datatable-activity').DataTable().page.len($(this).val()).draw();
+                    });
+                    $('#live_filter').change(function () {
+                        window.location.href = "./process_monitor.php?server=" + $(this).val();
+                    });
+                    $('#datatable-activity').DataTable().search($('#live_search').val()).draw();
+                });
+            </script>
 
-                </html>
+            <!-- App js-->
+            <script src="assets/js/app.min.js"></script>
+            </body>
+
+            </html>

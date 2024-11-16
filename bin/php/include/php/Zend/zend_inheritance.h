@@ -24,18 +24,23 @@
 
 BEGIN_EXTERN_C()
 
-ZEND_API void zend_do_implement_interface(zend_class_entry *ce, zend_class_entry *iface);
-ZEND_API void zend_do_inheritance_ex(zend_class_entry *ce, zend_class_entry *parent_ce, zend_bool checked);
+ZEND_API void zend_do_implement_interface(zend_class_entry *ce,
+                                          zend_class_entry *iface);
+ZEND_API void zend_do_inheritance_ex(zend_class_entry *ce,
+                                     zend_class_entry *parent_ce,
+                                     zend_bool checked);
 
-#define zend_do_inheritance(ce, parent_ce) \
-	zend_do_inheritance_ex(ce, parent_ce, 0)
+#define zend_do_inheritance(ce, parent_ce)                                     \
+  zend_do_inheritance_ex(ce, parent_ce, 0)
 
-ZEND_API int zend_do_link_class(zend_class_entry *ce, zend_string *lc_parent_name);
+ZEND_API int zend_do_link_class(zend_class_entry *ce,
+                                zend_string *lc_parent_name);
 
 void zend_verify_abstract_class(zend_class_entry *ce);
 void zend_check_deprecated_constructor(const zend_class_entry *ce);
 void zend_build_properties_info_table(zend_class_entry *ce);
-zend_bool zend_try_early_bind(zend_class_entry *ce, zend_class_entry *parent_ce, zend_string *lcname, zval *delayed_early_binding);
+zend_bool zend_try_early_bind(zend_class_entry *ce, zend_class_entry *parent_ce,
+                              zend_string *lcname, zval *delayed_early_binding);
 
 END_EXTERN_C()
 

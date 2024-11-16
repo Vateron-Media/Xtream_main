@@ -15,7 +15,7 @@ foreach (get_defined_constants(true)['user'] as $rKey => $rValue) {
 }
 
 if (1 < $rICount) {
-?>
+    ?>
     <script>
         var rCurrentPage = "<?= $_PAGE ?>";
         var rReferer = null;
@@ -33,7 +33,7 @@ if (1 < $rICount) {
                 data: rData,
                 processData: false,
                 contentType: false,
-                success: function(rReturn) {
+                success: function (rReturn) {
                     try {
                         var rJSON = $.parseJSON(rReturn);
                     } catch (e) {
@@ -90,7 +90,7 @@ if (1 < $rICount) {
         }
     </script>
 
-<?php
+    <?php
 } else {
     if (isset(ipTV_lib::$request['referer'])) {
         $rReferer = ipTV_lib::$request['referer'];

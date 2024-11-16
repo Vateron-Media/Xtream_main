@@ -43,7 +43,7 @@ if ($rSettings["sidebar"]) { ?>
                                                 </button>
                                             </a>
                                         </div>
-                                <?php }
+                                    <?php }
                                 } ?>
                                 <h4 class="page-title"><?= $rTicket["title"] ?></h4>
                             </div>
@@ -54,17 +54,17 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="timeline" dir="ltr">
                                 <?php foreach ($rTicket["replies"] as $rReply) { ?>
                                     <article class="timeline-item<?php if (!$rReply["admin_reply"]) {
-                                                                        echo " timeline-item-left";
-                                                                    } ?>">
+                                        echo " timeline-item-left";
+                                    } ?>">
                                         <div class="timeline-desk">
                                             <div class="timeline-box">
                                                 <span class="arrow-alt"></span>
                                                 <span class="timeline-icon"><i class="mdi mdi-adjust"></i></span>
                                                 <h4 class="mt-0 font-16"><?php if (!$rReply["admin_reply"]) {
-                                                                                echo $rTicket["user"]["username"];
-                                                                            } else {
-                                                                                echo "Admin";
-                                                                            } ?></h4>
+                                                    echo $rTicket["user"]["username"];
+                                                } else {
+                                                    echo "Admin";
+                                                } ?></h4>
                                                 <p class="text-muted">
                                                     <small><?= date("Y-m-d H:i", $rReply["date"]) ?></small>
                                                 </p>
@@ -77,28 +77,28 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col -->
                     </div>
                     <!-- end row -->
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
-                </body>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
+            </body>
 
-                </html>
+            </html>

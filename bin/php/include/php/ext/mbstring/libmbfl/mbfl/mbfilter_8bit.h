@@ -31,8 +31,8 @@
 #ifndef MBFL_MBFILTER_8BIT_H
 #define MBFL_MBFILTER_8BIT_H
 
-#include "mbfl_defs.h"
 #include "mbfilter.h"
+#include "mbfl_defs.h"
 
 MBFLAPI extern const mbfl_encoding mbfl_encoding_8bit;
 

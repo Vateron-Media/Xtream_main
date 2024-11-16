@@ -198,7 +198,8 @@ class PEAR_PackageFile {
                 return $pf;
             }
 
-            if (!$pf->validate($state)) {;
+            if (!$pf->validate($state)) {
+                ;
                 if (
                     $this->_config->get('verbose') > 0
                     && $this->_logger && $pf->getValidationWarnings(false)
@@ -244,7 +245,7 @@ class PEAR_PackageFile {
                 'warning',
                 array('xml' => $data),
                 'package.xml "' . $file .
-                    '" has no package.xml <package> version'
+                '" has no package.xml <package> version'
             );
             $object = &$this->parserFactory('1.0');
             $object->setConfig($this->_config);

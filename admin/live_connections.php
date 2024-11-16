@@ -87,8 +87,8 @@ if ($rSettings["sidebar"]) { ?>
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                    echo " selected";
-                                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                            echo " selected";
+                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -119,184 +119,184 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col-->
                     </div>
                     <!-- end row-->
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/js/pages/form-remember.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/js/pages/form-remember.js"></script>
 
-                <!-- Datatables init -->
-                <script>
-                    var autoRefresh = true;
-                    var rClearing = false;
+            <!-- Datatables init -->
+            <script>
+                var autoRefresh = true;
+                var rClearing = false;
 
-                    function toggleAuto() {
-                        if (autoRefresh == true) {
-                            autoRefresh = false;
-                            $(".auto-text").html("<?= $_["manual_mode"] ?>");
-                        } else {
-                            autoRefresh = true;
-                            $(".auto-text").html("<?= $_["auto_refresh"] ?>");
-                        }
+                function toggleAuto() {
+                    if (autoRefresh == true) {
+                        autoRefresh = false;
+                        $(".auto-text").html("<?= $_["manual_mode"] ?>");
+                    } else {
+                        autoRefresh = true;
+                        $(".auto-text").html("<?= $_["auto_refresh"] ?>");
                     }
+                }
 
-                    function api(rID, rType) {
-                        $.getJSON("./api.php?action=user_activity&sub=" + rType + "&pid=" + rID, function(data) {
-                            if (data.result === true) {
-                                if (rType == "kill") {
-                                    $.toast("<?= $_["connection_has_been_killed"] ?>");
-                                }
-                                $.each($('.tooltip'), function(index, element) {
-                                    $(this).remove();
-                                });
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-activity").DataTable().ajax.reload(null, false);
-                            } else {
-                                $.toast("<?= $_["error_occured"] ?>");
+                function api(rID, rType) {
+                    $.getJSON("./api.php?action=user_activity&sub=" + rType + "&pid=" + rID, function (data) {
+                        if (data.result === true) {
+                            if (rType == "kill") {
+                                $.toast("<?= $_["connection_has_been_killed"] ?>");
                             }
-                        });
-                    }
-
-                    function reloadUsers() {
-                        if (autoRefresh == true) {
+                            $.each($('.tooltip'), function (index, element) {
+                                $(this).remove();
+                            });
                             $('[data-toggle="tooltip"]').tooltip("hide");
                             $("#datatable-activity").DataTable().ajax.reload(null, false);
+                        } else {
+                            $.toast("<?= $_["error_occured"] ?>");
                         }
-                        setTimeout(reloadUsers, 2000);
-                    }
+                    });
+                }
 
-                    function getServer() {
-                        return $("#live_filter").val();
-                    }
-
-                    function clearFilters() {
-                        window.rClearing = true;
-                        $("#live_search").val("").trigger('change');
-                        $('#live_filter').val("").trigger('change');
-                        $('#live_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
-                        window.rClearing = false;
-                        $('#datatable-activity').DataTable().search($("#live_search").val());
-                        $('#datatable-activity').DataTable().page.len($('#live_show_entries').val());
-                        $("#datatable-activity").DataTable().page(0).draw('page');
+                function reloadUsers() {
+                    if (autoRefresh == true) {
                         $('[data-toggle="tooltip"]').tooltip("hide");
                         $("#datatable-activity").DataTable().ajax.reload(null, false);
                     }
-                    $(document).ready(function() {
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        formCache.init();
-                        formCache.fetch();
+                    setTimeout(reloadUsers, 2000);
+                }
 
-                        <?php if (isset($_GET["server_id"])) { ?>
-                            $("#live_filter").val(<?= $_GET["server_id"] ?>);
-                        <?php } ?>
+                function getServer() {
+                    return $("#live_filter").val();
+                }
 
-                        $('select').select2({
-                            width: '100%'
-                        });
-                        $("#datatable-activity").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                },
-                                infoFiltered: ""
+                function clearFilters() {
+                    window.rClearing = true;
+                    $("#live_search").val("").trigger('change');
+                    $('#live_filter').val("").trigger('change');
+                    $('#live_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    window.rClearing = false;
+                    $('#datatable-activity').DataTable().search($("#live_search").val());
+                    $('#datatable-activity').DataTable().page.len($('#live_show_entries').val());
+                    $("#datatable-activity").DataTable().page(0).draw('page');
+                    $('[data-toggle="tooltip"]').tooltip("hide");
+                    $("#datatable-activity").DataTable().ajax.reload(null, false);
+                }
+                $(document).ready(function () {
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+                    formCache.init();
+                    formCache.fetch();
+
+                    <?php if (isset($_GET["server_id"])) { ?>
+                        $("#live_filter").val(<?= $_GET["server_id"] ?>);
+                    <?php } ?>
+
+                    $('select').select2({
+                        width: '100%'
+                    });
+                    $("#datatable-activity").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
                             },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                                $('[data-toggle="tooltip"]').tooltip();
-                            },
-                            responsive: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "live_connections";
-                                    d.server_id = getServer();
-                                    <?php if (isset($_GET["stream_id"])) { ?>
-                                        d.stream_id = <?= intval($_GET["stream_id"]) ?>;
-                                    <?php } else if (isset($_GET["user_id"])) { ?>
+                            infoFiltered: ""
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                            $('[data-toggle="tooltip"]').tooltip();
+                        },
+                        responsive: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "live_connections";
+                                d.server_id = getServer();
+                                <?php if (isset($_GET["stream_id"])) { ?>
+                                    d.stream_id = <?= intval($_GET["stream_id"]) ?>;
+                                <?php } else if (isset($_GET["user_id"])) { ?>
                                         d.user_id = <?= intval($_GET["user_id"]) ?>;
-                                    <?php } ?>
-                                }
-                            },
-                            columnDefs: [{
-                                    "className": "dt-center",
-                                    "targets": [0, 1, 6, 7, 8, 9, 10, 11]
-                                },
-                                {
-                                    "className": "ellipsis",
-                                    "targets": [5]
-                                }
-                            ],
-                            order: [
-                                [0, "desc"]
-                            ],
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
-                            lengthMenu: [10, 25, 50, 250, 500, 1000],
-                            stateSave: true
-                        });
-                        $("#datatable-activity").css("width", "100%");
-                        $('#live_search').keyup(function() {
-                            if (!window.rClearing) {
-                                $('#datatable-activity').DataTable().search($(this).val()).draw();
+                                <?php } ?>
                             }
-                        })
-                        $('#live_show_entries').change(function() {
-                            if (!window.rClearing) {
-                                $('#datatable-activity').DataTable().page.len($(this).val()).draw();
-                            }
-                        })
-                        $('#live_filter').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-activity").DataTable().ajax.reload(null, false);
-                            }
-                        })
-                        <?php if (!$detect->isMobile()) { ?>
-                            setTimeout(reloadUsers, 5000);
-                        <?php } ?>
-                        $('#datatable-activity').DataTable().search($(this).val()).draw();
-                        <?php if (!$rAdminSettings["auto_refresh"]) { ?>
-                            toggleAuto();
-                        <?php } ?>
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 1, 6, 7, 8, 9, 10, 11]
+                        },
+                        {
+                            "className": "ellipsis",
+                            "targets": [5]
+                        }
+                        ],
+                        order: [
+                            [0, "desc"]
+                        ],
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        lengthMenu: [10, 25, 50, 250, 500, 1000],
+                        stateSave: true
                     });
+                    $("#datatable-activity").css("width", "100%");
+                    $('#live_search').keyup(function () {
+                        if (!window.rClearing) {
+                            $('#datatable-activity').DataTable().search($(this).val()).draw();
+                        }
+                    })
+                    $('#live_show_entries').change(function () {
+                        if (!window.rClearing) {
+                            $('#datatable-activity').DataTable().page.len($(this).val()).draw();
+                        }
+                    })
+                    $('#live_filter').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-activity").DataTable().ajax.reload(null, false);
+                        }
+                    })
+                    <?php if (!$detect->isMobile()) { ?>
+                        setTimeout(reloadUsers, 5000);
+                    <?php } ?>
+                    $('#datatable-activity').DataTable().search($(this).val()).draw();
+                    <?php if (!$rAdminSettings["auto_refresh"]) { ?>
+                        toggleAuto();
+                    <?php } ?>
+                });
 
-                    $(window).bind('beforeunload', function() {
-                        formCache.save();
-                    });
-                </script>
+                $(window).bind('beforeunload', function () {
+                    formCache.save();
+                });
+            </script>
 
-                <!-- App js-->
-                <script src="assets/js/app.min.js"></script>
-                </body>
+            <!-- App js-->
+            <script src="assets/js/app.min.js"></script>
+            </body>
 
-                </html>
+            </html>

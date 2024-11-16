@@ -9,7 +9,7 @@ require_once __DIR__ . "/RedisSentinelTest.php";
 function getClassArray($classes) {
     $result = [];
 
-    if ( ! is_array($classes))
+    if (!is_array($classes))
         $classes = [$classes];
 
     foreach ($classes as $class) {
@@ -17,7 +17,9 @@ function getClassArray($classes) {
     }
 
     return array_unique(
-        array_map(function ($v) { return strtolower($v); },
+        array_map(function ($v) {
+            return strtolower($v);
+        },
             $result
         )
     );
@@ -25,9 +27,9 @@ function getClassArray($classes) {
 
 function getTestClass($class) {
     $valid_classes = [
-        'redis'         => 'Redis_Test',
-        'redisarray'    => 'Redis_Array_Test',
-        'rediscluster'  => 'Redis_Cluster_Test',
+        'redis' => 'Redis_Test',
+        'redisarray' => 'Redis_Array_Test',
+        'rediscluster' => 'Redis_Cluster_Test',
         'redissentinel' => 'Redis_Sentinel_Test'
     ];
 
@@ -40,7 +42,7 @@ function getTestClass($class) {
 }
 
 function raHosts($host, $ports) {
-    if ( ! is_array($ports))
+    if (!is_array($ports))
         $ports = [6379, 6380, 6381, 6382];
 
     return array_map(function ($port) use ($host) {
@@ -50,7 +52,7 @@ function raHosts($host, $ports) {
 
 /* Make sure errors go to stdout and are shown */
 error_reporting(E_ALL);
-ini_set( 'display_errors','1');
+ini_set('display_errors', '1');
 
 /* Grab options */
 $opt = getopt('', ['host:', 'port:', 'class:', 'test:', 'nocolors', 'user:', 'auth:']);
@@ -73,7 +75,7 @@ $auth = $opt['auth'] ?? NULL;
 
 if ($user && $auth) {
     $auth = [$user, $auth];
-} else if ($user && ! $auth) {
+} else if ($user && !$auth) {
     echo TestSuite::make_warning("User passed without a password!\n");
 }
 
@@ -93,13 +95,13 @@ foreach ($classes as $class) {
         echo TestSuite::make_bold("RedisArray") . "\n";
 
         $full_ring = raHosts($host, $port);
-        $sub_ring  = array_slice($full_ring, 0, -1);
+        $sub_ring = array_slice($full_ring, 0, -1);
 
         echo TestSuite::make_bold("Full Ring: ") . implode(' ', $full_ring) . "\n";
-        echo TestSuite::make_bold(" New Ring: ") . implode(' ',  $sub_ring) . "\n";
+        echo TestSuite::make_bold(" New Ring: ") . implode(' ', $sub_ring) . "\n";
 
-        foreach([true, false] as $useIndex) {
-            echo "\n". ($useIndex ? "WITH" : "WITHOUT") . " per-node index:\n";
+        foreach ([true, false] as $useIndex) {
+            echo "\n" . ($useIndex ? "WITH" : "WITHOUT") . " per-node index:\n";
 
             /* The various RedisArray subtests we can run */
             $test_classes = [

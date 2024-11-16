@@ -47,8 +47,8 @@ if ($rSettings["sidebar"]) { ?>
                                             <select id="show_entries" class="form-control" data-toggle="select2">
                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                echo " selected";
-                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                        echo " selected";
+                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                     <?php } ?>
                                             </select>
                                         </div>
@@ -70,98 +70,98 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col-->
                     </div>
                     <!-- end row-->
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
 
-                <!-- Datatables init -->
-                <script>
-                    function getRange() {
-                        return $("#range").val();
-                    }
+            <!-- Datatables init -->
+            <script>
+                function getRange() {
+                    return $("#range").val();
+                }
 
-                    $(document).ready(function() {
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        $('select').select2({
-                            width: '100%'
-                        });
-                        $('#range').on('change', function() {
-                            $("#datatable-activity").DataTable().ajax.reload(null, false);
-                        });
-                        $("#datatable-activity").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                },
-                                infoFiltered: ""
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                                $('[data-toggle="tooltip"]').tooltip();
-                            },
-                            responsive: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "user_ips",
-                                        d.range = getRange()
-                                }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 2, 3]
-                            }],
-                            "order": [
-                                [2, "desc"]
-                            ],
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
-                        });
-                        $("#datatable-activity").css("width", "100%");
-                        $('#log_search').keyup(function() {
-                            $('#datatable-activity').DataTable().search($(this).val()).draw();
-                        })
-                        $('#show_entries').change(function() {
-                            $('#datatable-activity').DataTable().page.len($(this).val()).draw();
-                        })
+                $(document).ready(function () {
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
                     });
-                </script>
+                    $('select').select2({
+                        width: '100%'
+                    });
+                    $('#range').on('change', function () {
+                        $("#datatable-activity").DataTable().ajax.reload(null, false);
+                    });
+                    $("#datatable-activity").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            },
+                            infoFiltered: ""
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                            $('[data-toggle="tooltip"]').tooltip();
+                        },
+                        responsive: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "user_ips",
+                                    d.range = getRange()
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 2, 3]
+                        }],
+                        "order": [
+                            [2, "desc"]
+                        ],
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
+                    });
+                    $("#datatable-activity").css("width", "100%");
+                    $('#log_search').keyup(function () {
+                        $('#datatable-activity').DataTable().search($(this).val()).draw();
+                    })
+                    $('#show_entries').change(function () {
+                        $('#datatable-activity').DataTable().page.len($(this).val()).draw();
+                    })
+                });
+            </script>
 
-                <!-- App js-->
-                <script src="assets/js/app.min.js"></script>
-                </body>
+            <!-- App js-->
+            <script src="assets/js/app.min.js"></script>
+            </body>
 
-                </html>
+            </html>

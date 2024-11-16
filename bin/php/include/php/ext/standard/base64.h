@@ -62,22 +62,27 @@
 PHP_FUNCTION(base64_decode);
 PHP_FUNCTION(base64_encode);
 
-#if (ZEND_INTRIN_AVX2_FUNC_PTR || ZEND_INTRIN_SSSE3_FUNC_PTR) && !ZEND_INTRIN_AVX2_NATIVE
+#if (ZEND_INTRIN_AVX2_FUNC_PTR || ZEND_INTRIN_SSSE3_FUNC_PTR) &&               \
+    !ZEND_INTRIN_AVX2_NATIVE
 PHP_MINIT_FUNCTION(base64_intrin);
 #endif
 
 PHPAPI extern zend_string *php_base64_encode(const unsigned char *, size_t);
-PHPAPI extern zend_string *php_base64_decode_ex(const unsigned char *, size_t, zend_bool);
+PHPAPI extern zend_string *php_base64_decode_ex(const unsigned char *, size_t,
+                                                zend_bool);
 
 static inline zend_string *php_base64_encode_str(const zend_string *str) {
-	return php_base64_encode((const unsigned char*)(ZSTR_VAL(str)), ZSTR_LEN(str));
+  return php_base64_encode((const unsigned char *)(ZSTR_VAL(str)),
+                           ZSTR_LEN(str));
 }
 
-static inline zend_string *php_base64_decode(const unsigned char *str, size_t len) {
-	return php_base64_decode_ex(str, len, 0);
+static inline zend_string *php_base64_decode(const unsigned char *str,
+                                             size_t len) {
+  return php_base64_decode_ex(str, len, 0);
 }
 static inline zend_string *php_base64_decode_str(const zend_string *str) {
-	return php_base64_decode_ex((const unsigned char*)(ZSTR_VAL(str)), ZSTR_LEN(str), 0);
+  return php_base64_decode_ex((const unsigned char *)(ZSTR_VAL(str)),
+                              ZSTR_LEN(str), 0);
 }
 
 #endif /* BASE64_H */

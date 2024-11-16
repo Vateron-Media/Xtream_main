@@ -267,7 +267,7 @@ class PEAR_Validate {
                     $this->_addWarning(
                         'version',
                         'version "' . $version . '" should be "' .
-                            implode('.', $versioncomponents) . '"'
+                        implode('.', $versioncomponents) . '"'
                     );
                 } else {
                     $this->_addWarning(
@@ -296,7 +296,7 @@ class PEAR_Validate {
                                 $this->_addWarning(
                                     'version',
                                     'version 1.' . $versioncomponents[1] .
-                                        '.0 probably should not be alpha or beta'
+                                    '.0 probably should not be alpha or beta'
                                 );
                                 return true;
                             } elseif (strlen($versioncomponents[2]) > 1) {
@@ -307,7 +307,7 @@ class PEAR_Validate {
                                 $this->_addWarning(
                                     'version',
                                     'version 1.' . $versioncomponents[1] .
-                                        '.0 probably should not be alpha or beta'
+                                    '.0 probably should not be alpha or beta'
                                 );
                                 return true;
                             }
@@ -315,7 +315,7 @@ class PEAR_Validate {
                             $this->_addWarning(
                                 'version',
                                 'bugfix versions (1.3.x where x > 0) probably should ' .
-                                    'not be alpha or beta'
+                                'not be alpha or beta'
                             );
                             return true;
                         }
@@ -323,7 +323,7 @@ class PEAR_Validate {
                         $this->_addWarning(
                             'version',
                             'major versions greater than 1 are not allowed for packages ' .
-                                'without an <extends> tag or an identical postfix (foo2 v2.0.0)'
+                            'without an <extends> tag or an identical postfix (foo2 v2.0.0)'
                         );
                         return true;
                     }
@@ -335,7 +335,7 @@ class PEAR_Validate {
                         $this->_addWarning(
                             'version',
                             'version "' . $version . '" should be "' .
-                                implode('.', $versioncomponents) . '"'
+                            implode('.', $versioncomponents) . '"'
                         );
                     }
                 } else {
@@ -358,7 +358,7 @@ class PEAR_Validate {
                                 $this->_addWarning(
                                     'version',
                                     "version $majver." . $versioncomponents[1] .
-                                        '.0 probably should not be alpha or beta'
+                                    '.0 probably should not be alpha or beta'
                                 );
                                 return false;
                             } elseif (strlen($versioncomponents[2]) > 1) {
@@ -369,7 +369,7 @@ class PEAR_Validate {
                                 $this->_addWarning(
                                     'version',
                                     "version $majver." . $versioncomponents[1] .
-                                        '.0 cannot be alpha or beta'
+                                    '.0 cannot be alpha or beta'
                                 );
                                 return true;
                             }
@@ -377,7 +377,7 @@ class PEAR_Validate {
                             $this->_addWarning(
                                 'version',
                                 "bugfix versions ($majver.x.y where y > 0) should " .
-                                    'not be alpha or beta'
+                                'not be alpha or beta'
                             );
                             return true;
                         }
@@ -396,7 +396,7 @@ class PEAR_Validate {
                         $this->_addWarning(
                             'version',
                             'version "' . $version . '" should be "' .
-                                implode('.', $versioncomponents) . '"'
+                            implode('.', $versioncomponents) . '"'
                         );
                     }
                 }

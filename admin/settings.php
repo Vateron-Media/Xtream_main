@@ -245,55 +245,56 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["settings_sucessfully_updated"] ?>
                                     </div>
                                 <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                         <?= $_["there_was_an_error_saving_settings"] ?>
-                                    </div>
+                                        </div>
                                 <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                         <?= $_["failed_to_update_GeoLite2"] ?>
-                                    </div>
+                                            </div>
                                 <?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
                                         <?= $_["geoLite2_has_been_updated"] ?>
-                                    </div>
+                                                </div>
                                 <?php } else if ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        Failed to update Panel! Please try again.
-                                    </div>
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        Failed to update Panel! Please try again.
+                                                    </div>
                                 <?php } else if ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        XtreamCodes is currently waiting to be updated... Your server will become
-                                        unavailable once the process begins.
-                                    </div>
+                                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            XtreamCodes is currently waiting to be updated... Your server will become
+                                                            unavailable once the process begins.
+                                                        </div>
                                 <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
                                         <?= $_["there_was_an_error_saving_settings"] ?>
-                                    </div>
+                                                            </div>
                                 <?php } ?>
                                 <?php if (isUpdateNeeded($rGeoLite2Latest, $rGeoLite2Curent["geolite2_version"] ? $rGeoLite2Curent["geolite2_version"] : "0.0.0")) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        <?= $_["a_new_version_of_GeoLite2"] ?> (<?= $rGeoLite2Latest ?>) <?= $_["is_available"] ?>
+                                        <?= $_["a_new_version_of_GeoLite2"] ?> (<?= $rGeoLite2Latest ?>)
+                                        <?= $_["is_available"] ?>
                                         <a href="./settings.php?geolite2"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
@@ -455,8 +456,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?php
                                                                             foreach ($rTimeZones as $rValue => $rText) { ?>
                                                                                 <option <?php if ($rSettings["default_timezone"] == $rValue) {
-                                                                                            echo "selected ";
-                                                                                        } ?>value="<?= $rValue ?>">
+                                                                                    echo "selected ";
+                                                                                } ?>value="<?= $rValue ?>">
                                                                                     <?= $rText ?>
                                                                                 </option>
                                                                             <?php } ?>
@@ -507,8 +508,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="form-control" data-toggle="select2">
                                                                             <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                                 <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                                            echo " selected";
-                                                                                        } ?> value="<?= $rShow ?>">
+                                                                                    echo " selected";
+                                                                                } ?>
+                                                                                    value="<?= $rShow ?>">
                                                                                     <?= $rShow ?></option>
                                                                                 <?php } ?>
                                                                         </select>
@@ -527,8 +529,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="dashboard_stats" id="dashboard_stats"
                                                                             type="checkbox" <?php if ($rAdminSettings["dashboard_stats"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -546,7 +548,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="dashboard_world_map_activity">Dashboard World Map Activity <i data-toggle="tooltip"
+                                                                        for="dashboard_world_map_activity">Dashboard World
+                                                                        Map Activity <i data-toggle="tooltip"
                                                                             data-placement="top" title=""
                                                                             data-original-title="Enable this option to show interactive connection statistics activity on dashboard."
                                                                             class="mdi mdi-information"></i></label>
@@ -554,8 +557,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input name="dashboard_world_map_activity"
                                                                             id="dashboard_world_map_activity"
                                                                             type="checkbox" <?php if ($rAdminSettings["dashboard_world_map_activity"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -566,9 +569,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="dashboard_world_map_live"
-                                                                            id="dashboard_world_map_live" type="checkbox" <?php if ($rAdminSettings["dashboard_world_map_live"] == 1) {
-                                                                                                                                echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery"
+                                                                            id="dashboard_world_map_live" type="checkbox"
+                                                                            <?php if ($rAdminSettings["dashboard_world_map_live"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -580,8 +584,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         for="debug_show_errors"><?= $_["debug_show_errors"] ?></label>
                                                                     <div class="col-md-2">
                                                                         <input name="debug_show_errors"
-                                                                            id="debug_show_errors" type="checkbox"
-                                                                            <?php if ($rSettings["debug_show_errors"] == 1) {
+                                                                            id="debug_show_errors" type="checkbox" <?php if ($rSettings["debug_show_errors"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -598,8 +601,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="recaptcha_enable" id="recaptcha_enable"
                                                                             type="checkbox" <?php if ($rSettings["recaptcha_enable"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -677,8 +680,7 @@ if ($rSettings["sidebar"]) { ?>
                                                     </li>-->
                                                             <li class="list-inline-item float-right">
                                                                 <input name="submit_settings" type="submit"
-                                                                    class="btn btn-primary"
-                                                                    value=<?= $_["save_changes"] ?> />
+                                                                    class="btn btn-primary" value=<?= $_["save_changes"] ?> />
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -693,9 +695,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     data-original-title="<?= $_["desc_ip_subnet_match"] ?>"
                                                                     class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
-                                                                <input name="ip_subnet_match" id="ip_subnet_match" type="checkbox" <?php if ($rAdminSettings["ip_subnet_match"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch"
+                                                                <input name="ip_subnet_match" id="ip_subnet_match"
+                                                                    type="checkbox" <?php if ($rAdminSettings["ip_subnet_match"] == 1) {
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery" class="js-switch"
                                                                     data-color="#039cfd" />
                                                             </div>
                                                             <label class="col-md-4 col-form-label"
@@ -705,8 +708,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
                                                                 <input name="ip_logout" id="ip_logout" type="checkbox" <?php if ($rAdminSettings["ip_logout"] == 1) {
-                                                                                                                            echo "checked ";
-                                                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                    echo "checked ";
+                                                                } ?>data-plugin="switchery" class="js-switch"
                                                                     data-color="#039cfd" />
                                                             </div>
                                                         </div>
@@ -717,9 +720,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     data-original-title="<?= $_["desc_restrict_same_ip"] ?>"
                                                                     class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
-                                                                <input name="restrict_same_ip" id="restrict_same_ip" type="checkbox" <?php if ($rSettings["restrict_same_ip"] == 1) {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                <input name="restrict_same_ip" id="restrict_same_ip"
+                                                                    type="checkbox" <?php if ($rSettings["restrict_same_ip"] == 1) {
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery" class="js-switch"
                                                                     data-color="#039cfd" />
                                                             </div>
                                                             <label class="col-md-4 col-form-label"
@@ -728,9 +732,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     data-original-title="<?= $_["use_random_ip_for_rmtp"] ?>"
                                                                     class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
-                                                                <input name="rtmp_random" id="rtmp_random" type="checkbox" <?php if ($rSettings["rtmp_random"] == 1) {
-                                                                                                                                echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                <input name="rtmp_random" id="rtmp_random" type="checkbox"
+                                                                    <?php if ($rSettings["rtmp_random"] == 1) {
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery" class="js-switch"
                                                                     data-color="#039cfd" />
                                                             </div>
                                                         </div>
@@ -743,9 +748,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             <div class="col-md-2">
                                                                 <input name="disallow_2nd_ip_con" id="disallow_2nd_ip_con"
                                                                     type="checkbox" <?php if ($rSettings["disallow_2nd_ip_con"] == 1) {
-                                                                                        echo "checked ";
-                                                                                    } ?>data-plugin="switchery"
-                                                                    class="js-switch" data-color="#039cfd" />
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery" class="js-switch"
+                                                                    data-color="#039cfd" />
                                                             </div>
                                                             <label class="col-md-4 col-form-label"
                                                                 for="disallow_2nd_ip_max"><?= $_["disallow_2nd_ip_max"] ?>
@@ -753,8 +758,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     data-original-title="<?= $_["desc_disallow_2nd_ip_max"] ?>"
                                                                     class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
-                                                                <input type="text" class="form-control" id="disallow_2nd_ip_max"
-                                                                    name="disallow_2nd_ip_max"
+                                                                <input type="text" class="form-control"
+                                                                    id="disallow_2nd_ip_max" name="disallow_2nd_ip_max"
                                                                     value="<?= htmlspecialchars($rSettings["disallow_2nd_ip_max"]) ?: 0 ?>">
                                                             </div>
                                                         </div>
@@ -768,10 +773,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     data-original-title="<?= $_["desc_detect_restream_block_user"] ?>"
                                                                     class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
-                                                                <input name="detect_restream_block_user" id="detect_restream_block_user"
-                                                                    type="checkbox" <?php if ($rSettings["detect_restream_block_user"] == 1) {
-                                                                                        echo "checked ";
-                                                                                    } ?>data-plugin="switchery"
+                                                                <input name="detect_restream_block_user"
+                                                                    id="detect_restream_block_user" type="checkbox" <?php if ($rSettings["detect_restream_block_user"] == 1) {
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery"
                                                                     class="js-switch" data-color="#039cfd" />
                                                             </div>
                                                         </div>
@@ -782,10 +787,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     data-original-title="<?= $_["desc_block_streaming_servers"] ?>"
                                                                     class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
-                                                                <input name="block_streaming_servers" id="block_streaming_servers"
-                                                                    type="checkbox" <?php if ($rSettings["block_streaming_servers"] == 1) {
-                                                                                        echo "checked ";
-                                                                                    } ?>data-plugin="switchery"
+                                                                <input name="block_streaming_servers"
+                                                                    id="block_streaming_servers" type="checkbox" <?php if ($rSettings["block_streaming_servers"] == 1) {
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery"
                                                                     class="js-switch" data-color="#039cfd" />
                                                             </div>
                                                             <label class="col-md-4 col-form-label"
@@ -796,9 +801,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             <div class="col-md-2">
                                                                 <input name="block_proxies" id="block_proxies"
                                                                     type="checkbox" <?php if ($rSettings["block_proxies"] == 1) {
-                                                                                        echo "checked ";
-                                                                                    } ?>data-plugin="switchery"
-                                                                    class="js-switch" data-color="#039cfd" />
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery" class="js-switch"
+                                                                    data-color="#039cfd" />
                                                             </div>
                                                         </div>
                                                         </br>
@@ -855,8 +860,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                   <select name="language" id="language" class="form-control" data-toggle="select2">
                                                                     <?php foreach (getLanguages() as $rLanguage) { ?>
                                                                      <option<?php if ($rAdminSettings["language"] == $rLanguage["key"]) {
-                                                                                echo " selected";
-                                                                            } ?> value="<?= $rLanguage["key"] ?>"><?= $rLanguage["language"] ?></option>
+                                                                         echo " selected";
+                                                                     } ?> value="<?= $rLanguage["key"] ?>"><?= $rLanguage["language"] ?></option>
                                                                     <?php } ?>
                                                                 </select>
                                                             </div>
@@ -882,8 +887,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="form-control" data-toggle="select2">
                                                                             <?php foreach ($rTMDBLanguages as $rKey => $rLanguage) { ?>
                                                                                 <option<?php if ($rAdminSettings["tmdb_language"] == $rKey) {
-                                                                                            echo " selected";
-                                                                                        } ?> value="<?= $rKey ?>">
+                                                                                    echo " selected";
+                                                                                } ?> value="<?= $rKey ?>">
                                                                                     <?= $rLanguage ?></option>
                                                                                 <?php } ?>
                                                                         </select>
@@ -901,8 +906,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="form-control" data-toggle="select2">
                                                                             <?php foreach (array("python" => "Python Based (slower, more accurate)", "php" => "PHP Based (faster, less accurate)") as $rKey => $rParser) { ?>
                                                                                 <option<?php if ($rAdminSettings["release_parser"] == $rKey) {
-                                                                                            echo " selected";
-                                                                                        } ?> value="<?= $rKey ?>">
+                                                                                    echo " selected";
+                                                                                } ?> value="<?= $rKey ?>">
                                                                                     <?= $rParser ?></option>
                                                                                 <?php } ?>
                                                                         </select>
@@ -924,7 +929,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="api_container"><?= $_["api_container"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top" title=""
+                                                                        <i data-toggle="tooltip" data-placement="top"
+                                                                            title=""
                                                                             data-original-title="<?= $_["desc_api_container"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
@@ -933,8 +939,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?php
                                                                             foreach (array("ts" => "MPEG-TS", "m3u8" => "HLS") as $rValue => $rText) { ?>
                                                                                 <option <?php if ($rSettings["api_container"] == $rValue) {
-                                                                                            echo "selected ";
-                                                                                        } ?>value="<?= $rValue ?>">
+                                                                                    echo "selected ";
+                                                                                } ?>value="<?= $rValue ?>">
                                                                                     <?= $rText ?>
                                                                                 </option>
                                                                             <?php } ?>
@@ -951,8 +957,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="google_2factor" id="google_2factor"
                                                                             type="checkbox" <?php if ($rAdminSettings["google_2factor"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -966,8 +972,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="local_api" id="local_api"
                                                                             type="checkbox" <?php if ($rAdminSettings["local_api"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -975,8 +981,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="dark_mode_login" id="dark_mode_login"
                                                                             type="checkbox" <?php if ($rAdminSettings["dark_mode_login"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -990,8 +996,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="download_images" id="download_images"
                                                                             type="checkbox" <?php if ($rAdminSettings["download_images"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1003,8 +1009,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="auto_refresh" id="auto_refresh"
                                                                             type="checkbox" <?php if ($rAdminSettings["auto_refresh"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1017,8 +1023,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="alternate_scandir"
-                                                                            id="alternate_scandir" type="checkbox"
-                                                                            <?php if ($rAdminSettings["alternate_scandir"] == 1) {
+                                                                            id="alternate_scandir" type="checkbox" <?php if ($rAdminSettings["alternate_scandir"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1059,9 +1064,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="save_closed_connection"
-                                                                            id="save_closed_connection" type="checkbox" <?php if ($rSettings["save_closed_connection"] == 1) {
-                                                                                                                            echo "checked ";
-                                                                                                                        } ?>data-plugin="switchery"
+                                                                            id="save_closed_connection" type="checkbox"
+                                                                            <?php if ($rSettings["save_closed_connection"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1073,8 +1079,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="client_logs_save" id="client_logs_save"
                                                                             type="checkbox" <?php if ($rSettings["client_logs_save"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1110,9 +1116,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="disable_trial" id="disable_trial"
                                                                             type="checkbox" <?php if ($rSettings["disable_trial"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                            data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="reseller_restrictions"><?= $_["allow_restrictions"] ?>
@@ -1122,8 +1128,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="reseller_restrictions"
-                                                                            id="reseller_restrictions" type="checkbox"
-                                                                            <?php if ($rAdminSettings["reseller_restrictions"] == 1) {
+                                                                            id="reseller_restrictions" type="checkbox" <?php if ($rAdminSettings["reseller_restrictions"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1139,8 +1144,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="change_usernames" id="change_usernames"
                                                                             type="checkbox" <?php if ($rAdminSettings["change_usernames"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1152,8 +1157,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="change_own_dns" id="change_own_dns"
                                                                             type="checkbox" <?php if ($rAdminSettings["change_own_dns"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1167,8 +1172,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="change_own_email" id="change_own_email"
                                                                             type="checkbox" <?php if ($rAdminSettings["change_own_email"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1179,8 +1184,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="change_own_password"
-                                                                            id="change_own_password" type="checkbox"
-                                                                            <?php if ($rAdminSettings["change_own_password"] == 1) {
+                                                                            id="change_own_password" type="checkbox" <?php if ($rAdminSettings["change_own_password"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1196,8 +1200,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="change_own_lang" id="change_own_lang"
                                                                             type="checkbox" <?php if ($rAdminSettings["change_own_lang"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1208,8 +1212,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="reseller_mag_events"
-                                                                            id="reseller_mag_events" type="checkbox"
-                                                                            <?php if ($rAdminSettings["reseller_mag_events"] == 1) {
+                                                                            id="reseller_mag_events" type="checkbox" <?php if ($rAdminSettings["reseller_mag_events"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1224,8 +1227,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="reseller_can_isplock"
-                                                                            id="reseller_can_isplock" type="checkbox"
-                                                                            <?php if ($rAdminSettings["reseller_can_isplock"] == 1) {
+                                                                            id="reseller_can_isplock" type="checkbox" <?php if ($rAdminSettings["reseller_can_isplock"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1238,9 +1240,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="reseller_reset_isplock"
-                                                                            id="reseller_reset_isplock" type="checkbox" <?php if ($rAdminSettings["reseller_reset_isplock"] == 1) {
-                                                                                                                            echo "checked ";
-                                                                                                                        } ?>data-plugin="switchery"
+                                                                            id="reseller_reset_isplock" type="checkbox"
+                                                                            <?php if ($rAdminSettings["reseller_reset_isplock"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1248,8 +1251,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <!--<label class="col-md-4 col-form-label" for="reseller_select_bouquets"><?= $_["reseller_select_bouquets"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["message_reseller_select_bouquets"] ?>" class="mdi mdi-information"></i></label>
                                                             <div class="col-md-2">
                                                                 <input name="reseller_select_bouquets" id="reseller_select_bouquets" type="checkbox"<?php if ($rAdminSettings["reseller_select_bouquets"] == 1) {
-                                                                                                                                                        echo "checked ";
-                                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd"/>
+                                                                    echo "checked ";
+                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd"/>
                                                             </div>-->
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="active_mannuals"><?= $_["active_mannuals"] ?>
@@ -1260,8 +1263,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="active_mannuals" id="active_mannuals"
                                                                             type="checkbox" <?php if ($rAdminSettings["active_mannuals"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1291,8 +1294,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="enable_isp_lock" id="enable_isp_lock"
                                                                             type="checkbox" <?php if ($rSettings["enable_isp_lock"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1304,9 +1307,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="block_svp" id="block_svp"
                                                                             type="checkbox" <?php if ($rSettings["block_svp"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                            data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -1319,21 +1322,22 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="disable_ts" id="disable_ts"
                                                                             type="checkbox" <?php if ($rSettings["disable_ts"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                            data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="disable_ts_allow_restream"><?= $_["disable_ts_allow_restream"] ?> <i
-                                                                            data-toggle="tooltip" data-placement="top"
+                                                                        for="disable_ts_allow_restream"><?= $_["disable_ts_allow_restream"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
                                                                             title=""
                                                                             data-original-title="<?= $_["desc_disable_ts_allow_restream"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="disable_ts_allow_restream" id="disable_ts_allow_restream"
-                                                                            type="checkbox" <?php if ($rSettings["disable_ts_allow_restream"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                        <input name="disable_ts_allow_restream"
+                                                                            id="disable_ts_allow_restream" type="checkbox"
+                                                                            <?php if ($rSettings["disable_ts_allow_restream"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1347,21 +1351,22 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="disable_hls" id="disable_hls"
                                                                             type="checkbox" <?php if ($rSettings["disable_hls"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                            data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="disable_hls_allow_restream"><?= $_["disable_hls_allow_restream"] ?> <i
-                                                                            data-toggle="tooltip" data-placement="top"
+                                                                        for="disable_hls_allow_restream"><?= $_["disable_hls_allow_restream"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
                                                                             title=""
                                                                             data-original-title="<?= $_["desc_disable_hls_allow_restream"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="disable_hls_allow_restream" id="disable_hls_allow_restream"
-                                                                            type="checkbox" <?php if ($rSettings["disable_disable_hls_allow_restreamts_allow_restream"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                        <input name="disable_hls_allow_restream"
+                                                                            id="disable_hls_allow_restream" type="checkbox"
+                                                                            <?php if ($rSettings["disable_disable_hls_allow_restreamts_allow_restream"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1373,10 +1378,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-original-title="<?= $_["desc_case_sensitive_line"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="case_sensitive_line" id="case_sensitive_line"
-                                                                            type="checkbox" <?php if ($rSettings["case_sensitive_line"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                        <input name="case_sensitive_line"
+                                                                            id="case_sensitive_line" type="checkbox" <?php if ($rSettings["case_sensitive_line"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1387,8 +1392,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="county_override_1st"
-                                                                            id="county_override_1st" type="checkbox"
-                                                                            <?php if ($rSettings["county_override_1st"] == 1) {
+                                                                            id="county_override_1st" type="checkbox" <?php if ($rSettings["county_override_1st"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1402,11 +1406,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-original-title="<?= $_["desc_encrypt_hls"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="encrypt_hls"
-                                                                            id="encrypt_hls" type="checkbox" <?php if ($rSettings["encrypt_hls"] == 1) {
-                                                                                                                    echo "checked ";
-                                                                                                                } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
+                                                                        <input name="encrypt_hls" id="encrypt_hls"
+                                                                            type="checkbox" <?php if ($rSettings["encrypt_hls"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                            data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="disallow_empty_user_agents"><?= $_["disallow_empty_ua"] ?>
@@ -1416,9 +1420,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="disallow_empty_user_agents"
-                                                                            id="disallow_empty_user_agents" type="checkbox" <?php if ($rSettings["disallow_empty_user_agents"] == 1) {
-                                                                                                                                echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery"
+                                                                            id="disallow_empty_user_agents" type="checkbox"
+                                                                            <?php if ($rSettings["disallow_empty_user_agents"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1467,8 +1472,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="use_mdomain_in_lists"
-                                                                            id="use_mdomain_in_lists" type="checkbox"
-                                                                            <?php if ($rSettings["use_mdomain_in_lists"] == 1) {
+                                                                            id="use_mdomain_in_lists" type="checkbox" <?php if ($rSettings["use_mdomain_in_lists"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1484,8 +1488,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="encrypt_playlist" id="encrypt_playlist"
                                                                             type="checkbox" <?php if ($rSettings["encrypt_playlist"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1511,10 +1515,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-original-title="<?= $_["desc_restrict_playlists"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="restrict_playlists" id="restrict_playlists"
-                                                                            type="checkbox" <?php if ($rSettings["restrict_playlists"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                        <input name="restrict_playlists"
+                                                                            id="restrict_playlists" type="checkbox" <?php if ($rSettings["restrict_playlists"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1524,10 +1528,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-original-title="<?= $_["desc_ignore_invalid_users"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="ignore_invalid_users" id="ignore_invalid_users"
-                                                                            type="checkbox" <?php if ($rSettings["ignore_invalid_users"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                        <input name="ignore_invalid_users"
+                                                                            id="ignore_invalid_users" type="checkbox" <?php if ($rSettings["ignore_invalid_users"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1567,16 +1571,18 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <select name="split_by" id="split_by"
                                                                             class="form-control" data-toggle="select2">
                                                                             <option<?php if ($rSettings["split_by"] == "conn") {
-                                                                                        echo " selected";
-                                                                                    } ?> value="conn">
+                                                                                echo " selected";
+                                                                            } ?> value="conn">
                                                                                 <?= $_["connections"] ?></option>
                                                                                 <option<?php if ($rSettings["split_by"] == "maxclients") {
-                                                                                            echo " selected";
-                                                                                        } ?> value="maxclients">
+                                                                                    echo " selected";
+                                                                                } ?>
+                                                                                    value="maxclients">
                                                                                     <?= $_["max_clients"] ?></option>
                                                                                     <option<?php if ($rSettings["split_by"] == "guar_band") {
-                                                                                                echo " selected";
-                                                                                            } ?> value="guar_band">
+                                                                                        echo " selected";
+                                                                                    } ?>
+                                                                                        value="guar_band">
                                                                                         <?= $_["network_speed"] ?></option>
                                                                         </select>
                                                                     </div>
@@ -1589,12 +1595,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                             id="channel_number_type" class="form-control"
                                                                             data-toggle="select2">
                                                                             <option<?php if ($rSettings["channel_number_type"] == "bouquet") {
-                                                                                        echo " selected";
-                                                                                    } ?> value="bouquet">
+                                                                                echo " selected";
+                                                                            } ?> value="bouquet">
                                                                                 <?= $_["bouquet"] ?></option>
                                                                                 <option<?php if ($rSettings["channel_number_type"] == "manual") {
-                                                                                            echo " selected";
-                                                                                        } ?> value="manual">
+                                                                                    echo " selected";
+                                                                                } ?> value="manual">
                                                                                     <?= $_["manual"] ?></option>
                                                                         </select>
                                                                     </div>
@@ -1609,9 +1615,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="use_buffer" id="use_buffer"
                                                                             type="checkbox" <?php if ($rSettings["use_buffer"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                            data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="show_isps"><?= $_["enable_isps"] ?> <i
@@ -1622,9 +1628,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="show_isps" id="show_isps"
                                                                             type="checkbox" <?php if ($rSettings["show_isps"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                            data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -1648,9 +1654,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="monitor_connection_status"
-                                                                            id="monitor_connection_status" type="checkbox" <?php if ($rSettings["monitor_connection_status"] == 1) {
-                                                                                                                                echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery"
+                                                                            id="monitor_connection_status" type="checkbox"
+                                                                            <?php if ($rSettings["monitor_connection_status"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1664,8 +1671,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="kill_rogue_ffmpeg"
                                                                             id="kill_rogue_ffmpeg" type="checkbox" <?php if ($rSettings["kill_rogue_ffmpeg"] == 1) {
-                                                                                                                        echo "checked ";
-                                                                                                                    } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -1678,8 +1685,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input type="text" class="form-control"
-                                                                            id="create_expiration"
-                                                                            name="create_expiration"
+                                                                            id="create_expiration" name="create_expiration"
                                                                             value="<?= htmlspecialchars($rSettings["create_expiration"]) ?>">
                                                                     </div>
                                                                 </div>
@@ -1692,8 +1698,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input type="text" class="form-control"
-                                                                            id="read_buffer_size"
-                                                                            name="read_buffer_size"
+                                                                            id="read_buffer_size" name="read_buffer_size"
                                                                             value="<?= htmlspecialchars($rSettings["read_buffer_size"]) ?>">
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1704,8 +1709,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input type="text" class="form-control"
-                                                                            id="stop_failures"
-                                                                            name="stop_failures"
+                                                                            id="stop_failures" name="stop_failures"
                                                                             value="<?= htmlspecialchars($rSettings["stop_failures"]) ?>">
                                                                     </div>
                                                                 </div>
@@ -1717,15 +1721,16 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-original-title="<?= $_["desc_allow_cdn_access"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="allow_cdn_access"
-                                                                            id="allow_cdn_access" type="checkbox" <?php if ($rSettings["allow_cdn_access"] == 1) {
-                                                                                                                        echo "checked ";
-                                                                                                                    } ?>data-plugin="switchery"
+                                                                        <input name="allow_cdn_access" id="allow_cdn_access"
+                                                                            type="checkbox" <?php if ($rSettings["allow_cdn_access"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
                                                                 </br>
-                                                                <h5 class="card-title mb-4">On-Demand Settings(not working)</h5>
+                                                                <h5 class="card-title mb-4">On-Demand Settings(not working)
+                                                                </h5>
                                                                 </br>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
@@ -1736,8 +1741,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="on_demand_instant_off"
-                                                                            id="on_demand_instant_off" type="checkbox"
-                                                                            <?php if ($rSettings["on_demand_instant_off"] == 1) {
+                                                                            id="on_demand_instant_off" type="checkbox" <?php if ($rSettings["on_demand_instant_off"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1797,8 +1801,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input type="text" class="form-control"
-                                                                            id="seg_time"
-                                                                            name="seg_time"
+                                                                            id="seg_time" name="seg_time"
                                                                             value="<?= htmlspecialchars($rSettings["seg_time"]) ?>">
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -1809,8 +1812,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input type="text" class="form-control"
-                                                                            id="seg_list_size"
-                                                                            name="seg_list_size"
+                                                                            id="seg_list_size" name="seg_list_size"
                                                                             value="<?= htmlspecialchars($rSettings["seg_list_size"]) ?>">
                                                                     </div>
                                                                 </div>
@@ -1835,8 +1837,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input type="text" class="form-control"
-                                                                            id="segment_wait_time"
-                                                                            name="segment_wait_time"
+                                                                            id="segment_wait_time" name="segment_wait_time"
                                                                             value="<?= htmlspecialchars($rSettings["segment_wait_time"]) ?>">
                                                                     </div>
                                                                 </div>
@@ -1876,11 +1877,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <select name="segment_type" id="segment_type"
                                                                             class="form-control" data-toggle="select2">
                                                                             <option<?php if ($rSettings["segment_type"] == "0") {
-                                                                                        echo " selected";
-                                                                                    } ?> value="0">-f hls</option>
+                                                                                echo " selected";
+                                                                            } ?> value="0">-f hls</option>
                                                                                 <option<?php if ($rSettings["segment_type"] == "1") {
-                                                                                            echo " selected";
-                                                                                        } ?> value="1">-f segment</option>
+                                                                                    echo " selected";
+                                                                                } ?> value="1">-f segment
+                                                                                    </option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -1892,9 +1894,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-original-title="<?= $_["desc_ffmpeg_warnings"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="ffmpeg_warnings"
-                                                                            id="ffmpeg_warnings" type="checkbox"
-                                                                            <?php if ($rSettings["ffmpeg_warnings"] == 1) {
+                                                                        <input name="ffmpeg_warnings" id="ffmpeg_warnings"
+                                                                            type="checkbox" <?php if ($rSettings["ffmpeg_warnings"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1906,9 +1907,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-original-title="<?= $_["desc_ignore_keyframes"] ?>"
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
-                                                                        <input name="ignore_keyframes"
-                                                                            id="ignore_keyframes" type="checkbox"
-                                                                            <?php if ($rSettings["ignore_keyframes"] == 1) {
+                                                                        <input name="ignore_keyframes" id="ignore_keyframes"
+                                                                            type="checkbox" <?php if ($rSettings["ignore_keyframes"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1926,8 +1926,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="audio_restart_loss"
-                                                                            id="audio_restart_loss" type="checkbox"
-                                                                            <?php if ($rSettings["audio_restart_loss"] == 1) {
+                                                                            id="audio_restart_loss" type="checkbox" <?php if ($rSettings["audio_restart_loss"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -1941,15 +1940,15 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="priority_backup" id="priority_backup"
                                                                             type="checkbox" <?php if ($rSettings["priority_backup"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="probe_extra_wait"><?= $_["probe_extra_wait"] ?> <i
-                                                                            data-toggle="tooltip" data-placement="top"
+                                                                        for="probe_extra_wait"><?= $_["probe_extra_wait"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
                                                                             title=""
                                                                             data-original-title="<?= $_["desc_probe_extra_wait"] ?>"
                                                                             class="mdi mdi-information"></i></label>
@@ -1959,8 +1958,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             value="<?= htmlspecialchars($rSettings["probe_extra_wait"]) ?>">
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
-                                                                        for="stream_fail_sleep"><?= $_["stream_fail_sleep"] ?> <i
-                                                                            data-toggle="tooltip" data-placement="top"
+                                                                        for="stream_fail_sleep"><?= $_["stream_fail_sleep"] ?>
+                                                                        <i data-toggle="tooltip" data-placement="top"
                                                                             title=""
                                                                             data-original-title="<?= $_["desc_stream_fail_sleep"] ?>"
                                                                             class="mdi mdi-information"></i></label>
@@ -1992,12 +1991,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <select name="fps_check_type" id="fps_check_type"
                                                                             class="form-control" data-toggle="select2">
                                                                             <option<?php if ($rSettings["fps_check_type"] == "0") {
-                                                                                        echo " selected";
-                                                                                    } ?> value="0">
+                                                                                echo " selected";
+                                                                            } ?> value="0">
                                                                                 <?= $_["fps_check_type_0"] ?></option>
                                                                                 <option<?php if ($rSettings["fps_check_type"] == "1") {
-                                                                                            echo " selected";
-                                                                                        } ?> value="1">
+                                                                                    echo " selected";
+                                                                                } ?> value="1">
                                                                                     <?= $_["fps_check_type_1"] ?></option>
                                                                         </select>
                                                                     </div>
@@ -2014,8 +2013,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="show_not_on_air_video"
-                                                                            id="show_not_on_air_video" type="checkbox"
-                                                                            <?php if ($rSettings["show_not_on_air_video"] == 1) {
+                                                                            id="show_not_on_air_video" type="checkbox" <?php if ($rSettings["show_not_on_air_video"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -2036,8 +2034,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="show_banned_video"
-                                                                            id="show_banned_video" type="checkbox"
-                                                                            <?php if ($rSettings["show_banned_video"] == 1) {
+                                                                            id="show_banned_video" type="checkbox" <?php if ($rSettings["show_banned_video"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -2057,8 +2054,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="show_expired_video"
-                                                                            id="show_expired_video" type="checkbox"
-                                                                            <?php if ($rSettings["show_expired_video"] == 1) {
+                                                                            id="show_expired_video" type="checkbox" <?php if ($rSettings["show_expired_video"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -2071,22 +2067,22 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </div>
                                                                 </div>
                                                                 </br>
-                                                                <h5 class="card-title mb-4">Allowed Countries <i data-toggle="tooltip" data-placement="top"
-                                                                        title=""
+                                                                <h5 class="card-title mb-4">Allowed Countries <i
+                                                                        data-toggle="tooltip" data-placement="top" title=""
                                                                         data-original-title="<?= $_["desc_allow_countries"] ?>"
                                                                         class="mdi mdi-information"></i></h5>
                                                                 </br>
                                                                 <div class="col-md-12">
-                                                                    <select name="allow_countries[]"
-                                                                        id="allow_countries"
+                                                                    <select name="allow_countries[]" id="allow_countries"
                                                                         class="form-control select2-multiple"
                                                                         data-toggle="select2" multiple="multiple"
                                                                         data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach ($rGeoCountries as $rValue => $rText) { ?>
                                                                             <option <?php if (in_array($rValue, json_decode($rSettings["allow_countries"], True))) {
-                                                                                        echo "selected ";
-                                                                                    } ?>value="<?= $rValue ?>">
-                                                                                <?= $rText ?></option>
+                                                                                echo "selected ";
+                                                                            } ?>value="<?= $rValue ?>">
+                                                                                <?= $rText ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -2143,8 +2139,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="show_all_category_mag"
-                                                                            id="show_all_category_mag" type="checkbox"
-                                                                            <?php if ($rSettings["show_all_category_mag"] == 1) {
+                                                                            id="show_all_category_mag" type="checkbox" <?php if ($rSettings["show_all_category_mag"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -2158,9 +2153,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="mag_security" id="mag_security"
                                                                             type="checkbox" <?php if ($rSettings["mag_security"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                            data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -2172,9 +2167,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input name="always_enabled_subtitles"
-                                                                            id="always_enabled_subtitles" type="checkbox" <?php if ($rSettings["always_enabled_subtitles"] == 1) {
-                                                                                                                                echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery"
+                                                                            id="always_enabled_subtitles" type="checkbox"
+                                                                            <?php if ($rSettings["always_enabled_subtitles"] == 1) {
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -2183,8 +2179,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input name="enable_connection_problem_indication"
                                                                             id="enable_connection_problem_indication"
                                                                             type="checkbox" <?php if ($rSettings["enable_connection_problem_indication"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -2193,8 +2189,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         for="show_tv_channel_logo"><?= $_["show_channel_logos"] ?></label>
                                                                     <div class="col-md-2">
                                                                         <input name="show_tv_channel_logo"
-                                                                            id="show_tv_channel_logo" type="checkbox"
-                                                                            <?php if ($rSettings["show_tv_channel_logo"] == 1) {
+                                                                            id="show_tv_channel_logo" type="checkbox" <?php if ($rSettings["show_tv_channel_logo"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -2205,8 +2200,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input name="show_channel_logo_in_preview"
                                                                             id="show_channel_logo_in_preview"
                                                                             type="checkbox" <?php if ($rSettings["show_channel_logo_in_preview"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -2216,16 +2211,15 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="stb_change_pass" id="stb_change_pass"
                                                                             type="checkbox" <?php if ($rSettings["stb_change_pass"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="enable_debug_stalker"><?= $_["stalker_debug"] ?></label>
                                                                     <div class="col-md-2">
                                                                         <input name="enable_debug_stalker"
-                                                                            id="enable_debug_stalker" type="checkbox"
-                                                                            <?php if ($rSettings["enable_debug_stalker"] == 1) {
+                                                                            id="enable_debug_stalker" type="checkbox" <?php if ($rSettings["enable_debug_stalker"] == 1) {
                                                                                 echo "checked ";
                                                                             } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
@@ -2240,8 +2234,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?php
                                                                             foreach (array("ts" => "TS", "m3u8" => "M3U8") as $rValue => $rText) { ?>
                                                                                 <option <?php if ($rSettings["mag_container"] == $rValue) {
-                                                                                            echo "selected ";
-                                                                                        } ?>value="<?= $rValue ?>">
+                                                                                    echo "selected ";
+                                                                                } ?>value="<?= $rValue ?>">
                                                                                     <?= $rText ?>
                                                                                 </option>
                                                                             <?php } ?>
@@ -2255,8 +2249,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?php
                                                                             foreach (array("default" => "Default", "digital" => "Digital", "emerald" => "Emerald", "cappucino" => "Cappucino", "ocean_blue" => "Ocean Blue") as $rValue => $rText) { ?>
                                                                                 <option <?php if ($rSettings["stalker_theme"] == $rValue) {
-                                                                                            echo "selected ";
-                                                                                        } ?>value="<?= $rValue ?>">
+                                                                                    echo "selected ";
+                                                                                } ?>value="<?= $rValue ?>">
                                                                                     <?= $rText ?>
                                                                                 </option>
                                                                             <?php } ?>
@@ -2297,8 +2291,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-2">
                                                                         <input name="disable_mag_token"
                                                                             id="disable_mag_token" type="checkbox" <?php if ($rSettings["disable_mag_token"] == 1) {
-                                                                                                                        echo "checked ";
-                                                                                                                    } ?>data-plugin="switchery"
+                                                                                echo "checked ";
+                                                                            } ?>data-plugin="switchery"
                                                                             class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
@@ -2326,9 +2320,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-placeholder="<?= $_["choose"] ?>...">
                                                                             <?php foreach ($rMAGs as $rMAG) { ?>
                                                                                 <option <?php if (in_array($rMAG, json_decode($rSettings["allowed_stb_types"], True))) {
-                                                                                            echo "selected ";
-                                                                                        } ?>value="<?= $rMAG ?>">
-                                                                                    <?= $rMAG ?></option>
+                                                                                    echo "selected ";
+                                                                                } ?>value="<?= $rMAG ?>">
+                                                                                    <?= $rMAG ?>
+                                                                                </option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
@@ -2345,9 +2340,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-placeholder="<?= $_["choose"] ?>...">
                                                                             <?php foreach ($rMAGs as $rMAG) { ?>
                                                                                 <option <?php if (in_array($rMAG, json_decode($rSettings["allowed_stb_types_for_local_recording"], True))) {
-                                                                                            echo "selected ";
-                                                                                        } ?>value="<?= $rMAG ?>">
-                                                                                    <?= $rMAG ?></option>
+                                                                                    echo "selected ";
+                                                                                } ?>value="<?= $rMAG ?>">
+                                                                                    <?= $rMAG ?>
+                                                                                </option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
@@ -2376,8 +2372,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-toggle="select2">
                                                                             <?php foreach (array("off" => "Off", "hourly" => "Hourly", "daily" => "Daily", "weekly" => "Weekly", "monthly" => "Monthly") as $rType => $rText) { ?>
                                                                                 <option<?php if ($rSettings["automatic_backups"] == $rType) {
-                                                                                            echo " selected";
-                                                                                        } ?> value="<?= $rType ?>">
+                                                                                    echo " selected";
+                                                                                } ?>
+                                                                                    value="<?= $rType ?>">
                                                                                     <?= $rText ?></option>
                                                                                 <?php } ?>
                                                                         </select>
@@ -2497,7 +2494,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <td><?= $rServers[$_INFO["server_id"]]["domain_name"] ?>
                                                                     </td>
                                                                 </tr>
-                                                                <?php }
+                                                            <?php }
                                                             $result = $db->query("SELECT `username`, `reseller_dns` FROM `reg_users` WHERE `reseller_dns` <> '' AND `verified` = 1 ORDER BY `username` ASC;");
                                                             if (($result) && ($result->num_rows > 0)) {
                                                                 while ($row = $result->fetch_assoc()) { ?>
@@ -2505,7 +2502,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <td><?= $row["username"] ?></td>
                                                                         <td><?= $row["reseller_dns"] ?></td>
                                                                     </tr>
-                                                            <?php }
+                                                                <?php }
                                                             } ?>
                                                         </tbody>
                                                     </table>
@@ -2517,211 +2514,211 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end col -->
                         </div>
                     </form>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
-                <link rel="stylesheet" href="assets/js/minified/themes/default.min.css" id="theme-style" />
-                <script src="assets/js/minified/sceditor.min.js"></script>
-                <script src="assets/js/minified/formats/xhtml.js"></script>
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+                </div>
+            </footer>
+            <!-- end Footer -->
+            <link rel="stylesheet" href="assets/js/minified/themes/default.min.css" id="theme-style" />
+            <script src="assets/js/minified/sceditor.min.js"></script>
+            <script src="assets/js/minified/formats/xhtml.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    function api(rID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_backup"] ?>') == false) {
-                                return;
-                            }
-                        } else if (rType == "restore") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_restore_from_this_backup"] ?>') == false) {
-                                return;
-                            } else {
-                                $.toast("<?= $_["restoring_backup"] ?>");
-                                $(".content-page").fadeOut();
-                            }
-                        } else if (rType == "backup") {
-                            $("#create_backup").attr("disabled", true);
+            <script>
+                function api(rID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_backup"] ?>') == false) {
+                            return;
                         }
-                        $.getJSON("./api.php?action=backup&sub=" + rType + "&filename=" + encodeURIComponent(rID), function(
-                            data) {
-                            if (data.result === true) {
-                                if (rType == "delete") {
-                                    $.each($('.tooltip'), function(index, element) {
-                                        $(this).remove();
-                                    });
-                                    $('[data-toggle="tooltip"]').tooltip();
-                                    $.toast("<?= $_["backup_successfully_deleted"] ?>");
-                                } else if (rType == "restore") {
-                                    $.toast("<?= $_["restored_from_backup"] ?>");
-                                    $(".content-page").fadeIn();
-                                } else if (rType == "backup") {
-                                    $.toast("<?= $_["backup_has_been_successfully_generated"] ?>");
-                                    $("#create_backup").attr("disabled", false);
-                                }
-                                $("#datatable-backups").DataTable().ajax.reload(null, false);
-                            } else {
-                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                                if (rType == "backup") {
-                                    $("#create_backup").attr("disabled", false);
-                                }
-                                if (!$(".content-page").is(":visible")) {
-                                    $(".content-page").fadeIn();
-                                }
+                    } else if (rType == "restore") {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_restore_from_this_backup"] ?>') == false) {
+                            return;
+                        } else {
+                            $.toast("<?= $_["restoring_backup"] ?>");
+                            $(".content-page").fadeOut();
+                        }
+                    } else if (rType == "backup") {
+                        $("#create_backup").attr("disabled", true);
+                    }
+                    $.getJSON("./api.php?action=backup&sub=" + rType + "&filename=" + encodeURIComponent(rID), function (
+                        data) {
+                        if (data.result === true) {
+                            if (rType == "delete") {
+                                $.each($('.tooltip'), function (index, element) {
+                                    $(this).remove();
+                                });
+                                $('[data-toggle="tooltip"]').tooltip();
+                                $.toast("<?= $_["backup_successfully_deleted"] ?>");
+                            } else if (rType == "restore") {
+                                $.toast("<?= $_["restored_from_backup"] ?>");
+                                $(".content-page").fadeIn();
+                            } else if (rType == "backup") {
+                                $.toast("<?= $_["backup_has_been_successfully_generated"] ?>");
+                                $("#create_backup").attr("disabled", false);
+                            }
+                            $("#datatable-backups").DataTable().ajax.reload(null, false);
+                        } else {
+                            $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                            if (rType == "backup") {
+                                $("#create_backup").attr("disabled", false);
+                            }
+                            if (!$(".content-page").is(":visible")) {
+                                $(".content-page").fadeIn();
+                            }
+                        }
+                    });
+                }
+
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
                             }
                         });
-                    }
-
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
-
-                    $(document).ready(function() {
-                        $('select').select2({
-                            width: '100%'
-                        });
-                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                        elems.forEach(function(html) {
-                            var switchery = new Switchery(html);
-                        });
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-
-                        $("#datatable-backups").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                                $('[data-toggle="tooltip"]').tooltip();
-                            },
-                            bInfo: false,
-                            paging: false,
-                            searching: false,
-                            bSort: false,
-                            responsive: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "backups"
-                                }
-                            },
-                            order: [
-                                [0, "desc"]
-                            ],
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 1, 2, 3]
-                            }],
-
-                        });
-                        $("#datatable-backups").css("width", "100%");
-                        $("form").attr('autocomplete', 'off');
-                        $("#flood_limit").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#user_auto_kick_hours").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#probesize").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#stream_max_analyze").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#client_prebuffer").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#restreamer_prebuffer").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#backups_to_keep").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                    });
-                </script>
-                <script>
-                    var textarea = document.getElementById('userpanel_mainpage');
-                    sceditor.create(textarea, {
-                        format: 'bbcode',
-                        icons: 'monocons',
-                        style: '../assets/js/minified/themes/content/default.min.css',
-                    });
-
-
-                    var themeInput = document.getElementById('theme');
-                    themeInput.onchange = function() {
-                        var theme = '../assets/js/minified/themes/' + themeInput.value + '.min.css';
-
-                        document.getElementById('theme-style').href = theme;
                     };
-                </script>
-                <script>
-                    var textarea = document.getElementById('page_mannuals');
-                    sceditor.create(textarea, {
-                        format: 'bbcode',
-                        icons: 'monocons',
-                        style: '../assets/js/minified/themes/content/default.min.css'
+                }(jQuery));
+
+                $(document).ready(function () {
+                    $('select').select2({
+                        width: '100%'
+                    });
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+                    elems.forEach(function (html) {
+                        var switchery = new Switchery(html);
+                    });
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
                     });
 
+                    $("#datatable-backups").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                            $('[data-toggle="tooltip"]').tooltip();
+                        },
+                        bInfo: false,
+                        paging: false,
+                        searching: false,
+                        bSort: false,
+                        responsive: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "backups"
+                            }
+                        },
+                        order: [
+                            [0, "desc"]
+                        ],
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 1, 2, 3]
+                        }],
 
-                    var themeInput = document.getElementById('theme');
-                    themeInput.onchange = function() {
-                        var theme = '../assets/js/minified/themes/' + themeInput.value + '.min.css';
+                    });
+                    $("#datatable-backups").css("width", "100%");
+                    $("form").attr('autocomplete', 'off');
+                    $("#flood_limit").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#user_auto_kick_hours").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#probesize").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#stream_max_analyze").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#client_prebuffer").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#restreamer_prebuffer").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#backups_to_keep").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                });
+            </script>
+            <script>
+                var textarea = document.getElementById('userpanel_mainpage');
+                sceditor.create(textarea, {
+                    format: 'bbcode',
+                    icons: 'monocons',
+                    style: '../assets/js/minified/themes/content/default.min.css',
+                });
 
-                        document.getElementById('theme-style').href = theme;
-                    };
-                </script>
-                </body>
 
-                </html>
+                var themeInput = document.getElementById('theme');
+                themeInput.onchange = function () {
+                    var theme = '../assets/js/minified/themes/' + themeInput.value + '.min.css';
+
+                    document.getElementById('theme-style').href = theme;
+                };
+            </script>
+            <script>
+                var textarea = document.getElementById('page_mannuals');
+                sceditor.create(textarea, {
+                    format: 'bbcode',
+                    icons: 'monocons',
+                    style: '../assets/js/minified/themes/content/default.min.css'
+                });
+
+
+                var themeInput = document.getElementById('theme');
+                themeInput.onchange = function () {
+                    var theme = '../assets/js/minified/themes/' + themeInput.value + '.min.css';
+
+                    document.getElementById('theme-style').href = theme;
+                };
+            </script>
+            </body>
+
+            </html>

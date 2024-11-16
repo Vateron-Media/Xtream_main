@@ -23,32 +23,32 @@
 
 #include "TSRM.h"
 
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <ctype.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #ifdef HAVE_UTIME_H
 #include <utime.h>
 #endif
 
-#include <stdarg.h>
 #include <limits.h>
+#include <stdarg.h>
 
 #if HAVE_SYS_PARAM_H
-# include <sys/param.h>
+#include <sys/param.h>
 #endif
 
 #ifndef MAXPATHLEN
-# if _WIN32
-#  include "win32/ioutil.h"
-#  define MAXPATHLEN PHP_WIN32_IOUTIL_MAXPATHLEN
-# elif PATH_MAX
-#  define MAXPATHLEN PATH_MAX
-# elif defined(MAX_PATH)
-#  define MAXPATHLEN MAX_PATH
-# else
-#  define MAXPATHLEN 256
-# endif
+#if _WIN32
+#include "win32/ioutil.h"
+#define MAXPATHLEN PHP_WIN32_IOUTIL_MAXPATHLEN
+#elif PATH_MAX
+#define MAXPATHLEN PATH_MAX
+#elif defined(MAX_PATH)
+#define MAXPATHLEN MAX_PATH
+#else
+#define MAXPATHLEN 256
+#endif
 #endif
 
 #ifdef ZTS
@@ -66,25 +66,26 @@
 #endif
 
 #ifdef ZEND_WIN32
+#include "win32/ioutil.h"
 #include "win32/readdir.h"
 #include <sys/utime.h>
-#include "win32/ioutil.h"
 /* mode_t isn't defined on Windows */
 typedef unsigned short mode_t;
 
 #define DEFAULT_SLASH '\\'
-#define DEFAULT_DIR_SEPARATOR	';'
-#define IS_SLASH(c)	((c) == '/' || (c) == '\\')
-#define IS_SLASH_P(c)	(*(c) == '/' || \
-        (*(c) == '\\' && !IsDBCSLeadByte(*(c-1))))
+#define DEFAULT_DIR_SEPARATOR ';'
+#define IS_SLASH(c) ((c) == '/' || (c) == '\\')
+#define IS_SLASH_P(c)                                                          \
+  (*(c) == '/' || (*(c) == '\\' && !IsDBCSLeadByte(*(c - 1))))
 
-/* COPY_WHEN_ABSOLUTE is 2 under Win32 because by chance both regular absolute paths
-   in the file system and UNC paths need copying of two characters */
+/* COPY_WHEN_ABSOLUTE is 2 under Win32 because by chance both regular absolute
+   paths in the file system and UNC paths need copying of two characters */
 #define COPY_WHEN_ABSOLUTE(path) 2
-#define IS_UNC_PATH(path, len) \
-	(len >= 2 && IS_SLASH(path[0]) && IS_SLASH(path[1]))
-#define IS_ABSOLUTE_PATH(path, len) \
-	(len >= 2 && (/* is local */isalpha(path[0]) && path[1] == ':' || /* is UNC */IS_SLASH(path[0]) && IS_SLASH(path[1])))
+#define IS_UNC_PATH(path, len)                                                 \
+  (len >= 2 && IS_SLASH(path[0]) && IS_SLASH(path[1]))
+#define IS_ABSOLUTE_PATH(path, len)                                            \
+  (len >= 2 && (/* is local */ isalpha(path[0]) && path[1] == ':' ||           \
+                /* is UNC */ IS_SLASH(path[0]) && IS_SLASH(path[1])))
 
 #else
 #ifdef HAVE_DIRENT_H
@@ -94,24 +95,22 @@ typedef unsigned short mode_t;
 #define DEFAULT_SLASH '/'
 
 #ifdef __riscos__
-#define DEFAULT_DIR_SEPARATOR  ';'
+#define DEFAULT_DIR_SEPARATOR ';'
 #else
-#define DEFAULT_DIR_SEPARATOR  ':'
+#define DEFAULT_DIR_SEPARATOR ':'
 #endif
 
-#define IS_SLASH(c)	((c) == '/')
-#define IS_SLASH_P(c)	(*(c) == '/')
+#define IS_SLASH(c) ((c) == '/')
+#define IS_SLASH_P(c) (*(c) == '/')
 
 #endif
-
 
 #ifndef COPY_WHEN_ABSOLUTE
 #define COPY_WHEN_ABSOLUTE(path) 0
 #endif
 
 #ifndef IS_ABSOLUTE_PATH
-#define IS_ABSOLUTE_PATH(path, len) \
-	(IS_SLASH(path[0]))
+#define IS_ABSOLUTE_PATH(path, len) (IS_SLASH(path[0]))
 #endif
 
 #ifdef TSRM_EXPORTS
@@ -119,39 +118,40 @@ typedef unsigned short mode_t;
 #endif
 
 #ifdef ZEND_WIN32
-#	ifdef CWD_EXPORTS
-#		define CWD_API __declspec(dllexport)
-#	else
-#		define CWD_API __declspec(dllimport)
-#	endif
-#elif defined(__GNUC__) && __GNUC__ >= 4
-#	define CWD_API __attribute__ ((visibility("default")))
+#ifdef CWD_EXPORTS
+#define CWD_API __declspec(dllexport)
 #else
-#	define CWD_API
+#define CWD_API __declspec(dllimport)
+#endif
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#define CWD_API __attribute__((visibility("default")))
+#else
+#define CWD_API
 #endif
 
 #ifdef ZEND_WIN32
-# define php_sys_stat_ex php_win32_ioutil_stat_ex
-# define php_sys_stat php_win32_ioutil_stat
-# define php_sys_lstat php_win32_ioutil_lstat
-# define php_sys_fstat php_win32_ioutil_fstat
-# define php_sys_readlink php_win32_ioutil_readlink
-# define php_sys_symlink php_win32_ioutil_symlink
-# define php_sys_link php_win32_ioutil_link
+#define php_sys_stat_ex php_win32_ioutil_stat_ex
+#define php_sys_stat php_win32_ioutil_stat
+#define php_sys_lstat php_win32_ioutil_lstat
+#define php_sys_fstat php_win32_ioutil_fstat
+#define php_sys_readlink php_win32_ioutil_readlink
+#define php_sys_symlink php_win32_ioutil_symlink
+#define php_sys_link php_win32_ioutil_link
 #else
-# define php_sys_stat stat
-# define php_sys_lstat lstat
-# define php_sys_fstat fstat
-# ifdef HAVE_SYMLINK
-# define php_sys_readlink(link, target, target_len) readlink(link, target, target_len)
-# define php_sys_symlink symlink
-# define php_sys_link link
-# endif
+#define php_sys_stat stat
+#define php_sys_lstat lstat
+#define php_sys_fstat fstat
+#ifdef HAVE_SYMLINK
+#define php_sys_readlink(link, target, target_len)                             \
+  readlink(link, target, target_len)
+#define php_sys_symlink symlink
+#define php_sys_link link
+#endif
 #endif
 
 typedef struct _cwd_state {
-	char *cwd;
-	size_t cwd_length;
+  char *cwd;
+  size_t cwd_length;
 } cwd_state;
 
 typedef int (*verify_path_func)(const cwd_state *);
@@ -163,9 +163,11 @@ CWD_API int virtual_cwd_deactivate(void);
 CWD_API char *virtual_getcwd_ex(size_t *length);
 CWD_API char *virtual_getcwd(char *buf, size_t size);
 CWD_API int virtual_chdir(const char *path);
-CWD_API int virtual_chdir_file(const char *path, int (*p_chdir)(const char *path));
+CWD_API int virtual_chdir_file(const char *path,
+                               int (*p_chdir)(const char *path));
 CWD_API int virtual_filepath(const char *path, char **filepath);
-CWD_API int virtual_filepath_ex(const char *path, char **filepath, verify_path_func verify_path);
+CWD_API int virtual_filepath_ex(const char *path, char **filepath,
+                                verify_path_func verify_path);
 CWD_API char *virtual_realpath(const char *path, char *real_path);
 CWD_API FILE *virtual_fopen(const char *path, const char *mode);
 CWD_API int virtual_open(const char *path, int flags, ...);
@@ -185,63 +187,68 @@ CWD_API int virtual_utime(const char *filename, struct utimbuf *buf);
 #endif
 CWD_API int virtual_chmod(const char *filename, mode_t mode);
 #if !defined(ZEND_WIN32)
-CWD_API int virtual_chown(const char *filename, uid_t owner, gid_t group, int link);
+CWD_API int virtual_chown(const char *filename, uid_t owner, gid_t group,
+                          int link);
 #endif
 
 /* One of the following constants must be used as the last argument
    in virtual_file_ex() call. */
 
-#define CWD_EXPAND   0 /* expand "." and ".." but don't resolve symlinks     */
-#define CWD_FILEPATH 1 /* resolve symlinks if file is exist otherwise expand */
-#define CWD_REALPATH 2 /* call realpath(), resolve symlinks. File must exist */
+#define CWD_EXPAND 0   /* expand "." and ".." but don't resolve symlinks     */
+#define CWD_FILEPATH 1 /* resolve symlinks if file is exist otherwise expand   \
+                        */
+#define CWD_REALPATH 2 /* call realpath(), resolve symlinks. File must exist   \
+                        */
 
-CWD_API int virtual_file_ex(cwd_state *state, const char *path, verify_path_func verify_path, int use_realpath);
+CWD_API int virtual_file_ex(cwd_state *state, const char *path,
+                            verify_path_func verify_path, int use_realpath);
 
 CWD_API char *tsrm_realpath(const char *path, char *real_path);
 
-#define REALPATH_CACHE_TTL  (2*60) /* 2 minutes */
-#define REALPATH_CACHE_SIZE 0      /* disabled while php.ini isn't loaded */
+#define REALPATH_CACHE_TTL (2 * 60) /* 2 minutes */
+#define REALPATH_CACHE_SIZE 0       /* disabled while php.ini isn't loaded */
 
 typedef struct _realpath_cache_bucket {
-	zend_ulong                    key;
-	char                          *path;
-	char                          *realpath;
-	struct _realpath_cache_bucket *next;
-	time_t                         expires;
-	uint16_t                       path_len;
-	uint16_t                       realpath_len;
-	uint8_t                        is_dir:1;
+  zend_ulong key;
+  char *path;
+  char *realpath;
+  struct _realpath_cache_bucket *next;
+  time_t expires;
+  uint16_t path_len;
+  uint16_t realpath_len;
+  uint8_t is_dir : 1;
 #ifdef ZEND_WIN32
-	uint8_t                        is_rvalid:1;
-	uint8_t                        is_readable:1;
-	uint8_t                        is_wvalid:1;
-	uint8_t                        is_writable:1;
+  uint8_t is_rvalid : 1;
+  uint8_t is_readable : 1;
+  uint8_t is_wvalid : 1;
+  uint8_t is_writable : 1;
 #endif
 } realpath_cache_bucket;
 
 typedef struct _virtual_cwd_globals {
-	cwd_state cwd;
-	zend_long                   realpath_cache_size;
-	zend_long                   realpath_cache_size_limit;
-	zend_long                   realpath_cache_ttl;
-	realpath_cache_bucket *realpath_cache[1024];
+  cwd_state cwd;
+  zend_long realpath_cache_size;
+  zend_long realpath_cache_size_limit;
+  zend_long realpath_cache_ttl;
+  realpath_cache_bucket *realpath_cache[1024];
 } virtual_cwd_globals;
 
 #ifdef ZTS
 extern ts_rsrc_id cwd_globals_id;
 extern size_t cwd_globals_offset;
-# define CWDG(v) ZEND_TSRMG_FAST(cwd_globals_offset, virtual_cwd_globals *, v)
+#define CWDG(v) ZEND_TSRMG_FAST(cwd_globals_offset, virtual_cwd_globals *, v)
 #else
 extern virtual_cwd_globals cwd_globals;
-# define CWDG(v) (cwd_globals.v)
+#define CWDG(v) (cwd_globals.v)
 #endif
 
 CWD_API void realpath_cache_clean(void);
 CWD_API void realpath_cache_del(const char *path, size_t path_len);
-CWD_API realpath_cache_bucket* realpath_cache_lookup(const char *path, size_t path_len, time_t t);
+CWD_API realpath_cache_bucket *realpath_cache_lookup(const char *path,
+                                                     size_t path_len, time_t t);
 CWD_API zend_long realpath_cache_size(void);
 CWD_API zend_long realpath_cache_max_buckets(void);
-CWD_API realpath_cache_bucket** realpath_cache_get_buckets(void);
+CWD_API realpath_cache_bucket **realpath_cache_get_buckets(void);
 
 #ifdef CWD_EXPORTS
 extern void virtual_cwd_main_cwd_init(uint8_t);
@@ -266,7 +273,7 @@ extern void virtual_cwd_main_cwd_init(uint8_t);
 #define VCWD_REALPATH(path, real_path) virtual_realpath(path, real_path)
 #define VCWD_RENAME(oldname, newname) virtual_rename(oldname, newname)
 #define VCWD_STAT(path, buff) virtual_stat(path, buff)
-# define VCWD_LSTAT(path, buff) virtual_lstat(path, buff)
+#define VCWD_LSTAT(path, buff) virtual_lstat(path, buff)
 #define VCWD_UNLINK(path) virtual_unlink(path)
 #define VCWD_MKDIR(pathname, mode) virtual_mkdir(pathname, mode)
 #define VCWD_RMDIR(pathname) virtual_rmdir(pathname)
@@ -290,10 +297,11 @@ extern void virtual_cwd_main_cwd_init(uint8_t);
 /* rename on windows will fail if newname already exists.
    MoveFileEx has to be used */
 #if defined(ZEND_WIN32)
-#define VCWD_FOPEN(path, mode)  php_win32_ioutil_fopen(path, mode)
+#define VCWD_FOPEN(path, mode) php_win32_ioutil_fopen(path, mode)
 #define VCWD_OPEN(path, flags) php_win32_ioutil_open(path, flags)
-#define VCWD_OPEN_MODE(path, flags, mode) php_win32_ioutil_open(path, flags, mode)
-# define VCWD_RENAME(oldname, newname) php_win32_ioutil_rename(oldname, newname)
+#define VCWD_OPEN_MODE(path, flags, mode)                                      \
+  php_win32_ioutil_open(path, flags, mode)
+#define VCWD_RENAME(oldname, newname) php_win32_ioutil_rename(oldname, newname)
 #define VCWD_MKDIR(pathname, mode) php_win32_ioutil_mkdir(pathname, mode)
 #define VCWD_RMDIR(pathname) php_win32_ioutil_rmdir(pathname)
 #define VCWD_UNLINK(path) php_win32_ioutil_unlink(path)
@@ -302,10 +310,10 @@ extern void virtual_cwd_main_cwd_init(uint8_t);
 #define VCWD_GETCWD(buff, size) php_win32_ioutil_getcwd(buff, size)
 #define VCWD_CHMOD(path, mode) php_win32_ioutil_chmod(path, mode)
 #else
-#define VCWD_FOPEN(path, mode)  fopen(path, mode)
+#define VCWD_FOPEN(path, mode) fopen(path, mode)
 #define VCWD_OPEN(path, flags) open(path, flags)
-#define VCWD_OPEN_MODE(path, flags, mode)	open(path, flags, mode)
-# define VCWD_RENAME(oldname, newname) rename(oldname, newname)
+#define VCWD_OPEN_MODE(path, flags, mode) open(path, flags, mode)
+#define VCWD_RENAME(oldname, newname) rename(oldname, newname)
 #define VCWD_MKDIR(pathname, mode) mkdir(pathname, mode)
 #define VCWD_RMDIR(pathname) rmdir(pathname)
 #define VCWD_UNLINK(path) unlink(path)
@@ -325,11 +333,11 @@ extern void virtual_cwd_main_cwd_init(uint8_t);
 #define VCWD_REALPATH(path, real_path) tsrm_realpath(path, real_path)
 
 #if HAVE_UTIME
-# ifdef ZEND_WIN32
-#  define VCWD_UTIME(path, time) win32_utime(path, time)
-# else
-#  define VCWD_UTIME(path, time) utime(path, time)
-# endif
+#ifdef ZEND_WIN32
+#define VCWD_UTIME(path, time) win32_utime(path, time)
+#else
+#define VCWD_UTIME(path, time) utime(path, time)
+#endif
 #endif
 
 #if !defined(ZEND_WIN32)
@@ -351,35 +359,35 @@ extern void virtual_cwd_main_cwd_init(uint8_t);
 #endif
 
 #ifndef S_IFLNK
-#define _IFLNK  0120000	/* symbolic link */
+#define _IFLNK 0120000 /* symbolic link */
 #define S_IFLNK _IFLNK
 #endif
 
 #ifndef S_ISDIR
-#define S_ISDIR(mode)	(((mode)&S_IFMT) == S_IFDIR)
+#define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
 #endif
 
 #ifndef S_ISREG
-#define S_ISREG(mode)	(((mode)&S_IFMT) == S_IFREG)
+#define S_ISREG(mode) (((mode) & S_IFMT) == S_IFREG)
 #endif
 
 #ifndef S_ISLNK
-#define S_ISLNK(mode)	(((mode)&S_IFMT) == S_IFLNK)
+#define S_ISLNK(mode) (((mode) & S_IFMT) == S_IFLNK)
 #endif
 
 #ifndef S_IXROOT
-#define S_IXROOT ( S_IXUSR | S_IXGRP | S_IXOTH )
+#define S_IXROOT (S_IXUSR | S_IXGRP | S_IXOTH)
 #endif
 
 /* XXX should be _S_IFIFO? */
 #ifndef S_IFIFO
-#define	_IFIFO  0010000	/* fifo */
-#define S_IFIFO	_IFIFO
+#define _IFIFO 0010000 /* fifo */
+#define S_IFIFO _IFIFO
 #endif
 
 #ifndef S_IFBLK
-#define	_IFBLK  0060000	/* block special */
-#define S_IFBLK	_IFBLK
+#define _IFBLK 0060000 /* block special */
+#define S_IFBLK _IFBLK
 #endif
 
 #endif /* VIRTUAL_CWD_H */

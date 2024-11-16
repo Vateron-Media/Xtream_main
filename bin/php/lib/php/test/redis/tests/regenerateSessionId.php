@@ -14,10 +14,10 @@ $locking_enabled = !!($opt['locking-enabled'] ?? false);
 $destroy_previous = !!($opt['destroy-previous'] ?? false);
 $proxy = !!($opt['proxy'] ?? false);
 
-if ( ! $handler) {
+if (!$handler) {
     fprintf(STDERR, "--handler is required\n");
     exit(1);
-} else if ( ! $save_path) {
+} else if (!$save_path) {
     fprintf(STDERR, "--save-path is required\n");
     exit(1);
 }
@@ -27,45 +27,37 @@ ini_set('session.save_path', $save_path);
 ini_set('redis.session.locking_enabled', $locking_enabled);
 
 if (interface_exists('SessionHandlerInterface')) {
-    class TestHandler implements SessionHandlerInterface
-    {
+    class TestHandler implements SessionHandlerInterface {
         /**
          * @var SessionHandler
          */
         private $handler;
 
-        public function __construct()
-        {
+        public function __construct() {
             $this->handler = new SessionHandler();
         }
 
-        public function close()
-        {
+        public function close() {
             return $this->handler->close();
         }
 
-        public function destroy($session_id)
-        {
+        public function destroy($session_id) {
             return $this->handler->destroy($session_id);
         }
 
-        public function gc($maxlifetime)
-        {
+        public function gc($maxlifetime) {
             return $this->handler->gc($maxlifetime);
         }
 
-        public function open($save_path, $name)
-        {
+        public function open($save_path, $name) {
             return $this->handler->open($save_path, $name);
         }
 
-        public function read($session_id)
-        {
+        public function read($session_id) {
             return $this->handler->read($session_id);
         }
 
-        public function write($session_id, $session_data)
-        {
+        public function write($session_id, $session_data) {
             return $this->handler->write($session_id, $session_data);
         }
     }
@@ -78,9 +70,9 @@ if ($proxy) {
 
 session_id($id);
 
-if ( !  session_start()) {
+if (!session_start()) {
     $result = "FAILED: session_start()";
-} else if ( ! session_regenerate_id($destroy_previous)) {
+} else if (!session_regenerate_id($destroy_previous)) {
     $result = "FAILED: session_regenerateId()";
 } else {
     $result = session_id();

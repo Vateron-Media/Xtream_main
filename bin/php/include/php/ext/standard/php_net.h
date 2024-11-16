@@ -22,7 +22,7 @@
 #include "php.h"
 #include "php_network.h"
 
-PHPAPI zend_string* php_inet_ntop(const struct sockaddr *addr);
+PHPAPI zend_string *php_inet_ntop(const struct sockaddr *addr);
 
 PHP_FUNCTION(net_get_interfaces);
 

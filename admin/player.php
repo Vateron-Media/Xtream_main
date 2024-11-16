@@ -59,7 +59,7 @@ if (isset(ipTV_lib::$request['id'])) {
 
             $rURL = $rProtocol . '://' . (($rServers[$rServerID]['domain_name'] ? explode(',', $rServers[$rServerID]['domain_name'])[0] : $rServers[$rServerID]['server_ip'])) . ':' . ((issecure() ? $rServers[$rServerID]['https_broadcast_port'] : $rServers[$rServerID]['http_broadcast_port'])) . '/admin/' . ((ipTV_lib::$request['type'] == 'live' ? 'live.php' : (ipTV_lib::$request['type'] == 'timeshift' ? 'timeshift' : 'vod'))) . '?uitoken=' . $rUIToken . ((ipTV_lib::$request['type'] == 'live' ? '&extension=.m3u8' : ''));
 
-?>
+            ?>
             <html>
 
             <head>
@@ -83,7 +83,7 @@ if (isset(ipTV_lib::$request['id'])) {
                     <video id="video" width="100%" height="100%" src="<?php echo $rURL; ?>" controls></video>
                 <?php endif; ?>
                 <script>
-                    $(document).ready(function() {
+                    $(document).ready(function () {
                         <?php if (!$rLegacy): ?>
                             var rPlayer = jwplayer("now__playing__player");
                             rPlayer.setup({
@@ -102,7 +102,7 @@ if (isset(ipTV_lib::$request['id'])) {
             </body>
 
             </html>
-<?php
+            <?php
         } else {
             exit();
         }

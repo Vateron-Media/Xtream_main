@@ -467,7 +467,8 @@ http://pear.php.net/dtd/package-2.0.xsd',
         }
         if (isset($dirs['file'])) {
             uksort($dirs['file'], 'strnatcasecmp');
-        };
+        }
+        ;
     }
 
     function _deFormat(&$dirs) {

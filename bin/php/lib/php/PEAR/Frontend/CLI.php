@@ -501,43 +501,43 @@ class PEAR_Frontend_CLI extends PEAR_Frontend {
                     $data['data'][] = array('Deprecated! use', $name);
                 }
             default: {
-                    if (is_array($data)) {
-                        $this->_startTable($data);
-                        $count = count($data['data'][0]);
-                        if ($count == 2) {
-                            $opts = array(
-                                0 => array('wrap' => 25),
-                                1 => array('wrap' => 48)
-                            );
-                        } elseif ($count == 3) {
-                            $opts = array(
-                                0 => array('wrap' => 30),
-                                1 => array('wrap' => 20),
-                                2 => array('wrap' => 35)
-                            );
-                        } else {
-                            $opts = null;
-                        }
-                        if (isset($data['headline']) && is_array($data['headline'])) {
-                            $this->_tableRow(
-                                $data['headline'],
-                                array('bold' => true),
-                                $opts
-                            );
-                        }
-
-                        if (is_array($data['data'])) {
-                            foreach ($data['data'] as $row) {
-                                $this->_tableRow($row, null, $opts);
-                            }
-                        } else {
-                            $this->_tableRow(array($data['data']), null, $opts);
-                        }
-                        $this->_endTable();
+                if (is_array($data)) {
+                    $this->_startTable($data);
+                    $count = count($data['data'][0]);
+                    if ($count == 2) {
+                        $opts = array(
+                            0 => array('wrap' => 25),
+                            1 => array('wrap' => 48)
+                        );
+                    } elseif ($count == 3) {
+                        $opts = array(
+                            0 => array('wrap' => 30),
+                            1 => array('wrap' => 20),
+                            2 => array('wrap' => 35)
+                        );
                     } else {
-                        $this->_displayLine($data);
+                        $opts = null;
                     }
+                    if (isset($data['headline']) && is_array($data['headline'])) {
+                        $this->_tableRow(
+                            $data['headline'],
+                            array('bold' => true),
+                            $opts
+                        );
+                    }
+
+                    if (is_array($data['data'])) {
+                        foreach ($data['data'] as $row) {
+                            $this->_tableRow($row, null, $opts);
+                        }
+                    } else {
+                        $this->_tableRow(array($data['data']), null, $opts);
+                    }
+                    $this->_endTable();
+                } else {
+                    $this->_displayLine($data);
                 }
+            }
         }
     }
 

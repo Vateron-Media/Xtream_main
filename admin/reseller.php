@@ -191,7 +191,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                <?php }
+                                                    <?php }
                                                 } ?>
                                             </div>
                                             <!-- end timeline -->
@@ -249,60 +249,60 @@ if ($rSettings["sidebar"]) { ?>
                     </div>
                     <!-- end row -->
 
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-knob/jquery.knob.min.js"></script>
-                <script src="assets/libs/peity/jquery.peity.min.js"></script>
-                <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/jquery-number/jquery.number.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/js/pages/dashboard.init.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-knob/jquery.knob.min.js"></script>
+            <script src="assets/libs/peity/jquery.peity.min.js"></script>
+            <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/jquery-number/jquery.number.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/js/pages/dashboard.init.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    function getStats() {
-                        var rStart = Date.now();
-                        $.getJSON("./api.php?action=reseller_dashboard", function(data) {
-                            $(".active-connections .entry").html($.number(data.open_connections, 0));
-                            $(".online-users .entry").html($.number(data.online_users, 0));
-                            $(".active-accounts .entry").html($.number(data.active_accounts, 0));
-                            <?php if (floor($rUserInfo["credits"]) == $rUserInfo["credits"]) { ?>
-                                $(".credits .entry").html($.number(data.credits, 0));
-                            <?php } else { ?>
-                                $(".credits .entry").html($.number(data.credits, 2));
-                            <?php } ?>
-                            if (Date.now() - rStart < 1000) {
-                                setTimeout(getStats, 1000 - (Date.now() - rStart));
-                            } else {
-                                getStats();
-                            }
-                        }).fail(function() {
-                            setTimeout(getStats, 1000);
-                        });
-                    }
-
-                    $(document).ready(function() {
-                        getStats();
+            <script>
+                function getStats() {
+                    var rStart = Date.now();
+                    $.getJSON("./api.php?action=reseller_dashboard", function (data) {
+                        $(".active-connections .entry").html($.number(data.open_connections, 0));
+                        $(".online-users .entry").html($.number(data.online_users, 0));
+                        $(".active-accounts .entry").html($.number(data.active_accounts, 0));
+                        <?php if (floor($rUserInfo["credits"]) == $rUserInfo["credits"]) { ?>
+                            $(".credits .entry").html($.number(data.credits, 0));
+                        <?php } else { ?>
+                            $(".credits .entry").html($.number(data.credits, 2));
+                        <?php } ?>
+                        if (Date.now() - rStart < 1000) {
+                            setTimeout(getStats, 1000 - (Date.now() - rStart));
+                        } else {
+                            getStats();
+                        }
+                    }).fail(function () {
+                        setTimeout(getStats, 1000);
                     });
-                </script>
-                </body>
+                }
 
-                </html>
+                $(document).ready(function () {
+                    getStats();
+                });
+            </script>
+            </body>
+
+            </html>

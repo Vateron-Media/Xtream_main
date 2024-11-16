@@ -328,18 +328,18 @@ if ($rSettings["sidebar"]) { ?>
                                                             <?= $_["add_multiple"] ?>
                                                         </button>
                                                     </a>
-                                            <?php }
+                                                <?php }
                                             } ?>
                                         </li>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rEpisode)) {
-                                                            echo $rEpisode["stream_display_name"] . ' &nbsp;<button type="button" class="btn btn-outline-info waves-effect waves-light btn-xs" onClick="player(' . $rEpisode["id"] . ', \'' . json_decode($rEpisode["target_container"], True)[0] . '\');"><i class="mdi mdi-play"></i></button>';
-                                                        } else if ($rMulti) {
-                                                            echo $_["add_multiple"];
-                                                        } else {
-                                                            echo $_["add_single"];
-                                                        } ?></h4>
+                                    echo $rEpisode["stream_display_name"] . ' &nbsp;<button type="button" class="btn btn-outline-info waves-effect waves-light btn-xs" onClick="player(' . $rEpisode["id"] . ', \'' . json_decode($rEpisode["target_container"], True)[0] . '\');"><i class="mdi mdi-play"></i></button>';
+                                } else if ($rMulti) {
+                                    echo $_["add_multiple"];
+                                } else {
+                                    echo $_["add_single"];
+                                } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -354,12 +354,12 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["episode_success"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["generic_fail"] ?>
-                                </div>
+                                    </div>
                             <?php }
                             if (isset($rEpisode)) { ?>
                                 <div class="card text-xs-center">
@@ -394,21 +394,20 @@ if ($rSettings["sidebar"]) { ?>
                                             <?= $rServers[$rServerID]["server_name"] ?></strong><br />
                                         <?= str_replace("\n", "<br/>", $rEncodeError) ?>
                                     </div>
-                            <?php }
+                                <?php }
                             } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./episode.php<?php if (isset($_GET["id"])) {
-                                                                    echo "?id=" . $_GET["id"];
-                                                                } ?>" method="POST" id="stream_form"
-                                        data-parsley-validate="">
+                                        echo "?id=" . $_GET["id"];
+                                    } ?>" method="POST" id="stream_form" data-parsley-validate="">
                                         <?php if (isset($rEpisode)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rEpisode["id"] ?>" />
                                         <?php }
                                         if (!isset($rMulti)) { ?>
                                             <input type="hidden" id="tmdb_id" name="tmdb_id" value="<?php if (isset($rEpisode)) {
-                                                                                                        echo htmlspecialchars($rEpisode["properties"]["tmdb_id"]);
-                                                                                                    } ?>" />
+                                                echo htmlspecialchars($rEpisode["properties"]["tmdb_id"]);
+                                            } ?>" />
                                         <?php } else { ?>
                                             <input type="hidden" name="multi" id="multi" value="" />
                                             <input type="hidden" name="server" id="server" value="" />
@@ -471,9 +470,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input type="text" class="form-control text-center"
                                                                             id="season_num" name="season_num" placeholder=""
                                                                             value="<?php if (isset($rEpisode)) {
-                                                                                        echo htmlspecialchars($rEpisode["season"]);
-                                                                                    } ?>"
-                                                                            required data-parsley-trigger="change">
+                                                                                echo htmlspecialchars($rEpisode["season"]);
+                                                                            } ?>" required
+                                                                            data-parsley-trigger="change">
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="episode"><?= $_["episode_number"] ?></label>
@@ -481,9 +480,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input type="text" class="form-control text-center"
                                                                             id="episode" name="episode" placeholder=""
                                                                             value="<?php if (isset($rEpisode)) {
-                                                                                        echo htmlspecialchars($rEpisode["episode"]);
-                                                                                    } ?>"
-                                                                            required data-parsley-trigger="change">
+                                                                                echo htmlspecialchars($rEpisode["episode"]);
+                                                                            } ?>" required
+                                                                            data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -500,11 +499,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <div class="col-md-8">
                                                                         <input type="text" class="form-control"
                                                                             id="stream_display_name"
-                                                                            name="stream_display_name"
-                                                                            value="<?php if (isset($rEpisode)) {
-                                                                                        echo htmlspecialchars($rEpisode["stream_display_name"]);
-                                                                                    } ?>"
-                                                                            required data-parsley-trigger="change">
+                                                                            name="stream_display_name" value="<?php if (isset($rEpisode)) {
+                                                                                echo htmlspecialchars($rEpisode["stream_display_name"]);
+                                                                            } ?>" required
+                                                                            data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
                                                                 <?php
@@ -533,10 +531,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         for="notes"><?= $_["notes"] ?></label>
                                                                     <div class="col-md-8">
                                                                         <textarea id="notes" name="notes"
-                                                                            class="form-control" rows="3"
-                                                                            placeholder=""><?php if (isset($rEpisode)) {
-                                                                                                echo htmlspecialchars($rEpisode["notes"]);
-                                                                                            } ?></textarea>
+                                                                            class="form-control" rows="3" placeholder=""><?php if (isset($rEpisode)) {
+                                                                                echo htmlspecialchars($rEpisode["notes"]);
+                                                                            } ?></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div> <!-- end col -->
@@ -621,10 +618,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="movie_image"><?= $_["image_url"] ?></label>
                                                                 <div class="col-md-8 input-group">
                                                                     <input type="text" class="form-control"
-                                                                        id="movie_image" name="movie_image"
-                                                                        value="<?php if (isset($rEpisode)) {
-                                                                                    echo htmlspecialchars($rEpisode["properties"]["movie_image"]);
-                                                                                } ?>">
+                                                                        id="movie_image" name="movie_image" value="<?php if (isset($rEpisode)) {
+                                                                            echo htmlspecialchars($rEpisode["properties"]["movie_image"]);
+                                                                        } ?>">
                                                                     <div class="input-group-append">
                                                                         <a href="javascript:void(0)"
                                                                             onClick="openImage(this)"
@@ -639,8 +635,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <textarea rows="6" class="form-control" id="plot"
                                                                         name="plot"><?php if (isset($rEpisode)) {
-                                                                                        echo htmlspecialchars($rEpisode["properties"]["plot"]);
-                                                                                    } ?></textarea>
+                                                                            echo htmlspecialchars($rEpisode["properties"]["plot"]);
+                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -648,10 +644,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="releasedate"><?= $_["release_date"] ?></label>
                                                                 <div class="col-md-3">
                                                                     <input type="text" class="form-control"
-                                                                        id="releasedate" name="releasedate"
-                                                                        value="<?php if (isset($rEpisode)) {
-                                                                                    echo htmlspecialchars($rEpisode["properties"]["releasedate"]);
-                                                                                } ?>">
+                                                                        id="releasedate" name="releasedate" value="<?php if (isset($rEpisode)) {
+                                                                            echo htmlspecialchars($rEpisode["properties"]["releasedate"]);
+                                                                        } ?>">
                                                                 </div>
                                                                 <label class="col-md-2 col-form-label"
                                                                     for="episode_run_time"><?= $_["runtime"] ?></label>
@@ -659,8 +654,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="episode_run_time" name="episode_run_time"
                                                                         value="<?php if (isset($rEpisode)) {
-                                                                                    echo intval($rEpisode["properties"]["duration_secs"] / 60.0);
-                                                                                } ?>">
+                                                                            echo intval($rEpisode["properties"]["duration_secs"] / 60.0);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -668,10 +663,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="rating"><?= $_["rating"] ?></label>
                                                                 <div class="col-md-3">
                                                                     <input type="text" class="form-control" id="rating"
-                                                                        name="rating"
-                                                                        value="<?php if (isset($rEpisode)) {
-                                                                                    echo htmlspecialchars($rEpisode["properties"]["rating"]);
-                                                                                } ?>">
+                                                                        name="rating" value="<?php if (isset($rEpisode)) {
+                                                                            echo htmlspecialchars($rEpisode["properties"]["rating"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -700,10 +694,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="direct_source" id="direct_source"
                                                                         type="checkbox" <?php if (isset($rEpisode)) {
-                                                                                            if ($rEpisode["direct_source"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } ?>data-plugin="switchery"
+                                                                            if ($rEpisode["direct_source"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -711,10 +705,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="read_native" id="read_native"
                                                                         type="checkbox" <?php if (isset($rEpisode)) {
-                                                                                            if ($rEpisode["read_native"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                            if ($rEpisode["read_native"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -728,10 +722,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="movie_symlink" id="movie_symlink"
                                                                         type="checkbox" <?php if (isset($rEpisode)) {
-                                                                                            if ($rEpisode["movie_symlink"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } ?>data-plugin="switchery"
+                                                                            if ($rEpisode["movie_symlink"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -743,10 +737,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="remove_subtitles" id="remove_subtitles"
                                                                         type="checkbox" <?php if (isset($rEpisode)) {
-                                                                                            if ($rEpisode["remove_subtitles"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } ?>data-plugin="switchery"
+                                                                            if ($rEpisode["remove_subtitles"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -764,11 +758,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-toggle="select2">
                                                                             <?php foreach (array("mp4", "mkv", "avi", "mpg", "flv") as $rContainer) { ?>
                                                                                 <option <?php if (isset($rEpisode)) {
-                                                                                            if (json_decode($rEpisode["target_container"], True)[0] == $rContainer) {
-                                                                                                echo "selected ";
-                                                                                            }
-                                                                                        } ?>value="<?= $rContainer ?>">
-                                                                                    <?= $rContainer ?></option>
+                                                                                    if (json_decode($rEpisode["target_container"], True)[0] == $rContainer) {
+                                                                                        echo "selected ";
+                                                                                    }
+                                                                                } ?>value="<?= $rContainer ?>">
+                                                                                    <?= $rContainer ?>
+                                                                                </option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
@@ -780,10 +775,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="mdi mdi-information"></i></label>
                                                                     <div class="col-md-2">
                                                                         <input type="text" class="form-control"
-                                                                            id="custom_sid" name="custom_sid"
-                                                                            value="<?php if (isset($rEpisode)) {
-                                                                                        echo htmlspecialchars($rEpisode["custom_sid"]);
-                                                                                    } ?>">
+                                                                            id="custom_sid" name="custom_sid" value="<?php if (isset($rEpisode)) {
+                                                                                echo htmlspecialchars($rEpisode["custom_sid"]);
+                                                                            } ?>">
                                                                     </div>
                                                                 </div>
                                                             <?php }
@@ -807,8 +801,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input type="text" id="movie_subtitles"
                                                                             name="movie_subtitles" class="form-control"
                                                                             value="<?php if (isset($rEpisode)) {
-                                                                                        echo htmlspecialchars($rSubFile);
-                                                                                    } ?>">
+                                                                                echo htmlspecialchars($rSubFile);
+                                                                            } ?>">
                                                                         <div class="input-group-append">
                                                                             <a href="#file-browser" id="filebrowser-sub"
                                                                                 class="btn btn-primary waves-effect waves-light"><i
@@ -829,18 +823,20 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="transcode_profile_id" class="form-control"
                                                                         data-toggle="select2">
                                                                         <option <?php if (isset($rEpisode)) {
-                                                                                    if (intval($rEpisode["transcode_profile_id"]) == 0) {
-                                                                                        echo "selected ";
-                                                                                    }
-                                                                                } ?>value="0">
-                                                                            <?= $_["transcoding_disabled"] ?></option>
+                                                                            if (intval($rEpisode["transcode_profile_id"]) == 0) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } ?>value="0">
+                                                                            <?= $_["transcoding_disabled"] ?>
+                                                                        </option>
                                                                         <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
                                                                             <option <?php if (isset($rEpisode)) {
-                                                                                        if (intval($rEpisode["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>">
-                                                                                <?= $rProfile["profile_name"] ?></option>
+                                                                                if (intval($rEpisode["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rProfile["profile_id"] ?>">
+                                                                                <?= $rProfile["profile_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -886,12 +882,11 @@ if ($rSettings["sidebar"]) { ?>
                                                         </li>
                                                         <li class="list-inline-item float-right">
                                                             <input name="submit_stream" type="submit"
-                                                                class="btn btn-primary"
-                                                                value="<?php if (isset($rEpisode)) {
-                                                                            echo $_["edit"];
-                                                                        } else {
-                                                                            echo $_["add"];
-                                                                        } ?>" />
+                                                                class="btn btn-primary" value="<?php if (isset($rEpisode)) {
+                                                                    echo $_["edit"];
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -907,9 +902,10 @@ if ($rSettings["sidebar"]) { ?>
                                                     <select id="server_id" class="form-control" data-toggle="select2">
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
-                                                                                                        echo " selected";
-                                                                                                    } ?>>
-                                                                <?= htmlspecialchars($rServer["server_name"]) ?></option>
+                                                                  echo " selected";
+                                                              } ?>>
+                                                                <?= htmlspecialchars($rServer["server_name"]) ?>
+                                                            </option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -928,8 +924,8 @@ if ($rSettings["sidebar"]) { ?>
                                                 </div>
                                             </div>
                                             <div class="form-group row mb-4" <?php if (isset($rMulti)) {
-                                                                                    echo "style='display:none;'";
-                                                                                } ?>>
+                                                echo "style='display:none;'";
+                                            } ?>>
                                                 <label class="col-md-4 col-form-label"
                                                     for="search"><?= $_["search_directory"] ?></label>
                                                 <div class="col-md-8 input-group">
@@ -981,499 +977,499 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var changeTitle = false;
-                    var rSwitches = [];
-                    var rEpisodes = {};
+            <script>
+                var changeTitle = false;
+                var rSwitches = [];
+                var rEpisodes = {};
 
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
-
-                    function pad(n) {
-                        if (n < 10)
-                            return "0" + n;
-                        return n;
-                    }
-
-                    function api(rID, rServerID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('<?= $_["episode_delete_confirm"] ?>') == false) {
-                                return;
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
                             }
-                        }
-                        $.getJSON("./api.php?action=episode&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function(data) {
-                            if (data.result == true) {
-                                if (rType == "start") {
-                                    $.toast("<?= $_["episode_encoding_start"] ?>.");
-                                } else if (rType == "stop") {
-                                    $.toast("<?= $_["episode_encoding_stop"] ?>");
-                                } else if (rType == "delete") {
-                                    $.toast("<?= $_["episode_deleted"] ?>");
-                                }
-                                $.each($('.tooltip'), function(index, element) {
-                                    $(this).remove();
-                                });
-                                $("#datatable-list").DataTable().ajax.reload(null, false);
-                            } else {
-                                $.toast("<?= $_["error_occured"] ?>");
-                            }
-                        }).fail(function() {
-                            $.toast("<?= $_["error_occured"] ?>");
                         });
-                    }
+                    };
+                }(jQuery));
 
-                    function selectDirectory(elem) {
-                        window.currentDirectory += elem + "/";
-                        $("#current_path").val(window.currentDirectory);
-                        $("#changeDir").click();
-                    }
+                function pad(n) {
+                    if (n < 10)
+                        return "0" + n;
+                    return n;
+                }
 
-                    function selectParent() {
-                        $("#current_path").val(window.currentDirectory.split("/").slice(0, -2).join("/") + "/");
-                        $("#changeDir").click();
+                function api(rID, rServerID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('<?= $_["episode_delete_confirm"] ?>') == false) {
+                            return;
+                        }
                     }
-
-                    function selectFile(rFile) {
-                        if ($('li.nav-item .active').attr('href') == "#stream-details") {
-                            $("#stream_source").val("s:" + $("#server_id").val() + ":" + window.currentDirectory + rFile);
-                            var rExtension = rFile.substr((rFile.lastIndexOf('.') + 1));
-                            if ($("#target_container option[value='" + rExtension + "']").length > 0) {
-                                $("#target_container").val(rExtension).trigger('change');
+                    $.getJSON("./api.php?action=episode&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function (data) {
+                        if (data.result == true) {
+                            if (rType == "start") {
+                                $.toast("<?= $_["episode_encoding_start"] ?>.");
+                            } else if (rType == "stop") {
+                                $.toast("<?= $_["episode_encoding_stop"] ?>");
+                            } else if (rType == "delete") {
+                                $.toast("<?= $_["episode_deleted"] ?>");
                             }
+                            $.each($('.tooltip'), function (index, element) {
+                                $(this).remove();
+                            });
+                            $("#datatable-list").DataTable().ajax.reload(null, false);
                         } else {
-                            $("#movie_subtitles").val("s:" + $("#server_id").val() + ":" + window.currentDirectory + rFile);
+                            $.toast("<?= $_["error_occured"] ?>");
                         }
-                        $.magnificPopup.close();
-                    }
+                    }).fail(function () {
+                        $.toast("<?= $_["error_occured"] ?>");
+                    });
+                }
 
-                    function openImage(elem) {
-                        rPath = $(elem).parent().parent().find("input").val();
-                        if (rPath.length > 0) {
-                            if (rPath.substring(0, 1) == ".") {
-                                window.open('<?= getURL() ?>' + rPath.substring(1, rPath.length));
-                            } else if (rPath.substring(0, 1) == "/") {
-                                window.open('<?= getURL() ?>' + rPath);
-                            } else {
-                                window.open(rPath);
-                            }
+                function selectDirectory(elem) {
+                    window.currentDirectory += elem + "/";
+                    $("#current_path").val(window.currentDirectory);
+                    $("#changeDir").click();
+                }
+
+                function selectParent() {
+                    $("#current_path").val(window.currentDirectory.split("/").slice(0, -2).join("/") + "/");
+                    $("#changeDir").click();
+                }
+
+                function selectFile(rFile) {
+                    if ($('li.nav-item .active').attr('href') == "#stream-details") {
+                        $("#stream_source").val("s:" + $("#server_id").val() + ":" + window.currentDirectory + rFile);
+                        var rExtension = rFile.substr((rFile.lastIndexOf('.') + 1));
+                        if ($("#target_container option[value='" + rExtension + "']").length > 0) {
+                            $("#target_container").val(rExtension).trigger('change');
+                        }
+                    } else {
+                        $("#movie_subtitles").val("s:" + $("#server_id").val() + ":" + window.currentDirectory + rFile);
+                    }
+                    $.magnificPopup.close();
+                }
+
+                function openImage(elem) {
+                    rPath = $(elem).parent().parent().find("input").val();
+                    if (rPath.length > 0) {
+                        if (rPath.substring(0, 1) == ".") {
+                            window.open('<?= getURL() ?>' + rPath.substring(1, rPath.length));
+                        } else if (rPath.substring(0, 1) == "/") {
+                            window.open('<?= getURL() ?>' + rPath);
+                        } else {
+                            window.open(rPath);
                         }
                     }
+                }
 
-                    function reloadStream() {
-                        $("#datatable-list").DataTable().ajax.reload(null, false);
-                        setTimeout(reloadStream, 5000);
-                    }
+                function reloadStream() {
+                    $("#datatable-list").DataTable().ajax.reload(null, false);
+                    setTimeout(reloadStream, 5000);
+                }
 
-                    function clearSearch() {
-                        $("#search").val("");
-                        $("#doSearch").click();
-                    }
+                function clearSearch() {
+                    $("#search").val("");
+                    $("#doSearch").click();
+                }
 
-                    function player(rID, rContainer) {
-                        $.magnificPopup.open({
-                            items: {
-                                src: "./player.php?type=series&id=" + rID + "&container=" + rContainer,
-                                type: 'iframe'
-                            }
-                        });
-                    }
-
-                    function setSwitch(switchElement, checkedBool) {
-                        if ((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
-                            switchElement.setPosition(true);
-                            switchElement.handleOnchange(true);
+                function player(rID, rContainer) {
+                    $.magnificPopup.open({
+                        items: {
+                            src: "./player.php?type=series&id=" + rID + "&container=" + rContainer,
+                            type: 'iframe'
                         }
+                    });
+                }
+
+                function setSwitch(switchElement, checkedBool) {
+                    if ((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
+                        switchElement.setPosition(true);
+                        switchElement.handleOnchange(true);
                     }
-                    $(document).ready(function() {
-                        $('select').select2({
-                            width: '100%'
-                        });
+                }
+                $(document).ready(function () {
+                    $('select').select2({
+                        width: '100%'
+                    });
 
-                        $("#datatable").DataTable({
-                            responsive: false,
-                            paging: false,
-                            bInfo: false,
-                            searching: false,
-                            scrollY: "250px",
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0]
-                            }, ],
-                            "language": {
-                                "emptyTable": ""
-                            }
-                        });
-
-                        $("#datatable-files").DataTable({
-                            responsive: false,
-                            paging: false,
-                            bInfo: false,
-                            searching: true,
-                            scrollY: "250px",
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0]
-                            }, ],
-                            "language": {
-                                "emptyTable": "<?= $_["no_compatible_file"] ?>"
-                            }
-                        });
-
-                        $("#doSearch").click(function() {
-                            $('#datatable-files').DataTable().search($("#search").val()).draw();
-                        })
-
-                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                        elems.forEach(function(html) {
-                            var switchery = new Switchery(html);
-                            window.rSwitches[$(html).attr("id")] = switchery;
-                        });
-
-                        $("#direct_source").change(function() {
-                            evaluateDirectSource();
-                        });
-                        $("#movie_symlink").change(function() {
-                            evaluateSymlink();
-                        });
-
-                        function evaluateDirectSource() {
-                            $(["movie_symlink", "read_native", "transcode_profile_id", "target_container", "remove_subtitles", "movie_subtitles"]).each(function(rID, rElement) {
-                                if ($(rElement)) {
-                                    if ($("#direct_source").is(":checked")) {
-                                        if (window.rSwitches[rElement]) {
-                                            setSwitch(window.rSwitches[rElement], false);
-                                            window.rSwitches[rElement].disable();
-                                        } else {
-                                            $("#" + rElement).prop("disabled", true);
-                                        }
-                                    } else {
-                                        if (window.rSwitches[rElement]) {
-                                            window.rSwitches[rElement].enable();
-                                        } else {
-                                            $("#" + rElement).prop("disabled", false);
-                                        }
-                                    }
-                                }
-                            });
+                    $("#datatable").DataTable({
+                        responsive: false,
+                        paging: false,
+                        bInfo: false,
+                        searching: false,
+                        scrollY: "250px",
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0]
+                        },],
+                        "language": {
+                            "emptyTable": ""
                         }
+                    });
 
-                        function evaluateSymlink() {
-                            $(["direct_source", "read_native", "transcode_profile_id"]).each(function(rID, rElement) {
-                                if ($(rElement)) {
-                                    if ($("#movie_symlink").is(":checked")) {
-                                        if (window.rSwitches[rElement]) {
-                                            setSwitch(window.rSwitches[rElement], false);
-                                            window.rSwitches[rElement].disable();
-                                        } else {
-                                            $("#" + rElement).prop("disabled", true);
-                                        }
-                                    } else {
-                                        if (window.rSwitches[rElement]) {
-                                            window.rSwitches[rElement].enable();
-                                        } else {
-                                            $("#" + rElement).prop("disabled", false);
-                                        }
-                                    }
-                                }
-                            });
+                    $("#datatable-files").DataTable({
+                        responsive: false,
+                        paging: false,
+                        bInfo: false,
+                        searching: true,
+                        scrollY: "250px",
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0]
+                        },],
+                        "language": {
+                            "emptyTable": "<?= $_["no_compatible_file"] ?>"
                         }
+                    });
 
-                        $("#select_folder").click(function() {
-                            $("#season_folder").val(window.currentDirectory);
-                            $("#server").val($("#server_id").val());
-                            rID = 1;
-                            $("#episode_add").html("");
-                            $("#datatable-files").DataTable().rows().every(function(rowIdx, tableLoop, rowLoop) {
-                                var data = this.data();
-                                rExt = data[1].split('.').pop().toLowerCase();
-                                if (["mp4", "mkv", "mov", "avi", "mpg", "mpeg", "flv", "wmv"].includes(rExt)) {
-                                    $("#episode_add").append('<div class="form-group row mb-4"><label class="col-md-4 col-form-label" for="episode_' + rID + '_name"><?= $_["episode_to_add"] ?></label><div class="col-md-6"><input type="text" class="form-control" id="episode_' + rID + '_name" name="episode_' + rID + '_name" value="' + data[1] + '" readonly></div><div class="col-md-2"><input type="text" class="form-control text-center" id="episode_' + rID + '_num" name="episode_' + rID + '_num" value="' + rID + '" placeholder="Episode""></div></div>');
-                                    $("#episode_" + rID + "_num").inputFilter(function(value) {
-                                        return /^\d*$/.test(value);
-                                    });
-                                }
-                                rID++;
-                            });
-                            $.magnificPopup.close();
-                        });
+                    $("#doSearch").click(function () {
+                        $('#datatable-files').DataTable().search($("#search").val()).draw();
+                    })
 
-                        $("#changeDir").click(function() {
-                            $("#search").val("");
-                            window.currentDirectory = $("#current_path").val();
-                            if (window.currentDirectory.substr(-1) != "/") {
-                                window.currentDirectory += "/";
-                            }
-                            $("#current_path").val(window.currentDirectory);
-                            $("#datatable").DataTable().clear();
-                            $("#datatable").DataTable().row.add(["", "<?= $_["loading"] ?>..."]);
-                            $("#datatable").DataTable().draw(true);
-                            $("#datatable-files").DataTable().clear();
-                            $("#datatable-files").DataTable().row.add(["", "<?= $_["please_wait"] ?>..."]);
-                            $("#datatable-files").DataTable().draw(true);
-                            if ($('li.nav-item .active').attr('href') == "#stream-details") {
-                                rFilter = "video";
-                            } else {
-                                rFilter = "subs";
-                            }
-                            $.getJSON("./api.php?action=listdir&dir=" + window.currentDirectory + "&server=" + $("#server_id").val() + "&filter=" + rFilter, function(data) {
-                                $("#datatable").DataTable().clear();
-                                $("#datatable-files").DataTable().clear();
-                                if (window.currentDirectory != "/") {
-                                    $("#datatable").DataTable().row.add(["<i class='mdi mdi-subdirectory-arrow-left'></i>", "Parent Directory"]);
-                                }
-                                if (data.result == true) {
-                                    $(data.data.dirs).each(function(id, dir) {
-                                        $("#datatable").DataTable().row.add(["<i class='mdi mdi-folder-open-outline'></i>", dir]);
-                                    });
-                                    $("#datatable").DataTable().draw(true);
-                                    $(data.data.files).each(function(id, dir) {
-                                        $("#datatable-files").DataTable().row.add(["<i class='mdi mdi-file-video'></i>", dir]);
-                                    });
-                                    $("#datatable-files").DataTable().draw(true);
-                                }
-                            });
-                        });
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+                    elems.forEach(function (html) {
+                        var switchery = new Switchery(html);
+                        window.rSwitches[$(html).attr("id")] = switchery;
+                    });
 
-                        $('#datatable').on('click', 'tbody > tr', function() {
-                            if ($(this).find("td").eq(1).html() == "<?= $_["parent_directory"] ?>") {
-                                selectParent();
-                            } else {
-                                selectDirectory($(this).find("td").eq(1).html());
-                            }
-                        });
-                        <?php if (!$rMulti) { ?>
-                            $('#datatable-files').on('click', 'tbody > tr', function() {
-                                selectFile($(this).find("td").eq(1).html());
-                            });
-                        <?php } ?>
-                        $('#server_tree').jstree({
-                            'core': {
-                                'check_callback': function(op, node, parent, position, more) {
-                                    switch (op) {
-                                        case 'move_node':
-                                            if (node.id == "source") {
-                                                return false;
-                                            }
-                                            return true;
-                                    }
-                                },
-                                'data': <?= json_encode($rServerTree) ?>
-                            },
-                            "plugins": ["dnd"]
-                        });
-
-                        $("#stream_form").submit(function(e) {
-                            <?php if (!$rMulti) { ?>
-                                if ($("#stream_display_name").val().length == 0) {
-                                    e.preventDefault();
-                                    $.toast("<?= $_["enter_an_episode_name"] ?>");
-                                }
-                                if ($("#stream_source").val().length == 0) {
-                                    e.preventDefault();
-                                    $.toast("<?= $_["enter_an_episode_source"] ?>");
-                                }
-                            <?php } ?>
-                            $("#server_tree_data").val(JSON.stringify($('#server_tree').jstree(true).get_json('#', {
-                                flat: true
-                            })));
-                        });
-
-                        $("#filebrowser").magnificPopup({
-                            type: 'inline',
-                            preloader: false,
-                            focus: '#server_id',
-                            callbacks: {
-                                beforeOpen: function() {
-                                    if ($(window).width() < 830) {
-                                        this.st.focus = false;
-                                    } else {
-                                        this.st.focus = '#server_id';
-                                    }
-                                }
-                            }
-                        });
-                        $("#filebrowser-sub").magnificPopup({
-                            type: 'inline',
-                            preloader: false,
-                            focus: '#server_id',
-                            callbacks: {
-                                beforeOpen: function() {
-                                    if ($(window).width() < 830) {
-                                        this.st.focus = false;
-                                    } else {
-                                        this.st.focus = '#server_id';
-                                    }
-                                }
-                            }
-                        });
-
-                        $("#filebrowser").on("mfpOpen", function() {
-                            clearSearch();
-                            $("#changeDir").click();
-                            $($.fn.dataTable.tables(true)).css('width', '100%');
-                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                        });
-                        $("#filebrowser-sub").on("mfpOpen", function() {
-                            clearSearch();
-                            $("#changeDir").click();
-                            $($.fn.dataTable.tables(true)).css('width', '100%');
-                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                        });
-
-                        $(document).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        $("#server_id").change(function() {
-                            $("#current_path").val("/");
-                            $("#changeDir").click();
-                        });
-
-                        <?php if (!$rMulti) { ?>
-                            $("#season_num").change(function() {
-                                if (!window.changeTitle) {
-                                    $("#tmdb_search").empty().trigger('change');
-                                    if ($("#season_num").val().length > 0) {
-                                        window.rEpisodes = {};
-                                        $.getJSON("./api.php?action=tmdb_search&type=episode&term=<?= $rSeries["tmdb_id"] ?>&season=" + $("#season_num").val(), function(data) {
-                                            if (data.result == true) {
-                                                if (data.data.episodes.length > 0) {
-                                                    newOption = new Option("<?= $_["found_episodes"] ?>".replace("{num}", data.data.episodes.length), -1, true, true);
-                                                } else {
-                                                    newOption = new Option("<?= $_["no_episodes_found"] ?>", -1, true, true);
-                                                }
-                                                $("#tmdb_search").append(newOption).trigger('change');
-                                                $(data.data.episodes).each(function(id, item) {
-                                                    window.rEpisodes[item.id] = item;
-                                                    rTitle = "<?= $_["episode"] ?> " + item.episode_number + " - " + item.name;
-                                                    newOption = new Option(rTitle, item.id, true, true);
-                                                    $("#tmdb_search").append(newOption);
-                                                });
-                                            } else {
-                                                newOption = new Option("<?= $_["no_results_found"] ?>", -1, true, true);
-                                            }
-                                            $("#tmdb_search").val(-1).trigger('change');
-                                        });
-                                    }
-                                } else {
-                                    window.changeTitle = false;
-                                }
-                            });
-                            $("#tmdb_search").change(function() {
-                                if (($("#tmdb_search").val()) && ($("#tmdb_search").val() > -1)) {
-                                    var rEpisode = window.rEpisodes[$("#tmdb_search").val()];
-                                    var rFormat = "S" + pad(rEpisode.season_number) + "E" + pad(rEpisode.episode_number);
-                                    $("#stream_display_name").val($("#series_name").val() + " - " + rFormat + " - " + rEpisode.name);
-                                    $("#movie_image").val("");
-                                    if (rEpisode.still_path.length > 0) {
-                                        $("#movie_image").val("https://image.tmdb.org/t/p/w300" + rEpisode.still_path);
-                                    }
-                                    $("#releasedate").val(rEpisode.air_date);
-                                    $("#episode_run_time").val('<?= $rSeries["episode_run_time"] ?>');
-                                    $("#plot").val(rEpisode.overview);
-                                    $("#rating").val(rEpisode.vote_average);
-                                    $("#tmdb_id").val(rEpisode.id);
-                                    $("#episode").val(rEpisode.episode_number);
-                                }
-                            });
-                        <?php }
-                        if (isset($rEpisode)) { ?>
-                            $("#datatable-list").DataTable({
-                                ordering: false,
-                                paging: false,
-                                searching: false,
-                                processing: true,
-                                serverSide: true,
-                                bInfo: false,
-                                ajax: {
-                                    url: "./table_search.php",
-                                    "data": function(d) {
-                                        d.id = "episodes";
-                                        d.stream_id = <?= $rEpisode["id"] ?>;
-                                    }
-                                },
-                                columnDefs: [{
-                                        "className": "dt-center",
-                                        "targets": [2, 3, 4, 5]
-                                    },
-                                    {
-                                        "visible": false,
-                                        "targets": [0, 1, 6, 7]
-                                    }
-                                ],
-                            });
-                            setTimeout(reloadStream, 5000);
-                            $("#season_num").trigger('change');
-                        <?php } ?>
-
-                        $("#runtime").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#season_num").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("form").attr('autocomplete', 'off');
-
-                        $("#changeDir").click();
+                    $("#direct_source").change(function () {
                         evaluateDirectSource();
+                    });
+                    $("#movie_symlink").change(function () {
                         evaluateSymlink();
                     });
-                </script>
-                </body>
 
-                </html>
+                    function evaluateDirectSource() {
+                        $(["movie_symlink", "read_native", "transcode_profile_id", "target_container", "remove_subtitles", "movie_subtitles"]).each(function (rID, rElement) {
+                            if ($(rElement)) {
+                                if ($("#direct_source").is(":checked")) {
+                                    if (window.rSwitches[rElement]) {
+                                        setSwitch(window.rSwitches[rElement], false);
+                                        window.rSwitches[rElement].disable();
+                                    } else {
+                                        $("#" + rElement).prop("disabled", true);
+                                    }
+                                } else {
+                                    if (window.rSwitches[rElement]) {
+                                        window.rSwitches[rElement].enable();
+                                    } else {
+                                        $("#" + rElement).prop("disabled", false);
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    function evaluateSymlink() {
+                        $(["direct_source", "read_native", "transcode_profile_id"]).each(function (rID, rElement) {
+                            if ($(rElement)) {
+                                if ($("#movie_symlink").is(":checked")) {
+                                    if (window.rSwitches[rElement]) {
+                                        setSwitch(window.rSwitches[rElement], false);
+                                        window.rSwitches[rElement].disable();
+                                    } else {
+                                        $("#" + rElement).prop("disabled", true);
+                                    }
+                                } else {
+                                    if (window.rSwitches[rElement]) {
+                                        window.rSwitches[rElement].enable();
+                                    } else {
+                                        $("#" + rElement).prop("disabled", false);
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    $("#select_folder").click(function () {
+                        $("#season_folder").val(window.currentDirectory);
+                        $("#server").val($("#server_id").val());
+                        rID = 1;
+                        $("#episode_add").html("");
+                        $("#datatable-files").DataTable().rows().every(function (rowIdx, tableLoop, rowLoop) {
+                            var data = this.data();
+                            rExt = data[1].split('.').pop().toLowerCase();
+                            if (["mp4", "mkv", "mov", "avi", "mpg", "mpeg", "flv", "wmv"].includes(rExt)) {
+                                $("#episode_add").append('<div class="form-group row mb-4"><label class="col-md-4 col-form-label" for="episode_' + rID + '_name"><?= $_["episode_to_add"] ?></label><div class="col-md-6"><input type="text" class="form-control" id="episode_' + rID + '_name" name="episode_' + rID + '_name" value="' + data[1] + '" readonly></div><div class="col-md-2"><input type="text" class="form-control text-center" id="episode_' + rID + '_num" name="episode_' + rID + '_num" value="' + rID + '" placeholder="Episode""></div></div>');
+                                $("#episode_" + rID + "_num").inputFilter(function (value) {
+                                    return /^\d*$/.test(value);
+                                });
+                            }
+                            rID++;
+                        });
+                        $.magnificPopup.close();
+                    });
+
+                    $("#changeDir").click(function () {
+                        $("#search").val("");
+                        window.currentDirectory = $("#current_path").val();
+                        if (window.currentDirectory.substr(-1) != "/") {
+                            window.currentDirectory += "/";
+                        }
+                        $("#current_path").val(window.currentDirectory);
+                        $("#datatable").DataTable().clear();
+                        $("#datatable").DataTable().row.add(["", "<?= $_["loading"] ?>..."]);
+                        $("#datatable").DataTable().draw(true);
+                        $("#datatable-files").DataTable().clear();
+                        $("#datatable-files").DataTable().row.add(["", "<?= $_["please_wait"] ?>..."]);
+                        $("#datatable-files").DataTable().draw(true);
+                        if ($('li.nav-item .active').attr('href') == "#stream-details") {
+                            rFilter = "video";
+                        } else {
+                            rFilter = "subs";
+                        }
+                        $.getJSON("./api.php?action=listdir&dir=" + window.currentDirectory + "&server=" + $("#server_id").val() + "&filter=" + rFilter, function (data) {
+                            $("#datatable").DataTable().clear();
+                            $("#datatable-files").DataTable().clear();
+                            if (window.currentDirectory != "/") {
+                                $("#datatable").DataTable().row.add(["<i class='mdi mdi-subdirectory-arrow-left'></i>", "Parent Directory"]);
+                            }
+                            if (data.result == true) {
+                                $(data.data.dirs).each(function (id, dir) {
+                                    $("#datatable").DataTable().row.add(["<i class='mdi mdi-folder-open-outline'></i>", dir]);
+                                });
+                                $("#datatable").DataTable().draw(true);
+                                $(data.data.files).each(function (id, dir) {
+                                    $("#datatable-files").DataTable().row.add(["<i class='mdi mdi-file-video'></i>", dir]);
+                                });
+                                $("#datatable-files").DataTable().draw(true);
+                            }
+                        });
+                    });
+
+                    $('#datatable').on('click', 'tbody > tr', function () {
+                        if ($(this).find("td").eq(1).html() == "<?= $_["parent_directory"] ?>") {
+                            selectParent();
+                        } else {
+                            selectDirectory($(this).find("td").eq(1).html());
+                        }
+                    });
+                    <?php if (!$rMulti) { ?>
+                        $('#datatable-files').on('click', 'tbody > tr', function () {
+                            selectFile($(this).find("td").eq(1).html());
+                        });
+                    <?php } ?>
+                    $('#server_tree').jstree({
+                        'core': {
+                            'check_callback': function (op, node, parent, position, more) {
+                                switch (op) {
+                                    case 'move_node':
+                                        if (node.id == "source") {
+                                            return false;
+                                        }
+                                        return true;
+                                }
+                            },
+                            'data': <?= json_encode($rServerTree) ?>
+                        },
+                        "plugins": ["dnd"]
+                    });
+
+                    $("#stream_form").submit(function (e) {
+                        <?php if (!$rMulti) { ?>
+                            if ($("#stream_display_name").val().length == 0) {
+                                e.preventDefault();
+                                $.toast("<?= $_["enter_an_episode_name"] ?>");
+                            }
+                            if ($("#stream_source").val().length == 0) {
+                                e.preventDefault();
+                                $.toast("<?= $_["enter_an_episode_source"] ?>");
+                            }
+                        <?php } ?>
+                        $("#server_tree_data").val(JSON.stringify($('#server_tree').jstree(true).get_json('#', {
+                            flat: true
+                        })));
+                    });
+
+                    $("#filebrowser").magnificPopup({
+                        type: 'inline',
+                        preloader: false,
+                        focus: '#server_id',
+                        callbacks: {
+                            beforeOpen: function () {
+                                if ($(window).width() < 830) {
+                                    this.st.focus = false;
+                                } else {
+                                    this.st.focus = '#server_id';
+                                }
+                            }
+                        }
+                    });
+                    $("#filebrowser-sub").magnificPopup({
+                        type: 'inline',
+                        preloader: false,
+                        focus: '#server_id',
+                        callbacks: {
+                            beforeOpen: function () {
+                                if ($(window).width() < 830) {
+                                    this.st.focus = false;
+                                } else {
+                                    this.st.focus = '#server_id';
+                                }
+                            }
+                        }
+                    });
+
+                    $("#filebrowser").on("mfpOpen", function () {
+                        clearSearch();
+                        $("#changeDir").click();
+                        $($.fn.dataTable.tables(true)).css('width', '100%');
+                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+                    });
+                    $("#filebrowser-sub").on("mfpOpen", function () {
+                        clearSearch();
+                        $("#changeDir").click();
+                        $($.fn.dataTable.tables(true)).css('width', '100%');
+                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+                    });
+
+                    $(document).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+                    $("#server_id").change(function () {
+                        $("#current_path").val("/");
+                        $("#changeDir").click();
+                    });
+
+                    <?php if (!$rMulti) { ?>
+                        $("#season_num").change(function () {
+                            if (!window.changeTitle) {
+                                $("#tmdb_search").empty().trigger('change');
+                                if ($("#season_num").val().length > 0) {
+                                    window.rEpisodes = {};
+                                    $.getJSON("./api.php?action=tmdb_search&type=episode&term=<?= $rSeries["tmdb_id"] ?>&season=" + $("#season_num").val(), function (data) {
+                                        if (data.result == true) {
+                                            if (data.data.episodes.length > 0) {
+                                                newOption = new Option("<?= $_["found_episodes"] ?>".replace("{num}", data.data.episodes.length), -1, true, true);
+                                            } else {
+                                                newOption = new Option("<?= $_["no_episodes_found"] ?>", -1, true, true);
+                                            }
+                                            $("#tmdb_search").append(newOption).trigger('change');
+                                            $(data.data.episodes).each(function (id, item) {
+                                                window.rEpisodes[item.id] = item;
+                                                rTitle = "<?= $_["episode"] ?> " + item.episode_number + " - " + item.name;
+                                                newOption = new Option(rTitle, item.id, true, true);
+                                                $("#tmdb_search").append(newOption);
+                                            });
+                                        } else {
+                                            newOption = new Option("<?= $_["no_results_found"] ?>", -1, true, true);
+                                        }
+                                        $("#tmdb_search").val(-1).trigger('change');
+                                    });
+                                }
+                            } else {
+                                window.changeTitle = false;
+                            }
+                        });
+                        $("#tmdb_search").change(function () {
+                            if (($("#tmdb_search").val()) && ($("#tmdb_search").val() > -1)) {
+                                var rEpisode = window.rEpisodes[$("#tmdb_search").val()];
+                                var rFormat = "S" + pad(rEpisode.season_number) + "E" + pad(rEpisode.episode_number);
+                                $("#stream_display_name").val($("#series_name").val() + " - " + rFormat + " - " + rEpisode.name);
+                                $("#movie_image").val("");
+                                if (rEpisode.still_path.length > 0) {
+                                    $("#movie_image").val("https://image.tmdb.org/t/p/w300" + rEpisode.still_path);
+                                }
+                                $("#releasedate").val(rEpisode.air_date);
+                                $("#episode_run_time").val('<?= $rSeries["episode_run_time"] ?>');
+                                $("#plot").val(rEpisode.overview);
+                                $("#rating").val(rEpisode.vote_average);
+                                $("#tmdb_id").val(rEpisode.id);
+                                $("#episode").val(rEpisode.episode_number);
+                            }
+                        });
+                    <?php }
+                    if (isset($rEpisode)) { ?>
+                        $("#datatable-list").DataTable({
+                            ordering: false,
+                            paging: false,
+                            searching: false,
+                            processing: true,
+                            serverSide: true,
+                            bInfo: false,
+                            ajax: {
+                                url: "./table_search.php",
+                                "data": function (d) {
+                                    d.id = "episodes";
+                                    d.stream_id = <?= $rEpisode["id"] ?>;
+                                }
+                            },
+                            columnDefs: [{
+                                "className": "dt-center",
+                                "targets": [2, 3, 4, 5]
+                            },
+                            {
+                                "visible": false,
+                                "targets": [0, 1, 6, 7]
+                            }
+                            ],
+                        });
+                        setTimeout(reloadStream, 5000);
+                        $("#season_num").trigger('change');
+                    <?php } ?>
+
+                    $("#runtime").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#season_num").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("form").attr('autocomplete', 'off');
+
+                    $("#changeDir").click();
+                    evaluateDirectSource();
+                    evaluateSymlink();
+                });
+            </script>
+            </body>
+
+            </html>

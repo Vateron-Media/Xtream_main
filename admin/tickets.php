@@ -91,9 +91,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         onClick="api(<?= $rTicket["id"] ?>, 'close');"><i
                                                                             class="mdi mdi-check-all mr-2 text-muted font-18 vertical-middle"></i><?= $_["close"] ?></a>
                                                                 <?php } else if ($rPermissions["is_admin"]) { ?>
-                                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                                        onClick="api(<?= $rTicket["id"] ?>, 'reopen');"><i
-                                                                            class="mdi mdi-check-all mr-2 text-muted font-18 vertical-middle"></i><?= $_["re-open"] ?></a>
+                                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                                            onClick="api(<?= $rTicket["id"] ?>, 'reopen');"><i
+                                                                                class="mdi mdi-check-all mr-2 text-muted font-18 vertical-middle"></i><?= $_["re-open"] ?></a>
                                                                 <?php } ?>
                                                                 <?php if ($rPermissions["is_admin"]) { ?>
                                                                     <a class="dropdown-item" href="javascript:void(0);"
@@ -107,7 +107,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <a class="dropdown-item" href="javascript:void(0);"
                                                                             onClick="api(<?= $rTicket["id"] ?>, 'unread');"><i
                                                                                 class="mdi mdi-star mr-2 font-18 text-muted vertical-middle"></i><?= $_["mark_as_unread"] ?></a>
-                                                            <?php }
+                                                                    <?php }
                                                                 }
                                                             } ?>
                                                         </div>
@@ -121,63 +121,63 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col -->
                     </div>
                     <!-- end row -->
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
-                <script>
-                    function api(rID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_ticket"] ?>') == false) {
-                                return;
-                            }
+                </div>
+            </footer>
+            <!-- end Footer -->
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
+            <script>
+                function api(rID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_ticket"] ?>') == false) {
+                            return;
                         }
-                        $.getJSON("./api.php?action=ticket&sub=" + rType + "&ticket_id=" + rID, function(data) {
-                            if (data.result == true) {
-                                location.reload();
-                            } else {
-                                $.toast("<?= $_["an_error_occured"] ?>");
-                            }
-                        }).fail(function() {
-                            $.toast("<?= $_["an_error_occured"] ?>");
-                        });
                     }
-                    $(document).ready(function() {
-                        $("#tickets-table").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
-                            },
-                            order: [
-                                [0, "desc"]
-                            ],
-                            stateSave: true
-                        });
-                        $("#tickets-table").css("width", "100%");
+                    $.getJSON("./api.php?action=ticket&sub=" + rType + "&ticket_id=" + rID, function (data) {
+                        if (data.result == true) {
+                            location.reload();
+                        } else {
+                            $.toast("<?= $_["an_error_occured"] ?>");
+                        }
+                    }).fail(function () {
+                        $.toast("<?= $_["an_error_occured"] ?>");
                     });
-                </script>
-                </body>
+                }
+                $(document).ready(function () {
+                    $("#tickets-table").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded")
+                        },
+                        order: [
+                            [0, "desc"]
+                        ],
+                        stateSave: true
+                    });
+                    $("#tickets-table").css("width", "100%");
+                });
+            </script>
+            </body>
 
-                </html>
+            </html>

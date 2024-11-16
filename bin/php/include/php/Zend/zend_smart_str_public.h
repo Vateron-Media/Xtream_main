@@ -20,8 +20,8 @@
 #define ZEND_SMART_STR_PUBLIC_H
 
 typedef struct {
-	zend_string *s;
-	size_t a;
+  zend_string *s;
+  size_t a;
 } smart_str;
 
 #endif

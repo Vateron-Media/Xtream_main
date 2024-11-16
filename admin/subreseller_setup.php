@@ -99,8 +99,8 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./subreseller_setup.php<?php if (isset($rSubreseller)) {
-                                                                                echo "?id=" . $rSubreseller["id"];
-                                                                            } ?>" method="POST" id="subreseller_form">
+                                        echo "?id=" . $rSubreseller["id"];
+                                    } ?>" method="POST" id="subreseller_form">
                                         <?php if (isset($rSubreseller)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rSubreseller["id"] ?>" />
                                         <?php } ?>
@@ -131,11 +131,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php foreach (getMemberGroups() as $rGroup) {
                                                                             if ($rGroup["is_reseller"] == 1) { ?>
                                                                                 <option <?php if (isset($rSubreseller)) {
-                                                                                            if (intval($rSubreseller["reseller"]) == intval($rGroup["group_id"])) {
-                                                                                                echo "selected ";
-                                                                                            }
-                                                                                        } ?>value="<?= $rGroup["group_id"] ?>"><?= $rGroup["group_name"] ?></option>
-                                                                        <?php }
+                                                                                    if (intval($rSubreseller["reseller"]) == intval($rGroup["group_id"])) {
+                                                                                        echo "selected ";
+                                                                                    }
+                                                                                } ?>value="<?= $rGroup["group_id"] ?>"><?= $rGroup["group_name"] ?></option>
+                                                                            <?php }
                                                                         } ?>
                                                                     </select>
                                                                 </div>
@@ -150,11 +150,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php foreach (getMemberGroups() as $rGroup) {
                                                                             if ($rGroup["is_reseller"] == 1) { ?>
                                                                                 <option <?php if (isset($rSubreseller)) {
-                                                                                            if (intval($rSubreseller["subreseller"]) == intval($rGroup["group_id"])) {
-                                                                                                echo "selected ";
-                                                                                            }
-                                                                                        } ?>value="<?= $rGroup["group_id"] ?>"><?= $rGroup["group_name"] ?></option>
-                                                                        <?php }
+                                                                                    if (intval($rSubreseller["subreseller"]) == intval($rGroup["group_id"])) {
+                                                                                        echo "selected ";
+                                                                                    }
+                                                                                } ?>value="<?= $rGroup["group_id"] ?>"><?= $rGroup["group_name"] ?></option>
+                                                                            <?php }
                                                                         } ?>
                                                                     </select>
                                                                 </div>
@@ -175,51 +175,51 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    $(document).ready(function() {
-                        $('select.select2').select2({
-                            width: '100%'
-                        })
+            <script>
+                $(document).ready(function () {
+                    $('select.select2').select2({
+                        width: '100%'
+                    })
 
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-
-                        $("form").attr('autocomplete', 'off');
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
                     });
-                </script>
-                </body>
 
-                </html>
+                    $("form").attr('autocomplete', 'off');
+                });
+            </script>
+            </body>
+
+            </html>

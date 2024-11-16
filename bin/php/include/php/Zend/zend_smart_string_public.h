@@ -23,9 +23,9 @@
 #include <sys/types.h>
 
 typedef struct {
-	char *c;
-	size_t len;
-	size_t a;
+  char *c;
+  size_t len;
+  size_t a;
 } smart_string;
 
 #endif

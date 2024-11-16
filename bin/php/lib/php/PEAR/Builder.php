@@ -375,8 +375,8 @@ class PEAR_Builder extends PEAR_Common {
         }
         $err = $this->_runCommand(
             $this->config->get('php_prefix')
-                . "phpize" .
-                $this->config->get('php_suffix'),
+            . "phpize" .
+            $this->config->get('php_suffix'),
             array(&$this, 'phpizeCallback')
         );
         if (PEAR::isError($err)) {

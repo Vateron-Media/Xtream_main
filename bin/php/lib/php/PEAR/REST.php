@@ -150,7 +150,7 @@ class PEAR_REST {
                     $content = $parser->getData();
                 case 'text/html':
                 default:
-                    // use it as a string
+                // use it as a string
             }
         } else {
             // assume XML

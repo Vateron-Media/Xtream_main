@@ -18,8 +18,7 @@ called catposstab in pcre_compile.c. */
 
 /* These are the general character categories. */
 
-enum
-{
+enum {
   ucp_C, /* Other */
   ucp_L, /* Letter */
   ucp_M, /* Mark */
@@ -31,8 +30,7 @@ enum
 
 /* These are the particular character categories. */
 
-enum
-{
+enum {
   ucp_Cc, /* Control */
   ucp_Cf, /* Format */
   ucp_Cn, /* Unassigned */
@@ -69,8 +67,7 @@ enum
 assumes that the values are less than 16. If more values are added that take
 the number to 16 or more, the code will have to be rewritten. */
 
-enum
-{
+enum {
   ucp_gbCR,                /*  0 */
   ucp_gbLF,                /*  1 */
   ucp_gbControl,           /*  2 */
@@ -88,8 +85,7 @@ enum
 
 /* These are the script identifications. */
 
-enum
-{
+enum {
   ucp_Arabic,
   ucp_Armenian,
   ucp_Bengali,

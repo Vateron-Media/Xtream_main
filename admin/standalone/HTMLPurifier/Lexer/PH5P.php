@@ -1382,14 +1382,14 @@ class HTML5 {
         // one immediately after the U+0026 AMPERSAND character):
 
         switch ($this->character($this->char + 1)) {
-                // U+0023 NUMBER SIGN (#)
+            // U+0023 NUMBER SIGN (#)
             case '#':
 
                 // The behaviour further depends on the character after the
                 // U+0023 NUMBER SIGN:
                 switch ($this->character($this->char + 1)) {
-                        // U+0078 LATIN SMALL LETTER X
-                        // U+0058 LATIN CAPITAL LETTER X
+                    // U+0078 LATIN SMALL LETTER X
+                    // U+0058 LATIN CAPITAL LETTER X
                     case 'x':
                     case 'X':
                         // Follow the steps below, but using the range of
@@ -1402,7 +1402,7 @@ class HTML5 {
                         $char_class = '0-9A-Fa-f';
                         break;
 
-                        // Anything else
+                    // Anything else
                     default:
                         // Follow the steps below, but using the range of
                         // characters U+0030 DIGIT ZERO through to U+0039 DIGIT
@@ -1422,7 +1422,7 @@ class HTML5 {
                 // The rest of the parsing happens below.
                 break;
 
-                // Anything else
+            // Anything else
             default:
                 // Consume the maximum number of characters possible, with the
                 // consumed characters case-sensitively matching one of the
@@ -2085,7 +2085,7 @@ class HTML5TreeConstructer {
         /* Handle the token as follows: */
 
         switch ($token['type']) {
-                /* A character token */
+            /* A character token */
             case HTML5::CHARACTR:
                 /* Reconstruct the active formatting elements, if any. */
                 $this->reconstructActiveFormattingElements();
@@ -2094,7 +2094,7 @@ class HTML5TreeConstructer {
                 $this->insertText($token['data']);
                 break;
 
-                /* A comment token */
+            /* A comment token */
             case HTML5::COMMENT:
                 /* Append a Comment node to the current node with the data
                 attribute set to the data given in the comment token. */
@@ -2103,8 +2103,8 @@ class HTML5TreeConstructer {
 
             case HTML5::STARTTAG:
                 switch ($token['name']) {
-                        /* A start tag token whose tag name is one of: "script",
-                    "style" */
+                    /* A start tag token whose tag name is one of: "script",
+                "style" */
                     case 'script':
                     case 'style':
                         /* Process the token as if the insertion mode had been "in
@@ -2112,8 +2112,8 @@ class HTML5TreeConstructer {
                         return $this->inHead($token);
                         break;
 
-                        /* A start tag token whose tag name is one of: "base", "link",
-                    "meta", "title" */
+                    /* A start tag token whose tag name is one of: "base", "link",
+                "meta", "title" */
                     case 'base':
                     case 'link':
                     case 'meta':
@@ -2123,7 +2123,7 @@ class HTML5TreeConstructer {
                         return $this->inHead($token);
                         break;
 
-                        /* A start tag token with the tag name "body" */
+                    /* A start tag token with the tag name "body" */
                     case 'body':
                         /* Parse error. If the second element on the stack of open
                         elements is not a body element, or, if the stack of open
@@ -2146,9 +2146,9 @@ class HTML5TreeConstructer {
                         }
                         break;
 
-                        /* A start tag whose tag name is one of: "address",
-                    "blockquote", "center", "dir", "div", "dl", "fieldset",
-                    "listing", "menu", "ol", "p", "ul" */
+                    /* A start tag whose tag name is one of: "address",
+                "blockquote", "center", "dir", "div", "dl", "fieldset",
+                "listing", "menu", "ol", "p", "ul" */
                     case 'address':
                     case 'blockquote':
                     case 'center':
@@ -2177,7 +2177,7 @@ class HTML5TreeConstructer {
                         $this->insertElement($token);
                         break;
 
-                        /* A start tag whose tag name is "form" */
+                    /* A start tag whose tag name is "form" */
                     case 'form':
                         /* If the form element pointer is not null, ignore the
                         token with a parse error. */
@@ -2205,7 +2205,7 @@ class HTML5TreeConstructer {
                         }
                         break;
 
-                        /* A start tag whose tag name is "li", "dd" or "dt" */
+                    /* A start tag whose tag name is "li", "dd" or "dt" */
                     case 'li':
                     case 'dd':
                     case 'dt':
@@ -2260,7 +2260,7 @@ class HTML5TreeConstructer {
                         $this->insertElement($token);
                         break;
 
-                        /* A start tag token whose tag name is "plaintext" */
+                    /* A start tag token whose tag name is "plaintext" */
                     case 'plaintext':
                         /* If the stack of open elements has a p  element in scope,
                         then act as if an end tag with the tag name p had been
@@ -2280,8 +2280,8 @@ class HTML5TreeConstructer {
                         return HTML5::PLAINTEXT;
                         break;
 
-                        /* A start tag whose tag name is one of: "h1", "h2", "h3", "h4",
-                    "h5", "h6" */
+                    /* A start tag whose tag name is one of: "h1", "h2", "h3", "h4",
+                "h5", "h6" */
                     case 'h1':
                     case 'h2':
                     case 'h3':
@@ -2312,7 +2312,7 @@ class HTML5TreeConstructer {
                         $this->insertElement($token);
                         break;
 
-                        /* A start tag whose tag name is "a" */
+                    /* A start tag whose tag name is "a" */
                     case 'a':
                         /* If the list of active formatting elements contains
                         an element whose tag name is "a" between the end of the
@@ -2350,8 +2350,8 @@ class HTML5TreeConstructer {
                         $this->a_formatting[] = $el;
                         break;
 
-                        /* A start tag whose tag name is one of: "b", "big", "em", "font",
-                    "i", "nobr", "s", "small", "strike", "strong", "tt", "u" */
+                    /* A start tag whose tag name is one of: "b", "big", "em", "font",
+                "i", "nobr", "s", "small", "strike", "strong", "tt", "u" */
                     case 'b':
                     case 'big':
                     case 'em':
@@ -2375,7 +2375,7 @@ class HTML5TreeConstructer {
                         $this->a_formatting[] = $el;
                         break;
 
-                        /* A start tag token whose tag name is "button" */
+                    /* A start tag token whose tag name is "button" */
                     case 'button':
                         /* If the stack of open elements has a button element in scope,
                         then this is a parse error; act as if an end tag with the tag
@@ -2401,7 +2401,7 @@ class HTML5TreeConstructer {
                         $this->a_formatting[] = self::MARKER;
                         break;
 
-                        /* A start tag token whose tag name is one of: "marquee", "object" */
+                    /* A start tag token whose tag name is one of: "marquee", "object" */
                     case 'marquee':
                     case 'object':
                         /* Reconstruct the active formatting elements, if any. */
@@ -2415,7 +2415,7 @@ class HTML5TreeConstructer {
                         $this->a_formatting[] = self::MARKER;
                         break;
 
-                        /* A start tag token whose tag name is "xmp" */
+                    /* A start tag token whose tag name is "xmp" */
                     case 'xmp':
                         /* Reconstruct the active formatting elements, if any. */
                         $this->reconstructActiveFormattingElements();
@@ -2427,7 +2427,7 @@ class HTML5TreeConstructer {
                         return HTML5::CDATA;
                         break;
 
-                        /* A start tag whose tag name is "table" */
+                    /* A start tag whose tag name is "table" */
                     case 'table':
                         /* If the stack of open elements has a p element in scope,
                         then act as if an end tag with the tag name p had been seen. */
@@ -2447,8 +2447,8 @@ class HTML5TreeConstructer {
                         $this->mode = self::IN_TABLE;
                         break;
 
-                        /* A start tag whose tag name is one of: "area", "basefont",
-                    "bgsound", "br", "embed", "img", "param", "spacer", "wbr" */
+                    /* A start tag whose tag name is one of: "area", "basefont",
+                "bgsound", "br", "embed", "img", "param", "spacer", "wbr" */
                     case 'area':
                     case 'basefont':
                     case 'bgsound':
@@ -2468,7 +2468,7 @@ class HTML5TreeConstructer {
                         array_pop($this->stack);
                         break;
 
-                        /* A start tag whose tag name is "hr" */
+                    /* A start tag whose tag name is "hr" */
                     case 'hr':
                         /* If the stack of open elements has a p element in scope,
                         then act as if an end tag with the tag name p had been seen. */
@@ -2488,7 +2488,7 @@ class HTML5TreeConstructer {
                         array_pop($this->stack);
                         break;
 
-                        /* A start tag whose tag name is "image" */
+                    /* A start tag whose tag name is "image" */
                     case 'image':
                         /* Parse error. Change the token's tag name to "img" and
                         reprocess it. (Don't ask.) */
@@ -2496,7 +2496,7 @@ class HTML5TreeConstructer {
                         return $this->inBody($token);
                         break;
 
-                        /* A start tag whose tag name is "input" */
+                    /* A start tag whose tag name is "input" */
                     case 'input':
                         /* Reconstruct the active formatting elements, if any. */
                         $this->reconstructActiveFormattingElements();
@@ -2515,7 +2515,7 @@ class HTML5TreeConstructer {
                         array_pop($this->stack);
                         break;
 
-                        /* A start tag whose tag name is "isindex" */
+                    /* A start tag whose tag name is "isindex" */
                     case 'isindex':
                         /* Parse error. */
                         // w/e
@@ -2566,7 +2566,7 @@ class HTML5TreeConstructer {
                             /* Act as if a stream of character tokens had been seen. */
                             $this->insertText(
                                 'This is a searchable index. ' .
-                                    'Insert your search keywords here: '
+                                'Insert your search keywords here: '
                             );
 
                             /* Act as if a start tag token with the tag name "input"
@@ -2588,7 +2588,7 @@ class HTML5TreeConstructer {
                             (see below for what they should say). */
                             $this->insertText(
                                 'This is a searchable index. ' .
-                                    'Insert your search keywords here: '
+                                'Insert your search keywords here: '
                             );
 
                             /* Act as if an end tag token with the tag name "label"
@@ -2629,7 +2629,7 @@ class HTML5TreeConstructer {
                         }
                         break;
 
-                        /* A start tag whose tag name is "textarea" */
+                    /* A start tag whose tag name is "textarea" */
                     case 'textarea':
                         $this->insertElement($token);
 
@@ -2638,8 +2638,8 @@ class HTML5TreeConstructer {
                         return HTML5::RCDATA;
                         break;
 
-                        /* A start tag whose tag name is one of: "iframe", "noembed",
-                    "noframes" */
+                    /* A start tag whose tag name is one of: "iframe", "noembed",
+                "noframes" */
                     case 'iframe':
                     case 'noembed':
                     case 'noframes':
@@ -2649,7 +2649,7 @@ class HTML5TreeConstructer {
                         return HTML5::CDATA;
                         break;
 
-                        /* A start tag whose tag name is "select" */
+                    /* A start tag whose tag name is "select" */
                     case 'select':
                         /* Reconstruct the active formatting elements, if any. */
                         $this->reconstructActiveFormattingElements();
@@ -2661,9 +2661,9 @@ class HTML5TreeConstructer {
                         $this->mode = self::IN_SELECT;
                         break;
 
-                        /* A start or end tag whose tag name is one of: "caption", "col",
-                    "colgroup", "frame", "frameset", "head", "option", "optgroup",
-                    "tbody", "td", "tfoot", "th", "thead", "tr". */
+                    /* A start or end tag whose tag name is one of: "caption", "col",
+                "colgroup", "frame", "frameset", "head", "option", "optgroup",
+                "tbody", "td", "tfoot", "th", "thead", "tr". */
                     case 'caption':
                     case 'col':
                     case 'colgroup':
@@ -2681,9 +2681,9 @@ class HTML5TreeConstructer {
                         // Parse error. Ignore the token.
                         break;
 
-                        /* A start or end tag whose tag name is one of: "event-source",
-                    "section", "nav", "article", "aside", "header", "footer",
-                    "datagrid", "command" */
+                    /* A start or end tag whose tag name is one of: "event-source",
+                "section", "nav", "article", "aside", "header", "footer",
+                "datagrid", "command" */
                     case 'event-source':
                     case 'section':
                     case 'nav':
@@ -2696,7 +2696,7 @@ class HTML5TreeConstructer {
                         // Work in progress!
                         break;
 
-                        /* A start tag token not covered by the previous entries */
+                    /* A start tag token not covered by the previous entries */
                     default:
                         /* Reconstruct the active formatting elements, if any. */
                         $this->reconstructActiveFormattingElements();
@@ -2708,7 +2708,7 @@ class HTML5TreeConstructer {
 
             case HTML5::ENDTAG:
                 switch ($token['name']) {
-                        /* An end tag with the tag name "body" */
+                    /* An end tag with the tag name "body" */
                     case 'body':
                         /* If the second element in the stack of open elements is
                         not a body element, this is a parse error. Ignore the token.
@@ -2726,7 +2726,7 @@ class HTML5TreeConstructer {
                         $this->mode = self::AFTER_BODY;
                         break;
 
-                        /* An end tag with the tag name "html" */
+                    /* An end tag with the tag name "html" */
                     case 'html':
                         /* Act as if an end tag with tag name "body" had been seen,
                         then, if that token wasn't ignored, reprocess the current
@@ -2741,9 +2741,9 @@ class HTML5TreeConstructer {
                         return $this->afterBody($token);
                         break;
 
-                        /* An end tag whose tag name is one of: "address", "blockquote",
-                    "center", "dir", "div", "dl", "fieldset", "listing", "menu",
-                    "ol", "pre", "ul" */
+                    /* An end tag whose tag name is one of: "address", "blockquote",
+                "center", "dir", "div", "dl", "fieldset", "listing", "menu",
+                "ol", "pre", "ul" */
                     case 'address':
                     case 'blockquote':
                     case 'center':
@@ -2781,7 +2781,7 @@ class HTML5TreeConstructer {
                         }
                         break;
 
-                        /* An end tag whose tag name is "form" */
+                    /* An end tag whose tag name is "form" */
                     case 'form':
                         /* If the stack of open elements has an element in scope
                         with the same tag name as that of the token, then generate
@@ -2807,7 +2807,7 @@ class HTML5TreeConstructer {
                         $this->form_pointer = null;
                         break;
 
-                        /* An end tag whose tag name is "p" */
+                    /* An end tag whose tag name is "p" */
                     case 'p':
                         /* If the stack of open elements has a p element in scope,
                         then generate implied end tags, except for p elements. */
@@ -2831,7 +2831,7 @@ class HTML5TreeConstructer {
                         }
                         break;
 
-                        /* An end tag whose tag name is "dd", "dt", or "li" */
+                    /* An end tag whose tag name is "dd", "dt", or "li" */
                     case 'dd':
                     case 'dt':
                     case 'li':
@@ -2860,8 +2860,8 @@ class HTML5TreeConstructer {
                         }
                         break;
 
-                        /* An end tag whose tag name is one of: "h1", "h2", "h3", "h4",
-                    "h5", "h6" */
+                    /* An end tag whose tag name is one of: "h1", "h2", "h3", "h4",
+                "h5", "h6" */
                     case 'h1':
                     case 'h2':
                     case 'h3':
@@ -2890,8 +2890,8 @@ class HTML5TreeConstructer {
                         }
                         break;
 
-                        /* An end tag whose tag name is one of: "a", "b", "big", "em",
-                    "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u" */
+                    /* An end tag whose tag name is one of: "a", "b", "big", "em",
+                "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u" */
                     case 'a':
                     case 'b':
                     case 'big':
@@ -3114,8 +3114,8 @@ class HTML5TreeConstructer {
                         }
                         break;
 
-                        /* An end tag token whose tag name is one of: "button",
-                    "marquee", "object" */
+                    /* An end tag token whose tag name is one of: "button",
+                "marquee", "object" */
                     case 'button':
                     case 'marquee':
                     case 'object':
@@ -3150,10 +3150,10 @@ class HTML5TreeConstructer {
                         }
                         break;
 
-                        /* Or an end tag whose tag name is one of: "area", "basefont",
-                    "bgsound", "br", "embed", "hr", "iframe", "image", "img",
-                    "input", "isindex", "noembed", "noframes", "param", "select",
-                    "spacer", "table", "textarea", "wbr" */
+                    /* Or an end tag whose tag name is one of: "area", "basefont",
+                "bgsound", "br", "embed", "hr", "iframe", "image", "img",
+                "input", "isindex", "noembed", "noframes", "param", "select",
+                "spacer", "table", "textarea", "wbr" */
                     case 'area':
                     case 'basefont':
                     case 'bgsound':
@@ -3176,7 +3176,7 @@ class HTML5TreeConstructer {
                         // Parse error. Ignore the token.
                         break;
 
-                        /* An end tag token not covered by the previous entries */
+                    /* An end tag token not covered by the previous entries */
                     default:
                         for ($n = count($this->stack) - 1; $n >= 0; $n--) {
                             /* Initialise node to be the current node (the bottommost

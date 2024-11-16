@@ -2,8 +2,7 @@
 
 require_once __DIR__ . "/TestSuite.php";
 
-class Redis_Sentinel_Test extends TestSuite
-{
+class Redis_Sentinel_Test extends TestSuite {
     const NAME = 'mymaster';
 
     /**
@@ -28,54 +27,45 @@ class Redis_Sentinel_Test extends TestSuite
         'down-after-milliseconds',
     ];
 
-    protected function newInstance()
-    {
+    protected function newInstance() {
         return new RedisSentinel(['host' => $this->getHost()]);
     }
 
-    public function setUp()
-    {
+    public function setUp() {
         $this->sentinel = $this->newInstance();
     }
 
-    public function testCkquorum()
-    {
+    public function testCkquorum() {
         $this->assertTrue($this->sentinel->ckquorum(self::NAME));
     }
 
-    public function testFailover()
-    {
+    public function testFailover() {
         $this->assertFalse($this->sentinel->failover(self::NAME));
     }
 
-    public function testFlushconfig()
-    {
+    public function testFlushconfig() {
         $this->assertTrue($this->sentinel->flushconfig());
     }
 
-    public function testGetMasterAddrByName()
-    {
+    public function testGetMasterAddrByName() {
         $result = $this->sentinel->getMasterAddrByName(self::NAME);
         $this->assertTrue(is_array($result));
         $this->assertEquals(2, count($result));
     }
 
-    protected function checkFields(array $fields)
-    {
+    protected function checkFields(array $fields) {
         foreach ($this->fields as $k) {
             $this->assertTrue(array_key_exists($k, $fields));
         }
     }
 
-    public function testMaster()
-    {
+    public function testMaster() {
         $result = $this->sentinel->master(self::NAME);
         $this->assertTrue(is_array($result));
         $this->checkFields($result);
     }
 
-    public function testMasters()
-    {
+    public function testMasters() {
         $result = $this->sentinel->masters();
         $this->assertTrue(is_array($result));
         foreach ($result as $master) {
@@ -83,24 +73,20 @@ class Redis_Sentinel_Test extends TestSuite
         }
     }
 
-    public function testMyid()
-    {
+    public function testMyid() {
         $result = $this->sentinel->myid();
         $this->assertTrue(is_string($result));
     }
 
-    public function testPing()
-    {
+    public function testPing() {
         $this->assertTrue($this->sentinel->ping());
     }
 
-    public function testReset()
-    {
+    public function testReset() {
         $this->assertEquals(1, $this->sentinel->reset('*'));
     }
 
-    public function testSentinels()
-    {
+    public function testSentinels() {
         $result = $this->sentinel->sentinels(self::NAME);
         $this->assertTrue(is_array($result));
         foreach ($result as $sentinel) {
@@ -108,8 +94,7 @@ class Redis_Sentinel_Test extends TestSuite
         }
     }
 
-    public function testSlaves()
-    {
+    public function testSlaves() {
         $result = $this->sentinel->slaves(self::NAME);
         $this->assertTrue(is_array($result));
         foreach ($result as $slave) {

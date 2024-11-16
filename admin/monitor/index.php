@@ -20,22 +20,22 @@ $update = $Config->checkUpdate();
     <script src="js/plugins/jquery.knob.js" type="text/javascript"></script>
     <script src="js/esm.js" type="text/javascript"></script>
     <script>
-        $(function() {
+        $(function () {
             $('.gauge').knob({
                 'fontWeight': 'normal',
-                'format': function(value) {
+                'format': function (value) {
                     return value + '%';
                 }
             });
 
-            $('a.reload').click(function(e) {
+            $('a.reload').click(function (e) {
                 e.preventDefault();
             });
 
             esm.getAll();
 
             <?php if ($Config->get('esm:auto_refresh') > 0): ?>
-                setInterval(function() {
+                setInterval(function () {
                     esm.getAll();
                 }, <?php echo $Config->get('esm:auto_refresh') * 1000; ?>);
             <?php endif; ?>

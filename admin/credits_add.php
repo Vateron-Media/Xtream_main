@@ -80,18 +80,18 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["transfer_success"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["transfer_fail"] ?>
-                                </div>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./credits_add.php<?php if (isset($_GET["id"])) {
-                                                                        echo "?id=" . $_GET["id"];
-                                                                    } ?>" method="POST" id="credits_form" data-parsley-validate="">
+                                        echo "?id=" . $_GET["id"];
+                                    } ?>" method="POST" id="credits_form" data-parsley-validate="">
                                         <input type="hidden" name="id" value="<?= $_GET["id"] ?>" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
@@ -167,100 +167,100 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/js/pages/jquery.number.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/js/pages/jquery.number.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
+            <script>
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                            }
+                        });
+                    };
+                }(jQuery));
 
-                    function calculateCredits() {
-                        var rCredits = $("#credits").val();
-                        var rUserCredits = <?= $rUser["credits"] ?>;
+                function calculateCredits() {
+                    var rCredits = $("#credits").val();
+                    var rUserCredits = <?= $rUser["credits"] ?>;
 
-                        if (!$.isNumeric(rCredits)) {
-                            rCredits = 0;
-                        }
-                        $("#cost_credits").html($.number(rCredits, 2));
-                        $("#remaining_credits").html($.number(<?= $rUserInfo["credits"] ?> - rCredits, 0));
-                        if ((parseFloat(<?= $rUserInfo["credits"] ?>) - parseFloat(rCredits) < 0) || (parseFloat(rUserCredits) + parseFloat(rCredits) < 0)) {
-                            $("#no-credits").show()
-                            $(".purchase").prop('disabled', true);
-                        } else {
-                            $("#no-credits").hide()
-                            $(".purchase").prop('disabled', false);
-                        }
-                        if (rCredits == 0) {
-                            $(".purchase").prop('disabled', true);
-                        } else {
-                            $(".purchase").prop('disabled', false);
-                        }
+                    if (!$.isNumeric(rCredits)) {
+                        rCredits = 0;
                     }
+                    $("#cost_credits").html($.number(rCredits, 2));
+                    $("#remaining_credits").html($.number(<?= $rUserInfo["credits"] ?> - rCredits, 0));
+                    if ((parseFloat(<?= $rUserInfo["credits"] ?>) - parseFloat(rCredits) < 0) || (parseFloat(rUserCredits) + parseFloat(rCredits) < 0)) {
+                        $("#no-credits").show()
+                        $(".purchase").prop('disabled', true);
+                    } else {
+                        $("#no-credits").hide()
+                        $(".purchase").prop('disabled', false);
+                    }
+                    if (rCredits == 0) {
+                        $(".purchase").prop('disabled', true);
+                    } else {
+                        $(".purchase").prop('disabled', false);
+                    }
+                }
 
-                    $(document).ready(function() {
-                        $('select.select2').select2({
-                            width: '100%'
-                        })
-                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                        elems.forEach(function(html) {
-                            var switchery = new Switchery(html);
-                        });
+                $(document).ready(function () {
+                    $('select.select2').select2({
+                        width: '100%'
+                    })
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+                    elems.forEach(function (html) {
+                        var switchery = new Switchery(html);
+                    });
 
-                        $(document).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
+                    $(document).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
 
-                        $("#credits").on('input', function() {
-                            calculateCredits();
-                        });
-
-                        $("form").attr('autocomplete', 'off');
+                    $("#credits").on('input', function () {
                         calculateCredits();
                     });
-                </script>
-                </body>
 
-                </html>
+                    $("form").attr('autocomplete', 'off');
+                    calculateCredits();
+                });
+            </script>
+            </body>
+
+            </html>

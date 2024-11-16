@@ -30,9 +30,9 @@ PHP_FUNCTION(image_type_to_extension);
    This enum is used to have ext/standard/image.c and ext/exif/exif.c use
    the same constants for file types.
 */
-typedef enum
-{ IMAGE_FILETYPE_UNKNOWN=0,
-  IMAGE_FILETYPE_GIF=1,
+typedef enum {
+  IMAGE_FILETYPE_UNKNOWN = 0,
+  IMAGE_FILETYPE_GIF = 1,
   IMAGE_FILETYPE_JPEG,
   IMAGE_FILETYPE_PNG,
   IMAGE_FILETYPE_SWF,
@@ -51,7 +51,8 @@ typedef enum
   IMAGE_FILETYPE_XBM,
   IMAGE_FILETYPE_ICO,
   IMAGE_FILETYPE_WEBP,
-/* WHEN EXTENDING: PLEASE ALSO REGISTER IN image.c:PHP_MINIT_FUNCTION(imagetypes) */
+  /* WHEN EXTENDING: PLEASE ALSO REGISTER IN
+     image.c:PHP_MINIT_FUNCTION(imagetypes) */
   IMAGE_FILETYPE_COUNT
 } image_filetype;
 /* }}} */
@@ -60,6 +61,6 @@ PHP_MINIT_FUNCTION(imagetypes);
 
 PHPAPI int php_getimagetype(php_stream *stream, char *filetype);
 
-PHPAPI char * php_image_type_to_mime_type(int image_type);
+PHPAPI char *php_image_type_to_mime_type(int image_type);
 
 #endif /* PHP_IMAGE_H */

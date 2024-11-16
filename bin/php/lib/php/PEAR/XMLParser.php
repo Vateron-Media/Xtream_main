@@ -162,7 +162,7 @@ class PEAR_XMLParser {
 
         // adjust type of the value
         switch (strtolower($value['type'])) {
-                // unserialize an array
+            // unserialize an array
             case 'array':
                 if ($data !== '') {
                     $value['children']['_content'] = $data;
@@ -171,14 +171,14 @@ class PEAR_XMLParser {
                 $value['value'] = isset($value['children']) ? $value['children'] : array();
                 break;
 
-                /*
+            /*
              * unserialize a null value
              */
             case 'null':
                 $data = null;
                 break;
 
-                /*
+            /*
              * unserialize any scalar value
              */
             default:

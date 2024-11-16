@@ -4,7 +4,7 @@ namespace SessionHelpers;
 
 class PhpSpawner {
     protected static function appendPhpArgs(string $php): string {
-        $modules   = shell_exec("$php --no-php-ini -m");
+        $modules = shell_exec("$php --no-php-ini -m");
 
         /* Determine if we need to specifically add extensions */
         $extensions = array_filter(
@@ -43,7 +43,7 @@ class PhpSpawner {
     public static function cmd(string $script): string {
         static $cmd = NULL;
 
-        if ( ! $cmd) {
+        if (!$cmd) {
             $cmd = getenv('TEST_PHP_EXECUTABLE') ?: PHP_BINARY;
 
             if ($test_args = getenv('TEST_PHP_ARGS')) {
@@ -170,7 +170,7 @@ class Runner {
 
     protected function validateArgs(array $required) {
         foreach ($required as $req) {
-            if ( ! isset($this->args[$req]) || $this->args[$req] === null)
+            if (!isset($this->args[$req]) || $this->args[$req] === null)
                 throw new \Exception("Command requires '$req' arg");
         }
     }
@@ -214,7 +214,7 @@ class Runner {
         $append = [];
 
         foreach ($args as $arg => $val) {
-            if ( ! $val)
+            if (!$val)
                 continue;
 
             if (is_string($val))
@@ -241,7 +241,7 @@ class Runner {
             return $this->output;
         }
 
-        if ( ! $this->output_file || ! $this->pid) {
+        if (!$this->output_file || !$this->pid) {
             throw new \Exception("Process was not started in the background");
         }
 
@@ -253,13 +253,13 @@ class Runner {
             usleep(100000);
         } while ((microtime(true) - $st) < $timeout);
 
-        if ( ! file_exists($this->output_file))
+        if (!file_exists($this->output_file))
             return "";
 
-        $this->output      = file_get_contents($this->output_file);
+        $this->output = file_get_contents($this->output_file);
         $this->output_file = NULL;
-        $this->exit_code   = $exit_code;
-        $this->pid         = NULL;
+        $this->exit_code = $exit_code;
+        $this->pid = NULL;
 
         return $this->output;
     }
@@ -270,7 +270,7 @@ class Runner {
 
         $output_file = $this->getTmpFileName();
 
-        $this->cmd  = $this->startSessionCmd();
+        $this->cmd = $this->startSessionCmd();
         $this->cmd .= " >$output_file 2>&1 & echo $!";
 
         $pid = exec($this->cmd, $output, $exit_code);
@@ -279,7 +279,7 @@ class Runner {
         if ($this->exit_code || !is_numeric($pid))
             return false;
 
-        $this->pid = (int)$pid;
+        $this->pid = (int) $pid;
         $this->output_file = $output_file;
 
         return true;
@@ -314,7 +314,7 @@ class Runner {
     }
 
     public function regenerateId($locking = false, $destroy = false, $proxy = false) {
-        if ( ! $this->cmd)
+        if (!$this->cmd)
             throw new \Exception("Cannot regenerate id before starting session!");
 
         $cmd = $this->regenerateIdCmd($locking, $destroy, $proxy);

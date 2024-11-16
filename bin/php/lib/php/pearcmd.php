@@ -248,9 +248,9 @@ if ($fetype == 'Gtk2') {
     if (!$config->validConfiguration()) {
         PEAR::raiseError(
             "CRITICAL ERROR: no existing valid configuration files found in " .
-                "files '$pear_user_config' or '$pear_system_config', " .
-                "please copy an existing configuration file to one of these " .
-                "locations, or use the -c and -s options to create one"
+            "files '$pear_user_config' or '$pear_system_config', " .
+            "please copy an existing configuration file to one of these " .
+            "locations, or use the -c and -s options to create one"
         );
     }
     Gtk::main();
@@ -263,9 +263,9 @@ if ($fetype == 'Gtk2') {
         if (!$config->validConfiguration()) {
             PEAR::raiseError(
                 "CRITICAL ERROR: no existing valid configuration files found " .
-                    "in files '$pear_user_config' or '$pear_system_config', " .
-                    "please copy an existing configuration file to one of " .
-                    "these locations, or use the -c and -s options to create one"
+                "in files '$pear_user_config' or '$pear_system_config', " .
+                "please copy an existing configuration file to one of " .
+                "these locations, or use the -c and -s options to create one"
             );
         }
 

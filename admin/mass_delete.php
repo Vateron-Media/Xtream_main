@@ -118,33 +118,33 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["mass_delete_message_1"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["mass_delete_message_2"] ?>
-                                </div>
+                                    </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                     <?= $_["mass_delete_message_3"] ?>
-                                </div>
+                                        </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                     <?= $_["mass_delete_message_4"] ?>
-                                </div>
+                                            </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
                                     <?= $_["mass_delete_message_5"] ?>
-                                </div>
+                                                </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
@@ -202,8 +202,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                                                echo " selected";
-                                                                                                            } ?>><?= $rCategory["category_name"] ?>
+                                                                          echo " selected";
+                                                                      } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -215,8 +215,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                                echo " selected";
-                                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                        echo " selected";
+                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                                     <?php } ?>
                                                             </select>
                                                         </div>
@@ -263,8 +263,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </option>
                                                                 <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                                                echo " selected";
-                                                                                                            } ?>><?= $rCategory["category_name"] ?>
+                                                                          echo " selected";
+                                                                      } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -287,8 +287,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                                echo " selected";
-                                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                        echo " selected";
+                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                                     <?php } ?>
                                                             </select>
                                                         </div>
@@ -337,8 +337,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                                 <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                                                echo " selected";
-                                                                                                            } ?>><?= $rCategory["category_name"] ?>
+                                                                          echo " selected";
+                                                                      } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -348,8 +348,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                                echo " selected";
-                                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                        echo " selected";
+                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                                     <?php } ?>
                                                             </select>
                                                         </div>
@@ -395,7 +395,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <option value=""><?= $_["all_series"] ?></option>
                                                                 <?php foreach (getSeries() as $rSerie) { ?>
                                                                     <option value="<?= $rSerie["id"] ?>">
-                                                                        <?= $rSerie["title"] ?></option>
+                                                                        <?= $rSerie["title"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
@@ -416,8 +417,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                                echo " selected";
-                                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                        echo " selected";
+                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                                     <?php } ?>
                                                             </select>
                                                         </div>
@@ -465,7 +466,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </option>
                                                                 <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
                                                                     <option value="<?= $rRegisteredUser["id"] ?>">
-                                                                        <?= $rRegisteredUser["username"] ?></option>
+                                                                        <?= $rRegisteredUser["username"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
@@ -488,8 +490,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                                echo " selected";
-                                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                        echo " selected";
+                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                                     <?php } ?>
                                                             </select>
                                                         </div>
@@ -535,500 +537,500 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
 
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-ui/jquery-ui.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-ui/jquery-ui.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var rStreams = [];
-                    var rMovies = [];
-                    var rSeries = [];
-                    var rEpisodes = [];
-                    var rUsers = [];
+            <script>
+                var rStreams = [];
+                var rMovies = [];
+                var rSeries = [];
+                var rEpisodes = [];
+                var rUsers = [];
 
-                    function getStreamCategory() {
-                        return $("#stream_category_search").val();
-                    }
+                function getStreamCategory() {
+                    return $("#stream_category_search").val();
+                }
 
-                    function getMovieCategory() {
-                        return $("#movie_category_search").val();
-                    }
+                function getMovieCategory() {
+                    return $("#movie_category_search").val();
+                }
 
-                    function getSeriesCategory() {
-                        return $("#series_category_search").val();
-                    }
+                function getSeriesCategory() {
+                    return $("#series_category_search").val();
+                }
 
-                    function getMovieFilter() {
-                        return $("#movie_filter").val();
-                    }
+                function getMovieFilter() {
+                    return $("#movie_filter").val();
+                }
 
-                    function getUserFilter() {
-                        return $("#user_filter").val();
-                    }
+                function getUserFilter() {
+                    return $("#user_filter").val();
+                }
 
-                    function getEpisodeFilter() {
-                        return $("#episode_filter").val();
-                    }
+                function getEpisodeFilter() {
+                    return $("#episode_filter").val();
+                }
 
-                    function getEpisodeSeries() {
-                        return $("#episode_series").val();
-                    }
+                function getEpisodeSeries() {
+                    return $("#episode_series").val();
+                }
 
-                    function getReseller() {
-                        return $("#reseller_search").val();
-                    }
+                function getReseller() {
+                    return $("#reseller_search").val();
+                }
 
-                    function toggleStreams() {
-                        $("#datatable-md1 tr").each(function() {
-                            if ($(this).hasClass('selected')) {
-                                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rStreams.splice($.inArray($(this).find("td:eq(0)").html(), window.rStreams), 1);
-                                }
-                            } else {
-                                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rStreams.push($(this).find("td:eq(0)").html());
-                                }
+                function toggleStreams() {
+                    $("#datatable-md1 tr").each(function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rStreams.splice($.inArray($(this).find("td:eq(0)").html(), window.rStreams), 1);
                             }
-                        });
-                    }
-
-                    function toggleMovies() {
-                        $("#datatable-md2 tr").each(function() {
-                            if ($(this).hasClass('selected')) {
-                                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rMovies.splice($.inArray($(this).find("td:eq(0)").html(), window.rMovies), 1);
-                                }
-                            } else {
-                                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rMovies.push($(this).find("td:eq(0)").html());
-                                }
+                        } else {
+                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rStreams.push($(this).find("td:eq(0)").html());
                             }
-                        });
-                    }
-
-                    function toggleSeries() {
-                        $("#datatable-md4 tr").each(function() {
-                            if ($(this).hasClass('selected')) {
-                                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rSeries.splice($.inArray($(this).find("td:eq(0)").html(), window.rSeries), 1);
-                                }
-                            } else {
-                                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rSeries.push($(this).find("td:eq(0)").html());
-                                }
-                            }
-                        });
-                    }
-
-                    function toggleEpisodes() {
-                        $("#datatable-md5 tr").each(function() {
-                            if ($(this).hasClass('selected')) {
-                                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rEpisodes.splice($.inArray($(this).find("td:eq(0)").html(), window.rEpisodes), 1);
-                                }
-                            } else {
-                                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rEpisodes.push($(this).find("td:eq(0)").html());
-                                }
-                            }
-                        });
-                    }
-
-                    function toggleUsers() {
-                        $("#datatable-md3 tr").each(function() {
-                            if ($(this).hasClass('selected')) {
-                                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rUsers.splice($.inArray($(this).find("td:eq(0)").html(), window.rUsers), 1);
-                                }
-                            } else {
-                                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rUsers.push($(this).find("td:eq(0)").html());
-                                }
-                            }
-                        });
-                    }
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
-                    $(document).ready(function() {
-                        $('select').select2({
-                            width: '100%'
-                        })
-                        $("#stream_form").submit(function(e) {
-                            $("#streams").val(JSON.stringify(window.rStreams));
-                            if (window.rStreams.length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["mass_delete_message_6"] ?>");
-                            }
-                        });
-                        $("#movie_form").submit(function(e) {
-                            $("#movies").val(JSON.stringify(window.rMovies));
-                            if (window.rMovies.length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["mass_delete_message_7"] ?>");
-                            }
-                        });
-                        $("#series_form").submit(function(e) {
-                            $("#series").val(JSON.stringify(window.rSeries));
-                            if (window.rSeries.length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["mass_delete_message_8"] ?>");
-                            }
-                        });
-                        $("#episodes_form").submit(function(e) {
-                            $("#episodes").val(JSON.stringify(window.rEpisodes));
-                            if (window.rEpisodes.length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["mass_delete_message_9"] ?>");
-                            }
-                        });
-                        $("#user_form").submit(function(e) {
-                            $("#users").val(JSON.stringify(window.rUsers));
-                            if (window.rUsers.length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["mass_delete_message_10"] ?>");
-                            }
-                        });
-                        $(document).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        $("form").attr('autocomplete', 'off');
-                        sTable = $("#datatable-md1").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "stream_list",
-                                        d.category = getStreamCategory(),
-                                        d.include_channels = true
-                                }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0]
-                            }],
-                            "rowCallback": function(row, data) {
-                                if ($.inArray(data[0], window.rStreams) !== -1) {
-                                    $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                }
-                            },
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
-                        });
-                        $('#stream_search').keyup(function() {
-                            sTable.search($(this).val()).draw();
-                        })
-                        $('#show_entries').change(function() {
-                            sTable.page.len($(this).val()).draw();
-                        })
-                        $('#stream_category_search').change(function() {
-                            sTable.ajax.reload(null, false);
-                        })
-                        rTable = $("#datatable-md2").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "movie_list",
-                                        d.category = getMovieCategory(),
-                                        d.filter = getMovieFilter()
-                                }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 3]
-                            }],
-                            "rowCallback": function(row, data) {
-                                if ($.inArray(data[0], window.rMovies) !== -1) {
-                                    $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                }
-                            },
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
-                        });
-                        $('#movie_search').keyup(function() {
-                            rTable.search($(this).val()).draw();
-                        })
-                        $('#movie_show_entries').change(function() {
-                            rTable.page.len($(this).val()).draw();
-                        })
-                        $('#movie_category_search').change(function() {
-                            rTable.ajax.reload(null, false);
-                        })
-                        $('#movie_filter').change(function() {
-                            rTable.ajax.reload(null, false);
-                        })
-                        gTable = $("#datatable-md4").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "series_list",
-                                        d.category = getSeriesCategory()
-                                }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0]
-                            }],
-                            "rowCallback": function(row, data) {
-                                if ($.inArray(data[0], window.rSeries) !== -1) {
-                                    $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                }
-                            },
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
-                        });
-                        $('#series_search').keyup(function() {
-                            gTable.search($(this).val()).draw();
-                        })
-                        $('#series_show_entries').change(function() {
-                            gTable.page.len($(this).val()).draw();
-                        })
-                        $('#series_category_search').change(function() {
-                            gTable.ajax.reload(null, false);
-                        })
-                        eTable = $("#datatable-md5").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "episode_list",
-                                        d.series = getEpisodeSeries(),
-                                        d.filter = getEpisodeFilter()
-                                }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 3]
-                            }],
-                            "rowCallback": function(row, data) {
-                                if ($.inArray(data[0], window.rSeries) !== -1) {
-                                    $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                }
-                            },
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
-                        });
-                        $('#episode_search').keyup(function() {
-                            eTable.search($(this).val()).draw();
-                        })
-                        $('#episode_show_entries').change(function() {
-                            eTable.page.len($(this).val()).draw();
-                        })
-                        $('#episode_series').change(function() {
-                            eTable.ajax.reload(null, false);
-                        })
-                        $('#episode_filter').change(function() {
-                            eTable.ajax.reload(null, false);
-                        })
-                        uTable = $("#datatable-md3").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "users",
-                                        d.filter = getUserFilter(),
-                                        d.reseller = getReseller(),
-                                        d.showall = true
-                                }
-                            },
-                            columnDefs: [{
-                                    "className": "dt-center",
-                                    "targets": [0, 4, 6, 7, 9]
-                                },
-                                {
-                                    "visible": false,
-                                    "targets": [2, 5, 8, 10, 11]
-                                }
-                            ],
-                            "rowCallback": function(row, data) {
-                                if ($.inArray(data[0], window.rUsers) !== -1) {
-                                    $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                }
-                            },
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
-                        });
-                        $('#user_search').keyup(function() {
-                            uTable.search($(this).val()).draw();
-                        })
-                        $('#user_show_entries').change(function() {
-                            uTable.page.len($(this).val()).draw();
-                        })
-                        $('#reseller_search').change(function() {
-                            uTable.ajax.reload(null, false);
-                        })
-                        $('#user_filter').change(function() {
-                            uTable.ajax.reload(null, false);
-                        })
-                        $("#datatable-md1").selectable({
-                            filter: 'tr',
-                            selected: function(event, ui) {
-                                if ($(ui.selected).hasClass('selectedfilter')) {
-                                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                    window.rStreams.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rStreams), 1);
-                                } else {
-                                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                    window.rStreams.push($(ui.selected).find("td:eq(0)").html());
-                                }
-                            }
-                        });
-                        $("#datatable-md2").selectable({
-                            filter: 'tr',
-                            selected: function(event, ui) {
-                                if ($(ui.selected).hasClass('selectedfilter')) {
-                                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                    window.rMovies.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rMovies), 1);
-                                } else {
-                                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                    window.rMovies.push($(ui.selected).find("td:eq(0)").html());
-                                }
-                            }
-                        });
-                        $("#datatable-md4").selectable({
-                            filter: 'tr',
-                            selected: function(event, ui) {
-                                if ($(ui.selected).hasClass('selectedfilter')) {
-                                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                    window.rSeries.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSeries), 1);
-                                } else {
-                                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                    window.rSeries.push($(ui.selected).find("td:eq(0)").html());
-                                }
-                            }
-                        });
-                        $("#datatable-md5").selectable({
-                            filter: 'tr',
-                            selected: function(event, ui) {
-                                if ($(ui.selected).hasClass('selectedfilter')) {
-                                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                    window.rEpisodes.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rEpisodes), 1);
-                                } else {
-                                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                    window.rEpisodes.push($(ui.selected).find("td:eq(0)").html());
-                                }
-                            }
-                        });
-                        $("#datatable-md3").selectable({
-                            filter: 'tr',
-                            selected: function(event, ui) {
-                                if ($(ui.selected).hasClass('selectedfilter')) {
-                                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                    window.rUsers.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rUsers), 1);
-                                } else {
-                                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                    window.rUsers.push($(ui.selected).find("td:eq(0)").html());
-                                }
-                            }
-                        });
+                        }
                     });
-                </script>
-                </body>
+                }
 
-                </html>
+                function toggleMovies() {
+                    $("#datatable-md2 tr").each(function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rMovies.splice($.inArray($(this).find("td:eq(0)").html(), window.rMovies), 1);
+                            }
+                        } else {
+                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rMovies.push($(this).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                }
+
+                function toggleSeries() {
+                    $("#datatable-md4 tr").each(function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rSeries.splice($.inArray($(this).find("td:eq(0)").html(), window.rSeries), 1);
+                            }
+                        } else {
+                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rSeries.push($(this).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                }
+
+                function toggleEpisodes() {
+                    $("#datatable-md5 tr").each(function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rEpisodes.splice($.inArray($(this).find("td:eq(0)").html(), window.rEpisodes), 1);
+                            }
+                        } else {
+                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rEpisodes.push($(this).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                }
+
+                function toggleUsers() {
+                    $("#datatable-md3 tr").each(function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rUsers.splice($.inArray($(this).find("td:eq(0)").html(), window.rUsers), 1);
+                            }
+                        } else {
+                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rUsers.push($(this).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                }
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                            }
+                        });
+                    };
+                }(jQuery));
+                $(document).ready(function () {
+                    $('select').select2({
+                        width: '100%'
+                    })
+                    $("#stream_form").submit(function (e) {
+                        $("#streams").val(JSON.stringify(window.rStreams));
+                        if (window.rStreams.length == 0) {
+                            e.preventDefault();
+                            $.toast("<?= $_["mass_delete_message_6"] ?>");
+                        }
+                    });
+                    $("#movie_form").submit(function (e) {
+                        $("#movies").val(JSON.stringify(window.rMovies));
+                        if (window.rMovies.length == 0) {
+                            e.preventDefault();
+                            $.toast("<?= $_["mass_delete_message_7"] ?>");
+                        }
+                    });
+                    $("#series_form").submit(function (e) {
+                        $("#series").val(JSON.stringify(window.rSeries));
+                        if (window.rSeries.length == 0) {
+                            e.preventDefault();
+                            $.toast("<?= $_["mass_delete_message_8"] ?>");
+                        }
+                    });
+                    $("#episodes_form").submit(function (e) {
+                        $("#episodes").val(JSON.stringify(window.rEpisodes));
+                        if (window.rEpisodes.length == 0) {
+                            e.preventDefault();
+                            $.toast("<?= $_["mass_delete_message_9"] ?>");
+                        }
+                    });
+                    $("#user_form").submit(function (e) {
+                        $("#users").val(JSON.stringify(window.rUsers));
+                        if (window.rUsers.length == 0) {
+                            e.preventDefault();
+                            $.toast("<?= $_["mass_delete_message_10"] ?>");
+                        }
+                    });
+                    $(document).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+                    $("form").attr('autocomplete', 'off');
+                    sTable = $("#datatable-md1").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "stream_list",
+                                    d.category = getStreamCategory(),
+                                    d.include_channels = true
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0]
+                        }],
+                        "rowCallback": function (row, data) {
+                            if ($.inArray(data[0], window.rStreams) !== -1) {
+                                $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            }
+                        },
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
+                    });
+                    $('#stream_search').keyup(function () {
+                        sTable.search($(this).val()).draw();
+                    })
+                    $('#show_entries').change(function () {
+                        sTable.page.len($(this).val()).draw();
+                    })
+                    $('#stream_category_search').change(function () {
+                        sTable.ajax.reload(null, false);
+                    })
+                    rTable = $("#datatable-md2").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "movie_list",
+                                    d.category = getMovieCategory(),
+                                    d.filter = getMovieFilter()
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 3]
+                        }],
+                        "rowCallback": function (row, data) {
+                            if ($.inArray(data[0], window.rMovies) !== -1) {
+                                $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            }
+                        },
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
+                    });
+                    $('#movie_search').keyup(function () {
+                        rTable.search($(this).val()).draw();
+                    })
+                    $('#movie_show_entries').change(function () {
+                        rTable.page.len($(this).val()).draw();
+                    })
+                    $('#movie_category_search').change(function () {
+                        rTable.ajax.reload(null, false);
+                    })
+                    $('#movie_filter').change(function () {
+                        rTable.ajax.reload(null, false);
+                    })
+                    gTable = $("#datatable-md4").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "series_list",
+                                    d.category = getSeriesCategory()
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0]
+                        }],
+                        "rowCallback": function (row, data) {
+                            if ($.inArray(data[0], window.rSeries) !== -1) {
+                                $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            }
+                        },
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
+                    });
+                    $('#series_search').keyup(function () {
+                        gTable.search($(this).val()).draw();
+                    })
+                    $('#series_show_entries').change(function () {
+                        gTable.page.len($(this).val()).draw();
+                    })
+                    $('#series_category_search').change(function () {
+                        gTable.ajax.reload(null, false);
+                    })
+                    eTable = $("#datatable-md5").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "episode_list",
+                                    d.series = getEpisodeSeries(),
+                                    d.filter = getEpisodeFilter()
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 3]
+                        }],
+                        "rowCallback": function (row, data) {
+                            if ($.inArray(data[0], window.rSeries) !== -1) {
+                                $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            }
+                        },
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
+                    });
+                    $('#episode_search').keyup(function () {
+                        eTable.search($(this).val()).draw();
+                    })
+                    $('#episode_show_entries').change(function () {
+                        eTable.page.len($(this).val()).draw();
+                    })
+                    $('#episode_series').change(function () {
+                        eTable.ajax.reload(null, false);
+                    })
+                    $('#episode_filter').change(function () {
+                        eTable.ajax.reload(null, false);
+                    })
+                    uTable = $("#datatable-md3").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "users",
+                                    d.filter = getUserFilter(),
+                                    d.reseller = getReseller(),
+                                    d.showall = true
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 4, 6, 7, 9]
+                        },
+                        {
+                            "visible": false,
+                            "targets": [2, 5, 8, 10, 11]
+                        }
+                        ],
+                        "rowCallback": function (row, data) {
+                            if ($.inArray(data[0], window.rUsers) !== -1) {
+                                $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            }
+                        },
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
+                    });
+                    $('#user_search').keyup(function () {
+                        uTable.search($(this).val()).draw();
+                    })
+                    $('#user_show_entries').change(function () {
+                        uTable.page.len($(this).val()).draw();
+                    })
+                    $('#reseller_search').change(function () {
+                        uTable.ajax.reload(null, false);
+                    })
+                    $('#user_filter').change(function () {
+                        uTable.ajax.reload(null, false);
+                    })
+                    $("#datatable-md1").selectable({
+                        filter: 'tr',
+                        selected: function (event, ui) {
+                            if ($(ui.selected).hasClass('selectedfilter')) {
+                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                                window.rStreams.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rStreams), 1);
+                            } else {
+                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                                window.rStreams.push($(ui.selected).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                    $("#datatable-md2").selectable({
+                        filter: 'tr',
+                        selected: function (event, ui) {
+                            if ($(ui.selected).hasClass('selectedfilter')) {
+                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                                window.rMovies.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rMovies), 1);
+                            } else {
+                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                                window.rMovies.push($(ui.selected).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                    $("#datatable-md4").selectable({
+                        filter: 'tr',
+                        selected: function (event, ui) {
+                            if ($(ui.selected).hasClass('selectedfilter')) {
+                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                                window.rSeries.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSeries), 1);
+                            } else {
+                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                                window.rSeries.push($(ui.selected).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                    $("#datatable-md5").selectable({
+                        filter: 'tr',
+                        selected: function (event, ui) {
+                            if ($(ui.selected).hasClass('selectedfilter')) {
+                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                                window.rEpisodes.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rEpisodes), 1);
+                            } else {
+                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                                window.rEpisodes.push($(ui.selected).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                    $("#datatable-md3").selectable({
+                        filter: 'tr',
+                        selected: function (event, ui) {
+                            if ($(ui.selected).hasClass('selectedfilter')) {
+                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                                window.rUsers.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rUsers), 1);
+                            } else {
+                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                                window.rUsers.push($(ui.selected).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                });
+            </script>
+            </body>
+
+            </html>

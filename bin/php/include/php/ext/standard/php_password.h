@@ -29,7 +29,7 @@ PHP_FUNCTION(password_algos);
 PHP_MINIT_FUNCTION(password);
 PHP_MSHUTDOWN_FUNCTION(password);
 
-#define PHP_PASSWORD_DEFAULT    PHP_PASSWORD_BCRYPT
+#define PHP_PASSWORD_DEFAULT PHP_PASSWORD_BCRYPT
 #define PHP_PASSWORD_BCRYPT_COST 10
 
 #if HAVE_ARGON2LIB
@@ -43,12 +43,12 @@ PHP_MSHUTDOWN_FUNCTION(password);
 #endif
 
 typedef struct _php_password_algo {
-	const char *name;
-	zend_string *(*hash)(const zend_string *password, zend_array *options);
-	zend_bool (*verify)(const zend_string *password, const zend_string *hash);
-	zend_bool (*needs_rehash)(const zend_string *password, zend_array *options);
-	int (*get_info)(zval *return_value, const zend_string *hash);
-	zend_bool (*valid)(const zend_string *hash);
+  const char *name;
+  zend_string *(*hash)(const zend_string *password, zend_array *options);
+  zend_bool (*verify)(const zend_string *password, const zend_string *hash);
+  zend_bool (*needs_rehash)(const zend_string *password, zend_array *options);
+  int (*get_info)(zval *return_value, const zend_string *hash);
+  zend_bool (*valid)(const zend_string *hash);
 } php_password_algo;
 
 extern const php_password_algo php_password_algo_bcrypt;
@@ -57,16 +57,17 @@ extern const php_password_algo php_password_algo_argon2i;
 extern const php_password_algo php_password_algo_argon2id;
 #endif
 
-PHPAPI int php_password_algo_register(const char*, const php_password_algo*);
-PHPAPI void php_password_algo_unregister(const char*);
-PHPAPI const php_password_algo* php_password_algo_default();
-PHPAPI zend_string *php_password_algo_extract_ident(const zend_string*);
-PHPAPI const php_password_algo* php_password_algo_find(const zend_string*);
+PHPAPI int php_password_algo_register(const char *, const php_password_algo *);
+PHPAPI void php_password_algo_unregister(const char *);
+PHPAPI const php_password_algo *php_password_algo_default();
+PHPAPI zend_string *php_password_algo_extract_ident(const zend_string *);
+PHPAPI const php_password_algo *php_password_algo_find(const zend_string *);
 
-PHPAPI const php_password_algo* php_password_algo_identify_ex(const zend_string*, const php_password_algo*);
-static inline const php_password_algo* php_password_algo_identify(const zend_string *hash) {
-	return php_password_algo_identify_ex(hash, php_password_algo_default());
+PHPAPI const php_password_algo *
+php_password_algo_identify_ex(const zend_string *, const php_password_algo *);
+static inline const php_password_algo *
+php_password_algo_identify(const zend_string *hash) {
+  return php_password_algo_identify_ex(hash, php_password_algo_default());
 }
-
 
 #endif

@@ -25,7 +25,7 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
         }
     }
     $isMobileDevice = isMobileDevice();
-?>
+    ?>
     <!DOCTYPE html>
     <html>
 
@@ -88,8 +88,8 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
                     onmouseout="this.src='images/radio_btn.png'" onClick="parent.location='radio.php'" />
             </div>
             <div class="User"><img src="images/user_icon.png"><a style="margin-left:10px; color:#C60;"><?php
-                                                                                                        echo $_SESSION["cl_data"]["username"];
-                                                                                                        ?>
+            echo $_SESSION["cl_data"]["username"];
+            ?>
                 </a>
                 <div style="width:3px; height:103px;position:absolute; margin-top:-40px; margin-left:-10px;"><img
                         src="images/Header_default_line.png"></div>
@@ -98,13 +98,13 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
                 <ul>
                     <li><a style=" color:#c60; font-size:12px;">Expire Date:</a><a
                             style="margin-left:10px; color:#fff; font-size:12px;"><?php
-                                                                                    if (empty($_SESSION["cl_data"]["exp_date"])) {
-                                                                                        echo "Unlimited";
-                                                                                        goto Ec9abc252e5f0f74eaf017f72638eef0;
-                                                                                    }
-                                                                                    echo date("d/m/Y H:i", $_SESSION["cl_data"]["exp_date"]);
-                                                                                    Ec9abc252e5f0f74eaf017f72638eef0:
-                                                                                    ?>
+                            if (empty($_SESSION["cl_data"]["exp_date"])) {
+                                echo "Unlimited";
+                                goto Ec9abc252e5f0f74eaf017f72638eef0;
+                            }
+                            echo date("d/m/Y H:i", $_SESSION["cl_data"]["exp_date"]);
+                            Ec9abc252e5f0f74eaf017f72638eef0:
+                            ?>
                         </a></li>
                     <li style="margin-left:30px;"><img src="images/logout_btn.png"
                             onmouseover="this.src='images/logout_btn_hover.png'"
@@ -252,7 +252,7 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
 
     </html>
 
-<?php
+    <?php
 
     // [PHPDeobfuscator] Implied script end
     return;

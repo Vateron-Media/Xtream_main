@@ -17,17 +17,23 @@
  */
 
 PHPAPI extern const php_stream_wrapper php_glob_stream_wrapper;
-PHPAPI extern const php_stream_ops     php_glob_stream_ops;
+PHPAPI extern const php_stream_ops php_glob_stream_ops;
 
 BEGIN_EXTERN_C()
 
-PHPAPI char* _php_glob_stream_get_path(php_stream *stream, size_t *plen STREAMS_DC);
-#define php_glob_stream_get_path(stream, plen)	_php_glob_stream_get_path((stream), (plen) STREAMS_CC)
+PHPAPI char *_php_glob_stream_get_path(php_stream *stream,
+                                       size_t *plen STREAMS_DC);
+#define php_glob_stream_get_path(stream, plen)                                 \
+  _php_glob_stream_get_path((stream), (plen)STREAMS_CC)
 
-PHPAPI char* _php_glob_stream_get_pattern(php_stream *stream, size_t *plen STREAMS_DC);
-#define php_glob_stream_get_pattern(stream, plen)	_php_glob_stream_get_pattern((stream), (plen) STREAMS_CC)
+PHPAPI char *_php_glob_stream_get_pattern(php_stream *stream,
+                                          size_t *plen STREAMS_DC);
+#define php_glob_stream_get_pattern(stream, plen)                              \
+  _php_glob_stream_get_pattern((stream), (plen)STREAMS_CC)
 
-PHPAPI int   _php_glob_stream_get_count(php_stream *stream, int *pflags STREAMS_DC);
-#define php_glob_stream_get_count(stream, pflags)	_php_glob_stream_get_count((stream), (pflags) STREAMS_CC)
+PHPAPI int _php_glob_stream_get_count(php_stream *stream,
+                                      int *pflags STREAMS_DC);
+#define php_glob_stream_get_count(stream, pflags)                              \
+  _php_glob_stream_get_count((stream), (pflags)STREAMS_CC)
 
 END_EXTERN_C()

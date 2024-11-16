@@ -20,6 +20,6 @@
 #ifndef MYSQLND_READ_BUFFER_H
 #define MYSQLND_READ_BUFFER_H
 
-PHPAPI MYSQLND_READ_BUFFER * mysqlnd_create_read_buffer(const size_t count);
+PHPAPI MYSQLND_READ_BUFFER *mysqlnd_create_read_buffer(const size_t count);
 
 #endif /* MYSQLND_READ_BUFFER_H */

@@ -85,9 +85,9 @@ class Misc {
                 continue;
             else
                 if ($div == 1)
-                $parts[] = $div . ' ' . $name;
-            else
-                $parts[] = $div . ' ' . $name . 's';
+                    $parts[] = $div . ' ' . $name;
+                else
+                    $parts[] = $div . ' ' . $name . 's';
             $seconds %= $divisor;
         }
 

@@ -77,10 +77,10 @@ if ($rSettings["sidebar"]) { ?>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rCategoryArr)) {
-                                                            echo $_["edit"];
-                                                        } else {
-                                                            echo $_["add"];
-                                                        } ?> <?= $_["category"] ?> </h4>
+                                    echo $_["edit"];
+                                } else {
+                                    echo $_["add"];
+                                } ?> <?= $_["category"] ?> </h4>
                             </div>
                         </div>
                     </div>
@@ -95,18 +95,18 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["category_operation_was_completed_successfully"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["generic_fail"] ?>
-                                </div>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./stream_category.php<?php if (isset($_GET["id"])) {
-                                                                            echo "?id=" . $_GET["id"];
-                                                                        } ?>" method="POST" id="category_form" data-parsley-validate="">
+                                        echo "?id=" . $_GET["id"];
+                                    } ?>" method="POST" id="category_form" data-parsley-validate="">
                                         <?php if (isset($rCategoryArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rCategoryArr["id"] ?>" />
                                             <input type="hidden" name="cat_order"
@@ -147,10 +147,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                             data-toggle="select2">
                                                                             <?php foreach (array("live" => "Live TV", "movie" => "Movie", "series" => "TV Series", "radio" => "Radio Station") as $rGroupID => $rGroup) { ?>
                                                                                 <option <?php if (isset($rCategoryArr)) {
-                                                                                            if ($rCategoryArr["category_type"] == $rGroupID) {
-                                                                                                echo "selected ";
-                                                                                            }
-                                                                                        } ?>value="<?= $rGroupID ?>"><?= $rGroup ?></option>
+                                                                                    if ($rCategoryArr["category_type"] == $rGroupID) {
+                                                                                        echo "selected ";
+                                                                                    }
+                                                                                } ?>value="<?= $rGroupID ?>"><?= $rGroup ?></option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
@@ -166,8 +166,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control"
                                                                         id="category_name" name="category_name" value="<?php if (isset($rCategoryArr)) {
-                                                                                                                            echo htmlspecialchars($rCategoryArr["category_name"]);
-                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                            echo htmlspecialchars($rCategoryArr["category_name"]);
+                                                                        } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -176,10 +176,10 @@ if ($rSettings["sidebar"]) { ?>
                                                         <li class="list-inline-item float-right">
                                                             <input name="submit_category" type="submit"
                                                                 class="btn btn-primary" value="<?php if (isset($rCategoryArr)) {
-                                                                                                    echo $_["edit"];
-                                                                                                } else {
-                                                                                                    echo $_["add"];
-                                                                                                } ?>" />
+                                                                    echo $_["edit"];
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -209,97 +209,97 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    $(document).ready(function() {
-                        $('select').select2({
-                            width: '100%'
-                        })
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        $("form").attr('autocomplete', 'off');
-                        <?php if (isset($rCategoryArr)) { ?>
-                            $("#datatable").DataTable({
-                                language: {
-                                    paginate: {
-                                        previous: "<i class='mdi mdi-chevron-left'>",
-                                        next: "<i class='mdi mdi-chevron-right'>"
-                                    }
-                                },
-                                drawCallback: function() {
-                                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                                    $('[data-toggle="tooltip"]').tooltip();
-                                },
-                                responsive: false,
-                                bAutoWidth: false,
-                                bInfo: false,
-                                processing: true,
-                                serverSide: true,
-                                ajax: {
-                                    url: "./table.php",
-                                    "data": function(d) {
-                                        <?php if ($rCategoryArr["category_type"] == "live") { ?>
-                                            d.id = "streams_short";
-                                        <?php } else if ($rCategoryArr["category_type"] == "movie") { ?>
-                                            d.id = "movies_short";
-                                        <?php } else if ($rCategoryArr["category_type"] == "radio") { ?>
-                                            d.id = "radios_short";
-                                        <?php } else { ?>
-                                            d.id = "series_short";
-                                        <?php } ?>
-                                        d.category_id = <?= $rCategoryArr["id"] ?>;
-                                    }
-                                },
-                                columnDefs: [{
-                                    "className": "dt-center",
-                                    "targets": [0, 2]
-                                }],
-                            });
-                        <?php } ?>
+            <script>
+                $(document).ready(function () {
+                    $('select').select2({
+                        width: '100%'
+                    })
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
                     });
-                </script>
-                </body>
+                    $("form").attr('autocomplete', 'off');
+                    <?php if (isset($rCategoryArr)) { ?>
+                        $("#datatable").DataTable({
+                            language: {
+                                paginate: {
+                                    previous: "<i class='mdi mdi-chevron-left'>",
+                                    next: "<i class='mdi mdi-chevron-right'>"
+                                }
+                            },
+                            drawCallback: function () {
+                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                                $('[data-toggle="tooltip"]').tooltip();
+                            },
+                            responsive: false,
+                            bAutoWidth: false,
+                            bInfo: false,
+                            processing: true,
+                            serverSide: true,
+                            ajax: {
+                                url: "./table.php",
+                                "data": function (d) {
+                                    <?php if ($rCategoryArr["category_type"] == "live") { ?>
+                                        d.id = "streams_short";
+                                    <?php } else if ($rCategoryArr["category_type"] == "movie") { ?>
+                                            d.id = "movies_short";
+                                    <?php } else if ($rCategoryArr["category_type"] == "radio") { ?>
+                                                d.id = "radios_short";
+                                    <?php } else { ?>
+                                                d.id = "series_short";
+                                    <?php } ?>
+                                    d.category_id = <?= $rCategoryArr["id"] ?>;
+                                }
+                            },
+                            columnDefs: [{
+                                "className": "dt-center",
+                                "targets": [0, 2]
+                            }],
+                        });
+                    <?php } ?>
+                });
+            </script>
+            </body>
 
-                </html>
+            </html>

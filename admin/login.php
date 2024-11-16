@@ -189,47 +189,47 @@ if (!isset($_STATUS)) {
 							<?= $_["login_message_2"] ?>
 						</div>
 					<?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-							role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-									aria-hidden="true">&times;</span></button>
+							<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+								role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+										aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_3"] ?>
-						</div>
+							</div>
 					<?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-							role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-									aria-hidden="true">&times;</span></button>
+								<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+									role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+											aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_4"] ?>
-						</div>
+								</div>
 					<?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
-						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-							role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-									aria-hidden="true">&times;</span></button>
+									<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+										role="alert">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+												aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_5"] ?>
-						</div>
+									</div>
 					<?php } else if ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
-						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-							role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-									aria-hidden="true">&times;</span></button>
+										<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+											role="alert">
+											<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+													aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_6"] ?>
-						</div>
+										</div>
 					<?php } else if ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
-						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-							role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-									aria-hidden="true">&times;</span></button>
+											<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+												role="alert">
+												<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+														aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_7"] ?>
-						</div>
+											</div>
 					<?php } else if ((isset($_STATUS)) && ($_STATUS == 6)) { ?>
-						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-							role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-									aria-hidden="true">&times;</span></button>
+												<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+													role="alert">
+													<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+															aria-hidden="true">&times;</span></button>
 							<?= str_replace("{num}", $rSettings["pass_length"], $_["login_message_8"]) ?>
-						</div>
+												</div>
 					<?php } ?>
 					<div class="card-login">
 						<div class="card-body p-4">
@@ -265,38 +265,38 @@ if (!isset($_STATUS)) {
 											</h5>
 										<?php }
 									} else if (isset($rChangePass)) { ?>
-										<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
-										<input type="hidden" name="change" value="<?= $rChangePass ?>" />
-										<div class="form-group mb-3 text-center">
-											<p><?= str_replace("{num}", $rSettings["pass_length"], $_["login_message_9"]) ?>
-											</p>
-										</div>
-										<div class="form-group mb-3">
-											<label for="newpass"><?= $_["new_password"] ?></label>
-											<input class="form-login" autocomplete="off" type="password" id="newpass"
-												name="newpass" required data-parsley-trigger="change"
-												placeholder="<?= $_["enter_a_new_password"] ?>">
-										</div>
-										<div class="form-group mb-3">
-											<label for="confirm"><?= $_["confirm_password"] ?></label>
-											<input class="form-login" autocomplete="off" type="password" id="confirm"
-												name="confirm" required data-parsley-trigger="change"
-												placeholder="<?= $_["confirm_your_password"] ?>">
-										</div>
-									<?php } else { ?>
-										<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
-										<input type="hidden" name="auth" value="<?= $rAuth ?>" />
-										<?php if (isset($rNew2F)) { ?>
+											<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
+											<input type="hidden" name="change" value="<?= $rChangePass ?>" />
 											<div class="form-group mb-3 text-center">
-												<p><?= $_["login_message_10"] ?></p>
-												<img src="<?= $rQR ?>">
+												<p><?= str_replace("{num}", $rSettings["pass_length"], $_["login_message_9"]) ?>
+												</p>
 											</div>
+											<div class="form-group mb-3">
+												<label for="newpass"><?= $_["new_password"] ?></label>
+												<input class="form-login" autocomplete="off" type="password" id="newpass"
+													name="newpass" required data-parsley-trigger="change"
+													placeholder="<?= $_["enter_a_new_password"] ?>">
+											</div>
+											<div class="form-group mb-3">
+												<label for="confirm"><?= $_["confirm_password"] ?></label>
+												<input class="form-login" autocomplete="off" type="password" id="confirm"
+													name="confirm" required data-parsley-trigger="change"
+													placeholder="<?= $_["confirm_your_password"] ?>">
+											</div>
+									<?php } else { ?>
+											<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
+											<input type="hidden" name="auth" value="<?= $rAuth ?>" />
+										<?php if (isset($rNew2F)) { ?>
+												<div class="form-group mb-3 text-center">
+													<p><?= $_["login_message_10"] ?></p>
+													<img src="<?= $rQR ?>">
+												</div>
 										<?php } ?>
-										<div class="form-group mb-3">
-											<label for="gauth"><?= $_["google_authenticator_code"] ?></label>
-											<input class="form-login" autocomplete="off" type="gauth" required="" id="gauth"
-												name="gauth" placeholder="<?= $_["enter_your_auth_code"] ?>">
-										</div>
+											<div class="form-group mb-3">
+												<label for="gauth"><?= $_["google_authenticator_code"] ?></label>
+												<input class="form-login" autocomplete="off" type="gauth" required="" id="gauth"
+													name="gauth" placeholder="<?= $_["enter_your_auth_code"] ?>">
+											</div>
 									<?php } ?>
 									<div class="form-group mb-0 text-center">
 										<button class="btn btn-dangerlog btn-block" type="submit"
@@ -320,7 +320,7 @@ if (!isset($_STATUS)) {
 			<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 		<?php } ?>
 		<script>
-			$(document).ready(function() {
+			$(document).ready(function () {
 				if (window.location.hash.substring(0, 1) == "#") {
 					$("#username_group").hide();
 					$("#username").val(window.location.hash.substring(1));

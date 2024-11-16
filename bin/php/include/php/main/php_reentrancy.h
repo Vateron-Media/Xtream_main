@@ -59,7 +59,6 @@ struct tm *localtime_r(const time_t *const timep, struct tm *p_tm);
 #endif
 #endif
 
-
 #if !defined(HAVE_CTIME_R) && defined(HAVE_CTIME)
 #define PHP_NEED_REENTRANCY 1
 PHPAPI char *php_ctime_r(const time_t *clock, char *buf);
@@ -70,7 +69,6 @@ char *ctime_r(const time_t *clock, char *buf);
 #endif
 #endif
 
-
 #if !defined(HAVE_ASCTIME_R) && defined(HAVE_ASCTIME)
 #define PHP_NEED_REENTRANCY 1
 PHPAPI char *php_asctime_r(const struct tm *tm, char *buf);
@@ -80,7 +78,6 @@ PHPAPI char *php_asctime_r(const struct tm *tm, char *buf);
 char *asctime_r(const struct tm *tm, char *buf);
 #endif
 #endif
-
 
 #if !defined(HAVE_GMTIME_R) && defined(HAVE_GMTIME)
 #define PHP_NEED_REENTRANCY 1

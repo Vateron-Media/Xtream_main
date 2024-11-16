@@ -124,18 +124,18 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["device_success"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["device_fail"] ?>
-                                </div>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./mag.php<?php if (isset($rEditID)) {
-                                                                echo "?id=" . $rEditID;
-                                                            } ?>" method="POST" id="mag_form" data-parsley-validate="">
+                                        echo "?id=" . $rEditID;
+                                    } ?>" method="POST" id="mag_form" data-parsley-validate="">
                                         <?php if (isset($rMagArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rEditID ?>" />
                                         <?php } ?>
@@ -162,8 +162,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="mac"
                                                                         name="mac" value="<?php if (isset($rMagArr)) {
-                                                                                                echo htmlspecialchars(base64_decode($rMagArr["mac"]));
-                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                            echo htmlspecialchars(base64_decode($rMagArr["mac"]));
+                                                                        } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -187,10 +187,10 @@ if ($rSettings["sidebar"]) { ?>
                                                         <li class="next list-inline-item float-right">
                                                             <input name="submit_mag" type="submit"
                                                                 class="btn btn-primary" value="<?php if (isset($rMagArr)) {
-                                                                                                    echo $_["edit"];
-                                                                                                } else {
-                                                                                                    echo $_["add"];
-                                                                                                } ?>" />
+                                                                    echo $_["edit"];
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -202,74 +202,74 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    $(document).ready(function() {
-                        $('#paired_user').select2({
-                            ajax: {
-                                url: './api.php',
-                                dataType: 'json',
-                                data: function(params) {
-                                    return {
-                                        search: params.term,
-                                        action: 'userlist',
-                                        page: params.page
-                                    };
-                                },
-                                processResults: function(data, params) {
-                                    params.page = params.page || 1;
-                                    return {
-                                        results: data.items,
-                                        pagination: {
-                                            more: (params.page * 100) < data.total_count
-                                        }
-                                    };
-                                },
-                                cache: true,
-                                width: "100%"
+            <script>
+                $(document).ready(function () {
+                    $('#paired_user').select2({
+                        ajax: {
+                            url: './api.php',
+                            dataType: 'json',
+                            data: function (params) {
+                                return {
+                                    search: params.term,
+                                    action: 'userlist',
+                                    page: params.page
+                                };
                             },
-                            placeholder: '<?= $_["search_user"] ?>'
-                        });
-
-                        $(document).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-
-                        $("form").attr('autocomplete', 'off');
+                            processResults: function (data, params) {
+                                params.page = params.page || 1;
+                                return {
+                                    results: data.items,
+                                    pagination: {
+                                        more: (params.page * 100) < data.total_count
+                                    }
+                                };
+                            },
+                            cache: true,
+                            width: "100%"
+                        },
+                        placeholder: '<?= $_["search_user"] ?>'
                     });
-                </script>
-                </body>
 
-                </html>
+                    $(document).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+
+                    $("form").attr('autocomplete', 'off');
+                });
+            </script>
+            </body>
+
+            </html>

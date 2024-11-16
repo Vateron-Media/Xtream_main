@@ -289,18 +289,14 @@ class Release {
 
   public function __toString() {
     $arrays = [];
-    foreach (
-      [
-        $this->getTitle(),
-        $this->getYear(),
-        ($this->getSeason() ? 'S' . sprintf('%02d', $this->getSeason()) : '') .
-          ($this->getEpisode() ? 'E' . sprintf('%02d', $this->getEpisode()) : ''),
-        $this->getLanguage(),
-        $this->getResolution(),
-        $this->getSource(),
-        $this->getEncoding(),
-        $this->getDub()
-      ] as $array
+    foreach ([$this->getTitle(), $this->getYear(), ($this->getSeason() ? 'S' . sprintf('%02d', $this->getSeason()) : '') .
+      ($this->getEpisode() ? 'E' . sprintf('%02d', $this->getEpisode()) : ''),
+      $this->getLanguage(),
+      $this->getResolution(),
+      $this->getSource(),
+      $this->getEncoding(),
+      $this->getDub()
+    ] as $array
     ) {
       if (is_array($array)) {
         $arrays[] = implode('.', $array);

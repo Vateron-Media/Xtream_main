@@ -60,7 +60,7 @@ if ($rSettings["sidebar"]) { ?>
                                         </thead>
                                         <tbody>
                                             <?php foreach (getBlockedLogins() as $rIP) {
-                                            ?>
+                                                ?>
                                                 <tr id="ip-<?= $rIP["id"] ?>">
                                                     <td class="text-center"><?= $rIP["id"] ?></td>
                                                     <td class="text-center"><?= $rIP["ip"] ?></td>
@@ -81,80 +81,80 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col-->
                     </div>
                     <!-- end row-->
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/pdfmake/pdfmake.min.js"></script>
-                <script src="assets/libs/pdfmake/vfs_fonts.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/pdfmake/pdfmake.min.js"></script>
+            <script src="assets/libs/pdfmake/vfs_fonts.js"></script>
 
-                <script>
-                    function api(rID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('Are you sure you want to delete this IP? This cannot be undone!') == false) {
-                                return;
-                            }
+            <script>
+                function api(rID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('Are you sure you want to delete this IP? This cannot be undone!') == false) {
+                            return;
                         }
-                        $.getJSON("./api.php?action=login_flood&sub=" + rType + "&ip=" + rID, function(data) {
-                            if (data.result === true) {
-                                if (rType == "delete") {
-                                    $("#ip-" + rID).remove();
-                                    $.toast("IP successfully deleted.");
-                                }
-                                $.each($('.tooltip'), function(index, element) {
-                                    $(this).remove();
-                                });
-                                $('[data-toggle="tooltip"]').tooltip();
-                            } else {
-                                $.toast("An error occured while processing your request.");
-                            }
-                        });
                     }
-
-                    $(document).ready(function() {
-                        $("#datatable").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            responsive: false
-                        });
-                        $("#datatable").css("width", "100%");
+                    $.getJSON("./api.php?action=login_flood&sub=" + rType + "&ip=" + rID, function (data) {
+                        if (data.result === true) {
+                            if (rType == "delete") {
+                                $("#ip-" + rID).remove();
+                                $.toast("IP successfully deleted.");
+                            }
+                            $.each($('.tooltip'), function (index, element) {
+                                $(this).remove();
+                            });
+                            $('[data-toggle="tooltip"]').tooltip();
+                        } else {
+                            $.toast("An error occured while processing your request.");
+                        }
                     });
-                </script>
+                }
 
-                <!-- App js-->
-                <script src="assets/js/app.min.js"></script>
-                </body>
+                $(document).ready(function () {
+                    $("#datatable").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        responsive: false
+                    });
+                    $("#datatable").css("width", "100%");
+                });
+            </script>
 
-                </html>
+            <!-- App js-->
+            <script src="assets/js/app.min.js"></script>
+            </body>
+
+            </html>

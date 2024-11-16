@@ -24,8 +24,10 @@
 #include "zend_smart_string_public.h"
 
 BEGIN_EXTERN_C()
-PHPAPI void php_printf_to_smart_string(smart_string *buf, const char *format, va_list ap);
-PHPAPI void php_printf_to_smart_str(smart_str *buf, const char *format, va_list ap);
+PHPAPI void php_printf_to_smart_string(smart_string *buf, const char *format,
+                                       va_list ap);
+PHPAPI void php_printf_to_smart_str(smart_str *buf, const char *format,
+                                    va_list ap);
 END_EXTERN_C()
 
 #define spprintf zend_spprintf

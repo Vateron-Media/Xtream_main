@@ -33,4 +33,3 @@ ZEND_API void zend_weakrefs_notify(zend_object *object);
 END_EXTERN_C()
 
 #endif
-

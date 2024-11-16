@@ -9,8 +9,9 @@
 
 #ifndef PHP_IGBINARY_H
 #define PHP_IGBINARY_H
-// Note: php_igbinary.h should contain publicly exposed variables, functions, and macros of igbinary.
-// If a macro is needed by *only* igbinary, put it in igbinary_macros.h
+// Note: php_igbinary.h should contain publicly exposed variables, functions,
+// and macros of igbinary. If a macro is needed by *only* igbinary, put it in
+// igbinary_macros.h
 
 #include "php.h"
 
@@ -25,7 +26,7 @@ extern zend_module_entry igbinary_module_entry;
 #endif
 
 ZEND_BEGIN_MODULE_GLOBALS(igbinary)
-	zend_bool compact_strings;
+zend_bool compact_strings;
 ZEND_END_MODULE_GLOBALS(igbinary)
 
 #ifdef ZTS

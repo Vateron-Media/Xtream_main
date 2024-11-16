@@ -17,14 +17,14 @@ if ($rSettings["sidebar"]) {
 }
 if ($rSettings["sidebar"]) { ?>
     <div class="content-page<?php if ($rPermissions["is_reseller"]) {
-                                echo " boxed-layout-ext";
-                            } ?>">
+        echo " boxed-layout-ext";
+    } ?>">
         <div class="content">
             <div class="container-fluid">
             <?php } else { ?>
                 <div class="wrapper<?php if ($rPermissions["is_reseller"]) {
-                                        echo " boxed-layout-ext";
-                                    } ?>">
+                    echo " boxed-layout-ext";
+                } ?>">
                     <div class="container-fluid">
                     <?php } ?>
                     <!-- start page title -->
@@ -105,8 +105,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         <option value="" selected><?= $_["all_servers"] ?></option>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
-                                                                                                        echo " selected";
-                                                                                                    } ?>><?= $rServer["server_name"] ?></option>
+                                                                  echo " selected";
+                                                              } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -117,8 +117,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         data-toggle="select2">
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                        echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                echo " selected";
+                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                             <?php } ?>
                                                     </select>
                                                 </div>
@@ -132,8 +132,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         <option value="" selected><?= $_["all_servers"] ?></option>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
-                                                                                                        echo " selected";
-                                                                                                    } ?>><?= $rServer["server_name"] ?></option>
+                                                                  echo " selected";
+                                                              } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -166,8 +166,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         data-toggle="select2">
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                        echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                echo " selected";
+                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                             <?php } ?>
                                                     </select>
                                                 </div>
@@ -197,244 +197,244 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col-->
                     </div>
                     <!-- end row-->
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
-                <script src="assets/js/pages/form-remember.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
+            <script src="assets/js/pages/form-remember.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var autoRefresh = true;
-                    var rClearing = false;
+            <script>
+                var autoRefresh = true;
+                var rClearing = false;
 
-                    function toggleAuto() {
-                        if (autoRefresh == true) {
-                            autoRefresh = false;
-                            $(".auto-text").html("<?= $_["manual_mode"] ?>");
-                        } else {
-                            autoRefresh = true;
-                            $(".auto-text").html("<?= $_["auto_refresh"] ?>");
+                function toggleAuto() {
+                    if (autoRefresh == true) {
+                        autoRefresh = false;
+                        $(".auto-text").html("<?= $_["manual_mode"] ?>");
+                    } else {
+                        autoRefresh = true;
+                        $(".auto-text").html("<?= $_["auto_refresh"] ?>");
+                    }
+                }
+
+                function api(rID, rServerID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('<?= $_["movie_delete_confirm"] ?>') == false) {
+                            return;
                         }
                     }
-
-                    function api(rID, rServerID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('<?= $_["movie_delete_confirm"] ?>') == false) {
-                                return;
+                    $.getJSON("./api.php?action=movie&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function (data) {
+                        if (data.result == true) {
+                            if (rType == "start") {
+                                $.toast("<?= $_["movie_encode_started"] ?>");
+                            } else if (rType == "stop") {
+                                $.toast("<?= $_["movie_encode_stopped"] ?>");
+                            } else if (rType == "delete") {
+                                $.toast("<?= $_["movie_delete_confirmed"] ?>");
                             }
-                        }
-                        $.getJSON("./api.php?action=movie&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function(data) {
-                            if (data.result == true) {
-                                if (rType == "start") {
-                                    $.toast("<?= $_["movie_encode_started"] ?>");
-                                } else if (rType == "stop") {
-                                    $.toast("<?= $_["movie_encode_stopped"] ?>");
-                                } else if (rType == "delete") {
-                                    $.toast("<?= $_["movie_delete_confirmed"] ?>");
-                                }
-                                $.each($('.tooltip'), function(index, element) {
-                                    $(this).remove();
-                                });
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                            } else {
-                                $.toast("<?= $_["error_occured"] ?>");
-                            }
-                        }).fail(function() {
-                            $.toast("<?= $_["error_occured"] ?>");
-                        });
-                    }
-
-                    function player(rID, rContainer) {
-                        $.magnificPopup.open({
-                            items: {
-                                src: "./player.php?type=movie&id=" + rID + "&container=" + rContainer,
-                                type: 'iframe'
-                            }
-                        });
-                    }
-
-                    function reloadStreams() {
-                        if (autoRefresh == true) {
+                            $.each($('.tooltip'), function (index, element) {
+                                $(this).remove();
+                            });
                             $('[data-toggle="tooltip"]').tooltip("hide");
                             $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                        }
-                        setTimeout(reloadStreams, 5000);
-                    }
-
-                    function getCategory() {
-                        return $("#movies_category_id").val();
-                    }
-
-                    function getFilter() {
-                        return $("#movies_filter").val();
-                    }
-
-                    function getServer() {
-                        return $("#movies_server").val();
-                    }
-
-                    function changeZoom() {
-                        if ($("#datatable-streampage").hasClass("font-large")) {
-                            $("#datatable-streampage").removeClass("font-large");
-                            $("#datatable-streampage").addClass("font-normal");
-                        } else if ($("#datatable-streampage").hasClass("font-normal")) {
-                            $("#datatable-streampage").removeClass("font-normal");
-                            $("#datatable-streampage").addClass("font-small");
                         } else {
-                            $("#datatable-streampage").removeClass("font-small");
-                            $("#datatable-streampage").addClass("font-large");
+                            $.toast("<?= $_["error_occured"] ?>");
                         }
-                        $("#datatable-streampage").DataTable().draw();
-                    }
+                    }).fail(function () {
+                        $.toast("<?= $_["error_occured"] ?>");
+                    });
+                }
 
-                    function clearFilters() {
-                        window.rClearing = true;
-                        $("#movies_search").val("").trigger('change');
-                        $('#movies_filter').val("").trigger('change');
-                        $('#movies_server').val("").trigger('change');
-                        $('#movies_category_id').val("").trigger('change');
-                        $('#movies_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
-                        window.rClearing = false;
-                        $('#datatable-streampage').DataTable().search($("#movies_search").val());
-                        $('#datatable-streampage').DataTable().page.len($('#movies_show_entries').val());
-                        $("#datatable-streampage").DataTable().page(0).draw('page');
+                function player(rID, rContainer) {
+                    $.magnificPopup.open({
+                        items: {
+                            src: "./player.php?type=movie&id=" + rID + "&container=" + rContainer,
+                            type: 'iframe'
+                        }
+                    });
+                }
+
+                function reloadStreams() {
+                    if (autoRefresh == true) {
                         $('[data-toggle="tooltip"]').tooltip("hide");
                         $("#datatable-streampage").DataTable().ajax.reload(null, false);
                     }
-                    $(document).ready(function() {
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        formCache.init();
-                        formCache.fetch();
+                    setTimeout(reloadStreams, 5000);
+                }
 
-                        $('select').select2({
-                            width: '100%'
-                        });
-                        $("#datatable-streampage").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                                $('[data-toggle="tooltip"]').tooltip();
-                            },
-                            createdRow: function(row, data, index) {
-                                $(row).addClass('stream-' + data[0]);
-                            },
-                            responsive: false,
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "movies";
-                                    d.category = getCategory();
-                                    d.server = getServer();
-                                    <?php if ($rPermissions["is_admin"]) { ?>
-                                        d.filter = getFilter();
-                                    <?php } else { ?>
-                                        d.filter = 1;
-                                    <?php } ?>
-                                }
-                            },
-                            columnDefs: [
-                                <?php if ($rPermissions["is_admin"]) { ?> {
-                                        "className": "dt-center",
-                                        "targets": [0, 3, 4, 5, 6, 7]
-                                    },
-                                    {
-                                        "orderable": false,
-                                        "targets": [5, 6]
-                                    }
-                                <?php } else { ?> {
-                                        "className": "dt-center",
-                                        "targets": [0, 3]
-                                    }
+                function getCategory() {
+                    return $("#movies_category_id").val();
+                }
+
+                function getFilter() {
+                    return $("#movies_filter").val();
+                }
+
+                function getServer() {
+                    return $("#movies_server").val();
+                }
+
+                function changeZoom() {
+                    if ($("#datatable-streampage").hasClass("font-large")) {
+                        $("#datatable-streampage").removeClass("font-large");
+                        $("#datatable-streampage").addClass("font-normal");
+                    } else if ($("#datatable-streampage").hasClass("font-normal")) {
+                        $("#datatable-streampage").removeClass("font-normal");
+                        $("#datatable-streampage").addClass("font-small");
+                    } else {
+                        $("#datatable-streampage").removeClass("font-small");
+                        $("#datatable-streampage").addClass("font-large");
+                    }
+                    $("#datatable-streampage").DataTable().draw();
+                }
+
+                function clearFilters() {
+                    window.rClearing = true;
+                    $("#movies_search").val("").trigger('change');
+                    $('#movies_filter').val("").trigger('change');
+                    $('#movies_server').val("").trigger('change');
+                    $('#movies_category_id').val("").trigger('change');
+                    $('#movies_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    window.rClearing = false;
+                    $('#datatable-streampage').DataTable().search($("#movies_search").val());
+                    $('#datatable-streampage').DataTable().page.len($('#movies_show_entries').val());
+                    $("#datatable-streampage").DataTable().page(0).draw('page');
+                    $('[data-toggle="tooltip"]').tooltip("hide");
+                    $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                }
+                $(document).ready(function () {
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+                    formCache.init();
+                    formCache.fetch();
+
+                    $('select').select2({
+                        width: '100%'
+                    });
+                    $("#datatable-streampage").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                            $('[data-toggle="tooltip"]').tooltip();
+                        },
+                        createdRow: function (row, data, index) {
+                            $(row).addClass('stream-' + data[0]);
+                        },
+                        responsive: false,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "movies";
+                                d.category = getCategory();
+                                d.server = getServer();
+                                <?php if ($rPermissions["is_admin"]) { ?>
+                                    d.filter = getFilter();
+                                <?php } else { ?>
+                                    d.filter = 1;
                                 <?php } ?>
-                            ],
-                            order: [
-                                [0, "desc"]
-                            ],
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
-                            stateSave: true
-                        });
-                        $("#datatable-streampage").css("width", "100%");
-                        $('#movies_search').keyup(function() {
-                            if (!window.rClearing) {
-                                $('#datatable-streampage').DataTable().search($(this).val()).draw();
                             }
-                        })
-                        $('#movies_show_entries').change(function() {
-                            if (!window.rClearing) {
-                                $('#datatable-streampage').DataTable().page.len($(this).val()).draw();
-                            }
-                        })
-                        $('#movies_category_id').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                            }
-                        })
-                        $('#movies_server').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                            }
-                        })
-                        $('#movies_filter').change(function() {
-                            if (!window.rClearing) {
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                            }
-                        })
-                        <?php if (!$detect->isMobile()) { ?>
-                            setTimeout(reloadStreams, 5000);
-                        <?php }
-                        if (!$rAdminSettings["auto_refresh"]) { ?>
-                            toggleAuto();
-                        <?php } ?>
-                        if ($('#movies_search').val().length > 0) {
-                            $('#datatable-streampage').DataTable().search($('#movies_search').val()).draw();
+                        },
+                        columnDefs: [
+                            <?php if ($rPermissions["is_admin"]) { ?> {
+                                    "className": "dt-center",
+                                    "targets": [0, 3, 4, 5, 6, 7]
+                                },
+                                {
+                                    "orderable": false,
+                                    "targets": [5, 6]
+                                }
+                                <?php } else { ?> {
+                                    "className": "dt-center",
+                                    "targets": [0, 3]
+                                }
+                                <?php } ?>
+                        ],
+                        order: [
+                            [0, "desc"]
+                        ],
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        stateSave: true
+                    });
+                    $("#datatable-streampage").css("width", "100%");
+                    $('#movies_search').keyup(function () {
+                        if (!window.rClearing) {
+                            $('#datatable-streampage').DataTable().search($(this).val()).draw();
                         }
-                    });
+                    })
+                    $('#movies_show_entries').change(function () {
+                        if (!window.rClearing) {
+                            $('#datatable-streampage').DataTable().page.len($(this).val()).draw();
+                        }
+                    })
+                    $('#movies_category_id').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                        }
+                    })
+                    $('#movies_server').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                        }
+                    })
+                    $('#movies_filter').change(function () {
+                        if (!window.rClearing) {
+                            $('[data-toggle="tooltip"]').tooltip("hide");
+                            $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                        }
+                    })
+                    <?php if (!$detect->isMobile()) { ?>
+                        setTimeout(reloadStreams, 5000);
+                    <?php }
+                    if (!$rAdminSettings["auto_refresh"]) { ?>
+                        toggleAuto();
+                    <?php } ?>
+                    if ($('#movies_search').val().length > 0) {
+                        $('#datatable-streampage').DataTable().search($('#movies_search').val()).draw();
+                    }
+                });
 
-                    $(window).bind('beforeunload', function() {
-                        formCache.save();
-                    });
-                </script>
-                </body>
+                $(window).bind('beforeunload', function () {
+                    formCache.save();
+                });
+            </script>
+            </body>
 
-                </html>
+            </html>

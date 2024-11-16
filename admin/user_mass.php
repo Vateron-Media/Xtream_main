@@ -138,12 +138,12 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["mass_edit_of_users"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["there_was_an_error"] ?>
-                                </div>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
@@ -188,7 +188,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </option>
                                                                 <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
                                                                     <option value="<?= $rRegisteredUser["id"] ?>">
-                                                                        <?= $rRegisteredUser["username"] ?></option>
+                                                                        <?= $rRegisteredUser["username"] ?>
+                                                                    </option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
@@ -211,8 +212,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                                                echo " selected";
-                                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                        echo " selected";
+                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                                     <?php } ?>
                                                             </select>
                                                         </div>
@@ -266,7 +267,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-toggle="select2">
                                                                         <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
                                                                             <option value="<?= $rRegisteredUser["id"] ?>">
-                                                                                <?= $rRegisteredUser["username"] ?></option>
+                                                                                <?= $rRegisteredUser["username"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -361,7 +363,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         </option>
                                                                         <?php foreach ($rServers as $rServer) { ?>
                                                                             <option value="<?= $rServer["id"] ?>">
-                                                                                <?= $rServer["server_name"] ?></option>
+                                                                                <?= $rServer["server_name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -506,7 +509,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-toggle="select2">
                                                                         <?php foreach ($rCountries as $rCountry) { ?>
                                                                             <option value="<?= $rCountry["id"] ?>">
-                                                                                <?= $rCountry["name"] ?></option>
+                                                                                <?= $rCountry["name"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -544,7 +548,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <tr>
                                                                                 <td class="text-center">
-                                                                                    <?= $rBouquet["id"] ?></td>
+                                                                                    <?= $rBouquet["id"] ?>
+                                                                                </td>
                                                                                 <td><?= $rBouquet["bouquet_name"] ?></td>
                                                                                 <td class="text-center">
                                                                                     <?= count(json_decode($rBouquet["bouquet_channels"], True)) ?>
@@ -589,301 +594,301 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
 
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-ui/jquery-ui.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-ui/jquery-ui.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var rSwitches = [];
-                    var rSelected = [];
-                    var rBouquets = [];
+            <script>
+                var rSwitches = [];
+                var rSelected = [];
+                var rBouquets = [];
 
-                    function getReseller() {
-                        return $("#reseller_search").val();
-                    }
+                function getReseller() {
+                    return $("#reseller_search").val();
+                }
 
-                    function getFilter() {
-                        return $("#filter").val();
-                    }
+                function getFilter() {
+                    return $("#filter").val();
+                }
 
-                    function toggleUsers() {
-                        $("#datatable-mass tr").each(function() {
-                            if ($(this).hasClass('selected')) {
-                                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rSelected.splice($.inArray($(this).find("td:eq(0)").html(), window.rSelected), 1);
-                                }
-                            } else {
-                                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rSelected.push($(this).find("td:eq(0)").html());
-                                }
+                function toggleUsers() {
+                    $("#datatable-mass tr").each(function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rSelected.splice($.inArray($(this).find("td:eq(0)").html(), window.rSelected), 1);
+                            }
+                        } else {
+                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rSelected.push($(this).find("td:eq(0)").html());
+                            }
+                        }
+                    });
+                    $("#selected_count").html(" - " + window.rSelected.length + " selected")
+                }
+
+                function toggleBouquets() {
+                    $("#datatable-bouquets tr").each(function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rBouquets.splice($.inArray($(this).find("td:eq(0)").html(), window.rBouquets), 1);
+                            }
+                        } else {
+                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            if ($(this).find("td:eq(0)").html()) {
+                                window.rBouquets.push($(this).find("td:eq(0)").html());
+                            }
+                        }
+                        if (!$("#c_bouquets").is(":checked")) {
+                            $("#c_bouquets").prop('checked', true);
+                        }
+                    });
+                }
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
                             }
                         });
-                        $("#selected_count").html(" - " + window.rSelected.length + " selected")
-                    }
-
-                    function toggleBouquets() {
-                        $("#datatable-bouquets tr").each(function() {
-                            if ($(this).hasClass('selected')) {
-                                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rBouquets.splice($.inArray($(this).find("td:eq(0)").html(), window.rBouquets), 1);
-                                }
+                    };
+                }(jQuery));
+                $(document).ready(function () {
+                    $('select').select2({
+                        width: '100%'
+                    })
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+                    elems.forEach(function (html) {
+                        var switchery = new Switchery(html);
+                        window.rSwitches[$(html).attr("id")] = switchery;
+                    });
+                    $('#exp_date').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        minDate: new Date(),
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        }
+                    });
+                    $("#no_expire").change(function () {
+                        if ($(this).prop("checked")) {
+                            $("#exp_date").prop("disabled", true);
+                        } else {
+                            $("#exp_date").removeAttr("disabled");
+                        }
+                    });
+                    $("#user_form").submit(function (e) {
+                        var rBouquets = [];
+                        $("#datatable-bouquets tr.selected").each(function () {
+                            rBouquets.push($(this).find("td:eq(0)").html());
+                        });
+                        $("#bouquets_selected").val(JSON.stringify(rBouquets));
+                        $("#users_selected").val(JSON.stringify(window.rSelected));
+                        if (window.rSelected.length == 0) {
+                            e.preventDefault();
+                            $.toast("<?= $_["select_at_least_one_user_to_edit"] ?>");
+                        }
+                    });
+                    $("input[type=checkbox].activate").change(function () {
+                        if ($(this).is(":checked")) {
+                            if ($(this).data("type") == "switch") {
+                                window.rSwitches[$(this).data("name")].enable();
+                            } else if ($(this).data("type") == "output") {
+                                $(".output").each(function () {
+                                    $(this).prop("disabled", false);
+                                });
+                            } else if ($(this).data("type") == "bouquet") {
+                                $(".bouquet-checkbox").each(function () {
+                                    $(this).prop("disabled", false);
+                                });
                             } else {
-                                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                if ($(this).find("td:eq(0)").html()) {
-                                    window.rBouquets.push($(this).find("td:eq(0)").html());
+                                if ($(this).data("name") == "exp_date") {
+                                    $("#no_expire").prop("disabled", false);
+                                    if (!$("#no_expire").is(":checked")) {
+                                        $("#exp_date").prop("disabled", false);
+                                    }
+                                } else {
+                                    $("#" + $(this).data("name")).prop("disabled", false);
                                 }
+                            }
+                        } else {
+                            if ($(this).data("type") == "switch") {
+                                window.rSwitches[$(this).data("name")].disable();
+                            } else if ($(this).data("type") == "output") {
+                                $(".output").each(function () {
+                                    $(this).prop("disabled", true);
+                                });
+                            } else if ($(this).data("type") == "bouquet") {
+                                $(".bouquet-checkbox").each(function () {
+                                    $(this).prop("disabled", true);
+                                });
+                            } else {
+                                if ($(this).data("name") == "exp_date") {
+                                    $("#no_expire").prop("disabled", true);
+                                    if (!$("#no_expire").is(":checked")) {
+                                        $("#exp_date").prop("disabled", true);
+                                    }
+                                } else {
+                                    $("#" + $(this).data("name")).prop("disabled", true);
+                                }
+                            }
+                        }
+                    });
+                    $(".clockpicker").clockpicker();
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+                    $("#probesize_ondemand").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#delay_minutes").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#tv_archive_duration").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("form").attr('autocomplete', 'off');
+                    rTable = $("#datatable-mass").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: "./table_search.php",
+                            "data": function (d) {
+                                d.id = "users",
+                                    d.filter = getFilter(),
+                                    d.reseller = getReseller(),
+                                    d.showall = true
+                            }
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 4, 6, 7, 9]
+                        },
+                        {
+                            "visible": false,
+                            "targets": [2, 5, 8, 10, 11]
+                        }
+                        ],
+                        "rowCallback": function (row, data) {
+                            if ($.inArray(data[0], window.rSelected) !== -1) {
+                                $(row).addClass("selected");
+                            }
+                        },
+                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
+                    });
+                    bTable = $("#datatable-bouquets").DataTable({
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 2, 3]
+                        }],
+                        "rowCallback": function (row, data) {
+                            if ($.inArray(data[0], window.rBouquets) !== -1) {
+                                $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                            }
+                        },
+                        paging: false,
+                        bInfo: false,
+                        searching: false
+                    });
+                    $('#user_search').keyup(function () {
+                        rTable.search($(this).val()).draw();
+                    })
+                    $('#show_entries').change(function () {
+                        rTable.page.len($(this).val()).draw();
+                    })
+                    $('#reseller_search').change(function () {
+                        rTable.ajax.reload(null, false);
+                    })
+                    $('#filter').change(function () {
+                        rTable.ajax.reload(null, false);
+                    })
+                    $("#datatable-mass").selectable({
+                        filter: 'tr',
+                        selected: function (event, ui) {
+                            if ($(ui.selected).hasClass('selectedfilter')) {
+                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                                window.rSelected.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSelected), 1);
+                            } else {
+                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                                window.rSelected.push($(ui.selected).find("td:eq(0)").html());
+                            }
+                            $("#selected_count").html(" - " + window.rSelected.length + " selected")
+                        }
+                    });
+                    $("#datatable-bouquets").selectable({
+                        filter: 'tr',
+                        selected: function (event, ui) {
+                            if ($(ui.selected).hasClass('selectedfilter')) {
+                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                                window.rBouquets.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rBouquets), 1);
+                            } else {
+                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                                window.rBouquets.push($(ui.selected).find("td:eq(0)").html());
                             }
                             if (!$("#c_bouquets").is(":checked")) {
                                 $("#c_bouquets").prop('checked', true);
                             }
-                        });
-                    }
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
-                    $(document).ready(function() {
-                        $('select').select2({
-                            width: '100%'
-                        })
-                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                        elems.forEach(function(html) {
-                            var switchery = new Switchery(html);
-                            window.rSwitches[$(html).attr("id")] = switchery;
-                        });
-                        $('#exp_date').daterangepicker({
-                            singleDatePicker: true,
-                            showDropdowns: true,
-                            minDate: new Date(),
-                            locale: {
-                                format: 'YYYY-MM-DD'
-                            }
-                        });
-                        $("#no_expire").change(function() {
-                            if ($(this).prop("checked")) {
-                                $("#exp_date").prop("disabled", true);
-                            } else {
-                                $("#exp_date").removeAttr("disabled");
-                            }
-                        });
-                        $("#user_form").submit(function(e) {
-                            var rBouquets = [];
-                            $("#datatable-bouquets tr.selected").each(function() {
-                                rBouquets.push($(this).find("td:eq(0)").html());
-                            });
-                            $("#bouquets_selected").val(JSON.stringify(rBouquets));
-                            $("#users_selected").val(JSON.stringify(window.rSelected));
-                            if (window.rSelected.length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["select_at_least_one_user_to_edit"] ?>");
-                            }
-                        });
-                        $("input[type=checkbox].activate").change(function() {
-                            if ($(this).is(":checked")) {
-                                if ($(this).data("type") == "switch") {
-                                    window.rSwitches[$(this).data("name")].enable();
-                                } else if ($(this).data("type") == "output") {
-                                    $(".output").each(function() {
-                                        $(this).prop("disabled", false);
-                                    });
-                                } else if ($(this).data("type") == "bouquet") {
-                                    $(".bouquet-checkbox").each(function() {
-                                        $(this).prop("disabled", false);
-                                    });
-                                } else {
-                                    if ($(this).data("name") == "exp_date") {
-                                        $("#no_expire").prop("disabled", false);
-                                        if (!$("#no_expire").is(":checked")) {
-                                            $("#exp_date").prop("disabled", false);
-                                        }
-                                    } else {
-                                        $("#" + $(this).data("name")).prop("disabled", false);
-                                    }
-                                }
-                            } else {
-                                if ($(this).data("type") == "switch") {
-                                    window.rSwitches[$(this).data("name")].disable();
-                                } else if ($(this).data("type") == "output") {
-                                    $(".output").each(function() {
-                                        $(this).prop("disabled", true);
-                                    });
-                                } else if ($(this).data("type") == "bouquet") {
-                                    $(".bouquet-checkbox").each(function() {
-                                        $(this).prop("disabled", true);
-                                    });
-                                } else {
-                                    if ($(this).data("name") == "exp_date") {
-                                        $("#no_expire").prop("disabled", true);
-                                        if (!$("#no_expire").is(":checked")) {
-                                            $("#exp_date").prop("disabled", true);
-                                        }
-                                    } else {
-                                        $("#" + $(this).data("name")).prop("disabled", true);
-                                    }
-                                }
-                            }
-                        });
-                        $(".clockpicker").clockpicker();
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        $("#probesize_ondemand").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#delay_minutes").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#tv_archive_duration").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("form").attr('autocomplete', 'off');
-                        rTable = $("#datatable-mass").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            processing: true,
-                            serverSide: true,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function(d) {
-                                    d.id = "users",
-                                        d.filter = getFilter(),
-                                        d.reseller = getReseller(),
-                                        d.showall = true
-                                }
-                            },
-                            columnDefs: [{
-                                    "className": "dt-center",
-                                    "targets": [0, 4, 6, 7, 9]
-                                },
-                                {
-                                    "visible": false,
-                                    "targets": [2, 5, 8, 10, 11]
-                                }
-                            ],
-                            "rowCallback": function(row, data) {
-                                if ($.inArray(data[0], window.rSelected) !== -1) {
-                                    $(row).addClass("selected");
-                                }
-                            },
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
-                        });
-                        bTable = $("#datatable-bouquets").DataTable({
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 2, 3]
-                            }],
-                            "rowCallback": function(row, data) {
-                                if ($.inArray(data[0], window.rBouquets) !== -1) {
-                                    $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                }
-                            },
-                            paging: false,
-                            bInfo: false,
-                            searching: false
-                        });
-                        $('#user_search').keyup(function() {
-                            rTable.search($(this).val()).draw();
-                        })
-                        $('#show_entries').change(function() {
-                            rTable.page.len($(this).val()).draw();
-                        })
-                        $('#reseller_search').change(function() {
-                            rTable.ajax.reload(null, false);
-                        })
-                        $('#filter').change(function() {
-                            rTable.ajax.reload(null, false);
-                        })
-                        $("#datatable-mass").selectable({
-                            filter: 'tr',
-                            selected: function(event, ui) {
-                                if ($(ui.selected).hasClass('selectedfilter')) {
-                                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                    window.rSelected.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSelected), 1);
-                                } else {
-                                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                    window.rSelected.push($(ui.selected).find("td:eq(0)").html());
-                                }
-                                $("#selected_count").html(" - " + window.rSelected.length + " selected")
-                            }
-                        });
-                        $("#datatable-bouquets").selectable({
-                            filter: 'tr',
-                            selected: function(event, ui) {
-                                if ($(ui.selected).hasClass('selectedfilter')) {
-                                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                    window.rBouquets.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rBouquets), 1);
-                                } else {
-                                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                    window.rBouquets.push($(ui.selected).find("td:eq(0)").html());
-                                }
-                                if (!$("#c_bouquets").is(":checked")) {
-                                    $("#c_bouquets").prop('checked', true);
-                                }
-                            }
-                        });
+                        }
                     });
-                </script>
-                </body>
+                });
+            </script>
+            </body>
 
-                </html>
+            </html>

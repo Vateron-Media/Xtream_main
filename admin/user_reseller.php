@@ -320,12 +320,12 @@ if ($rSettings["sidebar"]) { ?>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rUser)) {
-                                                            echo $_["edit"];
-                                                        } else {
-                                                            echo $_["add"];
-                                                        } ?> <?php if (isset($_GET["trial"])) {
-                                                                    echo $_["trial"];
-                                                                } ?><?= $_["user"] ?></h4>
+                                    echo $_["edit"];
+                                } else {
+                                    echo $_["add"];
+                                } ?> <?php if (isset($_GET["trial"])) {
+                                      echo $_["trial"];
+                                  } ?><?= $_["user"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -339,7 +339,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["you_have_used_your_allowance"] ?>
                                 </div>
-                                <?php }
+                            <?php }
                             if (isset($_STATUS)) {
                                 if ($_STATUS == 0) { ?>
                                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -349,61 +349,61 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["user_operation_was_completed_successfully"] ?>
                                     </div>
                                 <?php } else if ($_STATUS == 1) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                         <?= $_["an_invalid_expiration_date_was_entered"] ?>
-                                    </div>
+                                        </div>
                                 <?php } else if ($_STATUS == 2) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                         <?= $_["there_was_an_error"] ?>
-                                    </div>
+                                            </div>
                                 <?php } else if ($_STATUS == 3) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
                                         <?= $_["an_invalid_package_was_selected"] ?>
-                                    </div>
+                                                </div>
                                 <?php } else if ($_STATUS == 4) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                         <?= $_["you_don't_have_enough_credits"] ?>
-                                    </div>
+                                                    </div>
                                 <?php } else if ($_STATUS == 5) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
                                         <?= $_["you_are_not_permitted_to_generate"] ?>
-                                    </div>
+                                                        </div>
                                 <?php } else if ($_STATUS == 6) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
                                         <?= $_["this_username_already_exists"] ?>
-                                    </div>
+                                                            </div>
                                 <?php } else if ($_STATUS == 7) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                         <?= $_["an_invalid_mac_address_was_entered"] ?>
-                                    </div>
+                                                                </div>
                                 <?php } else if ($_STATUS == 8) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
                                         <?= $_["this_mac_address_is_already_in_use"] ?>
-                                    </div>
+                                                                    </div>
                                 <?php }
                             }
                             if ((isset($rUser)) and ($rUser["is_trial"])) { ?>
@@ -417,8 +417,8 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./user_reseller.php<?php if (isset($_GET["id"])) {
-                                                                            echo "?id=" . $_GET["id"];
-                                                                        } ?>" method="POST" id="user_form">
+                                        echo "?id=" . $_GET["id"];
+                                    } ?>" method="POST" id="user_form">
                                         <?php if (isset($rUser)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
                                         <?php }
@@ -462,14 +462,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="username"><?= $_["username"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input<?php if ((!$rPermissions["allow_change_pass"]) && (!$rAdminSettings["change_usernames"])) {
-                                                                                echo $_[" disabled"];
-                                                                            } ?> type="text"
+                                                                        echo $_[" disabled"];
+                                                                    } ?> type="text"
                                                                         class="form-control" id="username"
                                                                         name="username"
                                                                         placeholder="<?= $_["auto_generate_if_blank"] ?>"
                                                                         value="<?php if (isset($rUser)) {
-                                                                                    echo htmlspecialchars($rUser["username"]);
-                                                                                } ?>">
+                                                                            echo htmlspecialchars($rUser["username"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4" id="pass">
@@ -477,14 +477,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="password"><?= $_["password"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input<?php if (!$rPermissions["allow_change_pass"]) {
-                                                                                echo " disabled";
-                                                                            } ?> type="text"
+                                                                        echo " disabled";
+                                                                    } ?> type="text"
                                                                         class="form-control" id="password"
                                                                         name="password"
                                                                         placeholder="<?= $_["auto_generate_if_blank"] ?>"
                                                                         value="<?php if (isset($rUser)) {
-                                                                                    echo htmlspecialchars($rUser["password"]);
-                                                                                } ?>">
+                                                                            echo htmlspecialchars($rUser["password"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -496,22 +496,22 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-toggle="select2">
                                                                         <?php foreach ($rRegisteredUsers as $rRegisteredUser) { ?>
                                                                             <option <?php if (isset($rUser)) {
-                                                                                        if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } else if ($rUserInfo["id"] == $rRegisteredUser["id"]) {
-                                                                                        echo "selected ";
-                                                                                    } ?>value="<?= $rRegisteredUser["id"] ?>">
-                                                                                <?= $rRegisteredUser["username"] ?></option>
+                                                                                if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } else if ($rUserInfo["id"] == $rRegisteredUser["id"]) {
+                                                                                echo "selected ";
+                                                                            } ?>value="<?= $rRegisteredUser["id"] ?>">
+                                                                                <?= $rRegisteredUser["username"] ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label"
-                                                                    for="package"><?php if (isset($rUser)) {
-                                                                                        echo "Extend ";
-                                                                                    } ?><?= $_["package"] ?></label>
+                                                                <label class="col-md-4 col-form-label" for="package"><?php if (isset($rUser)) {
+                                                                    echo "Extend ";
+                                                                } ?><?= $_["package"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <select name="package" id="package"
                                                                         class="form-control select2"
@@ -519,13 +519,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php if (isset($rUser)) { ?>
                                                                             <option value=""><?= $_["no_changes"] ?>
                                                                             </option>
-                                                                            <?php }
+                                                                        <?php }
                                                                         foreach (getPackages() as $rPackage) {
                                                                             if (in_array($rUserInfo["member_group_id"], json_decode($rPackage["groups"], True))) {
                                                                                 if ((($rPackage["is_trial"]) && ((isset($_GET["trial"])) or (isset($_POST["trial"])))) or (($rPackage["is_official"]) && ((!isset($_GET["trial"])) and (!isset($_POST["trial"]))))) { ?>
                                                                                     <option value="<?= $rPackage["id"] ?>">
-                                                                                        <?= $rPackage["package_name"] ?></option>
-                                                                        <?php }
+                                                                                        <?= $rPackage["package_name"] ?>
+                                                                                    </option>
+                                                                                <?php }
                                                                             }
                                                                         } ?>
                                                                     </select>
@@ -538,10 +539,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input disabled type="text" class="form-control"
                                                                         id="max_connections" name="max_connections"
                                                                         value="<?php if (isset($rUser)) {
-                                                                                    echo htmlspecialchars($rUser["max_connections"]);
-                                                                                } else {
-                                                                                    echo "1";
-                                                                                } ?>">
+                                                                            echo htmlspecialchars($rUser["max_connections"]);
+                                                                        } else {
+                                                                            echo "1";
+                                                                        } ?>">
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="exp_date"><?= $_["expiry"] ?> <i
@@ -552,15 +553,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input type="text" disabled
                                                                         class="form-control text-center date"
-                                                                        id="exp_date" name="exp_date"
-                                                                        value="<?php if (isset($rUser)) {
-                                                                                    if (!is_null($rUser["exp_date"])) {
-                                                                                        echo date("Y-m-d", $rUser["exp_date"]);
-                                                                                    } else {
-                                                                                        echo "\" disabled=\"disabled";
-                                                                                    }
-                                                                                } ?>"
-                                                                        data-toggle="date-picker"
+                                                                        id="exp_date" name="exp_date" value="<?php if (isset($rUser)) {
+                                                                            if (!is_null($rUser["exp_date"])) {
+                                                                                echo date("Y-m-d", $rUser["exp_date"]);
+                                                                            } else {
+                                                                                echo "\" disabled=\"disabled";
+                                                                            }
+                                                                        } ?>" data-toggle="date-picker"
                                                                         data-single-date-picker="true">
                                                                 </div>
                                                             </div>
@@ -573,8 +572,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input<?php if (isset($rUser)) {
-                                                                                echo " disabled";
-                                                                            } ?> name="is_mag" id="is_mag" type="checkbox"
+                                                                        echo " disabled";
+                                                                    } ?> name="is_mag" id="is_mag" type="checkbox"
                                                                         <?php if (isset($rUser)) {
                                                                             if ($rUser["is_mag"] == 1) {
                                                                                 echo "checked ";
@@ -592,14 +591,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input<?php if (isset($rUser)) {
-                                                                                echo " disabled";
-                                                                            } ?> name="is_e2" id="is_e2" type="checkbox" <?php if (isset($rUser)) {
-                                                                                                                                if ($rUser["is_e2"] == 1) {
-                                                                                                                                    echo "checked ";
-                                                                                                                                }
-                                                                                                                            } else if (isset($_GET["e2"])) {
-                                                                                                                                echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                        echo " disabled";
+                                                                    } ?> name="is_e2" id="is_e2" type="checkbox" <?php if (isset($rUser)) {
+                                                                          if ($rUser["is_e2"] == 1) {
+                                                                              echo "checked ";
+                                                                          }
+                                                                      } else if (isset($_GET["e2"])) {
+                                                                          echo "checked ";
+                                                                      } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -611,8 +610,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="mac_address_mag" name="mac_address_mag"
                                                                         value="<?php if (isset($rUser)) {
-                                                                                    echo htmlspecialchars($rUser["mac_address_mag"]);
-                                                                                } ?>">
+                                                                            echo htmlspecialchars($rUser["mac_address_mag"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4" style="display:none"
@@ -621,10 +620,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="mac_address_e2"><?= $_["mac_address"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control"
-                                                                        id="mac_address_e2" name="mac_address_e2"
-                                                                        value="<?php if (isset($rUser)) {
-                                                                                    echo htmlspecialchars($rUser["mac_address_e2"]);
-                                                                                } ?>">
+                                                                        id="mac_address_e2" name="mac_address_e2" value="<?php if (isset($rUser)) {
+                                                                            echo htmlspecialchars($rUser["mac_address_e2"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -632,10 +630,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="reseller_notes"><?= $_["reseller_notes"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <textarea id="reseller_notes" name="reseller_notes"
-                                                                        class="form-control" rows="3"
-                                                                        placeholder=""><?php if (isset($rUser)) {
-                                                                                            echo htmlspecialchars($rUser["reseller_notes"]);
-                                                                                        } ?></textarea>
+                                                                        class="form-control" rows="3" placeholder=""><?php if (isset($rUser)) {
+                                                                            echo htmlspecialchars($rUser["reseller_notes"]);
+                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -677,7 +674,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?php if (isset($rUser)) {
                                                                                 foreach (json_decode($rUser["allowed_ips"], True) as $rIP) { ?>
                                                                                     <option value="<?= $rIP ?>"><?= $rIP ?></option>
-                                                                            <?php }
+                                                                                <?php }
                                                                             } ?>
                                                                         </select>
                                                                     </div>
@@ -708,7 +705,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?php if (isset($rUser)) {
                                                                                 foreach (json_decode($rUser["allowed_ua"], True) as $rUA) { ?>
                                                                                     <option value="<?= $rUA ?>"><?= $rUA ?></option>
-                                                                            <?php }
+                                                                                <?php }
                                                                             } ?>
                                                                         </select>
                                                                     </div>
@@ -740,11 +737,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <thead>
                                                                         <tr>
                                                                             <th class="text-center">
-                                                                                <?= $_["total_credits"] ?></th>
+                                                                                <?= $_["total_credits"] ?>
+                                                                            </th>
                                                                             <th class="text-center">
-                                                                                <?= $_["purchase_cost"] ?></th>
+                                                                                <?= $_["purchase_cost"] ?>
+                                                                            </th>
                                                                             <th class="text-center">
-                                                                                <?= $_["remaining_credits"] ?></th>
+                                                                                <?= $_["remaining_credits"] ?>
+                                                                            </th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -767,7 +767,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <th class="text-center"><?= $_["id"] ?></th>
                                                                             <th><?= $_["bouquet_name"] ?></th>
                                                                             <th class="text-center">
-                                                                                <?= $_["channels"] ?></th>
+                                                                                <?= $_["channels"] ?>
+                                                                            </th>
                                                                             <th class="text-center"><?= $_["series"] ?>
                                                                             </th>
                                                                         </tr>
@@ -797,125 +798,125 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/js/pages/jquery.number.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/js/pages/jquery.number.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var swObjs = {};
+            <script>
+                var swObjs = {};
 
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
-
-                    function isValidDate(dateString) {
-                        var regEx = /^\d{4}-\d{2}-\d{2}$/;
-                        if (!dateString.match(regEx)) return false; // Invalid format
-                        var d = new Date(dateString);
-                        var dNum = d.getTime();
-                        if (!dNum && dNum !== 0) return false; // NaN value, Invalid date
-                        return d.toISOString().slice(0, 10) === dateString;
-                    }
-
-                    function isValidIP(rIP) {
-                        if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(rIP)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-
-                    function evaluateForm() {
-                        if (($("#is_mag").is(":checked")) || ($("#is_e2").is(":checked"))) {
-                            if ($("#is_mag").is(":checked")) {
-                                $("#mac_entry_mag").show();
-                                $("#uname").hide()
-                                $("#pass").hide()
-                                window.swObjs["is_e2"].disable();
-                            } else {
-                                $("#mac_entry_e2").show();
-                                $("#uname").hide()
-                                $("#pass").hide()
-                                window.swObjs["is_mag"].disable();
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
                             }
-                        } else {
-                            $("#mac_entry_mag").hide();
-                            $("#mac_entry_e2").hide();
-                            $("#uname").show()
-                            $("#pass").show()
-                            <?php if (!isset($rUser)) { ?>
-                                window.swObjs["is_e2"].enable();
-                                window.swObjs["is_mag"].enable();
-                            <?php } else { ?>
-                                window.swObjs["is_e2"].disable();
-                                window.swObjs["is_mag"].disable();
-                            <?php } ?>
-                        }
+                        });
+                    };
+                }(jQuery));
+
+                function isValidDate(dateString) {
+                    var regEx = /^\d{4}-\d{2}-\d{2}$/;
+                    if (!dateString.match(regEx)) return false; // Invalid format
+                    var d = new Date(dateString);
+                    var dNum = d.getTime();
+                    if (!dNum && dNum !== 0) return false; // NaN value, Invalid date
+                    return d.toISOString().slice(0, 10) === dateString;
+                }
+
+                function isValidIP(rIP) {
+                    if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(rIP)) {
+                        return true;
+                    } else {
+                        return false;
                     }
+                }
 
-                    $("#package").change(function() {
-                        getPackage();
-                    });
+                function evaluateForm() {
+                    if (($("#is_mag").is(":checked")) || ($("#is_e2").is(":checked"))) {
+                        if ($("#is_mag").is(":checked")) {
+                            $("#mac_entry_mag").show();
+                            $("#uname").hide()
+                            $("#pass").hide()
+                            window.swObjs["is_e2"].disable();
+                        } else {
+                            $("#mac_entry_e2").show();
+                            $("#uname").hide()
+                            $("#pass").hide()
+                            window.swObjs["is_mag"].disable();
+                        }
+                    } else {
+                        $("#mac_entry_mag").hide();
+                        $("#mac_entry_e2").hide();
+                        $("#uname").show()
+                        $("#pass").show()
+                        <?php if (!isset($rUser)) { ?>
+                            window.swObjs["is_e2"].enable();
+                            window.swObjs["is_mag"].enable();
+                        <?php } else { ?>
+                            window.swObjs["is_e2"].disable();
+                            window.swObjs["is_mag"].disable();
+                        <?php } ?>
+                    }
+                }
 
-                    function getPackage() {
-                        var rTable = $('#datatable-review').DataTable();
-                        rTable.clear();
-                        rTable.draw();
-                        if ($("#package").val().length > 0) {
-                            $.getJSON("./api.php?action=get_package<?php if (isset($_GET["trial"])) {
-                                                                        echo "_trial";
-                                                                    } ?>&package_id=" + $("#package").val() <?php if (isset($rUser)) {
-                                                                                                                echo " + \"&user_id=" . $rUser["id"] . "\"";
-                                                                                                            } ?>, function(rData) {
+                $("#package").change(function () {
+                    getPackage();
+                });
+
+                function getPackage() {
+                    var rTable = $('#datatable-review').DataTable();
+                    rTable.clear();
+                    rTable.draw();
+                    if ($("#package").val().length > 0) {
+                        $.getJSON("./api.php?action=get_package<?php if (isset($_GET["trial"])) {
+                            echo "_trial";
+                        } ?>&package_id=" + $("#package").val() <?php if (isset($rUser)) {
+                             echo " + \"&user_id=" . $rUser["id"] . "\"";
+                         } ?>, function (rData) {
                                 if (rData.result === true) {
                                     $("#max_connections").val(rData.data.max_connections);
                                     $("#cost_credits").html($.number(rData.data.cost_credits, 2));
@@ -944,119 +945,119 @@ if ($rSettings["sidebar"]) { ?>
                                             $("#mac_entry_e2").hide();
                                         }
                                     <?php } ?>
-                                    $(rData.bouquets).each(function(rIndex) {
+                                    $(rData.bouquets).each(function (rIndex) {
                                         rTable.row.add([rData.bouquets[rIndex].id, rData.bouquets[rIndex].bouquet_name, rData.bouquets[rIndex].bouquet_channels.length, rData.bouquets[rIndex].bouquet_series.length]);
                                     });
                                 }
                                 rTable.draw();
                             });
-                        } else {
-                            $("#max_connections").val(<?= $rUser["max_connections"] ?>);
-                            $("#cost_credits").html(0);
-                            $("#remaining_credits").html($.number(<?= $rUserInfo["credits"] ?>, 2));
-                            $("#exp_date").val('<?= date("Y-m-d", $rUser["exp_date"]) ?>');
-                            <?php if (!$canGenerateTrials) { ?>
-                                $(".purchase").prop('disabled', true);
-                                <?php }
-                            foreach (json_decode($rUser["bouquet"], True) as $rBouquetID) {
-                                $rBouquetData = getBouquet($rBouquetID);
-                                if (strlen($rBouquetID) > 0) { ?>
-                                    rTable.row.add([<?= $rBouquetID ?>, '<?= $rBouquetData["bouquet_name"] ?>', <?= count(json_decode($rBouquetData["bouquet_channels"], True)) ?>, <?= count(json_decode($rBouquetData["bouquet_series"], True)) ?>]);
+                    } else {
+                        $("#max_connections").val(<?= $rUser["max_connections"] ?>);
+                        $("#cost_credits").html(0);
+                        $("#remaining_credits").html($.number(<?= $rUserInfo["credits"] ?>, 2));
+                        $("#exp_date").val('<?= date("Y-m-d", $rUser["exp_date"]) ?>');
+                        <?php if (!$canGenerateTrials) { ?>
+                            $(".purchase").prop('disabled', true);
+                        <?php }
+                        foreach (json_decode($rUser["bouquet"], True) as $rBouquetID) {
+                            $rBouquetData = getBouquet($rBouquetID);
+                            if (strlen($rBouquetID) > 0) { ?>
+                                rTable.row.add([<?= $rBouquetID ?>, '<?= $rBouquetData["bouquet_name"] ?>', <?= count(json_decode($rBouquetData["bouquet_channels"], True)) ?>, <?= count(json_decode($rBouquetData["bouquet_series"], True)) ?>]);
                             <?php }
-                            } ?>
-                            rTable.draw();
-                        }
+                        } ?>
+                        rTable.draw();
                     }
+                }
 
-                    $(document).ready(function() {
-                        $('select.select2').select2({
-                            width: '100%'
-                        })
-                        $(".js-switch").each(function(index, element) {
-                            var init = new Switchery(element);
-                            window.swObjs[element.id] = init;
-                        });
-                        $('#exp_date').daterangepicker({
-                            singleDatePicker: true,
-                            showDropdowns: true,
-                            minDate: new Date(),
-                            locale: {
-                                format: 'YYYY-MM-DD'
-                            }
-                        });
-
-                        $("#no_expire").change(function() {
-                            if ($(this).prop("checked")) {
-                                $("#exp_date").prop("disabled", true);
-                            } else {
-                                $("#exp_date").removeAttr("disabled");
-                            }
-                        });
-
-                        $(".js-switch").on("change", function() {
-                            evaluateForm();
-                        });
-
-                        $("#datatable-review").DataTable({
-                            language: {
-                                paginate: {
-                                    previous: "<i class='mdi mdi-chevron-left'>",
-                                    next: "<i class='mdi mdi-chevron-right'>"
-                                }
-                            },
-                            drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0, 2, 3]
-                            }],
-                            responsive: false,
-                            bInfo: false,
-                            searching: false,
-                            paging: false
-                        });
-                        $("#user_form").submit(function(e) {
-                            $("#allowed_ua option").prop('selected', true);
-                            $("#allowed_ips option").prop('selected', true);
-                        });
-
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-                        $("#add_ip").click(function() {
-                            if (($("#ip_field").val().length > 0) && (isValidIP($("#ip_field").val()))) {
-                                var o = new Option($("#ip_field").val(), $("#ip_field").val());
-                                $("#allowed_ips").append(o);
-                                $("#ip_field").val("");
-                            } else {
-                                $.toast("<?= $_["please_enter_a_valid_ip_address"] ?>");
-                            }
-                        });
-                        $("#remove_ip").click(function() {
-                            $('#allowed_ips option:selected').remove();
-                        });
-                        $("#add_ua").click(function() {
-                            if ($("#ua_field").val().length > 0) {
-                                var o = new Option($("#ua_field").val(), $("#ua_field").val());
-                                $("#allowed_ua").append(o);
-                                $("#ua_field").val("");
-                            } else {
-                                $.toast("<?= $_["please_enter_a_user_agent"] ?>");
-                            }
-                        });
-                        $("#remove_ua").click(function() {
-                            $('#allowed_ua option:selected').remove();
-                        });
-                        $("#max_connections").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("form").attr('autocomplete', 'off');
-
-                        evaluateForm();
-                        getPackage();
+                $(document).ready(function () {
+                    $('select.select2').select2({
+                        width: '100%'
+                    })
+                    $(".js-switch").each(function (index, element) {
+                        var init = new Switchery(element);
+                        window.swObjs[element.id] = init;
                     });
-                </script>
-                </body>
+                    $('#exp_date').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        minDate: new Date(),
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        }
+                    });
 
-                </html>
+                    $("#no_expire").change(function () {
+                        if ($(this).prop("checked")) {
+                            $("#exp_date").prop("disabled", true);
+                        } else {
+                            $("#exp_date").removeAttr("disabled");
+                        }
+                    });
+
+                    $(".js-switch").on("change", function () {
+                        evaluateForm();
+                    });
+
+                    $("#datatable-review").DataTable({
+                        language: {
+                            paginate: {
+                                previous: "<i class='mdi mdi-chevron-left'>",
+                                next: "<i class='mdi mdi-chevron-right'>"
+                            }
+                        },
+                        drawCallback: function () {
+                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                        },
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0, 2, 3]
+                        }],
+                        responsive: false,
+                        bInfo: false,
+                        searching: false,
+                        paging: false
+                    });
+                    $("#user_form").submit(function (e) {
+                        $("#allowed_ua option").prop('selected', true);
+                        $("#allowed_ips option").prop('selected', true);
+                    });
+
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+                    $("#add_ip").click(function () {
+                        if (($("#ip_field").val().length > 0) && (isValidIP($("#ip_field").val()))) {
+                            var o = new Option($("#ip_field").val(), $("#ip_field").val());
+                            $("#allowed_ips").append(o);
+                            $("#ip_field").val("");
+                        } else {
+                            $.toast("<?= $_["please_enter_a_valid_ip_address"] ?>");
+                        }
+                    });
+                    $("#remove_ip").click(function () {
+                        $('#allowed_ips option:selected').remove();
+                    });
+                    $("#add_ua").click(function () {
+                        if ($("#ua_field").val().length > 0) {
+                            var o = new Option($("#ua_field").val(), $("#ua_field").val());
+                            $("#allowed_ua").append(o);
+                            $("#ua_field").val("");
+                        } else {
+                            $.toast("<?= $_["please_enter_a_user_agent"] ?>");
+                        }
+                    });
+                    $("#remove_ua").click(function () {
+                        $('#allowed_ua option:selected').remove();
+                    });
+                    $("#max_connections").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("form").attr('autocomplete', 'off');
+
+                    evaluateForm();
+                    getPackage();
+                });
+            </script>
+            </body>
+
+            </html>

@@ -48,10 +48,10 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
 ?>
 
 <div class="wrapper boxed-layout-ext" <?php if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
-                                            echo '';
-                                        } else {
-                                            echo ' style="display: none;"';
-                                        } ?>>
+    echo '';
+} else {
+    echo ' style="display: none;"';
+} ?>>
     <div class="container-fluid">
         <form action="./cache.php" method="POST">
             <div class="row">
@@ -77,9 +77,9 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                             $rColour = 'secondary'; // Default color
                             $rHeader = 'Poor'; // Default header
                             $rSize = 25; // Default size
-
+                            
                             $rMessage = "You're using neither Caching or Redis Connection Handler, the server will perform poorly compared to having either enabled."; // Default message
-
+                            
                             if (ipTV_lib::$settings['enable_cache'] || ipTV_lib::$settings['redis_handler']) {
                                 $rHeader = 'Good';
                                 $rColour = 'info';
@@ -102,7 +102,9 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                             <h5 class="card-title"><?= $rHeader ?> Performance</h5>
                             <p><?= $rMessage ?></p>
                             <div class="progress mb-2">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-<?= $rColour ?>" role="progressbar" aria-valuenow="<?= $rSize ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?= $rSize ?>%"></div>
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-<?= $rColour ?>"
+                                    role="progressbar" aria-valuenow="<?= $rSize ?>" aria-valuemin="0"
+                                    aria-valuemax="100" style="width: <?= $rSize ?>%"></div>
                             </div>
                         </div>
                     </div>
@@ -119,7 +121,8 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                     <li class="nav-item">
                                         <a href="#connections" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                             <i class="mdi mdi-lan-connect mr-1"></i>
-                                            <span class="d-none d-sm-inline">Redis Connection Handler (not worked)</span>
+                                            <span class="d-none d-sm-inline">Redis Connection Handler (not
+                                                worked)</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -146,7 +149,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
 
                                                     <?php if ($rFreeCache >= 90): ?>
                                                         <div class="alert alert-danger mb-4" role="alert">
-                                                            <?= str_replace("{free_cache}",  $rFreeCache, $_["cache_cron_danger"]) ?>
+                                                            <?= str_replace("{free_cache}", $rFreeCache, $_["cache_cron_danger"]) ?>
                                                         </div>
                                                     <?php endif; ?>
 
@@ -157,43 +160,72 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                     <?php endif; ?>
 
                                                     <h5 class="card-title"><?= $_["cache_cron"] ?></h5>
-                                                    <p><?= str_replace("{time}", date("Y-m-d H:i:s", $rSettings['last_cache']), $_["cache_cron_description"]) ?></p>
+                                                    <p><?= str_replace("{time}", date("Y-m-d H:i:s", $rSettings['last_cache']), $_["cache_cron_description"]) ?>
+                                                    </p>
                                                     <div class="form-group row mb-4">
-                                                        <table class="table table-striped table-borderless mb-0" id="datatable-cache">
+                                                        <table class="table table-striped table-borderless mb-0"
+                                                            id="datatable-cache">
                                                             <tbody>
                                                                 <tr>
-                                                                    <td class="text-center"><?= $_["cache_cron_minute"] ?></td>
-                                                                    <td style="width:250px;"><input type="text" class="form-control text-center" id="minute" name="minute" value="<?= $rMinute ?>"></td>
-                                                                    <td class="text-center"><?= $_["cache_cron_hour"] ?></td>
-                                                                    <td style="width:250px;"><input type="text" class="form-control text-center" id="hour" name="hour" value="<?= $rHour ?>"></td>
+                                                                    <td class="text-center"><?= $_["cache_cron_minute"] ?>
+                                                                    </td>
+                                                                    <td style="width:250px;"><input type="text"
+                                                                            class="form-control text-center" id="minute"
+                                                                            name="minute" value="<?= $rMinute ?>"></td>
+                                                                    <td class="text-center"><?= $_["cache_cron_hour"] ?>
+                                                                    </td>
+                                                                    <td style="width:250px;"><input type="text"
+                                                                            class="form-control text-center" id="hour"
+                                                                            name="hour" value="<?= $rHour ?>"></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td class="text-center"><?= $_["cache_cron_thread_count"] ?></td>
-                                                                    <td><input type="text" class="form-control text-center" id="cache_thread_count" name="cache_thread_count" value="<?= intval($rSettings['cache_thread_count']) ?>"></td>
+                                                                    <td class="text-center">
+                                                                        <?= $_["cache_cron_thread_count"] ?>
+                                                                    </td>
+                                                                    <td><input type="text" class="form-control text-center"
+                                                                            id="cache_thread_count"
+                                                                            name="cache_thread_count"
+                                                                            value="<?= intval($rSettings['cache_thread_count']) ?>">
+                                                                    </td>
                                                                     <td class="text-center">Update Changes Only</td>
                                                                     <td>
-                                                                        <input name="cache_changes" id="cache_changes" type="checkbox" <?= $rSettings['cache_changes'] == 1 ? 'checked' : '' ?> data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                        <input name="cache_changes" id="cache_changes"
+                                                                            type="checkbox"
+                                                                            <?= $rSettings['cache_changes'] == 1 ? 'checked' : '' ?> data-plugin="switchery" class="js-switch"
+                                                                            data-color="#039cfd" />
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td class="text-center"><?= $_["cache_cron_streams"] ?></td>
-                                                                    <td class="text-center">
-                                                                        <button type="button" class="btn btn-info btn-xs waves-effect waves-light"><?= number_format($rStreamCountR) ?> / <?= number_format($rStreamCount) ?></button>
+                                                                    <td class="text-center"><?= $_["cache_cron_streams"] ?>
                                                                     </td>
-                                                                    <td class="text-center"><?= $_["cache_cron_users"] ?></td>
+                                                                    <td class="text-center">
+                                                                        <button type="button"
+                                                                            class="btn btn-info btn-xs waves-effect waves-light"><?= number_format($rStreamCountR) ?>
+                                                                            / <?= number_format($rStreamCount) ?></button>
+                                                                    </td>
+                                                                    <td class="text-center"><?= $_["cache_cron_users"] ?>
+                                                                    </td>
 
                                                                     <td class="text-center">
-                                                                        <button type="button" class="btn btn-info btn-xs waves-effect waves-light"><?= number_format($rUserCountR) ?> / <?= number_format($rUserCount) ?></button>
+                                                                        <button type="button"
+                                                                            class="btn btn-info btn-xs waves-effect waves-light"><?= number_format($rUserCountR) ?>
+                                                                            / <?= number_format($rUserCount) ?></button>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td class="text-center"><?= $_["cache_cron_series"] ?></td>
-                                                                    <td class="text-center">
-                                                                        <button type="button" class="btn btn-info btn-xs waves-effect waves-light"><?= number_format($rSeriesCountR) ?> / <?= number_format($rSeriesCount) ?></button>
+                                                                    <td class="text-center"><?= $_["cache_cron_series"] ?>
                                                                     </td>
-                                                                    <td class="text-center"><?= $_["cache_cron_time_taken"] ?></td>
                                                                     <td class="text-center">
-                                                                        <button type="button" class="btn btn-info btn-xs waves-effect waves-light"><?= secondsToTime($rSettings['last_cache_taken']) ?></button>
+                                                                        <button type="button"
+                                                                            class="btn btn-info btn-xs waves-effect waves-light"><?= number_format($rSeriesCountR) ?>
+                                                                            / <?= number_format($rSeriesCount) ?></button>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?= $_["cache_cron_time_taken"] ?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <button type="button"
+                                                                            class="btn btn-info btn-xs waves-effect waves-light"><?= secondsToTime($rSettings['last_cache_taken']) ?></button>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -201,21 +233,27 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                     </div>
                                                 <?php else: ?>
                                                     <h5 class="card-title">Cache is Disabled</h5>
-                                                    <p>You have chosen to disable Cache system. You can re-enable it by clicking the Enable Cache box below, however when doing so you would get best results restarting XUI on this server.</p>
+                                                    <p>You have chosen to disable Cache system. You can re-enable it by
+                                                        clicking the Enable Cache box below, however when doing so you would
+                                                        get best results restarting XUI on this server.</p>
                                                 <?php endif; ?>
 
                                                 <ul class="list-inline wizard mb-0" style="margin-top:30px;">
                                                     <?php if ($rSettings['enable_cache']): ?>
                                                         <li class="list-inline-item">
-                                                            <button id="disable_cache" onClick="api('disable_cache')" class="btn btn-danger" type="button">Disable Cache</button>
-                                                            <button id="regenerate_cache" onClick="api('regenerate_cache')" class="btn btn-info" type="button">Regenerate Cache</button>
+                                                            <button id="disable_cache" onClick="api('disable_cache')"
+                                                                class="btn btn-danger" type="button">Disable Cache</button>
+                                                            <button id="regenerate_cache" onClick="api('regenerate_cache')"
+                                                                class="btn btn-info" type="button">Regenerate Cache</button>
                                                         </li>
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_settings" type="submit" class="btn btn-primary" value="Save Cron" />
+                                                            <input name="submit_settings" type="submit"
+                                                                class="btn btn-primary" value="Save Cron" />
                                                         </li>
                                                     <?php else: ?>
                                                         <li class="list-inline-item">
-                                                            <button id="enable_cache" onClick="api('enable_cache')" class="btn btn-success" type="button">Enable Cache</button>
+                                                            <button id="enable_cache" onClick="api('enable_cache')"
+                                                                class="btn btn-success" type="button">Enable Cache</button>
                                                         </li>
                                                     <?php endif; ?>
                                                 </ul>
@@ -226,9 +264,29 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                         <div class="row">
                                             <div class="col-12">
                                                 <h5 class="card-title">Redis Connection Handler</h5>
-                                                <p>The handler will allow all connections from clients to load balancers to be verified and managed using Redis rather than through mysql connections.<br /><br /><strong>Disabling Redis handler will disconnect all of your active clients, enabling it however should move the live connections from MySQL to Redis without disconnects.</strong></p>
+                                                <p>The handler will allow all connections from clients to load balancers
+                                                    to be verified and managed using Redis rather than through mysql
+                                                    connections.<br /><br /><strong>Disabling Redis handler will
+                                                        disconnect all of your active clients, enabling it however
+                                                        should move the live connections from MySQL to Redis without
+                                                        disconnects.</strong></p>
                                                 <h5 class="card-title mt-4">Pros & Cons</h5>
-                                                <p>Before deciding whether Redis Connection Handler is right for you, you should know a few things. Firstly, enabling Redis will significantly increase XUI's ability to handle connections as the previous bottleneck would be from MySQL not being able to handle the amount of incoming client requests. You'll also find that zap time will be quicker, CPU should be lower and things will generally run quite smoothly.<br /><br />The drawbacks from using Redis is that the live connection database is stored in memory, although a backup is periodically written, restarting XUI can result in connection losses. In addition to this, your ability to filter or search some content in the Admin or Reseller interface will be diminished. For example, with Redis on you can only sort Live Connections by Time Active ascending or descending and you cannot search the live connection list. You also lose the ability to sort by Active Connections in Lines or Content pages etc.<br /><br />The best way to decide if Redis is right for you is to try it for yourself.</p>
+                                                <p>Before deciding whether Redis Connection Handler is right for you,
+                                                    you should know a few things. Firstly, enabling Redis will
+                                                    significantly increase XUI's ability to handle connections as the
+                                                    previous bottleneck would be from MySQL not being able to handle the
+                                                    amount of incoming client requests. You'll also find that zap time
+                                                    will be quicker, CPU should be lower and things will generally run
+                                                    quite smoothly.<br /><br />The drawbacks from using Redis is that
+                                                    the live connection database is stored in memory, although a backup
+                                                    is periodically written, restarting XUI can result in connection
+                                                    losses. In addition to this, your ability to filter or search some
+                                                    content in the Admin or Reseller interface will be diminished. For
+                                                    example, with Redis on you can only sort Live Connections by Time
+                                                    Active ascending or descending and you cannot search the live
+                                                    connection list. You also lose the ability to sort by Active
+                                                    Connections in Lines or Content pages etc.<br /><br />The best way
+                                                    to decide if Redis is right for you is to try it for yourself.</p>
 
                                                 <?php if ($rSettings['redis_handler']):
                                                     try {
@@ -245,26 +303,32 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                     } catch (Exception $e) {
                                                         $rAuth = false;
                                                     }
-                                                ?>
+                                                    ?>
 
                                                     <div class="form-group row mb-4 mt-4">
-                                                        <table class="table table-striped table-borderless mb-0" id="datatable-redis">
+                                                        <table class="table table-striped table-borderless mb-0"
+                                                            id="datatable-redis">
                                                             <tbody>
                                                                 <tr>
                                                                     <td class="text-center">Server Status</td>
                                                                     <td class="text-center">
                                                                         <?php if ($rStatus): ?>
-                                                                            <button type="button" class="btn btn-success btn-xs waves-effect waves-light btn-fixed-xl">ONLINE</button>
+                                                                            <button type="button"
+                                                                                class="btn btn-success btn-xs waves-effect waves-light btn-fixed-xl">ONLINE</button>
                                                                         <?php else: ?>
-                                                                            <button type="button" class="btn btn-danger btn-xs waves-effect waves-light btn-fixed-xl">OFFLINE</button>
+                                                                            <button type="button"
+                                                                                class="btn btn-danger btn-xs waves-effect waves-light btn-fixed-xl">OFFLINE</button>
                                                                         <?php endif; ?>
                                                                     </td>
                                                                     <td class="text-center">Authentication</td>
                                                                     <td class="text-center">
                                                                         <?php if ($rAuth): ?>
-                                                                            <button type="button" class="btn btn-success btn-xs waves-effect waves-light btn-fixed-xl">AUTHENTICATED</button>
+                                                                            <button type="button"
+                                                                                class="btn btn-success btn-xs waves-effect waves-light btn-fixed-xl">AUTHENTICATED</button>
                                                                         <?php else: ?>
-                                                                            <button type="button" class="btn btn-danger btn-xs waves-effect waves-light btn-fixed-xl">INVALID PASSWORD</button>
+                                                                            <button type="button"
+                                                                                class="btn btn-danger btn-xs waves-effect waves-light btn-fixed-xl">INVALID
+                                                                                PASSWORD</button>
                                                                         <?php endif; ?>
                                                                     </td>
                                                                 </tr>
@@ -272,19 +336,23 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                         </table>
                                                     </div>
                                                 <?php else: ?>
-                                                    <p><strong>You have chosen to disable Redis Connection Handler. Click the button below to re-enable it.</strong></p>
+                                                    <p><strong>You have chosen to disable Redis Connection Handler. Click
+                                                            the button below to re-enable it.</strong></p>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
                                         <ul class="list-inline wizard mb-0" style="margin-top:30px;">
                                             <?php if ($rSettings['redis_handler']): ?>
                                                 <li class="list-inline-item">
-                                                    <button id="disable_handler" onClick="api('disable_handler')" class="btn btn-danger" type="button">Disable Handler</button>
-                                                    <button id="clear_redis" onClick="api('clear_redis')" class="btn btn-info" type="button">Clear Database</button>
+                                                    <button id="disable_handler" onClick="api('disable_handler')"
+                                                        class="btn btn-danger" type="button">Disable Handler</button>
+                                                    <button id="clear_redis" onClick="api('clear_redis')"
+                                                        class="btn btn-info" type="button">Clear Database</button>
                                                 </li>
                                             <?php else: ?>
                                                 <li class="list-inline-item">
-                                                    <button id="enable_handler" onClick="api('enable_handler')" class="btn btn-success" type="button">Enable Handler</button>
+                                                    <button id="enable_handler" onClick="api('enable_handler')"
+                                                        class="btn btn-success" type="button">Enable Handler</button>
                                                 </li>
                                             <?php endif; ?>
                                         </ul>
@@ -344,7 +412,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                 confirmButton: "Clear",
                 cancelButton: "Cancel",
                 content: "Are you sure you want to clear the Redis database? This will drop all connections.",
-                confirm: function() {
+                confirm: function () {
                     api(rType, true);
                 }
             }).open();
@@ -372,20 +440,20 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                 $.toast("Redis database has been cleared!");
                 $("#clear_redis").attr("disabled", true);
             }
-            $.getJSON("./api.php?action=" + rType, function(data) {
+            $.getJSON("./api.php?action=" + rType, function (data) {
                 if (data.result == true) {
                     window.location.reload();
                 } else {
                     $.toast("An error occured while processing your request.");
                 }
-            }).fail(function() {
+            }).fail(function () {
                 $.toast("An error occured while processing your request.");
             });
         }
     }
-    (function($) {
-        $.fn.inputFilter = function(inputFilter) {
-            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+    (function ($) {
+        $.fn.inputFilter = function (inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
                 if (inputFilter(this.value)) {
                     this.oldValue = this.value;
                     this.oldSelectionStart = this.selectionStart;
@@ -398,17 +466,17 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
         };
     }(jQuery));
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('select').select2({
             width: '100%'
         });
-        $("#minute").keypress(function(e) {
+        $("#minute").keypress(function (e) {
             return checkRegex(e);
         });
-        $("#hour").keypress(function(e) {
+        $("#hour").keypress(function (e) {
             return checkRegex(e);
         });
-        $("#cache_thread_count").inputFilter(function(value) {
+        $("#cache_thread_count").inputFilter(function (value) {
             return /^\d*$/.test(value);
         });
         $("form").attr('autocomplete', 'off');

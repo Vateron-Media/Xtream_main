@@ -497,14 +497,14 @@ class XML_Util {
                 return (
                     preg_replace(
                         '/<(area|base(?:font)?|br|col|frame|hr|img|input|isindex|link|meta|'
-                            . 'param)([^>]*)><\/\\1>/s',
+                        . 'param)([^>]*)><\/\\1>/s',
                         '<\\1\\2 />',
                         $xml
                     ) ?: $xml
                 );
                 break;
             case XML_UTIL_COLLAPSE_NONE:
-                // fall thru
+            // fall thru
             default:
                 return $xml;
         }
@@ -663,7 +663,7 @@ class XML_Util {
         if (!isset($tag['qname']) && !isset($tag['localPart'])) {
             return XML_Util::raiseError(
                 'You must either supply a qualified name '
-                    . '(qname) or local tag name (localPart).',
+                . '(qname) or local tag name (localPart).',
                 XML_UTIL_ERROR_NO_TAG_NAME
             );
         }
@@ -959,13 +959,13 @@ class XML_Util {
         // check for invalid chars
         $match = preg_match(
             '/^([[:alpha:]_]([[:alnum:]\-\.]*)?:)?'
-                . '[[:alpha:]_]([[:alnum:]\_\-\.]+)?\\z/',
+            . '[[:alpha:]_]([[:alnum:]\_\-\.]+)?\\z/',
             $string
         );
         if (!$match) {
             return XML_Util::raiseError(
                 'XML names may only contain alphanumeric '
-                    . 'chars, period, hyphen, colon and underscores',
+                . 'chars, period, hyphen, colon and underscores',
                 XML_UTIL_ERROR_INVALID_CHARS
             );
         }

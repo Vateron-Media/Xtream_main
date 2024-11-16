@@ -566,7 +566,7 @@ class PEAR_ErrorStack {
                 case PEAR_ERRORSTACK_DIE:
                     $die = true;
                     break;
-                    // anything else returned has the same effect as pushandlog
+                // anything else returned has the same effect as pushandlog
             }
         }
         if ($push) {

@@ -45,16 +45,16 @@ function main() {
      * looks like it doesn't belong, it probably doesn't; cull at will.
      */
     global $DETAILED, $PHP_FAILED_TESTS, $SHOW_ONLY_GROUPS, $argc, $argv, $cfg,
-        $cfgfiles, $cfgtypes, $conf_passed, $end_time, $environment,
-        $exts_skipped, $exts_tested, $exts_to_test, $failed_tests_file,
-        $html_file, $html_output, $ignored_by_ext, $ini_overwrites, $is_switch,
-        $just_save_results, $log_format, $matches, $no_clean, $no_file_cache,
-        $optionals, $output_file, $pass_option_n, $pass_options,
-        $pattern_match, $php, $php_cgi, $phpdbg, $preload, $redir_tests,
-        $repeat, $result_tests_file, $slow_min_ms, $start_time, $switch,
-        $temp_source, $temp_target, $temp_urlbase, $test_cnt, $test_dirs,
-        $test_files, $test_idx, $test_list, $test_results, $testfile,
-        $user_tests, $valgrind, $sum_results, $shuffle;
+    $cfgfiles, $cfgtypes, $conf_passed, $end_time, $environment,
+    $exts_skipped, $exts_tested, $exts_to_test, $failed_tests_file,
+    $html_file, $html_output, $ignored_by_ext, $ini_overwrites, $is_switch,
+    $just_save_results, $log_format, $matches, $no_clean, $no_file_cache,
+    $optionals, $output_file, $pass_option_n, $pass_options,
+    $pattern_match, $php, $php_cgi, $phpdbg, $preload, $redir_tests,
+    $repeat, $result_tests_file, $slow_min_ms, $start_time, $switch,
+    $temp_source, $temp_target, $temp_urlbase, $test_cnt, $test_dirs,
+    $test_files, $test_idx, $test_list, $test_results, $testfile,
+    $user_tests, $valgrind, $sum_results, $shuffle;
     // Parallel testing
     global $workers, $workerID;
 
@@ -102,7 +102,8 @@ NO_PROC_OPEN_ERROR;
     ini_set('pcre.backtrack_limit', PHP_INT_MAX);
 
     // delete as much output buffers as possible
-    while (@ob_end_clean()) {;
+    while (@ob_end_clean()) {
+        ;
     }
     if (ob_get_level()) {
         echo "Not all buffers were deleted.\n";
@@ -266,7 +267,7 @@ NO_PROC_OPEN_ERROR;
     define('PHP_QA_EMAIL', 'qa-reports@lists.php.net');
     define('QA_SUBMISSION_PAGE', 'http://qa.php.net/buildtest-process.php');
     define('QA_REPORTS_PAGE', 'http://qa.php.net/reports');
-    define('TRAVIS_CI', (bool)getenv('TRAVIS'));
+    define('TRAVIS_CI', (bool) getenv('TRAVIS'));
 
     // Determine the tests to be run.
 
@@ -392,7 +393,7 @@ NO_PROC_OPEN_ERROR;
                         break;
                     }
                     $i--;
-                    // break left intentionally
+                // break left intentionally
                 case 'w':
                     $failed_tests_file = fopen($argv[++$i], 'w+t');
                     break;
@@ -411,13 +412,13 @@ NO_PROC_OPEN_ERROR;
                 case 'g':
                     $SHOW_ONLY_GROUPS = explode(",", $argv[++$i]);
                     break;
-                    //case 'h'
+                //case 'h'
                 case '--keep-all':
                     foreach ($cfgfiles as $file) {
                         $cfg['keep'][$file] = true;
                     }
                     break;
-                    //case 'l'
+                //case 'l'
                 case 'm':
                     $valgrind = new RuntestsValgrind($environment);
                     break;
@@ -453,7 +454,7 @@ NO_PROC_OPEN_ERROR;
                     putenv('NO_INTERACTION=1');
                     $environment['NO_INTERACTION'] = 1;
                     break;
-                    //case 'r'
+                //case 'r'
                 case 's':
                     $output_file = $argv[++$i];
                     $just_save_results = true;
@@ -506,7 +507,7 @@ NO_PROC_OPEN_ERROR;
                             . ':print_suppressions=0';
                     }
                     break;
-                    //case 'w'
+                //case 'w'
                 case '-':
                     // repeat check with full switch
                     $switch = $argv[$i];
@@ -913,7 +914,7 @@ VALGRIND    : " . ($valgrind ? $valgrind->getHeader() : 'Not used') . "
 
 function save_or_mail_results() {
     global $sum_results, $just_save_results, $failed_test_summary,
-        $PHP_FAILED_TESTS, $php, $output_file;
+    $PHP_FAILED_TESTS, $php, $output_file;
 
     /* We got failed Tests, offer the user to send an e-mail to QA team, unless NO_INTERACTION is set */
     if (!getenv('NO_INTERACTION') && !TRAVIS_CI) {
@@ -1168,7 +1169,8 @@ function save_text($filename, $text, $filename_copy = null) {
         error("Cannot open file '" . $filename . "' (save_text)");
     }
 
-    if (1 < $DETAILED) echo "
+    if (1 < $DETAILED)
+        echo "
 FILE $filename {{{
 $text
 }}}
@@ -1201,7 +1203,7 @@ function system_with_timeout($commandline, $env = null, $stdin = null, $captureS
     $data = '';
 
     $bin_env = array();
-    foreach ((array)$env as $key => $value) {
+    foreach ((array) $env as $key => $value) {
         $bin_env[$key] = $value;
     }
 
@@ -1536,7 +1538,7 @@ function run_all_tests_parallel($test_files, $env, $redir_tested) {
                             if (junit_enabled()) {
                                 junit_merge_results($message["junit"]);
                             }
-                            // intentional fall-through
+                        // intentional fall-through
                         case "ready":
                             // Schedule sequential tests only once we are down to one worker.
                             if (count($workerProcs) === 1 && $sequentialTests) {
@@ -1772,7 +1774,8 @@ function run_test($php, $file, $env) {
         $file = $file[0];
     }
 
-    if ($DETAILED) echo "
+    if ($DETAILED)
+        echo "
 =================
 TEST $file
 ";
@@ -1810,7 +1813,7 @@ TEST $file
 
         // Match the beginning of a section.
         if (preg_match('/^--([_A-Z]+)--/', $line, $r)) {
-            $section = (string)$r[1];
+            $section = (string) $r[1];
 
             if (isset($section_text[$section]) && $section_text[$section]) {
                 $bork_info = "duplicated $section section";
@@ -2217,7 +2220,7 @@ TEST $file
     if (isset($section_text['REDIRECTTEST'])) {
         $test_files = array();
 
-        $IN_REDIRECT = eval($section_text['REDIRECTTEST']);
+        $IN_REDIRECT = eval ($section_text['REDIRECTTEST']);
         $IN_REDIRECT['via'] = "via [$shortname]\n\t";
         $IN_REDIRECT['dir'] = realpath(dirname($file));
         $IN_REDIRECT['prefix'] = trim($section_text['TEST']);
@@ -2453,7 +2456,8 @@ TEST $file
         $cmd = $valgrind->wrapCommand($cmd, $memcheck_filename, strpos($test_file, "pcre") !== false);
     }
 
-    if ($DETAILED) echo "
+    if ($DETAILED)
+        echo "
 CONTENT_LENGTH  = " . $env['CONTENT_LENGTH'] . "
 CONTENT_TYPE    = " . $env['CONTENT_TYPE'] . "
 PATH_TRANSLATED = " . $env['PATH_TRANSLATED'] . "
@@ -3301,12 +3305,12 @@ function show_result($result, $tested, $tested_file, $extra = '', $temp_filename
         fwrite(
             $html_file,
             "<tr>" .
-                "<td>$result</td>" .
-                "<td>$tested</td>" .
-                "<td>$extra</td>" .
-                "<td>$diff</td>" .
-                "<td>$mem</td>" .
-                "</tr>\n"
+            "<td>$result</td>" .
+            "<td>$tested</td>" .
+            "<td>$extra</td>" .
+            "<td>$diff</td>" .
+            "<td>$mem</td>" .
+            "</tr>\n"
         );
     }
 }
@@ -3341,7 +3345,8 @@ function junit_init() {
 
 function junit_save_xml() {
     global $JUNIT;
-    if (!junit_enabled()) return;
+    if (!junit_enabled())
+        return;
 
     $xml = '<' . '?' . 'xml version="1.0" encoding="UTF-8"' . '?' . '>' . PHP_EOL;
     $xml .= sprintf(
@@ -3402,7 +3407,8 @@ function junit_enabled() {
  */
 function junit_mark_test_as($type, $file_name, $test_name, $time = null, $message = '', $details = '') {
     global $JUNIT;
-    if (!junit_enabled()) return;
+    if (!junit_enabled())
+        return;
 
     $suite = junit_get_suitename_for($file_name);
 
@@ -3459,7 +3465,8 @@ function junit_suite_record($suite, $param, $value = 1) {
 
 function junit_get_timer($file_name) {
     global $JUNIT;
-    if (!junit_enabled()) return 0;
+    if (!junit_enabled())
+        return 0;
 
     if (isset($JUNIT['files'][$file_name]['total'])) {
         return number_format($JUNIT['files'][$file_name]['total'], 4);
@@ -3470,7 +3477,8 @@ function junit_get_timer($file_name) {
 
 function junit_start_timer($file_name) {
     global $JUNIT;
-    if (!junit_enabled()) return;
+    if (!junit_enabled())
+        return;
 
     if (!isset($JUNIT['files'][$file_name]['start'])) {
         $JUNIT['files'][$file_name]['start'] = microtime(true);
@@ -3488,7 +3496,8 @@ function junit_get_suitename_for($file_name) {
 function junit_path_to_classname($file_name) {
     global $JUNIT;
 
-    if (!junit_enabled()) return '';
+    if (!junit_enabled())
+        return '';
 
     $ret = $JUNIT['name'];
     $_tmp = array();
@@ -3520,7 +3529,8 @@ function junit_path_to_classname($file_name) {
 
 function junit_init_suite($suite_name) {
     global $JUNIT;
-    if (!junit_enabled()) return;
+    if (!junit_enabled())
+        return;
 
     if (!empty($JUNIT['suites'][$suite_name])) {
         return;
@@ -3541,7 +3551,8 @@ function junit_init_suite($suite_name) {
 
 function junit_finish_timer($file_name) {
     global $JUNIT;
-    if (!junit_enabled()) return;
+    if (!junit_enabled())
+        return;
 
     if (!isset($JUNIT['files'][$file_name]['start'])) {
         error("Timer for $file_name was not started!");
@@ -3559,11 +3570,11 @@ function junit_finish_timer($file_name) {
 function junit_merge_results($junit) {
     global $JUNIT;
     $JUNIT['test_total'] += $junit['test_total'];
-    $JUNIT['test_pass']  += $junit['test_pass'];
-    $JUNIT['test_fail']  += $junit['test_fail'];
+    $JUNIT['test_pass'] += $junit['test_pass'];
+    $JUNIT['test_fail'] += $junit['test_fail'];
     $JUNIT['test_error'] += $junit['test_error'];
-    $JUNIT['test_skip']  += $junit['test_skip'];
-    $JUNIT['test_warn']  += $junit['test_warn'];
+    $JUNIT['test_skip'] += $junit['test_skip'];
+    $JUNIT['test_warn'] += $junit['test_warn'];
     $JUNIT['execution_time'] += $junit['execution_time'];
     $JUNIT['files'] += $junit['files'];
     foreach ($junit['suites'] as $name => $suite) {
@@ -3574,11 +3585,11 @@ function junit_merge_results($junit) {
 
         $SUITE = &$JUNIT['suites'][$name];
         $SUITE['test_total'] += $suite['test_total'];
-        $SUITE['test_pass']  += $suite['test_pass'];
-        $SUITE['test_fail']  += $suite['test_fail'];
+        $SUITE['test_pass'] += $suite['test_pass'];
+        $SUITE['test_fail'] += $suite['test_fail'];
         $SUITE['test_error'] += $suite['test_error'];
-        $SUITE['test_skip']  += $suite['test_skip'];
-        $SUITE['test_warn']  += $suite['test_warn'];
+        $SUITE['test_skip'] += $suite['test_skip'];
+        $SUITE['test_warn'] += $suite['test_warn'];
         $SUITE['execution_time'] += $suite['execution_time'];
         $SUITE['files'] += $suite['files'];
     }

@@ -16,7 +16,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
             ipTV_lib::$Servers = ipTV_lib::getServers();
             $rType = intval($argv[1]);
             $rPort = intval($argv[3]);
-            list(,,,, $rUsername, $rPassword) = $argv;
+            list(, , , , $rUsername, $rPassword) = $argv;
             $rHTTPPort = (empty($argv[6]) ? 25461 : intval($argv[6]));
             $rHTTPSPort = (empty($argv[7]) ? 25463 : intval($argv[7]));
             $rUpdateSysctl = (empty($argv[8]) ? 0 : intval($argv[8]));
@@ -66,7 +66,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     'mariadb-server'
                 );
                 $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $lastVersion . '/' . $rFiles['lb'];
-            } else  if ($rType == 2) {
+            } else if ($rType == 2) {
                 $rPackages = array('cpufrequtils');
                 $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $lastVersion . '/' . $rFiles['lb_update'];
             } else {

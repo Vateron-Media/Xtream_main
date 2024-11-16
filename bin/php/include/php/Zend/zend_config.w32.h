@@ -24,17 +24,17 @@
 
 #define _CRTDBG_MAP_ALLOC
 
+#include <crtdbg.h>
 #include <malloc.h>
 #include <stdlib.h>
-#include <crtdbg.h>
 
 #include <string.h>
 
 #ifndef ZEND_INCLUDE_FULL_WINDOWS_HEADERS
 #define WIN32_LEAN_AND_MEAN
 #endif
-#include <winsock2.h>
 #include <windows.h>
+#include <winsock2.h>
 
 #include <float.h>
 
@@ -55,9 +55,10 @@ extern "C++" {
 #define zend_finite std::isfinite
 }
 #else
-#define zend_isinf(a)	((_fpclass(a) == _FPCLASS_PINF) || (_fpclass(a) == _FPCLASS_NINF))
-#define zend_finite(x)	_finite(x)
-#define zend_isnan(x)	_isnan(x)
+#define zend_isinf(a)                                                          \
+  ((_fpclass(a) == _FPCLASS_PINF) || (_fpclass(a) == _FPCLASS_NINF))
+#define zend_finite(x) _finite(x)
+#define zend_isnan(x) _isnan(x)
 #endif
 
 #ifndef __cplusplus
@@ -65,18 +66,18 @@ extern "C++" {
  * a much quicker PHP binary
  */
 #ifdef ZEND_WIN32_FORCE_INLINE
-# undef inline
-# define inline __forceinline
+#undef inline
+#define inline __forceinline
 #endif
 #endif
 
 #ifdef LIBZEND_EXPORTS
-#	define ZEND_API __declspec(dllexport)
+#define ZEND_API __declspec(dllexport)
 #else
-#	define ZEND_API __declspec(dllimport)
+#define ZEND_API __declspec(dllimport)
 #endif
 
-#define ZEND_DLEXPORT		__declspec(dllexport)
-#define ZEND_DLIMPORT		__declspec(dllimport)
+#define ZEND_DLEXPORT __declspec(dllexport)
+#define ZEND_DLIMPORT __declspec(dllimport)
 
 #endif /* ZEND_CONFIG_W32_H */

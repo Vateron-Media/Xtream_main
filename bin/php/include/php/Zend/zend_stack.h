@@ -21,10 +21,9 @@
 #define ZEND_STACK_H
 
 typedef struct _zend_stack {
-	int size, top, max;
-	void *elements;
+  int size, top, max;
+  void *elements;
 } zend_stack;
-
 
 #define STACK_BLOCK_SIZE 16
 
@@ -38,12 +37,17 @@ ZEND_API int zend_stack_is_empty(const zend_stack *stack);
 ZEND_API int zend_stack_destroy(zend_stack *stack);
 ZEND_API void *zend_stack_base(const zend_stack *stack);
 ZEND_API int zend_stack_count(const zend_stack *stack);
-ZEND_API void zend_stack_apply(zend_stack *stack, int type, int (*apply_function)(void *element));
-ZEND_API void zend_stack_apply_with_argument(zend_stack *stack, int type, int (*apply_function)(void *element, void *arg), void *arg);
-ZEND_API void zend_stack_clean(zend_stack *stack, void (*func)(void *), zend_bool free_elements);
+ZEND_API void zend_stack_apply(zend_stack *stack, int type,
+                               int (*apply_function)(void *element));
+ZEND_API void
+zend_stack_apply_with_argument(zend_stack *stack, int type,
+                               int (*apply_function)(void *element, void *arg),
+                               void *arg);
+ZEND_API void zend_stack_clean(zend_stack *stack, void (*func)(void *),
+                               zend_bool free_elements);
 END_EXTERN_C()
 
-#define ZEND_STACK_APPLY_TOPDOWN	1
-#define ZEND_STACK_APPLY_BOTTOMUP	2
+#define ZEND_STACK_APPLY_TOPDOWN 1
+#define ZEND_STACK_APPLY_BOTTOMUP 2
 
 #endif /* ZEND_STACK_H */

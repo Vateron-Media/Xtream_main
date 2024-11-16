@@ -76,24 +76,24 @@ if ($rSettings["sidebar"]) { ?>
                                         </thead>
                                         <tbody>
                                             <?php foreach (getSecurityCenter() as $rIP) {
-                                            ?>
+                                                ?>
                                                 <tr id="ip-<?= $rIP["id"] ?>">
                                                     <td class="text-center"><a
                                                             href="./user.php?id=<?= $rIP["id"] ?>"><?= $rIP["id"] ?></td>
                                                     <!--<td class="text-center"><?= $rIP["FROM_BASE64(mac)"] ?></td>-->
                                                     <td class="text-center"><?php
-                                                                            $MAG_or_M3U = $rIP["FROM_BASE64(mac)"];
+                                                    $MAG_or_M3U = $rIP["FROM_BASE64(mac)"];
 
-                                                                            // True because $MAG_or_M3U is empty
-                                                                            if (empty($MAG_or_M3U)) {
-                                                                                echo $rIP["username"];
-                                                                            }
+                                                    // True because $MAG_or_M3U is empty
+                                                    if (empty($MAG_or_M3U)) {
+                                                        echo $rIP["username"];
+                                                    }
 
-                                                                            // True because $MAG_or_M3U is set
-                                                                            if (isset($MAG_or_M3U)) {
-                                                                                echo $rIP["FROM_BASE64(mac)"];
-                                                                            }
-                                                                            ?></td>
+                                                    // True because $MAG_or_M3U is set
+                                                    if (isset($MAG_or_M3U)) {
+                                                        echo $rIP["FROM_BASE64(mac)"];
+                                                    }
+                                                    ?></td>
                                                     <!--<td class="text-center"><?= $rIP["username"] ?></td>-->
                                                     <!--<td class="text-center"><?= $rIP["password"] ?></td>-->
                                                     <td class="text-center"><?= $rIP["stream_display_name"] ?></td>
@@ -105,12 +105,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 class="btn btn-outline-danger waves-effect waves-light btn-xs"><i
                                                                     class="far fa-eye"></i></button></a></td>
                                                     <!--<td class="text-center"><?php
-                                                                                if ($rIP["is_restreamer"] > 0) {
-                                                                                    echo '<i class="text-success fas fa-check fa-lg"></i>';
-                                                                                } else {
-                                                                                    echo '<i class="text-danger fas fa-times fa-lg"></i>';
-                                                                                }
-                                                                                rIP["is_restreamer"] ?></td>-->
+                                                    if ($rIP["is_restreamer"] > 0) {
+                                                        echo '<i class="text-success fas fa-check fa-lg"></i>';
+                                                    } else {
+                                                        echo '<i class="text-danger fas fa-times fa-lg"></i>';
+                                                    }
+                                                    rIP["is_restreamer"] ?></td>-->
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -148,25 +148,25 @@ if ($rSettings["sidebar"]) { ?>
                                         </thead>
                                         <tbody>
                                             <?php foreach (getLeakedLines() as $rIP) {
-                                            ?>
+                                                ?>
                                                 <tr id="ip-<?= $rIP["id"] ?>">
                                                     <td class="text-center"><a
                                                             href="./user.php?id=<?= $rIP["user_id"] ?>"><?= $rIP["user_id"] ?>
                                                     </td>
                                                     <!--<td class="text-center"><?= $rIP["FROM_BASE64(mac)"] ?></td>-->
                                                     <td class="text-center"><?php
-                                                                            $MAG_or_M3U = $rIP["FROM_BASE64(mac)"];
+                                                    $MAG_or_M3U = $rIP["FROM_BASE64(mac)"];
 
-                                                                            // True because $MAG_or_M3U is empty
-                                                                            if (empty($MAG_or_M3U)) {
-                                                                                echo $rIP["username"];
-                                                                            }
+                                                    // True because $MAG_or_M3U is empty
+                                                    if (empty($MAG_or_M3U)) {
+                                                        echo $rIP["username"];
+                                                    }
 
-                                                                            // True because $MAG_or_M3U is set
-                                                                            if (isset($MAG_or_M3U)) {
-                                                                                echo $rIP["FROM_BASE64(mac)"];
-                                                                            }
-                                                                            ?></td>
+                                                    // True because $MAG_or_M3U is set
+                                                    if (isset($MAG_or_M3U)) {
+                                                        echo $rIP["FROM_BASE64(mac)"];
+                                                    }
+                                                    ?></td>
                                                     <!--<td class="text-center"><?= $rIP["username"] ?></td>-->
                                                     <!--<td class="text-center"><?= $rIP["password"] ?></td>-->
                                                     <td class="text-center"><?= $rIP["GROUP_CONCAT(DISTINCT container)"] ?>
@@ -182,12 +182,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 class="btn btn-outline-danger waves-effect waves-light btn-xs"><i
                                                                     class="far fa-eye"></i></button></a></td>
                                                     <!--<td class="text-center"><?php
-                                                                                if ($rIP["is_restreamer"] > 0) {
-                                                                                    echo '<i class="text-success fas fa-check fa-lg"></i>';
-                                                                                } else {
-                                                                                    echo '<i class="text-danger fas fa-times fa-lg"></i>';
-                                                                                }
-                                                                                rIP["is_restreamer"] ?></td>-->
+                                                    if ($rIP["is_restreamer"] > 0) {
+                                                        echo '<i class="text-success fas fa-check fa-lg"></i>';
+                                                    } else {
+                                                        echo '<i class="text-danger fas fa-times fa-lg"></i>';
+                                                    }
+                                                    rIP["is_restreamer"] ?></td>-->
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -198,101 +198,101 @@ if ($rSettings["sidebar"]) { ?>
                         </div><!-- end col-->
                     </div>
                     <!-- end row-->
-                    </div> <!-- end container -->
                 </div> <!-- end container -->
-            </div>
-            <!-- end wrapper -->
-            <?php if ($rSettings["sidebar"]) {
-                echo "</div>";
-            } ?>
-            <!-- Footer Start -->
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                    </div>
+            </div> <!-- end container -->
+        </div>
+        <!-- end wrapper -->
+        <?php if ($rSettings["sidebar"]) {
+            echo "</div>";
+        } ?>
+        <!-- Footer Start -->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                 </div>
-            </footer>
-            <!-- end Footer -->
+            </div>
+        </footer>
+        <!-- end Footer -->
 
-            <script src="assets/js/vendor.min.js"></script>
-            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-            <script src="assets/libs/datatables/buttons.print.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-            <script src="assets/libs/pdfmake/pdfmake.min.js"></script>
-            <script src="assets/libs/pdfmake/vfs_fonts.js"></script>
+        <script src="assets/js/vendor.min.js"></script>
+        <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+        <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+        <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+        <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+        <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+        <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+        <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+        <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+        <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+        <script src="assets/libs/datatables/buttons.print.min.js"></script>
+        <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+        <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+        <script src="assets/libs/pdfmake/pdfmake.min.js"></script>
+        <script src="assets/libs/pdfmake/vfs_fonts.js"></script>
 
-            <script>
-                function api(rID, rType) {
-                    if (rType == "delete") {
-                        if (confirm('Are you sure you want to delete this IP? This cannot be undone!') == false) {
-                            return;
-                        } else {
-                            $.toast("The IP is being unblocked from each server...");
-                            if (rType == "delete") {
-                                $("#ip-" + rID).remove();
-                            }
-                            $.each($('.tooltip'), function(index, element) {
-                                $(this).remove();
-                            });
-                            $('[data-toggle="tooltip"]').tooltip();
+        <script>
+            function api(rID, rType) {
+                if (rType == "delete") {
+                    if (confirm('Are you sure you want to delete this IP? This cannot be undone!') == false) {
+                        return;
+                    } else {
+                        $.toast("The IP is being unblocked from each server...");
+                        if (rType == "delete") {
+                            $("#ip-" + rID).remove();
                         }
+                        $.each($('.tooltip'), function (index, element) {
+                            $(this).remove();
+                        });
+                        $('[data-toggle="tooltip"]').tooltip();
                     }
-                    $.getJSON("./api.php?action=ip&sub=" + rType + "&ip=" + rID, function(data) {
-                        if (data.result === true) {
-                            if (rType == "delete") {
-                                $.toast("IP successfully deleted.");
-                            }
-                        } else {
-                            $.toast("An error occured while processing your request.");
-                        }
-                    });
                 }
-
-                $(document).ready(function() {
-                    $("#datatable").DataTable({
-                        language: {
-                            paginate: {
-                                previous: "<i class='mdi mdi-chevron-left'>",
-                                next: "<i class='mdi mdi-chevron-right'>"
-                            }
-                        },
-                        drawCallback: function() {
-                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                        },
-                        responsive: false
-                    });
-                    $("#datatable").css("width", "100%");
+                $.getJSON("./api.php?action=ip&sub=" + rType + "&ip=" + rID, function (data) {
+                    if (data.result === true) {
+                        if (rType == "delete") {
+                            $.toast("IP successfully deleted.");
+                        }
+                    } else {
+                        $.toast("An error occured while processing your request.");
+                    }
                 });
+            }
 
-                $(document).ready(function() {
-                    $("#datatable2").DataTable({
-                        language: {
-                            paginate: {
-                                previous: "<i class='mdi mdi-chevron-left'>",
-                                next: "<i class='mdi mdi-chevron-right'>"
-                            }
-                        },
-                        drawCallback: function() {
-                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                        },
-                        responsive: false
-                    });
-                    $("#datatable2").css("width", "100%");
+            $(document).ready(function () {
+                $("#datatable").DataTable({
+                    language: {
+                        paginate: {
+                            previous: "<i class='mdi mdi-chevron-left'>",
+                            next: "<i class='mdi mdi-chevron-right'>"
+                        }
+                    },
+                    drawCallback: function () {
+                        $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                    },
+                    responsive: false
                 });
-            </script>
+                $("#datatable").css("width", "100%");
+            });
 
-            <!-- App js-->
-            <script src="assets/js/app.min.js"></script>
-            </body>
+            $(document).ready(function () {
+                $("#datatable2").DataTable({
+                    language: {
+                        paginate: {
+                            previous: "<i class='mdi mdi-chevron-left'>",
+                            next: "<i class='mdi mdi-chevron-right'>"
+                        }
+                    },
+                    drawCallback: function () {
+                        $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                    },
+                    responsive: false
+                });
+                $("#datatable2").css("width", "100%");
+            });
+        </script>
 
-            </html>
+        <!-- App js-->
+        <script src="assets/js/app.min.js"></script>
+        </body>
+
+        </html>

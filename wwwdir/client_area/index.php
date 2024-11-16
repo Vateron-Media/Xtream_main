@@ -26,7 +26,7 @@ if (!(!empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] === t
     }
     A343c01625b4df947736524e5fc743da:
     Ebb02f8298a9003b768842c44f9d2a97:
-?>
+    ?>
     <!DOCTYPE html>
     <html>
 
@@ -69,7 +69,7 @@ if (!(!empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] === t
     </body>
 
     </html>
-<?php
+    <?php
     // [PHPDeobfuscator] Implied script end
     return;
 }

@@ -1431,14 +1431,16 @@ LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_server
                         if ($rRow["mag"] == NULL) {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                         } else {
-                            $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";;
+                            $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
+                            ;
                         }
                     }
                 } else {
                     if ($rRow["mag"] == NULL) {
                         $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                     } else {
-                        $rUsername = "<a href='./user_reseller_edit.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";;
+                        $rUsername = "<a href='./user_reseller_edit.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
+                        ;
                     }
                 }
                 $rChannel = $rRow["stream_display_name"];
@@ -1532,7 +1534,8 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
             while ($rRow = $rResult->fetch_assoc()) {
                 // Format Rows
                 if ($rRow['divergence'] <= 50) {
-                    $rDivergence = '<button type="button" class="btn btn-outline-success btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';;
+                    $rDivergence = '<button type="button" class="btn btn-outline-success btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
+                    ;
                 } else if ($rRow['divergence'] <= 80) {
                     $rDivergence = '<button type="button" class="btn btn-outline-warning btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
                 } else {
@@ -1543,14 +1546,16 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                         if ($rRow["mag"] == NULL) {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                         } else {
-                            $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";;
+                            $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
+                            ;
                         }
                     }
                 } else {
                     if ($rRow["mag"] == NULL) {
                         $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                     } else {
-                        $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";;
+                        $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
+                        ;
                     }
                 }
                 $rChannel = $rRow["stream_display_name"];

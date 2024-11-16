@@ -28,50 +28,52 @@ PHPAPI void spl_instantiate(zend_class_entry *pce, zval *object);
 PHPAPI zend_long spl_offset_convert_to_long(zval *offset);
 
 /* {{{ spl_instantiate_arg_ex1 */
-static inline int spl_instantiate_arg_ex1(zend_class_entry *pce, zval *retval, zval *arg1)
-{
-	zend_function *func = pce->constructor;
-	spl_instantiate(pce, retval);
+static inline int spl_instantiate_arg_ex1(zend_class_entry *pce, zval *retval,
+                                          zval *arg1) {
+  zend_function *func = pce->constructor;
+  spl_instantiate(pce, retval);
 
-	zend_call_method(retval, pce, &func, ZSTR_VAL(func->common.function_name), ZSTR_LEN(func->common.function_name), NULL, 1, arg1, NULL);
-	return 0;
+  zend_call_method(retval, pce, &func, ZSTR_VAL(func->common.function_name),
+                   ZSTR_LEN(func->common.function_name), NULL, 1, arg1, NULL);
+  return 0;
 }
 /* }}} */
 
 /* {{{ spl_instantiate_arg_ex2 */
-static inline int spl_instantiate_arg_ex2(zend_class_entry *pce, zval *retval, zval *arg1, zval *arg2)
-{
-	zend_function *func = pce->constructor;
-	spl_instantiate(pce, retval);
+static inline int spl_instantiate_arg_ex2(zend_class_entry *pce, zval *retval,
+                                          zval *arg1, zval *arg2) {
+  zend_function *func = pce->constructor;
+  spl_instantiate(pce, retval);
 
-	zend_call_method(retval, pce, &func, ZSTR_VAL(func->common.function_name), ZSTR_LEN(func->common.function_name), NULL, 2, arg1, arg2);
-	return 0;
+  zend_call_method(retval, pce, &func, ZSTR_VAL(func->common.function_name),
+                   ZSTR_LEN(func->common.function_name), NULL, 2, arg1, arg2);
+  return 0;
 }
 /* }}} */
 
 /* {{{ spl_instantiate_arg_n */
-static inline void spl_instantiate_arg_n(zend_class_entry *pce, zval *retval, int argc, zval *argv)
-{
-	zend_function *func = pce->constructor;
-	zend_fcall_info fci;
-	zend_fcall_info_cache fcc;
-	zval dummy;
+static inline void spl_instantiate_arg_n(zend_class_entry *pce, zval *retval,
+                                         int argc, zval *argv) {
+  zend_function *func = pce->constructor;
+  zend_fcall_info fci;
+  zend_fcall_info_cache fcc;
+  zval dummy;
 
-	spl_instantiate(pce, retval);
+  spl_instantiate(pce, retval);
 
-	fci.size = sizeof(zend_fcall_info);
-	ZVAL_STR(&fci.function_name, func->common.function_name);
-	fci.object = Z_OBJ_P(retval);
-	fci.retval = &dummy;
-	fci.param_count = argc;
-	fci.params = argv;
-	fci.no_separation = 1;
+  fci.size = sizeof(zend_fcall_info);
+  ZVAL_STR(&fci.function_name, func->common.function_name);
+  fci.object = Z_OBJ_P(retval);
+  fci.retval = &dummy;
+  fci.param_count = argc;
+  fci.params = argv;
+  fci.no_separation = 1;
 
-	fcc.function_handler = func;
-	fcc.called_scope = pce;
-	fcc.object = Z_OBJ_P(retval);
+  fcc.function_handler = func;
+  fcc.called_scope = pce;
+  fcc.object = Z_OBJ_P(retval);
 
-	zend_call_function(&fci, &fcc);
+  zend_call_function(&fci, &fcc);
 }
 /* }}} */
 
