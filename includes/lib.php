@@ -496,7 +496,7 @@ class ipTV_lib {
      * @param int $timeout The timeout value for each cURL request (default is 5 seconds).
      * @return array An array of results from the cURL requests.
      */
-    public static function curlMultiRequest(array $urls, $callback = null, int $timeout = 5) {
+    public static function getMultiCURL(array $urls, $callback = null, int $timeout = 5) {
         if (empty($urls)) {
             return array();
         }

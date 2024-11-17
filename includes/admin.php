@@ -642,7 +642,7 @@ function APIRequest($rData) {
     if ($rAdminSettings["local_api"]) {
         $rAPI = "http://127.0.0.1:" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "/api.php";
     } else {
-        $rAPI = "http://" . $rServers[$_INFO["server_id"]]["server_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "/api.php";
+        $rAPI = "http://" . $rServers[$_INFO["server_id"]]["server_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "admin/api.php";
     }
     $rPost = http_build_query($rData);
     $ch = curl_init();

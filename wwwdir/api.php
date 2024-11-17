@@ -1,330 +1,246 @@
 <?php
 
+register_shutdown_function('shutdown');
 set_time_limit(0);
 require 'init.php';
-$user_ip = $_SERVER['REMOTE_ADDR'];
-if (!in_array($user_ip, ipTV_streaming::getAllowedIPsAdmin()) && !in_array($user_ip, ipTV_lib::$settings['api_ips'])) {
-    die(json_encode(array('result' => false, 'IP FORBIDDEN')));
+$rDeny = true;
+global $rDeny;
+
+if (empty(ipTV_lib::$request['password']) || ipTV_lib::$request['password'] != ipTV_lib::$settings['live_streaming_pass']) {
+    generateError('INVALID_API_PASSWORD');
 }
-if (!empty(ipTV_lib::$settings['api_pass']) && ipTV_lib::$request['api_pass'] != ipTV_lib::$settings['api_pass']) {
-    die(json_encode(array('result' => false, 'KEY WRONG')));
+
+unset(ipTV_lib::$request['password']);
+
+if (!in_array($rIP, ipTV_lib::$allowedIPs)) {
+    generateError('API_IP_NOT_ALLOWED');
 }
-$action = !empty(ipTV_lib::$request['action']) ? ipTV_lib::$request['action'] : '';
-$sub = !empty(ipTV_lib::$request['sub']) ? ipTV_lib::$request['sub'] : '';
+
+header('Access-Control-Allow-Origin: *');
+$action = (!empty(ipTV_lib::$request['action']) ? ipTV_lib::$request['action'] : '');
+$rDeny = false;
+
 switch ($action) {
-    case 'server':
-        switch ($sub) {
-            case 'list':
-                $output = array();
-                foreach (ipTV_lib::$Servers as $server_id => $server) {
-                    $output[] = array('id' => $server_id, 'server_name' => $server['server_name'], 'online' => $server['server_online'], 'info' => json_decode($server['server_hardware'], true));
-                }
-                echo json_encode($output);
-                break;
+    case 'view_log':
+        if (empty(ipTV_lib::$request['stream_id'])) {
+            break;
         }
+        $streamID = intval(ipTV_lib::$request['stream_id']);
+        if (file_exists(STREAMS_PATH . $streamID . '.errors')) {
+            echo file_get_contents(STREAMS_PATH . $streamID . '.errors');
+        } elseif (file_exists(VOD_PATH . $streamID . '.errors')) {
+            echo file_get_contents(VOD_PATH . $streamID . '.errors');
+        }
+        exit();
+    case 'reload_epg':
+        shell_exec(PHP_BIN . ' ' . CRON_PATH . 'epg.php >/dev/null 2>/dev/null &');
         break;
     case 'vod':
-        $stream_ids = array_map('intval', ipTV_lib::$request['stream_ids']);
-        switch ($sub) {
-            case 'start':
-            case 'stop':
-                $servers = empty(ipTV_lib::$request['servers']) ? array_keys(ipTV_lib::$Servers) : array_map('intval', ipTV_lib::$request['servers']);
-                foreach ($servers as $server_id) {
-                    $urls[$server_id] = array('url' => ipTV_lib::$Servers[$server_id]['api_url_ip'] . '&action=vod', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
-                }
-                ipTV_lib::curlMultiRequest($urls);
-                echo json_encode(array('result' => true));
-                die;
-                break;
+        if (!empty(ipTV_lib::$request['stream_ids']) && !empty(ipTV_lib::$request['function'])) {
+            $streamIDs = array_map('intval', ipTV_lib::$request['stream_ids']);
+            $function = ipTV_lib::$request['function'];
+            switch ($function) {
+                case 'start':
+                    foreach ($streamIDs as $streamID) {
+                        ipTV_stream::stopMovie($streamID);
+                        ipTV_stream::startMovie($streamID);
+                        usleep(50000);
+                    }
+                    echo json_encode(array('result' => true));
+                    exit();
+                case 'stop':
+                    foreach ($streamIDs as $streamID) {
+                        ipTV_stream::stopMovie($streamID);
+                    }
+                    echo json_encode(array('result' => true));
+                    exit();
+            }
         }
-        break;
     case 'stream':
-        switch ($sub) {
-            case 'start':
-            case 'stop':
-                $stream_ids = array_map('intval', ipTV_lib::$request['stream_ids']);
-                $servers = empty(ipTV_lib::$request['servers']) ? array_keys(ipTV_lib::$Servers) : array_map('intval', ipTV_lib::$request['servers']);
-                foreach ($servers as $server_id) {
-                    $urls[$server_id] = array('url' => ipTV_lib::$Servers[$server_id]['api_url_ip'] . '&action=stream', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
-                }
-                // $urls = array(
-                //     1 => array(
-                //         'url' => 'http://192.168.0.124:25461/system_api.php?password=XXXXXXXXXXXXXXXXXXXX&action=stream',
-                //         'postdata' => array(
-                //             'function' => 'start',
-                //             'stream_ids' => array(1)
-                //         )
-                //     )
-                // );
-                ipTV_lib::curlMultiRequest($urls);
-                echo json_encode(array('result' => true));
-                die;
-                break;
-            case 'list':
-                $output = array();
-                $ipTV_db->query('SELECT id,stream_display_name FROM `streams` WHERE type <> 2');
-                foreach ($ipTV_db->get_rows() as $row) {
-                    $output[] = array('id' => $row['id'], 'stream_name' => $row['stream_display_name']);
-                }
-                echo json_encode($output);
-                break;
-            case 'offline':
-                $ipTV_db->query('SELECT t1.stream_status,t1.server_id,t1.stream_id FROM `streams_servers` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.type <> 2 WHERE t1.stream_status = 1');
-                $streamSys = $ipTV_db->get_rows(true, 'stream_id', false, 'server_id');
-                $output = array();
-                foreach ($streamSys as $stream_id => $server_id) {
-                    $output[$stream_id] = array_keys($server_id);
-                }
-                echo json_encode($output);
-                break;
-            case 'online':
-                $ipTV_db->query('SELECT t1.stream_status,t1.server_id,t1.stream_id FROM `streams_servers` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.type <> 2 WHERE t1.pid > 0 AND t1.stream_status = 0');
-                $streamSys = $ipTV_db->get_rows(true, 'stream_id', false, 'server_id');
-                $output = array();
-                foreach ($streamSys as $stream_id => $server_id) {
-                    $output[$stream_id] = array_keys($server_id);
-                }
-                echo json_encode($output);
-                break;
-        }
-        break;
-    case 'stb':
-        switch ($sub) {
-            case 'info':
-                if (!empty(ipTV_lib::$request['mac'])) {
-                    $mac = ipTV_lib::$request['mac'];
-                    $user_info = ipTV_streaming::getMagInfo(false, $mac, true, false, true);
-                    if (!empty($user_info)) {
-                        echo json_encode(array_merge(array('result' => true), $user_info));
-                    } else {
-                        echo json_encode(array('result' => false, 'error' => 'NOT EXISTS'));
-                    }
-                } else {
-                    echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR (mac)'));
-                }
-                break;
-            case 'edit':
-                if (!empty(ipTV_lib::$request['mac'])) {
-                    $mac = ipTV_lib::$request['mac'];
-                    $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
-                    $user_data['is_mag'] = 1;
-                    $query = GetColumnNames($user_data);
-                    if ($ipTV_db->query("UPDATE `users` SET {$query} WHERE id = ( SELECT user_id FROM mag_devices WHERE `mac` = '%s' )", base64_encode(strtoupper($mac)))) {
-                        if ($ipTV_db->affected_rows() > 0) {
-                            echo json_encode(array('result' => true));
-                            $ipTV_db->query('INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` ) VALUES( \'%s\', \'%s\', \'%s\', \'%s\', \'%s\' )', "SYSTEM API[{$user_ip}]", $mac, '-', time(), '[API->Edit MAG Device]');
+        if (!empty(ipTV_lib::$request['stream_ids']) && !empty(ipTV_lib::$request['function'])) {
+            $streamIDs = array_map('intval', ipTV_lib::$request['stream_ids']);
+            $function = ipTV_lib::$request['function'];
+
+            switch ($function) {
+                case 'start':
+                    foreach ($streamIDs as $streamID) {
+                        if (ipTV_stream::startMonitor($streamID, true)) {
+                            usleep(50000);
                         } else {
                             echo json_encode(array('result' => false));
+                            exit();
                         }
-                    } else {
-                        echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR'));
                     }
-                } else {
-                    echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR (user/pass)'));
-                }
-                break;
-            case 'create':
-                $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
-                if (!empty($user_data['mac'])) {
-                    $output_formats_types = array(1, 2, 3);
-                    $mac = base64_encode(strtoupper($user_data['mac']));
-                    unset($user_data['mac']);
-                    $user_data['username'] = ipTV_lib::generateString(10);
-                    $user_data['password'] = ipTV_lib::generateString(10);
-                    if (!array_key_exists('allowed_ips', $user_data) || !parseJson($user_data['allowed_ips'])) {
-                        $user_data['allowed_ips'] = json_encode(array());
+                    echo json_encode(array('result' => true));
+                    exit();
+                case 'stop':
+                    foreach ($streamIDs as $streamID) {
+                        ipTV_stream::stopStream($streamID, true);
                     }
-                    $user_data['allowed_ua'] = json_encode(array());
-                    $user_data['created_at'] = time();
-                    $user_data['created_by'] = 0;
-                    $user_data['exp_date'] = empty($user_data['exp_date']) ? null : intval($user_data['exp_date']);
-                    $user_data['bouquet'] = empty($user_data['bouquet']) || !parseJson($user_data['bouquet']) ? array() : array_map('intval', json_decode($user_data['bouquet'], true));
-                    $user_data['is_mag'] = 1;
-                    if (array_key_exists('mac', $user_data)) {
-                        unset($user_data['mac']);
-                    }
-                    if (array_key_exists('output_formats', $user_data)) {
-                        unset($user_data['output_formats']);
-                    }
-                    if (!searchQuery('mag_devices', 'mac', $mac)) {
-                        $query = queryParse($user_data);
-                        if ($ipTV_db->simple_query("INSERT INTO `users` {$query}")) {
-                            if ($ipTV_db->affected_rows() > 0) {
-                                $user_id = $ipTV_db->last_insert_id();
-                                foreach ($output_formats_types as $type) {
-                                    $ipTV_db->query('INSERT INTO `user_output` ( `user_id`, `access_output_id` )VALUES( \'%d\', \'%d\' )', $user_id, $type);
-                                }
-                                $ipTV_db->query('INSERT INTO `mag_devices` ( `user_id`, `mac`, `created` )VALUES( \'%d\', \'%s\', \'%d\' )', $user_id, $mac, time());
-                                echo json_encode(array('result' => true));
-                                $ipTV_db->query('INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` )VALUES( \'%s\', \'%s\', \'%s\', \'%s\', \'%s\' )', "SYSTEM API[{$user_ip}]", base64_decode($mac), '-', time(), '[API->New MAG Device]');
-                            } else {
-                                echo json_encode(array('result' => false));
-                            }
-                        } else {
-                            echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR'));
-                        }
-                    } else {
-                        echo json_encode(array('result' => false, 'error' => 'EXISTS'));
-                    }
-                } else {
-                    echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR (mac)'));
-                }
-                break;
+                    echo json_encode(array('result' => true));
+                    exit();
+                default:
+                    break;
+            }
         }
         break;
-    case 'user':
-        switch ($sub) {
-            case 'info':
-                if (!empty(ipTV_lib::$request['username']) && !empty(ipTV_lib::$request['password'])) {
-                    $username = ipTV_lib::$request['username'];
-                    $password = ipTV_lib::$request['password'];
-                    $user_info = ipTV_streaming::getUserInfo(false, $username, $password, true, false, true);
-                    if (!empty($user_info)) {
-                        echo json_encode(array('result' => true, 'user_info' => $user_info));
-                    } else {
-                        echo json_encode(array('result' => false, 'error' => 'NOT EXISTS'));
-                    }
+    case 'stats':
+        echo json_encode(getStats());
+        exit();
+    case 'BackgroundCLI':
+        if (!empty(ipTV_lib::$request['cmds'])) {
+            $cmds = ipTV_lib::$request['cmds'];
+            $output = array();
+            foreach ($cmds as $key => $cmd) {
+                if (!is_array($cmd)) {
+                    $output[$key] = shell_exec($cmd);
+                    usleep(ipTV_lib::$settings['stream_start_delay']);
                 } else {
-                    echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR (user/pass)'));
-                }
-                break;
-            case 'edit':
-                if (!empty(ipTV_lib::$request['username']) && !empty(ipTV_lib::$request['password'])) {
-                    $username = ipTV_lib::$request['username'];
-                    $password = ipTV_lib::$request['password'];
-                    $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
-                    $ipTV_db->query('SELECT * FROM `users` WHERE `username` = \'%s\' and `password` = \'%s\'', $username, $password);
-                    if ($ipTV_db->num_rows() > 0) {
-                        $query = GetColumnNames($user_data);
-                        if ($ipTV_db->query("UPDATE `users` SET {$query} WHERE `username` = '%s' and `password` = '%s'", $username, $password)) {
-                            echo json_encode(array('result' => true));
-                            $ipTV_db->query('INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` )VALUES( \'%s\', \'%s\', \'%s\', \'%s\', \'%s\' )', "SYSTEM API[{$user_ip}]", $username, $password, time(), '[API->Edit Line]');
-                        } else {
-                            echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR'));
-                        }
-                    } else {
-                        echo json_encode(array('result' => false, 'error' => 'NOT EXISTS'));
+                    foreach ($cmd as $k2 => $cm) {
+                        $output[$key][$k2] = shell_exec($cm);
+                        usleep(ipTV_lib::$settings['stream_start_delay']);
                     }
-                } else {
-                    echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR (user/pass)'));
                 }
-                break;
-            case 'create':
-                $output_formats_types = array(1, 2, 3);
-                $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
-                if (!array_key_exists('username', $user_data)) {
-                    $user_data['username'] = ipTV_lib::generateString(10);
-                }
-                if (!array_key_exists('password', $user_data)) {
-                    $user_data['password'] = ipTV_lib::generateString(10);
-                }
-                if (!array_key_exists('allowed_ips', $user_data) || !parseJson($user_data['allowed_ips'])) {
-                    $user_data['allowed_ips'] = json_encode(array());
-                }
-                if (!array_key_exists('allowed_ua', $user_data) || !parseJson($user_data['allowed_ua'])) {
-                    $user_data['allowed_ua'] = json_encode(array());
-                }
-                $user_data['created_at'] = time();
-                $user_data['created_by'] = 0;
-                $user_data['exp_date'] = empty($user_data['exp_date']) ? null : intval($user_data['exp_date']);
-                $user_data['bouquet'] = empty($user_data['bouquet']) || !parseJson($user_data['bouquet']) ? array() : array_map('intval', json_decode($user_data['bouquet'], true));
-                $output_formats_types = empty($user_data['output_formats']) || !parseJson($user_data['output_formats']) ? $output_formats_types : array_map('intval', $user_data['output_formats']);
-                if (array_key_exists('output_formats', $user_data)) {
-                    unset($user_data['output_formats']);
-                }
-                $ipTV_db->query('SELECT id FROM `users` WHERE `username` = \'%s\' AND `password` = \'%s\' LIMIT 1', $user_data['username'], $user_data['password']);
-                if ($ipTV_db->num_rows() == 0) {
-                    $query = queryParse($user_data);
-                    if ($ipTV_db->simple_query("INSERT INTO `users` {$query}")) {
-                        if ($ipTV_db->affected_rows() > 0) {
-                            $user_id = $ipTV_db->last_insert_id();
-                            foreach ($output_formats_types as $type) {
-                                $ipTV_db->query('INSERT INTO `user_output` ( `user_id`, `access_output_id` ) VALUES( \'%d\', \'%d\' )', $user_id, $type);
-                            }
-                            echo json_encode(array('result' => true, 'created_id' => $user_id, 'username' => $user_data['username'], 'password' => $user_data['password']));
-                            $ipTV_db->query('INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` )VALUES( \'%s\', \'%s\', \'%s\', \'%s\', \'%s\' )', "SYSTEM API[{$user_ip}]", $user_data['username'], $user_data['password'], time(), '[API->New Line]');
-                        } else {
-                            echo json_encode(array('result' => false));
-                        }
-                    } else {
-                        echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR'));
-                    }
-                } else {
-                    echo json_encode(array('result' => false, 'error' => 'EXISTS'));
-                }
-                break;
+            }
+            echo json_encode($output);
+        }
+        die;
+    case 'getDiff':
+        if (!empty(ipTV_lib::$request['main_time'])) {
+            $main_time = ipTV_lib::$request['main_time'];
+            echo json_encode($main_time - time());
+            die;
         }
         break;
-    case 'reg_user':
-        switch ($sub) {
-            case 'list':
-                $ipTV_db->query('SELECT id,username,credits,group_id,group_name,last_login,date_registered,email,ip,status FROM `reg_users` t1 INNER JOIN `member_groups` t2 ON t1.member_group_id = t2.group_id');
-                $results = $ipTV_db->get_rows();
-                echo json_encode($results);
-                break;
-            case 'credits':
-                if (!empty(ipTV_lib::$request['amount']) && (!empty(ipTV_lib::$request['id']) || !empty(ipTV_lib::$request['username']))) {
-                    $amount = sprintf('%.2f', ipTV_lib::$request['amount']);
-                    if (!empty(ipTV_lib::$request['id'])) {
-                        $ipTV_db->query('SELECT * FROM reg_users WHERE `id` = \'%d\'', ipTV_lib::$request['id']);
-                    } else {
-                        $ipTV_db->query('SELECT * FROM reg_users WHERE `username` = \'%s\'', ipTV_lib::$request['username']);
-                    }
-                    if ($ipTV_db->num_rows()) {
-                        $RegUser = $ipTV_db->get_row();
-                        $credits = $amount + $RegUser['credits'];
-                        if ($credits < 0) {
-                            echo json_encode(array('result' => true, 'error' => 'NOT ENOUGH CREDITS'));
+    case 'pidsAreRunning':
+        if (empty(ipTV_lib::$request['pids']) && !is_array(ipTV_lib::$request['pids']) && empty(ipTV_lib::$request['program'])) {
+            break;
+        }
+
+        $PIDs = array_map('intval', ipTV_lib::$request['pids']);
+        $program = ipTV_lib::$request['program'];
+        $output = array();
+
+        foreach ($PIDs as $rPID) {
+            $output[$rPID] = false;
+
+            if (file_exists('/proc/' . $rPID) && is_readable('/proc/' . $rPID . '/exe') && strpos(basename(readlink('/proc/' . $rPID . '/exe')), basename($program)) === 0) {
+                $output[$rPID] = true;
+            }
+        }
+        echo json_encode($output);
+        exit();
+    case 'getFile':
+        if (empty(ipTV_lib::$request['filename'])) {
+            break;
+        }
+
+        $filename = ipTV_lib::$request['filename'];
+        if (in_array(strtolower(pathinfo($filename)['extension']), array('log', 'tar.gz', 'gz', 'zip', 'm3u8', 'mp4', 'mkv', 'avi', 'mpg', 'flv', '3gp', 'm4v', 'wmv', 'mov', 'ts', 'srt', 'sub', 'sbv', 'jpg', 'png', 'bmp', 'jpeg', 'gif', 'tif'))) {
+            if (file_exists($filename) && is_readable($filename)) {
+                header('Content-Type: application/octet-stream');
+                $fp = @fopen($filename, 'rb');
+                $size = filesize($filename);
+                $length = $size;
+                $start = 0;
+                $end = $size - 1;
+                header("Accept-Ranges: 0-{$length}");
+                if (isset($_SERVER['HTTP_RANGE'])) {
+                    $rRangeEnd = $end;
+                    list(, $rRange) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+                    if (strpos($rRange, ',') === false) {
+                        if ($rRange == '-') {
+                            $rRangeStart = $size - substr($rRange, 1);
                         } else {
-                            $ipTV_db->query('UPDATE reg_users SET `credits` = \'%.2f\' WHERE `id` = \'%d\'', $credits, $RegUser['id']);
-                            echo json_encode(array('result' => true));
-                            $ipTV_db->query('INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` )VALUES( \'%s\', \'%s\', \'%s\', \'%s\', \'%s\' )', "SYSTEM API[{$user_ip}]", $user_data['username'], $user_data['password'], time(), "[API->ADD Credits {$amount}]");
+                            $rRange = explode('-', $rRange);
+                            $rRangeStart = $rRange[0];
+                            $rRangeEnd = (isset($rRange[1]) && is_numeric($rRange[1]) ? $rRange[1] : $size);
+                        }
+
+                        $rRangeEnd = ($end < $rRangeEnd ? $end : $rRangeEnd);
+
+                        if (!($rRangeEnd < $rRangeStart || $size - 1 < $rRangeStart || $size <= $rRangeEnd)) {
+                            $start = $rRangeStart;
+                            $end = $rRangeEnd;
+                            $length = $end - $start + 1;
+                            fseek($fp, $start);
+                            header('HTTP/1.1 206 Partial Content');
+                        } else {
+                            header('HTTP/1.1 416 Requested Range Not Satisfiable');
+                            header('Content-Range: bytes ' . $start . '-' . $end . '/' . $size);
+
+                            exit();
                         }
                     } else {
-                        echo json_encode(array('result' => false, 'error' => 'NOT EXISTS'));
+                        header('HTTP/1.1 416 Requested Range Not Satisfiable');
+                        header('Content-Range: bytes ' . $start . '-' . $end . '/' . $size);
+
+                        exit();
                     }
-                } else {
-                    echo json_encode(array('result' => false, 'error' => 'PARAMETER ERROR (amount & id||username)'));
                 }
-                break;
+
+                header('Content-Range: bytes ' . $start . '-' . $end . '/' . $size);
+                header('Content-Length: ' . $length);
+
+                while (!feof($fp) && ftell($fp) <= $end) {
+                    echo stream_get_line($fp, (intval(ipTV_lib::$settings['read_buffer_size']) ?: 8192));
+                }
+                fclose($fp);
+            }
+
+            exit();
+        }
+        exit(json_encode(array('result' => false, 'error' => 'Invalid file extension.')));
+
+    case 'viewDir':
+        $dir = urldecode(ipTV_lib::$request['dir']);
+        if (file_exists($dir)) {
+            $files = scandir($dir);
+            natcasesort($files);
+            if (count($files) > 2) {
+                echo '<ul class="jqueryFileTree" style="display: none;">';
+                foreach ($files as $file) {
+                    if (file_exists($dir . $file) && $file != '.' && $file != '..' && is_dir($dir . $file) && is_readable($dir . $file)) {
+                        echo '<li class="directory collapsed"><a href="#" rel="' . htmlentities($dir . $file) . '/">' . htmlentities($file) . '</a></li>';
+                    }
+                }
+                foreach ($files as $file) {
+                    if (file_exists($dir . $file) && $file != '.' && $file != '..' && !is_dir($dir . $file) && is_readable($dir . $file)) {
+                        $ext = preg_replace('/^.*\\./', '', $file);
+                        echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $file) . '">' . htmlentities($file) . '</a></li>';
+                    }
+                }
+                echo '</ul>';
+            }
+        }
+        die;
+    case 'runCMD':
+        if (!empty(ipTV_lib::$request['command']) && in_array($user_ip, array("127.0.0.1", $_SERVER["SERVER_ADDR"]))) {
+            exec($_POST['command'], $outputCMD);
+            echo json_encode($outputCMD);
+            die;
         }
         break;
-}
-function GetColumnNames($data) {
-    global $ipTV_db;
-    $query = '';
-    foreach ($data as $columnName => $value) {
-        $columnName = preg_replace('/[^a-zA-Z0-9\\_]+/', '', $columnName);
-        if (is_array($value)) {
-            $query .= "`{$columnName}` = '" . $ipTV_db->escape(json_encode($value)) . '\',';
-        } else if (is_null($value)) {
-            $query .= "`{$columnName}` = null,";
-        } else {
-            $query .= "`{$columnName}` = '" . $ipTV_db->escape($value) . '\',';
+    case 'redirect_connection':
+        if (!empty(ipTV_lib::$request['activity_id']) && !empty(ipTV_lib::$request['stream_id'])) {
+            ipTV_lib::$request['type'] = 'redirect';
+            file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
         }
-    }
-    return rtrim($query, ',');
-}
-function queryParse($data) {
-    global $ipTV_db;
-    $query = '(';
-    foreach (array_keys($data) as $columnName) {
-        $columnName = preg_replace('/[^a-zA-Z0-9\\_]+/', '', $columnName);
-        $query .= "`{$columnName}`,";
-    }
-    $query = rtrim($query, ',') . ') VALUES (';
-    foreach (array_values($data) as $value) {
-        if (is_array($value)) {
-            $query .= '\'' . $ipTV_db->escape(json_encode($value)) . '\',';
-        } else if (is_null($value)) {
-            $query .= 'NULL,';
-        } else {
-            $query .= '\'' . $ipTV_db->escape($value) . '\',';
+        break;
+    case 'signal_send':
+        if (!empty(ipTV_lib::$request['message']) && !empty(ipTV_lib::$request['activity_id'])) {
+            ipTV_lib::$request['type'] = 'signal';
+            file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
         }
-    }
-    $query = rtrim($query, ',') . ');';
-    return $query;
+        break;
+    default:
+        exit(json_encode(array('result' => false)));
 }
-function parseJson($string) {
-    return is_array(json_decode($string, true));
+
+function shutdown() {
+    global $rDeny;
+
+    if ($rDeny) {
+        checkFlood();
+    }
 }
