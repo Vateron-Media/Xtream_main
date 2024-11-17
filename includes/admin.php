@@ -640,9 +640,9 @@ function APIRequest($rData) {
     global $rAdminSettings, $rServers, $_INFO;
     ini_set('default_socket_timeout', 5);
     if ($rAdminSettings["local_api"]) {
-        $rAPI = "http://127.0.0.1:" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "/api.php";
+        $rAPI = "http://127.0.0.1:" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "/admin/api.php";
     } else {
-        $rAPI = "http://" . $rServers[$_INFO["server_id"]]["server_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "admin/api.php";
+        $rAPI = "http://" . $rServers[$_INFO["server_id"]]["server_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "/admin/api.php";
     }
     $rPost = http_build_query($rData);
     $ch = curl_init();
@@ -657,7 +657,7 @@ function APIRequest($rData) {
 function SystemAPIRequest($rServerID, $rData) {
     global $rServers, $rSettings;
     ini_set('default_socket_timeout', 5);
-    $rAPI = "http://" . $rServers[intval($rServerID)]["server_ip"] . ":" . $rServers[intval($rServerID)]["http_broadcast_port"] . "/system_api.php";
+    $rAPI = "http://" . $rServers[intval($rServerID)]["server_ip"] . ":" . $rServers[intval($rServerID)]["http_broadcast_port"] . "/api.php";
     $rData["password"] = $rSettings["live_streaming_pass"];
     $rPost = http_build_query($rData);
     $ch = curl_init();
@@ -828,7 +828,7 @@ function roundUpToAny($n, $x = 5) {
 
 function checkSource($rServerID, $rFilename) {
     global $rServers, $rSettings;
-    $rAPI = "http://" . $rServers[intval($rServerID)]["server_ip"] . ":" . $rServers[intval($rServerID)]["http_broadcast_port"] . "/system_api.php?password=" . $rSettings["live_streaming_pass"] . "&action=getFile&filename=" . urlencode(escapeshellcmd($rFilename));
+    $rAPI = "http://" . $rServers[intval($rServerID)]["server_ip"] . ":" . $rServers[intval($rServerID)]["http_broadcast_port"] . "/api.php?password=" . $rSettings["live_streaming_pass"] . "&action=getFile&filename=" . urlencode(escapeshellcmd($rFilename));
     $rCommand = 'timeout 5 ' . MAIN_DIR . 'bin/ffprobe -show_streams -v quiet "' . $rAPI . '" -of json';
     return json_decode(shell_exec($rCommand), True);
 }

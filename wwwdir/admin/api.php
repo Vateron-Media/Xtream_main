@@ -1,7 +1,7 @@
 <?php
 
 set_time_limit(0);
-require 'init.php';
+require '../init.php';
 $user_ip = $_SERVER['REMOTE_ADDR'];
 if (!in_array($user_ip, ipTV_streaming::getAllowedIPsAdmin()) && !in_array($user_ip, ipTV_lib::$settings['api_ips'])) {
     die(json_encode(array('result' => false, 'IP FORBIDDEN')));
@@ -49,7 +49,7 @@ switch ($action) {
                 }
                 // $urls = array(
                 //     1 => array(
-                //         'url' => 'http://192.168.0.124:25461/system_api.php?password=XXXXXXXXXXXXXXXXXXXX&action=stream',
+                //         'url' => 'http://192.168.0.124:25461/api.php?password=XXXXXXXXXXXXXXXXXXXX&action=stream',
                 //         'postdata' => array(
                 //             'function' => 'start',
                 //             'stream_ids' => array(1)

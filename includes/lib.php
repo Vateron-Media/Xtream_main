@@ -367,13 +367,13 @@ class ipTV_lib {
             $http_port = ($server_protocol == 'http' ? intval($row['http_broadcast_port']) : intval($row['https_broadcast_port']));
             $row["server_protocol"] = $server_protocol;
             $row["request_port"] = $http_port;
-            $row["api_url"] = $server_protocol . "://" . $url . ":" . $http_port . "/system_api.php?password=" . ipTV_lib::$settings["live_streaming_pass"];
+            $row["api_url"] = $server_protocol . "://" . $url . ":" . $http_port . "/api.php?password=" . ipTV_lib::$settings["live_streaming_pass"];
             $row["site_url"] = $server_protocol . "://" . $url . ":" . $http_port . "/";
             $row['http_url'] = 'http://' . $url . ':' . intval($row['http_broadcast_port']) . '/';
             $row['https_url'] = 'https://' . $url . ':' . intval($row['https_broadcast_port']) . '/';
             $row["rtmp_server"] = "rtmp://" . $url . ":" . $row["rtmp_port"] . "/live/";
             $row["rtmp_mport_url"] = "http://127.0.0.1:31210/";
-            $row["api_url_ip"] = $server_protocol . "://" . $row["server_ip"] . ":" . $http_port . "/system_api.php?password=" . ipTV_lib::$settings["live_streaming_pass"];
+            $row["api_url_ip"] = $server_protocol . "://" . $row["server_ip"] . ":" . $http_port . "/api.php?password=" . ipTV_lib::$settings["live_streaming_pass"];
             $row["site_url_ip"] = $server_protocol . "://" . $row["server_ip"] . ":" . $http_port . "/";
             $row["geoip_countries"] = empty($row["geoip_countries"]) ? array() : json_decode($row["geoip_countries"], true);
             $row["isp_names"] = empty($row["isp_names"]) ? array() : json_decode($row["isp_names"], true);
