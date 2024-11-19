@@ -1,4 +1,5 @@
 <?php
+
 if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc) {
         register_shutdown_function('shutdown');
@@ -56,20 +57,20 @@ function loadCron() {
         if ($rQueue == 0) {
             shell_exec(PHP_BIN . ' ' . CLI_PATH . 'queue.php > /dev/null 2>/dev/null &');
         }
-        // $rOnDemand = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep ondemand | grep -v grep | grep -v pgrep | wc -l')));
-        // if (ipTV_lib::$settings['on_demand_instant_off'] && $rOnDemand == 0) {
-        //     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'ondemand.php > /dev/null 2>/dev/null &');
-        // } else {
-        //     if (!ipTV_lib::$settings['on_demand_instant_off'] || $rOnDemand > 0) {
-        //         echo 'Killing On-Demand Instant-Off' . "\n";
-        //         exec("pgrep -U xtreamcodes | xargs ps | grep ondemand | awk '{print \$1}'", $rPIDs);
-        //         foreach ($rPIDs as $rPID) {
-        //             if (intval($rPID) > 0) {
-        //                 shell_exec('kill -9 ' . intval($rPID));
-        //             }
-        //         }
-        //     }
-        // }
+        $rOnDemand = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep ondemand | grep -v grep | grep -v pgrep | wc -l')));
+        if (ipTV_lib::$settings['on_demand_instant_off'] && $rOnDemand == 0) {
+            shell_exec(PHP_BIN . ' ' . CLI_PATH . 'ondemand.php > /dev/null 2>/dev/null &');
+        } else {
+            if (!ipTV_lib::$settings['on_demand_instant_off'] || $rOnDemand > 0) {
+                echo 'Killing On-Demand Instant-Off' . "\n";
+                exec("pgrep -U xtreamcodes | xargs ps | grep ondemand | awk '{print \$1}'", $rPIDs);
+                foreach ($rPIDs as $rPID) {
+                    if (intval($rPID) > 0) {
+                        shell_exec('kill -9 ' . intval($rPID));
+                    }
+                }
+            }
+        }
         // $rScanner = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep scanner | grep -v grep | grep -v pgrep | wc -l')));
         // if (ipTV_lib::$settings['on_demand_checker'] && $rScanner == 0) {
         //     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'scanner.php > /dev/null 2>/dev/null &');

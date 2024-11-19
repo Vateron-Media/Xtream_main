@@ -1320,6 +1320,37 @@ class ipTV_streaming {
             return $rData;
         }
     }
+    public static function getStreamConnections($rStreamIDs, $rGroup = true, $rCount = false) {
+        if (!is_object(ipTV_lib::$redis)) {
+            ipTV_lib::connectRedis();
+        }
+        $rRedis = ipTV_lib::$redis->multi();
+        foreach ($rStreamIDs as $rStreamID) {
+            $rRedis->zRevRangeByScore('STREAM#' . $rStreamID, '+inf', '-inf');
+        }
+        $rGroups = $rRedis->exec();
+        $rConnectionMap = $rRedisKeys = array();
+        foreach ($rGroups as $rGroupID => $rKeys) {
+            if ($rCount) {
+                $rConnectionMap[$rStreamIDs[$rGroupID]] = count($rKeys);
+            } else {
+                if (count($rKeys) > 0) {
+                    $rRedisKeys = array_merge($rRedisKeys, $rKeys);
+                }
+            }
+        }
+        if (!$rCount) {
+            foreach (ipTV_lib::$redis->mGet(array_unique($rRedisKeys)) as $rRow) {
+                $rRow = igbinary_unserialize($rRow);
+                if ($rGroup) {
+                    $rConnectionMap[$rRow['stream_id']][] = $rRow;
+                } else {
+                    $rConnectionMap[$rRow['stream_id']][$rRow['server_id']][] = $rRow;
+                }
+            }
+        }
+        return $rConnectionMap;
+    }
     public static function updateStream($streamID) {
         self::$ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = \'%d\' AND `cache` = 1 AND `custom_data` = \'%s\';', self::getMainID(), json_encode(array('type' => 'update_stream', 'id' => $streamID)));
         if (self::$ipTV_db->get_row()['count'] == 0) {

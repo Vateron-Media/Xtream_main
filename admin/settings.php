@@ -1729,7 +1729,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </div>
                                                                 </div>
                                                                 </br>
-                                                                <h5 class="card-title mb-4">On-Demand Settings(not working)
+                                                                <h5 class="card-title mb-4">On-Demand Settings
                                                                 </h5>
                                                                 </br>
                                                                 <div class="form-group row mb-4">
