@@ -177,7 +177,7 @@ function loadCron() {
                         $rClose = true;
                     }
                     if ($rClose) {
-                        echo 'Close connection: ' . $rConnection['uuid'] . "\n";
+                        echo 'Close connection 1: ' . $rConnection['uuid'] . "\n";
                         ipTV_streaming::closeConnection($rConnection, false, false);
                         $rRedisDelete['count']++;
                         $rRedisDelete['line'][$rConnection['identity']][] = $rConnection['uuid'];
@@ -202,7 +202,7 @@ function loadCron() {
                         if (!($rAutoKick != 0 && $rAutoKick <= $rTotalTime) || $rIsRestreamer) {
                             if ($rConnection['container'] == 'hls') {
                                 if (30 <= $rStartTime - $rConnection['hls_last_read'] || $rConnection['hls_end'] == 1) {
-                                    echo 'Close connection: ' . $rConnection['uuid'] . "\n";
+                                    echo 'Close connection 2: ' . $rConnection['uuid'] . "\n";
                                     ipTV_streaming::closeConnection($rConnection, false, false);
                                     if (ipTV_lib::$settings['redis_handler']) {
                                         $rRedisDelete['count']++;
@@ -218,38 +218,36 @@ function loadCron() {
                                         $rDeleteStream[$rConnection['stream_id']] = $rDelete[$rConnection['server_id']];
                                     }
                                 }
-                            } else {
-                                if ($rConnection['container'] != 'rtmp') {
-                                    if ($rConnection['server_id'] == SERVER_ID) {
-                                        $rIsRunning = ipTV_streaming::isProcessRunning($rConnection['pid'], 'php-fpm');
+                            } else if ($rConnection['container'] == 'ts') {
+                                if ($rConnection['server_id'] == SERVER_ID) {
+                                    $rIsRunning = ipTV_streaming::isProcessRunning($rConnection['pid'], 'php-fpm');
+                                } else {
+                                    if ($rConnection['date_start'] <= ipTV_lib::$Servers[$rConnection['server_id']]['last_check_ago'] - 1 && 0 < count($rPHPPIDs[$rConnection['server_id']])) {
+                                        $rIsRunning = in_array(intval($rConnection['pid']), $rPHPPIDs[$rConnection['server_id']]);
                                     } else {
-                                        if ($rConnection['date_start'] <= ipTV_lib::$Servers[$rConnection['server_id']]['last_check_ago'] - 1 && 0 < count($rPHPPIDs[$rConnection['server_id']])) {
-                                            $rIsRunning = in_array(intval($rConnection['pid']), $rPHPPIDs[$rConnection['server_id']]);
-                                        } else {
-                                            $rIsRunning = true;
-                                        }
+                                        $rIsRunning = true;
                                     }
-                                    if (($rConnection['hls_end'] == 1 && 300 <= $rStartTime - $rConnection['hls_last_read']) && !$rIsRunning) {
-                                        echo 'Close connection: ' . $rConnection['uuid'] . "\n";
-                                        ipTV_streaming::closeConnection($rConnection, false, false);
-                                        if (ipTV_lib::$settings['redis_handler']) {
-                                            $rRedisDelete['count']++;
-                                            $rRedisDelete['line'][$rConnection['identity']][] = $rConnection['uuid'];
-                                            $rRedisDelete['stream'][$rConnection['stream_id']][] = $rConnection['uuid'];
-                                            $rRedisDelete['server'][$rConnection['server_id']][] = $rConnection['uuid'];
-                                            $rRedisDelete['uuid'][] = $rConnection['uuid'];
-                                            if ($rConnection['user_id']) {
-                                                $rRedisDelete['server_lines'][$rConnection['server_id']][] = $rConnection['uuid'];
-                                            }
-                                        } else {
-                                            $rDelete[$rConnection['server_id']][] = $rConnection['uuid'];
-                                            $rDeleteStream[$rConnection['stream_id']] = $rDelete[$rConnection['server_id']];
+                                }
+                                if (($rConnection['hls_end'] == 1 && 300 <= $rStartTime - $rConnection['hls_last_read']) || !$rIsRunning) {
+                                    echo 'Close connection 3: ' . $rConnection['uuid'] . "\n";
+                                    ipTV_streaming::closeConnection($rConnection, false, false);
+                                    if (ipTV_lib::$settings['redis_handler']) {
+                                        $rRedisDelete['count']++;
+                                        $rRedisDelete['line'][$rConnection['identity']][] = $rConnection['uuid'];
+                                        $rRedisDelete['stream'][$rConnection['stream_id']][] = $rConnection['uuid'];
+                                        $rRedisDelete['server'][$rConnection['server_id']][] = $rConnection['uuid'];
+                                        $rRedisDelete['uuid'][] = $rConnection['uuid'];
+                                        if ($rConnection['user_id']) {
+                                            $rRedisDelete['server_lines'][$rConnection['server_id']][] = $rConnection['uuid'];
                                         }
+                                    } else {
+                                        $rDelete[$rConnection['server_id']][] = $rConnection['uuid'];
+                                        $rDeleteStream[$rConnection['stream_id']] = $rDelete[$rConnection['server_id']];
                                     }
                                 }
                             }
                         } else {
-                            echo 'Close connection: ' . $rConnection['uuid'] . "\n";
+                            echo 'Close connection 4: ' . $rConnection['uuid'] . "\n";
                             ipTV_streaming::closeConnection($rConnection, false, false);
                             if (ipTV_lib::$settings['redis_handler']) {
                                 $rRedisDelete['count']++;
@@ -266,7 +264,7 @@ function loadCron() {
                             }
                         }
                     } else {
-                        echo 'Close connection: ' . $rConnection['uuid'] . "\n";
+                        echo 'Close connection 5: ' . $rConnection['uuid'] . "\n";
                         ipTV_streaming::closeConnection($rConnection, false, false);
                         if (ipTV_lib::$settings['redis_handler']) {
                             $rRedisDelete['count']++;
@@ -290,7 +288,7 @@ function loadCron() {
             if (ipTV_lib::$Servers[SERVER_ID]['is_main'] && 0 < $rMaxConnections && $rMaxConnections < $rActiveCount) {
                 foreach ($rConnections as $rKey => $rConnection) {
                     if (!$rConnection['hls_end']) {
-                        echo 'Close connection: ' . $rConnection['uuid'] . "\n";
+                        echo 'Close connection 6: ' . $rConnection['uuid'] . "\n";
                         ipTV_streaming::closeConnection($rConnection, false, false);
                         if (ipTV_lib::$settings['redis_handler']) {
                             $rRedisDelete['count']++;

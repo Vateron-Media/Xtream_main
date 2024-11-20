@@ -1175,7 +1175,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('166', 'cache_thread_count', '4'),
 ('167', 'cache_changes', '1'),
 ('168', 'restrict_same_ip', '1'),
-('169', 'api_container', 'ts'),
+('169', 'api_container', 'hls'),
 ('170', 'allow_cdn_access', '0'),
 ('171', 'detect_restream_block_user', '0'),
 ('172', 'block_streaming_servers', '0'),

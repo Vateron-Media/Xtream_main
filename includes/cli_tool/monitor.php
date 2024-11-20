@@ -569,4 +569,5 @@ if (!empty($segment)) {
     goto label496;
 }
 goto label1186;
-label1880:;
+label1880:
+;
