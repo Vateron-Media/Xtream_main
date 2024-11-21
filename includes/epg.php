@@ -104,12 +104,12 @@ class Epg {
         if ($epgSource !== false) {
             $this->epgSource = $epgSource;
             if (empty($this->epgSource->programme)) {
-                ipTV_lib::saveLog('Not A Valid EPG Source Specified or EPG Crashed: ' . $result);
+                ipTV_lib::saveLog_old('Not A Valid EPG Source Specified or EPG Crashed: ' . $result);
             } else {
                 $this->validEpg = true;
             }
         } else {
-            ipTV_lib::saveLog('No XML Found At: ' . $result);
+            ipTV_lib::saveLog_old('No XML Found At: ' . $result);
         }
         $epgSource = $content = null;
     }

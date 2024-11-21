@@ -609,8 +609,13 @@ class ipTV_lib {
         $val = preg_replace("/&#(\\d+?)([^\\d;])/i", "&#\\1;\\2", $val);
         return trim($val);
     }
-    public static function saveLog($msg) {
+    public static function saveLog_old($msg) {
         self::$ipTV_db->query('INSERT INTO `panel_logs` (`log_message`,`date`) VALUES(\'%s\',\'%d\')', $msg, time());
+    }
+    public static function saveLog($rType, $rMessage, $rExtra = '', $rLine = 0) {
+        if (stripos($rExtra, 'panel_logs') === false && stripos($rMessage, 'timeout exceeded') === false && stripos($rMessage, 'lock wait timeout') === false && stripos($rMessage, 'duplicate entry') === false) {
+            panelLog($rType, $rMessage, $rExtra, $rLine);
+        }
     }
     public static function generateString($length = 10) {
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789qwertyuiopasdfghjklzxcvbnm";

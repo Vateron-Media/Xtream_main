@@ -89,7 +89,7 @@ class ipTV_servers {
                 @curl_close($ch);
                 if ($error != 0 || $esponseCode != 200) {
                     $i++;
-                    ipTV_lib::saveLog("[MAIN->LB] Response from Server ID {$serverID} was Invalid ( ERROR: {$error} | Response Code: {$esponseCode} | Try: {$i} )");
+                    ipTV_lib::saveLog_old("[MAIN->LB] Response from Server ID {$serverID} was Invalid ( ERROR: {$error} | Response Code: {$esponseCode} | Try: {$i} )");
                     break;
                 }
             }
