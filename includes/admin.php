@@ -35,7 +35,7 @@ if (file_exists(MAIN_DIR . 'config')) {
     die('no config found');
 }
 
-$ipTV_db_admin = new ipTV_db($_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['hostname'], $_INFO['port'], empty($_INFO['pconnect']) ? false : true, false);
+$ipTV_db_admin = new Database($_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['hostname'], $_INFO['port'], empty($_INFO['pconnect']) ? false : true);
 
 if (!$db = new mysqli($_INFO["hostname"], $_INFO["username"], $_INFO["password"], $_INFO["database"], $_INFO["port"])) {
     exit("No MySQL connection!");
@@ -107,7 +107,7 @@ function getRegisteredUser($rID) {
 
 function getRegisteredUserHash($rHash) {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query("SELECT * FROM `reg_users` WHERE MD5(`username`) = '%s' LIMIT 1;", $rHash);
+    $ipTV_db_admin->query("SELECT * FROM `reg_users` WHERE MD5(`username`) = ? LIMIT 1;", $rHash);
     if ($ipTV_db_admin->num_rows() == 1) {
         return $ipTV_db_admin->get_row();
     }
@@ -116,7 +116,7 @@ function getRegisteredUserHash($rHash) {
 
 function doLogin($rUsername, $rPassword) {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query("SELECT `id`, `username`, `password`, `member_group_id`, `google_2fa_sec`, `status` FROM `reg_users` WHERE `username` = '%s' LIMIT 1;", $rUsername);
+    $ipTV_db_admin->query("SELECT `id`, `username`, `password`, `member_group_id`, `google_2fa_sec`, `status` FROM `reg_users` WHERE `username` = ? LIMIT 1;", $rUsername);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rRow = $ipTV_db_admin->get_row();
 
@@ -146,7 +146,7 @@ function getUser($rID) {
 
 function getPermissions($rID) {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query("SELECT * FROM `member_groups` WHERE `group_id` = %s;", intval($rID));
+    $ipTV_db_admin->query("SELECT * FROM `member_groups` WHERE `group_id` = ?;", intval($rID));
     if ($ipTV_db_admin->num_rows() == 1) {
         return $ipTV_db_admin->get_row();
     }
