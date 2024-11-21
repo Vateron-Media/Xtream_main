@@ -36,7 +36,7 @@ if (file_exists(MAIN_DIR . 'config')) {
     die('no config found');
 }
 
-$ipTV_db = new ipTV_db($_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['hostname'], $_INFO['port'], empty($_INFO['pconnect']) ? false : true, false);
+$ipTV_db = new Database($_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['hostname'], $_INFO['port'], empty($_INFO['pconnect']) ? false : true);
 
 ipTV_lib::$ipTV_db = &$ipTV_db;
 ipTV_streaming::$ipTV_db = &$ipTV_db;
