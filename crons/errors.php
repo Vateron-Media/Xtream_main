@@ -1,7 +1,6 @@
 <?php
 if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     set_time_limit(0);
-    // ini_set('memory_limit', -1);
     if ($argc) {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
@@ -31,10 +30,11 @@ function parseLog($rLog) {
                 if (!in_array($errorHash, $errorHashes)) {
                     if (!(stripos($rLine['message'], 'server has gone away') !== false && stripos($rLine['message'], 'socket error on read socket') !== false && stripos($rLine['message'], 'connection lost') !== false)) {
                         $rLine = array_map(array($ipTV_db, 'escape'), $rLine);
-                        $rQuery .= '(' . SERVER_ID . ',\'' . $rLine['type'] . '\', \'' . $rLine['message'] . '\',\'' . $rLine['extra'] . '\',' . $rLine['line'] . ',' . $rLine['time'] . ",'" . $errorHash . "'),";
+                        $rQuery .= '(' . SERVER_ID . ',' . $rLine['type'] . ',' . $rLine['message'] . ',' . $rLine['extra'] . ',' . $rLine['line'] . ',' . $rLine['time'] . ",'" . $errorHash . "'),";
                         $errorHashes[] = $errorHash;
                     }
                 }
+                break;
             }
         }
         fclose($rFP);
@@ -63,7 +63,7 @@ function loadCron() {
                         $rErrors = array_values(array_unique(array_map('trim', explode("\n", file_get_contents($rFile)))));
                         foreach ($rErrors as $rError) {
                             if (!(empty($rError) || inArray($rIgnoreErrors, $rError))) {
-                                $rQuery .= '(' . $rStreamID . ',' . SERVER_ID . ',' . time() . ', \'' . $ipTV_db->escape($rError) . '\'),';
+                                $rQuery .= '(' . $rStreamID . ',' . SERVER_ID . ',' . time() . ',' . $ipTV_db->escape($rError) . '),';
                             }
                         }
                         unlink($rFile);
@@ -75,7 +75,7 @@ function loadCron() {
     }
     if (!empty($rQuery)) {
         $rQuery = rtrim($rQuery, ',');
-        $ipTV_db->query('INSERT INTO `stream_logs` (`stream_id`,`server_id`,`date`,`error`) VALUES ' . $rQuery . ';');
+        $ipTV_db->query('INSERT INTO `streams_errors` (`stream_id`,`server_id`,`date`,`error`) VALUES ' . $rQuery . ';');
     }
     $rLog = LOGS_TMP_PATH . 'error_log.log';
     if (file_exists($rLog)) {

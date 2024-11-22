@@ -107,14 +107,14 @@ function loadCron() {
                 }
             }
         } else {
-            $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = \'%s\' AND `hls_end` = 0;', SERVER_ID);
+            $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = ? AND `hls_end` = 0;', SERVER_ID);
             $rConnections = intval($ipTV_db->get_row()['count']);
-            $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `server_id` = \'%s\' AND `hls_end` = 0 GROUP BY `user_id`;', SERVER_ID);
+            $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `server_id` = ? AND `hls_end` = 0 GROUP BY `user_id`;', SERVER_ID);
             $rUsers = intval($ipTV_db->num_rows());
             $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
             $rAllUsers = intval($ipTV_db->num_rows());
         }
-        $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = \'%s\' AND `pid` > 0 AND `type` = 1;', SERVER_ID);
+        $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = ? AND `pid` > 0 AND `type` = 1;', SERVER_ID);
         $rStreams = intval($ipTV_db->get_row()['count']);
         $rPing = 0;
         if (!$rServers[SERVER_ID]['is_main']) {
@@ -131,15 +131,15 @@ function loadCron() {
         }
         $rSysCtl = file_get_contents('/etc/sysctl.conf');
         $rAddresses = array_values(array_unique(array_map('trim', explode("\n", shell_exec("ip -4 addr | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'")))));
-        // $ipTV_db->query('INSERT INTO `servers_stats`(`server_id`, `connections`, `total_users`, `users`, `streams`, `cpu`, `cpu_cores`, `cpu_avg`, `total_mem`, `total_mem_free`, `total_mem_used`, `total_mem_used_percent`, `total_disk_space`, `uptime`, `total_running_streams`, `bytes_sent`, `bytes_received`, `bytes_sent_total`, `bytes_received_total`, `cpu_load_average`, `gpu_info`, `iostat_info`, `time`) VALUES(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', UNIX_TIMESTAMP());', SERVER_ID, $rConnections, $rAllUsers, $rUsers, $rStreams, $rStats['cpu'], $rStats['cpu_cores'], $rStats['cpu_avg'], $rStats['total_mem'], $rStats['total_mem_free'], $rStats['total_mem_used'], $rStats['total_mem_used_percent'], $rStats['total_disk_space'], $rStats['uptime'], $rStats['total_running_streams'], $rStats['bytes_sent'], $rStats['bytes_received'], $rStats['bytes_sent_total'], $rStats['bytes_received_total'], $rStats['cpu_load_average'], json_encode($rStats['gpu_info'], JSON_UNESCAPED_UNICODE), json_encode($rStats['iostat_info'], JSON_UNESCAPED_UNICODE));
-        $ipTV_db->query('UPDATE `streaming_servers` SET `remote_status` = \'%s\', `script_version` = \'%s\', `server_hardware` = \'%s\',`whitelist_ips` = \'%s\', `sysctl` = \'%s\', `video_devices` = \'%s\', `audio_devices` = \'%s\', `gpu_info` = \'%s\', `interfaces` = \'%s\', `time_offset` = ' . intval(time()) . ' - UNIX_TIMESTAMP(), `ping` = \'%s\' WHERE `id` = \'%s\'', $rRemoteStatus, SCRIPT_VERSION, json_encode($rHardware, JSON_UNESCAPED_UNICODE), json_encode($rAddresses, JSON_UNESCAPED_UNICODE), $rSysCtl, json_encode($rStats['video_devices'], JSON_UNESCAPED_UNICODE), json_encode($rStats['audio_devices'], JSON_UNESCAPED_UNICODE), json_encode($rStats['gpu_info'], JSON_UNESCAPED_UNICODE), json_encode($rStats['interfaces'], JSON_UNESCAPED_UNICODE), $rPing, SERVER_ID);
+        // $ipTV_db->query('INSERT INTO `servers_stats`(`server_id`, `connections`, `total_users`, `users`, `streams`, `cpu`, `cpu_cores`, `cpu_avg`, `total_mem`, `total_mem_free`, `total_mem_used`, `total_mem_used_percent`, `total_disk_space`, `uptime`, `total_running_streams`, `bytes_sent`, `bytes_received`, `bytes_sent_total`, `bytes_received_total`, `cpu_load_average`, `gpu_info`, `iostat_info`, `time`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP());', SERVER_ID, $rConnections, $rAllUsers, $rUsers, $rStreams, $rStats['cpu'], $rStats['cpu_cores'], $rStats['cpu_avg'], $rStats['total_mem'], $rStats['total_mem_free'], $rStats['total_mem_used'], $rStats['total_mem_used_percent'], $rStats['total_disk_space'], $rStats['uptime'], $rStats['total_running_streams'], $rStats['bytes_sent'], $rStats['bytes_received'], $rStats['bytes_sent_total'], $rStats['bytes_received_total'], $rStats['cpu_load_average'], json_encode($rStats['gpu_info'], JSON_UNESCAPED_UNICODE), json_encode($rStats['iostat_info'], JSON_UNESCAPED_UNICODE));
+        $ipTV_db->query('UPDATE `streaming_servers` SET `remote_status` = ?, `script_version` = ?, `server_hardware` = ?,`whitelist_ips` = ?, `sysctl` = ?, `video_devices` = ?, `audio_devices` = ?, `gpu_info` = ?, `interfaces` = ?, `time_offset` = ' . intval(time()) . ' - UNIX_TIMESTAMP(), `ping` = ? WHERE `id` = ?', $rRemoteStatus, SCRIPT_VERSION, json_encode($rHardware, JSON_UNESCAPED_UNICODE), json_encode($rAddresses, JSON_UNESCAPED_UNICODE), $rSysCtl, json_encode($rStats['video_devices'], JSON_UNESCAPED_UNICODE), json_encode($rStats['audio_devices'], JSON_UNESCAPED_UNICODE), json_encode($rStats['gpu_info'], JSON_UNESCAPED_UNICODE), json_encode($rStats['interfaces'], JSON_UNESCAPED_UNICODE), $rPing, SERVER_ID);
         if ($rServers[SERVER_ID]['is_main']) {
             foreach ($rServers as $rServerID => $rServerArray) {
                 if ($rServerArray['server_online'] != $rServerArray['last_status']) {
-                    $ipTV_db->query('UPDATE `streaming_servers` SET `last_status` = \'%s\' WHERE `id` = \'%s\';', $rServerArray['server_online'], $rServerID);
+                    $ipTV_db->query('UPDATE `streaming_servers` SET `last_status` = ? WHERE `id` = ?;', $rServerArray['server_online'], $rServerID);
                 }
             }
-            $ipTV_db->query('DELETE FROM `signals` WHERE `time` <= \'%s\';', time() - 86400);
+            $ipTV_db->query('DELETE FROM `signals` WHERE `time` <= ?;', time() - 86400);
         }
     } else {
         echo 'XtreamCodes not running...' . "\n";

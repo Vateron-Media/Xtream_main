@@ -327,7 +327,7 @@ function loadCron() {
     if (count($rConnectionSpeeds) > 0) {
         if (ipTV_lib::$settings['redis_handler']) {
             $rStreamMap = $rBitrates = array();
-            $ipTV_db->query('SELECT `stream_id`, `bitrate` FROM `streams_servers` WHERE `server_id` = \'%d\' AND `bitrate` IS NOT NULL;', SERVER_ID);
+            $ipTV_db->query('SELECT `stream_id`, `bitrate` FROM `streams_servers` WHERE `server_id` = ? AND `bitrate` IS NOT NULL;', SERVER_ID);
             foreach ($ipTV_db->get_rows() as $rRow) {
                 $rStreamMap[intval($rRow['stream_id'])] = intval($rRow['bitrate'] / 8 * 0.92);
             }
@@ -348,7 +348,7 @@ function loadCron() {
             unset($rStreamMap);
         } else {
             $rBitrates = array();
-            $ipTV_db->query('SELECT `lines_live`.`uuid`, `streams_servers`.`bitrate` FROM `lines_live` LEFT JOIN `streams_servers` ON `lines_live`.`stream_id` = `streams_servers`.`stream_id` AND `lines_live`.`server_id` = `streams_servers`.`server_id` WHERE `lines_live`.`server_id` = \'%d\';', SERVER_ID);
+            $ipTV_db->query('SELECT `lines_live`.`uuid`, `streams_servers`.`bitrate` FROM `lines_live` LEFT JOIN `streams_servers` ON `lines_live`.`stream_id` = `streams_servers`.`stream_id` AND `lines_live`.`server_id` = `streams_servers`.`server_id` WHERE `lines_live`.`server_id` = ?;', SERVER_ID);
             foreach ($ipTV_db->get_rows() as $rRow) {
                 $rBitrates[$rRow['uuid']] = intval($rRow['bitrate'] / 8 * 0.92);
             }
