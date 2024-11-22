@@ -12,7 +12,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
             $rLastCheck = null;
             $rInterval = 60;
             $rMD5 = md5_file(__FILE__);
-            while (true && $ipTV_db && !(ipTV_lib::$settings['redis_handler'] && (!ipTV_lib::$redis || !ipTV_lib::$redis->ping()))) {
+            while (true && $ipTV_db && $ipTV_db->ping() && !(ipTV_lib::$settings['redis_handler'] && (!ipTV_lib::$redis || !ipTV_lib::$redis->ping()))) {
                 if (!$rLastCheck && $rInterval < time() - $rLastCheck) {
                     if (md5_file(__FILE__) == $rMD5) {
                         ipTV_lib::$settings = ipTV_lib::getSettings(true);
@@ -24,7 +24,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 $rRows = array();
                 if (ipTV_lib::$settings['redis_handler']) {
                     $rStreamIDs = $rAttached = $rRows = array();
-                    if ($ipTV_db->query('SELECT t1.stream_id, servers_attached.attached FROM `streams_servers` t1 LEFT JOIN (SELECT `stream_id`, COUNT(*) AS `attached` FROM `streams_servers` WHERE `parent_id` = %d AND `pid` IS NOT NULL AND `pid` > 0 AND `monitor_pid` IS NOT NULL AND `monitor_pid` > 0) AS `servers_attached` ON `servers_attached`.`stream_id` = t1.`stream_id` WHERE t1.pid IS NOT NULL AND t1.pid > 0 AND t1.server_id = %d AND t1.`on_demand` = 1;', SERVER_ID, SERVER_ID)) {
+                    if ($ipTV_db->query('SELECT t1.stream_id, servers_attached.attached FROM `streams_servers` t1 LEFT JOIN (SELECT `stream_id`, COUNT(*) AS `attached` FROM `streams_servers` WHERE `parent_id` = ? AND `pid` IS NOT NULL AND `pid` > 0 AND `monitor_pid` IS NOT NULL AND `monitor_pid` > 0) AS `servers_attached` ON `servers_attached`.`stream_id` = t1.`stream_id` WHERE t1.pid IS NOT NULL AND t1.pid > 0 AND t1.server_id = ? AND t1.`on_demand` = 1;', SERVER_ID, SERVER_ID)) {
                         foreach ($ipTV_db->get_rows() as $rRow) {
                             $rStreamIDs[] = $rRow['stream_id'];
                             $rAttached[$rRow['stream_id']] = $rRow['attached'];
@@ -38,7 +38,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     }
                     break;
                 }
-                if ($ipTV_db->query('SELECT t1.stream_id, clients.online_clients, servers_attached.attached FROM `streams_servers` t1 LEFT JOIN (SELECT stream_id, COUNT(*) as online_clients FROM `lines_live` WHERE `server_id` = %d AND `hls_end` = 0 GROUP BY stream_id) AS clients ON clients.stream_id = t1.stream_id LEFT JOIN (SELECT `stream_id`, COUNT(*) AS `attached` FROM `streams_servers` WHERE `parent_id` = %d AND `pid` IS NOT NULL AND `pid` > 0 AND `monitor_pid` IS NOT NULL AND `monitor_pid` > 0) AS `servers_attached` ON `servers_attached`.`stream_id` = t1.`stream_id` WHERE t1.pid IS NOT NULL AND t1.pid > 0 AND t1.server_id = %d AND t1.`on_demand` = 1;', SERVER_ID, SERVER_ID, SERVER_ID)) {
+                if ($ipTV_db->query('SELECT t1.stream_id, clients.online_clients, servers_attached.attached FROM `streams_servers` t1 LEFT JOIN (SELECT stream_id, COUNT(*) as online_clients FROM `lines_live` WHERE `server_id` = ? AND `hls_end` = 0 GROUP BY stream_id) AS clients ON clients.stream_id = t1.stream_id LEFT JOIN (SELECT `stream_id`, COUNT(*) AS `attached` FROM `streams_servers` WHERE `parent_id` = ? AND `pid` IS NOT NULL AND `pid` > 0 AND `monitor_pid` IS NOT NULL AND `monitor_pid` > 0) AS `servers_attached` ON `servers_attached`.`stream_id` = t1.`stream_id` WHERE t1.pid IS NOT NULL AND t1.pid > 0 AND t1.server_id = ? AND t1.`on_demand` = 1;', SERVER_ID, SERVER_ID, SERVER_ID)) {
                     if ($ipTV_db->num_rows() > 0) {
                         $rRows = $ipTV_db->get_rows();
                     }
@@ -75,8 +75,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                                 posix_kill($rPID, 9);
                             }
                             shell_exec('rm -f ' . STREAMS_PATH . intval($rStreamID) . '_*');
-                            $ipTV_db->query('UPDATE `streams_servers` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`audio_codec` = NULL,`video_codec` = NULL,`resolution` = NULL,`compatible` = 0,`stream_status` = 0,`monitor_pid` = NULL WHERE `stream_id` = %d AND `server_id` = %d', $rStreamID, SERVER_ID);
-                            $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(%d, 1, %d, %s);', $rMainID, time(), json_encode(array('type' => 'update_stream', 'id' => $rStreamID)));
+                            $ipTV_db->query('UPDATE `streams_servers` SET `bitrate` = NULL,`current_source` = NULL,`to_analyze` = 0,`pid` = NULL,`stream_started` = NULL,`stream_info` = NULL,`audio_codec` = NULL,`video_codec` = NULL,`resolution` = NULL,`compatible` = 0,`stream_status` = 0,`monitor_pid` = NULL WHERE `stream_id` = ? AND `server_id` = ?', $rStreamID, SERVER_ID);
+                            $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(?, 1, ?, ?);', $rMainID, time(), json_encode(array('type' => 'update_stream', 'id' => $rStreamID)));
                             unlink(SIGNALS_TMP_PATH . 'queue_' . intval($rStreamID));
                             ipTV_streaming::updateStream($rStreamID);
                         }

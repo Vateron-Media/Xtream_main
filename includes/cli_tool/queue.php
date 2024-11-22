@@ -7,7 +7,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         $rLastCheck = null;
         $rInterval = 60;
         $rMD5 = md5_file(__FILE__);
-        while (true) {
+        while (true && $ipTV_db->ping()) {
             if (!($rLastCheck && $rInterval > time() - $rLastCheck)) {
                 if (md5_file(__FILE__) == $rMD5) {
                     ipTV_lib::$settings = ipTV_lib::getSettings(true);
@@ -16,7 +16,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     echo 'File changed! Break.' . "\n";
                 }
             }
-            if ($ipTV_db->query("SELECT `id`, `pid` FROM `queue` WHERE `server_id` = '%d' AND `pid` IS NOT NULL AND `type` = 'movie' ORDER BY `added` ASC;", SERVER_ID)) {
+            if ($ipTV_db->query("SELECT `id`, `pid` FROM `queue` WHERE `server_id` = ? AND `pid` IS NOT NULL AND `type` = 'movie' ORDER BY `added` ASC;", SERVER_ID)) {
                 $rDelete = $rInProgress = array();
                 if ($ipTV_db->num_rows() > 0) {
                     foreach ($ipTV_db->get_rows() as $rRow) {
@@ -29,12 +29,12 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 }
                 // $rFreeSlots = (0 < ipTV_lib::$settings['max_encode_movies'] ? intval(ipTV_lib::$settings['max_encode_movies']) - count($rInProgress) : 50);
                 // if ($rFreeSlots > 0) {
-                //     if ($ipTV_db->query("SELECT `id`, `stream_id` FROM `queue` WHERE `server_id` = '%d' AND `pid` IS NULL AND `type` = 'movie' ORDER BY `added` ASC LIMIT " . $rFreeSlots . ';', SERVER_ID)) {
+                //     if ($ipTV_db->query("SELECT `id`, `stream_id` FROM `queue` WHERE `server_id` = ? AND `pid` IS NULL AND `type` = 'movie' ORDER BY `added` ASC LIMIT " . $rFreeSlots . ';', SERVER_ID)) {
                 //         if ($ipTV_db->num_rows() > 0) {
                 //             foreach ($ipTV_db->get_rows() as $rRow) {
                 //                 $rPID = ipTV_stream::startMovie($rRow['stream_id']);
                 //                 if ($rPID) {
-                //                     $ipTV_db->query('UPDATE `queue` SET `pid` = \'%d\' WHERE `id` = \'%d\';', $rPID, $rRow['id']);
+                //                     $ipTV_db->query('UPDATE `queue` SET `pid` = ? WHERE `id` = ?;', $rPID, $rRow['id']);
                 //                 } else {
                 //                     $rDelete[] = $rRow['id'];
                 //                 }
@@ -42,7 +42,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 //         }
                 //     }
                 // }
-                if ($ipTV_db->query("SELECT `id`, `pid` FROM `queue` WHERE `server_id` = '%d' AND `pid` IS NOT NULL AND `type` = 'channel' ORDER BY `added` ASC;", SERVER_ID)) {
+                if ($ipTV_db->query("SELECT `id`, `pid` FROM `queue` WHERE `server_id` = ? AND `pid` IS NOT NULL AND `type` = 'channel' ORDER BY `added` ASC;", SERVER_ID)) {
                     $rInProgress = array();
                     if ($ipTV_db->num_rows() > 0) {
                         foreach ($ipTV_db->get_rows() as $rRow) {
@@ -55,7 +55,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     }
                     // $rFreeSlots = (0 < ipTV_lib::$settings['max_encode_cc'] ? intval(ipTV_lib::$settings['max_encode_cc']) - count($rInProgress) : 1);
                     // if ($rFreeSlots > 0) {
-                    //     if ($ipTV_db->query("SELECT `id`, `stream_id` FROM `queue` WHERE `server_id` = '%d' AND `pid` IS NULL AND `type` = 'channel' ORDER BY `added` ASC LIMIT " . $rFreeSlots . ';', SERVER_ID)) {
+                    //     if ($ipTV_db->query("SELECT `id`, `stream_id` FROM `queue` WHERE `server_id` = ? AND `pid` IS NULL AND `type` = 'channel' ORDER BY `added` ASC LIMIT " . $rFreeSlots . ';', SERVER_ID)) {
                     //         if ($ipTV_db->num_rows() > 0) {
                     //             foreach ($ipTV_db->get_rows() as $rRow) {
                     //                 if (file_exists(CREATED_PATH . $rRow['stream_id'] . '_.create')) {
@@ -72,7 +72,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     //                     }
                     //                 }
                     //                 if ($rPID) {
-                    //                     $ipTV_db->query('UPDATE `queue` SET `pid` = \'%d\' WHERE `id` = \'%d\';', $rPID, $rRow['id']);
+                    //                     $ipTV_db->query('UPDATE `queue` SET `pid` = ? WHERE `id` = ?;', $rPID, $rRow['id']);
                     //                 } else {
                     //                     $rDelete[] = $rRow['id'];
                     //                 }

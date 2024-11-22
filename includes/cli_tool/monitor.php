@@ -28,13 +28,13 @@ require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
 checkRunning($streamID);
 set_time_limit(0);
 cli_set_process_title('XtreamCodes[' . $streamID . ']');
-$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = \'%d\' WHERE t1.id = \'%d\'', SERVER_ID, $streamID);
+$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = ? WHERE t1.id = ?', SERVER_ID, $streamID);
 if (($ipTV_db->num_rows() <= 0)) {
     ipTV_stream::stopStream($streamID);
     exit();
 }
 $streamInfo = $ipTV_db->get_row();
-$ipTV_db->query('UPDATE `streams_servers` SET `monitor_pid` = \'%d\' WHERE `server_stream_id` = \'%d\'', getmypid(), $streamInfo['server_stream_id']);
+$ipTV_db->query('UPDATE `streams_servers` SET `monitor_pid` = ? WHERE `server_stream_id` = ?', getmypid(), $streamInfo['server_stream_id']);
 
 if (ipTV_lib::$settings["enable_cache"]) {
     ipTV_streaming::updateStream($streamID);
@@ -60,7 +60,7 @@ if (0 >= $rParentID) {
     $rCurrentSource = 'Loopback: #' . $rParentID;
 }
 $rLastSegment = $rForceSource = null;
-$ipTV_db->query('SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = \'%d\' AND t1.argument_id = t2.id', $streamID);
+$ipTV_db->query('SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = ? AND t1.argument_id = t2.id', $streamID);
 $streamArguments = $ipTV_db->get_rows();
 if (!(0 < $streamInfo['delay_minutes']) && ($streamInfo['parent_id'] == 0)) {
     $rDelay = false;
@@ -288,7 +288,7 @@ if (true) {
             echo 'Segment exists!' . "\n";
             $ea6de21e70c530a9 = true;
             $rChecks = 0;
-            $ipTV_db->query('UPDATE `streams_servers` SET `stream_status` = 0, `stream_started` = \'%d\' WHERE `server_stream_id` = \'%d\'', time() - $rOffset, $streamInfo['server_stream_id']);
+            $ipTV_db->query('UPDATE `streams_servers` SET `stream_status` = 0, `stream_started` = ? WHERE `server_stream_id` = ?', time() - $rOffset, $streamInfo['server_stream_id']);
         }
         if (($rChecks == $A63c815f93524582)) {
             echo 'Reached max failures' . "\n";
@@ -318,7 +318,7 @@ if (($rParentID == 0)) {
 if ((is_numeric($rPID) && (0 < $rPID) && ipTV_streaming::isStreamRunning($rPID, $streamID))) {
     shell_exec('kill -9 ' . intval($rPID));
 }
-$ipTV_db->query('UPDATE `streams_servers` SET `pid` = null, `stream_status` = 1 WHERE `server_stream_id` = \'%d\';', $streamInfo['server_stream_id']);
+$ipTV_db->query('UPDATE `streams_servers` SET `pid` = null, `stream_status` = 1 WHERE `server_stream_id` = ?;', $streamInfo['server_stream_id']);
 if (ipTV_lib::$settings["enable_cache"]) {
     ipTV_streaming::updateStream($streamID);
 }
@@ -478,14 +478,14 @@ if (file_exists($segment)) {
 // label430:
 if (!$ea6de21e70c530a9 && $streamInfo['stream_info'] && $streamInfo['on_demand']) {
     if ($streamInfo['stream_info']) {
-        // $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = \'%s\', `compatible` = \'%s\', `audio_codec` = \'%s\', `video_codec` = \'%s\', `resolution` = \'%s\', `bitrate` = \'%s\', `stream_status` = 0, `stream_started` = \'%s\' WHERE `server_stream_id` = \'%b\'', $streamInfo['stream_info'], $rCompatible, $rAudioCodec, $rVideoCodec, $rResolution, intval($rBitrate), time() - $rOffset, $streamInfo['server_stream_id']);
-        $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = \'%s\', `bitrate` = \'%d\', `stream_status` = 0, `stream_started` = \'%d\' WHERE `server_stream_id` = \'%d\'', $streamInfo['stream_info'], intval($rBitrate), time() - $rOffset, $streamInfo['server_stream_id']);
+        // $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = ?, `compatible` = ?, `audio_codec` = ?, `video_codec` = ?, `resolution` = ?, `bitrate` = ?, `stream_status` = 0, `stream_started` = ? WHERE `server_stream_id` = \'%b\'', $streamInfo['stream_info'], $rCompatible, $rAudioCodec, $rVideoCodec, $rResolution, intval($rBitrate), time() - $rOffset, $streamInfo['server_stream_id']);
+        $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = ?, `bitrate` = ?, `stream_status` = 0, `stream_started` = ? WHERE `server_stream_id` = ?', $streamInfo['stream_info'], intval($rBitrate), time() - $rOffset, $streamInfo['server_stream_id']);
     } else {
-        $ipTV_db->query('UPDATE `streams_servers` SET `stream_status` = 0, `stream_info` = NULL, `compatible` = 0, `audio_codec` = NULL, `video_codec` = NULL, `resolution` = NULL, `stream_started` = \'%d\' WHERE `server_stream_id` = \'%d\'', time() - $rOffset, $streamInfo['server_stream_id']);
+        $ipTV_db->query('UPDATE `streams_servers` SET `stream_status` = 0, `stream_info` = NULL, `compatible` = 0, `audio_codec` = NULL, `video_codec` = NULL, `resolution` = NULL, `stream_started` = ? WHERE `server_stream_id` = ?', time() - $rOffset, $streamInfo['server_stream_id']);
     }
 } else {
-    // $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = \'%s\', `compatible` = \'%s\', `audio_codec` = \'%s\', `video_codec` = \'%s\', `resolution` = \'%s\', `bitrate` = \'%s\', `stream_status` = 0 WHERE `server_stream_id` = \'%d\'', $streamInfo['stream_info'], $rCompatible, $rAudioCodec, $rVideoCodec, $rResolution, intval($rBitrate), $streamInfo['server_stream_id']);
-    $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = \'%s\', `bitrate` = \'%d\', `stream_status` = 0 WHERE `server_stream_id` = \'%d\'', $streamInfo['stream_info'], intval($rBitrate), $streamInfo['server_stream_id']);
+    // $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = ?, `compatible` = ?, `audio_codec` = ?, `video_codec` = ?, `resolution` = ?, `bitrate` = ?, `stream_status` = 0 WHERE `server_stream_id` = ?', $streamInfo['stream_info'], $rCompatible, $rAudioCodec, $rVideoCodec, $rResolution, intval($rBitrate), $streamInfo['server_stream_id']);
+    $ipTV_db->query('UPDATE `streams_servers` SET `stream_info` = ?, `bitrate` = ?, `stream_status` = 0 WHERE `server_stream_id` = ?', $streamInfo['stream_info'], intval($rBitrate), $streamInfo['server_stream_id']);
 }
 if (ipTV_lib::$settings["enable_cache"]) {
     ipTV_streaming::updateStream($streamID);

@@ -153,8 +153,8 @@ if ($rReqType == 'stb' && $rReqAction == 'handshake') {
         $rDevice['token'] = strtoupper(md5(uniqid(rand(), true)));
         $rVerifyToken = encryptData(igbinary_serialize(array('id' => $rDevice['mag_id'], 'token' => $rDevice['token'])), ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
         $rDevice['authenticated'] = false;
-        $ipTV_db->query('UPDATE `mag_devices` SET `token` = \'%s\' WHERE `mag_id` = \'%s\'', $rDevice['token'], $rDevice['mag_id']);
-        $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(\'%s\', 1, \'%s\', \'%s\');', SERVER_ID, time(), json_encode(array('type' => 'update_line', 'id' => $rDevice['user_id'])));
+        $ipTV_db->query('UPDATE `mag_devices` SET `token` = ? WHERE `mag_id` = ?', $rDevice['token'], $rDevice['mag_id']);
+        $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(?, 1, ?, ?);', SERVER_ID, time(), json_encode(array('type' => 'update_line', 'id' => $rDevice['user_id'])));
         updatecache();
     } else {
         $rDevice = array();
@@ -213,7 +213,7 @@ if ($rDevice && $rReqType == 'stb' && $rReqAction == 'get_profile') {
     if (empty($rSerialNumber)) {
         $rBanData = array('ip' => $rIP, 'notes' => "[MS] No Serial Number", 'date' => time());
         touch(FLOOD_TMP_PATH . 'block_' . $rIP);
-        $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\', \'%s\', \'%s\')', $rBanData['ip'], $rBanData['notes'], $rBanData['date']);
+        $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?, ?, ?)', $rBanData['ip'], $rBanData['notes'], $rBanData['date']);
         http_response_code(404);
         die();
     }
@@ -221,7 +221,7 @@ if ($rDevice && $rReqType == 'stb' && $rReqAction == 'get_profile') {
     if (!empty($rDevice['sn']) && $rDevice['sn'] !== $rSerialNumber) {
         $rBanData = array('ip' => $rIP, 'notes' => "[MS] Invalid Serial Number", 'date' => time());
         touch(FLOOD_TMP_PATH . 'block_' . $rIP);
-        $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\', \'%s\', \'%s\')', $rBanData['ip'], $rBanData['notes'], $rBanData['date']);
+        $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?, ?, ?)', $rBanData['ip'], $rBanData['notes'], $rBanData['date']);
         http_response_code(404);
         die();
     }
@@ -268,7 +268,7 @@ if ($rDevice && $rReqType == 'stb' && $rReqAction == 'get_profile') {
         $rDevice['get_profile_vars']['stb_type'] = $rSTBType;
         $rDevice['get_profile_vars']['hw_version'] = $rHWVersion;
         $rDevice['authenticated'] = true;
-        $ipTV_db->query('UPDATE `mag_devices` SET `ip` = \'%s\', `stb_type` = \'%s\', `sn` = \'%s\', `ver` = \'%s\', `image_version` = \'%s\', `device_id` = \'%s\', `device_id2` = \'%s\', `hw_version` = \'%s\' WHERE `mag_id` = \'%s\';', $rIP, $rSTBType, $rSerialNumber, $rVersion, $rImageVersion, $rDeviceID, $rDeviceID2, $rHWVersion, $rDevice['mag_id']);
+        $ipTV_db->query('UPDATE `mag_devices` SET `ip` = ?, `stb_type` = ?, `sn` = ?, `ver` = ?, `image_version` = ?, `device_id` = ?, `device_id2` = ?, `hw_version` = ? WHERE `mag_id` = ?;', $rIP, $rSTBType, $rSerialNumber, $rVersion, $rImageVersion, $rDeviceID, $rDeviceID2, $rHWVersion, $rDevice['mag_id']);
         updatecache();
     } else {
         ipTV_lib::unlinkFile(STALKER_TMP_PATH . 'stalker_' . $rDevice['id']);
@@ -367,7 +367,7 @@ switch ($rReqType) {
                             }
 
                             $rDevice['volume'] = $rVolume;
-                            $ipTV_db->query('UPDATE `mag_devices` SET `volume` = \'%s\' WHERE `mag_id` = \'%s\'', $rVolume, $rDevice['mag_id']);
+                            $ipTV_db->query('UPDATE `mag_devices` SET `volume` = ? WHERE `mag_id` = ?', $rVolume, $rDevice['mag_id']);
                             updatecache();
 
                             exit(json_encode(array('data' => true)));
@@ -379,7 +379,7 @@ switch ($rReqType) {
                             exit(json_encode(array('js' => $rImages)));
 
                         case 'get_settings_profile':
-                            $ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mag_id` = \'%s\'', $rDevice['mag_id']);
+                            $ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mag_id` = ?', $rDevice['mag_id']);
                             $rInfo = $ipTV_db->get_row();
                             $rSettings = array('js' => array('modules' => array(array('name' => 'lock'), array('name' => 'lang'), array('name' => 'update'), array('name' => 'net_info', 'sub' => array(array('name' => 'wired'), array('name' => 'pppoe', 'sub' => array(array('name' => 'dhcp'), array('name' => 'dhcp_manual'), array('name' => 'disable'))), array('name' => 'wireless'), array('name' => 'speed'))), array('name' => 'video'), array('name' => 'audio'), array('name' => 'net', 'sub' => array(array('name' => 'ethernet', 'sub' => array(array('name' => 'dhcp'), array('name' => 'dhcp_manual'), array('name' => 'manual'), array('name' => 'no_ip'))), array('name' => 'pppoe', 'sub' => array(array('name' => 'dhcp'), array('name' => 'dhcp_manual'), array('name' => 'disable'))), array('name' => 'wifi', 'sub' => array(array('name' => 'dhcp'), array('name' => 'dhcp_manual'), array('name' => 'manual'))), array('name' => 'speed'))), array('name' => 'advanced'), array('name' => 'dev_info'), array('name' => 'reload'), array('name' => 'internal_portal'), array('name' => 'reboot'))));
                             $rSettings['js']['parent_password'] = $rInfo['parent_password'];
@@ -412,7 +412,7 @@ switch ($rReqType) {
                             exit(json_encode($rSettings));
 
                         case 'get_locales':
-                            $ipTV_db->query('SELECT `locale` FROM `mag_devices` WHERE `mag_id` = \'%s\'', $rDevice['mag_id']);
+                            $ipTV_db->query('SELECT `locale` FROM `mag_devices` WHERE `mag_id` = ?', $rDevice['mag_id']);
                             $rSelected = $ipTV_db->get_row();
                             $rOutput = array();
 
@@ -431,12 +431,12 @@ switch ($rReqType) {
 
                             if (empty($rDeviceAspect)) {
                                 $rDevice['aspect'] = array('js' => array($rChannelID => $rAspect));
-                                $ipTV_db->query('UPDATE `mag_devices` SET `aspect` = \'%s\' WHERE mag_id = \'%s\'', json_encode(array('js' => array($rChannelID => $rAspect))), $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `aspect` = ? WHERE mag_id = ?', json_encode(array('js' => array($rChannelID => $rAspect))), $rDevice['mag_id']);
                             } else {
                                 $rDeviceAspect = json_decode($rDeviceAspect, true);
                                 $rDeviceAspect['js'][$rChannelID] = $rAspect;
                                 $rDevice['aspect'] = $rDeviceAspect;
-                                $ipTV_db->query('UPDATE `mag_devices` SET `aspect` = \'%s\' WHERE mag_id = \'%s\'', json_encode($rDeviceAspect), $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `aspect` = ? WHERE mag_id = ?', json_encode($rDeviceAspect), $rDevice['mag_id']);
                             }
 
                             updatecache();
@@ -450,7 +450,7 @@ switch ($rReqType) {
                             if (!empty($_SERVER['HTTP_COOKIE'])) {
                                 $rDelay = intval(ipTV_lib::$request['screensaver_delay']);
                                 $rDevice['screensaver_delay'] = $rDelay;
-                                $ipTV_db->query('UPDATE `mag_devices` SET `screensaver_delay` = \'%s\' WHERE `mag_id` = \'%s\'', $rDelay, $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `screensaver_delay` = ? WHERE `mag_id` = ?', $rDelay, $rDevice['mag_id']);
                                 updatecache();
                             }
 
@@ -462,7 +462,7 @@ switch ($rReqType) {
                                 $rBufferSize = intval(ipTV_lib::$request['playback_buffer_size']);
                                 $rDevice['playback_buffer_bytes'] = $rBufferBytes;
                                 $rDevice['playback_buffer_size'] = $rBufferSize;
-                                $ipTV_db->query('UPDATE `mag_devices` SET `playback_buffer_bytes` = \'%s\' , `playback_buffer_size` = \'%s\' WHERE `mag_id` = \'%s\'', $rBufferBytes, $rBufferSize, $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `playback_buffer_bytes` = ? , `playback_buffer_size` = ? WHERE `mag_id` = ?', $rBufferBytes, $rBufferSize, $rDevice['mag_id']);
                                 updatecache();
                             }
 
@@ -471,7 +471,7 @@ switch ($rReqType) {
                         case 'set_plasma_saving':
                             $rPlasmaSaving = intval(ipTV_lib::$request['plasma_saving']);
                             $rDevice['plasma_saving'] = $rPlasmaSaving;
-                            $ipTV_db->query('UPDATE `mag_devices` SET `plasma_saving` = \'%s\' WHERE `mag_id` = \'%s\'', $rPlasmaSaving, $rDevice['mag_id']);
+                            $ipTV_db->query('UPDATE `mag_devices` SET `plasma_saving` = ? WHERE `mag_id` = ?', $rPlasmaSaving, $rDevice['mag_id']);
                             updatecache();
 
                             exit(json_encode(array('js' => true)));
@@ -479,7 +479,7 @@ switch ($rReqType) {
                         case 'set_parent_password':
                             if (isset(ipTV_lib::$request['parent_password']) && isset(ipTV_lib::$request['pass']) && isset(ipTV_lib::$request['repeat_pass']) && ipTV_lib::$request['pass'] == ipTV_lib::$request['repeat_pass']) {
                                 $rDevice['parent_password'] = ipTV_lib::$request['pass'];
-                                $ipTV_db->query('UPDATE `mag_devices` SET `parent_password` = \'%s\' WHERE `mag_id` = \'%s\'', ipTV_lib::$request['pass'], $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `parent_password` = ? WHERE `mag_id` = ?', ipTV_lib::$request['pass'], $rDevice['mag_id']);
                                 updatecache();
 
                                 exit(json_encode(array('js' => true)));
@@ -490,7 +490,7 @@ switch ($rReqType) {
                         case 'set_locale':
                             if (!empty(ipTV_lib::$request['locale'])) {
                                 $rDevice['locale'] = ipTV_lib::$request['locale'];
-                                $ipTV_db->query('UPDATE `mag_devices` SET `locale` = \'%s\' WHERE `mag_id` = \'%s\'', ipTV_lib::$request['locale'], $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `locale` = ? WHERE `mag_id` = ?', ipTV_lib::$request['locale'], $rDevice['mag_id']);
                                 updatecache();
                             }
 
@@ -500,7 +500,7 @@ switch ($rReqType) {
                             if (!empty($_SERVER['HTTP_COOKIE']) || isset(ipTV_lib::$request['data'])) {
                                 $rReaction = ipTV_lib::$request['data'];
                                 $rDevice['hdmi_event_reaction'] = $rReaction;
-                                $ipTV_db->query('UPDATE `mag_devices` SET `hdmi_event_reaction` = \'%s\' WHERE `mag_id` = \'%s\'', $rReaction, $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `hdmi_event_reaction` = ? WHERE `mag_id` = ?', $rReaction, $rDevice['mag_id']);
                                 updatecache();
                             }
 
@@ -511,23 +511,23 @@ switch ($rReqType) {
 
                 case 'watchdog':
                     $rDevice['last_watchdog'] = time();
-                    $ipTV_db->query('UPDATE `mag_devices` SET `last_watchdog` = \'%s\' WHERE `mag_id` = \'%s\'', time(), $rDevice['mag_id']);
+                    $ipTV_db->query('UPDATE `mag_devices` SET `last_watchdog` = ? WHERE `mag_id` = ?', time(), $rDevice['mag_id']);
                     updatecache();
 
                     switch ($rReqAction) {
                         case 'get_events':
-                            $ipTV_db->query('SELECT * FROM `mag_events` WHERE `mag_device_id` = \'%s\' AND `status` = 0 ORDER BY `id` ASC LIMIT 1', $rDevice['mag_id']);
+                            $ipTV_db->query('SELECT * FROM `mag_events` WHERE `mag_device_id` = ? AND `status` = 0 ORDER BY `id` ASC LIMIT 1', $rDevice['mag_id']);
                             $rData = array('data' => array('msgs' => 0, 'additional_services_on' => 1));
 
                             if ($ipTV_db->num_rows() > 0) {
                                 $rEvents = $ipTV_db->get_row();
-                                $ipTV_db->query('SELECT count(*) FROM `mag_events` WHERE `mag_device_id` = \'%s\' AND `status` = 0 ', $rDevice['mag_id']);
+                                $ipTV_db->query('SELECT count(*) FROM `mag_events` WHERE `mag_device_id` = ? AND `status` = 0 ', $rDevice['mag_id']);
                                 $rMessages = $ipTV_db->get_col();
                                 $rData = array('data' => array('msgs' => $rMessages, 'id' => $rEvents['id'], 'event' => $rEvents['event'], 'need_confirm' => $rEvents['need_confirm'], 'msg' => $rEvents['msg'], 'reboot_after_ok' => $rEvents['reboot_after_ok'], 'auto_hide_timeout' => $rEvents['auto_hide_timeout'], 'send_time' => date('d-m-Y H:i:s', $rEvents['send_time']), 'additional_services_on' => $rEvents['additional_services_on'], 'updated' => array('anec' => $rEvents['anec'], 'vclub' => $rEvents['vclub'])));
                                 $rAutoStatus = array('reboot', 'reload_portal', 'play_channel', 'cut_off');
 
                                 if (in_array($rEvents['event'], $rAutoStatus)) {
-                                    $ipTV_db->query('UPDATE `mag_events` SET `status` = 1 WHERE `id` = \'%s\'', $rEvents['id']);
+                                    $ipTV_db->query('UPDATE `mag_events` SET `status` = 1 WHERE `id` = ?', $rEvents['id']);
                                 }
                             }
 
@@ -539,7 +539,7 @@ switch ($rReqType) {
                             }
 
                             $rActiveID = ipTV_lib::$request['event_active_id'];
-                            $ipTV_db->query('UPDATE `mag_events` SET `status` = 1 WHERE `id` = \'%s\'', $rActiveID);
+                            $ipTV_db->query('UPDATE `mag_events` SET `status` = 1 WHERE `id` = ?', $rActiveID);
 
                             exit(json_encode(array('js' => array('data' => 'ok'))));
                     }
@@ -593,7 +593,7 @@ switch ($rReqType) {
                                 $rID = intval(ipTV_lib::$request['id']);
                                 $rRealType = ipTV_lib::$request['real_type'];
                                 $rDate = date('Y-m-d H:i:s');
-                                $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(\'%s\', \'%s\', \'%s\', \'%s\')', $rID, $rDevice['mag_id'], $rRealType, $rDate);
+                                $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(?, ?, ?, ?)', $rID, $rDevice['mag_id'], $rRealType, $rDate);
                             }
 
                             exit(json_encode(array('js' => true)));
@@ -602,7 +602,7 @@ switch ($rReqType) {
                             $rChannels = (empty(ipTV_lib::$request['fav_ch']) ? '' : ipTV_lib::$request['fav_ch']);
                             $rChannels = array_filter(array_map('intval', explode(',', $rChannels)));
                             $rDevice['fav_channels']['live'] = $rChannels;
-                            $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = \'%s\' WHERE `mag_id` = \'%s\'', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
+                            $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
                             updatecache();
 
                             exit(json_encode(array('js' => true)));
@@ -696,7 +696,7 @@ switch ($rReqType) {
 
                             if ($rChannelID > 0) {
                                 $rDevice['last_itv_id'] = $rChannelID;
-                                $ipTV_db->query('UPDATE `mag_devices` SET `last_itv_id` = \'%s\' WHERE `mag_id` = \'%s\'', $rChannelID, $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `last_itv_id` = ? WHERE `mag_id` = ?', $rChannelID, $rDevice['mag_id']);
                                 updatecache();
                             }
 
@@ -727,7 +727,7 @@ switch ($rReqType) {
                                 $rID = intval(ipTV_lib::$request['id']);
                                 $rRealType = ipTV_lib::$request['real_type'];
                                 $rDate = date('Y-m-d H:i:s');
-                                $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(\'%s\', \'%s\', \'%s\', \'%s\')', $rID, $rDevice['mag_id'], $rRealType, $rDate);
+                                $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(?, ?, ?, ?)', $rID, $rDevice['mag_id'], $rRealType, $rDate);
                             }
 
                         case 'set_fav':
@@ -738,7 +738,7 @@ switch ($rReqType) {
                                     $rDevice['fav_channels']['movie'][] = $rVideoID;
                                 }
 
-                                $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = \'%s\' WHERE `mag_id` = \'%s\'', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
                                 updatecache();
                             }
 
@@ -754,7 +754,7 @@ switch ($rReqType) {
                                         break;
                                     }
                                 }
-                                $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = \'%s\' WHERE `mag_id` = \'%s\'', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
                                 updatecache();
                             }
 
@@ -831,7 +831,7 @@ switch ($rReqType) {
                                         list($rCommand['series_id'], $rCommand['season_num']) = explode(':', basename($rCommand['series_data'], '.mpg'));
                                     }
 
-                                    $ipTV_db->query('SELECT t1.stream_id,t2.target_container FROM `streams_episodes` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id WHERE t1.`series_id` = \'%s\' AND t1.`season_num` = \'%s\' ORDER BY `episode_num` ASC LIMIT ' . intval($rSeries - 1) . ', 1', $rCommand['series_id'], $rCommand['season_num']);
+                                    $ipTV_db->query('SELECT t1.stream_id,t2.target_container FROM `streams_episodes` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id WHERE t1.`series_id` = ? AND t1.`season_num` = ? ORDER BY `episode_num` ASC LIMIT ' . intval($rSeries - 1) . ', 1', $rCommand['series_id'], $rCommand['season_num']);
 
                                     if (0 < $ipTV_db->num_rows()) {
                                         $rRow = $ipTV_db->get_row();
@@ -867,7 +867,7 @@ switch ($rReqType) {
                                 $rID = intval(ipTV_lib::$request['id']);
                                 $rRealType = ipTV_lib::$request['real_type'];
                                 $rDate = date('Y-m-d H:i:s');
-                                $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(\'%s\', \'%s\', \'%s\', \'%s\')', $rID, $rDevice['mag_id'], $rRealType, $rDate);
+                                $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(?, ?, ?, ?)', $rID, $rDevice['mag_id'], $rRealType, $rDate);
                             }
 
                             exit(json_encode(array('js' => true)));
@@ -880,7 +880,7 @@ switch ($rReqType) {
                                     $rDevice['fav_channels']['series'][] = $rVideoID;
                                 }
 
-                                $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = \'%s\' WHERE `mag_id` = \'%s\'', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
                                 updatecache();
                             }
 
@@ -897,7 +897,7 @@ switch ($rReqType) {
                                         break;
                                     }
                                 }
-                                $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = \'%s\' WHERE `mag_id` = \'%s\'', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
+                                $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
                                 updatecache();
                             }
 
@@ -980,7 +980,7 @@ switch ($rReqType) {
                             $f3f9f9fa3c58c22b = (empty(ipTV_lib::$request['fav_radio']) ? '' : ipTV_lib::$request['fav_radio']);
                             $f3f9f9fa3c58c22b = array_filter(array_map('intval', explode(',', $f3f9f9fa3c58c22b)));
                             $rDevice['fav_channels']['radio_streams'] = $f3f9f9fa3c58c22b;
-                            $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = \'%s\' WHERE `mag_id` = \'%s\'', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
+                            $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
                             updatecache();
 
                             exit(json_encode(array('js' => true)));
@@ -1107,7 +1107,7 @@ switch ($rReqType) {
                             if (file_exists(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID))) {
                                 $rStreamRow = igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID)))['info'];
                             } else {
-                                $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = \'%s\';', ipTV_lib::$request['ch_id']);
+                                $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = ?;', ipTV_lib::$request['ch_id']);
 
                                 if ($ipTV_db->num_rows() > 0) {
                                     $rStreamRow = $ipTV_db->get_row();
@@ -1201,7 +1201,7 @@ switch ($rReqType) {
                             if (file_exists(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID))) {
                                 $rStreamRow = igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID)))['info'];
                             } else {
-                                $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = \'%s\';', ipTV_lib::$request['ch_id']);
+                                $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = ?;', ipTV_lib::$request['ch_id']);
 
                                 if ($ipTV_db->num_rows() > 0) {
                                     $rStreamRow = $ipTV_db->get_row();
@@ -1360,12 +1360,12 @@ function getItems($rTypes = array(), $rCategoryID = null, $rFav = null, $rOrderB
     }
 
     if (!empty($rCategoryID)) {
-        $rWhere[] = "JSON_CONTAINS(`category_id`, '%s', '\$')";
+        $rWhere[] = "JSON_CONTAINS(`category_id`, ?, '\$')";
         $rWhereV[] = $rCategoryID;
     }
 
     if (!empty($rPicking['genre']) && $rPicking['genre'] != '*') {
-        $rWhere[] = "JSON_CONTAINS(`category_id`, '%s', '\$')";
+        $rWhere[] = "JSON_CONTAINS(`category_id`, ?, '\$')";
         $rWhereV[] = $rPicking['genre'];
     }
 
@@ -1384,13 +1384,13 @@ function getItems($rTypes = array(), $rCategoryID = null, $rFav = null, $rOrderB
     }
 
     if (!empty($rSearchBy)) {
-        $rWhere[] = '`stream_display_name` LIKE \'%s\'';
+        $rWhere[] = '`stream_display_name` LIKE ?';
         $rWhereV[] = '%' . $rSearchBy . '%';
     }
 
 
     if (!empty($rPicking['abc']) && $rPicking['abc'] != '*') {
-        $rWhere[] = 'UCASE(LEFT(`stream_display_name`, 1)) = \'%s\'';
+        $rWhere[] = 'UCASE(LEFT(`stream_display_name`, 1)) = ?';
         $rWhereV[] = strtoupper($rPicking['abc']);
     }
 
@@ -1440,7 +1440,7 @@ function getItems($rTypes = array(), $rCategoryID = null, $rFav = null, $rOrderB
             $rRows = $ipTV_db->get_rows();
         } else {
             $rWhereV[] = $additionalOptions;
-            $ipTV_db->query("SELECT * FROM (SELECT @row_number:=@row_number+1 AS `pos`, `id` FROM `streams`, (SELECT @row_number:=0) AS `t` " . $rWhereString . " ORDER BY " . $rOrder . ") `ids` WHERE `ids`.`id` = '%s';", ...$rWhereV);
+            $ipTV_db->query("SELECT * FROM (SELECT @row_number:=@row_number+1 AS `pos`, `id` FROM `streams`, (SELECT @row_number:=0) AS `t` " . $rWhereString . " ORDER BY " . $rOrder . ") `ids` WHERE `ids`.`id` = ?;", ...$rWhereV);
             return $ipTV_db->get_row()["pos"] ?: NULL;
         }
     } else {
@@ -1524,10 +1524,10 @@ function getDevice($rID = null, $rMAC = null) {
 
     if (!$rDevice && $rMAC || $rDevice && 600 < time() - $rDevice['generated']) {
         if ($rMAC) {
-            $ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mac` = \'%s\' LIMIT 1', $rMAC);
+            $ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mac` = ? LIMIT 1', $rMAC);
         } else {
             if ($rDevice) {
-                $ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mac` = \'%s\' LIMIT 1', $rDevice['get_profile_vars']['mac']);
+                $ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mac` = ? LIMIT 1', $rDevice['get_profile_vars']['mac']);
             }
         }
 
@@ -1697,7 +1697,7 @@ function getMovies($rCategoryID = null, $rFav = null, $rOrderBy = null, $rSearch
 
 function getSeasons($rSeriesID) {
     global $ipTV_db;
-    $ipTV_db->query('SELECT * FROM `streams_episodes` t1 INNER JOIN `streams` t2 ON t2.id=t1.stream_id WHERE t1.series_id = \'%s\' ORDER BY t1.season_num DESC, t1.episode_num ASC', $rSeriesID);
+    $ipTV_db->query('SELECT * FROM `streams_episodes` t1 INNER JOIN `streams` t2 ON t2.id=t1.stream_id WHERE t1.series_id = ? ORDER BY t1.season_num DESC, t1.episode_num ASC', $rSeriesID);
 
     return $ipTV_db->get_rows(true, 'season_num', false);
 }
@@ -1714,7 +1714,7 @@ function getSeries($rMovieID = null, $rCategoryID = null, $rFav = null, $rOrderB
         $rItems = getseriesitems($rDevice['user_id'], 'series', $rCategoryID, $rFav, $rOrderBy, $rSearchBy, $rPicking);
     } else {
         $rItems = getSeasons($rMovieID);
-        $ipTV_db->query('SELECT * FROM `streams_series` WHERE `id` = \'%s\'', $rMovieID);
+        $ipTV_db->query('SELECT * FROM `streams_series` WHERE `id` = ?', $rMovieID);
         $rSeriesInfo = $ipTV_db->get_row();
     }
 

@@ -11,6 +11,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         ipTV_lib::$settings = ipTV_lib::getSettings(true);
         if (ipTV_lib::$settings['enable_cache']) {
             while (true) {
+                if (!$ipTV_db->ping()) {
+                    break;
+                }
                 if ($rLastCheck && $rInterval > time() - $rLastCheck) {
                 } else {
                     ipTV_lib::$settings = ipTV_lib::getSettings(true);
@@ -33,34 +36,34 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                         switch ($rHeader) {
                             case 'restream_block_user':
                                 list($rBlank, $rUserID, $rStreamID, $rIP) = explode('/', $rKey);
-                                $ipTV_db->query('UPDATE `lines` SET `admin_enabled` = 0 WHERE `id` = \'%d\';', $rUserID);
-                                $ipTV_db->query('INSERT INTO `detect_restream_logs`(`user_id`, `stream_id`, `ip`, `time`) VALUES(\'%d\', \'%d\', \'%s\', \'%s\');', $rUserID, $rStreamID, $rIP, time());
+                                $ipTV_db->query('UPDATE `lines` SET `admin_enabled` = 0 WHERE `id` = ?;', $rUserID);
+                                $ipTV_db->query('INSERT INTO `detect_restream_logs`(`user_id`, `stream_id`, `ip`, `time`) VALUES(?, ?, ?, ?);', $rUserID, $rStreamID, $rIP, time());
                                 $rUpdatedLines[] = $rUserID;
                                 break;
                             case 'forced_country':
                                 $rUserID = intval(explode('/', $rKey)[1]);
-                                $ipTV_db->query('UPDATE `lines` SET `forced_country` = \'%s\' WHERE `id` = \'%d\'', $rData, $rUserID);
+                                $ipTV_db->query('UPDATE `lines` SET `forced_country` = ? WHERE `id` = ?', $rData, $rUserID);
                                 $rUpdatedLines[] = $rUserID;
                                 break;
                             case 'isp':
                                 $rUserID = intval(explode('/', $rKey)[1]);
                                 $rISPInfo = json_decode($rData, true);
-                                $ipTV_db->query('UPDATE `lines` SET `isp_desc` = \'%s\', `as_number` = \'%s\' WHERE `id` = \'%d\'', $rISPInfo[0], $rISPInfo[1], $rUserID);
+                                $ipTV_db->query('UPDATE `lines` SET `isp_desc` = ?, `as_number` = ? WHERE `id` = ?', $rISPInfo[0], $rISPInfo[1], $rUserID);
                                 $rUpdatedLines[] = $rUserID;
                                 break;
                             case 'expiring':
                                 $rUserID = intval(explode('/', $rKey)[1]);
-                                $ipTV_db->query('UPDATE `lines` SET `last_expiration_video` = \'%s\' WHERE `id` = \'%d\';', time(), $rUserID);
+                                $ipTV_db->query('UPDATE `lines` SET `last_expiration_video` = ? WHERE `id` = ?;', time(), $rUserID);
                                 $rUpdatedLines[] = $rUserID;
                                 break;
                             case 'flood_attack':
                                 list($rBlank, $rIP) = explode('/', $rKey);
-                                $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%s\')', $rIP, 'FLOOD ATTACK', time());
+                                $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?,?,?)', $rIP, 'FLOOD ATTACK', time());
                                 touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                                 break;
                             case 'bruteforce_attack':
                                 list($rBlank, $rIP) = explode('/', $rKey);
-                                $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%s\')', $rIP, 'BRUTEFORCE ATTACK', time());
+                                $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?,?,?)', $rIP, 'BRUTEFORCE ATTACK', time());
                                 touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                                 break;
                         }

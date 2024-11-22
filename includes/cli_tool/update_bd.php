@@ -48,7 +48,7 @@ if ($ipTV_db->num_rows() > 0) {
         $rAdminSettings[$rRow['type']] = $rRow['value'];
     }
     if (0 < strlen($rAdminSettings['recaptcha_v2_secret_key']) && 0 < strlen($rAdminSettings['recaptcha_v2_site_key'])) {
-        $ipTV_db->query('UPDATE `settings` SET `recaptcha_v2_secret_key` = \'%s\', `recaptcha_v2_site_key` = \'%s\';', $rAdminSettings['recaptcha_v2_secret_key'], $rAdminSettings['recaptcha_v2_site_key']);
+        $ipTV_db->query('UPDATE `settings` SET `recaptcha_v2_secret_key` = ?, `recaptcha_v2_site_key` = ?;', $rAdminSettings['recaptcha_v2_secret_key'], $rAdminSettings['recaptcha_v2_site_key']);
     }
 }
 

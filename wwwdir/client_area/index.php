@@ -6,7 +6,7 @@ if (!(!empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] === t
     if (!(!empty(ipTV_lib::$request["username"]) && !empty(ipTV_lib::$request["password"]))) {
         goto Edca3ffe9250f93804ca6930c52ae31e;
     }
-    $ipTV_db->query("SELECT * FROM `users` WHERE `username` = '%s' AND `password` = '%s' AND (`exp_date` >= " . time() . " OR `exp_date` is null) LIMIT 1", ipTV_lib::$request["username"], ipTV_lib::$request["password"]);
+    $ipTV_db->query("SELECT * FROM `users` WHERE `username` = ? AND `password` = ? AND (`exp_date` >= " . time() . " OR `exp_date` is null) LIMIT 1", ipTV_lib::$request["username"], ipTV_lib::$request["password"]);
     if ($ipTV_db->num_rows() > 0) {
         $_SESSION["client_loggedin"] = true;
         $_SESSION["cl_data"] = $ipTV_db->get_row();

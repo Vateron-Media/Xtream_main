@@ -367,7 +367,7 @@ if ($rUserInfo) {
                 $rWhereV = $rWhere = array();
 
                 if (!empty($rCategoryIDSearch)) {
-                    $rWhere[] = "JSON_CONTAINS(`category_id`, '%s', '\$')";
+                    $rWhere[] = "JSON_CONTAINS(`category_id`, ?, '\$')";
                     $rWhereV[] = $rCategoryIDSearch;
                 }
 
@@ -413,7 +413,7 @@ if ($rUserInfo) {
             if (!empty(ipTV_lib::$request['vod_id'])) {
                 $rVODID = intval(ipTV_lib::$request['vod_id']);
 
-                $ipTV_db->query('SELECT * FROM `streams` WHERE `id` = \'%s\'', $rVODID);
+                $ipTV_db->query('SELECT * FROM `streams` WHERE `id` = ?', $rVODID);
                 $rRow = $ipTV_db->get_row();
 
                 if ($rRow) {
@@ -470,7 +470,7 @@ if ($rUserInfo) {
                 $rWhereV = $rWhere = array();
 
                 if (!empty($rCategoryIDSearch)) {
-                    $rWhere[] = "JSON_CONTAINS(`category_id`, '%s', '\$')";
+                    $rWhere[] = "JSON_CONTAINS(`category_id`, ?, '\$')";
                     $rWhereV[] = $rCategoryIDSearch;
                 }
 

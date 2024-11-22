@@ -44,7 +44,7 @@ $rPassword = ipTV_lib::$settings['live_streaming_pass'];
 $rStreamID = intval(ipTV_lib::$request['stream']);
 $rExtension = ipTV_lib::$request['extension'];
 $rWaitTime = 20;
-$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = \'%s\' WHERE t1.`id` = \'%s\'', SERVER_ID, $rStreamID);
+$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = ? WHERE t1.`id` = ?', SERVER_ID, $rStreamID);
 
 if (0 < $ipTV_db->num_rows()) {
     touch(SIGNALS_TMP_PATH . 'admin_' . intval($rStreamID));

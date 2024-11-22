@@ -19,7 +19,7 @@ if (@$argc) {
         if (!file_exists(ARCHIVE_PATH . $stream_id)) {
             mkdir(ARCHIVE_PATH . $stream_id);
         }
-        $ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t1.id = t2.stream_id AND t2.server_id = t1.tv_archive_server_id WHERE t1.`id` = '%d' AND t1.`tv_archive_server_id` = '%d' AND t1.`tv_archive_duration` > 0", $stream_id, SERVER_ID);
+        $ipTV_db->query("SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t1.id = t2.stream_id AND t2.server_id = t1.tv_archive_server_id WHERE t1.`id` = ? AND t1.`tv_archive_server_id` = ? AND t1.`tv_archive_duration` > 0", $stream_id, SERVER_ID);
         if (0 >= $ipTV_db->num_rows()) {
         } else {
             $stream = $ipTV_db->get_row();
@@ -29,7 +29,7 @@ if (@$argc) {
             if (empty($stream["pid"])) {
                 posix_kill(getmypid(), 9);
             }
-            $ipTV_db->query("UPDATE `streams` SET `tv_archive_pid` = '%d' WHERE `id` = '%d'", getmypid(), $stream_id);
+            $ipTV_db->query("UPDATE `streams` SET `tv_archive_pid` = ? WHERE `id` = ?", getmypid(), $stream_id);
             $time_last_check = time();
             $ipTV_db->close_mysql();
             delete_old_segments($stream_id, $stream["tv_archive_duration"]);
