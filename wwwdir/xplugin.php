@@ -29,7 +29,7 @@ if (!empty(ipTV_lib::$request['action']) && ipTV_lib::$request['action'] == 'aut
         }
         $token = strtoupper(md5(uniqid(rand(), true)));
         $seconds = mt_rand(60, 70);
-        $ipTV_db->query('UPDATE `enigma2_devices` SET `original_mac` = \'%s\',`dns` = \'%s\',`key_auth` = \'%s\',`lversion` = \'%s\',`watchdog_timeout` = \'%d\',`modem_mac` = \'%s\',`local_ip` = \'%s\',`public_ip` = \'%s\',`enigma_version` = \'%s\',`cpu` = \'%s\',`version` = \'%s\',`token` = \'%s\',`last_updated` = \'%d\' WHERE `device_id` = \'%d\'', $cmac, $dn, $user_agent, $lversion, $seconds, $mmac, $ip, $remote_addr, $version, $type, $pversion, $token, time(), $enigma_devices['enigma2']['device_id']);
+        $ipTV_db->query('UPDATE `enigma2_devices` SET `original_mac` = ?,`dns` = ?,`key_auth` = ?,`lversion` = ?,`watchdog_timeout` = ?,`modem_mac` = ?,`local_ip` = ?,`public_ip` = ?,`enigma_version` = ?,`cpu` = ?,`version` = ?,`token` = ?,`last_updated` = ? WHERE `device_id` = ?', $cmac, $dn, $user_agent, $lversion, $seconds, $mmac, $ip, $remote_addr, $version, $type, $pversion, $token, time(), $enigma_devices['enigma2']['device_id']);
         $json['details'] = array();
         $json['details']['token'] = $token;
         $json['details']['username'] = $enigma_devices['user_info']['username'];
@@ -43,7 +43,7 @@ if (empty(ipTV_lib::$request['token'])) {
     die(json_encode(array('valid' => false)));
 }
 $token = ipTV_lib::$request['token'];
-$ipTV_db->query('SELECT * FROM enigma2_devices WHERE `token` = \'%s\' AND `public_ip` = \'%s\' AND `key_auth` = \'%s\' LIMIT 1', $token, $remote_addr, $user_agent);
+$ipTV_db->query('SELECT * FROM enigma2_devices WHERE `token` = ? AND `public_ip` = ? AND `key_auth` = ? LIMIT 1', $token, $remote_addr, $user_agent);
 if ($ipTV_db->num_rows() <= 0) {
     die(json_encode(array('valid' => false)));
 }
@@ -66,8 +66,8 @@ if (!empty($page)) {
             }
         }
     } else {
-        $ipTV_db->query('UPDATE `enigma2_devices` SET `last_updated` = \'%d\',`rc` = \'%d\' WHERE `device_id` = \'%d\'', time(), ipTV_lib::$request['rc'], $device_info['device_id']);
-        $ipTV_db->query('SELECT * FROM `enigma2_actions` WHERE `device_id` = \'%d\'', $device_info['device_id']);
+        $ipTV_db->query('UPDATE `enigma2_devices` SET `last_updated` = ?,`rc` = ? WHERE `device_id` = ?', time(), ipTV_lib::$request['rc'], $device_info['device_id']);
+        $ipTV_db->query('SELECT * FROM `enigma2_actions` WHERE `device_id` = ?', $device_info['device_id']);
         $result = array();
         if ($ipTV_db->num_rows() > 0) {
             $device = $ipTV_db->get_row();
@@ -101,7 +101,7 @@ if (!empty($page)) {
                     $result[$device['key']] = (int) $device['type'];
                     break;
             }
-            $ipTV_db->query('DELETE FROM enigma2_actions where id = \'%d\'', $device['id']);
+            $ipTV_db->query('DELETE FROM enigma2_actions where id = ?', $device['id']);
         }
         die(json_encode(array('valid' => true, 'data' => $result)));
     }

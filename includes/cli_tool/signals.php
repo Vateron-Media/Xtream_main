@@ -5,8 +5,8 @@ if ($argc) {
     cli_set_process_title('XtreamCodes[Signal Receiver]');
     shell_exec('kill $(ps aux | grep \'Signal Receiver\' | grep -v grep | grep -v ' . getmypid() . ' | awk \'{print $2}\')');
     $rMD5 = md5_file(__FILE__);
-    while (true) {
-        if ($ipTV_db->query('SELECT `signal_id`, `pid`, `rtmp` FROM `signals` WHERE `server_id` = \'%s\' AND `pid` IS NOT NULL ORDER BY `signal_id` ASC LIMIT 100', SERVER_ID)) {
+    while (true && $ipTV_db && $ipTV_db->ping()) {
+        if ($ipTV_db->query('SELECT `signal_id`, `pid`, `rtmp` FROM `signals` WHERE `server_id` = ? AND `pid` IS NOT NULL ORDER BY `signal_id` ASC LIMIT 100', SERVER_ID)) {
             if ($ipTV_db->num_rows() > 0) {
                 $rIDs = array();
                 foreach ($ipTV_db->get_rows() as $rRow) {
@@ -24,7 +24,7 @@ if ($argc) {
                     $ipTV_db->query('DELETE FROM `signals` WHERE `signal_id` IN (' . implode(',', $rIDs) . ')');
                 }
             }
-            if ($ipTV_db->query('SELECT `signal_id`, `custom_data` FROM `signals` WHERE `server_id` = \'%s\' AND `cache` = 1 ORDER BY `signal_id` ASC LIMIT 1000;', SERVER_ID)) {
+            if ($ipTV_db->query('SELECT `signal_id`, `custom_data` FROM `signals` WHERE `server_id` = ? AND `cache` = 1 ORDER BY `signal_id` ASC LIMIT 1000;', SERVER_ID)) {
                 if ($ipTV_db->num_rows() > 0) {
                     $rDeletedLines = $rUpdatedStreams = $rUpdatedLines = $rIDs = array();
                     foreach ($ipTV_db->get_rows() as $rRow) {

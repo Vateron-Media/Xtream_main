@@ -118,7 +118,7 @@ if ($user_info = ipTV_streaming::getUserInfo(null, $username, $password, true, f
             sleep(5);
         }
         if ($user_info['max_connections'] == 0 || $user_info['active_cons'] < $user_info['max_connections']) {
-            $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES(\'%d\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\')', $user_info['id'], $stream_id, SERVER_ID, '', $user_ip, $extension, ipTV_lib::$request['clientid'], time(), $geoip_country_code, $user_info['con_isp_name'], $external_device);
+            $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES(?,?,?,?,?,?,?,?,?,?,?)', $user_info['id'], $stream_id, SERVER_ID, '', $user_ip, $extension, ipTV_lib::$request['clientid'], time(), $geoip_country_code, $user_info['con_isp_name'], $external_device);
             $activity_id = $ipTV_db->last_insert_id();
             $ipTV_db->close_mysql();
             http_response_code(200);

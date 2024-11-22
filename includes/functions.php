@@ -120,7 +120,7 @@ function checkFlood($rIP = null) {
                                 if (ipTV_lib::$cached) {
                                     ipTV_lib::setSignal('flood_attack/' . $rIP, 1);
                                 } else {
-                                    $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%d\')', $rIP, 'FLOOD ATTACK', time());
+                                    $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?,?,?)', $rIP, 'FLOOD ATTACK', time());
                                 }
                                 touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                             }
@@ -236,7 +236,7 @@ function checkBruteforce($rIP = null, $rMAC = null, $rUsername = null) {
                                         if (ipTV_lib::$cached) {
                                             ipTV_lib::setSignal('bruteforce_attack/' . $rIP, 1);
                                         } else {
-                                            $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(\'%s\',\'%s\',\'%s\')', $rIP, 'BRUTEFORCE ' . strtoupper($rFloodType) . ' ATTACK', time());
+                                            $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?,?,?)', $rIP, 'BRUTEFORCE ' . strtoupper($rFloodType) . ' ATTACK', time());
                                         }
                                         touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                                     }
@@ -298,14 +298,14 @@ function truncateAttempts($rAttempts, $rFrequency, $rList = false) {
 }
 function GetEPGStream($stream_id, $from_now = false) {
     global $ipTV_db;
-    $ipTV_db->query('SELECT `type`,`movie_properties`,`epg_id`,`channel_id` FROM `streams` WHERE `id` = \'%d\'', $stream_id);
+    $ipTV_db->query('SELECT `type`,`movie_properties`,`epg_id`,`channel_id` FROM `streams` WHERE `id` = ?', $stream_id);
     if ($ipTV_db->num_rows() > 0) {
         $data = $ipTV_db->get_row();
         if ($data['type'] != 2) {
             if ($from_now) {
-                $ipTV_db->query('SELECT * FROM `epg_data` WHERE `epg_id` = \'%d\' AND `channel_id` = \'%s\' AND `end` >= \'%s\'', $data['epg_id'], $data['channel_id'], date('Y-m-d H:i:00'));
+                $ipTV_db->query('SELECT * FROM `epg_data` WHERE `epg_id` = ? AND `channel_id` = ? AND `end` >= ?', $data['epg_id'], $data['channel_id'], date('Y-m-d H:i:00'));
             } else {
-                $ipTV_db->query('SELECT * FROM `epg_data` WHERE `epg_id` = \'%d\' AND `channel_id` = \'%s\'', $data['epg_id'], $data['channel_id']);
+                $ipTV_db->query('SELECT * FROM `epg_data` WHERE `epg_id` = ? AND `channel_id` = ?', $data['epg_id'], $data['channel_id']);
             }
             return $ipTV_db->get_rows();
         } else {
@@ -337,7 +337,7 @@ function getTotalTmpfs() {
 function GetCategories($type = null) {
     global $ipTV_db;
     if (is_string($type)) {
-        $ipTV_db->query('SELECT t1.* FROM `stream_categories` t1 WHERE t1.category_type = \'%s\' GROUP BY t1.id ORDER BY t1.cat_order ASC', $type);
+        $ipTV_db->query('SELECT t1.* FROM `stream_categories` t1 WHERE t1.category_type = ? GROUP BY t1.id ORDER BY t1.cat_order ASC', $type);
     } else {
         $ipTV_db->query('SELECT t1.* FROM `stream_categories` t1 ORDER BY t1.cat_order ASC');
     }
@@ -356,9 +356,9 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
             $rOutputKey = 'm3u8';
         }
         if (empty($rOutputKey)) {
-            $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 INNER JOIN `devices` t2 ON t2.default_output = t1.access_output_id AND `device_key` = \'%s\'', $rDeviceKey);
+            $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 INNER JOIN `devices` t2 ON t2.default_output = t1.access_output_id AND `device_key` = ?', $rDeviceKey);
         } else {
-            $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 WHERE `output_key` = \'%s\'', $rOutputKey);
+            $ipTV_db->query('SELECT t1.output_ext FROM `access_output` t1 WHERE `output_key` = ?', $rOutputKey);
         }
         if ($ipTV_db->num_rows() > 0) {
             $rCacheName = $rUserInfo['id'] . '_' . $rDeviceKey . '_' . $rOutputKey . '_' . implode('_', ($rTypeKey ?: array()));
@@ -382,7 +382,7 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                 if (empty($rOutputExt)) {
                     $rOutputExt = 'ts';
                 }
-                $ipTV_db->query('SELECT t1.*,t2.* FROM `devices` t1 LEFT JOIN `access_output` t2 ON t2.access_output_id = t1.default_output WHERE t1.device_key = \'%s\' LIMIT 1', $rDeviceKey);
+                $ipTV_db->query('SELECT t1.*,t2.* FROM `devices` t1 LEFT JOIN `access_output` t2 ON t2.access_output_id = t1.default_output WHERE t1.device_key = ? LIMIT 1', $rDeviceKey);
                 if (0 >= $ipTV_db->num_rows()) {
                     return false;
                 }
@@ -717,7 +717,7 @@ function GetContainerExtension($target_container, $stalker_container_priority = 
 }
 function searchQuery($tableName, $columnName, $value) {
     global $ipTV_db;
-    $ipTV_db->query("SELECT * FROM `{$tableName}` WHERE `{$columnName}` = '%s'", $value);
+    $ipTV_db->query("SELECT * FROM `{$tableName}` WHERE `{$columnName}` = ?", $value);
     if ($ipTV_db->num_rows() > 0) {
         return true;
     }

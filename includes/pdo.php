@@ -39,7 +39,7 @@ class Database {
     public function ping() {
         try {
             $this->dbh->query('SELECT 1');
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             return false;
         }
 

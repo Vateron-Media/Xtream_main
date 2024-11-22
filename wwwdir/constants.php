@@ -236,9 +236,19 @@ function log_fatal() {
 }
 
 function panelLog($rType, $rMessage, $rExtra = '', $rLine = 0) {
-    $data = array('type' => $rType, 'message' => $rMessage, 'extra' => $rExtra, 'line' => $rLine, 'time' => time());
-    file_put_contents(LOGS_TMP_PATH . 'error_log.log', base64_encode(json_encode($data)) . "\n", FILE_APPEND);
+    $logFile = LOGS_TMP_PATH . 'error_log.log';
+    // Ensure directory exists
+    if (!is_dir(LOGS_TMP_PATH)) {
+        mkdir(LOGS_TMP_PATH, 0775, true);
+    }
+    $data = ['type' => $rType,
+        'message' => $rMessage, 'extra' => $rExtra,
+        'line' => $rLine, 'time' => time()
+    ];
+    // Write log
+    file_put_contents($logFile, base64_encode(json_encode($data)) . "\n", FILE_APPEND);
 }
+
 
 function generateError($rError, $rKill = true, $rCode = null) {
     global $rErrorCodes;

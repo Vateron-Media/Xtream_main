@@ -23,9 +23,9 @@ $extension = $stream['extension'];
 $ipTV_db->query('
                     SELECT t1.*
                     FROM `streams` t1
-                    INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.pid IS NOT NULL AND t2.server_id = \'%d\'
+                    INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.pid IS NOT NULL AND t2.server_id = ?
                     INNER JOIN `streams_types` t3 ON t3.type_id = t1.type AND t3.type_key = \'movie\'
-                    WHERE t1.`id` = \'%d\'', SERVER_ID, $stream_id);
+                    WHERE t1.`id` = ?', SERVER_ID, $stream_id);
 if (ipTV_lib::$settings['use_buffer'] == 0) {
     header('X-Accel-Buffering: no');
 }

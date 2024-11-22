@@ -60,13 +60,13 @@ if (ipTV_lib::$settings['use_buffer'] == 0) {
 if ($rChannelInfo) {
     $serverID = ($rChannelInfo['redirect_id'] ?: SERVER_ID);
 
-    $ipTV_db->query('SELECT `server_id`, `activity_id`, `pid`, `user_ip` FROM `lines_live` WHERE `uuid` = \'%s\';', $rTokenData['uuid']);
+    $ipTV_db->query('SELECT `server_id`, `activity_id`, `pid`, `user_ip` FROM `lines_live` WHERE `uuid` = ?;', $rTokenData['uuid']);
 
     if (0 < $ipTV_db->num_rows()) {
         $rConnection = $ipTV_db->get_row();
     } else {
         if (!empty($_SERVER['HTTP_RANGE'])) {
-            $ipTV_db->query('SELECT `server_id`, `activity_id`, `pid`, `user_ip` FROM `lines_live` WHERE `user_id` = \'%s\' AND `container` = \'%s\' AND `user_agent` = \'%s\' AND `stream_id` = \'%s\';', $rUserInfo['id'], 'VOD', $rUserAgent, $streamID);
+            $ipTV_db->query('SELECT `server_id`, `activity_id`, `pid`, `user_ip` FROM `lines_live` WHERE `user_id` = ? AND `container` = ? AND `user_agent` = ? AND `stream_id` = ?;', $rUserInfo['id'], 'VOD', $rUserAgent, $streamID);
 
             if (0 < $ipTV_db->num_rows()) {
                 $rConnection = $ipTV_db->get_row();
@@ -79,7 +79,7 @@ if ($rChannelInfo) {
         if (!(file_exists(CONS_TMP_PATH . $rTokenData['uuid']) || ($activityStart + $rCreateExpiration) - intval(ipTV_lib::$Servers[SERVER_ID]['time_offset']) >= time())) {
             generateError('TOKEN_EXPIRED');
         }
-        $rResult = $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`) VALUES(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\');', $rUserInfo['id'], $streamID, $serverID, $rUserAgent, $IP, 'VOD', $rPID, $rTokenData['uuid'], $activityStart, $rCountryCode, $rUserInfo['con_isp_name']);
+        $rResult = $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`) VALUES(?,?,?,?,?,?,?,?,?,?,?);', $rUserInfo['id'], $streamID, $serverID, $rUserAgent, $IP, 'VOD', $rPID, $rTokenData['uuid'], $activityStart, $rCountryCode, $rUserInfo['con_isp_name']);
     } else {
         $IPMatch = (ipTV_lib::$settings['ip_subnet_match'] ? implode('.', array_slice(explode('.', $rConnection['user_ip']), 0, -1)) == implode('.', array_slice(explode('.', $IP), 0, -1)) : $rConnection['user_ip'] == $IP);
 
@@ -92,11 +92,11 @@ if ($rChannelInfo) {
             if ($rConnection['server_id'] == SERVER_ID) {
                 posix_kill(intval($rConnection['pid']), 9);
             } else {
-                $ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(\'%s\',\'%s\',UNIX_TIMESTAMP())', $rConnection['pid'], $rConnection['server_id']);
+                $ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(?,?,UNIX_TIMESTAMP())', $rConnection['pid'], $rConnection['server_id']);
             }
         }
 
-        $rResult = $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 0, `pid` = \'%s\' WHERE `activity_id` = \'%s\';', $rPID, $rConnection['activity_id']);
+        $rResult = $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 0, `pid` = ? WHERE `activity_id` = ?;', $rPID, $rConnection['activity_id']);
     }
 
     if (!$rResult) {
@@ -241,7 +241,7 @@ if ($rChannelInfo) {
                 $rConnection = null;
                 ipTV_lib::$settings = ipTV_lib::getCache('settings');
 
-                $ipTV_db->query('SELECT `pid`, `hls_end` FROM `lines_live` WHERE `uuid` = \'%s\'', $rTokenData['uuid']);
+                $ipTV_db->query('SELECT `pid`, `hls_end` FROM `lines_live` WHERE `uuid` = ?', $rTokenData['uuid']);
 
                 if ($ipTV_db->num_rows() == 1) {
                     $rConnection = $ipTV_db->get_row();
@@ -270,7 +270,7 @@ function shutdown() {
     ipTV_lib::$settings = ipTV_lib::getCache('settings');
 
     if ($rCloseCon) {
-        $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = \'%s\' WHERE `uuid` = \'%s\' AND `pid` = \'%s\';', time() - intval(ipTV_lib::$Servers[SERVER_ID]['time_offset']), $rTokenData['uuid'], $rPID);
+        $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = ? WHERE `uuid` = ? AND `pid` = ?;', time() - intval(ipTV_lib::$Servers[SERVER_ID]['time_offset']), $rTokenData['uuid'], $rPID);
     }
 
     if (is_object($ipTV_db)) {

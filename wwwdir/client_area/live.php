@@ -176,7 +176,7 @@ if (!(empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] != tru
                 <!--channels-->
                 <?php
                 $B9756c2ca174cd617ad8d0ed4704e5c6 = "'" . implode("','", array_unique($B9756c2ca174cd617ad8d0ed4704e5c6)) . "'";
-                $ipTV_db->query("SELECT *,UNIX_TIMESTAMP(start) as start_timestamp,UNIX_TIMESTAMP(end) as stop_timestamp from `epg_data` WHERE `end` >= '%s' AND `end` <= '%s' AND channel_id IN ({$B9756c2ca174cd617ad8d0ed4704e5c6})", date("Y-m-d H:i:00"), date("Y-m-d H:i:00", strtotime("+12 hours")));
+                $ipTV_db->query("SELECT *,UNIX_TIMESTAMP(start) as start_timestamp,UNIX_TIMESTAMP(end) as stop_timestamp from `epg_data` WHERE `end` >= ? AND `end` <= ? AND channel_id IN ({$B9756c2ca174cd617ad8d0ed4704e5c6})", date("Y-m-d H:i:00"), date("Y-m-d H:i:00", strtotime("+12 hours")));
                 $epgData = $ipTV_db->get_rows(true, "channel_id", false);
                 $C48e0083a9caa391609a3c645a2ec889 = 0;
                 if (ipTV_lib::$settings["client_area_plugin"] == "vlc") {

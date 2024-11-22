@@ -251,7 +251,7 @@ function getIP() {
 
 function changePort_new($rServerID, $rType, $rPorts, $rReload = false) {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(\'%d\', \'%s\', \'%s\');', $rServerID, time(), json_encode(array('action' => 'set_port', 'type' => intval($rType), 'ports' => $rPorts, 'reload' => $rReload)));
+    $ipTV_db_admin->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', $rServerID, time(), json_encode(array('action' => 'set_port', 'type' => intval($rType), 'ports' => $rPorts, 'reload' => $rReload)));
 }
 
 function scanBouquets() {
@@ -383,7 +383,7 @@ function goHome() {
 function verifyPostTable($rTable, $rData = array(), $rOnlyExisting = false) {
     global $ipTV_db_admin;
     $rReturn = array();
-    $ipTV_db_admin->query('SELECT `column_name`, `column_default`, `is_nullable`, `data_type` FROM `information_schema`.`columns` WHERE `table_schema` = (SELECT DATABASE()) AND `table_name` = \'%s\' ORDER BY `ordinal_position`;', $rTable);
+    $ipTV_db_admin->query('SELECT `column_name`, `column_default`, `is_nullable`, `data_type` FROM `information_schema`.`columns` WHERE `table_schema` = (SELECT DATABASE()) AND `table_name` = ? ORDER BY `ordinal_position`;', $rTable);
 
     foreach ($ipTV_db_admin->get_rows() as $rRow) {
         if ($rRow['column_default'] == 'NULL') {
@@ -444,7 +444,7 @@ function prepareArray($rArray) {
                 $rValue = null;
             }
         }
-        $rPlaceholder[] = '\'%s\'';
+        $rPlaceholder[] = '?';
         $rData[] = $rValue;
     }
     return array('placeholder' => implode(',', $rPlaceholder), 'columns' => implode(',', $rColumns), 'data' => $rData, 'update' => implode(',', $rUpdate));

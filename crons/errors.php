@@ -75,7 +75,7 @@ function loadCron() {
     }
     if (!empty($rQuery)) {
         $rQuery = rtrim($rQuery, ',');
-        $ipTV_db->query('INSERT INTO `streams_errors` (`stream_id`,`server_id`,`date`,`error`) VALUES ' . $rQuery . ';');
+        $ipTV_db->query('INSERT INTO `stream_logs` (`stream_id`,`server_id`,`date`,`error`) VALUES ' . $rQuery . ';');
     }
     $rLog = LOGS_TMP_PATH . 'error_log.log';
     if (file_exists($rLog)) {

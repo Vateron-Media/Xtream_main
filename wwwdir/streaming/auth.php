@@ -343,7 +343,7 @@ if ($rExtension) {
                         if (ipTV_lib::$cached) {
                             ipTV_lib::setSignal('restream_block_user/' . $rUserInfo['id'] . '/' . $streamID . '/' . $IP, 1);
                         } else {
-                            $ipTV_db->query('UPDATE `users` SET `admin_enabled` = 0 WHERE `id` = \'%s\';', $rUserInfo['id']);
+                            $ipTV_db->query('UPDATE `users` SET `admin_enabled` = 0 WHERE `id` = ?;', $rUserInfo['id']);
                         }
                     }
 
@@ -366,7 +366,7 @@ if ($rExtension) {
             if (ipTV_lib::$cached) {
                 ipTV_lib::setSignal('expiring/' . $rUserInfo['id'], time());
             } else {
-                $ipTV_db->query('UPDATE `users` SET `last_expiration_video` = \'%s\' WHERE `id` = \'%s\';', time(), $rUserInfo['id']);
+                $ipTV_db->query('UPDATE `users` SET `last_expiration_video` = ? WHERE `id` = ?;', time(), $rUserInfo['id']);
             }
 
             ipTV_streaming::showVideoServer('show_expiring_video', 'expiring_video_path', $rExtension, $rUserInfo, $IP, $rCountryCode, $rUserInfo['con_isp_name'], SERVER_ID);

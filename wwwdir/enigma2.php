@@ -143,7 +143,7 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
             break;
         case 'get_seasons':
             if (isset($series_id)) {
-                $ipTV_db->query('SELECT * FROM `series` WHERE `id` = \'%d\'', $series_id);
+                $ipTV_db->query('SELECT * FROM `series` WHERE `id` = ?', $series_id);
                 $serie = $ipTV_db->get_row();
                 $category_name = $serie['title'];
                 $xml = new SimpleXMLExtended('<items/>');
@@ -151,7 +151,7 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
                 $category = $xml->addchild('category');
                 $category->addchild('category_id', 1);
                 $category->addchild('category_title', "TV Series [ {$category_name} ]");
-                $ipTV_db->query('SELECT * FROM `series_episodes` t1 INNER JOIN `streams` t2 ON t2.id=t1.stream_id WHERE t1.series_id = \'%d\' ORDER BY t1.season_num ASC, t1.sort ASC', $series_id);
+                $ipTV_db->query('SELECT * FROM `series_episodes` t1 INNER JOIN `streams` t2 ON t2.id=t1.stream_id WHERE t1.series_id = ? ORDER BY t1.season_num ASC, t1.sort ASC', $series_id);
                 $rows = $ipTV_db->get_rows(true, 'season_num', false);
                 foreach (array_keys($rows) as $category_id) {
                     if ($cat_id != 0) {
@@ -212,7 +212,7 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
                             continue;
                         }
                     }
-                    $ipTV_db->query('SELECT *,UNIX_TIMESTAMP(start) as start_timestamp, UNIX_TIMESTAMP(end) as stop_timestamp FROM `epg_data` WHERE `channel_id` = \'%s\' AND  `end` >= \'%s\' LIMIT 2', $user_info['channel_id'], date('Y-m-d H:i:00'));
+                    $ipTV_db->query('SELECT *,UNIX_TIMESTAMP(start) as start_timestamp, UNIX_TIMESTAMP(end) as stop_timestamp FROM `epg_data` WHERE `channel_id` = ? AND  `end` >= ? LIMIT 2', $user_info['channel_id'], date('Y-m-d H:i:00'));
                     $epgData = $ipTV_db->get_rows();
                     $desc = '';
                     $title = '';

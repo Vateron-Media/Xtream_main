@@ -281,7 +281,7 @@ class ipTV_lib {
             if (is_array($value)) {
                 $value = json_encode($value);
             }
-            if (!self::$ipTV_db->query("UPDATE `settings` SET `value` = '%s' WHERE `name` = '%s'", $value, $key)) {
+            if (!self::$ipTV_db->query("UPDATE `settings` SET `value` = ? WHERE `name` = ?", $value, $key)) {
                 return false;
             }
         }
@@ -610,7 +610,7 @@ class ipTV_lib {
         return trim($val);
     }
     public static function saveLog_old($msg) {
-        self::$ipTV_db->query('INSERT INTO `panel_logs` (`log_message`,`date`) VALUES(\'%s\',\'%d\')', $msg, time());
+        self::$ipTV_db->query('INSERT INTO `panel_logs` (`log_message`,`date`) VALUES(?,?)', $msg, time());
     }
     public static function saveLog($rType, $rMessage, $rExtra = '', $rLine = 0) {
         if (stripos($rExtra, 'panel_logs') === false && stripos($rMessage, 'timeout exceeded') === false && stripos($rMessage, 'lock wait timeout') === false && stripos($rMessage, 'duplicate entry') === false) {
@@ -721,9 +721,9 @@ class ipTV_lib {
     }
     public static function updateLine($rUserID, $rForce = false) {
         if (self::$cached) {
-            self::$ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = \'%s\' AND `cache` = 1 AND `custom_data` = \'%s\';', ipTV_streaming::getMainID(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
+            self::$ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = ? AND `cache` = 1 AND `custom_data` = ?;', ipTV_streaming::getMainID(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
             if (self::$ipTV_db->get_row()['count'] == 0) {
-                self::$ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(\'%s\', 1, \'%s\', \'%s\');', ipTV_streaming::getMainID(), time(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
+                self::$ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(?, 1, ?, ?);', ipTV_streaming::getMainID(), time(), json_encode(array('type' => 'update_line', 'id' => $rUserID)));
             }
             return true;
         }

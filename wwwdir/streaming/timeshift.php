@@ -192,12 +192,12 @@ if (!empty($queue)) {
                 }
                 die;
             }
-            $ipTV_db->query('SELECT activity_id,hls_end FROM `lines_live` WHERE `user_id` = \'%d\' AND `server_id` = \'%d\' AND `container` = \'hls\' AND `user_ip` = \'%s\' AND `user_agent` = \'%s\' AND `stream_id` = \'%d\'', $user_info['id'], SERVER_ID, $user_ip, $user_agent, $stream_id);
+            $ipTV_db->query('SELECT activity_id,hls_end FROM `lines_live` WHERE `user_id` = ? AND `server_id` = ? AND `container` = \'hls\' AND `user_ip` = ? AND `user_agent` = ? AND `stream_id` = ?', $user_info['id'], SERVER_ID, $user_ip, $user_agent, $stream_id);
             if ($ipTV_db->num_rows() == 0) {
                 if ($user_info['max_connections'] != 0) {
-                    $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `user_id` = \'%d\' AND `container` = \'hls\'', $user_info['id']);
+                    $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `user_id` = ? AND `container` = \'hls\'', $user_info['id']);
                 }
-                $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`,`hls_last_read`) VALUES(\'%d\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\',\'%d\')', $user_info['id'], $stream_id, SERVER_ID, $user_agent, $user_ip, $container_priority . ' (HLS)', getmypid(), $date, $geoip_country_code, $user_info['con_isp_name'], $external_device, $date);
+                $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`,`hls_last_read`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)', $user_info['id'], $stream_id, SERVER_ID, $user_agent, $user_ip, $container_priority . ' (HLS)', getmypid(), $date, $geoip_country_code, $user_info['con_isp_name'], $external_device, $date);
                 $activity_id = $ipTV_db->last_insert_id();
             } else {
                 $row = $ipTV_db->get_row();
@@ -206,7 +206,7 @@ if (!empty($queue)) {
                     die;
                 }
                 $activity_id = $row['activity_id'];
-                $ipTV_db->query('UPDATE `lines_live` SET `hls_last_read` = \'%d\' WHERE `activity_id` = \'%d\'', time(), $row['activity_id']);
+                $ipTV_db->query('UPDATE `lines_live` SET `hls_last_read` = ? WHERE `activity_id` = ?', time(), $row['activity_id']);
             }
             $ipTV_db->close_mysql();
             $output = '#EXTM3U';
@@ -227,7 +227,7 @@ if (!empty($queue)) {
         default:
             header('Content-Type: video/mp2t');
             if (!empty($user_info)) {
-                $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES(\'%d\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\',\'%d\',\'%d\',\'%s\',\'%s\',\'%s\')', $user_info['id'], $stream_id, SERVER_ID, $user_agent, $user_ip, $container_priority, getmypid(), $date, $geoip_country_code, $user_info['con_isp_name'], $external_device);
+                $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES(?,?,?,?,?,?,?,?,?,?,?)', $user_info['id'], $stream_id, SERVER_ID, $user_agent, $user_ip, $container_priority, getmypid(), $date, $geoip_country_code, $user_info['con_isp_name'], $external_device);
                 $activity_id = $ipTV_db->last_insert_id();
                 $connection_speed_file = TMP_PATH . $activity_id . '.con';
                 $ipTV_db->close_mysql();

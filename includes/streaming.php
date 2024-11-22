@@ -64,12 +64,12 @@ class ipTV_streaming {
             }
         }
         $rOutput = array();
-        self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE t1.`id` = \'%s\'', $streamID);
+        self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE t1.`id` = ?', $streamID);
         if (self::$ipTV_db->num_rows() > 0) {
             $rStreamInfo = self::$ipTV_db->get_row();
             $rServers = array();
             if ($rStreamInfo['direct_source'] == 0) {
-                self::$ipTV_db->query('SELECT * FROM `streams_servers` WHERE `stream_id` = \'%s\'', $streamID);
+                self::$ipTV_db->query('SELECT * FROM `streams_servers` WHERE `stream_id` = ?', $streamID);
                 if (self::$ipTV_db->num_rows() > 0) {
                     $rServers = self::$ipTV_db->get_rows(true, 'server_id');
                 }
@@ -277,13 +277,13 @@ class ipTV_streaming {
             }
         } else {
             if (empty($password) && empty($userID) && strlen($username) == 32) {
-                self::$ipTV_db->query('SELECT * FROM `users` WHERE `is_mag` = 0 AND `is_e2` = 0 AND `access_token` = \'%s\' AND LENGTH(`access_token`) = 32', $username);
+                self::$ipTV_db->query('SELECT * FROM `users` WHERE `is_mag` = 0 AND `is_e2` = 0 AND `access_token` = ? AND LENGTH(`access_token`) = 32', $username);
             } else {
                 if (!empty($username) && !empty($password)) {
-                    self::$ipTV_db->query('SELECT `users`.*, `mag_devices`.`token` AS `mag_token` FROM `users` LEFT JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` WHERE `username` = \'%s\' AND `password` = \'%s\' LIMIT 1', $username, $password);
+                    self::$ipTV_db->query('SELECT `users`.*, `mag_devices`.`token` AS `mag_token` FROM `users` LEFT JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` WHERE `username` = ? AND `password` = ? LIMIT 1', $username, $password);
                 } else {
                     if (!empty($userID)) {
-                        self::$ipTV_db->query('SELECT `users`.*, `mag_devices`.`token` AS `mag_token` FROM `users` LEFT JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` WHERE `id` = \'%s\'', $userID);
+                        self::$ipTV_db->query('SELECT `users`.*, `mag_devices`.`token` AS `mag_token` FROM `users` LEFT JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` WHERE `id` = ?', $userID);
                     } else {
                         return false;
                     }
@@ -301,7 +301,7 @@ class ipTV_streaming {
             if (ipTV_lib::$cached) {
                 ipTV_lib::setSignal('forced_country/' . $userInfo['id'], $userInfo['forced_country']);
             } else {
-                self::$ipTV_db->query('UPDATE `users` SET `forced_country` = \'%s\' WHERE `id` = \'%s\'', $userInfo['forced_country'], $userInfo['id']);
+                self::$ipTV_db->query('UPDATE `users` SET `forced_country` = ? WHERE `id` = ?', $userInfo['forced_country'], $userInfo['id']);
             }
         }
         $userInfo['bouquet'] = json_decode($userInfo['bouquet'], true);
@@ -355,7 +355,7 @@ class ipTV_streaming {
                 if (ipTV_lib::$cached) {
                     ipTV_lib::setSignal('isp/' . $userInfo['id'], json_encode(array($userInfo['con_isp_name'], $userInfo['isp_asn'])));
                 } else {
-                    self::$ipTV_db->query('UPDATE `users` SET `isp_desc` = \'%s\', `as_number` = \'%s\' WHERE `id` = \'%s\'', $userInfo['con_isp_name'], $userInfo['isp_asn'], $userInfo['id']);
+                    self::$ipTV_db->query('UPDATE `users` SET `isp_desc` = ?, `as_number` = ? WHERE `id` = ?', $userInfo['con_isp_name'], $userInfo['isp_asn'], $userInfo['id']);
                 }
             }
         }
@@ -421,9 +421,9 @@ class ipTV_streaming {
     }
     public static function getMagInfo($mag_id = null, $mac = null, $get_ChannelIDS = false, $getBouquetInfo = false, $get_cons = false) {
         if (empty($mag_id)) {
-            self::$ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mac` = \'%s\'', base64_encode($mac));
+            self::$ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mac` = ?', base64_encode($mac));
         } else {
-            self::$ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mag_id` = \'%d\'', $mag_id);
+            self::$ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mag_id` = ?', $mag_id);
         }
         if (self::$ipTV_db->num_rows() > 0) {
             $maginfo = array();
@@ -448,9 +448,9 @@ class ipTV_streaming {
     }
     public static function enigmaDevices($maginfo, $get_ChannelIDS = false, $getBouquetInfo = false, $get_cons = false) {
         if (empty($maginfo['device_id'])) {
-            self::$ipTV_db->query('SELECT * FROM `enigma2_devices` WHERE `mac` = \'%s\'', $maginfo['mac']);
+            self::$ipTV_db->query('SELECT * FROM `enigma2_devices` WHERE `mac` = ?', $maginfo['mac']);
         } else {
-            self::$ipTV_db->query('SELECT * FROM `enigma2_devices` WHERE `device_id` = \'%d\'', $maginfo['device_id']);
+            self::$ipTV_db->query('SELECT * FROM `enigma2_devices` WHERE `device_id` = ?', $maginfo['device_id']);
         }
         if (self::$ipTV_db->num_rows() > 0) {
             $enigma2devices = array();
@@ -509,7 +509,7 @@ class ipTV_streaming {
                 return null;
             }
         } else {
-            self::$ipTV_db->query('SELECT `lines_live`.*, `on_demand` FROM `lines_live` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `lines_live`.`stream_id` AND `streams_servers`.`server_id` = `lines_live`.`server_id` WHERE `lines_live`.`user_id` = %d AND `lines_live`.`hls_end` = 0 ORDER BY `lines_live`.`activity_id` ASC', $userID);
+            self::$ipTV_db->query('SELECT `lines_live`.*, `on_demand` FROM `lines_live` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `lines_live`.`stream_id` AND `streams_servers`.`server_id` = `lines_live`.`server_id` WHERE `lines_live`.`user_id` = ? AND `lines_live`.`hls_end` = 0 ORDER BY `lines_live`.`activity_id` ASC', $userID);
 
             $rConnectionCount = self::$ipTV_db->num_rows();
             $rToKill = $rConnectionCount - $rMaxConnections;
@@ -649,9 +649,9 @@ class ipTV_streaming {
             if (!is_array($rActivityInfo)) {
                 if (!ipTV_lib::$settings['redis_handler']) {
                     if (strlen(strval($rActivityInfo)) == 32) {
-                        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `uuid` = \'%s\'', $rActivityInfo);
+                        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `uuid` = ?', $rActivityInfo);
                     } else {
-                        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `activity_id` = \'%s\'', $rActivityInfo);
+                        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `activity_id` = ?', $rActivityInfo);
                     }
                     $rActivityInfo = self::$ipTV_db->get_row();
                 } else {
@@ -665,7 +665,7 @@ class ipTV_streaming {
                         if (ipTV_lib::$settings['redis_handler']) {
                             self::redisSignal($rActivityInfo['pid'], $rActivityInfo['server_id'], 1);
                         } else {
-                            self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`rtmp`,`time`) VALUES(\'%s\',\'%s\',\'%s\',UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id'], 1);
+                            self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`rtmp`,`time`) VALUES(?,?,?,UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id'], 1);
                         }
                     }
                 } else {
@@ -674,7 +674,7 @@ class ipTV_streaming {
                             if (ipTV_lib::$settings['redis_handler']) {
                                 self::updateConnection($rActivityInfo, array(), 'close');
                             } else {
-                                self::$ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `activity_id` = \'%s\'', $rActivityInfo['activity_id']);
+                                self::$ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `activity_id` = ?', $rActivityInfo['activity_id']);
                             }
                             ipTV_lib::unlinkFile(CONS_TMP_PATH . $rActivityInfo['stream_id'] . '/' . $rActivityInfo['uuid']);
                         }
@@ -687,7 +687,7 @@ class ipTV_streaming {
                             if (ipTV_lib::$settings['redis_handler']) {
                                 self::redisSignal($rActivityInfo['pid'], $rActivityInfo['server_id'], 0);
                             } else {
-                                self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(\'%s\',\'%s\',UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id']);
+                                self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(?,?,UNIX_TIMESTAMP())', $rActivityInfo['pid'], $rActivityInfo['server_id']);
                             }
                         }
                     }
@@ -714,7 +714,7 @@ class ipTV_streaming {
                         $rRedis->sRem('ENDED', $rActivityInfo['uuid']);
                         $rRedis->exec();
                     } else {
-                        self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%s\'', $rActivityInfo['activity_id']);
+                        self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = ?', $rActivityInfo['activity_id']);
                     }
                 }
                 self::writeOfflineActivity($rActivityInfo['server_id'], $rActivityInfo['user_id'], $rActivityInfo['stream_id'], $rActivityInfo['date_start'], $rActivityInfo['user_agent'], $rActivityInfo['user_ip'], $rActivityInfo['container'], $rActivityInfo['geoip_country_code'], $rActivityInfo['isp'], $rActivityInfo['external_device'], $rActivityInfo['divergence']);
@@ -725,7 +725,7 @@ class ipTV_streaming {
         return false;
     }
     public static function closeLastCon($user_id, $max_connections) {
-        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `user_id` = \'%d\' ORDER BY activity_id ASC', $user_id);
+        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `user_id` = ? ORDER BY activity_id ASC', $user_id);
         $rows = self::$ipTV_db->get_rows();
         $length = count($rows) - $max_connections + 1;
         if ($length <= 0) {
@@ -756,7 +756,7 @@ class ipTV_streaming {
             return false;
         }
         if (empty($activity_id['activity_id'])) {
-            self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `activity_id` = \'%d\'', $activity_id);
+            self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `activity_id` = ?', $activity_id);
             $activity_id = self::$ipTV_db->get_row();
         }
         if (empty($activity_id)) {
@@ -765,22 +765,22 @@ class ipTV_streaming {
         if (!($activity_id['container'] == 'rtmp')) {
             if ($activity_id['container'] == 'hls') {
                 if (!$ActionUserActivityNow) {
-                    self::$ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
+                    self::$ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1 WHERE `activity_id` = ?', $activity_id['activity_id']);
                 }
             } else {
                 if ($activity_id['server_id'] == SERVER_ID) {
                     shell_exec("kill -9 {$activity_id['pid']} >/dev/null 2>/dev/null &");
                 } else {
-                    self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(\'%d\',\'%d\',UNIX_TIMESTAMP())', $activity_id['pid'], $activity_id['server_id']);
+                    self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`time`) VALUES(?,?,UNIX_TIMESTAMP())', $activity_id['pid'], $activity_id['server_id']);
                 }
                 if ($activity_id['server_id'] == SERVER_ID) {
                     shell_exec('wget --timeout=2 -O /dev/null -o /dev/null "' . ipTV_lib::$Servers[SERVER_ID]['rtmp_mport_url'] . "control/drop/client?clientid={$activity_id['pid']}\" >/dev/null 2>/dev/null &");
                 } else {
-                    self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`rtmp`,`time`) VALUES(\'%d\',\'%d\',\'%d\',UNIX_TIMESTAMP())', $activity_id['pid'], $activity_id['server_id'], 1);
+                    self::$ipTV_db->query('INSERT INTO `signals` (`pid`,`server_id`,`rtmp`,`time`) VALUES(?,?,?,UNIX_TIMESTAMP())', $activity_id['pid'], $activity_id['server_id'], 1);
                 }
             }
             if ($ActionUserActivityNow) {
-                self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
+                self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = ?', $activity_id['activity_id']);
             }
             self::writeOfflineActivity($activity_id['server_id'], $activity_id['user_id'], $activity_id['stream_id'], $activity_id['date_start'], $activity_id['user_agent'], $activity_id['user_ip'], $activity_id['container'], $activity_id['geoip_country_code'], $activity_id['isp'], $activity_id['external_device']);
             return true;
@@ -790,10 +790,10 @@ class ipTV_streaming {
         if (empty($PID)) {
             return false;
         }
-        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `container` = \'rtmp\' AND `pid` = \'%d\' AND `server_id` = \'%d\'', $PID, SERVER_ID);
+        self::$ipTV_db->query('SELECT * FROM `lines_live` WHERE `container` = \'rtmp\' AND `pid` = ? AND `server_id` = ?', $PID, SERVER_ID);
         if (self::$ipTV_db->num_rows() > 0) {
             $activity_id = self::$ipTV_db->get_row();
-            self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = \'%d\'', $activity_id['activity_id']);
+            self::$ipTV_db->query('DELETE FROM `lines_live` WHERE `activity_id` = ?', $activity_id['activity_id']);
             self::writeOfflineActivity($activity_id['server_id'], $activity_id['user_id'], $activity_id['stream_id'], $activity_id['date_start'], $activity_id['user_agent'], $activity_id['user_ip'], $activity_id['container'], $activity_id['geoip_country_code'], $activity_id['isp'], $activity_id['external_device']);
             return true;
         }
@@ -1404,9 +1404,9 @@ class ipTV_streaming {
         return $rConnectionMap;
     }
     public static function updateStream($streamID) {
-        self::$ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = \'%d\' AND `cache` = 1 AND `custom_data` = \'%s\';', self::getMainID(), json_encode(array('type' => 'update_stream', 'id' => $streamID)));
+        self::$ipTV_db->query('SELECT COUNT(*) AS `count` FROM `signals` WHERE `server_id` = ? AND `cache` = 1 AND `custom_data` = ?;', self::getMainID(), json_encode(array('type' => 'update_stream', 'id' => $streamID)));
         if (self::$ipTV_db->get_row()['count'] == 0) {
-            self::$ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(\'%s\', 1, \'%s\', \'%s\');', self::getMainID(), time(), json_encode(array('type' => 'update_stream', 'id' => $streamID)));
+            self::$ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(?, 1, ?, ?);', self::getMainID(), time(), json_encode(array('type' => 'update_stream', 'id' => $streamID)));
         }
         return true;
     }

@@ -8,7 +8,7 @@ if ($argc) {
     $rMD5 = md5_file(__FILE__);
     $rWatchdog = json_decode(ipTV_lib::$Servers[SERVER_ID]['watchdog_data'], true);
     $rCPUAverage = ($rWatchdog['cpu_average_array'] ?: array());
-    while (true) {
+    while (true && $ipTV_db->ping()) {
         if ($rLastCheck && $rInterval > time() - $rLastCheck) {
             $rStats = getStats();
             if (!$rPrevStat) {
@@ -40,7 +40,7 @@ if ($argc) {
             $rPHPPIDs = array();
 
             exec("ps -u xtreamcodes | grep php-fpm | awk {'print \$1'}", $rPHPPIDs);
-            $rResult = $ipTV_db->query('UPDATE `streaming_servers` SET `watchdog_data` = \'%s\', `last_check_ago` = UNIX_TIMESTAMP(), `php_pids` = \'%s\' WHERE `id` = \'%s\';', json_encode($rStats, JSON_PARTIAL_OUTPUT_ON_ERROR), json_encode($rPHPPIDs), SERVER_ID);
+            $rResult = $ipTV_db->query('UPDATE `streaming_servers` SET `watchdog_data` = ?, `last_check_ago` = UNIX_TIMESTAMP(), `php_pids` = ? WHERE `id` = ?;', json_encode($rStats, JSON_PARTIAL_OUTPUT_ON_ERROR), json_encode($rPHPPIDs), SERVER_ID);
 
             if ($rResult) {
                 sleep(2);
