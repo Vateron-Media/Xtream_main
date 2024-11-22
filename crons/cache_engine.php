@@ -525,7 +525,7 @@ function generateGroups() {
     $ipTV_db->query('SELECT `group_id` FROM `member_groups`;');
     foreach ($ipTV_db->get_rows() as $rGroup) {
         $rBouquets = $rReturn = array();
-        $ipTV_db->query("SELECT * FROM `packages` WHERE JSON_CONTAINS(`groups`, '%s', '\$');", $rGroup['group_id']);
+        $ipTV_db->query("SELECT * FROM `packages` WHERE JSON_CONTAINS(`groups`, ?, '\$');", $rGroup['group_id']);
         foreach ($ipTV_db->get_rows() as $rRow) {
             foreach (json_decode($rRow['bouquets'], true) as $rID) {
                 if (!in_array($rID, $rBouquets)) {
@@ -558,7 +558,7 @@ function generateGroups() {
                 }
                 foreach (json_decode($rRow['bouquet_series'], true) as $rSeriesID) {
                     $rSeriesIDs[] = $rSeriesID;
-                    $ipTV_db->query('SELECT `stream_id` FROM `streams_episodes` WHERE `series_id` = \'%d\';', $rSeriesID);
+                    $ipTV_db->query('SELECT `stream_id` FROM `streams_episodes` WHERE `series_id` = ?;', $rSeriesID);
                     foreach ($ipTV_db->get_rows() as $rEpisode) {
                         $rStreamIDs[] = $rEpisode['stream_id'];
                     }
@@ -593,7 +593,7 @@ function generateUsersPerIP() {
     $rUsersPerIP = array(3600 => array(), 86400 => array(), 604800 => array(), 0 => array());
     foreach (array_keys($rUsersPerIP) as $rTime) {
         if (0 < $rTime) {
-            $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `date_start` >= \'%s\' AND `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 GROUP BY `user_activity`.`user_id` ORDER BY `ip_count` DESC LIMIT 1000;', time() - $rTime);
+            $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `date_start` >= ? AND `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 GROUP BY `user_activity`.`user_id` ORDER BY `ip_count` DESC LIMIT 1000;', time() - $rTime);
         } else {
             $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 GROUP BY `user_activity`.`user_id` ORDER BY `ip_count` DESC LIMIT 1000;');
         }
@@ -608,7 +608,7 @@ function generateTheftDetection() {
     $rTheftDetection = array(3600 => array(), 86400 => array(), 604800 => array(), 0 => array());
     foreach (array_keys($rTheftDetection) as $rTime) {
         if (0 < $rTime) {
-            $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`stream_id`)) AS `vod_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `date_start` >= \'%s\' AND `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 AND `stream_id` IN (SELECT `id` FROM `streams` WHERE `type` IN (2,5)) GROUP BY `user_activity`.`user_id` ORDER BY `vod_count` DESC LIMIT 1000;', time() - $rTime);
+            $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`stream_id`)) AS `vod_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `date_start` >= ? AND `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 AND `stream_id` IN (SELECT `id` FROM `streams` WHERE `type` IN (2,5)) GROUP BY `user_activity`.`user_id` ORDER BY `vod_count` DESC LIMIT 1000;', time() - $rTime);
         } else {
             $ipTV_db->query('SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`stream_id`)) AS `vod_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` WHERE `users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`is_restreamer` = 0 AND `stream_id` IN (SELECT `id` FROM `streams` WHERE `type` IN (2,5)) GROUP BY `user_activity`.`user_id` ORDER BY `vod_count` DESC LIMIT 1000;');
         }

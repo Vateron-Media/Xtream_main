@@ -21,13 +21,13 @@ function loadCron() {
     global $ipTV_db;
     global $rSaveIPTables;
     ipTV_lib::$Servers = ipTV_lib::getServers(true);
-    $ipTV_db->query("SELECT `signal_id` FROM `signals` WHERE `server_id` = '%s' AND `custom_data` = '{\"action\":\"flush\"}' AND `cache` = 0;", SERVER_ID);
+    $ipTV_db->query("SELECT `signal_id` FROM `signals` WHERE `server_id` = ? AND `custom_data` = '{\"action\":\"flush\"}' AND `cache` = 0;", SERVER_ID);
     if (0 < $ipTV_db->num_rows()) {
         echo "Flushing IP's...";
         flushIPs();
         saveiptables();
-        $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'FLUSH', 'Flushed blocked IP\\'s from iptables.', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
-        $ipTV_db->query("DELETE FROM `signals` WHERE `server_id` = '%s' AND `custom_data` = '{\"action\":\"flush\"}' AND `cache` = 0;", SERVER_ID);
+        $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'FLUSH', 'Flushed blocked IP\\'s from iptables.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
+        $ipTV_db->query("DELETE FROM `signals` WHERE `server_id` = ? AND `custom_data` = '{\"action\":\"flush\"}' AND `cache` = 0;", SERVER_ID);
     } else {
         $rActualBlocked = getBlockedIPs();
         $rActualBlockedFlip = array_flip($rActualBlocked);
@@ -158,7 +158,7 @@ function loadCron() {
         if ($rNginx > 0) {
             if ($rPHP == 0) {
                 echo 'PHP-FPM ERROR - Restarting...';
-                $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'PHP-FPM', 'Restarted PHP-FPM instances due to a suspected crash.', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+                $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'PHP-FPM', 'Restarted PHP-FPM instances due to a suspected crash.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                 shell_exec('sudo systemctl stop xtreamcodes');
                 shell_exec('sudo systemctl start xtreamcodes');
                 exit();
@@ -172,13 +172,13 @@ function loadCron() {
             curl_close($rHandle);
         } else {
             echo $rCode . ' ERROR - Restarting...';
-            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'PHP-FPM', 'Restarted services due to " . $rCode . " error.', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'PHP-FPM', 'Restarted services due to " . $rCode . " error.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
             shell_exec('sudo systemctl stop xtreamcodes');
             shell_exec('sudo systemctl start xtreamcodes');
             exit();
         }
     }
-    if ($ipTV_db->query("SELECT `signal_id`, `custom_data` FROM `signals` WHERE `server_id` = '%s' AND `custom_data` <> '' AND `cache` = 0 ORDER BY signal_id ASC;", SERVER_ID)) {
+    if ($ipTV_db->query("SELECT `signal_id`, `custom_data` FROM `signals` WHERE `server_id` = ? AND `custom_data` <> '' AND `cache` = 0 ORDER BY signal_id ASC;", SERVER_ID)) {
         $rRows = $ipTV_db->get_rows();
         $rCheck = array('mag' => true, 'php' => true, 'services' => true, 'ports' => true, 'ramdisk' => true);
         foreach ($rRows as $rRow) {
@@ -297,29 +297,29 @@ function loadCron() {
                 foreach ($rRows as $rRow) {
                     $rData = json_decode($rRow['custom_data'], true);
                     if ($rRow['signal_id']) {
-                        $ipTV_db->query('DELETE FROM `signals` WHERE `signal_id` = \'%d\';', $rRow['signal_id']);
+                        $ipTV_db->query('DELETE FROM `signals` WHERE `signal_id` = ?;', $rRow['signal_id']);
                     }
                     switch ($rData['action']) {
                         case 'reboot':
                             echo 'Rebooting system...' . "\n";
-                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'REBOOT', 'System rebooted on request.', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'REBOOT', 'System rebooted on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                             $ipTV_db->close_mysql();
                             shell_exec('sudo reboot');
                             break;
                         case 'restart_services':
                             echo 'Restarting services...' . "\n";
-                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'RESTART', 'XtreamCodes services restarted on request.', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'RESTART', 'XtreamCodes services restarted on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                             shell_exec('sudo systemctl stop xtreamcodes');
                             shell_exec('sudo systemctl start xtreamcodes');
                             break;
                         case 'stop_services':
                             echo 'Stopping services...' . "\n";
-                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'STOP', 'XtreamCodes services stopped on request.', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'STOP', 'XtreamCodes services stopped on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                             shell_exec('sudo systemctl stop xtreamcodes');
                             break;
                         case 'reload_nginx':
                             echo 'Reloading nginx...' . "\n";
-                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'RELOAD', 'NGINX services reloaded on request.', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'RELOAD', 'NGINX services reloaded on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                             shell_exec('sudo ' . BIN_PATH . 'nginx_rtmp/sbin/nginx_rtmp -s reload');
                             shell_exec('sudo ' . BIN_PATH . 'nginx/sbin/nginx -s reload');
                             break;
@@ -355,12 +355,12 @@ function loadCron() {
                             break;
                         // case 'update_binaries':
                         //     echo 'Updating binaries...' . "\n";
-                        //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'BINARIES', 'Updating XtreamCodes binaries from XtreamCodes server...', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+                        //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'BINARIES', 'Updating XtreamCodes binaries from XtreamCodes server...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                         //     shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'binaries.php 2>&1 &');
                         //     break;
                         case 'update':
                             echo 'Updating...' . "\n";
-                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES('%s', 'UPDATE', 'Updating XtreamCodes...', 'root', 'localhost', NULL, '%s');", SERVER_ID, time());
+                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'UPDATE', 'Updating XtreamCodes...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                             shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" 2>&1 &');
                             break;
                         // case 'enable_ministra':
@@ -411,7 +411,7 @@ function loadCron() {
                                     shell_exec('sudo modprobe ip_conntrack > /dev/null');
                                     file_put_contents('/etc/sysctl.conf', $rNewConfig);
                                     shell_exec('sudo sysctl -p > /dev/null');
-                                    $ipTV_db->query('UPDATE `servers` SET `sysctl` = \'%s\' WHERE `id` = \'%s\';', $rNewConfig, SERVER_ID);
+                                    $ipTV_db->query('UPDATE `servers` SET `sysctl` = ? WHERE `id` = ?;', $rNewConfig, SERVER_ID);
                                 }
                             }
                             break;

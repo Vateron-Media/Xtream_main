@@ -35,7 +35,7 @@ function loadCron() {
         }
     }
     $pid = ipTV_servers::getPidFromProcessName(SERVER_ID, ipTV_lib::$FFMPEG_CPU);
-    $ipTV_db->query("SELECT t1.*,t2.* FROM `streams_servers` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.direct_source = 0 INNER JOIN `streams_types` t3 ON t3.type_id = t2.type AND t3.live = 0 WHERE (t1.to_analyze = 1 OR t1.stream_status = 2) AND t1.server_id = '%d'", SERVER_ID);
+    $ipTV_db->query("SELECT t1.*,t2.* FROM `streams_servers` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.direct_source = 0 INNER JOIN `streams_types` t3 ON t3.type_id = t2.type AND t3.live = 0 WHERE (t1.to_analyze = 1 OR t1.stream_status = 2) AND t1.server_id = ?", SERVER_ID);
     if (0 < $ipTV_db->num_rows()) {
         $series_data = $ipTV_db->get_rows();
         foreach ($series_data as $data) {
@@ -76,11 +76,11 @@ function loadCron() {
                         if (!isset($movie_properties['bitrate']) && $bitrate != $movie_properties['bitrate']) {
                             $movie_properties['bitrate'] = $bitrate;
                         }
-                        $ipTV_db->query("UPDATE `streams` SET `movie_properties` = '%s' WHERE `id` = '%d'", json_encode($movie_properties), $data["stream_id"]);
-                        $ipTV_db->query("UPDATE `streams_servers` SET `bitrate` = '%d',`to_analyze` = 0,`stream_status` = 0,`stream_info` = '%s'  WHERE `server_stream_id` = '%d'", $bitrate, json_encode($stream_info), $data["server_stream_id"]);
+                        $ipTV_db->query("UPDATE `streams` SET `movie_properties` = ? WHERE `id` = ?", json_encode($movie_properties), $data["stream_id"]);
+                        $ipTV_db->query("UPDATE `streams_servers` SET `bitrate` = ?,`to_analyze` = 0,`stream_status` = 0,`stream_info` = ?  WHERE `server_stream_id` = ?", $bitrate, json_encode($stream_info), $data["server_stream_id"]);
                         echo "VALID\n";
                     } else {
-                        $ipTV_db->query("UPDATE `streams_servers` SET `to_analyze` = 0,`stream_status` = 1  WHERE `server_stream_id` = '%d'", $data["server_stream_id"]);
+                        $ipTV_db->query("UPDATE `streams_servers` SET `to_analyze` = 0,`stream_status` = 1  WHERE `server_stream_id` = ?", $data["server_stream_id"]);
                         echo "BAD MOVIE\n";
                     }
                 }

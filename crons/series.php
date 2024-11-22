@@ -34,7 +34,7 @@ function loadCron() {
                     }
                 }
                 if ($rUpdate) {
-                    $ipTV_db_admin->query('UPDATE `streams` SET `stream_source` = \'%s\' WHERE `id` = \'%s\';', json_encode($rPlaylist['sources'], JSON_UNESCAPED_UNICODE), $rRow['id']);
+                    $ipTV_db_admin->query('UPDATE `streams` SET `stream_source` = ? WHERE `id` = ?;', json_encode($rPlaylist['sources'], JSON_UNESCAPED_UNICODE), $rRow['id']);
                     echo 'Updated: ' . $rRow['stream_display_name'] . "\n";
                 }
             }
