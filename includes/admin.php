@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -372,6 +369,10 @@ function checkPermissions($rPage = null) {
     switch ($rPage) {
         case 'server_install':
             return hasPermissions('adv', 'add_server');
+        case 'backups':
+        case 'cache':
+        case 'setup':
+            return hasPermissions('adv', 'database');
         default:
             return true;
     }
