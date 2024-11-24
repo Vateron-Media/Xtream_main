@@ -6,8 +6,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
         ipTV_lib::checkCron($unique_id);
-        shell_exec("sudo kill -9 `ps -ef | grep 'XtreamCodesSignals' | grep -v grep | awk '{print \$2}'`;");
-        cli_set_process_title('XtreamCodesSignals');
+        shell_exec("sudo kill -9 `ps -ef | grep 'XC_VMSignals' | grep -v grep | awk '{print \$2}'`;");
+        cli_set_process_title('XC_VMSignals');
         file_put_contents(CONFIG_PATH . 'signals.last', time());
         $rSaveIPTables = false;
         loadCron();
@@ -276,7 +276,7 @@ function loadCron() {
                 foreach ($ipTV_db->get_rows() as $rRow) {
                     $rFullPath = CRON_PATH . $rRow['filename'];
                     if (pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && file_exists($rFullPath)) {
-                        $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XtreamCodes';
+                        $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XC_VM';
                     }
                 }
                 $rActualCron = trim(implode("\n", $rJobs));
@@ -286,10 +286,10 @@ function loadCron() {
                 }
             }
             if (file_exists(CONFIG_PATH . 'sysctl.on')) {
-                if (strtoupper(substr(explode("\n", file_get_contents('/etc/sysctl.conf'))[0], 0, 9)) != '# XtreamCodes') {
+                if (strtoupper(substr(explode("\n", file_get_contents('/etc/sysctl.conf'))[0], 0, 9)) != '# XC_VM') {
                     echo 'Sysctl missing! Writing it.' . "\n";
                     exec('sudo modprobe ip_conntrack');
-                    file_put_contents('/etc/sysctl.conf', implode(PHP_EOL, array('# XtreamCodes', '', 'net.core.somaxconn = 655350', 'net.ipv4.route.flush=1', 'net.ipv4.tcp_no_metrics_save=1', 'net.ipv4.tcp_moderate_rcvbuf = 1', 'fs.file-max = 6815744', 'fs.aio-max-nr = 6815744', 'fs.nr_open = 6815744', 'net.ipv4.ip_local_port_range = 1024 65000', 'net.ipv4.tcp_sack = 1', 'net.ipv4.tcp_rmem = 10000000 10000000 10000000', 'net.ipv4.tcp_wmem = 10000000 10000000 10000000', 'net.ipv4.tcp_mem = 10000000 10000000 10000000', 'net.core.rmem_max = 524287', 'net.core.wmem_max = 524287', 'net.core.rmem_default = 524287', 'net.core.wmem_default = 524287', 'net.core.optmem_max = 524287', 'net.core.netdev_max_backlog = 300000', 'net.ipv4.tcp_max_syn_backlog = 300000', 'net.netfilter.nf_conntrack_max=1215196608', 'net.ipv4.tcp_window_scaling = 1', 'vm.max_map_count = 655300', 'net.ipv4.tcp_max_tw_buckets = 50000', 'net.ipv6.conf.all.disable_ipv6 = 1', 'net.ipv6.conf.default.disable_ipv6 = 1', 'net.ipv6.conf.lo.disable_ipv6 = 1', 'kernel.shmmax=134217728', 'kernel.shmall=134217728', 'vm.overcommit_memory = 1', 'net.ipv4.tcp_tw_reuse=1')));
+                    file_put_contents('/etc/sysctl.conf', implode(PHP_EOL, array('# XC_VM', '', 'net.core.somaxconn = 655350', 'net.ipv4.route.flush=1', 'net.ipv4.tcp_no_metrics_save=1', 'net.ipv4.tcp_moderate_rcvbuf = 1', 'fs.file-max = 6815744', 'fs.aio-max-nr = 6815744', 'fs.nr_open = 6815744', 'net.ipv4.ip_local_port_range = 1024 65000', 'net.ipv4.tcp_sack = 1', 'net.ipv4.tcp_rmem = 10000000 10000000 10000000', 'net.ipv4.tcp_wmem = 10000000 10000000 10000000', 'net.ipv4.tcp_mem = 10000000 10000000 10000000', 'net.core.rmem_max = 524287', 'net.core.wmem_max = 524287', 'net.core.rmem_default = 524287', 'net.core.wmem_default = 524287', 'net.core.optmem_max = 524287', 'net.core.netdev_max_backlog = 300000', 'net.ipv4.tcp_max_syn_backlog = 300000', 'net.netfilter.nf_conntrack_max=1215196608', 'net.ipv4.tcp_window_scaling = 1', 'vm.max_map_count = 655300', 'net.ipv4.tcp_max_tw_buckets = 50000', 'net.ipv6.conf.all.disable_ipv6 = 1', 'net.ipv6.conf.default.disable_ipv6 = 1', 'net.ipv6.conf.lo.disable_ipv6 = 1', 'kernel.shmmax=134217728', 'kernel.shmall=134217728', 'vm.overcommit_memory = 1', 'net.ipv4.tcp_tw_reuse=1')));
                     exec('sudo sysctl -p > /dev/null');
                 }
             }
@@ -308,13 +308,13 @@ function loadCron() {
                             break;
                         case 'restart_services':
                             echo 'Restarting services...' . "\n";
-                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'RESTART', 'XtreamCodes services restarted on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
+                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'RESTART', 'XC_VM services restarted on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                             shell_exec('sudo systemctl stop xtreamcodes');
                             shell_exec('sudo systemctl start xtreamcodes');
                             break;
                         case 'stop_services':
                             echo 'Stopping services...' . "\n";
-                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'STOP', 'XtreamCodes services stopped on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
+                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'STOP', 'XC_VM services stopped on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                             shell_exec('sudo systemctl stop xtreamcodes');
                             break;
                         case 'reload_nginx':
@@ -355,12 +355,12 @@ function loadCron() {
                             break;
                         // case 'update_binaries':
                         //     echo 'Updating binaries...' . "\n";
-                        //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'BINARIES', 'Updating XtreamCodes binaries from XtreamCodes server...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
+                        //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'BINARIES', 'Updating XC_VM binaries from XC_VMr...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                         //     shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'binaries.php 2>&1 &');
                         //     break;
                         case 'update':
                             echo 'Updating...' . "\n";
-                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'UPDATE', 'Updating XtreamCodes...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
+                            $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'UPDATE', 'Updating XC_VM...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
                             shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" 2>&1 &');
                             break;
                         // case 'enable_ministra':

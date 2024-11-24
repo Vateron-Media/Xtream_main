@@ -4,7 +4,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc) {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-        cli_set_process_title('XtreamCodes[VOD CC Checker]');
+        cli_set_process_title('XC_VM[VOD CC Checker]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
         ipTV_lib::checkCron($unique_id);
         ini_set('memory_limit', -1);
@@ -13,7 +13,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         exit(0);
     }
 } else {
-    exit('Please run as XtreamCodes!' . "\n");
+    exit('Please run as XC_VM!' . "\n");
 }
 
 function loadCron() {

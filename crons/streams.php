@@ -3,7 +3,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc) {
         register_shutdown_function('shutdown');
         require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
-        cli_set_process_title('XtreamCodes[Live Checker]');
+        cli_set_process_title('XC_VM[Live Checker]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
         ipTV_lib::checkCron($unique_id);
         loadCron();
@@ -11,7 +11,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         exit(0);
     }
 } else {
-    exit('Please run as XtreamCodes!' . "\n");
+    exit('Please run as XC_VM!' . "\n");
 }
 function loadCron() {
     global $ipTV_db;
@@ -169,14 +169,14 @@ function loadCron() {
         }
         $ipTV_db->query("SELECT `stream_id` FROM `streams_servers` WHERE `on_demand` = 1 AND `server_id` = ?;", SERVER_ID);
         $OnDemandIDs = array_keys($ipTV_db->get_rows(true, 'stream_id'));
-        $Processes = shell_exec('ps aux | grep XtreamCodes');
-        if (preg_match_all('/XtreamCodes\\[(.*)\\]/', $Processes, $Matches)) {
+        $Processes = shell_exec('ps aux | grep XC_VM');
+        if (preg_match_all('/XC_VM\\[(.*)\\]/', $Processes, $Matches)) {
             $Remove = array_diff($Matches[1], $streamIDs);
             $Remove = array_diff($Remove, $OnDemandIDs);
             foreach ($Remove as $streamID) {
                 if (is_numeric($streamID)) {
                     echo 'Kill Stream ID: ' . $streamID . "\n";
-                    shell_exec("kill -9 `ps -ef | grep '/" . intval($streamID) . "_.m3u8\\|XtreamCodes\\[" . intval($streamID) . "\\]' | grep -v grep | awk '{print \$2}'`;");
+                    shell_exec("kill -9 `ps -ef | grep '/" . intval($streamID) . "_.m3u8\\|XC_VM\\[" . intval($streamID) . "\\]' | grep -v grep | awk '{print \$2}'`;");
                     shell_exec('rm -f ' . STREAMS_PATH . intval($streamID) . '_*');
                 }
             }
@@ -192,7 +192,7 @@ function loadCron() {
             }
         }
     } else {
-        echo 'XtreamCodes not running...' . "\n";
+        echo 'XC_VM not running...' . "\n";
     }
 }
 function shutdown() {

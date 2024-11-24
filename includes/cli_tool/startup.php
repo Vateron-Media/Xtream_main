@@ -17,10 +17,10 @@ if ($argc) {
     if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
         $rCrons = array();
         if (file_exists(CRON_PATH . 'root_signals.php')) {
-            $rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_signals.php # XtreamCodes';
+            $rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_signals.php # XC_VM';
         }
         // if (file_exists(CRON_PATH . 'root_mysql.php')) {
-        //     $rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_mysql.php # XtreamCodes';
+        //     $rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_mysql.php # XC_VM';
         // }
         $rWrite = false;
         exec('sudo crontab -l', $rOutput);

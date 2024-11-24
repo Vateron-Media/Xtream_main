@@ -6,18 +6,18 @@ function checkRunning($streamID) {
         $rPID = intval(file_get_contents(STREAMS_PATH . $streamID . '_.monitor'));
     }
     if (empty($rPID)) {
-        shell_exec("kill -9 `ps -ef | grep 'XtreamCodes\\[" . intval($streamID) . "\\]' | grep -v grep | awk '{print \$2}'`;");
+        shell_exec("kill -9 `ps -ef | grep 'XC_VM\\[" . intval($streamID) . "\\]' | grep -v grep | awk '{print \$2}'`;");
     } else {
         if (file_exists('/proc/' . $rPID)) {
             $rCommand = trim(file_get_contents('/proc/' . $rPID . '/cmdline'));
-            if ($rCommand == 'XtreamCodes[' . $streamID . ']' && is_numeric($rPID) && 0 < $rPID) {
+            if ($rCommand == 'XC_VM[' . $streamID . ']' && is_numeric($rPID) && 0 < $rPID) {
                 posix_kill($rPID, 9);
             }
         }
     }
 }
 // if ((posix_getpwuid(posix_geteuid())['name'] != 'xtreamcodes')) {
-//     exit('Please run as XtreamCodes!' . "\n");
+//     exit('Please run as XC_VM!' . "\n");
 // }
 if ((!@$argc || ($argc <= 1))) {
     exit(0);
@@ -27,7 +27,7 @@ $restart = !empty($argv[2]);
 require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
 checkRunning($streamID);
 set_time_limit(0);
-cli_set_process_title('XtreamCodes[' . $streamID . ']');
+cli_set_process_title('XC_VM[' . $streamID . ']');
 $ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = ? WHERE t1.id = ?', SERVER_ID, $streamID);
 if (($ipTV_db->num_rows() <= 0)) {
     ipTV_stream::stopStream($streamID);

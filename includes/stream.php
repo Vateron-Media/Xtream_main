@@ -47,7 +47,7 @@ class ipTV_stream {
             self::$ipTV_db->query('UPDATE `streams` SET pids_create_channel = ?,`cchannel_rsources` = ? WHERE `id` = ?', json_encode($stream['pids_create_channel']), json_encode($stream['stream_source']), $streamID);
             ipTV_servers::RunCommandServer($stream['created_channel_location'], "echo {$json_string_data} | base64 --decode > \"" . CREATED_CHANNELS . $streamID . '_.list"', 'raw');
             return 1;
-        } else if (!empty($stream['pids_create_channel'])) {
+        } elseif (!empty($stream['pids_create_channel'])) {
             foreach ($stream['pids_create_channel'] as $key => $pid) {
                 if (!ipTV_servers::PidsChannels($stream['created_channel_location'], $pid, ipTV_lib::$FFMPEG_CPU)) {
                     unset($stream['pids_create_channel'][$key]);
@@ -576,7 +576,7 @@ class ipTV_stream {
             $monitor = intval(self::$ipTV_db->get_row()['monitor_pid']);
         }
         if ($monitor > 0) {
-            if (self::checkPID($monitor, "XtreamCodes[{$streamID}]") && is_numeric($monitor) && 0 < $monitor) {
+            if (self::checkPID($monitor, "XC_VM[{$streamID}]") && is_numeric($monitor) && 0 < $monitor) {
                 posix_kill($monitor, 9);
             }
         }
@@ -587,7 +587,7 @@ class ipTV_stream {
             $PID = intval(self::$ipTV_db->get_row()['pid']);
         }
         if ($PID > 0) {
-            if (self::checkPID($PID, "XtreamCodes[{$streamID}]") && is_numeric($PID) && 0 < $PID) {
+            if (self::checkPID($PID, "XC_VM[{$streamID}]") && is_numeric($PID) && 0 < $PID) {
                 posix_kill($PID, 9);
             }
         }
@@ -702,7 +702,7 @@ class ipTV_stream {
                 $URL = trim(substr($URL, stripos($URL, $Pattern) + strlen($Pattern)));
             }
             $URL .= ' live=1 timeout=10';
-        } else if ($protocol == 'http') {
+        } elseif ($protocol == 'http') {
             $Platforms = array('livestream.com', 'ustream.tv', 'twitch.tv', 'vimeo.com', 'facebook.com', 'dailymotion.com', 'cnn.com', 'edition.cnn.com', 'youtube.com', 'youtu.be');
             $Host = str_ireplace('www.', '', parse_url($URL, PHP_URL_HOST));
             if (in_array($Host, $Platforms)) {
@@ -718,7 +718,7 @@ class ipTV_stream {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
         curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         curl_setopt($ch, CURLOPT_URL, $rURL);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'XtreamCodes/' . SCRIPT_VERSION);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'XC_VM/' . SCRIPT_VERSION);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, $rWait);
         $rReturn = curl_exec($ch);
         curl_close($ch);
@@ -727,12 +727,12 @@ class ipTV_stream {
     /**
      * The function `checkCompatibility` checks if the audio and video codecs in the provided data are
      * compatible with the predefined arrays of supported codecs.
-     * 
+     *
      * @param array rData is expected to be an array containing information about audio and video codecs.
      * If  is not an array, the function attempts to decode it from JSON format. The function then
      * checks if the audio and video codec names in the  array are compatible with the predefined
      * lists of supported
-     * 
+     *
      * @return bool The function `checkCompatibility` is returning a boolean value based on the conditions
      * specified in the code. It checks if the input `` contains audio and video codec names that are
      * present in the predefined arrays `` and `` respectively. If the codec

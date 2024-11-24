@@ -54,5 +54,5 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
 		}
 	}
 } else {
-	exit('Please run as XtreamCodes!' . "\n");
+	exit('Please run as XC_VM!' . "\n");
 }

@@ -6,12 +6,12 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         $rStreamID = intval($argv[1]);
         checkRunning($rStreamID);
         set_time_limit(0);
-        cli_set_process_title('XtreamCodesCreate[' . $rStreamID . ']');
+        cli_set_process_title('XC_VMCreate[' . $rStreamID . ']');
     } else {
         exit(0);
     }
 } else {
-    exit('Please run as XtreamCodes!' . "\n");
+    exit('Please run as XC_VM!' . "\n");
 }
 function checkRunning($rStreamID) {
     clearstatcache(true);
@@ -19,11 +19,11 @@ function checkRunning($rStreamID) {
         $rPID = intval(file_get_contents(CREATED_PATH . $rStreamID . '_.create'));
     }
     if (empty($rPID)) {
-        shell_exec("kill -9 `ps -ef | grep 'XtreamCodesCreate\\[" . intval($rStreamID) . "\\]' | grep -v grep | awk '{print \$2}'`;");
+        shell_exec("kill -9 `ps -ef | grep 'XC_VMCreate\\[" . intval($rStreamID) . "\\]' | grep -v grep | awk '{print \$2}'`;");
     } else {
         if (file_exists('/proc/' . $rPID)) {
             $rCommand = trim(file_get_contents('/proc/' . $rPID . '/cmdline'));
-            if ($rCommand == 'XtreamCodesCreate[' . $rStreamID . ']') {
+            if ($rCommand == 'XC_VMCreate[' . $rStreamID . ']') {
                 posix_kill($rPID, 9);
             }
         }

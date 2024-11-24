@@ -7,7 +7,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc) {
         require str_replace('\\', '/', dirname($argv[0])) . '/../includes/admin.php';
         if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
-            cli_set_process_title('XtreamCodes[Backups]');
+            cli_set_process_title('XC_VM[Backups]');
             $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
             ipTV_lib::checkCron($unique_id);
             $rForce = false;
@@ -59,5 +59,5 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         exit(0);
     }
 } else {
-    exit('Please run as XtreamCodes!' . "\n");
+    exit('Please run as XC_VM!' . "\n");
 }

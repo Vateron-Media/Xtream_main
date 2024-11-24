@@ -15,11 +15,11 @@ log() {
 start() {
   pids=$(pgrep -u xtreamcodes nginx | wc -l)
   if [ "$pids" -ne 0 ]; then
-    log "XtreamCodes is already running"
+    log "XC_VM is already running"
     return 1
   fi
 
-  log "Starting XtreamCodes..."
+  log "Starting XC_VM..."
   sudo chown -R xtreamcodes:xtreamcodes /sys/class/net || exit 1
   sudo chown -R xtreamcodes:xtreamcodes "$SCRIPT/content/streams" || exit 1
   sudo chown -R xtreamcodes:xtreamcodes "$SCRIPT/tmp" || exit 1
@@ -36,17 +36,17 @@ start() {
     if [ -f $SCRIPT/includes/cli_tool/cache_handler.php ]; then
     sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/cache_handler.php >/dev/null 2>&1 &
   fi
-  log "XtreamCodes started in foreground."
+  log "XC_VM started in foreground."
   sleep infinity
 }
 
 stop() {
   pids=$(pgrep -u xtreamcodes nginx | wc -l)
   if [ "$pids" -eq 0 ]; then
-    log "XtreamCodes is not running"
+    log "XC_VM is not running"
     return 1
   fi
-  log "Stopping XtreamCodes..."
+  log "Stopping XC_VM..."
   sudo pkill -u xtreamcodes nginx
   sudo pkill -u xtreamcodes nginx_rtmp
   sleep 1
@@ -60,10 +60,10 @@ restart() {
 reload() {
   pids=$(pgrep -u xtreamcodes nginx | wc -l)
   if [ "$pids" -eq 0 ]; then
-    log "XtreamCodes is not running"
+    log "XC_VM is not running"
     return 1
   fi
-  log "Reloading XtreamCodes..."
+  log "Reloading XC_VM..."
   sudo -u xtreamcodes "$SCRIPT/bin/nginx/sbin/nginx" -s reload
   sudo -u xtreamcodes "$SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp" -s reload
 }

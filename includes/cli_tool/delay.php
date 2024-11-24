@@ -22,11 +22,11 @@ function killStreamProcess($stream_id) {
         $pid = intval(file_get_contents("/home/xtreamcodes/streams/" . $stream_id . ".monitor_delay"));
     }
     if (empty($pid)) {
-        shell_exec("kill -9 `ps -ef | grep 'XtreamCodesDelay\\[" . $stream_id . "\\]' | grep -v grep | awk '{print \$2}'`;");
+        shell_exec("kill -9 `ps -ef | grep 'XC_VMDelay\\[" . $stream_id . "\\]' | grep -v grep | awk '{print \$2}'`;");
     } else {
         if (file_exists("/proc/" . $pid)) {
             $name = trim(file_get_contents("/proc/" . $pid . "/cmdline"));
-            if ($name == "XtreamCodesDelay[" . $stream_id . "]") {
+            if ($name == "XC_VMDelay[" . $stream_id . "]") {
                 posix_kill($pid, 9);
             }
         }
@@ -77,7 +77,7 @@ if (@$argc) {
         $stream_id = intval($argv[1]);
         $stream_minutes = intval(abs($argv[2]));
         killStreamProcess($stream_id);
-        cli_set_process_title("XtreamCodesDelay[" . $stream_id . "]");
+        cli_set_process_title("XC_VMDelay[" . $stream_id . "]");
         require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
         set_time_limit(0);
 
