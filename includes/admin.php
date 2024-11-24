@@ -79,7 +79,7 @@ if (file_exists("/home/xtreamcodes/admin/.update")) {
 
         // Update Categories
         updateTMDbCategories();
-        $db->query('UPDATE `streaming_servers` SET `server_ip` = "' . $rIP . '" WHERE `id` = 1;');
+        $ipTV_db_admin->query('UPDATE `streaming_servers` SET `server_ip` = ? WHERE `id` = 1;', $_SERVER['SERVER_ADDR']);
     }
 }
 

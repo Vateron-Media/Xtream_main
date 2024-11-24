@@ -11,7 +11,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         }
         $rWatchdog = json_decode(ipTV_lib::$Servers[SERVER_ID]['watchdog_data'], true);
         $rCPUAverage = ($rWatchdog['cpu_average_array'] ?: array());
-        while (true && $ipTV_db->ping() && !(ipTV_lib::$settings['redis_handler'] && (!XUI::$redis || !XUI::$redis->ping()))) {
+        while (true && $ipTV_db->ping() && !(ipTV_lib::$settings['redis_handler'] && (!ipTV_lib::$redis || !ipTV_lib::$redis->ping()))) {
             if ($rLastCheck && $rInterval > time() - $rLastCheck) {
                 $rNginx = explode("\n", file_get_contents('http://127.0.0.1:' . ipTV_lib::$Servers[SERVER_ID]['http_broadcast_port'] . '/nginx_status'));
                 list($rAccepted, $rHandled, $rRequests) = explode(' ', trim($rNginx[2]));

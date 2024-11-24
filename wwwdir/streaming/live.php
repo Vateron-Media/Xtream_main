@@ -21,17 +21,17 @@ header("Access-Control-Allow-Origin: *");
 // }
 // if (!empty(ipTV_lib::$settings["send_unique_header"])) {
 //     $rExpires = new DateTime("+6 months", new DateTimeZone("GMT"));
-//     header("Set-Cookie: " . ipTV_lib::$settings["send_unique_header"] . "=" . XUI::generateString(11) . "; Domain=" . ipTV_lib::$settings["send_unique_header_domain"] . "; Expires=" . $rExpires->format(DATE_RFC2822) . "; Path=/; Secure; HttpOnly; SameSite=none");
+//     header("Set-Cookie: " . ipTV_lib::$settings["send_unique_header"] . "=" . generateString(11) . "; Domain=" . ipTV_lib::$settings["send_unique_header_domain"] . "; Expires=" . $rExpires->format(DATE_RFC2822) . "; Path=/; Secure; HttpOnly; SameSite=none");
 // }
 $rCreateExpiration = ipTV_lib::$settings["create_expiration"] ?: 5;
 $rIP = ipTV_streaming::getUserIP();
 $rUserAgent = empty($_SERVER["HTTP_USER_AGENT"]) ? "" : htmlentities(trim($_SERVER["HTTP_USER_AGENT"]));
-$rConSpeedFile = NULL;
+$rConSpeedFile = null;
 $rDivergence = 0;
 $closeCon = false;
 $PID = getmypid();
 $rStartTime = time();
-$rVideoCodec = NULL;
+$rVideoCodec = null;
 if (isset(ipTV_lib::$request["token"])) {
     $tokenData = json_decode(decryptData(ipTV_lib::$request["token"], ipTV_lib::$settings["live_streaming_pass"], OPENSSL_EXTRA), true);
     if (!is_array($tokenData)) {
@@ -78,7 +78,7 @@ if ($rChannelInfo) {
         ipTV_streaming::addToQueue($streamID, $PID);
     }
     if (!ipTV_streaming::isStreamRunning($rChannelInfo["pid"], $streamID)) {
-        $rChannelInfo["pid"] = NULL;
+        $rChannelInfo["pid"] = null;
         if ($rChannelInfo["on_demand"] == 1) {
             if (!ipTV_streaming::checkMonitorRunning($rChannelInfo["monitor_pid"], $streamID)) {
                 if (time() > $rActivityStart + $rCreateExpiration - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"]) {
@@ -88,7 +88,7 @@ if ($rChannelInfo) {
                 for ($rRetries = 0; !file_exists(STREAMS_PATH . (int) $streamID . "_.monitor") && $rRetries < 300; $rRetries++) {
                     usleep(10000);
                 }
-                $rChannelInfo["monitor_pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.monitor") ?: NULL;
+                $rChannelInfo["monitor_pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.monitor") ?: null;
             }
             if (!$rChannelInfo["monitor_pid"]) {
                 ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
@@ -96,7 +96,7 @@ if ($rChannelInfo) {
             for ($rRetries = 0; !file_exists(STREAMS_PATH . (int) $streamID . "_.pid") && $rRetries < 300; $rRetries++) {
                 usleep(10000);
             }
-            $rChannelInfo["pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.pid") ?: NULL;
+            $rChannelInfo["pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.pid") ?: null;
             if (!$rChannelInfo["pid"]) {
                 ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
             }
@@ -109,7 +109,7 @@ if ($rChannelInfo) {
     if ($rExtension == "ts") {
         if (!file_exists($playlist)) {
             $rFirstTS = STREAMS_PATH . $streamID . "_0.ts";
-            $rFP = NULL;
+            $rFP = null;
             while ($rRetries < (int) ipTV_lib::$settings["on_demand_wait_time"] * 10) {
                 if (file_exists($rFirstTS) && !$rFP) {
                     $rFP = fopen($rFirstTS, "r");
@@ -135,7 +135,7 @@ if ($rChannelInfo) {
         generateError("WAIT_TIME_EXPIRED");
     }
     if (!$rChannelInfo["pid"]) {
-        $rChannelInfo["pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.pid") ?: NULL;
+        $rChannelInfo["pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.pid") ?: null;
     }
 
     $rExecutionTime = time() - $rStartTime;
@@ -146,7 +146,7 @@ if ($rChannelInfo) {
         $ipTV_db->db_connect();
     }
     if (ipTV_lib::$settings["disallow_2nd_ip_con"] && !$userInfo["is_restreamer"] && ($userInfo["max_connections"] < ipTV_lib::$settings["disallow_2nd_ip_max"] && 0 < $userInfo["max_connections"] || ipTV_lib::$settings["disallow_2nd_ip_max"] == 0)) {
-        $rAcceptIP = NULL;
+        $rAcceptIP = null;
         if (ipTV_lib::$settings["redis_handler"]) {
             $rConnections = ipTV_streaming::getConnections($userInfo["id"], true);
             if (count($rConnections) > 0) {
@@ -185,10 +185,10 @@ if ($rChannelInfo) {
                     generateError("TOKEN_EXPIRED");
                 }
                 if (ipTV_lib::$settings["redis_handler"]) {
-                    $rConnectionData = ["user_id" => $userInfo["id"], "stream_id" => $streamID, "server_id" => $rServerID, "user_agent" => $rUserAgent, "user_ip" => $rIP, "container" => "hls", "pid" => NULL, "date_start" => $rActivityStart, "geoip_country_code" => $rCountryCode, "isp" => $userInfo["con_isp_name"], "external_device" => $rExternalDevice, "hls_end" => 0, "hls_last_read" => time() - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"], "on_demand" => $rChannelInfo["on_demand"], "identity" => $userInfo["id"], "uuid" => $tokenData["uuid"]];
+                    $rConnectionData = ["user_id" => $userInfo["id"], "stream_id" => $streamID, "server_id" => $rServerID, "user_agent" => $rUserAgent, "user_ip" => $rIP, "container" => "hls", "pid" => null, "date_start" => $rActivityStart, "geoip_country_code" => $rCountryCode, "isp" => $userInfo["con_isp_name"], "external_device" => $rExternalDevice, "hls_end" => 0, "hls_last_read" => time() - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"], "on_demand" => $rChannelInfo["on_demand"], "identity" => $userInfo["id"], "uuid" => $tokenData["uuid"]];
                     $rResult = ipTV_streaming::createConnection($rConnectionData);
                 } else {
-                    $rResult = $ipTV_db->query("INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`,`external_device`,`hls_last_read`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", $userInfo["id"], $streamID, $rServerID, $rUserAgent, $rIP, "hls", NULL, $tokenData["uuid"], $rActivityStart, $rCountryCode, $userInfo["con_isp_name"], $rExternalDevice, time() - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"]);
+                    $rResult = $ipTV_db->query("INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`,`external_device`,`hls_last_read`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", $userInfo["id"], $streamID, $rServerID, $rUserAgent, $rIP, "hls", null, $tokenData["uuid"], $rActivityStart, $rCountryCode, $userInfo["con_isp_name"], $rExternalDevice, time() - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"]);
                 }
             } else {
                 $rIPMatch = ipTV_lib::$settings["ip_subnet_match"] ? implode(".", array_slice(explode(".", $rConnection["user_ip"]), 0, -1)) == implode(".", array_slice(explode(".", $rIP), 0, -1)) : $rConnection["user_ip"] == $rIP;
@@ -217,7 +217,7 @@ if ($rChannelInfo) {
             } else {
                 $ipTV_db->close_mysql();
             }
-            $rHLS = ipTV_streaming::generateHLS($playlist, isset($rUsername) ? $rUsername : NULL, isset($rPassword) ? $rPassword : NULL, $streamID, $tokenData["uuid"], $rIP, $rVideoCodec, (int) $rChannelInfo["on_demand"], $rServerID);
+            $rHLS = ipTV_streaming::generateHLS($playlist, isset($rUsername) ? $rUsername : null, isset($rPassword) ? $rPassword : null, $streamID, $tokenData["uuid"], $rIP, $rVideoCodec, (int) $rChannelInfo["on_demand"], $rServerID);
             if ($rHLS) {
                 touch(CONS_TMP_PATH . $tokenData["uuid"]);
                 ob_end_clean();
@@ -307,7 +307,7 @@ if ($rChannelInfo) {
                 }
                 $rSegments = ipTV_streaming::getPlaylistSegments($playlist, $rPrebuffer, ipTV_lib::$SegmentsSettings["seg_time"]);
             } else {
-                $rSegments = NULL;
+                $rSegments = null;
             }
             if (!is_null($rSegments)) {
                 if (is_array($rSegments)) {
