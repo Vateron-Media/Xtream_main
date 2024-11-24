@@ -101,14 +101,6 @@ class Database {
         return $r;
     }
 
-    /**
-     * Executes a prepared SQL query
-     *
-     * @param string $query The SQL query to execute
-     * @param bool $buffered Whether to use buffered queries
-     * @param mixed ...$args Variable number of parameters for the prepared statement
-     * @return bool True on success, false on failure
-     */
     public function query($query, $buffered = false) {
         if (!$this->dbh) {
             return false;
@@ -135,7 +127,7 @@ class Database {
         try {
             $this->result = $this->dbh->prepare($query);
             $this->result->execute($next_arg_list);
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             $actual_query = trim(explode("\n", explode('Sent SQL:', $this->debugString($this->result))[1])[0]);
 
             if (strlen($actual_query) == 0) {
@@ -395,8 +387,7 @@ class Database {
         return [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_PERSISTENT => $this->pconnect,
-            PDO::ATTR_EMULATE_PREPARES => false, // Added for better prepared statement handling
+            PDO::ATTR_PERSISTENT => $this->pconnect
         ];
     }
 
