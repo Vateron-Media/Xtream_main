@@ -12,6 +12,16 @@ class Database {
     protected $pconnect = false;
     public $connected = false;
 
+    /**
+     * Constructor - Initializes database connection
+     *
+     * @param string $db_user Database username
+     * @param string $db_pass Database password
+     * @param string $db_name Database name
+     * @param string $host Database host
+     * @param int $db_port Database port number
+     * @param bool $pconnect Whether to use persistent connection
+     */
     public function __construct($db_user, $db_pass, $db_name, $host, $db_port = 7999, $pconnect = false) {
         $this->dbh = false;
         $this->dbuser = $db_user;
@@ -22,20 +32,22 @@ class Database {
         $this->dbport = $db_port;
         $this->db_connect();
     }
-
+    public function __destruct() {
+        $this->close_mysql();
+    }
     public function close_mysql() {
         if ($this->connected) {
             $this->dbh = null; // Properly close the PDO connection
             $this->connected = false;
         }
-
         return true;
     }
 
-    public function __destruct() {
-        $this->close_mysql();
-    }
-
+    /**
+     * Checks if the database connection is alive
+     *
+     * @return bool True if connection is alive, false otherwise
+     */
     public function ping() {
         try {
             $this->dbh->query('SELECT 1');
@@ -46,26 +58,40 @@ class Database {
         return true;
     }
 
-    public function db_connect() {
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Enable exception-based error handling
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Default fetch mode
-            PDO::ATTR_PERSISTENT => $this->pconnect // Persistent connection if enabled
-        ];
-        try {
-            $this->dbh = new PDO("mysql:host=" . $this->dbhost . ";port=" . $this->dbport . ";dbname=" . $this->dbname . ";charset=utf8mb4", $this->dbuser, $this->dbpassword, $options);
-
-            if (!$this->dbh) {
-                return false;
-            }
-        } catch (PDOException $e) {
-            die(json_encode(["error" => "MySQL connection failed", "message" => $e->getMessage()]));
+    /**
+     * Establishes database connection
+     *
+     * @return bool True on successful connection, never returns on failure (exits)
+     */
+    public function db_connect(): bool {
+        if ($this->connected) {
+            return true;
         }
-        $this->connected = true;
 
-        return true;
+        $options = $this->getDefaultPdoOptions();
+
+        try {
+            $this->dbh = new PDO(
+                $this->buildDsn(),
+                $this->dbuser,
+                $this->dbpassword,
+                $options
+            );
+
+            $this->connected = true;
+            return true;
+
+        } catch (PDOException $e) {
+            $this->handleConnectionError($e);
+        }
     }
 
+    /**
+     * Dumps prepared statement parameters for debugging
+     *
+     * @param PDOStatement $stmt The prepared statement to debug
+     * @return string Debug information
+     */
     public function debugString($stmt) {
         ob_start();
         $stmt->debugDumpParams();
@@ -75,6 +101,14 @@ class Database {
         return $r;
     }
 
+    /**
+     * Executes a prepared SQL query
+     *
+     * @param string $query The SQL query to execute
+     * @param bool $buffered Whether to use buffered queries
+     * @param mixed ...$args Variable number of parameters for the prepared statement
+     * @return bool True on success, false on failure
+     */
     public function query($query, $buffered = false) {
         if (!$this->dbh) {
             return false;
@@ -118,6 +152,35 @@ class Database {
         return true;
     }
 
+    /**
+     * Fetches all rows from the result set with optional custom indexing
+     *
+     * This method retrieves all rows from the current result set and provides
+     * various options for structuring the returned array. It can index rows
+     * by a specific column and create nested arrays based on parameters.
+     *
+     * @param bool   $use_id       Whether to use a column value as array key
+     * @param string $column_as_id The column name to use as array key when $use_id is true
+     * @param bool   $unique_row   If true, only keeps one row per $column_as_id value
+     *                            If false, creates an array of rows for each $column_as_id
+     * @param string $sub_row_id   Column to use as secondary index when $unique_row is false
+     *
+     * @return array|false
+     *
+     * @example
+     * // Simple fetch all rows
+     * $db->query("SELECT * FROM users");
+     * $rows = $db->get_rows(); // Returns: [['id'=>1, 'name'=>'John'], ['id'=>2, 'name'=>'Jane']]
+     *
+     * // Index by ID
+     * $rows = $db->get_rows(true, 'id'); 
+     * // Returns: [1=>['id'=>1, 'name'=>'John'], 2=>['id'=>2, 'name'=>'Jane']]
+     *
+     * // Multiple rows per ID with sub-index
+     * $rows = $db->get_rows(true, 'user_id', false, 'date');
+     * // Returns: ['user_id'=>['date1'=>[...], 'date2'=>[...]]]
+     *
+     */
     public function get_rows($use_id = false, $column_as_id = '', $unique_row = true, $sub_row_id = '') {
         if (!($this->dbh && $this->result)) {
             return false;
@@ -149,7 +212,23 @@ class Database {
 
         return $rows;
     }
-
+    /**
+     * Fetches a single row from the result set
+     * 
+     * Retrieves the next row from the current result set and cleans it.
+     * After fetching the row, the result set is cleared.
+     * If there's no active connection, result set, or no rows are found,
+     * the method returns false.
+     *
+     * @return array|false
+     *
+     * @see clean_row() For data sanitization process
+     *
+     * @example
+     * $db->query("SELECT * FROM users WHERE id = ?", false, 1);
+     * $row = $db->get_row();
+     * // Returns: ['id' => 1, 'name' => 'John', ...] or false if not found
+     */
     public function get_row() {
         if (!($this->dbh && $this->result)) {
             return false;
@@ -163,7 +242,21 @@ class Database {
 
         return $this->clean_row($row);
     }
-
+    /**
+     * Fetches the first column of the first row from the result set
+     *
+     * This method is useful when you need to retrieve a single value from
+     * the first row of a result set (e.g., COUNT queries, MAX, MIN, etc.).
+     * After fetching the value, the result set is cleared.
+     *
+     * @return mixed|false
+     *
+     * @example
+     * // Count total users
+     * $db->query("SELECT COUNT(*) FROM users");
+     * $total = $db->get_col(); // Returns: 42
+     *
+     */
     public function get_col() {
         if (!($this->dbh && $this->result)) {
             return false;
@@ -178,11 +271,9 @@ class Database {
 
         return $row;
     }
-
     public function affected_rows() {
         return $this->result ? $this->result->rowCount() : 0;
     }
-
     public function simple_query($query) {
         try {
             $this->result = $this->dbh->query($query);
@@ -194,9 +285,27 @@ class Database {
         }
         return true;
     }
-    public function escape($string) {
-        if ($this->dbh) {
+
+    /**
+     * Escapes a string for safe database usage
+     * 
+     * @param string $string The string to escape
+     * @return string|null The escaped string or null if database handle is not available
+     * @throws PDOException If the quote operation fails
+     */
+    public function escape(?string $string): ?string {
+        if ($string === null) {
+            return null;
+        }
+
+        if (!$this->dbh) {
+            throw new RuntimeException('Database connection not initialized');
+        }
+
+        try {
             return $this->dbh->quote($string);
+        } catch (PDOException $e) {
+            throw new PDOException('Failed to escape string: ' . $e->getMessage(), 0, $e);
         }
     }
 
@@ -207,14 +316,34 @@ class Database {
         $mysqli_num_fields = $this->result->columnCount();
         return (empty($mysqli_num_fields) ? 0 : $mysqli_num_fields);
     }
-
+    /**
+     * Gets the ID of the last inserted row
+     * 
+     * Returns the ID of the last inserted row, or the last value from a sequence.
+     * If no insert operation has been performed or if the connection is not established,
+     * the method returns 0.
+     *
+     * @return string|int The last insert ID (as returned by the database),
+     *                    or 0 if no connection exists or no rows were inserted
+     *
+     */
     public function last_insert_id() {
         if ($this->dbh) {
             $mysql_insert_id = $this->dbh->lastInsertId();
             return (empty($mysql_insert_id) ? 0 : $mysql_insert_id);
         }
     }
-
+    /**
+     * Gets the number of rows in the result set
+     * 
+     * This method returns the number of rows from the last query result.
+     * If there's no active connection or result set, it returns 0.
+     * Note: For SELECT statements, rowCount() may not return the actual number
+     * of rows for all databases. It's reliable for INSERT, UPDATE, DELETE queries.
+     *
+     * @return int The number of rows in the result set, or 0 if no result set exists
+     *             or if the result set is empty
+     */
     public function num_rows() {
         if (!($this->dbh && $this->result)) {
             return 0;
@@ -222,7 +351,12 @@ class Database {
         $mysqli_num_rows = $this->result->rowCount();
         return (empty($mysqli_num_rows) ? 0 : $mysqli_num_rows);
     }
-
+    /**
+     * Sanitizes and cleans input value by normalizing line endings and encoding HTML special characters
+     *
+     * @param string|null $value The input value to clean
+     * @return string The sanitized string
+     */
     public static function parseCleanValue($rValue) {
         if ($rValue != '') {
             $rValue = str_replace(array("\r\n", "\n\r", "\r"), "\n", $rValue);
@@ -237,7 +371,12 @@ class Database {
         }
         return '';
     }
-
+    /**
+     * Cleans all non-empty values in a database row using parseCleanValue().
+     * 
+     * @param array $row The database row to clean
+     * @return array The cleaned row with sanitized values
+     */
     public function clean_row($row) {
         foreach ($row as $key => $value) {
             if ($value) {
@@ -245,5 +384,49 @@ class Database {
             }
         }
         return $row;
+    }
+
+    /**
+     * Gets the default PDO connection options
+     *
+     * @return array Array of PDO options
+     */
+    private function getDefaultPdoOptions(): array {
+        return [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_PERSISTENT => $this->pconnect,
+            PDO::ATTR_EMULATE_PREPARES => false, // Added for better prepared statement handling
+        ];
+    }
+
+    /**
+     * Builds the DSN string for PDO connection
+     *
+     * @return string The formatted DSN string
+     */
+    private function buildDsn(): string {
+        return sprintf(
+            "mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4",
+            $this->dbhost,
+            $this->dbport,
+            $this->dbname
+        );
+    }
+
+    /**
+     * Handles PDO connection errors by formatting and outputting error details
+     * 
+     * @param PDOException $e The PDO exception that was caught
+     * @throws never This method never returns as it terminates execution
+     * @return never The function never returns due to exit() call
+     */
+    private function handleConnectionError(PDOException $e): never {
+        $error = [
+            'error' => 'MySQL: ' . $e->getMessage(),
+            'code' => $e->getCode()
+        ];
+
+        exit(json_encode($error));
     }
 }
