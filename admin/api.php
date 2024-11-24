@@ -232,10 +232,10 @@ if (isset($_GET["action"])) {
                     echo json_encode(array("result" => False));
                     exit;
                 }
-            } else if ($rSub == "reset") {
-                $db->query("UPDATE `reg_users` SET `google_2fa_sec` = '' WHERE `id` = " . intval($rUserID) . ";");
-                echo json_encode(array("result" => True));
-                exit;
+            // } else if ($rSub == "reset") {
+            //     $db->query("UPDATE `reg_users` SET `google_2fa_sec` = '' WHERE `id` = " . intval($rUserID) . ";");
+            //     echo json_encode(array("result" => True));
+            //     exit;
             } else if ($rSub == "enable") {
                 $db->query("UPDATE `reg_users` SET `status` = 1 WHERE `id` = " . intval($rUserID) . ";");
                 echo json_encode(array("result" => True));

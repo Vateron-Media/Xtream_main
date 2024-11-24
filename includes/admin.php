@@ -113,7 +113,7 @@ function getRegisteredUserHash($rHash) {
 
 function doLogin($rUsername, $rPassword) {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query("SELECT `id`, `username`, `password`, `member_group_id`, `google_2fa_sec`, `status` FROM `reg_users` WHERE `username` = ? LIMIT 1;", $rUsername);
+    $ipTV_db_admin->query("SELECT `id`, `username`, `password`, `member_group_id`,`status` FROM `reg_users` WHERE `username` = ? LIMIT 1;", $rUsername);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rRow = $ipTV_db_admin->get_row();
 
@@ -235,9 +235,9 @@ function getFooter() {
 function getIP() {
     if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
         $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-    } else if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+    } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
     } else {
         $ip = $_SERVER['REMOTE_ADDR'];
@@ -321,36 +321,36 @@ function hasPermissions($rType, $rID) {
         if (in_array(intval(getUser($rID)["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
             return true;
         }
-    } else if ($rType == "pid") {
+    } elseif ($rType == "pid") {
         $ipTV_db_admin->query("SELECT `user_id` FROM `lines_live` WHERE `pid` = " . intval($rID) . ";");
         if ($ipTV_db_admin->num_rows() > 0) {
             if (in_array(intval(getUser($ipTV_db_admin->get_row()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
                 return true;
             }
         }
-    } else if ($rType == "reg_user") {
+    } elseif ($rType == "reg_user") {
         if ((in_array(intval($rID), array_keys(getRegisteredUsers($rUserInfo["id"])))) && (intval($rID) <> intval($rUserInfo["id"]))) {
             return true;
         }
-    } else if ($rType == "ticket") {
+    } elseif ($rType == "ticket") {
         if (in_array(intval(getTicket($rID)["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
             return true;
         }
-    } else if ($rType == "mag") {
+    } elseif ($rType == "mag") {
         $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE `mag_id` = " . intval($rID) . ";");
         if ($ipTV_db_admin->num_rows() > 0) {
             if (in_array(intval(getUser($ipTV_db_admin->get_row()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
                 return true;
             }
         }
-    } else if ($rType == "e2") {
+    } elseif ($rType == "e2") {
         $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE `device_id` = " . intval($rID) . ";");
         if ($ipTV_db_admin->num_rows() > 0) {
             if (in_array(intval(getUser($ipTV_db_admin->get_row()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
                 return true;
             }
         }
-    } else if (($rType == "adv") && ($rPermissions["is_admin"])) {
+    } elseif (($rType == "adv") && ($rPermissions["is_admin"])) {
         if ((count($rPermissions["advanced"]) > 0) && ($rUserInfo["member_group_id"] <> 1)) {
             return in_array($rID, $rPermissions["advanced"]);
         } else {
@@ -511,22 +511,22 @@ function get_recent_stable_release(string $url) {
 /**
  * Determines if an update is needed based on the current version and the required version.
  *
- * This function compares two version strings, `currentVersion` and `requiredVersion`, 
- * which are expected to be in a dot-separated format (e.g., "1.0.0"). It converts these 
- * version strings into arrays of integers, then compares each part of the version numbers 
- * to determine if the current version is less than the required version. 
- * 
- * If any part of the current version is less than the corresponding part of the required 
- * version, the function returns true, indicating that an update is needed. If any part 
- * of the current version is greater, it returns false, indicating that no update is needed. 
+ * This function compares two version strings, `currentVersion` and `requiredVersion`,
+ * which are expected to be in a dot-separated format (e.g., "1.0.0"). It converts these
+ * version strings into arrays of integers, then compares each part of the version numbers
+ * to determine if the current version is less than the required version.
+ *
+ * If any part of the current version is less than the corresponding part of the required
+ * version, the function returns true, indicating that an update is needed. If any part
+ * of the current version is greater, it returns false, indicating that no update is needed.
  * If both versions are equal, it also returns false.
  *
  * @param string $requiredVersion The required version string to compare against.
  * @param string $currentVersion The current version string.
  * @return bool Returns true if an update is needed, false otherwise.
  */
-function isUpdateNeeded(string $requiredVersion = NULL, string $currentVersion = NULL): bool {
-    if ($requiredVersion == NULL && $currentVersion == NULL) {
+function isUpdateNeeded(string $requiredVersion = null, string $currentVersion = null): bool {
+    if ($requiredVersion == null && $currentVersion == null) {
         return false;
     }
     // Convert version strings to arrays of integers
@@ -576,7 +576,7 @@ function updateGeoLite2() {
         )
     );
     $URLTagsRelease = "https://api.github.com/repos/Vateron-Media/Xtream_Update/git/refs/tags";
-    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), True);
+    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), true);
     $latestTag = $tags[0]['ref'];
     $rGeoLite2_version = str_replace("refs/tags/", "", $latestTag);
 
@@ -675,7 +675,7 @@ function multiexplode($delimiters, $data) {
     $Return = array_filter(explode($delimiters[0], $MakeReady));
     return $Return;
 }
-//network interface 1		 
+//network interface 1
 function sexec($rServerID, $rCommand) {
     global $_INFO;
     if ($rServerID <> $_INFO["server_id"]) {
@@ -699,7 +699,7 @@ function netnet($rServerID) {
     array_push($ttt, "");
     return $ttt;
 }
-//network interface 2	
+//network interface 2
 
 
 
@@ -708,13 +708,13 @@ function changePort($rServerID, $rType, $rOldPort, $rNewPort) {
         // HTTP
         sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/bin/nginx/conf/nginx.conf");
         sexec($rServerID, "sed -i 's/:" . intval($rOldPort) . "/:" . intval($rNewPort) . "/g' /home/xtreamcodes/bin/nginx_rtmp/conf/nginx.conf");
-    } else if ($rType == 1) {
+    } elseif ($rType == 1) {
         // SSL
         sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . " ssl;/listen " . intval($rNewPort) . " ssl;/g' /home/xtreamcodes/bin/nginx/conf/nginx.conf");
-    } else if ($rType == 2) {
+    } elseif ($rType == 2) {
         // RTMP
         sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/bin/nginx_rtmp/conf/nginx.conf");
-    } else if ($rType == 3) {
+    } elseif ($rType == 3) {
         // ISP
         sexec($rServerID, "sed -i 's/listen " . intval($rOldPort) . ";/listen " . intval($rNewPort) . ";/g' /home/xtreamcodes/bin/nginx/conf/nginx.conf");
         sexec($rServerID, "sed -i 's|:" . intval($rOldPort) . "/api.php|:" . intval($rNewPort) . "/api.php|g' /home/xtreamcodes/wwwdir/includes/streaming.php");
@@ -831,7 +831,7 @@ function checkSource($rServerID, $rFilename) {
     global $rServers, $rSettings;
     $rAPI = "http://" . $rServers[intval($rServerID)]["server_ip"] . ":" . $rServers[intval($rServerID)]["http_broadcast_port"] . "/api.php?password=" . $rSettings["live_streaming_pass"] . "&action=getFile&filename=" . urlencode(escapeshellcmd($rFilename));
     $rCommand = 'timeout 5 ' . MAIN_DIR . 'bin/ffprobe -show_streams -v quiet "' . $rAPI . '" -of json';
-    return json_decode(shell_exec($rCommand), True);
+    return json_decode(shell_exec($rCommand), true);
 }
 
 function getSelections($rSources) {
@@ -848,7 +848,7 @@ function getSelections($rSources) {
 
 function tmdbParseRelease($Release) {
     $rCommand = "/usr/bin/python " . INCLUDES_PATH . "python/release.py \"" . escapeshellcmd($Release) . "\"";
-    return json_decode(shell_exec($rCommand), True);
+    return json_decode(shell_exec($rCommand), true);
 }
 
 function listDir($rServerID, $rDirectory, $rAllowed = null) {
@@ -910,7 +910,7 @@ function listDir($rServerID, $rDirectory, $rAllowed = null) {
             foreach ($rFiles as $rFile) {
                 if (stripos($rFile->getAttribute('class'), "directory") !== false) {
                     $rReturn["dirs"][] = $rFile->nodeValue;
-                } else if (stripos($rFile->getAttribute('class'), "file") !== false) {
+                } elseif (stripos($rFile->getAttribute('class'), "file") !== false) {
                     $rExt = strtolower(pathinfo($rFile->nodeValue)["extension"]);
                     if (((is_array($rAllowed)) && (in_array($rExt, $rAllowed))) or (!$rAllowed)) {
                         $rReturn["files"][] = $rFile->nodeValue;
@@ -980,7 +980,7 @@ function getStreamingServersByID($rID) {
     if (($result) && ($result->num_rows == 1)) {
         return $result->fetch_assoc();
     }
-    return False;
+    return false;
 }
 
 function getStreamList() {
@@ -1036,7 +1036,7 @@ function findEPG($rEPGName) {
     $result = $db->query("SELECT `id`, `data` FROM `epg`;");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
-            foreach (json_decode($row["data"], True) as $rChannelID => $rChannelData) {
+            foreach (json_decode($row["data"], true) as $rChannelID => $rChannelData) {
                 if ($rChannelID == $rEPGName) {
                     if (count($rChannelData["langs"]) > 0) {
                         $rEPGLang = $rChannelData["langs"][0];
@@ -1154,7 +1154,7 @@ function getSeriesTrailer($rTMDBID) {
     } else {
         $rURL = "https://api.themoviedb.org/3/tv/" . $rTMDBID . "/videos?api_key=" . $rSettings["tmdb_api_key"];
     }
-    $rJSON = json_decode(file_get_contents($rURL), True);
+    $rJSON = json_decode(file_get_contents($rURL), true);
     foreach ($rJSON["results"] as $rVideo) {
         if ((strtolower($rVideo["type"]) == "trailer") && (strtolower($rVideo["site"]) == "youtube")) {
             return $rVideo["key"];
@@ -1171,7 +1171,7 @@ function getStills($rTMDBID, $rSeason, $rEpisode) {
     } else {
         $rURL = "https://api.themoviedb.org/3/tv/" . $rTMDBID . "/season/" . $rSeason . "/episode/" . $rEpisode . "/images?api_key=" . $rSettings["tmdb_api_key"];
     }
-    return json_decode(file_get_contents($rURL), True);
+    return json_decode(file_get_contents($rURL), true);
 }
 
 function getUserAgents() {
@@ -1485,7 +1485,7 @@ function addToBouquet($rType, $rBouquetID, $rID) {
         } else {
             $rColumn = "bouquet_series";
         }
-        $rChannels = json_decode($rBouquet[$rColumn], True);
+        $rChannels = json_decode($rBouquet[$rColumn], true);
         if (!in_array($rID, $rChannels)) {
             $rChannels[] = $rID;
             if (count($rChannels) > 0) {
@@ -1508,7 +1508,7 @@ function removeFromBouquet($rType, $rBouquetID, $rID) {
         } else {
             $rColumn = "bouquet_series";
         }
-        $rChannels = json_decode($rBouquet[$rColumn], True);
+        $rChannels = json_decode($rBouquet[$rColumn], true);
         if (($rKey = array_search($rID, $rChannels)) !== false) {
             unset($rChannels[$rKey]);
             $db->query("UPDATE `bouquets` SET `" . ESC($rColumn) . "` = '" . ESC(json_encode(array_values($rChannels))) . "' WHERE `id` = " . intval($rBouquetID) . ";");
@@ -1522,7 +1522,7 @@ function getPackages($rGroup = null) {
     $result = $db->query("SELECT * FROM `packages` ORDER BY `id` ASC;");
     if (($result) && ($result->num_rows > 0)) {
         while ($row = $result->fetch_assoc()) {
-            if ((!isset($rGroup)) or (in_array(intval($rGroup), json_decode($row["groups"], True)))) {
+            if ((!isset($rGroup)) or (in_array(intval($rGroup), json_decode($row["groups"], true)))) {
                 $return[intval($row["id"])] = $row;
             }
         }
@@ -1614,7 +1614,7 @@ function getChannelsByID($rID) {
     if (($result) && ($result->num_rows == 1)) {
         return $result->fetch_assoc();
     }
-    return False;
+    return false;
 }
 
 function getCategory($rID) {
@@ -1623,7 +1623,7 @@ function getCategory($rID) {
     if (($result) && ($result->num_rows == 1)) {
         return $result->fetch_assoc();
     }
-    return False;
+    return false;
 }
 
 function getMag($rID) {
@@ -1910,7 +1910,7 @@ function updateSeries($rID) {
                 $rTMDB = new TMDB($rSettings["tmdb_api_key"]);
             }
             $rReturn = array();
-            $rSeasons = json_decode($rTMDB->getTVShow($rTMDBID)->getJSON(), True)["seasons"];
+            $rSeasons = json_decode($rTMDB->getTVShow($rTMDBID)->getJSON(), true)["seasons"];
             foreach ($rSeasons as $rSeason) {
                 if ($rAdminSettings["download_images"]) {
                     $rSeason["cover"] = downloadImage("https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rSeason["poster_path"]);
@@ -1932,7 +1932,7 @@ function getURL() {
     global $rServers, $_INFO;
     if (strlen($rServers[$_INFO["server_id"]]["domain_name"]) > 0) {
         return "http://" . $rServers[$_INFO["server_id"]]["domain_name"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"];
-    } else if (strlen($rServers[$_INFO["server_id"]]["vpn_ip"]) > 0) {
+    } elseif (strlen($rServers[$_INFO["server_id"]]["vpn_ip"]) > 0) {
         return "http://" . $rServers[$_INFO["server_id"]]["vpn_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"];
     } else {
         return "http://" . $rServers[$_INFO["server_id"]]["server_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"];
@@ -1957,7 +1957,7 @@ function generateSeriesPlaylist($rSeriesNo) {
         while ($row = $result->fetch_assoc()) {
             $resultB = $db->query("SELECT `stream_source` FROM `streams` WHERE `id` = " . intval($row["stream_id"]) . ";");
             if (($resultB) && ($resultB->num_rows > 0)) {
-                $rSource = json_decode($resultB->fetch_assoc()["stream_source"], True)[0];
+                $rSource = json_decode($resultB->fetch_assoc()["stream_source"], true)[0];
                 $rSplit = explode(":", $rSource);
                 $rFilename = join(":", array_slice($rSplit, 2, count($rSplit) - 2));
                 $rServerID = intval($rSplit[1]);

@@ -27,17 +27,7 @@ if (!isset($_STATUS)) {
 		if (!isset($_STATUS)) {
 			$rUserInfo = doLogin($_POST["username"], $_POST["password"]);
 			if (isset($rUserInfo)) {
-				if ((isset($rAdminSettings["google_2factor"])) && ($rAdminSettings["google_2factor"])) {
-					if (strlen($rUserInfo["google_2fa_sec"]) == 0) {
-						$rGA = new PHPGangsta_GoogleAuthenticator();
-						$rSecret = $rGA->createSecret();
-						$rUserInfo["google_2fa_sec"] = $rSecret;
-						$db->query("UPDATE `reg_users` SET `google_2fa_sec` = '" . ESC($rSecret) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
-						$rNew2F = true;
-					}
-					$rQR = $rGA->getQRCodeGoogleUrl('Xtream UI', $rUserInfo["google_2fa_sec"]);
-					$rAuth = md5($rUserInfo["password"]);
-				} else if ((strlen($_POST["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
+				if ((strlen($_POST["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
 					$rChangePass = md5($rUserInfo["password"]);
 				} else {
 					$rPermissions = getPermissions($rUserInfo["member_group_id"]);
@@ -73,39 +63,6 @@ if (!isset($_STATUS)) {
 				}
 				$_STATUS = 0;
 			}
-		}
-	} else if ((isset($_POST["gauth"])) && (isset($_POST["hash"])) && (isset($_POST["auth"])) && (isset($rAdminSettings["google_2factor"])) && ($rAdminSettings["google_2factor"])) {
-		$rUserInfo = getRegisteredUserHash($_POST["hash"]);
-		$rAuth = $_POST["auth"];
-		if (($rUserInfo) && ($rAuth == md5($rUserInfo["password"]))) {
-			if ($rGA->verifyCode($rUserInfo["google_2fa_sec"], $_POST["gauth"], 2)) {
-				$rPermissions = getPermissions($rUserInfo["member_group_id"]);
-				if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-					$db->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = '" . ESC(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
-					$_SESSION['hash'] = md5($rUserInfo["username"]);
-					$_SESSION['ip'] = getIP();
-					if ($rPermissions["is_admin"]) {
-						header("Location: ./dashboard.php");
-					} else {
-						$db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> Logged In');");
-						header("Location: ./reseller.php");
-					}
-				} else if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
-					$_STATUS = 2;
-				} else if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && (!$rUserInfo["status"]))) {
-					$_STATUS = 3;
-				} else {
-					$_STATUS = 4;
-				}
-			} else {
-				$rQR = $rGA->getQRCodeGoogleUrl('Xtream UI', $rUserInfo["google_2fa_sec"]);
-				$_STATUS = 1;
-			}
-		} else {
-			if (intval($rAdminSettings["login_flood"]) > 0) {
-				$db->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ESC($_POST["username"]) . "', '" . ESC(getIP()) . "');");
-			}
-			$_STATUS = 0;
 		}
 	} else if ((isset($_POST["newpass"])) && (isset($_POST["confirm"])) && (isset($_POST["hash"])) && (isset($_POST["change"]))) {
 		$rUserInfo = getRegisteredUserHash($_POST["hash"]);

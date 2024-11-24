@@ -137,12 +137,6 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     } else {
         $rAdminSettings["reseller_restrictions"] = false;
     }
-    if (isset($_POST["google_2factor"])) {
-        $rAdminSettings["google_2factor"] = true;
-        unset($_POST["google_2factor"]);
-    } else {
-        $rAdminSettings["google_2factor"] = false;
-    }
     if (isset($_POST["default_entries"])) {
         $rAdminSettings["default_entries"] = $_POST["default_entries"];
     }
@@ -945,21 +939,6 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 </option>
                                                                             <?php } ?>
                                                                         </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="google_2factor"><?= $_["two_factor_authentication"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["enable_two_factor"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="google_2factor" id="google_2factor"
-                                                                            type="checkbox" <?php if ($rAdminSettings["google_2factor"] == 1) {
-                                                                                echo "checked ";
-                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row mb-4">
@@ -2495,7 +2474,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </td>
                                                                 </tr>
                                                             <?php }
-                                                            $result = $db->query("SELECT `username`, `reseller_dns` FROM `reg_users` WHERE `reseller_dns` <> '' AND `verified` = 1 ORDER BY `username` ASC;");
+                                                            $result = $db->query("SELECT `username`, `reseller_dns` FROM `users` WHERE `reseller_dns` <> '' AND `verified` = 1 ORDER BY `username` ASC;");
                                                             if (($result) && ($result->num_rows > 0)) {
                                                                 while ($row = $result->fetch_assoc()) { ?>
                                                                     <tr>
