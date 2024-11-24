@@ -4,7 +4,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc) {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-        cli_set_process_title('XtreamCodes[Servers]');
+        cli_set_process_title('XC_VMrs]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
         ipTV_lib::checkCron($unique_id);
         loadCron();
@@ -12,7 +12,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         exit(0);
     }
 } else {
-    exit('Please run as XtreamCodes!' . "\n");
+    exit('Please run as XC_VM!' . "\n");
 }
 
 function loadCron() {
@@ -142,7 +142,7 @@ function loadCron() {
             $ipTV_db->query('DELETE FROM `signals` WHERE `time` <= ?;', time() - 86400);
         }
     } else {
-        echo 'XtreamCodes not running...' . "\n";
+        echo 'XC_VM not running...' . "\n";
     }
 }
 

@@ -271,7 +271,7 @@ if ($rSettings["sidebar"]) { ?>
                                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
-                                                            XtreamCodes is currently waiting to be updated... Your server will become
+                                                            XC_VM is currently waiting to be updated... Your server will become
                                                             unavailable once the process begins.
                                                         </div>
                                 <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>

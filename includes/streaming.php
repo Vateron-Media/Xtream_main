@@ -483,12 +483,12 @@ class ipTV_streaming {
     }
     /**
      * Closes active connections for a user when they exceed the maximum allowed limit
-     * 
+     *
      * @param int $userID The ID of the user whose connections need to be managed
      * @param int $rMaxConnections The maximum number of allowed connections
      * @param string $IP Optional. The IP address to filter connections (default: null)
      * @param string $userAgent Optional. The user agent to filter connections (default: null)
-     * 
+     *
      * @return int|null Returns the number of killed connections or null if no connections needed to be closed
      */
     public static function closeConnections($userID, $rMaxConnections, $IP = null, $userAgent = null) {
@@ -616,7 +616,7 @@ class ipTV_streaming {
      *
      * @param int $streamID The ID of the stream to manage
      * @param int $PID The process ID to remove from the queue
-     * 
+     *
      * @return void
      */
     public static function removeFromQueue($streamID, $PID) {
@@ -809,16 +809,16 @@ class ipTV_streaming {
             return null;
         }
     }
-    /** 
-     * Logs client actions to a file if client_logs_save setting is enabled or bypass flag is set to true. 
-     *  
-     * @param int $streamID The ID of the stream. 
-     * @param int $userID The ID of the user performing the action. 
-     * @param string $action The action being performed. 
-     * @param string $IP The IP address of the user. 
-     * @param string $data Additional data to be logged (optional). 
-     * @param bool $bypass Flag to bypass the client_logs_save setting (optional). 
-     * @return void|null 
+    /**
+     * Logs client actions to a file if client_logs_save setting is enabled or bypass flag is set to true.
+     *
+     * @param int $streamID The ID of the stream.
+     * @param int $userID The ID of the user performing the action.
+     * @param string $action The action being performed.
+     * @param string $IP The IP address of the user.
+     * @param string $data Additional data to be logged (optional).
+     * @param bool $bypass Flag to bypass the client_logs_save setting (optional).
+     * @return void|null
      */
     public static function clientLog($streamID, $userID, $action, $IP, $data = '', $bypass = false) {
         if (ipTV_lib::$settings['client_logs_save'] != 0 || $bypass) {
@@ -928,20 +928,20 @@ class ipTV_streaming {
         }
         return false;
     }
-    /** 
-     * Checks if a monitor process is running with the specified PID and stream ID. 
-     * 
-     * @param int $PID The process ID of the monitor. 
-     * @param int $streamID The stream ID to check against. 
-     * @param string $ffmpeg_path The path to the FFmpeg executable (default is PHP_BIN). 
-     * @return bool Returns true if the monitor process is running with the specified PID and stream ID, false otherwise. 
+    /**
+     * Checks if a monitor process is running with the specified PID and stream ID.
+     *
+     * @param int $PID The process ID of the monitor.
+     * @param int $streamID The stream ID to check against.
+     * @param string $ffmpeg_path The path to the FFmpeg executable (default is PHP_BIN).
+     * @return bool Returns true if the monitor process is running with the specified PID and stream ID, false otherwise.
      */
     public static function checkMonitorRunning($PID, $streamID, $ffmpeg_path = PHP_BIN) {
         if (!empty($PID)) {
             clearstatcache(true);
             if (file_exists('/proc/' . $PID) && is_readable('/proc/' . $PID . '/exe') && basename(readlink('/proc/' . $PID . '/exe')) == basename($ffmpeg_path)) {
                 $value = trim(file_get_contents("/proc/{$PID}/cmdline"));
-                if ($value == "XtreamCodes[{$streamID}]") {
+                if ($value == "XC_VM[{$streamID}]") {
                     return true;
                 }
             }
@@ -956,7 +956,7 @@ class ipTV_streaming {
         clearstatcache(true);
         if (file_exists('/proc/' . $PID) && is_readable('/proc/' . $PID . '/exe')) {
             $value = trim(file_get_contents("/proc/{$PID}/cmdline"));
-            if ($value == "XtreamCodesDelay[{$streamID}]") {
+            if ($value == "XC_VMDelay[{$streamID}]") {
                 return true;
             }
         }
@@ -1240,7 +1240,7 @@ class ipTV_streaming {
                 return igbinary_unserialize(file_get_contents(CONS_TMP_PATH . md5($user_ip) . '_isp'));
             }
             if ((isset($user_ip)) && (filter_var($user_ip, FILTER_VALIDATE_IP))) {
-                $rData = json_decode(file_get_contents("https://db-ip.com/demo/home.php?s=" . $user_ip), True);
+                $rData = json_decode(file_get_contents("https://db-ip.com/demo/home.php?s=" . $user_ip), true);
 
                 if (strlen($rData["demoInfo"]["isp"]) > 0) {
                     $json = array(

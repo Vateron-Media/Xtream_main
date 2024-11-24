@@ -32,7 +32,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         exit(0);
     }
 } else {
-    exit('Please run as XtreamCodes!' . "\n");
+    exit('Please run as XC_VM!' . "\n");
 }
 class Thread {
     public $process = null;
@@ -362,7 +362,7 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
             exit();
         }
     } else {
-        echo 'XtreamCodes not running...' . "\n";
+        echo 'XC_VM not running...' . "\n";
         exit();
     }
 }

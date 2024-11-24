@@ -21,9 +21,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			echo "\n" . 'Status' . "\n" . '------------------------------' . "\n";
 
 			if (isrunning()) {
-				echo 'XtreamCodes is running.' . "\n\n";
+				echo 'XC_VM is running.' . "\n\n";
 			} else {
-				echo 'XtreamCodes is not running.' . "\n\n";
+				echo 'XC_VM is not running.' . "\n\n";
 			}
 		} else {
 			echo "\n";
@@ -58,10 +58,10 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 
 		$rCrons = array();
 		if (file_exists(CRON_PATH . 'root_signals.php')) {
-			$rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_signals.php # XtreamCodes';
+			$rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_signals.php # XC_VM';
 		}
 		// if (file_exists(CRON_PATH . 'root_mysql.php')) {
-		// 	$rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_mysql.php # XtreamCodes';
+		// 	$rCrons[] = '* * * * * ' . PHP_BIN . ' ' . CRON_PATH . 'root_mysql.php # XC_VM';
 		// }
 
 		$rWrite = false;
@@ -171,7 +171,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 1 WHERE `id` = ?;', SERVER_ID);
 
 			if (stripos(ipTV_lib::$settings['server_name'], 'xtream') !== false || stripos(ipTV_lib::$settings['server_name'], 'zapx') !== false || stripos(ipTV_lib::$settings['server_name'], 'streamcreed') !== false) {
-				ipTV_lib::setSettings(["server_name" => "XtreamCodes"]);
+				ipTV_lib::setSettings(["server_name" => "XC_VM"]);
 			}
 
 			echo 'Servers' . "\n" . '------------------------------' . "\n";
@@ -187,7 +187,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			}
 
 			if ($rOffline == 0) {
-				echo 'All servers are Online and reporting back to XtreamCodes!' . "\n\n";
+				echo 'All servers are Online and reporting back to XC_VM!' . "\n\n";
 			} else {
 				echo "\n";
 			}

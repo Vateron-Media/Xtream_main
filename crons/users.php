@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if ($argc) {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-        cli_set_process_title('XtreamCodes[Users Parser]');
+        cli_set_process_title('XC_VM[Users Parser]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
         ipTV_lib::checkCron($unique_id);
         $rSync = null;
@@ -74,7 +74,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         exit(0);
     }
 } else {
-    exit('Please run as XtreamCodes!' . "\n");
+    exit('Please run as XC_VM!' . "\n");
 }
 function processDeletions($rDelete, $rDelStream = array()) {
     global $ipTV_db;
@@ -162,7 +162,7 @@ function loadCron() {
         $rRestreamerArray = $rMaxConnectionsArray = array();
         $rUserIDs = ipTV_lib::confirmIDs(array_keys($rUsers));
         if (count($rUserIDs) > 0) {
-            $ipTV_db->query('SELECT `id`, `max_connections`, `is_restreamer` FROM `users` WHERE `id` IN (' . implode(',', $rUserIDs) . ');');
+            $ipTV_db->query('SELECT `id`, `max_connections`, `is_restreamer` FROM `lines` WHERE `id` IN (' . implode(',', $rUserIDs) . ');');
             foreach ($ipTV_db->get_rows() as $rRow) {
                 $rMaxConnectionsArray[$rRow['id']] = $rRow['max_connections'];
                 $rRestreamerArray[$rRow['id']] = $rRow['is_restreamer'];

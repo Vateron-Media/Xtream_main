@@ -8,7 +8,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         if (count($argv) == 2) {
             $rStartup = true;
         }
-        cli_set_process_title('XtreamCodes[Cache Builder]');
+        cli_set_process_title('XC_VM[Cache Builder]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
         ipTV_lib::checkCron($unique_id);
         loadCron();
@@ -16,7 +16,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         exit(0);
     }
 } else {
-    exit('Please run as XtreamCodes!' . "\n");
+    exit('Please run as XC_VM!' . "\n");
 }
 function loadCron() {
     global $ipTV_db;

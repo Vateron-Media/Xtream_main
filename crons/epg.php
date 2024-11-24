@@ -2,7 +2,7 @@
 ini_set("memory_limit", -1);
 class Epg {
     public $validEpg = false;
-    public $epgSource = NULL;
+    public $epgSource = null;
     public $from_cache = false;
     public function __construct($result, $set = false) {
         $this->LoadEpg($result, $set);
@@ -108,22 +108,22 @@ class Epg {
         } else {
             ipTV_lib::saveLog_old("No XML Found At: " . $result);
         }
-        $epgSource = $content = NULL;
+        $epgSource = $content = null;
     }
 }
 
 
 if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
     if (@$argc) {
-        shell_exec("kill -9 `ps -ef | grep 'XtreamCodes\\[EPG\\]' | grep -v grep | awk '{print \$2}'`;");
+        shell_exec("kill -9 `ps -ef | grep 'XC_VM\\[EPG\\]' | grep -v grep | awk '{print \$2}'`;");
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-        cli_set_process_title("XtreamCodes[EPG]");
+        cli_set_process_title("XC_VM[EPG]");
         $ipTV_db->query("SELECT * FROM `epg`");
         foreach ($ipTV_db->get_rows() as $row) {
             $dataEPG = new Epg($row["epg_file"]);
             if ($dataEPG->validEpg) {
                 $ipTV_db->query("UPDATE `epg` SET `data` = ? WHERE `id` = ?", json_encode($dataEPG->getData()), $row["id"]);
-                $dataEPG = NULL;
+                $dataEPG = null;
             }
         }
         $ipTV_db->query("SELECT DISTINCT(t1.`epg_id`),t2.* FROM `streams` t1 INNER JOIN `epg` t2 ON t2.id = t1.epg_id WHERE t1.`epg_id` IS NOT NULL");
@@ -153,5 +153,5 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
         exit(0);
     }
 } else {
-    exit('Please run as XtreamCodes!' . "\n");
+    exit('Please run as XC_VM!' . "\n");
 }
