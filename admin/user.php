@@ -33,15 +33,15 @@ if (isset($_POST["submit_user"])) {
         $_POST["password"] = generateString(10);
     }
     if (!isset($_POST["edit"])) {
-        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = '" . ESC($_POST["username"]) . "';");
+        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = '" . $ipTV_db_admin->escape($_POST["username"]) . "';");
         if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 3; // Username in use.
         }
     }
     if ((($_POST["is_mag"]) && (!filter_var($_POST["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen($_POST["mac_address_e2"]) > 0) && (!filter_var($_POST["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
         $_STATUS = 4;
-    } else if ($_POST["is_mag"]) {
-        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . ESC(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
+    } elseif ($_POST["is_mag"]) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . $ipTV_db_admin->escape(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
         if ($ipTV_db_admin->num_rows() > 0) {
             if (isset($_POST["edit"])) {
                 if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
@@ -51,8 +51,8 @@ if (isset($_POST["submit_user"])) {
                 $_STATUS = 5; // MAC in use.
             }
         }
-    } else if ($_POST["is_e2"]) {
-        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . ESC($_POST["mac_address_e2"]) . "' LIMIT 1;");
+    } elseif ($_POST["is_e2"]) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . $ipTV_db_admin->escape($_POST["mac_address_e2"]) . "' LIMIT 1;");
         if ($ipTV_db_admin->num_rows() > 0) {
             if (isset($_POST["edit"])) {
                 if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
@@ -79,7 +79,7 @@ if (isset($_POST["submit_user"])) {
             $rArray[$rSelection] = 0;
         }
     }
-    $rArray["bouquet"] = sortArrayByArray(array_values(json_decode($_POST["bouquets_selected"], True)), array_keys(getBouquetOrder()));
+    $rArray["bouquet"] = sortArrayByArray(array_values(json_decode($_POST["bouquets_selected"], true)), array_keys(getBouquetOrder()));
     $rArray["bouquet"] = "[" . join(",", $rArray["bouquet"]) . "]";
     unset($_POST["bouquets_selected"]);
     if ((isset($_POST["exp_date"])) && (!isset($_POST["no_expire"]))) {
@@ -138,7 +138,7 @@ if (isset($_POST["submit_user"])) {
             $rArray["member_id"] = -1;
         }
         $rArray["created_by"] = $rArray["member_id"];
-        $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
+        $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
             if (is_array($rValue)) {
@@ -147,12 +147,12 @@ if (isset($_POST["submit_user"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . ESC($rValue) . '\'';
+                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
             }
         }
         if (isset($_POST["edit"])) {
             $rCols = "`id`," . $rCols;
-            $rValues = ESC($_POST["edit"]) . "," . $rValues;
+            $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
@@ -171,27 +171,27 @@ if (isset($_POST["submit_user"])) {
                         }
                         $ipTV_db_admin->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
                         if ($ipTV_db_admin->num_rows() == 0) {
-                            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ESC($_POST["mac_address_mag"])) . "', `lock_device` = " . intval($rSTBLock) . " WHERE `user_id` = " . intval($rInsertID) . ";");
+                            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode($ipTV_db_admin->escape($_POST["mac_address_mag"])) . "', `lock_device` = " . intval($rSTBLock) . " WHERE `user_id` = " . intval($rInsertID) . ";");
                         } else {
-                            $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(base64_encode($_POST["mac_address_mag"])) . "', " . intval($rSTBLock) . ");");
+                            $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . $ipTV_db_admin->escape(base64_encode($_POST["mac_address_mag"])) . "', " . intval($rSTBLock) . ");");
                         }
                         if (isset($_POST["edit"])) {
                             $ipTV_db_admin->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                         }
                     }
-                } else if ($rArray["is_e2"] == 1) {
+                } elseif ($rArray["is_e2"] == 1) {
                     if (hasPermissions("adv", "add_e2")) {
                         $ipTV_db_admin->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
                         if ($ipTV_db_admin->num_rows() == 0) {
-                            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . ESC($_POST["mac_address_e2"]) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
+                            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . $ipTV_db_admin->escape($_POST["mac_address_e2"]) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
                         } else {
-                            $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rInsertID) . ", '" . ESC($_POST["mac_address_e2"]) . "');");
+                            $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rInsertID) . ", '" . $ipTV_db_admin->escape($_POST["mac_address_e2"]) . "');");
                         }
                         if (isset($_POST["edit"])) {
                             $ipTV_db_admin->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                         }
                     }
-                } else if (isset($_POST["edit"])) {
+                } elseif (isset($_POST["edit"])) {
                     $ipTV_db_admin->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                     $ipTV_db_admin->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                 }
@@ -224,7 +224,7 @@ if (isset($_GET["id"])) {
         $rUser["mac_address_e2"] = getE2User($_GET["id"])["mac"];
     }
     $rUser["outputs"] = getOutputs($rUser["id"]);
-} else if (!hasPermissions("adv", "add_user")) {
+} elseif (!hasPermissions("adv", "add_user")) {
     exit;
 }
 
@@ -240,10 +240,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -252,7 +252,7 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <a href="./users.php<?php if (isset($_GET["mag"])) {
                                                                 echo "?mag";
-                                                            } else if (isset($_GET["e2"])) {
+                                                            } elseif (isset($_GET["e2"])) {
                                                                 echo "?e2";
                                                             } ?>">
                                             <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
@@ -262,9 +262,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rUser)) {
                                                             echo $_["edit"];
-                                                        } else {
-                                                            echo $_["add"];
-                                                        } ?> <?= $_["user"] ?></h4>
+                                                       } else {
+                                                           echo $_["add"];
+                                                       } ?> <?= $_["user"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -279,42 +279,42 @@ if ($rSettings["sidebar"]) { ?>
                                         </button>
                                         <?= $_["user_operation_was_completed_successfully"] ?>
                                     </div>
-                                <?php } else if ($_STATUS == 1) { ?>
+                                <?php } elseif ($_STATUS == 1) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                         <?= $_["an_incorrect_expiration_date_was_entered"] ?>
                                     </div>
-                                <?php } else if ($_STATUS == 2) { ?>
+                                <?php } elseif ($_STATUS == 2) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                         <?= $_["generic_fail"] ?>
                                     </div>
-                                <?php } else if ($_STATUS == 3) { ?>
+                                <?php } elseif ($_STATUS == 3) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                         <?= $_["this_username_already_exists"] ?>
                                     </div>
-                                <?php } else if ($_STATUS == 4) { ?>
+                                <?php } elseif ($_STATUS == 4) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                         <?= $_["an_invalid_mac_address_was_entered"] ?>
                                     </div>
-                                <?php } else if ($_STATUS == 5) { ?>
+                                <?php } elseif ($_STATUS == 5) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                         <?= $_["this_mac_address_is_already_in_use"] ?>
                                     </div>
-                            <?php }
+                                <?php }
                             } ?>
                             <div class="card">
                                 <div class="card-body">
@@ -374,7 +374,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         placeholder="<?= $_["auto_generate_if_blank"] ?>"
                                                                         value="<?php if (isset($rUser)) {
                                                                                     echo htmlspecialchars($rUser["username"]);
-                                                                                } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -386,7 +386,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         placeholder="<?= $_["auto_generate_if_blank"] ?>"
                                                                         value="<?php if (isset($rUser)) {
                                                                                     echo htmlspecialchars($rUser["password"]);
-                                                                                } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -400,9 +400,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         </option>
                                                                         <?php foreach ($rRegisteredUsers as $rRegisteredUser) { ?>
                                                                             <option <?php if (isset($rUser)) {
-                                                                                        if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
+                                                                                if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
+                                                                                    echo "selected ";
+                                                                                }
                                                                                     } else {
                                                                                         if (intval($rUserInfo["id"]) == intval($rRegisteredUser["id"])) {
                                                                                             echo "selected ";
@@ -421,9 +421,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="max_connections" name="max_connections"
                                                                         value="<?php if (isset($rUser)) {
                                                                                     echo htmlspecialchars($rUser["max_connections"]);
-                                                                                } else {
-                                                                                    echo "1";
-                                                                                } ?>"
+                                                                               } else {
+                                                                                   echo "1";
+                                                                               } ?>"
                                                                         required
                                                                         data-parsley-trigger="<?= $_["change"] ?>">
                                                                 </div>
@@ -440,12 +440,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control text-center datetime"
                                                                         id="exp_date" name="exp_date"
                                                                         value="<?php if (isset($rUser)) {
-                                                                                    if (!is_null($rUser["exp_date"])) {
-                                                                                        echo date("Y-m-d HH:mm", $rUser["exp_date"]);
-                                                                                    } else {
-                                                                                        echo "\" disabled=\"disabled";
-                                                                                    }
-                                                                                } ?>"
+                                                                            if (!is_null($rUser["exp_date"])) {
+                                                                                echo date("Y-m-d HH:mm", $rUser["exp_date"]);
+                                                                            } else {
+                                                                                echo "\" disabled=\"disabled";
+                                                                            }
+                                                                               } ?>"
                                                                         data-toggle="date-picker"
                                                                         data-single-date-picker="true">
                                                                 </div>
@@ -454,10 +454,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input type="checkbox"
                                                                             class="custom-control-input" id="no_expire"
                                                                             name="no_expire" <?php if (isset($rUser)) {
-                                                                                                    if (is_null($rUser["exp_date"])) {
-                                                                                                        echo " checked";
-                                                                                                    }
-                                                                                                } ?>>
+                                                                                if (is_null($rUser["exp_date"])) {
+                                                                                    echo " checked";
+                                                                                }
+                                                                                             } ?>>
                                                                         <label class="custom-control-label"
                                                                             for="no_expire"><?= $_["never"] ?></label>
                                                                     </div>
@@ -471,7 +471,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control" rows="3"
                                                                         placeholder=""><?php if (isset($rUser)) {
                                                                                             echo htmlspecialchars($rUser["admin_notes"]);
-                                                                                        } ?></textarea>
+                                                                                       } ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -482,7 +482,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control" rows="3"
                                                                         placeholder=""><?php if (isset($rUser)) {
                                                                                             echo htmlspecialchars($rUser["reseller_notes"]);
-                                                                                        } ?></textarea>
+                                                                                       } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -509,16 +509,16 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control select2"
                                                                         data-toggle="select2">
                                                                         <option <?php if (isset($rUser)) {
-                                                                                    if (intval($rUser["force_server_id"]) == 0) {
-                                                                                        echo "selected ";
-                                                                                    }
+                                                                            if (intval($rUser["force_server_id"]) == 0) {
+                                                                                echo "selected ";
+                                                                            }
                                                                                 } ?>value="0">
                                                                             <?= $_["disabled"] ?></option>
                                                                         <?php foreach ($rServers as $rServer) { ?>
                                                                             <option <?php if (isset($rUser)) {
-                                                                                        if (intval($rUser["force_server_id"]) == intval($rServer["id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
+                                                                                if (intval($rUser["force_server_id"]) == intval($rServer["id"])) {
+                                                                                    echo "selected ";
+                                                                                }
                                                                                     } ?>value="<?= $rServer["id"] ?>">
                                                                                 <?= htmlspecialchars($rServer["server_name"]) ?>
                                                                             </option>
@@ -536,9 +536,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="is_stalker" id="is_stalker"
                                                                         type="checkbox" <?php if (isset($rUser)) {
-                                                                                            if ($rUser["is_stalker"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
+                                                                            if ($rUser["is_stalker"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
                                                                                         } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
@@ -551,9 +551,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="is_restreamer" id="is_restreamer"
                                                                         type="checkbox" <?php if (isset($rUser)) {
-                                                                                            if ($rUser["is_restreamer"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
+                                                                            if ($rUser["is_restreamer"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
                                                                                         } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
@@ -568,12 +568,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input <?php if (!hasPermissions("adv", "add_e2")) {
                                                                                 echo "disabled ";
-                                                                            } ?>name="is_e2" id="is_e2"
+                                                                           } ?>name="is_e2" id="is_e2"
                                                                         type="checkbox" <?php if (isset($rUser)) {
-                                                                                            if ($rUser["is_e2"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
-                                                                                        } else if ((isset($_GET["e2"])) && (hasPermissions("adv", "add_e2"))) {
+                                                                            if ($rUser["is_e2"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                                        } elseif ((isset($_GET["e2"])) && (hasPermissions("adv", "add_e2"))) {
                                                                                             echo "checked ";
                                                                                         } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
@@ -587,12 +587,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input <?php if (!hasPermissions("adv", "add_mag")) {
                                                                                 echo "disabled ";
-                                                                            } ?>name="is_mag"
+                                                                           } ?>name="is_mag"
                                                                         id="is_mag" type="checkbox" <?php if (isset($rUser)) {
-                                                                                                        if ($rUser["is_mag"] == 1) {
-                                                                                                            echo "checked ";
-                                                                                                        }
-                                                                                                    } else if ((isset($_GET["mag"])) && (hasPermissions("adv", "add_mag"))) {
+                                                                            if ($rUser["is_mag"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                                                    } elseif ((isset($_GET["mag"])) && (hasPermissions("adv", "add_mag"))) {
                                                                                                         echo "checked ";
                                                                                                     } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
@@ -615,9 +615,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="lock_device" id="lock_device"
                                                                         type="checkbox" <?php if (isset($rUser)) {
-                                                                                            if ($rUser["lock_device"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
+                                                                            if ($rUser["lock_device"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
                                                                                         } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
@@ -628,9 +628,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="is_isplock" id="is_isplock"
                                                                         type="checkbox" <?php if (isset($rUser)) {
-                                                                                            if ($rUser["is_isplock"] == 1) {
-                                                                                                echo "checked ";
-                                                                                            }
+                                                                            if ($rUser["is_isplock"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
                                                                                         } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
@@ -644,7 +644,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="mac_address_mag" name="mac_address_mag"
                                                                         value="<?php if (isset($rUser)) {
                                                                                     echo htmlspecialchars($rUser["mac_address_mag"]);
-                                                                                } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4" style="display:none"
@@ -656,7 +656,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="mac_address_e2" name="mac_address_e2"
                                                                         value="<?php if (isset($rUser)) {
                                                                                     echo htmlspecialchars($rUser["mac_address_e2"]);
-                                                                                } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -672,9 +672,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-toggle="select2">
                                                                         <?php foreach ($rCountries as $rCountry) { ?>
                                                                             <option <?php if (isset($rUser)) {
-                                                                                        if ($rUser["forced_country"] == $rCountry["id"]) {
-                                                                                            echo "selected ";
-                                                                                        }
+                                                                                if ($rUser["forced_country"] == $rCountry["id"]) {
+                                                                                    echo "selected ";
+                                                                                }
                                                                                     } ?>value="<?= $rCountry["id"] ?>">
                                                                                 <?= $rCountry["name"] ?></option>
                                                                         <?php } ?>
@@ -744,9 +744,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <select id="allowed_ips" name="allowed_ips[]" size=6
                                                                         class="form-control" multiple="multiple">
                                                                         <?php if (isset($rUser)) {
-                                                                            foreach (json_decode($rUser["allowed_ips"], True) as $rIP) { ?>
+                                                                            foreach (json_decode($rUser["allowed_ips"], true) as $rIP) { ?>
                                                                                 <option value="<?= $rIP ?>"><?= $rIP ?></option>
-                                                                        <?php }
+                                                                            <?php }
                                                                         } ?>
                                                                     </select>
                                                                 </div>
@@ -774,9 +774,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <select id="allowed_ua" name="allowed_ua[]" size=6
                                                                         class="form-control" multiple="multiple">
                                                                         <?php if (isset($rUser)) {
-                                                                            foreach (json_decode($rUser["allowed_ua"], True) as $rUA) { ?>
+                                                                            foreach (json_decode($rUser["allowed_ua"], true) as $rUA) { ?>
                                                                                 <option value="<?= $rUA ?>"><?= $rUA ?></option>
-                                                                        <?php }
+                                                                            <?php }
                                                                         } ?>
                                                                     </select>
                                                                 </div>
@@ -813,21 +813,21 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <tbody>
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <tr<?php if (isset($rUser)) {
-                                                                                    if (in_array($rBouquet["id"], json_decode($rUser["bouquet"], True))) {
-                                                                                        echo " class='selected selectedfilter ui-selected'";
-                                                                                    }
-                                                                                } ?>>
+                                                                                if (in_array($rBouquet["id"], json_decode($rUser["bouquet"], true))) {
+                                                                                    echo " class='selected selectedfilter ui-selected'";
+                                                                                }
+                                                                               } ?>>
                                                                                 <td class="text-center">
                                                                                     <?= $rBouquet["id"] ?></td>
                                                                                 <td><?= $rBouquet["bouquet_name"] ?></td>
                                                                                 <td class="text-center">
-                                                                                    <?= count(json_decode($rBouquet["bouquet_channels"], True)) ?>
+                                                                                    <?= count(json_decode($rBouquet["bouquet_channels"], true)) ?>
                                                                                 </td>
                                                                                 <td class="text-center">
-                                                                                    <?= count(json_decode($rBouquet["bouquet_series"], True)) ?>
+                                                                                    <?= count(json_decode($rBouquet["bouquet_series"], true)) ?>
                                                                                 </td>
                                                                                 </tr>
-                                                                            <?php } ?>
+                                                                        <?php } ?>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -845,9 +845,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 class="btn btn-primary"
                                                                 value="<?php if (isset($rUser)) {
                                                                             echo $_["edit"];
-                                                                        } else {
-                                                                            echo $_["add"];
-                                                                        } ?>" />
+                                                                       } else {
+                                                                           echo $_["add"];
+                                                                       } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

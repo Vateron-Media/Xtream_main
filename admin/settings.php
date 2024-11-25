@@ -24,8 +24,8 @@ if (isset($_GET["geolite2"])) {
 }
 
 if (isset($_GET["panel_version"])) {
-    $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . ESC(json_encode(array('action' => 'update'))) . "`;");
-    $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . ESC($_INFO["server_id"]) . "', '" . ESC(time()) . "', '" . ESC(json_encode(array('action' => 'update'))) . "');");
+    $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . $ipTV_db_admin->escape(json_encode(array('action' => 'update'))) . "`;");
+    $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . $ipTV_db_admin->escape($_INFO["server_id"]) . "', '" . $ipTV_db_admin->escape(time()) . "', '" . $ipTV_db_admin->escape(json_encode(array('action' => 'update'))) . "');");
     $_STATUS = 5;
 }
 

@@ -198,7 +198,7 @@ if (isset($_POST["submit_stream"])) {
         if (isset($_POST["edit"])) {
             $rImportStreams[] = $rImportArray;
         } else {
-            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . ESC($rImportArray["stream_display_name"]) . "' AND `type` IN (1,3);");
+            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . $ipTV_db_admin->escape($rImportArray["stream_display_name"]) . "' AND `type` IN (1,3);");
             if ($ipTV_db_admin->get_row()["count"] == 0) {
                 $rImportStreams[] = $rImportArray;
             } else {
@@ -218,7 +218,7 @@ if (isset($_POST["submit_stream"])) {
             }
             $rImportArray['category_id'] = '[' . implode(',', array_map('intval', $categoriesIDs)) . ']';
             $rImportArray["order"] = getNextOrder();
-            $rCols = "`" . ESC(implode('`,`', array_keys($rImportArray))) . "`";
+            $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rImportArray))) . "`";
             $rValues = null;
             foreach (array_values($rImportArray) as $rValue) {
                 isset($rValues) ? $rValues .= ',' : $rValues = '';
@@ -228,12 +228,12 @@ if (isset($_POST["submit_stream"])) {
                 if (is_null($rValue)) {
                     $rValues .= 'NULL';
                 } else {
-                    $rValues .= '\'' . ESC($rValue) . '\'';
+                    $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
                 }
             }
             if (isset($_POST["edit"])) {
                 $rCols = "`id`," . $rCols;
-                $rValues = ESC($_POST["edit"]) . "," . $rValues;
+                $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
@@ -286,16 +286,16 @@ if (isset($_POST["submit_stream"])) {
                 }
                 $ipTV_db_admin->query("DELETE FROM `streams_options` WHERE `stream_id` = " . intval($rInsertID) . ";");
                 if ((isset($_POST["user_agent"])) && (strlen($_POST["user_agent"]) > 0)) {
-                    $ipTV_db_adminTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 1, '" . ESC($_POST["user_agent"]) . "');");
+                    $ipTV_db_adminTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 1, '" . $ipTV_db_admin->escape($_POST["user_agent"]) . "');");
                 }
                 if ((isset($_POST["http_proxy"])) && (strlen($_POST["http_proxy"]) > 0)) {
-                    $ipTV_db_adminTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 2, '" . ESC($_POST["http_proxy"]) . "');");
+                    $ipTV_db_adminTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 2, '" . $ipTV_db_admin->escape($_POST["http_proxy"]) . "');");
                 }
                 if ((isset($_POST["cookie"])) && (strlen($_POST["cookie"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 17, '" . ESC($_POST["cookie"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 17, '" . $ipTV_db_admin->escape($_POST["cookie"]) . "');");
                 }
                 if ((isset($_POST["headers"])) && (strlen($_POST["headers"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 19, '" . ESC($_POST["headers"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 19, '" . $ipTV_db_admin->escape($_POST["headers"]) . "');");
                 }
                 if ($rRestart) {
                     APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rInsertID)));

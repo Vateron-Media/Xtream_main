@@ -12,7 +12,7 @@ if (isset($_POST["submit_folder"])) {
         if (isset($_POST["edit"])) {
             $rExtra = " AND `id` <> " . intval($_POST["edit"]);
         }
-        $ipTV_db_admin->query("SELECT `id` FROM `watch_folders` WHERE `type` = '" . ESC($_POST["folder_type"]) . "' AND `directory` = '" . ESC($rPath) . "' AND `server_id` = " . intval($_POST["server_id"]) . $rExtra . ";");
+        $ipTV_db_admin->query("SELECT `id` FROM `watch_folders` WHERE `type` = '" . $ipTV_db_admin->escape($_POST["folder_type"]) . "' AND `directory` = '" . $ipTV_db_admin->escape($rPath) . "' AND `server_id` = " . intval($_POST["server_id"]) . $rExtra . ";");
         if ($ipTV_db_admin->num_rows() == 0) {
             if (isset($_POST["edit"])) {
                 $rArray = getWatchFolder($_POST["edit"]);
@@ -55,7 +55,7 @@ if (isset($_POST["submit_folder"])) {
             } else {
                 $rArray["auto_subtitles"] = 0;
             }
-            $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
+            $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
             foreach (array_values($rArray) as $rValue) {
                 isset($rValues) ? $rValues .= ',' : $rValues = '';
                 if (is_array($rValue)) {
@@ -64,12 +64,12 @@ if (isset($_POST["submit_folder"])) {
                 if (is_null($rValue)) {
                     $rValues .= 'NULL';
                 } else {
-                    $rValues .= '\'' . ESC($rValue) . '\'';
+                    $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
                 }
             }
             if (isset($_POST["edit"])) {
                 $rCols = "id," . $rCols;
-                $rValues = ESC($_POST["edit"]) . "," . $rValues;
+                $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `watch_folders`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
@@ -107,10 +107,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -125,9 +125,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rFolder)) {
                                     echo $_["edit"];
-                                } else {
-                                    echo $_["add"];
-                                } ?> <?= $_["folder"] ?></h4>
+                                                       } else {
+                                                           echo $_["add"];
+                                                       } ?> <?= $_["folder"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -141,7 +141,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["please_select_a_directory"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -153,7 +153,7 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body">
                                     <form action="./watch_add.php<?php if (isset($_GET["id"])) {
                                         echo "?id=" . $_GET["id"];
-                                    } ?>" method="POST" id="ip_form"
+                                                                 } ?>" method="POST" id="ip_form"
                                         data-parsley-validate="">
                                         <?php if (isset($rFolder)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rFolder["id"] ?>" />
@@ -189,7 +189,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php foreach (array("movie" => "Movies", "series" => "TV Series") as $rTypeID => $rType) { ?>
                                                                             <option value="<?= $rTypeID ?>" <?php if ((isset($rFolder)) && ($rFolder["type"] == $rTypeID)) {
                                                                                   echo " selected";
-                                                                              } ?>><?= $rType ?></option>
+                                                                                           } ?>><?= $rType ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -203,7 +203,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($rFolder)) && ($rFolder["server_id"] == $rServer["id"])) {
                                                                                   echo " selected";
-                                                                              } ?>>
+                                                                                           } ?>>
                                                                                 <?= $rServer["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -217,9 +217,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         name="selected_path" class="form-control"
                                                                         value="<?php if (isset($rFolder)) {
                                                                             echo htmlspecialchars($rFolder["directory"]);
-                                                                        } else {
-                                                                            echo "/";
-                                                                        } ?>"
+                                                                               } else {
+                                                                                   echo "/";
+                                                                               } ?>"
                                                                         required data-parsley-trigger="change">
                                                                     <div class="input-group-append">
                                                                         <button
@@ -261,9 +261,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 class="btn btn-primary"
                                                                 value="<?php if (isset($rFolder)) {
                                                                     echo $_["edit"];
-                                                                } else {
-                                                                    echo $_["add"];
-                                                                } ?>" />
+                                                                       } else {
+                                                                           echo $_["add"];
+                                                                       } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -274,7 +274,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 if ($rFolder["type"] <> "movie") {
                                                                     echo ' style="display: none;"';
                                                                 }
-                                                            } ?>>
+                                                                                                                 } ?>>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="category_id_movie"><?= $_["override_category"] ?>
                                                                     <i data-toggle="tooltip" data-placement="top"
@@ -290,14 +290,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if (intval($rFolder["category_id"]) == 0) {
                                                                                 echo "selected ";
                                                                             }
-                                                                        } ?>value="0">
+                                                                                } ?>value="0">
                                                                             <?= $_["do_not_use"] ?></option>
                                                                         <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
                                                                                 if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                    } ?>value="<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -307,9 +307,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 if ($rFolder["type"] <> "series") {
                                                                     echo ' style="display: none;"';
                                                                 }
-                                                            } else {
-                                                                echo ' style="display: none;"';
-                                                            } ?>>
+                                                                                                                  } else {
+                                                                                                                      echo ' style="display: none;"';
+                                                                                                                  } ?>>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="category_id_series"><?= $_["override_category"] ?>
                                                                     <i data-toggle="tooltip" data-placement="top"
@@ -325,14 +325,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if (intval($rFolder["category_id"]) == 0) {
                                                                                 echo "selected ";
                                                                             }
-                                                                        } ?>value="0">
+                                                                                } ?>value="0">
                                                                             <?= $_["do_not_use"] ?></option>
                                                                         <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
                                                                                 if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                    } ?>value="<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -352,10 +352,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-placeholder="Choose...">
                                                                         <?php foreach ($rBouquets as $rBouquet) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                if (in_array(intval($rBouquet["id"]), json_decode($rFolder["bouquets"], True))) {
+                                                                                if (in_array(intval($rBouquet["id"]), json_decode($rFolder["bouquets"], true))) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                    } ?>value="<?= $rBouquet["id"] ?>">
                                                                                 <?= $rBouquet["bouquet_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -382,14 +382,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if (intval($rFolder["fb_category_id"]) == 0) {
                                                                                 echo "selected ";
                                                                             }
-                                                                        } ?>value="0">
+                                                                                } ?>value="0">
                                                                             <?= $_["do_not_use"] ?></option>
                                                                         <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
                                                                                 if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                    } ?>value="<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -418,14 +418,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if (intval($rFolder["fb_category_id"]) == 0) {
                                                                                 echo "selected ";
                                                                             }
-                                                                        } ?>value="0">
+                                                                                } ?>value="0">
                                                                             <?= $_["do_not_use"] ?></option>
                                                                         <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
                                                                                 if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
                                                                                     echo $_["checked "];
                                                                                 }
-                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                    } ?>value="<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -445,10 +445,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach ($rBouquets as $rBouquet) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                if (in_array(intval($rBouquet["id"]), json_decode($rFolder["fb_bouquets"], True))) {
+                                                                                if (in_array(intval($rBouquet["id"]), json_decode($rFolder["fb_bouquets"], true))) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                    } ?>value="<?= $rBouquet["id"] ?>">
                                                                                 <?= $rBouquet["bouquet_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -469,10 +469,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach (array("mp4", "mkv", "avi", "mpg", "flv") as $rExtension) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                if (in_array($rExtension, json_decode($rFolder["allowed_extensions"], True))) {
+                                                                                if (in_array($rExtension, json_decode($rFolder["allowed_extensions"], true))) {
                                                                                     echo $_["checked "];
                                                                                 }
-                                                                            } ?>value="<?= $rExtension ?>">
+                                                                                    } ?>value="<?= $rExtension ?>">
                                                                                 <?= $rExtension ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -491,7 +491,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rFolder["disable_tmdb"]) {
                                                                                 echo $_["checked "];
                                                                             }
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -506,7 +506,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rFolder["ignore_no_match"]) {
                                                                                 echo $_["checked "];
                                                                             }
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -523,7 +523,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rFolder["auto_subtitles"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -535,9 +535,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 class="btn btn-primary"
                                                                 value="<?php if (isset($rFolder)) {
                                                                     echo $_["edit"];
-                                                                } else {
-                                                                    echo $_["add"];
-                                                                } ?>" />
+                                                                       } else {
+                                                                           echo $_["add"];
+                                                                       } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

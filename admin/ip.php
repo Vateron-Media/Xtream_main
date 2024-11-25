@@ -8,7 +8,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_ips"))) {
 if (isset($_POST["submit_ip"])) {
     if (filter_var($_POST["ip"], FILTER_VALIDATE_IP)) {
         $rArray = array("ip" => $_POST["ip"], "notes" => $_POST["notes"], "date" => time(), "attempts_blocked" => 0);
-        $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
+        $rCols = "`" . $ipTV_db_admin->escapeTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
             if (is_array($rValue)) {
@@ -17,7 +17,7 @@ if (isset($_POST["submit_ip"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . ESC($rValue) . '\'';
+                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
             }
         }
         $rQuery = "REPLACE INTO `blocked_ips`(" . $rCols . ") VALUES(" . $rValues . ");";

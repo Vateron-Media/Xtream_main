@@ -147,7 +147,7 @@ if (isset($_POST["submit_stream"])) {
         if (isset($rImportArray["target_container"])) {
             $rArray["target_container"] = $rImportArray["target_container"];
         }
-        $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
+        $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
         $rValues = null;
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
@@ -157,12 +157,12 @@ if (isset($_POST["submit_stream"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . ESC($rValue) . '\'';
+                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
             }
         }
         if (isset($_POST["edit"])) {
             $rCols = "`id`," . $rCols;
-            $rValues = ESC($_POST["edit"]) . "," . $rValues;
+            $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {

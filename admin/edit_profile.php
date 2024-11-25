@@ -63,7 +63,7 @@ if (isset($_POST["submit_profile"])) {
             $portadmin = $rSettings["port_admin"];
         }
         ipTV_lib::setSettings(["port_admin" => $portadmin]);
-        $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . ESC($rPassword) . "', `email` = '" . ESC($rEmail) . "', `reseller_dns` = '" . ESC($rDNS) . "', `default_lang` = '" . ESC($bob) . "', `dark_mode` = " . intval($rDarkMode) . ", `sidebar` = " . intval($rSidebar) . ", `expanded_sidebar` = " . intval($rExpanded) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+        $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $ipTV_db_admin->escape($rPassword) . "', `email` = '" . $ipTV_db_admin->escape($rEmail) . "', `reseller_dns` = '" . $ipTV_db_admin->escape($rDNS) . "', `default_lang` = '" . $ipTV_db_admin->escape($bob) . "', `dark_mode` = " . intval($rDarkMode) . ", `sidebar` = " . intval($rSidebar) . ", `expanded_sidebar` = " . intval($rExpanded) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
         $rUserInfo = getRegisteredUser($rUserInfo["id"]);
         $rAdminSettings["dark_mode"] = $rUserInfo["dark_mode"];
         $rAdminSettings["expanded_sidebar"] = $rUserInfo["expanded_sidebar"];

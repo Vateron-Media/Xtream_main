@@ -6,8 +6,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "stream_tools"))) {
 }
 
 if (isset($_POST["replace_dns"])) {
-    $rOldDNS = ESC(str_replace("/", "\/", $_POST["old_dns"]));
-    $rNewDNS = ESC(str_replace("/", "\/", $_POST["new_dns"]));
+    $rOldDNS = $ipTV_db_admin->escape(str_replace("/", "\/", $_POST["old_dns"]));
+    $rNewDNS = $ipTV_db_admin->escape(str_replace("/", "\/", $_POST["new_dns"]));
     $ipTV_db_admin->query("UPDATE `streams` SET `stream_source` = REPLACE(`stream_source`, '" . $rOldDNS . "', '" . $rNewDNS . "');");
     $_STATUS = 1;
 } else if (isset($_POST["move_streams"])) {
