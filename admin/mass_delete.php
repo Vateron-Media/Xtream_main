@@ -11,8 +11,8 @@ ini_set('max_execution_time', 0);
 if (isset($_POST["submit_streams"])) {
     $rStreams = json_decode($_POST["streams"], True);
     foreach ($rStreams as $rStream) {
-        $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStream) . ";");
-        $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rStream) . ";");
+        $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStream) . ";");
+        $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rStream) . ";");
     }
     $_STATUS = 0;
 }
@@ -20,14 +20,14 @@ if (isset($_POST["submit_streams"])) {
 if (isset($_POST["submit_movies"])) {
     $rMovies = json_decode($_POST["movies"], True);
     foreach ($rMovies as $rMovie) {
-        $result = $db->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
-        if (($result) && ($result->num_rows > 0)) {
-            while ($row = $result->fetch_assoc()) {
+        $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $row) {
                 deleteMovieFile($row["server_id"], $rMovie);
             }
         }
-        $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
-        $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rMovie) . ";");
+        $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
+        $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rMovie) . ";");
     }
     $_STATUS = 1;
 }
@@ -35,10 +35,10 @@ if (isset($_POST["submit_movies"])) {
 if (isset($_POST["submit_users"])) {
     $rUsers = json_decode($_POST["users"], True);
     foreach ($rUsers as $rUser) {
-        $db->query("DELETE FROM `users` WHERE `id` = " . intval($rUser) . ";");
-        $db->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
-        $db->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rUser) . ";");
-        $db->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rUser) . ";");
+        $ipTV_db_admin->query("DELETE FROM `users` WHERE `id` = " . intval($rUser) . ";");
+        $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
+        $ipTV_db_admin->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rUser) . ";");
+        $ipTV_db_admin->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rUser) . ";");
     }
     $_STATUS = 2;
 }
@@ -46,20 +46,20 @@ if (isset($_POST["submit_users"])) {
 if (isset($_POST["submit_series"])) {
     $rSeries = json_decode($_POST["series"], True);
     foreach ($rSeries as $rSerie) {
-        $db->query("DELETE FROM `series` WHERE `id` = " . intval($rSerie) . ";");
-        $rResult = $db->query("SELECT `stream_id` FROM `series_episodes` WHERE `series_id` = " . intval($rSerie) . ";");
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
-                $rResultB = $db->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
-                if (($rResultB) && ($rResultB->num_rows > 0)) {
-                    while ($rRowB = $rResultB->fetch_assoc()) {
+        $ipTV_db_admin->query("DELETE FROM `series` WHERE `id` = " . intval($rSerie) . ";");
+        $ipTV_db_admin->query("SELECT `stream_id` FROM `series_episodes` WHERE `series_id` = " . intval($rSerie) . ";");
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
+                $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
+                if ($ipTV_db_admin->num_rows() > 0) {
+                    while ($rRowB = $ipTV_db_admin->get_rows()) {
                         deleteMovieFile($rRowB["server_id"], $rRow["stream_id"]);
                     }
                 }
-                $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
-                $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
+                $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
+                $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
             }
-            $db->query("DELETE FROM `series_episodes` WHERE `series_id` = " . intval($rSerie) . ";");
+            $ipTV_db_admin->query("DELETE FROM `series_episodes` WHERE `series_id` = " . intval($rSerie) . ";");
         }
     }
     scanBouquets();
@@ -69,15 +69,15 @@ if (isset($_POST["submit_series"])) {
 if (isset($_POST["submit_episodes"])) {
     $rEpisodes = json_decode($_POST["episodes"], True);
     foreach ($rEpisodes as $rEpisode) {
-        $result = $db->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rEpisode) . ";");
-        if (($result) && ($result->num_rows > 0)) {
-            while ($row = $result->fetch_assoc()) {
+        $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rEpisode) . ";");
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $row) {
                 deleteMovieFile($row["server_id"], $rEpisode);
             }
         }
-        $db->query("DELETE FROM `series_episodes` WHERE `stream_id` = " . intval($rEpisode) . ";");
-        $db->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rEpisode) . ";");
-        $db->query("DELETE FROM `streams` WHERE `id` = " . intval($rEpisode) . ";");
+        $ipTV_db_admin->query("DELETE FROM `series_episodes` WHERE `stream_id` = " . intval($rEpisode) . ";");
+        $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rEpisode) . ";");
+        $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rEpisode) . ";");
     }
     $_STATUS = 4;
 }

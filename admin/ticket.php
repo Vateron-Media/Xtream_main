@@ -25,9 +25,9 @@ if (isset($_POST["submit_ticket"])) {
                 }
             }
             $rQuery = "INSERT INTO `tickets`(" . $rCols . ") VALUES(" . $rValues . ");";
-            if ($db->query($rQuery)) {
-                $rInsertID = $db->insert_id;
-                $db->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . $rInsertID . ", 0, '" . ESC($_POST["message"]) . "', " . time() . ");");
+            if ($ipTV_db_admin->query($rQuery)) {
+                $rInsertID = $ipTV_db_admin->last_insert_id();
+                $ipTV_db_admin->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . $rInsertID . ", 0, '" . ESC($_POST["message"]) . "', " . time() . ");");
                 header("Location: ./ticket_view.php?id=" . intval($rInsertID));
             } else {
                 $_STATUS = 2;
@@ -36,11 +36,11 @@ if (isset($_POST["submit_ticket"])) {
             $rTicket = getTicket($_POST["respond"]);
             if ($rTicket) {
                 if (intval($rUserInfo["id"]) == intval($rTicket["member_id"])) {
-                    $db->query("UPDATE `tickets` SET `admin_read` = 0, `user_read` = 1 WHERE `id` = " . intval($_POST["respond"]) . ";");
-                    $db->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . intval($_POST["respond"]) . ", 0, '" . ESC($_POST["message"]) . "', " . time() . ");");
+                    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 0, `user_read` = 1 WHERE `id` = " . intval($_POST["respond"]) . ";");
+                    $ipTV_db_admin->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . intval($_POST["respond"]) . ", 0, '" . ESC($_POST["message"]) . "', " . time() . ");");
                 } else {
-                    $db->query("UPDATE `tickets` SET `admin_read` = 0, `user_read` = 0 WHERE `id` = " . intval($_POST["respond"]) . ";");
-                    $db->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . intval($_POST["respond"]) . ", 1, '" . ESC($_POST["message"]) . "', " . time() . ");");
+                    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 0, `user_read` = 0 WHERE `id` = " . intval($_POST["respond"]) . ";");
+                    $ipTV_db_admin->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . intval($_POST["respond"]) . ", 1, '" . ESC($_POST["message"]) . "', " . time() . ");");
                 }
                 header("Location: ./ticket_view.php?id=" . intval($_POST["respond"]));
             } else {

@@ -7,9 +7,9 @@ if (isset($_SESSION['hash'])) {
 
 $rAdminSettings = getAdminSettings();
 if (intval($rAdminSettings["login_flood"]) > 0) {
-	$result = $db->query("SELECT COUNT(`id`) AS `count` FROM `login_flood` WHERE `ip` = '" . ESC(getIP()) . "' AND TIME_TO_SEC(TIMEDIFF(NOW(), `dateadded`)) <= 86400;");
-	if (($result) && ($result->num_rows == 1)) {
-		if (intval($result->fetch_assoc()["count"]) >= intval($rAdminSettings["login_flood"])) {
+	$ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `login_flood` WHERE `ip` = '" . ESC(getIP()) . "' AND TIME_TO_SEC(TIMEDIFF(NOW(), `dateadded`)) <= 86400;");
+	if ($ipTV_db_admin->num_rows() == 1) {
+		if (intval($ipTV_db_admin->get_row()["count"]) >= intval($rAdminSettings["login_flood"])) {
 			$_STATUS = 7;
 		}
 	}
@@ -32,7 +32,7 @@ if (!isset($_STATUS)) {
 				} else {
 					$rPermissions = getPermissions($rUserInfo["member_group_id"]);
 					if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-						$db->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = '" . ESC(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+						$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = '" . ESC(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
 						$_SESSION['hash'] = md5($rUserInfo["username"]);
 						$_SESSION['ip'] = getIP();
 						if ($rPermissions["is_admin"]) {
@@ -42,7 +42,7 @@ if (!isset($_STATUS)) {
 								header("Location: ./dashboard.php");
 							}
 						} else {
-							$db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> Logged In');");
+							$ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> Logged In');");
 							if (strlen($_POST["referrer"]) > 0) {
 								header("Location: ." . ESC($_POST["referrer"]));
 							} else {
@@ -59,7 +59,7 @@ if (!isset($_STATUS)) {
 				}
 			} else {
 				if (intval($rAdminSettings["login_flood"]) > 0) {
-					$db->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ESC($_POST["username"]) . "', '" . ESC(getIP()) . "');");
+					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ESC($_POST["username"]) . "', '" . ESC(getIP()) . "');");
 				}
 				$_STATUS = 0;
 			}
@@ -71,13 +71,13 @@ if (!isset($_STATUS)) {
 			if (($_POST["newpass"] == $_POST["confirm"]) && (strlen($_POST["newpass"]) >= intval($rSettings["pass_length"]))) {
 				$rPermissions = getPermissions($rUserInfo["member_group_id"]);
 				if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-					$db->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . ESC(cryptPassword($_POST["newpass"])) . "', `ip` = '" . ESC(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . ESC(cryptPassword($_POST["newpass"])) . "', `ip` = '" . ESC(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
 					$_SESSION['hash'] = md5($rUserInfo["username"]);
 					$_SESSION['ip'] = getIP();
 					if ($rPermissions["is_admin"]) {
 						header("Location: ./dashboard.php");
 					} else {
-						$db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> Logged In');");
+						$ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> Logged In');");
 						header("Location: ./reseller.php");
 					}
 				} else if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
@@ -92,7 +92,7 @@ if (!isset($_STATUS)) {
 			}
 		} else {
 			if (intval($rAdminSettings["login_flood"]) > 0) {
-				$db->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ESC($_POST["username"]) . "', '" . ESC(getIP()) . "');");
+				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ESC($_POST["username"]) . "', '" . ESC(getIP()) . "');");
 			}
 			$_STATUS = 0;
 		}

@@ -65,28 +65,28 @@ if (isset($_POST["submit_user"])) {
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);
                 $rQuery = "UPDATE `users` SET " . $rQueryString . " WHERE `id` = " . intval($rUser) . ";";
-                $db->query($rQuery);
+                $ipTV_db_admin->query($rQuery);
             }
             if (isset($_POST["c_access_output"])) {
-                $db->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
+                $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
                 foreach ($_POST["access_output"] as $rOutputID) {
-                    $db->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rUser) . ", " . intval($rOutputID) . ");");
+                    $ipTV_db_admin->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rUser) . ", " . intval($rOutputID) . ");");
                 }
             }
         }
         if ((isset($_POST["c_lock_device"])) or (isset($_POST["reset_stb_lock"]))) {
-            $rResult = $db->query("SELECT `mag_id`, `user_id` FROM `mag_devices`;");
-            if (($rResult) && ($rResult->num_rows > 0)) {
-                while ($rRow = $rResult->fetch_assoc()) {
+            $ipTV_db_admin->query("SELECT `mag_id`, `user_id` FROM `mag_devices`;");
+            if ($ipTV_db_admin->num_rows() > 0) {
+                foreach ($ipTV_db_admin->get_rows() as $rRow) {
                     if (in_array($rRow["user_id"], $rUsers)) {
                         if (isset($_POST["reset_stb_lock"])) {
                             resetSTB($rRow["mag_id"]);
                         }
                         if (isset($_POST["c_lock_device"])) {
                             if (isset($_POST["lock_device"])) {
-                                $db->query("UPDATE `mag_devices` SET `lock_device` = 1 WHERE `mag_id` = " . intval($rRow["mag_id"]) . ";");
+                                $ipTV_db_admin->query("UPDATE `mag_devices` SET `lock_device` = 1 WHERE `mag_id` = " . intval($rRow["mag_id"]) . ";");
                             } else {
-                                $db->query("UPDATE `mag_devices` SET `lock_device` = 0 WHERE `mag_id` = " . intval($rRow["mag_id"]) . ";");
+                                $ipTV_db_admin->query("UPDATE `mag_devices` SET `lock_device` = 0 WHERE `mag_id` = " . intval($rRow["mag_id"]) . ";");
                             }
                         }
                     }

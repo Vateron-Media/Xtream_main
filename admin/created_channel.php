@@ -78,19 +78,19 @@ if (isset($_POST["submit_stream"])) {
             $rValues = ESC($_POST["edit"]) . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
-        if ($db->query($rQuery)) {
+        if ($ipTV_db_admin->query($rQuery)) {
             if (isset($_POST["edit"])) {
                 $rInsertID = intval($_POST["edit"]);
             } else {
-                $rInsertID = $db->insert_id;
+                $rInsertID = $ipTV_db_admin->last_insert_id();
             }
         }
         if (isset($rInsertID)) {
             $rStreamExists = array();
             if (isset($_POST["edit"])) {
-                $result = $db->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
-                if (($result) && ($result->num_rows > 0)) {
-                    while ($row = $result->fetch_assoc()) {
+                $ipTV_db_admin->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
+                if ($ipTV_db_admin->num_rows() > 0) {
+                    foreach ($ipTV_db_admin->get_rows() as $row) {
                         $rStreamExists[intval($row["server_id"])] = intval($row["server_stream_id"]);
                     }
                 }
@@ -108,15 +108,15 @@ if (isset($_POST["submit_stream"])) {
                             $rParent = intval($rServer["parent"]);
                         }
                         if (isset($rStreamExists[$rServerID])) {
-                            $db->query("UPDATE `streams_servers` SET `parent_id` = " . $rParent . " WHERE `server_stream_id` = " . $rStreamExists[$rServerID] . ";");
+                            $ipTV_db_admin->query("UPDATE `streams_servers` SET `parent_id` = " . $rParent . " WHERE `server_stream_id` = " . $rStreamExists[$rServerID] . ";");
                         } else {
-                            $db->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", 0);");
+                            $ipTV_db_admin->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", 0);");
                         }
                     }
                 }
                 foreach ($rStreamExists as $rServerID => $rDBID) {
                     if (!in_array($rServerID, $rStreamsAdded)) {
-                        $db->query("DELETE FROM `streams_servers` WHERE `server_stream_id` = " . $rDBID . ";");
+                        $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `server_stream_id` = " . $rDBID . ";");
                     }
                 }
             }

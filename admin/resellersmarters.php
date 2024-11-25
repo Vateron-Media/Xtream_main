@@ -12,16 +12,16 @@ if (!isset($_SESSION['hash'])) {
 if (isset($_POST["submit_secret"])) {
     $salt = "!SMARTERS!";
     $return = array();
-    $result = $db->query("CREATE TABLE IF NOT EXISTS reseller_credentials (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,member_id VARCHAR(30), api_key VARCHAR(100) NOT NULL,ip_allow VARCHAR(30))");
+    $result = $ipTV_db_admin->query("CREATE TABLE IF NOT EXISTS reseller_credentials (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,member_id VARCHAR(30), api_key VARCHAR(100) NOT NULL,ip_allow VARCHAR(30))");
     $password = resellerapi_generateRandomString(15);
     $encrypted = resellerapi_encrypt($password, $salt);
-    $results = $db->query("SELECT * FROM `reseller_credentials` WHERE member_id = '" . intval($rUserInfo['id']) . "'");
-    if ($results->num_rows > 0) {
-        $rQuery = "UPDATE `reseller_credentials` SET api_key = '" . $db->real_escape_string($encrypted) . "', ip_allow= '' WHERE member_id = '" . intval($rUserInfo['id']) . "'";
+    $ipTV_db_admin->query("SELECT * FROM `reseller_credentials` WHERE member_id = '" . intval($rUserInfo['id']) . "'");
+    if ($ipTV_db_admin->num_rows() > 0) {
+        $rQuery = "UPDATE `reseller_credentials` SET api_key = '" . $ipTV_db_admin->escape($encrypted) . "', ip_allow= '' WHERE member_id = '" . intval($rUserInfo['id']) . "'";
     } else {
-        $rQuery = "INSERT INTO `reseller_credentials`(`member_id`,`api_key`, `ip_allow`) VALUES('" . intval($rUserInfo['id']) . "','" . $db->real_escape_string($encrypted) . "','11.11.11.11');";
+        $rQuery = "INSERT INTO `reseller_credentials`(`member_id`,`api_key`, `ip_allow`) VALUES('" . intval($rUserInfo['id']) . "','" . $ipTV_db_admin->escape($encrypted) . "','11.11.11.11');";
     }
-    if ($db->query($rQuery)) {
+    if ($ipTV_db_admin->query($rQuery)) {
         $return['result'] = 'success';
         $return['msg'] = 'API Credential genrated/updated successfully!';
     }
@@ -53,10 +53,10 @@ if ($rSettings["sidebar"]) {
     include "header.php";
 }
 $api_key = '';
-$results = $db->query("SELECT * FROM `reseller_credentials` WHERE member_id = '" . intval($rUserInfo['id']) . "'");
-if ($results->num_rows > 0) {
+$ipTV_db_admin->query("SELECT * FROM `reseller_credentials` WHERE member_id = '" . intval($rUserInfo['id']) . "'");
+if ($ipTV_db_admin->num_rows() > 0) {
     $salt = "!SMARTERS!";
-    while ($row = $results->fetch_assoc()) {
+    foreach ($ipTV_db_admin->get_rows() as $row) {
         $api_key = resellerapi_decrypt($row['api_key'], $salt);
     }
 }

@@ -56,11 +56,11 @@ if (isset($_POST["submit_series"])) {
         $rValues = ESC($_POST["edit"]) . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `series`(" . $rCols . ") VALUES(" . $rValues . ");";
-    if ($db->query($rQuery)) {
+    if ($ipTV_db_adminTV_db_admin->query($rQuery)) {
         if (isset($_POST["edit"])) {
             $rInsertID = intval($_POST["edit"]);
         } else {
-            $rInsertID = $db->insert_id;
+            $rInsertID = $ipTV_db_admin->last_insert_id();
         }
         updateSeries(intval($rInsertID));
         foreach ($rBouquets as $rBouquet) {

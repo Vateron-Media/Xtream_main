@@ -8,27 +8,27 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "stream_tools"))) {
 if (isset($_POST["replace_dns"])) {
     $rOldDNS = ESC(str_replace("/", "\/", $_POST["old_dns"]));
     $rNewDNS = ESC(str_replace("/", "\/", $_POST["new_dns"]));
-    $db->query("UPDATE `streams` SET `stream_source` = REPLACE(`stream_source`, '" . $rOldDNS . "', '" . $rNewDNS . "');");
+    $ipTV_db_admin->query("UPDATE `streams` SET `stream_source` = REPLACE(`stream_source`, '" . $rOldDNS . "', '" . $rNewDNS . "');");
     $_STATUS = 1;
 } else if (isset($_POST["move_streams"])) {
     $rSource = $_POST["source_server"];
     $rReplacement = $_POST["replacement_server"];
     $rExisting = array();
-    $result = $db->query("SELECT `id` FROM `streams_servers` WHERE `server_id` = " . intval($rReplacement) . ";");
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
+    $ipTV_db_admin->query("SELECT `id` FROM `streams_servers` WHERE `server_id` = " . intval($rReplacement) . ";");
+    if ($ipTV_db_admin->num_rows() > 0) {
+        foreach ($ipTV_db_admin->get_rows() as $row) {
             $rExisting[] = intval($row["id"]);
         }
     }
-    $result = $db->query("SELECT `id` FROM `streams_servers` WHERE `server_id` = " . intval($rSource) . ";");
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
+    $ipTV_db_admin->query("SELECT `id` FROM `streams_servers` WHERE `server_id` = " . intval($rSource) . ";");
+    if ($ipTV_db_admin->num_rows() > 0) {
+        foreach ($ipTV_db_admin->get_rows() as $row) {
             if (in_array(intval($row["id"]), $rExisting)) {
-                $db->query("DELETE FROM `streams_servers` WHERE `id` = " . intval($row["id"]) . ";");
+                $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `id` = " . intval($row["id"]) . ";");
             }
         }
     }
-    $db->query("UPDATE `streams_servers` SET `server_id` = " . intval($rReplacement) . " WHERE `server_id` = " . intval($rSource) . ";");
+    $ipTV_db_admin->query("UPDATE `streams_servers` SET `server_id` = " . intval($rReplacement) . " WHERE `server_id` = " . intval($rSource) . ";");
     $_STATUS = 2;
 } else if (isset($_POST["cleanup_streams"])) {
     $rStreams = getStreamList();
@@ -37,52 +37,52 @@ if (isset($_POST["replace_dns"])) {
         $rStreamArray[] = intval($rStream["id"]);
     }
     $rDelete = array();
-    $result = $db->query("SELECT `server_stream_id`, `stream_id` FROM `streams_servers`;");
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
+    $ipTV_db_admin->query("SELECT `server_stream_id`, `stream_id` FROM `streams_servers`;");
+    if ($ipTV_db_admin->num_rows() > 0) {
+        foreach ($ipTV_db_admin->get_rows() as $row) {
             if (!in_array(intval($row["stream_id"]), $rStreamArray)) {
                 $rDelete[] = $row["server_stream_id"];
             }
         }
     }
     if (count($rDelete) > 0) {
-        $db->query("DELETE FROM `streams_servers` WHERE `server_stream_id` IN (" . join(",", $rDelete) . ");");
+        $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `server_stream_id` IN (" . join(",", $rDelete) . ");");
     }
     $rDelete = array();
-    $result = $db->query("SELECT `id`, `stream_id` FROM `client_logs`;");
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
+    $ipTV_db_admin->query("SELECT `id`, `stream_id` FROM `client_logs`;");
+    if ($ipTV_db_admin->num_rows() > 0) {
+        foreach ($ipTV_db_admin->get_rows() as $row) {
             if (!in_array(intval($row["stream_id"]), $rStreamArray)) {
                 $rDelete[] = $row["id"];
             }
         }
     }
     if (count($rDelete) > 0) {
-        $db->query("DELETE FROM `client_logs` WHERE `id` IN (" . join(",", $rDelete) . ");");
+        $ipTV_db_admin->query("DELETE FROM `client_logs` WHERE `id` IN (" . join(",", $rDelete) . ");");
     }
     $rDelete = array();
-    $result = $db->query("SELECT `id`, `stream_id` FROM `stream_logs`;");
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
+    $ipTV_db_admin->query("SELECT `id`, `stream_id` FROM `stream_logs`;");
+    if ($ipTV_db_admin->num_rows() > 0) {
+        foreach ($ipTV_db_admin->get_rows() as $row) {
             if (!in_array(intval($row["stream_id"]), $rStreamArray)) {
                 $rDelete[] = $row["id"];
             }
         }
     }
     if (count($rDelete) > 0) {
-        $db->query("DELETE FROM `stream_logs` WHERE `id` IN (" . join(",", $rDelete) . ");");
+        $ipTV_db_admin->query("DELETE FROM `stream_logs` WHERE `id` IN (" . join(",", $rDelete) . ");");
     }
     $rDelete = array();
-    $result = $db->query("SELECT `activity_id`, `stream_id` FROM `user_activity`;");
-    if (($result) && ($result->num_rows > 0)) {
-        while ($row = $result->fetch_assoc()) {
+    $ipTV_db_admin->query("SELECT `activity_id`, `stream_id` FROM `user_activity`;");
+    if ($ipTV_db_admin->num_rows() > 0) {
+        foreach ($ipTV_db_admin->get_rows() as $row) {
             if (!in_array(intval($row["stream_id"]), $rStreamArray)) {
                 $rDelete[] = $row["activity_id"];
             }
         }
     }
     if (count($rDelete) > 0) {
-        $db->query("DELETE FROM `user_activity` WHERE `activity_id` IN (" . join(",", $rDelete) . ");");
+        $ipTV_db_admin->query("DELETE FROM `user_activity` WHERE `activity_id` IN (" . join(",", $rDelete) . ");");
     }
     $_STATUS = 3;
 }

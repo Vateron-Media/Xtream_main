@@ -19,7 +19,7 @@ if ((isset($_GET["trial"])) or (isset($_POST["trial"]))) {
         $canGenerateTrials = checkTrials();
     }
 } else {
-    $canGenerateTrials = True;
+    $canGenerateTrials = true;
 }
 
 if (isset($_POST["submit_user"])) {
@@ -43,12 +43,12 @@ if (isset($_POST["submit_user"])) {
     if (!empty($_POST["package"])) {
         $rPackage = getPackage($_POST["package"]);
         // Check package is within permissions.
-        if (($rPackage) && (in_array($rUserInfo["member_group_id"], json_decode($rPackage["groups"], True)))) {
+        if (($rPackage) && (in_array($rUserInfo["member_group_id"], json_decode($rPackage["groups"], true)))) {
             // Ignore post and get information from package instead.
             if ($_POST["trial"]) {
                 $rCost = floatval($rPackage["trial_credits"]);
             } else {
-                $rOverride = json_decode($rUserInfo["override_packages"], True);
+                $rOverride = json_decode($rUserInfo["override_packages"], true);
                 if ((isset($rOverride[$rPackage["id"]]["official_credits"])) && (strlen($rOverride[$rPackage["id"]]["official_credits"]) > 0)) {
                     $rCost = floatval($rOverride[$rPackage["id"]]["official_credits"]);
                 } else {
@@ -132,18 +132,18 @@ if (isset($_POST["submit_user"])) {
     $rArray["username"] = $_POST["username"];
     $rArray["password"] = $_POST["password"];
     if (!isset($rUser)) {
-        $result = $db->query("SELECT `id` FROM `users` WHERE `username` = '" . ESC($rArray["username"]) . "';");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = '" . ESC($rArray["username"]) . "';");
+        if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 6; // Username in use.
         }
     }
     if ((($_POST["is_mag"]) && (!filter_var($_POST["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen($_POST["mac_address_e2"]) > 0) && (!filter_var($_POST["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
         $_STATUS = 7;
     } else if ($_POST["is_mag"]) {
-        $result = $db->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . ESC(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . ESC(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
+        if ($ipTV_db_admin->num_rows() > 0) {
             if (isset($_POST["edit"])) {
-                if (intval($result->fetch_assoc()["user_id"]) <> intval($_POST["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
                     $_STATUS = 8; // MAC in use.
                 }
             } else {
@@ -151,10 +151,10 @@ if (isset($_POST["submit_user"])) {
             }
         }
     } else if ($_POST["is_e2"]) {
-        $result = $db->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . ESC($_POST["mac_address_e2"]) . "' LIMIT 1;");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . ESC($_POST["mac_address_e2"]) . "' LIMIT 1;");
+        if ($ipTV_db_admin->num_rows() > 0) {
             if (isset($_POST["edit"])) {
-                if (intval($result->fetch_assoc()["user_id"]) <> intval($_POST["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
                     $_STATUS = 8; // MAC in use.
                 }
             } else {
@@ -180,7 +180,7 @@ if (isset($_POST["submit_user"])) {
             $rArray["allowed_ua"] = "[]";
         }
     }
-    $rArray["bouquet"] = array_values(json_decode($_POST["bouquets_selected"], True));
+    $rArray["bouquet"] = array_values(json_decode($_POST["bouquets_selected"], true));
     unset($_POST["bouquets_selected"]);
     if (!isset($_STATUS)) {
         $rArray["created_by"] = $rUserInfo["id"];
@@ -205,12 +205,12 @@ if (isset($_POST["submit_user"])) {
         // Confirm Reseller can generate MAG.
         if ($rArray["is_mag"]) {
             if (($rPackage["can_gen_mag"]) or (isset($rUser))) {
-                $isMag = True;
+                $isMag = true;
             }
         }
         if ($rArray["is_e2"]) {
             if (($rPackage["can_gen_e2"]) or (isset($rUser))) {
-                $isE2 = True;
+                $isE2 = true;
             }
         }
         if ((!$isMag) && (!$isE2) && (($rPackage["only_mag"]) or ($rPackage["only_e2"])) and (!isset($rUser))) {
@@ -218,55 +218,55 @@ if (isset($_POST["submit_user"])) {
         } else {
             // Checks completed, run,
             $rQuery = "REPLACE INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
-            if ($db->query($rQuery)) {
+            if ($ipTV_db_admin->query($rQuery)) {
                 if (isset($rUser)) {
                     $rInsertID = intval($rUser["id"]);
                 } else {
-                    $rInsertID = $db->insert_id;
+                    $rInsertID = $ipTV_db_admin->last_insert_id();
                 }
                 if (isset($rCost)) {
                     $rNewCredits = floatval($rUserInfo["credits"]) - floatval($rCost);
-                    $db->query("UPDATE `reg_users` SET `credits` = '" . floatval($rNewCredits) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = '" . floatval($rNewCredits) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
                     if (isset($rUser)) {
                         if ($isMag) {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_mag"]) . " ] " . $_["extend_mag"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_mag"]) . " ] " . $_["extend_mag"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         } else if ($isE2) {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_e2"]) . " ] " . $_["extend_enigma"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_e2"]) . " ] " . $_["extend_enigma"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         } else {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["username"]) . " ] " . $_["extend_m3u"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["username"]) . " ] " . $_["extend_m3u"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         }
                     } else {
                         if ($isMag) {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_mag"]) . " ] " . $_["new_mag"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_mag"]) . " ] " . $_["new_mag"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         } else if ($isE2) {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_e2"]) . " ] " . $_["new_enigma"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_e2"]) . " ] " . $_["new_enigma"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         } else {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["username"]) . " ] " . $_["new_m3u"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["username"]) . " ] " . $_["new_m3u"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         }
-                        $rAccessOutput = json_decode($rPackage["output_formats"], True);
+                        $rAccessOutput = json_decode($rPackage["output_formats"], true);
                         $rLockDevice = $rPackage["lock_device"];
                     }
                     $rUserInfo["credits"] = $rNewCredits;
                 }
                 if ((!isset($rUser)) && ((isset($rInsertID)) && (isset($rAccessOutput)))) {
-                    $db->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rInsertID) . ";");
+                    $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rInsertID) . ";");
                     foreach ($rAccessOutput as $rOutputID) {
-                        $db->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rInsertID) . ", " . intval($rOutputID) . ");");
+                        $ipTV_db_admin->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rInsertID) . ", " . intval($rOutputID) . ");");
                     }
                 }
                 if ($isMag) {
-                    $result = $db->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
-                    if ((isset($result)) && ($result->num_rows == 1)) {
-                        $db->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ESC(strtoupper($_POST["mac_address_mag"]))) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
+                    $ipTV_db_admin->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
+                    if ($ipTV_db_admin->num_rows() == 1) {
+                        $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ESC(strtoupper($_POST["mac_address_mag"]))) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
                     } else if (!isset($rUser)) {
-                        $db->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(base64_encode(strtoupper($_POST["mac_address_mag"]))) . "', " . intval($rLockDevice) . ");");
+                        $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(base64_encode(strtoupper($_POST["mac_address_mag"]))) . "', " . intval($rLockDevice) . ");");
                     }
                 } else if ($isE2) {
-                    $result = $db->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
-                    if ((isset($result)) && ($result->num_rows == 1)) {
-                        $db->query("UPDATE `enigma2_devices` SET `mac` = '" . ESC(strtoupper($_POST["mac_address_e2"])) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
+                    $ipTV_db_admin->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
+                    if ($ipTV_db_admin->num_rows() == 1) {
+                        $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . ESC(strtoupper($_POST["mac_address_e2"])) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
                     } else if (!isset($rUser)) {
-                        $db->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(strtoupper($_POST["mac_address_e2"])) . "', " . intval($rLockDevice) . ");");
+                        $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(strtoupper($_POST["mac_address_e2"])) . "', " . intval($rLockDevice) . ");");
                     }
                 }
                 header("Location: ./user_reseller.php?id=" . $rInsertID);
@@ -305,12 +305,12 @@ if ($rSettings["sidebar"]) {
     include "header.php";
 }
 if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content boxed-layout">
-            <div class="container-fluid">
+        <div class="content-page">
+            <div class="content boxed-layout">
+                <div class="container-fluid">
             <?php } else { ?>
-                <div class="wrapper boxed-layout">
-                    <div class="container-fluid">
+                    <div class="wrapper boxed-layout">
+                        <div class="container-fluid">
                     <?php } ?>
                     <!-- start page title -->
                     <div class="row">
@@ -338,86 +338,86 @@ if ($rSettings["sidebar"]) { ?>
                     <div class="row">
                         <div class="col-xl-12">
                             <?php if (!$canGenerateTrials) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["you_have_used_your_allowance"] ?>
-                                </div>
-                            <?php }
-                            if (isset($_STATUS)) {
-                                if ($_STATUS == 0) { ?>
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        <?= $_["user_operation_was_completed_successfully"] ?>
+                                        <?= $_["you_have_used_your_allowance"] ?>
                                     </div>
-                                <?php } else if ($_STATUS == 1) { ?>
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        <?= $_["an_invalid_expiration_date_was_entered"] ?>
-                                        </div>
-                                <?php } else if ($_STATUS == 2) { ?>
-                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?php }
+                            if (isset($_STATUS)) {
+                                if ($_STATUS == 0) { ?>
+                                            <div class="alert alert-success alert-dismissible fade show" role="alert">
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
-                                        <?= $_["there_was_an_error"] ?>
+                                                <?= $_["user_operation_was_completed_successfully"] ?>
                                             </div>
-                                <?php } else if ($_STATUS == 3) { ?>
-                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                        <?= $_["an_invalid_package_was_selected"] ?>
-                                                </div>
-                                <?php } else if ($_STATUS == 4) { ?>
+                                    <?php } else if ($_STATUS == 1) { ?>
                                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
-                                        <?= $_["you_don't_have_enough_credits"] ?>
+                                                <?= $_["an_invalid_expiration_date_was_entered"] ?>
                                                     </div>
-                                <?php } else if ($_STATUS == 5) { ?>
-                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                        <?= $_["you_are_not_permitted_to_generate"] ?>
-                                                        </div>
-                                <?php } else if ($_STATUS == 6) { ?>
+                                    <?php } else if ($_STATUS == 2) { ?>
                                                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
-                                        <?= $_["this_username_already_exists"] ?>
+                                                <?= $_["there_was_an_error"] ?>
                                                             </div>
-                                <?php } else if ($_STATUS == 7) { ?>
-                                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                        <?= $_["an_invalid_mac_address_was_entered"] ?>
-                                                                </div>
-                                <?php } else if ($_STATUS == 8) { ?>
+                                    <?php } else if ($_STATUS == 3) { ?>
                                                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                             <span aria-hidden="true">&times;</span>
                                                                         </button>
-                                        <?= $_["this_mac_address_is_already_in_use"] ?>
+                                                <?= $_["an_invalid_package_was_selected"] ?>
                                                                     </div>
-                                <?php }
+                                    <?php } else if ($_STATUS == 4) { ?>
+                                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                <?= $_["you_don't_have_enough_credits"] ?>
+                                                                            </div>
+                                    <?php } else if ($_STATUS == 5) { ?>
+                                                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                <?= $_["you_are_not_permitted_to_generate"] ?>
+                                                                                    </div>
+                                    <?php } else if ($_STATUS == 6) { ?>
+                                                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                                </button>
+                                                <?= $_["this_username_already_exists"] ?>
+                                                                                            </div>
+                                    <?php } else if ($_STATUS == 7) { ?>
+                                                                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                                        </button>
+                                                <?= $_["an_invalid_mac_address_was_entered"] ?>
+                                                                                                    </div>
+                                    <?php } else if ($_STATUS == 8) { ?>
+                                                                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                                                </button>
+                                                <?= $_["this_mac_address_is_already_in_use"] ?>
+                                                                                                            </div>
+                                    <?php }
                             }
                             if ((isset($rUser)) and ($rUser["is_trial"])) { ?>
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["this_is_a_trial_user"] ?>
-                                </div>
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <?= $_["this_is_a_trial_user"] ?>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
@@ -425,10 +425,10 @@ if ($rSettings["sidebar"]) { ?>
                                         echo "?id=" . $_GET["id"];
                                     } ?>" method="POST" id="user_form">
                                         <?php if (isset($rUser)) { ?>
-                                            <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
+                                                <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
                                         <?php }
                                         if (isset($_GET["trial"])) { ?>
-                                            <input type="hidden" name="trial" value="1" />
+                                                <input type="hidden" name="trial" value="1" />
                                         <?php } ?>
                                         <input type="hidden" name="bouquets_selected" id="bouquets_selected" value="" />
                                         <div id="basicwizard">
@@ -483,15 +483,15 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control select2"
                                                                         data-toggle="select2">
                                                                         <?php foreach ($rRegisteredUsers as $rRegisteredUser) { ?>
-                                                                            <option <?php if (isset($rUser)) {
-                                                                                if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
+                                                                                <option <?php if (isset($rUser)) {
+                                                                                    if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
+                                                                                        echo "selected ";
+                                                                                    }
+                                                                                } else if ($rUserInfo["id"] == $rRegisteredUser["id"]) {
                                                                                     echo "selected ";
-                                                                                }
-                                                                            } else if ($rUserInfo["id"] == $rRegisteredUser["id"]) {
-                                                                                echo "selected ";
-                                                                            } ?>value="<?= $rRegisteredUser["id"] ?>">
-                                                                                <?= $rRegisteredUser["username"] ?>
-                                                                            </option>
+                                                                                } ?>value="<?= $rRegisteredUser["id"] ?>">
+                                                                                    <?= $rRegisteredUser["username"] ?>
+                                                                                </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -505,16 +505,16 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control select2"
                                                                         data-toggle="select2">
                                                                         <?php if (isset($rUser)) { ?>
-                                                                            <option value=""><?= $_["no_changes"] ?>
-                                                                            </option>
+                                                                                <option value=""><?= $_["no_changes"] ?>
+                                                                                </option>
                                                                         <?php }
                                                                         foreach (getPackages() as $rPackage) {
-                                                                            if (in_array($rUserInfo["member_group_id"], json_decode($rPackage["groups"], True))) {
+                                                                            if (in_array($rUserInfo["member_group_id"], json_decode($rPackage["groups"], true))) {
                                                                                 if ((($rPackage["is_trial"]) && ((isset($_GET["trial"])) or (isset($_POST["trial"])))) or (($rPackage["is_official"]) && ((!isset($_GET["trial"])) and (!isset($_POST["trial"]))))) { ?>
-                                                                                    <option value="<?= $rPackage["id"] ?>">
-                                                                                        <?= $rPackage["package_name"] ?>
-                                                                                    </option>
-                                                                                <?php }
+                                                                                                <option value="<?= $rPackage["id"] ?>">
+                                                                                                    <?= $rPackage["package_name"] ?>
+                                                                                                </option>
+                                                                                        <?php }
                                                                             }
                                                                         } ?>
                                                                     </select>
@@ -633,84 +633,84 @@ if ($rSettings["sidebar"]) { ?>
                                                     </ul>
                                                 </div>
                                                 <?php if ($rAdminSettings["reseller_restrictions"]) { ?>
-                                                    <div class="tab-pane" id="restrictions">
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="ip_field"><?= $_["allowed_ip_addresses"] ?></label>
-                                                                    <div class="col-md-8 input-group">
-                                                                        <input type="text" id="ip_field"
-                                                                            class="form-control" value="">
-                                                                        <div class="input-group-append">
-                                                                            <a href="javascript:void(0)" id="add_ip"
-                                                                                class="btn btn-primary waves-effect waves-light"><i
-                                                                                    class="mdi mdi-plus"></i></a>
-                                                                            <a href="javascript:void(0)" id="remove_ip"
-                                                                                class="btn btn-danger waves-effect waves-light"><i
-                                                                                    class="mdi mdi-close"></i></a>
+                                                        <div class="tab-pane" id="restrictions">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="form-group row mb-4">
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="ip_field"><?= $_["allowed_ip_addresses"] ?></label>
+                                                                        <div class="col-md-8 input-group">
+                                                                            <input type="text" id="ip_field"
+                                                                                class="form-control" value="">
+                                                                            <div class="input-group-append">
+                                                                                <a href="javascript:void(0)" id="add_ip"
+                                                                                    class="btn btn-primary waves-effect waves-light"><i
+                                                                                        class="mdi mdi-plus"></i></a>
+                                                                                <a href="javascript:void(0)" id="remove_ip"
+                                                                                    class="btn btn-danger waves-effect waves-light"><i
+                                                                                        class="mdi mdi-close"></i></a>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="allowed_ips">&nbsp;</label>
-                                                                    <div class="col-md-8">
-                                                                        <select class="form-control" id="allowed_ips"
-                                                                            name="allowed_ips[]" size=6 class="form-control"
-                                                                            multiple="multiple">
-                                                                            <?php if (isset($rUser)) {
-                                                                                foreach (json_decode($rUser["allowed_ips"], True) as $rIP) { ?>
-                                                                                    <option value="<?= $rIP ?>"><?= $rIP ?></option>
-                                                                                <?php }
-                                                                            } ?>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="ua_field"><?= $_["allowed_user-agents"] ?></label>
-                                                                    <div class="col-md-8 input-group">
-                                                                        <input type="text" id="ua_field"
-                                                                            class="form-control" value="">
-                                                                        <div class="input-group-append">
-                                                                            <a href="javascript:void(0)" id="add_ua"
-                                                                                class="btn btn-primary waves-effect waves-light"><i
-                                                                                    class="mdi mdi-plus"></i></a>
-                                                                            <a href="javascript:void(0)" id="remove_ua"
-                                                                                class="btn btn-danger waves-effect waves-light"><i
-                                                                                    class="mdi mdi-close"></i></a>
+                                                                    <div class="form-group row mb-4">
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="allowed_ips">&nbsp;</label>
+                                                                        <div class="col-md-8">
+                                                                            <select class="form-control" id="allowed_ips"
+                                                                                name="allowed_ips[]" size=6 class="form-control"
+                                                                                multiple="multiple">
+                                                                                <?php if (isset($rUser)) {
+                                                                                    foreach (json_decode($rUser["allowed_ips"], true) as $rIP) { ?>
+                                                                                                <option value="<?= $rIP ?>"><?= $rIP ?></option>
+                                                                                        <?php }
+                                                                                } ?>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="allowed_ua">&nbsp;</label>
-                                                                    <div class="col-md-8">
-                                                                        <select class="form-control" id="allowed_ua"
-                                                                            name="allowed_ua[]" size=6 class="form-control"
-                                                                            multiple="multiple">
-                                                                            <?php if (isset($rUser)) {
-                                                                                foreach (json_decode($rUser["allowed_ua"], True) as $rUA) { ?>
-                                                                                    <option value="<?= $rUA ?>"><?= $rUA ?></option>
-                                                                                <?php }
-                                                                            } ?>
-                                                                        </select>
+                                                                    <div class="form-group row mb-4">
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="ua_field"><?= $_["allowed_user-agents"] ?></label>
+                                                                        <div class="col-md-8 input-group">
+                                                                            <input type="text" id="ua_field"
+                                                                                class="form-control" value="">
+                                                                            <div class="input-group-append">
+                                                                                <a href="javascript:void(0)" id="add_ua"
+                                                                                    class="btn btn-primary waves-effect waves-light"><i
+                                                                                        class="mdi mdi-plus"></i></a>
+                                                                                <a href="javascript:void(0)" id="remove_ua"
+                                                                                    class="btn btn-danger waves-effect waves-light"><i
+                                                                                        class="mdi mdi-close"></i></a>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </div> <!-- end col -->
-                                                        </div> <!-- end row -->
-                                                        <ul class="list-inline wizard mb-0">
-                                                            <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);"
-                                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
-                                                            </li>
-                                                            <li class="next list-inline-item float-right">
-                                                                <a href="javascript: void(0);"
-                                                                    class="btn btn-secondary"><?= $_["next"] ?></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                                    <div class="form-group row mb-4">
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="allowed_ua">&nbsp;</label>
+                                                                        <div class="col-md-8">
+                                                                            <select class="form-control" id="allowed_ua"
+                                                                                name="allowed_ua[]" size=6 class="form-control"
+                                                                                multiple="multiple">
+                                                                                <?php if (isset($rUser)) {
+                                                                                    foreach (json_decode($rUser["allowed_ua"], true) as $rUA) { ?>
+                                                                                                <option value="<?= $rUA ?>"><?= $rUA ?></option>
+                                                                                        <?php }
+                                                                                } ?>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div> <!-- end col -->
+                                                            </div> <!-- end row -->
+                                                            <ul class="list-inline wizard mb-0">
+                                                                <li class="previous list-inline-item">
+                                                                    <a href="javascript: void(0);"
+                                                                        class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                                </li>
+                                                                <li class="next list-inline-item float-right">
+                                                                    <a href="javascript: void(0);"
+                                                                        class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                 <?php } ?>
                                                 <div class="tab-pane" id="review-purchase">
                                                     <div class="row">
@@ -739,24 +739,24 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <div class="col-12">
                                                                             <div class="form-group row mb-4">
                                                                                 <?php foreach (getBouquets() as $rBouquet) { ?>
-                                                                                    <div class="col-md-6">
-                                                                                        <div
-                                                                                            class="custom-control custom-checkbox mt-1">
-                                                                                            <input type="checkbox"
-                                                                                                class="custom-control-input bouquet-checkbox"
-                                                                                                id="bouquet-<?= $rBouquet["id"] ?>"
-                                                                                                name="bouquet[]"
-                                                                                                value="<?= $rBouquet["id"] ?>"
-                                                                                                <?php if (isset($rUser)) {
-                                                                                                    if (in_array($rBouquet["id"], json_decode($rUser["bouquet"], True))) {
-                                                                                                        echo " checked";
-                                                                                                    }
-                                                                                                } ?>>
-                                                                                            <label
-                                                                                                class="custom-control-label"
-                                                                                                for="bouquet-<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></label>
+                                                                                        <div class="col-md-6">
+                                                                                            <div
+                                                                                                class="custom-control custom-checkbox mt-1">
+                                                                                                <input type="checkbox"
+                                                                                                    class="custom-control-input bouquet-checkbox"
+                                                                                                    id="bouquet-<?= $rBouquet["id"] ?>"
+                                                                                                    name="bouquet[]"
+                                                                                                    value="<?= $rBouquet["id"] ?>"
+                                                                                                    <?php if (isset($rUser)) {
+                                                                                                        if (in_array($rBouquet["id"], json_decode($rUser["bouquet"], true))) {
+                                                                                                            echo " checked";
+                                                                                                        }
+                                                                                                    } ?>>
+                                                                                                <label
+                                                                                                    class="custom-control-label"
+                                                                                                    for="bouquet-<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></label>
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
                                                                                 <?php } ?>
                                                                             </div>
                                                                         </div> <!-- end col -->
@@ -919,11 +919,11 @@ if ($rSettings["sidebar"]) { ?>
                         $("#uname").show()
                         $("#pass").show()
                         <?php if (!isset($rUser)) { ?>
-                            window.swObjs["is_e2"].enable();
-                            window.swObjs["is_mag"].enable();
+                                window.swObjs["is_e2"].enable();
+                                window.swObjs["is_mag"].enable();
                         <?php } else { ?>
-                            window.swObjs["is_e2"].disable();
-                            window.swObjs["is_mag"].disable();
+                                window.swObjs["is_e2"].disable();
+                                window.swObjs["is_mag"].disable();
                         <?php } ?>
                     }
                 }
@@ -957,18 +957,18 @@ if ($rSettings["sidebar"]) { ?>
                                         $(".purchase").prop('disabled', false);
                                     }
                                     <?php if (!$canGenerateTrials) { ?>
-                                        // No trials left!
-                                        $(".purchase").prop('disabled', true);
+                                            // No trials left!
+                                            $(".purchase").prop('disabled', true);
                                     <?php }
                                     if (!isset($rUser)) { ?>
-                                        if (rData.data.can_gen_mag == 0) {
-                                            window.swObjs["is_mag"].disable();
-                                            $("#mac_entry_mag").hide();
-                                        }
-                                        if (rData.data.can_gen_e2 == 0) {
-                                            window.swObjs["is_e2"].disable();
-                                            $("#mac_entry_e2").hide();
-                                        }
+                                            if (rData.data.can_gen_mag == 0) {
+                                                window.swObjs["is_mag"].disable();
+                                                $("#mac_entry_mag").hide();
+                                            }
+                                            if (rData.data.can_gen_e2 == 0) {
+                                                window.swObjs["is_e2"].disable();
+                                                $("#mac_entry_e2").hide();
+                                            }
                                     <?php } ?>
                                     $(rData.bouquets).each(function (rIndex) {
                                         rTable.row.add([rData.bouquets[rIndex].id, rData.bouquets[rIndex].bouquet_name, rData.bouquets[rIndex].bouquet_channels.length, rData.bouquets[rIndex].bouquet_series.length]);
@@ -982,13 +982,13 @@ if ($rSettings["sidebar"]) { ?>
                         $("#remaining_credits").html($.number(<?= $rUserInfo["credits"] ?>, 2));
                         $("#exp_date").val('<?= date("Y-m-d", $rUser["exp_date"]) ?>');
                         <?php if (!$canGenerateTrials) { ?>
-                            $(".purchase").prop('disabled', true);
+                                $(".purchase").prop('disabled', true);
                         <?php }
-                        foreach (json_decode($rUser["bouquet"], True) as $rBouquetID) {
+                        foreach (json_decode($rUser["bouquet"], true) as $rBouquetID) {
                             $rBouquetData = getBouquet($rBouquetID);
                             if (strlen($rBouquetID) > 0) { ?>
-                                rTable.row.add([<?= $rBouquetID ?>, '<?= $rBouquetData["bouquet_name"] ?>', <?= count(json_decode($rBouquetData["bouquet_channels"], True)) ?>, <?= count(json_decode($rBouquetData["bouquet_series"], True)) ?>]);
-                            <?php }
+                                        rTable.row.add([<?= $rBouquetID ?>, '<?= $rBouquetData["bouquet_name"] ?>', <?= count(json_decode($rBouquetData["bouquet_channels"], true)) ?>, <?= count(json_decode($rBouquetData["bouquet_series"], true)) ?>]);
+                                <?php }
                         } ?>
                         rTable.draw();
                     }

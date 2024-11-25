@@ -176,9 +176,9 @@ if ($rSettings["sidebar"]) { ?>
                                         <div class="slimscroll" style="height:350px;">
                                             <div class="timeline-alt">
                                                 <?php
-                                                $rResult = $db->query("SELECT `u`.`username`, `r`.`owner`, `r`.`date`, `r`.`type` FROM `reg_userlog` AS `r` INNER JOIN `reg_users` AS `u` ON `r`.`owner` = `u`.`id` WHERE `r`.`owner` IN (" . ESC(join(",", array_keys(getRegisteredUsers($rUserInfo["id"])))) . ") ORDER BY `r`.`date` DESC LIMIT 100;");
-                                                if (($rResult) && ($rResult->num_rows > 0)) {
-                                                    while ($rRow = $rResult->fetch_assoc()) { ?>
+                                                $ipTV_db_admin->query("SELECT `u`.`username`, `r`.`owner`, `r`.`date`, `r`.`type` FROM `reg_userlog` AS `r` INNER JOIN `reg_users` AS `u` ON `r`.`owner` = `u`.`id` WHERE `r`.`owner` IN (" . ESC(join(",", array_keys(getRegisteredUsers($rUserInfo["id"])))) . ") ORDER BY `r`.`date` DESC LIMIT 100;");
+                                                if ($ipTV_db_admin->num_rows() > 0) {
+                                                    foreach ($ipTV_db_admin->get_rows() as $rRow) { ?>
                                                         <div class="timeline-item">
                                                             <i class="timeline-icon"></i>
                                                             <div class="timeline-item-info">

@@ -165,20 +165,20 @@ if (isset($_POST["submit_stream"])) {
             $rValues = ESC($_POST["edit"]) . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
-        if ($db->query($rQuery)) {
+        if ($ipTV_db_admin->query($rQuery)) {
             if (isset($_POST["edit"])) {
                 $rInsertID = intval($_POST["edit"]);
             } else {
-                $rInsertID = intval($db->insert_id);
+                $rInsertID = intval($ipTV_db_admin->last_insert_id());
             }
-            $db->query("DELETE FROM `series_episodes` WHERE `stream_id` = " . $rInsertID . ";");
-            $db->query("INSERT INTO `series_episodes`(`season_num`, `series_id`, `stream_id`, `sort`) VALUES(" . intval($_POST["season_num"]) . ", " . intval($_POST["series"]) . ", " . $rInsertID . ", " . intval($rImportArray["episode"]) . ");");
+            $ipTV_db_admin->query("DELETE FROM `series_episodes` WHERE `stream_id` = " . $rInsertID . ";");
+            $ipTV_db_admin->query("INSERT INTO `series_episodes`(`season_num`, `series_id`, `stream_id`, `sort`) VALUES(" . intval($_POST["season_num"]) . ", " . intval($_POST["series"]) . ", " . $rInsertID . ", " . intval($rImportArray["episode"]) . ");");
             updateSeries(intval($_POST["series"]));
             $rStreamExists = array();
             if (isset($_POST["edit"])) {
-                $result = $db->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
-                if (($result) && ($result->num_rows > 0)) {
-                    while ($row = $result->fetch_assoc()) {
+                $ipTV_db_admin->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
+                if ($ipTV_db_admin->num_rows() > 0) {
+                    foreach ($ipTV_db_admin->get_rows() as $row) {
                         $rStreamExists[intval($row["server_id"])] = intval($row["server_stream_id"]);
                     }
                 }
@@ -196,22 +196,22 @@ if (isset($_POST["submit_stream"])) {
                             $rParent = intval($rServer["parent"]);
                         }
                         if (isset($rStreamExists[$rServerID])) {
-                            $db->query("UPDATE `streams_servers` SET `parent_id` = " . $rParent . ", `on_demand` = 0 WHERE `server_stream_id` = " . $rStreamExists[$rServerID] . ";");
+                            $ipTV_db_admin->query("UPDATE `streams_servers` SET `parent_id` = " . $rParent . ", `on_demand` = 0 WHERE `server_stream_id` = " . $rStreamExists[$rServerID] . ";");
                         } else {
-                            $db->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", 0);");
+                            $ipTV_db_admin->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", 0);");
                         }
                     }
                 }
                 foreach ($rStreamExists as $rServerID => $rDBID) {
                     if (!in_array($rServerID, $rStreamsAdded)) {
-                        $db->query("DELETE FROM `streams_servers` WHERE `server_stream_id` = " . $rDBID . ";");
+                        $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `server_stream_id` = " . $rDBID . ";");
                     }
                 }
             }
             if ($rRestart) {
                 $rRestartIDs[] = $rInsertID;
             }
-            $db->query("UPDATE `series` SET `last_modified` = " . intval(time()) . " WHERE `id` = " . intval($_POST["series"]) . ";");
+            $ipTV_db_admin->query("UPDATE `series` SET `last_modified` = " . intval(time()) . " WHERE `id` = " . intval($_POST["series"]) . ";");
         }
     }
     if ($rRestart) {
@@ -249,9 +249,9 @@ if (isset($_GET["id"])) {
     if ((!$rEpisode) or ($rEpisode["type"] <> 5)) {
         exit;
     }
-    $result = $db->query("SELECT `season_num`, `sort` FROM `series_episodes` WHERE `stream_id` = " . intval($rEpisode["id"]) . ";");
-    if (($result) && ($result->num_rows == 1)) {
-        $row = $result->fetch_assoc();
+    $ipTV_db_admin->query("SELECT `season_num`, `sort` FROM `series_episodes` WHERE `stream_id` = " . intval($rEpisode["id"]) . ";");
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $row = $ipTV_db_admin->get_row();
         $rEpisode["episode"] = intval($row["sort"]);
         $rEpisode["season"] = intval($row["season_num"]);
     } else {

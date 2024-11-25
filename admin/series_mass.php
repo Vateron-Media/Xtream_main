@@ -22,7 +22,7 @@ if (isset($_POST["submit_series"])) {
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);
                 $rQuery = "UPDATE `series` SET " . $rQueryString . " WHERE `id` = " . intval($rSeriesID) . ";";
-                if (!$db->query($rQuery)) {
+                if (!$ipTV_db_admin->query($rQuery)) {
                     $_STATUS = 1;
                 }
             }
@@ -41,7 +41,7 @@ if (isset($_POST["submit_series"])) {
         if (isset($_POST["reprocess_tmdb"])) {
             foreach ($rSeriesIDs as $rSeriesID) {
                 if (intval($rSeriesID) > 0) {
-                    $db->query("INSERT INTO `tmdb_async`(`type`, `stream_id`, `status`) VALUES(2, " . intval($rSeriesID) . ", 0);");
+                    $ipTV_db_admin->query("INSERT INTO `tmdb_async`(`type`, `stream_id`, `status`) VALUES(2, " . intval($rSeriesID) . ", 0);");
                 }
             }
         }

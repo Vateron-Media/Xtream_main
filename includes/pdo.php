@@ -101,6 +101,13 @@ class Database {
         return $r;
     }
 
+    /**
+     * Executes a prepared SQL query with optional parameter binding
+     * 
+     * @throws PDOException When database query execution fails
+     * @return bool Returns true on successful query execution, false on failure or if database handle is not initialized
+     *
+     */
     public function query($query, $buffered = false) {
         if (!$this->dbh) {
             return false;

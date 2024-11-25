@@ -21,9 +21,9 @@ if (isset($_POST["submit_ip"])) {
             }
         }
         $rQuery = "REPLACE INTO `blocked_ips`(" . $rCols . ") VALUES(" . $rValues . ");";
-        if ($db->query($rQuery)) {
+        if ($ipTV_db_admin->query($rQuery)) {
             shell_exec("sudo /sbin/iptables -A INPUT -s " . escapeshellcmd($rArray["ip"]) . " -j DROP");
-            $rInsertID = $db->insert_id;
+            $rInsertID = $ipTV_db_admin->last_insert_id();
         }
         if (isset($rInsertID)) {
             header("Location: ./ips.php");
