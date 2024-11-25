@@ -27,7 +27,7 @@ if (isset($_POST["submit_mag"])) {
             $rArray["pair_id"] = $rArray["id"];
             unset($rArray["id"]);
             // Create new user.
-            $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
+            $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
             foreach (array_values($rArray) as $rValue) {
                 isset($rValues) ? $rValues .= ',' : $rValues = '';
                 if (is_array($rValue)) {
@@ -36,7 +36,7 @@ if (isset($_POST["submit_mag"])) {
                 if (is_null($rValue)) {
                     $rValues .= 'NULL';
                 } else {
-                    $rValues .= '\'' . ESC($rValue) . '\'';
+                    $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
                 }
             }
             $rQuery = "INSERT INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
@@ -45,10 +45,10 @@ if (isset($_POST["submit_mag"])) {
                 $rArray = array("user_id" => $rNewID, "mac" => base64_encode($_POST["mac"]));
                 // Create / Edit MAG.
                 if (isset($_POST["edit"])) {
-                    $ipTV_db_admin->query("UPDATE `mag_devices` SET `user_id` = " . intval($rNewID) . ", `mac` = '" . ESC(base64_encode($_POST["mac"])) . "' WHERE `mag_id` = " . intval($_POST["edit"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `mag_devices` SET `user_id` = " . intval($rNewID) . ", `mac` = '" . $ipTV_db_admin->escape(base64_encode($_POST["mac"])) . "' WHERE `mag_id` = " . intval($_POST["edit"]) . ";");
                     $rEditID = $_POST["edit"];
                 } else {
-                    $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`) VALUES(" . intval($rNewID) . ", '" . ESC(base64_encode($_POST["mac"])) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`) VALUES(" . intval($rNewID) . ", '" . $ipTV_db_admin->escape(base64_encode($_POST["mac"])) . "');");
                     $rEditID = $ipTV_db_admin->last_insert_id();
                 }
                 $ipTV_db_admin->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rNewID) . ", 2);");
@@ -57,7 +57,7 @@ if (isset($_POST["submit_mag"])) {
             }
         } else if ((isset($_POST["edit"])) && (strlen($_POST["edit"]))) {
             // Don't create a new user, legacy support for device.
-            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . ESC(base64_encode($_POST["mac"])) . "' WHERE `mag_id` = " . intval($_POST["edit"]) . ";");
+            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . $ipTV_db_admin->escape(base64_encode($_POST["mac"])) . "' WHERE `mag_id` = " . intval($_POST["edit"]) . ";");
             header("Location: ./mag.php?id=" . $_POST["edit"]);
             exit;
         }

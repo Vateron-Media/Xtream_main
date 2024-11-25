@@ -95,7 +95,7 @@ if (isset($_POST["submit_server"])) {
                 $rArray[$rKey] = $rValue;
             }
         }
-        $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
+        $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
             if (is_array($rValue)) {
@@ -104,12 +104,12 @@ if (isset($_POST["submit_server"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . ESC($rValue) . '\'';
+                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
             }
         }
         if (isset($_POST["edit"])) {
             $rCols = "id," . $rCols;
-            $rValues = ESC($_POST["edit"]) . "," . $rValues;
+            $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `streaming_servers`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
@@ -171,15 +171,16 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./servers.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_servers"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_servers"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rServerArr)) {
-                                                            echo $_["edit"];
-                                                        } else {
-                                                            echo $_["add"];
-                                                        } ?> <?= $_["server"] ?></h4>
+                                    echo $_["edit"];
+                                } else {
+                                    echo $_["add"];
+                                } ?> <?= $_["server"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -194,18 +195,19 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["server_operation_was_completed"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["generic_fail"] ?>
-                                </div>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./server.php<?php if (isset($_GET["id"])) {
-                                                                    echo "?id=" . $_GET["id"];
-                                                                } ?>" method="POST" id="server_form" data-parsley-validate="">
+                                        echo "?id=" . $_GET["id"];
+                                    } ?>" method="POST" id="server_form"
+                                        data-parsley-validate="">
                                         <?php if (isset($rServerArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rServerArr["id"] ?>" />
                                             <input type="hidden" name="status" value="<?= $rServerArr["status"] ?>" />
@@ -213,19 +215,22 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#server-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#server-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#advanced-options" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#advanced-options" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-folder-alert-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["advanced"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#ispmanager" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#ispmanager" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-folder-alert-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["isp_manager"] ?></span>
                                                     </a>
@@ -236,60 +241,82 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="server_name"><?= $_["server_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="server_name"><?= $_["server_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="server_name" name="server_name" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                            echo htmlspecialchars($rServerArr["server_name"]);
-                                                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="server_name" name="server_name"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["server_name"]);
+                                                                        } ?>"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="domain_name"><?= $_["domaine_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="domain_name"><?= $_["domaine_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="domain_name" name="domain_name" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                            echo htmlspecialchars($rServerArr["domain_name"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="domain_name" name="domain_name"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["domain_name"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="server_ip"><?= $_["server_ip"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="server_ip"><?= $_["server_ip"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="server_ip" name="server_ip" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                        echo htmlspecialchars($rServerArr["server_ip"]);
-                                                                                                                                                    } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="server_ip" name="server_ip"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["server_ip"]);
+                                                                        } ?>"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="vpn_ip"><?= $_["vpn_ip"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="vpn_ip"><?= $_["vpn_ip"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="vpn_ip" name="vpn_ip" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                    echo htmlspecialchars($rServerArr["vpn_ip"]);
-                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control" id="vpn_ip"
+                                                                        name="vpn_ip"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["vpn_ip"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="total_clients"><?= $_["max_clients"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="total_clients"><?= $_["max_clients"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="total_clients" name="total_clients" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                                echo htmlspecialchars($rServerArr["total_clients"]);
-                                                                                                                                                            } else {
-                                                                                                                                                                echo "1000";
-                                                                                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="total_clients" name="total_clients"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["total_clients"]);
+                                                                        } else {
+                                                                            echo "1000";
+                                                                        } ?>"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="timeshift_only"><?= $_["timeshift_only"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="timeshift_only"><?= $_["timeshift_only"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="timeshift_only" id="timeshift_only" type="checkbox" <?php if (isset($rServerArr)) {
-                                                                                                                                            if ($rServerArr["timeshift_only"] == 1) {
-                                                                                                                                                echo "checked ";
-                                                                                                                                            }
-                                                                                                                                        } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="timeshift_only" id="timeshift_only"
+                                                                        type="checkbox" <?php if (isset($rServerArr)) {
+                                                                            if ($rServerArr["timeshift_only"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -297,113 +324,156 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="http_broadcast_port"><?= $_["http_port"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="http_broadcast_port"><?= $_["http_port"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="http_broadcast_port" name="http_broadcast_port" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                                            echo htmlspecialchars($rServerArr["http_broadcast_port"]);
-                                                                                                                                                                        } else {
-                                                                                                                                                                            echo "25461";
-                                                                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="http_broadcast_port"
+                                                                        name="http_broadcast_port"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["http_broadcast_port"]);
+                                                                        } else {
+                                                                            echo "25461";
+                                                                        } ?>"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="https_broadcast_port"><?= $_["https_port"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="https_broadcast_port"><?= $_["https_port"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="https_broadcast_port" name="https_broadcast_port" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                                                echo htmlspecialchars($rServerArr["https_broadcast_port"]);
-                                                                                                                                                                            } else {
-                                                                                                                                                                                echo "25463";
-                                                                                                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="https_broadcast_port"
+                                                                        name="https_broadcast_port"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["https_broadcast_port"]);
+                                                                        } else {
+                                                                            echo "25463";
+                                                                        } ?>"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="rtmp_port"><?= $_["rtmp_port"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="rtmp_port"><?= $_["rtmp_port"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="rtmp_port" name="rtmp_port" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                        echo htmlspecialchars($rServerArr["rtmp_port"]);
-                                                                                                                                                    } else {
-                                                                                                                                                        echo "25462";
-                                                                                                                                                    } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="rtmp_port" name="rtmp_port"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["rtmp_port"]);
+                                                                        } else {
+                                                                            echo "25462";
+                                                                        } ?>"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                                 <?php if (($_GET["id"] == 1)) { ?>
-                                                                    <label class="col-md-4 col-form-label" for="http_isp_port"><?= $_["isp_port"] ?></label>
+                                                                    <label class="col-md-4 col-form-label"
+                                                                        for="http_isp_port"><?= $_["isp_port"] ?></label>
                                                                     <div class="col-md-2">
-                                                                        <input type="text" class="form-control" id="http_isp_port" name="http_isp_port" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                                    echo htmlspecialchars($rServerArr["http_isp_port"]);
-                                                                                                                                                                } else {
-                                                                                                                                                                    echo "";
-                                                                                                                                                                } ?>" required data-parsley-trigger="change">
+                                                                        <input type="text" class="form-control"
+                                                                            id="http_isp_port" name="http_isp_port"
+                                                                            value="<?php if (isset($rServerArr)) {
+                                                                                echo htmlspecialchars($rServerArr["http_isp_port"]);
+                                                                            } else {
+                                                                                echo "";
+                                                                            } ?>"
+                                                                            required data-parsley-trigger="change">
                                                                     </div>
                                                                 <?php } ?>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="network_interface">Network Interface</label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="network_interface">Network Interface</label>
                                                                 <div class="col-md-2">
-                                                                    <select name="network_interface" id="network_interface" class="form-control select2" data-toggle="select2">network interface
+                                                                    <select name="network_interface"
+                                                                        id="network_interface"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">network interface
                                                                         <?php
                                                                         foreach (netnet($_GET["id"]) as $bbb) { ?>
                                                                             <option <?php if (isset($rServerArr)) {
-                                                                                        if ($rServerArr["network_interface"] == $bbb) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $bbb ?>"><?= $bbb ?></option>
+                                                                                if ($rServerArr["network_interface"] == $bbb) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $bbb ?>">
+                                                                                <?= $bbb ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="network_guaranteed_speed"><?= $_["network_speed"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="network_guaranteed_speed"><?= $_["network_speed"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="network_guaranteed_speed" name="network_guaranteed_speed" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                                                        echo htmlspecialchars($rServerArr["network_guaranteed_speed"]);
-                                                                                                                                                                                    } else {
-                                                                                                                                                                                        echo "1000";
-                                                                                                                                                                                    } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="network_guaranteed_speed"
+                                                                        name="network_guaranteed_speed"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["network_guaranteed_speed"]);
+                                                                        } else {
+                                                                            echo "1000";
+                                                                        } ?>"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="system_os"><?= $_["operating_system"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="system_os"><?= $_["operating_system"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="system_os" name="system_os" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                        echo htmlspecialchars($rServerArr["system_os"]);
-                                                                                                                                                    } else {
-                                                                                                                                                        echo "Ubuntu 14.04.5 LTS";
-                                                                                                                                                    } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="system_os" name="system_os"
+                                                                        value="<?php if (isset($rServerArr)) {
+                                                                            echo htmlspecialchars($rServerArr["system_os"]);
+                                                                        } else {
+                                                                            echo "Ubuntu 14.04.5 LTS";
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="enable_geoip"><?= $_["geoip_load_balancing"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="enable_geoip"><?= $_["geoip_load_balancing"] ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="enable_geoip" id="enable_geoip" type="checkbox" <?php if (isset($rServerArr)) {
-                                                                                                                                        if ($rServerArr["enable_geoip"] == 1) {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        }
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="enable_geoip" id="enable_geoip"
+                                                                        type="checkbox" <?php if (isset($rServerArr)) {
+                                                                            if ($rServerArr["enable_geoip"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <div class="col-md-6">
-                                                                    <select name="geoip_type" id="geoip_type" class="form-control select2" data-toggle="select2">
+                                                                    <select name="geoip_type" id="geoip_type"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach (array("high_priority" => "High Priority", "low_priority" => "Low Priority", "strict" => "Strict") as $rType => $rText) { ?>
                                                                             <option <?php if (isset($rServerArr)) {
-                                                                                        if ($rServerArr["geoip_type"] == $rType) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rType ?>"><?= $rText ?></option>
+                                                                                if ($rServerArr["geoip_type"] == $rType) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rType ?>">
+                                                                                <?= $rText ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="geoip_countries"><?= $_["geoip_countries"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="geoip_countries"><?= $_["geoip_countries"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="geoip_countries[]" id="geoip_countries" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                    <select name="geoip_countries[]"
+                                                                        id="geoip_countries"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php $rSelected = json_decode($rServerArr["geoip_countries"], True);
                                                                         foreach ($rCountries as $rCountry) { ?>
                                                                             <!--<option <?php if (isset($rServerArr)) {
-                                                                                            if (!empty($rSelected) && in_array($rCountry["id"], $rSelected)) {
-                                                                                                echo "selected ";
-                                                                                            }
-                                                                                        } ?>value="<?= $rCountry["id"] ?>"><?= $rCountry["name"] ?></option>-->
+                                                                                if (!empty($rSelected) && in_array($rCountry["id"], $rSelected)) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rCountry["id"] ?>"><?= $rCountry["name"] ?></option>-->
                                                                             <option <?php if (isset($rServerArr)) {
-                                                                                        if (!empty($rSelected) && in_array($rCountry["id"], $rSelected)) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rCountry["id"] ?>"><?= $rCountry["name"] ?></option>
+                                                                                if (!empty($rSelected) && in_array($rCountry["id"], $rSelected)) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rCountry["id"] ?>">
+                                                                                <?= $rCountry["name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -412,10 +482,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -425,45 +497,60 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="enable_isp">enable isp</label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="enable_isp">enable isp</label>
                                                                 <div class="col-md-2">
-                                                                    <input name="enable_isp" id="enable_isp" type="checkbox" <?php if (isset($rServerArr)) {
-                                                                                                                                    if ($rServerArr["enable_isp"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    }
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="enable_isp" id="enable_isp"
+                                                                        type="checkbox" <?php if (isset($rServerArr)) {
+                                                                            if ($rServerArr["enable_isp"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <div class="col-md-6">
-                                                                    <select name="isp_type" id="isp_type" class="form-control select2" data-toggle="select2">
+                                                                    <select name="isp_type" id="isp_type"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <?php foreach (array("high_priority" => "High Priority", "low_priority" => "Low Priority", "strict" => "Strict") as $rType => $rText) { ?>
                                                                             <option <?php if (isset($rServerArr)) {
-                                                                                        if ($rServerArr["isp_type"] == $rType) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rType ?>"><?= $rText ?></option>
+                                                                                if ($rServerArr["isp_type"] == $rType) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rType ?>">
+                                                                                <?= $rText ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="isp_field">Allowed ISP Names</label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="isp_field">Allowed ISP Names</label>
                                                                 <div class="col-md-8 input-group">
-                                                                    <input type="text" id="isp_field" class="form-control" value="">
+                                                                    <input type="text" id="isp_field"
+                                                                        class="form-control" value="">
                                                                     <div class="input-group-append">
-                                                                        <a href="javascript:void(0)" id="add_isp" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-plus"></i></a>
-                                                                        <a href="javascript:void(0)" id="remove_isp" class="btn btn-danger waves-effect waves-light"><i class="mdi mdi-close"></i></a>
+                                                                        <a href="javascript:void(0)" id="add_isp"
+                                                                            class="btn btn-primary waves-effect waves-light"><i
+                                                                                class="mdi mdi-plus"></i></a>
+                                                                        <a href="javascript:void(0)" id="remove_isp"
+                                                                            class="btn btn-danger waves-effect waves-light"><i
+                                                                                class="mdi mdi-close"></i></a>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="isp_names">&nbsp;</label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="isp_names">&nbsp;</label>
                                                                 <div class="col-md-8">
-                                                                    <select id="isp_names" name="isp_names[]" size=6 class="form-control" multiple="multiple">
+                                                                    <select id="isp_names" name="isp_names[]" size=6
+                                                                        class="form-control" multiple="multiple">
                                                                         <?php $rnabilosss = json_decode($rServerArr["isp_names"], True);
                                                                         if ((isset($rServerArr)) & (is_array($rnabilosss))) {
                                                                             foreach ($rnabilosss as $ispnom) { ?>
-                                                                                <option value="<?= $ispnom ?>"><?= $ispnom ?></option>
-                                                                        <?php }
+                                                                                <option value="<?= $ispnom ?>"><?= $ispnom ?>
+                                                                                </option>
+                                                                            <?php }
                                                                         } ?>
                                                                     </select>
                                                                 </div>
@@ -473,14 +560,17 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_server" type="submit" class="btn btn-primary" value="<?php if (isset($rServerArr)) {
-                                                                                                                                            echo $_["edit"];
-                                                                                                                                        } else {
-                                                                                                                                            echo $_["add"];
-                                                                                                                                        } ?>" />
+                                                            <input name="submit_server" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?php if (isset($rServerArr)) {
+                                                                    echo $_["edit"];
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -492,125 +582,125 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var swObjs = {};
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
-
-                    $(document).ready(function() {
-                        $('select.select2').select2({
-                            width: '100%'
-                        })
-                        $("#geoip_countries").select2({
-                            width: '100%'
-                        })
-                        $(".js-switch").each(function(index, element) {
-                            var init = new Switchery(element);
-                            window.swObjs[element.id] = init;
-                        });
-
-                        $('#exp_date').daterangepicker({
-                            singleDatePicker: true,
-                            showDropdowns: true,
-                            minDate: new Date(),
-                            locale: {
-                                format: 'YYYY-MM-DD'
+            <script>
+                var swObjs = {};
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
                             }
                         });
+                    };
+                }(jQuery));
 
-                        $("#no_expire").change(function() {
-                            if ($(this).prop("checked")) {
-                                $("#exp_date").prop("disabled", true);
-                            } else {
-                                $("#exp_date").removeAttr("disabled");
-                            }
-                        });
-                        $("#server_form").submit(function(e) {
-                            $("#isp_names option").prop('selected', true);
-                        });
-                        $("#add_isp").click(function() {
-                            if ($("#isp_field").val().length > 0) {
-                                var o = new Option($("#isp_field").val(), $("#isp_field").val());
-                                $("#isp_names").append(o);
-                                $("#isp_field").val("");
-                            } else {
-                                $.toast("Please enter a valid ISP name.");
-                            }
-                        });
-                        $("#remove_isp").click(function() {
-                            $('#isp_names option:selected').remove();
-                        });
-
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-
-                        $("#total_clients").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#http_broadcast_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
-                        });
-                        $("#https_broadcast_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
-                        });
-                        $("#rtmp_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
-                        });
-                        $("#http_isp_port").inputFilter(function(value) {
-                            return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
-                        });
-                        $("#network_guaranteed_speed").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("form").attr('autocomplete', 'off');
+                $(document).ready(function () {
+                    $('select.select2').select2({
+                        width: '100%'
+                    })
+                    $("#geoip_countries").select2({
+                        width: '100%'
+                    })
+                    $(".js-switch").each(function (index, element) {
+                        var init = new Switchery(element);
+                        window.swObjs[element.id] = init;
                     });
-                </script>
-                </body>
 
-                </html>
+                    $('#exp_date').daterangepicker({
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        minDate: new Date(),
+                        locale: {
+                            format: 'YYYY-MM-DD'
+                        }
+                    });
+
+                    $("#no_expire").change(function () {
+                        if ($(this).prop("checked")) {
+                            $("#exp_date").prop("disabled", true);
+                        } else {
+                            $("#exp_date").removeAttr("disabled");
+                        }
+                    });
+                    $("#server_form").submit(function (e) {
+                        $("#isp_names option").prop('selected', true);
+                    });
+                    $("#add_isp").click(function () {
+                        if ($("#isp_field").val().length > 0) {
+                            var o = new Option($("#isp_field").val(), $("#isp_field").val());
+                            $("#isp_names").append(o);
+                            $("#isp_field").val("");
+                        } else {
+                            $.toast("Please enter a valid ISP name.");
+                        }
+                    });
+                    $("#remove_isp").click(function () {
+                        $('#isp_names option:selected').remove();
+                    });
+
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+
+                    $("#total_clients").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#http_broadcast_port").inputFilter(function (value) {
+                        return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
+                    });
+                    $("#https_broadcast_port").inputFilter(function (value) {
+                        return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
+                    });
+                    $("#rtmp_port").inputFilter(function (value) {
+                        return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
+                    });
+                    $("#http_isp_port").inputFilter(function (value) {
+                        return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
+                    });
+                    $("#network_guaranteed_speed").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("form").attr('autocomplete', 'off');
+                });
+            </script>
+            </body>
+
+            </html>

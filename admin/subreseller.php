@@ -24,7 +24,7 @@ if (isset($_POST["submit_user"])) {
         if ($rUserInfo["credits"] - $rCost < 0) {
             $_STATUS = 3;
         }
-        $ipTV_db_admin->query("SELECT `id` FROM `reg_users` WHERE `username` = '" . ESC($_POST["username"]) . "';");
+        $ipTV_db_admin->query("SELECT `id` FROM `reg_users` WHERE `username` = '" . $ipTV_db_admin->escape($_POST["username"]) . "';");
         if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 4;
         }
@@ -51,7 +51,7 @@ if (isset($_POST["submit_user"])) {
         if (isset($_POST["notes"])) {
             $rArray["notes"] = $_POST["notes"];
         }
-        $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
+        $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
             if (is_array($rValue)) {
@@ -60,12 +60,12 @@ if (isset($_POST["submit_user"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . ESC($rValue) . '\'';
+                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
             }
         }
         if (isset($_POST["edit"])) {
             $rCols = "`id`," . $rCols;
-            $rValues = ESC($_POST["edit"]) . "," . $rValues;
+            $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `reg_users`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
@@ -77,7 +77,7 @@ if (isset($_POST["submit_user"])) {
             if (isset($rCost)) {
                 $rNewCredits = floatval($rUserInfo["credits"]) - $rCost;
                 $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = " . floatval($rNewCredits) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
-                $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["new_subreseller"] . " [" . ESC($_POST["username"]) . "] Credits: <font color=\"green\">" . floatval($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $ipTV_db_admin->escape($rArray["username"]) . "', '" . $ipTV_db_admin->escape($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["new_subreseller"] . " [" . $ipTV_db_admin->escape($_POST["username"]) . "] Credits: <font color=\"green\">" . floatval($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                 $rUserInfo["credits"] = $rNewCredits;
             }
             header("Location: ./subreseller.php?id=" . $rInsertID);

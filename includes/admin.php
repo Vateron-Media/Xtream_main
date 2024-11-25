@@ -1437,10 +1437,6 @@ function isUpdateNeeded(string $requiredVersion = null, string $currentVersion =
 
 ////// NOT CHECKED ////////
 
-function ESC($rString) {
-    return $rString;
-}
-
 function sortArrayByArray(array $rArray, array $rSort) {
     $rOrdered = array();
     foreach ($rSort as $rValue) {
@@ -1911,6 +1907,3 @@ function getURL() {
         return "http://" . $rServers[$_INFO["server_id"]]["server_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"];
     }
 }
-
-
-

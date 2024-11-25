@@ -177,7 +177,7 @@ if (isset($_POST["submit_movie"])) {
         if (isset($_POST["edit"])) {
             $rImportStreams[] = $rImportArray;
         } else {
-            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . ESC($rImportArray["stream_display_name"]) . "' AND `type` = 2;");
+            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . $ipTV_db_admin->escape($rImportArray["stream_display_name"]) . "' AND `type` = 2;");
             if ($ipTV_db_admin->get_row()["count"] == 0) {
                 $rImportStreams[] = $rImportArray;
             } else {
@@ -197,7 +197,7 @@ if (isset($_POST["submit_movie"])) {
             $rImportArray["order"] = getNextOrder();
             $rSync = $rImportArray["async"];
             unset($rImportArray["async"]);
-            $rCols = "`" . ESC(implode('`,`', array_keys($rImportArray))) . "`";
+            $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rImportArray))) . "`";
             $rValues = null;
             foreach (array_values($rImportArray) as $rValue) {
                 isset($rValues) ? $rValues .= ',' : $rValues = '';
@@ -207,12 +207,12 @@ if (isset($_POST["submit_movie"])) {
                 if (is_null($rValue)) {
                     $rValues .= 'NULL';
                 } else {
-                    $rValues .= '\'' . ESC($rValue) . '\'';
+                    $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
                 }
             }
             if (isset($_POST["edit"])) {
                 $rCols = "`id`," . $rCols;
-                $rValues = ESC($_POST["edit"]) . "," . $rValues;
+                $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
@@ -330,12 +330,12 @@ if ($rSettings["sidebar"]) {
     include "header.php";
 }
 if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content boxed-layout">
-            <div class="container-fluid">
+        <div class="content-page">
+            <div class="content boxed-layout">
+                <div class="container-fluid">
             <?php } else { ?>
-                <div class="wrapper boxed-layout">
-                    <div class="container-fluid">
+                    <div class="wrapper boxed-layout">
+                        <div class="container-fluid">
                     <?php } ?>
                     <!-- start page title -->
                     <div class="row">
@@ -353,19 +353,19 @@ if ($rSettings["sidebar"]) { ?>
                                                 </button>
                                             </a>
                                             <?php if (!isset($_GET["import"])) { ?>
-                                                <a href="./movie.php?import">
-                                                    <button type="button"
-                                                        class="btn btn-info waves-effect waves-light btn-sm">
-                                                        <?= $_["import_multiple"] ?>
-                                                    </button>
-                                                </a>
+                                                    <a href="./movie.php?import">
+                                                        <button type="button"
+                                                            class="btn btn-info waves-effect waves-light btn-sm">
+                                                            <?= $_["import_multiple"] ?>
+                                                        </button>
+                                                    </a>
                                             <?php } else { ?>
-                                                <a href="./movie.php">
-                                                    <button type="button"
-                                                        class="btn btn-info waves-effect waves-light btn-sm">
-                                                        <?= $_["add_single"] ?>
-                                                    </button>
-                                                </a>
+                                                    <a href="./movie.php">
+                                                        <button type="button"
+                                                            class="btn btn-info waves-effect waves-light btn-sm">
+                                                            <?= $_["add_single"] ?>
+                                                        </button>
+                                                    </a>
                                             <?php } ?>
                                         </li>
                                     </ol>
@@ -384,70 +384,70 @@ if ($rSettings["sidebar"]) { ?>
                     <div class="row">
                         <div class="col-xl-12">
                             <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["movies_info_1"] ?>
-                                </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                    <?= $_["movies_info_2"] ?>
+                                        <?= $_["movies_info_1"] ?>
                                     </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                    <?= $_["movies_info_3"] ?>
-                                        </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
+                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
                                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
-                                    <?= $_["movies_info_4"] ?>
+                                        <?= $_["movies_info_2"] ?>
                                             </div>
+                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                        <?= $_["movies_info_3"] ?>
+                                                    </div>
+                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
+                                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                        <?= $_["movies_info_4"] ?>
+                                                            </div>
                             <?php }
                             if (isset($rMovie["id"])) { ?>
-                                <div class="card text-xs-center">
-                                    <div class="table">
-                                        <table id="datatable-list" class="table table-borderless mb-0">
-                                            <thead class="bg-light">
-                                                <tr>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th><?= $_["server"] ?></th>
-                                                    <th><?= $_["clients"] ?></th>
-                                                    <th><?= $_["status"] ?></th>
-                                                    <th><?= $_["actions"] ?></th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="7" class="text-center">
-                                                        <?= $_["loading_movie_information"] ?>...
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="card text-xs-center">
+                                        <div class="table">
+                                            <table id="datatable-list" class="table table-borderless mb-0">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th><?= $_["server"] ?></th>
+                                                        <th><?= $_["clients"] ?></th>
+                                                        <th><?= $_["status"] ?></th>
+                                                        <th><?= $_["actions"] ?></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="7" class="text-center">
+                                                            <?= $_["loading_movie_information"] ?>...
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                                <?php $rEncodeErrors = getEncodeErrors($rMovie["id"]);
-                                foreach ($rEncodeErrors as $rServerID => $rEncodeError) { ?>
-                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <strong><?= $_["error_on_server"] ?> -
-                                            <?= $rServers[$rServerID]["server_name"] ?></strong><br />
-                                        <?= str_replace("\n", "<br/>", $rEncodeError) ?>
-                                    </div>
-                                <?php }
+                                    <?php $rEncodeErrors = getEncodeErrors($rMovie["id"]);
+                                    foreach ($rEncodeErrors as $rServerID => $rEncodeError) { ?>
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <strong><?= $_["error_on_server"] ?> -
+                                                    <?= $rServers[$rServerID]["server_name"] ?></strong><br />
+                                                <?= str_replace("\n", "<br/>", $rEncodeError) ?>
+                                            </div>
+                                    <?php }
                             } ?>
                             <div class="card">
                                 <div class="card-body">
@@ -459,7 +459,7 @@ if ($rSettings["sidebar"]) { ?>
                                           echo "?id=" . $_GET["id"];
                                       } ?>" method="POST" id="stream_form" data-parsley-validate="">
                                         <?php if (isset($rMovie["id"])) { ?>
-                                            <input type="hidden" name="edit" value="<?= $rMovie["id"] ?>" />
+                                                <input type="hidden" name="edit" value="<?= $rMovie["id"] ?>" />
                                         <?php } ?>
                                         <!--<input type="text" id="tmdb_id" name="tmdb_id" value="<?php if (isset($rMovie)) {
                                             echo htmlspecialchars($rMovie["properties"]["tmdb_id"]);
@@ -475,13 +475,13 @@ if ($rSettings["sidebar"]) { ?>
                                                     </a>
                                                 </li>
                                                 <?php if (!isset($_GET["import"])) { ?>
-                                                    <li class="nav-item">
-                                                        <a href="#movie-information" data-toggle="tab"
-                                                            class="nav-link rounded-0 pt-2 pb-2">
-                                                            <i class="mdi mdi-movie-outline mr-1"></i>
-                                                            <span class="d-none d-sm-inline"><?= $_["information"] ?></span>
-                                                        </a>
-                                                    </li>
+                                                        <li class="nav-item">
+                                                            <a href="#movie-information" data-toggle="tab"
+                                                                class="nav-link rounded-0 pt-2 pb-2">
+                                                                <i class="mdi mdi-movie-outline mr-1"></i>
+                                                                <span class="d-none d-sm-inline"><?= $_["information"] ?></span>
+                                                            </a>
+                                                        </li>
                                                 <?php } ?>
                                                 <li class="nav-item">
                                                     <a href="#advanced-details" data-toggle="tab"
@@ -503,88 +503,40 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <?php if (!isset($_GET["import"])) { ?>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="stream_display_name"><?= $_["movie_name"] ?></label>
-                                                                    <div class="col-md-8">
-                                                                        <input type="text" class="form-control"
-                                                                            id="stream_display_name"
-                                                                            name="stream_display_name" value="<?php if (isset($rMovie)) {
-                                                                                echo htmlspecialchars($rMovie["stream_display_name"]);
-                                                                            } ?>" required
-                                                                            data-parsley-trigger="change">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="tmdb_search"><?= $_["tmdb_results"] ?></label>
-                                                                    <div class="col-md-8">
-                                                                        <select id="tmdb_search" class="form-control"
-                                                                            data-toggle="select2"></select>
-                                                                    </div>
-                                                                </div>
-                                                                <?php
-                                                                if (isset($rMovie)) {
-                                                                    $rMovieSource = json_decode($rMovie["stream_source"], True)[0];
-                                                                } else {
-                                                                    $rMovieSource = "";
-                                                                } ?>
-                                                                <div class="form-group row mb-4 stream-url">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="stream_source"><?= $_["movie_path_or_url"] ?></label>
-                                                                    <div class="col-md-8 input-group">
-                                                                        <input type="text" id="stream_source"
-                                                                            name="stream_source" class="form-control"
-                                                                            value="<?= $rMovieSource ?>" required
-                                                                            data-parsley-trigger="change">
-                                                                        <div class="input-group-append">
-                                                                            <a href="#file-browser" id="filebrowser"
-                                                                                class="btn btn-primary waves-effect waves-light"><i
-                                                                                    class="mdi mdi-folder-open-outline"></i></a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            <?php } else { ?>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="import_type"><?= $_["type"] ?></label>
-                                                                    <div class="col-md-8">
-                                                                        <div class="custom-control custom-radio mt-1">
-                                                                            <span>
-                                                                                <input type="radio" id="import_type_1"
-                                                                                    name="customRadio"
-                                                                                    class="custom-control-input" checked>
-                                                                                <label class="custom-control-label"
-                                                                                    for="import_type_1"><?= $_["m3u"] ?></label>
-                                                                            </span>
-                                                                            <span style="padding-left:50px;">
-                                                                                <input type="radio" id="import_type_2"
-                                                                                    name="customRadio"
-                                                                                    class="custom-control-input">
-                                                                                <label class="custom-control-label"
-                                                                                    for="import_type_2"><?= $_["folder"] ?></label>
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="import_m3uf_toggle">
                                                                     <div class="form-group row mb-4">
                                                                         <label class="col-md-4 col-form-label"
-                                                                            for="m3u_file"><?= $_["m3u_file"] ?></label>
+                                                                            for="stream_display_name"><?= $_["movie_name"] ?></label>
                                                                         <div class="col-md-8">
-                                                                            <input type="file" id="m3u_file"
-                                                                                name="m3u_file" />
+                                                                            <input type="text" class="form-control"
+                                                                                id="stream_display_name"
+                                                                                name="stream_display_name" value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["stream_display_name"]);
+                                                                                } ?>" required
+                                                                                data-parsley-trigger="change">
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div id="import_folder_toggle" style="display:none;">
                                                                     <div class="form-group row mb-4">
                                                                         <label class="col-md-4 col-form-label"
-                                                                            for="import_folder"><?= $_["folder"] ?></label>
+                                                                            for="tmdb_search"><?= $_["tmdb_results"] ?></label>
+                                                                        <div class="col-md-8">
+                                                                            <select id="tmdb_search" class="form-control"
+                                                                                data-toggle="select2"></select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <?php
+                                                                    if (isset($rMovie)) {
+                                                                        $rMovieSource = json_decode($rMovie["stream_source"], True)[0];
+                                                                    } else {
+                                                                        $rMovieSource = "";
+                                                                    } ?>
+                                                                    <div class="form-group row mb-4 stream-url">
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="stream_source"><?= $_["movie_path_or_url"] ?></label>
                                                                         <div class="col-md-8 input-group">
-                                                                            <input type="text" id="import_folder"
-                                                                                name="import_folder" class="form-control"
-                                                                                value="<?= $rMovieSource ?>">
+                                                                            <input type="text" id="stream_source"
+                                                                                name="stream_source" class="form-control"
+                                                                                value="<?= $rMovieSource ?>" required
+                                                                                data-parsley-trigger="change">
                                                                             <div class="input-group-append">
                                                                                 <a href="#file-browser" id="filebrowser"
                                                                                     class="btn btn-primary waves-effect waves-light"><i
@@ -592,16 +544,64 @@ if ($rSettings["sidebar"]) { ?>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                            <?php } else { ?>
                                                                     <div class="form-group row mb-4">
                                                                         <label class="col-md-4 col-form-label"
-                                                                            for="scan_recursive"><?= $_["scan_recursively"] ?></label>
-                                                                        <div class="col-md-2">
-                                                                            <input name="scan_recursive" id="scan_recursive"
-                                                                                type="checkbox" data-plugin="switchery"
-                                                                                class="js-switch" data-color="#039cfd" />
+                                                                            for="import_type"><?= $_["type"] ?></label>
+                                                                        <div class="col-md-8">
+                                                                            <div class="custom-control custom-radio mt-1">
+                                                                                <span>
+                                                                                    <input type="radio" id="import_type_1"
+                                                                                        name="customRadio"
+                                                                                        class="custom-control-input" checked>
+                                                                                    <label class="custom-control-label"
+                                                                                        for="import_type_1"><?= $_["m3u"] ?></label>
+                                                                                </span>
+                                                                                <span style="padding-left:50px;">
+                                                                                    <input type="radio" id="import_type_2"
+                                                                                        name="customRadio"
+                                                                                        class="custom-control-input">
+                                                                                    <label class="custom-control-label"
+                                                                                        for="import_type_2"><?= $_["folder"] ?></label>
+                                                                                </span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                    <div id="import_m3uf_toggle">
+                                                                        <div class="form-group row mb-4">
+                                                                            <label class="col-md-4 col-form-label"
+                                                                                for="m3u_file"><?= $_["m3u_file"] ?></label>
+                                                                            <div class="col-md-8">
+                                                                                <input type="file" id="m3u_file"
+                                                                                    name="m3u_file" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="import_folder_toggle" style="display:none;">
+                                                                        <div class="form-group row mb-4">
+                                                                            <label class="col-md-4 col-form-label"
+                                                                                for="import_folder"><?= $_["folder"] ?></label>
+                                                                            <div class="col-md-8 input-group">
+                                                                                <input type="text" id="import_folder"
+                                                                                    name="import_folder" class="form-control"
+                                                                                    value="<?= $rMovieSource ?>">
+                                                                                <div class="input-group-append">
+                                                                                    <a href="#file-browser" id="filebrowser"
+                                                                                        class="btn btn-primary waves-effect waves-light"><i
+                                                                                            class="mdi mdi-folder-open-outline"></i></a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row mb-4">
+                                                                            <label class="col-md-4 col-form-label"
+                                                                                for="scan_recursive"><?= $_["scan_recursively"] ?></label>
+                                                                            <div class="col-md-2">
+                                                                                <input name="scan_recursive" id="scan_recursive"
+                                                                                    type="checkbox" data-plugin="switchery"
+                                                                                    class="js-switch" data-color="#039cfd" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label"
@@ -612,11 +612,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-toggle="select2" multiple="multiple"
                                                                         data-placeholder="Choose...">
                                                                         <?php foreach (getCategories_admin('movie') as $rCategory): ?>
-                                                                            <option <?php if (isset($rMovie) && in_array(intval($rCategory['id']), json_decode($rMovie['category_id'], true))) {
-                                                                                echo 'selected ';
-                                                                            } ?>value="<?php echo $rCategory['id']; ?>">
-                                                                                <?php echo $rCategory['category_name']; ?>
-                                                                            </option>
+                                                                                <option <?php if (isset($rMovie) && in_array(intval($rCategory['id']), json_decode($rMovie['category_id'], true))) {
+                                                                                    echo 'selected ';
+                                                                                } ?>value="<?php echo $rCategory['id']; ?>">
+                                                                                    <?php echo $rCategory['category_name']; ?>
+                                                                                </option>
                                                                         <?php endforeach; ?>
                                                                     </select>
                                                                 </div>
@@ -630,13 +630,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-toggle="select2" multiple="multiple"
                                                                         data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
-                                                                            <option <?php if (isset($rMovie)) {
-                                                                                if (in_array($rMovie["id"], json_decode($rBouquet["bouquet_movies"], True))) {
-                                                                                    echo "selected ";
-                                                                                }
-                                                                            } ?>value="<?= $rBouquet["id"] ?>">
-                                                                                <?= $rBouquet["bouquet_name"] ?>
-                                                                            </option>
+                                                                                <option <?php if (isset($rMovie)) {
+                                                                                    if (in_array($rMovie["id"], json_decode($rBouquet["bouquet_movies"], True))) {
+                                                                                        echo "selected ";
+                                                                                    }
+                                                                                } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                    <?= $rBouquet["bouquet_name"] ?>
+                                                                                </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -850,34 +850,34 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                                 <?php if (!isset($_GET["import"])) { ?>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="custom_sid"><?= $_["custom_channel_sid"] ?> <i
-                                                                            data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["episode_tooltip_5"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input type="text" class="form-control"
-                                                                            id="custom_sid" name="custom_sid" value="<?php if (isset($rMovie)) {
-                                                                                echo htmlspecialchars($rMovie["custom_sid"]);
-                                                                            } ?>">
-                                                                    </div>
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="custom_sid"><?= $_["custom_channel_sid"] ?> <i
+                                                                                data-toggle="tooltip" data-placement="top"
+                                                                                title=""
+                                                                                data-original-title="<?= $_["episode_tooltip_5"] ?>"
+                                                                                class="mdi mdi-information"></i></label>
+                                                                        <div class="col-md-2">
+                                                                            <input type="text" class="form-control"
+                                                                                id="custom_sid" name="custom_sid" value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rMovie["custom_sid"]);
+                                                                                } ?>">
+                                                                        </div>
                                                                 <?php } else { ?>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["episode_tooltip_3"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="remove_subtitles" id="remove_subtitles"
-                                                                            type="checkbox" <?php if (isset($rMovie)) {
-                                                                                if ($rMovie["remove_subtitles"] == 1) {
-                                                                                    echo "checked ";
-                                                                                }
-                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?>
+                                                                            <i data-toggle="tooltip" data-placement="top"
+                                                                                title=""
+                                                                                data-original-title="<?= $_["episode_tooltip_3"] ?>"
+                                                                                class="mdi mdi-information"></i></label>
+                                                                        <div class="col-md-2">
+                                                                            <input name="remove_subtitles" id="remove_subtitles"
+                                                                                type="checkbox" <?php if (isset($rMovie)) {
+                                                                                    if ($rMovie["remove_subtitles"] == 1) {
+                                                                                        echo "checked ";
+                                                                                    }
+                                                                                } ?>data-plugin="switchery"
+                                                                                class="js-switch" data-color="#039cfd" />
+                                                                        </div>
                                                                 <?php } ?>
                                                             </div>
                                                             <?php if (!isset($_GET["import"])) {
@@ -889,26 +889,26 @@ if ($rSettings["sidebar"]) { ?>
                                                                     }
                                                                 }
                                                                 ?>
-                                                                <div class="form-group row mb-4 stream-url">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="movie_subtitles"><?= $_["subtitle_location"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["episode_tooltip_6"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-8 input-group">
-                                                                        <input type="text" id="movie_subtitles"
-                                                                            name="movie_subtitles" class="form-control"
-                                                                            value="<?php if (isset($rMovie)) {
-                                                                                echo htmlspecialchars($rSubFile);
-                                                                            } ?>">
-                                                                        <div class="input-group-append">
-                                                                            <a href="#file-browser" id="filebrowser-sub"
-                                                                                class="btn btn-primary waves-effect waves-light"><i
-                                                                                    class="mdi mdi-folder-open-outline"></i></a>
+                                                                    <div class="form-group row mb-4 stream-url">
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="movie_subtitles"><?= $_["subtitle_location"] ?>
+                                                                            <i data-toggle="tooltip" data-placement="top"
+                                                                                title=""
+                                                                                data-original-title="<?= $_["episode_tooltip_6"] ?>"
+                                                                                class="mdi mdi-information"></i></label>
+                                                                        <div class="col-md-8 input-group">
+                                                                            <input type="text" id="movie_subtitles"
+                                                                                name="movie_subtitles" class="form-control"
+                                                                                value="<?php if (isset($rMovie)) {
+                                                                                    echo htmlspecialchars($rSubFile);
+                                                                                } ?>">
+                                                                            <div class="input-group-append">
+                                                                                <a href="#file-browser" id="filebrowser-sub"
+                                                                                    class="btn btn-primary waves-effect waves-light"><i
+                                                                                        class="mdi mdi-folder-open-outline"></i></a>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label"
@@ -929,54 +929,54 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?= $_["transcoding_disabled"] ?>
                                                                         </option>
                                                                         <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
-                                                                            <option <?php if (isset($rMovie)) {
-                                                                                if (intval($rMovie["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
-                                                                                    echo "selected ";
-                                                                                }
-                                                                            } ?>value="<?= $rProfile["profile_id"] ?>">
-                                                                                <?= $rProfile["profile_name"] ?>
-                                                                            </option>
+                                                                                <option <?php if (isset($rMovie)) {
+                                                                                    if (intval($rMovie["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
+                                                                                        echo "selected ";
+                                                                                    }
+                                                                                } ?>value="<?= $rProfile["profile_id"] ?>">
+                                                                                    <?= $rProfile["profile_name"] ?>
+                                                                                </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <?php if (!isset($_GET["import"])) { ?>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="target_container"><?= $_["target_container"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["episode_tooltip_4"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <select name="target_container"
-                                                                            id="target_container" class="form-control"
-                                                                            data-toggle="select2">
-                                                                            <?php foreach (array("mp4", "mkv", "avi", "mpg", "flv") as $rContainer) { ?>
-                                                                                <option <?php if (isset($rMovie)) {
-                                                                                    if (json_decode($rMovie["target_container"], True)[0] == $rContainer) {
-                                                                                        echo "selected ";
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="target_container"><?= $_["target_container"] ?>
+                                                                            <i data-toggle="tooltip" data-placement="top"
+                                                                                title=""
+                                                                                data-original-title="<?= $_["episode_tooltip_4"] ?>"
+                                                                                class="mdi mdi-information"></i></label>
+                                                                        <div class="col-md-2">
+                                                                            <select name="target_container"
+                                                                                id="target_container" class="form-control"
+                                                                                data-toggle="select2">
+                                                                                <?php foreach (array("mp4", "mkv", "avi", "mpg", "flv") as $rContainer) { ?>
+                                                                                        <option <?php if (isset($rMovie)) {
+                                                                                            if (json_decode($rMovie["target_container"], True)[0] == $rContainer) {
+                                                                                                echo "selected ";
+                                                                                            }
+                                                                                        } ?>value="<?= $rContainer ?>">
+                                                                                            <?= $rContainer ?>
+                                                                                        </option>
+                                                                                <?php } ?>
+                                                                            </select>
+                                                                        </div>
+                                                                        <label class="col-md-4 col-form-label"
+                                                                            for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?>
+                                                                            <i data-toggle="tooltip" data-placement="top"
+                                                                                title=""
+                                                                                data-original-title=<?= $_["episode_tooltip_3"] ?>" class="mdi mdi-information"></i></label>
+                                                                        <div class="col-md-2">
+                                                                            <input name="remove_subtitles" id="remove_subtitles"
+                                                                                type="checkbox" <?php if (isset($rMovie)) {
+                                                                                    if ($rMovie["remove_subtitles"] == 1) {
+                                                                                        echo "checked ";
                                                                                     }
-                                                                                } ?>value="<?= $rContainer ?>">
-                                                                                    <?= $rContainer ?>
-                                                                                </option>
-                                                                            <?php } ?>
-                                                                        </select>
-                                                                    </div>
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="remove_subtitles"><?= $_["remove_existing_subtitles"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title=<?= $_["episode_tooltip_3"] ?>" class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-2">
-                                                                        <input name="remove_subtitles" id="remove_subtitles"
-                                                                            type="checkbox" <?php if (isset($rMovie)) {
-                                                                                if ($rMovie["remove_subtitles"] == 1) {
-                                                                                    echo "checked ";
-                                                                                }
-                                                                            } ?>data-plugin="switchery"
-                                                                            class="js-switch" data-color="#039cfd" />
-                                                                    </div>
+                                                                                } ?>data-plugin="switchery"
+                                                                                class="js-switch" data-color="#039cfd" />
+                                                                        </div>
                                                                 <?php } ?>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -1040,10 +1040,10 @@ if ($rSettings["sidebar"]) { ?>
                                                         <select id="server_id" class="form-control"
                                                             data-toggle="select2">
                                                             <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                                <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
-                                                                      echo " selected";
-                                                                  } ?>><?= htmlspecialchars($rServer["server_name"]) ?>
-                                                                </option>
+                                                                    <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
+                                                                          echo " selected";
+                                                                      } ?>><?= htmlspecialchars($rServer["server_name"]) ?>
+                                                                    </option>
                                                             <?php } ?>
                                                         </select>
                                                     </div>
@@ -1062,23 +1062,23 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div>
                                                 </div>
                                                 <?php if (!isset($_GET["import"])) { ?>
-                                                    <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="search"><?= $_["search_directory"] ?></label>
-                                                        <div class="col-md-8 input-group">
-                                                            <input type="text" id="search" name="search"
-                                                                class="form-control"
-                                                                placeholder="<?= $_["filter_files"] ?>...">
-                                                            <div class="input-group-append">
-                                                                <button class="btn btn-warning waves-effect waves-light"
-                                                                    type="button" onClick="clearSearch()"><i
-                                                                        class="mdi mdi-close"></i></button>
-                                                                <button class="btn btn-primary waves-effect waves-light"
-                                                                    type="button" id="doSearch"><i
-                                                                        class="mdi mdi-magnify"></i></button>
+                                                        <div class="form-group row mb-4">
+                                                            <label class="col-md-4 col-form-label"
+                                                                for="search"><?= $_["search_directory"] ?></label>
+                                                            <div class="col-md-8 input-group">
+                                                                <input type="text" id="search" name="search"
+                                                                    class="form-control"
+                                                                    placeholder="<?= $_["filter_files"] ?>...">
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-warning waves-effect waves-light"
+                                                                        type="button" onClick="clearSearch()"><i
+                                                                            class="mdi mdi-close"></i></button>
+                                                                    <button class="btn btn-primary waves-effect waves-light"
+                                                                        type="button" id="doSearch"><i
+                                                                            class="mdi mdi-magnify"></i></button>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
                                                 <?php } ?>
                                                 <div class="form-group row mb-4">
                                                     <div class="col-md-6">
@@ -1105,10 +1105,10 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div>
                                                 </div>
                                                 <?php if (isset($_GET["import"])) { ?>
-                                                    <div class="float-right">
-                                                        <input id="select_folder" type="button" class="btn btn-info"
-                                                            value="<?= $_["select"] ?>" />
-                                                    </div>
+                                                        <div class="float-right">
+                                                            <input id="select_folder" type="button" class="btn btn-info"
+                                                                value="<?= $_["select"] ?>" />
+                                                        </div>
                                                 <?php } ?>
                                             </div> <!-- end col -->
                                         </div>
@@ -1385,19 +1385,19 @@ if ($rSettings["sidebar"]) { ?>
 
                     $("#stream_form").submit(function (e) {
                         <?php if (!isset($_GET["import"])) { ?>
-                            if ($("#stream_display_name").val().length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["enter_movie_name"] ?>");
-                            }
-                            if ($("#stream_source").val().length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["enter_movie_source"] ?>");
-                            }
+                                if ($("#stream_display_name").val().length == 0) {
+                                    e.preventDefault();
+                                    $.toast("<?= $_["enter_movie_name"] ?>");
+                                }
+                                if ($("#stream_source").val().length == 0) {
+                                    e.preventDefault();
+                                    $.toast("<?= $_["enter_movie_source"] ?>");
+                                }
                         <?php } else { ?>
-                            if (($("#m3u_file").val().length == 0) && ($("#import_folder").val().length == 0)) {
-                                e.preventDefault();
-                                $.toast("<?= $_["select_m3u_file"] ?>");
-                            }
+                                if (($("#m3u_file").val().length == 0) && ($("#import_folder").val().length == 0)) {
+                                    e.preventDefault();
+                                    $.toast("<?= $_["select_m3u_file"] ?>");
+                                }
                         <?php } ?>
                         $("#server_tree_data").val(JSON.stringify($('#server_tree').jstree(true).get_json('#', {
                             flat: true
@@ -1602,32 +1602,32 @@ if ($rSettings["sidebar"]) { ?>
                     });
 
                     <?php if (isset($rMovie["id"])) { ?>
-                        $("#datatable-list").DataTable({
-                            ordering: false,
-                            paging: false,
-                            searching: false,
-                            processing: true,
-                            serverSide: true,
-                            bInfo: false,
-                            ajax: {
-                                url: "./table_search.php",
-                                "data": function (d) {
-                                    d.id = "movies";
-                                    d.stream_id = <?= $rMovie["id"] ?>;
+                            $("#datatable-list").DataTable({
+                                ordering: false,
+                                paging: false,
+                                searching: false,
+                                processing: true,
+                                serverSide: true,
+                                bInfo: false,
+                                ajax: {
+                                    url: "./table_search.php",
+                                    "data": function (d) {
+                                        d.id = "movies";
+                                        d.stream_id = <?= $rMovie["id"] ?>;
+                                    }
+                                },
+                                columnDefs: [{
+                                    "className": "dt-center",
+                                    "targets": [2, 3, 4, 5]
+                                },
+                                {
+                                    "visible": false,
+                                    "targets": [0, 1, 6, 7]
                                 }
-                            },
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [2, 3, 4, 5]
-                            },
-                            {
-                                "visible": false,
-                                "targets": [0, 1, 6, 7]
-                            }
-                            ],
-                        });
-                        setTimeout(reloadStream, 5000);
-                        $("#stream_display_name").trigger('change');
+                                ],
+                            });
+                            setTimeout(reloadStream, 5000);
+                            $("#stream_display_name").trigger('change');
                     <?php } ?>
 
                     $("#import_type_1").click(function () {

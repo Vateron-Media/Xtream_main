@@ -110,7 +110,7 @@ if (isset($_POST["submit_stream"])) {
         foreach ($rStreamIDs as $rStreamID) {
             $rQueries = array();
             foreach ($rArray as $rKey => $rValue) {
-                $rQueries[] = "`" . ESC($rKey) . "` = '" . ESC($rValue) . "'";
+                $rQueries[] = "`" . $ipTV_db_admin->escape($rKey) . "` = '" . $ipTV_db_admin->escape($rValue) . "'";
             }
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);
@@ -169,25 +169,25 @@ if (isset($_POST["submit_stream"])) {
             if (isset($_POST["c_user_agent"])) {
                 $ipTV_db_admin->query("DELETE FROM `streams_options` WHERE `stream_id` = " . intval($rStreamID) . " AND `argument_id` = 1;");
                 if ((isset($_POST["user_agent"])) && (strlen($_POST["user_agent"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rStreamID) . ", 1, '" . ESC($_POST["user_agent"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rStreamID) . ", 1, '" . $ipTV_db_admin->escape($_POST["user_agent"]) . "');");
                 }
             }
             if (isset($_POST["c_http_proxy"])) {
                 $ipTV_db_admin->query("DELETE FROM `streams_options` WHERE `stream_id` = " . intval($rStreamID) . " AND `argument_id` = 2;");
                 if ((isset($_POST["http_proxy"])) && (strlen($_POST["http_proxy"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rStreamID) . ", 2, '" . ESC($_POST["http_proxy"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rStreamID) . ", 2, '" . $ipTV_db_admin->escape($_POST["http_proxy"]) . "');");
                 }
             }
             if (isset($_POST["c_cookie"])) {
                 $ipTV_db_admin->query("DELETE FROM `streams_options` WHERE `stream_id` = " . intval($rStreamID) . " AND `argument_id` = 17;");
                 if ((isset($_POST["cookie"])) && (strlen($_POST["cookie"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rStreamID) . ", 17, '" . ESC($_POST["cookie"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rStreamID) . ", 17, '" . $ipTV_db_admin->escape($_POST["cookie"]) . "');");
                 }
             }
             if (isset($_POST["c_headers"])) {
                 $ipTV_db_admin->query("DELETE FROM `streams_options` WHERE `stream_id` = " . intval($rStreamID) . " AND `argument_id` = 19;");
                 if ((isset($_POST["headers"])) && (strlen($_POST["headers"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rStreamID) . ", 19, '" . ESC($_POST["headers"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rStreamID) . ", 19, '" . $ipTV_db_admin->escape($_POST["headers"]) . "');");
                 }
             }
             if (isset($_POST["c_bouquets"])) {

@@ -38,7 +38,7 @@ if (isset($_POST["submit_series"])) {
             $rArray[$rKey] = $rValue;
         }
     }
-    $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
+    $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
     $rValues = null;
     foreach (array_values($rArray) as $rValue) {
         isset($rValues) ? $rValues .= ',' : $rValues = '';
@@ -48,12 +48,12 @@ if (isset($_POST["submit_series"])) {
         if (is_null($rValue)) {
             $rValues .= 'NULL';
         } else {
-            $rValues .= '\'' . ESC($rValue) . '\'';
+            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
         }
     }
     if (isset($_POST["edit"])) {
         $rCols = "`id`," . $rCols;
-        $rValues = ESC($_POST["edit"]) . "," . $rValues;
+        $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `series`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_adminTV_db_admin->query($rQuery)) {
@@ -86,7 +86,7 @@ if (isset($_GET["id"])) {
     if ((!$rSeries) or (!hasPermissions("adv", "edit_series"))) {
         exit;
     }
-} else if (!hasPermissions("adv", "add_series")) {
+} elseif (!hasPermissions("adv", "add_series")) {
     exit;
 }
 
@@ -99,10 +99,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -117,9 +117,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rSeries)) {
                                     echo $rSeries["title"];
-                                } else {
-                                    echo $_["add_series"];
-                                } ?></h4>
+                                                       } else {
+                                                           echo $_["add_series"];
+                                                       } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -133,7 +133,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["series_operation"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -145,13 +145,13 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body">
                                     <form action="./serie.php<?php if (isset($_GET["id"])) {
                                         echo "?id=" . $_GET["id"];
-                                    } ?>" method="POST" id="series_form" data-parsley-validate="">
+                                                             } ?>" method="POST" id="series_form" data-parsley-validate="">
                                         <?php if (isset($rSeries)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rSeries["id"] ?>" />
                                         <?php } ?>
                                         <!--<input type="hidden" id="tmdb_id" name="tmdb_id" value="<?php if (isset($rSeries)) {
                                             echo htmlspecialchars($rSeries["tmdb_id"]);
-                                        } ?>" />-->
+                                                                                                    } ?>" />-->
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
@@ -180,7 +180,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="title"
                                                                         name="title" value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["title"]);
-                                                                        } ?>" required data-parsley-trigger="change">
+                                                                                            } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -202,9 +202,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if (intval($rSeries["category_id"]) == intval($rCategory["id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } else if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                echo "selected ";
-                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                    } elseif ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                                        echo "selected ";
+                                                                                    } ?>value="<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?>
                                                                             </option>
                                                                         <?php } ?>
@@ -221,10 +221,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <option <?php if (isset($rSeries)) {
-                                                                                if (in_array($rSeries["id"], json_decode($rBouquet["bouquet_series"], True))) {
+                                                                                if (in_array($rSeries["id"], json_decode($rBouquet["bouquet_series"], true))) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rBouquet["id"] ?>"><?= htmlspecialchars($rBouquet["bouquet_name"]) ?>
+                                                                                    } ?>value="<?= $rBouquet["id"] ?>"><?= htmlspecialchars($rBouquet["bouquet_name"]) ?>
                                                                             </option>
                                                                         <?php } ?>
                                                                     </select>
@@ -249,7 +249,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="cover"
                                                                         name="cover" value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["cover"]);
-                                                                        } ?>">
+                                                                                            } ?>">
                                                                     <div class="input-group-append">
                                                                         <a href="javascript:void(0)"
                                                                             onClick="openImage(this)"
@@ -264,8 +264,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8 input-group">
                                                                     <input type="text" class="form-control"
                                                                         id="backdrop_path" name="backdrop_path" value="<?php if (isset($rSeries)) {
-                                                                            echo htmlspecialchars(json_decode($rSeries["backdrop_path"], True)[0]);
-                                                                        } ?>">
+                                                                            echo htmlspecialchars(json_decode($rSeries["backdrop_path"], true)[0]);
+                                                                                                                       } ?>">
                                                                     <div class="input-group-append">
                                                                         <a href="javascript:void(0)"
                                                                             onClick="openImage(this)"
@@ -281,7 +281,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <textarea rows="6" class="form-control" id="plot"
                                                                         name="plot"><?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["plot"]);
-                                                                        } ?></textarea>
+                                                                                    } ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -291,7 +291,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="cast"
                                                                         name="cast" value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["cast"]);
-                                                                        } ?>">
+                                                                                           } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -301,7 +301,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="director" name="director" value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["director"]);
-                                                                        } ?>">
+                                                                                                             } ?>">
                                                                 </div>
                                                                 <label class="col-md-2 col-form-label"
                                                                     for="genre"><?= $_["genres"] ?></label>
@@ -309,7 +309,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="genre"
                                                                         name="genre" value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["genre"]);
-                                                                        } ?>">
+                                                                                            } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -319,7 +319,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="releaseDate" name="releaseDate" value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["releaseDate"]);
-                                                                        } ?>">
+                                                                                                                   } ?>">
                                                                 </div>
                                                                 <label class="col-md-2 col-form-label"
                                                                     for="episode_run_time"><?= $_["runtime"] ?></label>
@@ -328,7 +328,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="episode_run_time" name="episode_run_time"
                                                                         value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["episode_run_time"]);
-                                                                        } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -339,7 +339,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="youtube_trailer" name="youtube_trailer"
                                                                         value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["youtube_trailer"]);
-                                                                        } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                                 <label class="col-md-2 col-form-label"
                                                                     for="rating"><?= $_["rating"] ?></label>
@@ -347,7 +347,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="rating"
                                                                         name="rating" value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["rating"]);
-                                                                        } ?>">
+                                                                                             } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -357,7 +357,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="tmdb_id"
                                                                         name="tmdb_id" value="<?php if (isset($rSeries)) {
                                                                             echo htmlspecialchars($rSeries["tmdb_id"]);
-                                                                        } ?>">
+                                                                                              } ?>">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -371,9 +371,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             <input name="submit_series" type="submit"
                                                                 class="btn btn-primary" value="<?php if (isset($rSeries)) {
                                                                     echo $_["edit"];
-                                                                } else {
-                                                                    echo $_["add"];
-                                                                } ?>" />
+                                                                                               } else {
+                                                                                                   echo $_["add"];
+                                                                                               } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

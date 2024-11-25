@@ -21,13 +21,13 @@ if (isset($_POST["bouquet_order_array"])) {
         foreach ($rUsers as $rUser) {
             $rBouquet = json_decode($rUser["bouquet"], True);
             $rBouquet = sortArrayByArray($rBouquet, $rOrder);
-            $ipTV_db_admin->query("UPDATE `users` SET `bouquet` = '[" . ESC(join(",", $rBouquet)) . "]' WHERE `id` = " . intval($rUser["id"]) . ";");
+            $ipTV_db_admin->query("UPDATE `users` SET `bouquet` = '[" . $ipTV_db_admin->escape(join(",", $rBouquet)) . "]' WHERE `id` = " . intval($rUser["id"]) . ";");
         }
         $rPackages = getPackages();
         foreach ($rPackages as $rPackage) {
             $rBouquet = json_decode($rPackage["bouquets"], True);
             $rBouquet = sortArrayByArray($rBouquet, $rOrder);
-            $ipTV_db_admin->query("UPDATE `packages` SET `bouquets` = '[" . ESC(join(",", $rBouquet)) . "]' WHERE `id` = " . intval($rPackage["id"]) . ";");
+            $ipTV_db_admin->query("UPDATE `packages` SET `bouquets` = '[" . $ipTV_db_admin->escape(join(",", $rBouquet)) . "]' WHERE `id` = " . intval($rPackage["id"]) . ";");
         }
         $_STATUS = 0;
     } else {

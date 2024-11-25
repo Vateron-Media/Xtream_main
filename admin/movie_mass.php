@@ -60,7 +60,7 @@ if (isset($_POST["submit_stream"])) {
             $rQueries = array();
             $rArray["category_id"] = '[' . implode(',', array_map('intval', $categoriesIDs)) . ']';
             foreach ($rArray as $rKey => $rValue) {
-                $rQueries[] = "`" . ESC($rKey) . "` = '" . ESC($rValue) . "'";
+                $rQueries[] = "`" . $ipTV_db_admin->escape($rKey) . "` = '" . $ipTV_db_admin->escape($rValue) . "'";
             }
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);

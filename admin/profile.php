@@ -63,7 +63,7 @@ if (isset($_POST["submit_profile"])) {
         $rProfileOptions["16"] = array("cmd" => "-i \"" . $_POST["logo_path"] . "\" -filter_complex \"overlay\"", "val" => $_POST["logo_path"]);
     }
     $rArray["profile_options"] = json_encode($rProfileOptions);
-    $rCols = "`" . ESC(implode('`,`', array_keys($rArray))) . "`";
+    $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
     foreach (array_values($rArray) as $rValue) {
         isset($rValues) ? $rValues .= ',' : $rValues = '';
         if (is_array($rValue)) {
@@ -72,7 +72,7 @@ if (isset($_POST["submit_profile"])) {
         if (is_null($rValue)) {
             $rValues .= 'NULL';
         } else {
-            $rValues .= '\'' . ESC($rValue) . '\'';
+            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
         }
     }
     if (isset($_POST["edit"])) {
@@ -80,7 +80,7 @@ if (isset($_POST["submit_profile"])) {
             exit;
         }
         $rCols = "profile_id," . $rCols;
-        $rValues = ESC($_POST["edit"]) . "," . $rValues;
+        $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `transcoding_profiles`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {

@@ -57,7 +57,7 @@ if (isset($_POST["submit_stream"])) {
         foreach ($rStreamIDs as $rStreamID) {
             $rQueries = array();
             foreach ($rArray as $rKey => $rValue) {
-                $rQueries[] = "`" . ESC($rKey) . "` = '" . ESC($rValue) . "'";
+                $rQueries[] = "`" . $ipTV_db_admin->escape($rKey) . "` = '" . $ipTV_db_admin->escape($rValue) . "'";
             }
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);

@@ -60,7 +60,7 @@ if (isset($_POST["submit_user"])) {
         foreach ($rUsers as $rUser) {
             $rQueries = array();
             foreach ($rArray as $rKey => $rValue) {
-                $rQueries[] = "`" . ESC($rKey) . "` = '" . ESC($rValue) . "'";
+                $rQueries[] = "`" . $ipTV_db_admin->escape($rKey) . "` = '" . $ipTV_db_admin->escape($rValue) . "'";
             }
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);
