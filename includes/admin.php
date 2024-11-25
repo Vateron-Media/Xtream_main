@@ -64,8 +64,6 @@ $nabilos = getRegisteredUserHash($_SESSION['hash']);
 if (file_exists("/home/xtreamcodes/admin/.update")) {
     unlink("/home/xtreamcodes/admin/.update");
     if (!file_exists("/home/xtreamcodes/admin/.update")) {
-        // Update table settings etc.
-        //checkTable("languages");
         //priority backup
         //$ipTV_db_admin->query("UPDATE settings SET priority_backup = 1;");
 
@@ -881,18 +879,6 @@ function getBouquet($rID) {
         return $ipTV_db_admin->get_row();
     }
     return null;
-}
-
-function getLanguages() {
-    global $ipTV_db_admin;
-    $return = array();
-    $ipTV_db_admin->query("SELECT * FROM `languages` ORDER BY `key` ASC;");
-    if ($ipTV_db_admin->num_rows() > 0) {
-        foreach ($ipTV_db_admin->get_rows() as $row) {
-            $return[] = $row;
-        }
-    }
-    return $return;
 }
 
 function addToBouquet($rType, $rBouquetID, $rID) {
