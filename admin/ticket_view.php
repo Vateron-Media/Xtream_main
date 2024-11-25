@@ -14,7 +14,7 @@ if (!$rTicket) {
 }
 
 if ($rUserInfo["id"] <> $rTicket["member_id"]) {
-    $db->query("UPDATE `tickets` SET `admin_read` = 1 WHERE `id` = " . intval($_GET["id"]) . ";");
+    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 1 WHERE `id` = " . intval($_GET["id"]) . ";");
 }
 
 if ($rSettings["sidebar"]) {

@@ -33,11 +33,11 @@ if (isset($_POST["submit_ua"])) {
         $rValues = ESC($_POST["edit"]) . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `blocked_user_agents`(" . $rCols . ") VALUES(" . $rValues . ");";
-    if ($db->query($rQuery)) {
+    if ($ipTV_db_admin->query($rQuery)) {
         if (isset($_POST["edit"])) {
             $rInsertID = intval($_POST["edit"]);
         } else {
-            $rInsertID = $db->insert_id;
+            $rInsertID = $ipTV_db_admin->last_insert_id();
         }
     }
     if (isset($rInsertID)) {

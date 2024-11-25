@@ -79,18 +79,18 @@ if ($rType == "users") {
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(`users`.`id`) AS `count` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `users`.`id`, `users`.`member_id`, `users`.`username`, `users`.`password`, `users`.`exp_date`, `users`.`admin_enabled`, `users`.`enabled`, `users`.`isp_desc`, `users`.`is_isplock`, `users`.`admin_notes`, `users`.`reseller_notes`, `users`.`max_connections`,  `users`.`is_trial`, `reg_users`.`username` AS `owner_name`, (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) AS `active_connections`, (SELECT user_ip FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id` LIMIT 1) AS `user_ip`, (SELECT MAX(`date_start`) FROM `user_activity` WHERE `users`.`id` = `user_activity`.`user_id`) AS `last_active` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 if (!$rRow["admin_enabled"]) {
                     $rStatus = '<span class="mdi mdi-close mdi-24px text-danger role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Banned"></span>';
@@ -228,8 +228,8 @@ if ($rType == "users") {
                     $rLeftDate = "<center>-</center>";
                 }
                 $query = "SELECT lines_live.date_start, lines_live.geoip_country_code, lines_live.user_ip, lines_live.stream_id, lines_live.user_id, streams.id, streams.stream_display_name FROM lines_live LEFT JOIN streams ON lines_live.stream_id = streams.id WHERE user_id = " . $rRow["id"];
-                $result = $db->query($query);
-                $row2 = mysqli_fetch_assoc($result);
+                $ipTV_db_admin->query($query);
+                $row2 = $ipTV_db_admin->get_row();
                 if (!empty($row2['stream_display_name'])) {
                     $rTime = intval(time()) - intval($row2["date_start"]);
                     $rStream_name = "<span style='color: #20a009;'</span>" . $row2['stream_display_name'] . "<br><span style='color: #737373;'>" . "Uptime </span>" . "<span style='color: #737373;'>" . sprintf('%02d:%02d:%02d', ($rTime / 3600), ($rTime / 60 % 60), $rTime % 60) . "<br><a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $row2["user_ip"] . "'</span>" . $row2["user_ip"] . " " . $row2['geoip_country_code'] . "<br><span style='color: #737373;'></span>" . $rRow["isp_desc"];
@@ -290,18 +290,18 @@ if ($rType == "users") {
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(`users`.`id`) AS `count` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `users`.`id`, `users`.`username`, `mag_devices`.`mac`, `mag_devices`.`mag_id`, `users`.`exp_date`, `users`.`admin_enabled`, `users`.`enabled`, `users`.`isp_desc`, `users`.`is_isplock`, `users`.`admin_notes`, `users`.`reseller_notes`, `users`.`max_connections`,  `users`.`is_trial`, `reg_users`.`username` AS `owner_name`, (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) AS `active_connections`, (SELECT user_ip FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id` LIMIT 1) AS `user_ip` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 if (!$rRow["admin_enabled"]) {
                     $rStatus = '<span class="mdi mdi-close mdi-24px text-danger role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Banned"></span>';
@@ -442,8 +442,8 @@ if ($rType == "users") {
                     $rLeftDate = "<center>-</center>";
                 }
                 $query = "SELECT lines_live.date_start, lines_live.geoip_country_code, lines_live.user_ip, lines_live.stream_id, lines_live.user_id, streams.id, streams.stream_display_name FROM lines_live LEFT JOIN streams ON lines_live.stream_id = streams.id WHERE user_id = " . $rRow["id"];
-                $result = $db->query($query);
-                $row2 = mysqli_fetch_assoc($result);
+                $ipTV_db_admin->query($query);
+                $row2 = $ipTV_db_admin->get_row();
                 if (!empty($row2['stream_display_name'])) {
                     $rTime = intval(time()) - intval($row2["date_start"]);
                     $rStream_name = "<span style='color: #20a009;'</span>" . $row2['stream_display_name'] . "<br><span style='color: #737373;'>" . "Uptime </span>" . "<span style='color: #737373;'>" . sprintf('%02d:%02d:%02d', ($rTime / 3600), ($rTime / 60 % 60), $rTime % 60) . "<br><a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $row2["user_ip"] . "'</span>" . $row2["user_ip"] . " " . $row2['geoip_country_code'] . "<br><span style='color: #737373;'></span>" . $rRow["isp_desc"];
@@ -504,18 +504,18 @@ if ($rType == "users") {
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(`users`.`id`) AS `count` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `enigma2_devices` ON `enigma2_devices`.`user_id` = `users`.`id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `users`.`id`, `users`.`username`, `enigma2_devices`.`mac`, `users`.`exp_date`, `users`.`admin_enabled`, `users`.`enabled`, `users`.`isp_desc`, `users`.`is_isplock`, `users`.`admin_notes`, `users`.`reseller_notes`, `users`.`max_connections`,  `users`.`is_trial`, `reg_users`.`username` AS `owner_name`, (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) AS `active_connections`, (SELECT user_ip FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id` LIMIT 1) AS `user_ip` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `enigma2_devices` ON `enigma2_devices`.`user_id` = `users`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 if (!$rRow["admin_enabled"]) {
                     $rStatus = '<span class="mdi mdi-close mdi-24px text-danger role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Banned"></span>';
@@ -637,8 +637,8 @@ if ($rType == "users") {
                     $rLeftDate = "<center>-</center>";
                 }
                 $query = "SELECT lines_live.date_start, lines_live.geoip_country_code, lines_live.user_ip, lines_live.stream_id, lines_live.user_id, streams.id, streams.stream_display_name FROM lines_live LEFT JOIN streams ON lines_live.stream_id = streams.id WHERE user_id = " . $rRow["id"];
-                $result = $db->query($query);
-                $row2 = mysqli_fetch_assoc($result);
+                $ipTV_db_admin->query($query);
+                $row2 = $ipTV_db_admin->get_row();
                 if (!empty($row2['stream_display_name'])) {
                     $rTime = intval(time()) - intval($row2["date_start"]);
                     $rStream_name = "<span style='color: #20a009;'</span>" . $row2['stream_display_name'] . "<br><span style='color: #737373;'>" . "Uptime </span>" . "<span style='color: #737373;'>" . sprintf('%02d:%02d:%02d', ($rTime / 3600), ($rTime / 60 % 60), $rTime % 60) . "<br><a target='_blank' href='https://www.ip-tracker.org/locator/ip-lookup.php?ip=" . $row2["user_ip"] . "'</span>" . $row2["user_ip"] . " " . $row2['geoip_country_code'] . "<br><span style='color: #737373;'></span>" . $rRow["isp_desc"];
@@ -712,18 +712,18 @@ if ($rType == "users") {
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT (SELECT COUNT(`id`) FROM `epg_data` WHERE `epg_data`.`epg_id` = `streams`.`epg_id` AND `epg_data`.`channel_id` = `streams`.`channel_id`) AS `count_epg`, `streams`.`id`, `streams`.`type`, `streams`.`stream_icon`, `streams`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 $rCategory = $rRow["category_name"] ?: "No Category";
                 if ($rRow["tv_archive_duration"] > 0) {
@@ -775,7 +775,7 @@ if ($rType == "users") {
                     $rActualStatus = 0;
                 }
                 if ($rRow["type"] == 3) {
-                    if (count(json_decode($rRow["cchannel_rsources"], True)) <> count(json_decode($rRow["stream_source"], True))) {
+                    if (count(json_decode($rRow["cchannel_rsources"], true)) <> count(json_decode($rRow["stream_source"], true))) {
                         // Still processing...
                         $rActualStatus = 6;
                     }
@@ -839,11 +839,11 @@ if ($rType == "users") {
                     $rPlayer = '<button type="button" disabled class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-play"></i></button>';
                 }
                 $rStreamInfoText = "<div style='font-size: 10px;' class='text-center' align='center'><tbody><tr><td colspan='5' class='col'>No information available</td></tr></tbody></div>";
-                $rStreamInfo = json_decode($rRow["stream_info"], True);
+                $rStreamInfo = json_decode($rRow["stream_info"], true);
                 if ($rStreamInfo == 0 || $rStreamInfo == "") {
                     $rStreamInfo = [];
                 }
-                $rProgressInfo = json_decode($rRow["progress_info"], True);
+                $rProgressInfo = json_decode($rRow["progress_info"], true);
                 if ($rActualStatus == 1) {
                     if (!isset($rStreamInfo["codecs"]["video"])) {
                         $rStreamInfo["codecs"]["video"] = array("width" => "?", "height" => "?", "codec_name" => "N/A", "r_frame_rate" => "--");
@@ -959,18 +959,18 @@ if ($rType == "users") {
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `streams`.`id`, `streams`.`type`, `streams`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 $rCategory = $rRow["category_name"] ?: "No Category";
                 $rStreamName = "<b>" . $rRow['stream_display_name'] . "</b><br><span style='font-size:11px;'>{$rCategory}</span>";
@@ -1064,8 +1064,8 @@ if ($rType == "users") {
                 }
                 $rButtons .= '</div>';
                 $rStreamInfoText = "<table style='font-size: 10px;' class='text-center' align='center'><tbody><tr><td colspan='5' class='col'>No information available</td></tr></tbody></table>";
-                $rStreamInfo = json_decode($rRow["stream_info"], True);
-                $rProgressInfo = json_decode($rRow["progress_info"], True);
+                $rStreamInfo = json_decode($rRow["stream_info"], true);
+                $rProgressInfo = json_decode($rRow["progress_info"], true);
                 if ($rActualStatus == 1) {
                     if (!isset($rStreamInfo["codecs"]["video"])) {
                         $rStreamInfo["codecs"]["video"] = array("width" => "?", "height" => "?", "codec_name" => "N/A", "r_frame_rate" => "--");
@@ -1171,18 +1171,18 @@ if ($rType == "users") {
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `streams`.`id`, `streams_servers`.`to_analyze`, `streams`.`target_container`, `streams`.`stream_display_name`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 $rCategory = $rRow["category_name"] ?: "No Category";
                 $rStreamName = "<b>" . $rRow['stream_display_name'] . "</b><br><span style='font-size:11px;'>{$rCategory}</span>";
@@ -1248,7 +1248,7 @@ if ($rType == "users") {
                 $rButtons .= '</div>';
                 if (hasPermissions("adv", "player")) {
                     if (((intval($rActualStatus) == 1) or ($rActualStatus == 3))) {
-                        $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ', \'' . json_decode($rRow["target_container"], True)[0] . '\');"><i class="mdi mdi-play"></i></button>';
+                        $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ', \'' . json_decode($rRow["target_container"], true)[0] . '\');"><i class="mdi mdi-play"></i></button>';
                     } else {
                         $rPlayer = '<button type="button" disabled class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-play"></i></button>';
                     }
@@ -1256,7 +1256,7 @@ if ($rType == "users") {
                     $rPlayer = '<button type="button" disabled class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-play"></i></button>';
                 }
                 $rStreamInfoText = "<div style='font-size: 10px;' class='text-center' align='center'><tbody><tr><td colspan='3' class='col'>No information available</td></tr></tbody></div>";
-                $rStreamInfo = json_decode($rRow["stream_info"], True);
+                $rStreamInfo = json_decode($rRow["stream_info"], true);
                 if ($rActualStatus == 1) {
                     if (!isset($rStreamInfo["codecs"]["video"])) {
                         $rStreamInfo["codecs"]["video"] = array("width" => "?", "height" => "?", "codec_name" => "N/A", "r_frame_rate" => "--");
@@ -1327,18 +1327,18 @@ if ($rType == "users") {
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `streams`.`id`, `streams`.`stream_display_name`, `series`.`title`, `streams`.`direct_source`, `streams_servers`.`to_analyze`, `streams_servers`.`pid` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rActualStatus = 0;
                 if (intval($rRow["direct_source"]) == 1) {
                     // Direct
@@ -1409,9 +1409,9 @@ if ($rType == "users") {
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `user_activity` LEFT JOIN `users` ON `user_activity`.`user_id` = `users`.`id` LEFT JOIN `streams` ON `user_activity`.`stream_id` = `streams`.`id` LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_servers`.`id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
@@ -1422,9 +1422,9 @@ INNER JOIN `users` ON `user_activity`.`user_id` = `users`.`id`
 LEFT JOIN `mag_devices` ON `user_activity`.`user_id` = `mag_devices`.`user_id`
 LEFT JOIN `streams` ON `user_activity`.`stream_id` = `streams`.`id`
 LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_servers`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 if ($rPermissions["is_admin"]) {
                     if (hasPermissions("adv", "edit_user")) {
@@ -1516,9 +1516,9 @@ LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_server
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `lines_live` LEFT JOIN `users` ON `lines_live`.`user_id` = `users`.`id` LEFT JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id` LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.`id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
@@ -1529,9 +1529,9 @@ INNER JOIN `users` ON `lines_live`.`user_id` = `users`.`id`
 LEFT JOIN `mag_devices` ON `lines_live`.`user_id` = `mag_devices`.`user_id`
 LEFT JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id`
 LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 if ($rRow['divergence'] <= 50) {
                     $rDivergence = '<button type="button" class="btn btn-outline-success btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
@@ -1671,18 +1671,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id`  {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `streams`.`id`, `streams`.`stream_display_name`, `stream_categories`.`category_name` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rReturn["data"][] = array($rRow["id"], $rRow["stream_display_name"], $rRow["category_name"], $rStatus);
             }
         }
@@ -1734,18 +1734,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `streams`.`id`, `streams`.`stream_display_name`, `stream_categories`.`category_name`, `streams`.`direct_source`, `streams_servers`.`to_analyze`, `streams_servers`.`pid` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rActualStatus = 0;
                 if (intval($rRow["direct_source"]) == 1) {
                     // Direct
@@ -1813,18 +1813,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id`  {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `streams`.`id`, `streams`.`stream_display_name`, `stream_categories`.`category_name` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rReturn["data"][] = array($rRow["id"], $rRow["stream_display_name"], $rRow["category_name"], $rStatus);
             }
         }
@@ -1864,18 +1864,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `series` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `series`.`category_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `series`.`id`, `series`.`title`, `stream_categories`.`category_name` FROM `series` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `series`.`category_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rReturn["data"][] = array($rRow["id"], $rRow["title"], $rRow["category_name"]);
             }
         }
@@ -1924,18 +1924,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `credits_log` LEFT JOIN `reg_users` AS `target` ON `target`.`id` = `credits_log`.`target_id` LEFT JOIN `reg_users` AS `owner` ON `owner`.`id` = `credits_log`.`admin_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `credits_log`.`id`, `credits_log`.`target_id`, `credits_log`.`admin_id`, `target`.`username` AS `target_username`, `owner`.`username` AS `owner_username`, `amount`, FROM_UNIXTIME(`date`) AS `date`, `credits_log`.`reason` FROM `credits_log` LEFT JOIN `reg_users` AS `target` ON `target`.`id` = `credits_log`.`target_id` LEFT JOIN `reg_users` AS `owner` ON `owner`.`id` = `credits_log`.`admin_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 if (hasPermissions("adv", "edit_reguser")) {
                     $rOwner = "<a href='./reg_user.php?id=" . $rRow["admin_id"] . "'>" . $rRow["owner_username"] . "</a>";
                     $rTarget = "<a href='./reg_user.php?id=" . $rRow["target_id"] . "'>" . $rRow["target_username"] . "</a>";
@@ -1971,18 +1971,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(DISTINCT(`user_activity`.`user_id`)) AS `count` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` {$rWhereString} GROUP BY `user_activity`.`user_id` {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rDates = date("Y-m-d H:i", time() - intval($_GET["range"])) . " - " . date("Y-m-d H:i", time());
                 $rButtons = '<a href="./user_activity.php?search=' . $rRow["username"] . '&dates=' . $rDates . '"><button type="button" class="btn btn-light waves-effect waves-light btn-xs">View Logs</button></a>';
                 $rReturn["data"][] = array("<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["user_id"] . "</a>", $rRow["username"], $rRow["ip_count"], $rButtons);
@@ -2033,18 +2033,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `client_logs` LEFT JOIN `streams` ON `streams`.`id` = `client_logs`.`stream_id` LEFT JOIN `users` ON `users`.`id` = `client_logs`.`user_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `client_logs`.`id`, `client_logs`.`user_id`, `client_logs`.`stream_id`, `streams`.`stream_display_name`, `users`.`username`, `client_logs`.`client_status`, `client_logs`.`query_string`, `client_logs`.`user_agent`, `client_logs`.`ip`, FROM_UNIXTIME(`client_logs`.`date`) AS `date` FROM `client_logs` LEFT JOIN `streams` ON `streams`.`id` = `client_logs`.`stream_id` LEFT JOIN `users` ON `users`.`id` = `client_logs`.`user_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 if (hasPermissions("adv", "edit_user")) {
                     $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                 } else {
@@ -2098,18 +2098,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `reg_userlog` LEFT JOIN `reg_users` ON `reg_users`.`id` = `reg_userlog`.`owner` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `reg_userlog`.`id`, `reg_userlog`.`owner` as `owner_id`, `reg_users`.`username` AS `owner`, `reg_userlog`.`username`, `reg_userlog`.`type`, FROM_UNIXTIME(`reg_userlog`.`date`) AS `date` FROM `reg_userlog` LEFT JOIN `reg_users` ON `reg_users`.`id` = `reg_userlog`.`owner` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 if (hasPermissions("adv", "edit_reguser")) {
                     $rOwner = "<a href='./reg_user.php?id=" . $rRow["owner_id"] . "'>" . $rRow["owner"] . "</a>";
                 } else {
@@ -2163,18 +2163,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `stream_logs` LEFT JOIN `streams` ON `streams`.`id` = `stream_logs`.`stream_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `stream_logs`.`server_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `stream_logs`.`id`, `stream_logs`.`stream_id`, `stream_logs`.`server_id`, `streams`.`stream_display_name`, `streaming_servers`.`server_name`, `stream_logs`.`error`, FROM_UNIXTIME(`stream_logs`.`date`) AS `date` FROM `stream_logs` LEFT JOIN `streams` ON `streams`.`id` = `stream_logs`.`stream_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `stream_logs`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rReturn["data"][] = array($rRow["id"], $rRow["stream_display_name"], $rRow["server_name"], $rRow["error"], $rRow["date"]);
             }
         }
@@ -2212,18 +2212,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `streams`.`id`, `streams`.`stream_display_name`, `stream_categories`.`category_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `container` = 'ts' AND `lines_live`.`stream_id` = `streams`.`id`) AS `active_count` FROM `streams` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rReturn["data"][] = array($rRow["id"], $rRow["stream_display_name"], $rRow["category_name"], $rRow["active_count"], "<button type='button' class='btn waves-effect waves-light btn-xs' href='javascript:void(0);' onClick='selectFingerprint(" . $rRow["id"] . ")'><i class='mdi mdi-fingerprint'></i></button>");
             }
         }
@@ -2273,18 +2273,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` LEFT JOIN `reg_users` AS `r` on `r`.`id` = `reg_users`.`owner_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `reg_users`.`id`, `reg_users`.`status`, `reg_users`.`notes`, `reg_users`.`credits`, `reg_users`.`username`, `reg_users`.`email`, `reg_users`.`ip`, FROM_UNIXTIME(`reg_users`.`date_registered`) AS `date_registered`, FROM_UNIXTIME(`reg_users`.`last_login`) AS `last_login`, `r`.`username` as `owner_username`, `member_groups`.`group_name`, `reg_users`.`verified`, `reg_users`.`status`, (SELECT COUNT(`id`) FROM `users` WHERE `member_id` = `reg_users`.`id`) AS `user_count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` LEFT JOIN `reg_users` AS `r` on `r`.`id` = `reg_users`.`owner_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 if ($rRow["status"] == 1) {
                     $rStatus = '<i class="text-success fas fa-circle"></i>';
                 } else {
@@ -2365,18 +2365,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `series` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `series`.`category_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `series`.`id`, `series`.`title`, `stream_categories`.`category_name`, `series`.`releaseDate`, `series`.`last_modified`, (SELECT MAX(`season_num`) FROM `series_episodes` WHERE `series_id` = `series`.`id`) AS `latest_season`, (SELECT COUNT(*) FROM `series_episodes` WHERE `series_id` = `series`.`id`) AS `episode_count` FROM `series` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `series`.`category_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rButtons = '<div class="btn-group">';
                 if (hasPermissions("adv", "add_episode")) {
                     $rButtons .= '<a href="./episode.php?sid=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Add Episode(s)" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-plus-circle-outline"></i></button></a>
@@ -2464,18 +2464,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `streams`.`id`, `streams_servers`.`to_analyze`, `streams`.`target_container`, `streams`.`stream_display_name`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`on_demand`, `stream_categories`.`category_name`, `streaming_servers`.`server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id`) AS `clients`, `series`.`title`, `series`.`id` AS `sid`, `series_episodes`.`season_num` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `streams_servers`.`server_id` LEFT JOIN `series_episodes` ON `series_episodes`.`stream_id` = `streams`.`id` LEFT JOIN `series` ON `series`.`id` = `series_episodes`.`series_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 $rSeriesName = $rRow["title"] . " - Season " . $rRow["season_num"];
                 $rStreamName = "<b>" . $rRow['stream_display_name'] . "</b><br><span style='font-size:11px;'>{$rSeriesName}</span>";
@@ -2541,7 +2541,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                 $rButtons .= '</div>';
                 if (hasPermissions("adv", "player")) {
                     if (((intval($rActualStatus) == 1) or ($rActualStatus == 3))) {
-                        $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ', \'' . json_decode($rRow["target_container"], True)[0] . '\');"><i class="mdi mdi-play"></i></button>';
+                        $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ', \'' . json_decode($rRow["target_container"], true)[0] . '\');"><i class="mdi mdi-play"></i></button>';
                     } else {
                         $rPlayer = '<button type="button" disabled class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-play"></i></button>';
                     }
@@ -2549,7 +2549,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                     $rPlayer = '<button type="button" disabled class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-play"></i></button>';
                 }
                 $rStreamInfoText = "<div style='font-size: 10px;' class='text-center' align='center'><tbody><tr><td colspan='3' class='col'>No information available</td></tr></tbody></div>";
-                $rStreamInfo = json_decode($rRow["stream_info"], True);
+                $rStreamInfo = json_decode($rRow["stream_info"], true);
                 if ($rActualStatus == 1) {
                     if (!isset($rStreamInfo["codecs"]["video"])) {
                         $rStreamInfo["codecs"]["video"] = array("width" => "?", "height" => "?", "codec_name" => "N/A", "r_frame_rate" => "--");
@@ -2633,18 +2633,18 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `watch_output` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `watch_output`.`server_id` {$rWhereString};";
-    $rResult = $db->query($rCountQuery);
-    if (($rResult) && ($rResult->num_rows == 1)) {
-        $rReturn["recordsTotal"] = $rResult->fetch_assoc()["count"];
+    $ipTV_db_admin->query($rCountQuery);
+    if ($ipTV_db_admin->num_rows() == 1) {
+        $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT `watch_output`.`id`, `watch_output`.`type`, `watch_output`.`server_id`, `streaming_servers`.`server_name`, `watch_output`.`filename`, `watch_output`.`status`, `watch_output`.`stream_id`, `watch_output`.`dateadded` FROM `watch_output` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `watch_output`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
-        $rResult = $db->query($rQuery);
-        if (($rResult) && ($rResult->num_rows > 0)) {
-            while ($rRow = $rResult->fetch_assoc()) {
+        $ipTV_db_admin->query($rQuery);
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rButtons = '<div class="btn-group">';
                 if ($rRow["stream_id"] > 0) {
                     if ($rRow["type"] == 1) {

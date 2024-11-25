@@ -12,7 +12,7 @@ if (isset($_POST["reorder"])) {
             $rSort = 0;
             foreach ($rEpisodes as $rStreamID) {
                 $rSort++;
-                $db->query("UPDATE `series_episodes` SET `sort` = " . intval($rSort) . " WHERE `id` = " . intval($rStreamID) . ";");
+                $ipTV_db_admin->query("UPDATE `series_episodes` SET `sort` = " . intval($rSort) . " WHERE `id` = " . intval($rStreamID) . ";");
             }
         }
     }
@@ -27,9 +27,9 @@ if (!$rSeries) {
 }
 
 $rSeasons = array();
-$result = $db->query("SELECT `series_episodes`.`id`, `series_episodes`.`season_num`, `streams`.`stream_display_name` FROM `series_episodes` LEFT JOIN `streams` ON `streams`.`id` = `series_episodes`.`stream_id` WHERE `series_id` = " . intval($rSeries["id"]) . " ORDER BY `series_episodes`.`season_num` ASC, `series_episodes`.`sort` ASC;");
-if (($result) && ($result->num_rows > 0)) {
-    while ($row = $result->fetch_assoc()) {
+$ipTV_db_admin->query("SELECT `series_episodes`.`id`, `series_episodes`.`season_num`, `streams`.`stream_display_name` FROM `series_episodes` LEFT JOIN `streams` ON `streams`.`id` = `series_episodes`.`stream_id` WHERE `series_id` = " . intval($rSeries["id"]) . " ORDER BY `series_episodes`.`season_num` ASC, `series_episodes`.`sort` ASC;");
+if ($ipTV_db_admin->num_rows() > 0) {
+    foreach ($ipTV_db_admin->get_rows() as $row) {
         $rSeasons[$row["season_num"]][] = array("id" => $row["id"], "title" => $row["stream_display_name"]);
     }
 }

@@ -24,8 +24,8 @@ if (isset($_GET["geolite2"])) {
 }
 
 if (isset($_GET["panel_version"])) {
-    $db->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . ESC(json_encode(array('action' => 'update'))) . "`;");
-    $db->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . ESC($_INFO["server_id"]) . "', '" . ESC(time()) . "', '" . ESC(json_encode(array('action' => 'update'))) . "');");
+    $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . ESC(json_encode(array('action' => 'update'))) . "`;");
+    $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . ESC($_INFO["server_id"]) . "', '" . ESC(time()) . "', '" . ESC(json_encode(array('action' => 'update'))) . "');");
     $_STATUS = 5;
 }
 
@@ -2474,9 +2474,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </td>
                                                                 </tr>
                                                             <?php }
-                                                            $result = $db->query("SELECT `username`, `reseller_dns` FROM `users` WHERE `reseller_dns` <> '' AND `verified` = 1 ORDER BY `username` ASC;");
-                                                            if (($result) && ($result->num_rows > 0)) {
-                                                                while ($row = $result->fetch_assoc()) { ?>
+                                                            $ipTV_db_admin->query("SELECT `username`, `reseller_dns` FROM `users` WHERE `reseller_dns` <> '' AND `verified` = 1 ORDER BY `username` ASC;");
+                                                            if ($ipTV_db_admin->num_rows() > 0) {
+                                                                foreach ($ipTV_db_admin->get_rows() as $row) { ?>
                                                                     <tr>
                                                                         <td><?= $row["username"] ?></td>
                                                                         <td><?= $row["reseller_dns"] ?></td>

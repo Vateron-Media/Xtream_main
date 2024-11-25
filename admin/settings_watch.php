@@ -19,7 +19,7 @@ if (isset($_POST["submit_settings"])) {
             if (!$rBouquets) {
                 $rBouquets = "[]";
             }
-            $db->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . ESC($rBouquets) . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 1;");
+            $ipTV_db_admin->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . ESC($rBouquets) . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 1;");
         }
     }
     foreach ($_POST as $rKey => $rValue) {
@@ -30,7 +30,7 @@ if (isset($_POST["submit_settings"])) {
             if (!$rBouquets) {
                 $rBouquets = "[]";
             }
-            $db->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . ESC($rBouquets) . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 2;");
+            $ipTV_db_admin->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . ESC($rBouquets) . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 2;");
         }
     }
     if (isset($_POST["read_native"])) {
@@ -53,14 +53,14 @@ if (isset($_POST["submit_settings"])) {
     } else {
         $rProbeInput = 0;
     }
-    $db->query("UPDATE `watch_settings` SET `ffprobe_input` = " . $rProbeInput . ", `percentage_match` = " . intval($_POST["percentage_match"]) . ", `read_native` = " . $rNative . ", `movie_symlink` = " . $rSymLink . ", `auto_encode` = " . $rAutoEncode . ", `transcode_profile_id` = " . intval($_POST["transcode_profile_id"]) . ", `scan_seconds` = " . intval($_POST["scan_seconds"]) . ";");
+    $ipTV_db_admin->query("UPDATE `watch_settings` SET `ffprobe_input` = " . $rProbeInput . ", `percentage_match` = " . intval($_POST["percentage_match"]) . ", `read_native` = " . $rNative . ", `movie_symlink` = " . $rSymLink . ", `auto_encode` = " . $rAutoEncode . ", `transcode_profile_id` = " . intval($_POST["transcode_profile_id"]) . ", `scan_seconds` = " . intval($_POST["scan_seconds"]) . ";");
 }
 
 $rBouquets = getBouquets();
 
-$rResult = $db->query("SELECT * FROM `watch_settings`;");
-if (($rResult) && ($rResult->num_rows == 1)) {
-    $rWatchSettings = $rResult->fetch_assoc();
+$ipTV_db_admin->query("SELECT * FROM `watch_settings`;");
+if ($ipTV_db_admin->num_rows() == 1) {
+    $rWatchSettings = $ipTV_db_admin->get_row();
 }
 
 if ($rSettings["sidebar"]) {
@@ -69,12 +69,12 @@ if ($rSettings["sidebar"]) {
     include "header.php";
 }
 if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content boxed-layout-ext">
-            <div class="container-fluid">
+        <div class="content-page">
+            <div class="content boxed-layout-ext">
+                <div class="container-fluid">
             <?php } else { ?>
-                <div class="wrapper boxed-layout-ext">
-                    <div class="container-fluid">
+                    <div class="wrapper boxed-layout-ext">
+                        <div class="container-fluid">
                     <?php } ?>
                     <!-- start page title -->
                     <div class="row">
@@ -104,12 +104,12 @@ if ($rSettings["sidebar"]) { ?>
                     <div class="row">
                         <div class="col-xl-12">
                             <?php if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["generic_fail"] ?>
-                                </div>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <?= $_["generic_fail"] ?>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
@@ -143,28 +143,28 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <label class="col-md-4 col-form-label" for="read_native"><?= $_["native_frames"] ?> </label>
                                                                 <div class="col-md-2">
                                                                     <input name="read_native" id="read_native" type="checkbox" <?php if ($rWatchSettings["read_native"] == 1) {
-                                                                                                                                    echo "checked ";
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label" for="movie_symlink"><?= $_["create_symlink"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["generate_a_symlink"] ?>" class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input name="movie_symlink" id="movie_symlink" type="checkbox" <?php if ($rWatchSettings["movie_symlink"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="auto_encode"><?= $_["auto_encode"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["start_encoding_as_soon"] ?>" class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input name="auto_encode" id="auto_encode" type="checkbox" <?php if ($rWatchSettings["auto_encode"] == 1) {
-                                                                                                                                    echo "checked ";
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label" for="ffprobe_input"><?= $_["probe_input"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["use_ffmpeg_to_probe_input_files"] ?>" class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
                                                                     <input name="ffprobe_input" id="ffprobe_input" type="checkbox" <?php if ($rWatchSettings["ffprobe_input"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                        echo "checked ";
+                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -182,12 +182,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <select name="transcode_profile_id" id="transcode_profile_id" class="form-control" data-toggle="select2">
                                                                         <option <?php if (intval($rWatchSettings["transcode_profile_id"]) == 0) {
-                                                                                    echo "selected ";
-                                                                                } ?>value="0"><?= $_["transcoding_disabled"] ?> </option>
+                                                                            echo "selected ";
+                                                                        } ?>value="0"><?= $_["transcoding_disabled"] ?> </option>
                                                                         <?php foreach (getTranscodeProfiles() as $rProfile) { ?>
-                                                                            <option <?php if (intval($rWatchSettings["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
-                                                                                        echo "selected ";
-                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>"><?= $rProfile["profile_name"] ?></option>
+                                                                                <option <?php if (intval($rWatchSettings["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
+                                                                                    echo "selected ";
+                                                                                } ?>value="<?= $rProfile["profile_id"] ?>"><?= $rProfile["profile_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -206,35 +206,35 @@ if ($rSettings["sidebar"]) { ?>
                                                             <p class="sub-header">
                                                                 <?= $_["select_a_category_and"] ?>
                                                             </p>
-                                                            <?php $rResult = $db->query("SELECT * FROM `watch_categories` WHERE `type` = 1 ORDER BY `genre` ASC;");
-                                                            if (($rResult) && ($rResult->num_rows > 0)) {
-                                                                while ($rRow = $rResult->fetch_assoc()) { ?>
-                                                                    <div class="form-group row mb-4">
-                                                                        <label class="col-md-2 col-form-label" for="genre_<?= $rRow["genre_id"] ?>"><?= $rRow["genre"] ?></label>
-                                                                        <div class="col-md-4">
-                                                                            <select name="genre_<?= $rRow["genre_id"] ?>" id="genre_<?= $rRow["genre_id"] ?>" class="form-control select2" data-toggle="select2">
-                                                                                <option <?php if (intval($rRow["category_id"]) == 0) {
+                                                            <?php $ipTV_db_admin->query("SELECT * FROM `watch_categories` WHERE `type` = 1 ORDER BY `genre` ASC;");
+                                                            if ($ipTV_db_admin->num_rows() > 0) {
+                                                                foreach ($ipTV_db_admin->get_rows() as $rRow) { ?>
+                                                                            <div class="form-group row mb-4">
+                                                                                <label class="col-md-2 col-form-label" for="genre_<?= $rRow["genre_id"] ?>"><?= $rRow["genre"] ?></label>
+                                                                                <div class="col-md-4">
+                                                                                    <select name="genre_<?= $rRow["genre_id"] ?>" id="genre_<?= $rRow["genre_id"] ?>" class="form-control select2" data-toggle="select2">
+                                                                                        <option <?php if (intval($rRow["category_id"]) == 0) {
                                                                                             echo "selected ";
                                                                                         } ?>value="0"><?= $_["do_not_use"] ?> </option>
-                                                                                <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
-                                                                                    <option <?php if (intval($rRow["category_id"]) == intval($rCategory["id"])) {
-                                                                                                echo "selected ";
-                                                                                            } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
-                                                                                <?php } ?>
-                                                                            </select>
-                                                                        </div>
-                                                                        <label class="col-md-2 col-form-label" for="bouquet_<?= $rRow["genre_id"] ?>"><?= $_["add_to_bouquets"] ?> </label>
-                                                                        <div class="col-md-4">
-                                                                            <select name="bouquet_<?= $rRow["genre_id"] ?>[]" id="bouquet_<?= $rRow["genre_id"] ?>" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
-                                                                                <?php foreach ($rBouquets as $rBouquet) { ?>
-                                                                                    <option <?php if (in_array(intval($rBouquet["id"]), json_decode($rRow["bouquets"], True))) {
-                                                                                                echo "selected ";
-                                                                                            } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
-                                                                                <?php } ?>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                            <?php }
+                                                                                        <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
+                                                                                                <option <?php if (intval($rRow["category_id"]) == intval($rCategory["id"])) {
+                                                                                                    echo "selected ";
+                                                                                                } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                        <?php } ?>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <label class="col-md-2 col-form-label" for="bouquet_<?= $rRow["genre_id"] ?>"><?= $_["add_to_bouquets"] ?> </label>
+                                                                                <div class="col-md-4">
+                                                                                    <select name="bouquet_<?= $rRow["genre_id"] ?>[]" id="bouquet_<?= $rRow["genre_id"] ?>" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                                        <?php foreach ($rBouquets as $rBouquet) { ?>
+                                                                                                <option <?php if (in_array(intval($rBouquet["id"]), json_decode($rRow["bouquets"], True))) {
+                                                                                                    echo "selected ";
+                                                                                                } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                                        <?php } ?>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                <?php }
                                                             } ?>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
@@ -250,35 +250,35 @@ if ($rSettings["sidebar"]) { ?>
                                                             <p class="sub-header">
                                                                 <?= $_["select_a_category_and"] ?>
                                                             </p>
-                                                            <?php $rResult = $db->query("SELECT * FROM `watch_categories` WHERE `type` = 2 ORDER BY `genre` ASC;");
-                                                            if (($rResult) && ($rResult->num_rows > 0)) {
-                                                                while ($rRow = $rResult->fetch_assoc()) { ?>
-                                                                    <div class="form-group row mb-4">
-                                                                        <label class="col-md-2 col-form-label" for="genretv_<?= $rRow["genre_id"] ?>"><?= $rRow["genre"] ?></label>
-                                                                        <div class="col-md-4">
-                                                                            <select name="genretv_<?= $rRow["genre_id"] ?>" id="genretv_<?= $rRow["genre_id"] ?>" class="form-control select2" data-toggle="select2">
-                                                                                <option <?php if (intval($rRow["category_id"]) == 0) {
+                                                            <?php $ipTV_db_admin->query("SELECT * FROM `watch_categories` WHERE `type` = 2 ORDER BY `genre` ASC;");
+                                                            if ($ipTV_db_admin->num_rows() > 0) {
+                                                                foreach ($ipTV_db_admin->get_rows() as $rRow) { ?>
+                                                                            <div class="form-group row mb-4">
+                                                                                <label class="col-md-2 col-form-label" for="genretv_<?= $rRow["genre_id"] ?>"><?= $rRow["genre"] ?></label>
+                                                                                <div class="col-md-4">
+                                                                                    <select name="genretv_<?= $rRow["genre_id"] ?>" id="genretv_<?= $rRow["genre_id"] ?>" class="form-control select2" data-toggle="select2">
+                                                                                        <option <?php if (intval($rRow["category_id"]) == 0) {
                                                                                             echo "selected ";
                                                                                         } ?>value="0"><?= $_["do_not_use"] ?></option>
-                                                                                <?php foreach (getCategories_admin("series") as $rCategory) { ?>
-                                                                                    <option <?php if (intval($rRow["category_id"]) == intval($rCategory["id"])) {
-                                                                                                echo "selected ";
-                                                                                            } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
-                                                                                <?php } ?>
-                                                                            </select>
-                                                                        </div>
-                                                                        <label class="col-md-2 col-form-label" for="bouquettv_<?= $rRow["genre_id"] ?>"><?= $_["add_to_bouquets"] ?></label>
-                                                                        <div class="col-md-4">
-                                                                            <select name="bouquettv_<?= $rRow["genre_id"] ?>[]" id="bouquettv_<?= $rRow["genre_id"] ?>" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
-                                                                                <?php foreach ($rBouquets as $rBouquet) { ?>
-                                                                                    <option <?php if (in_array(intval($rBouquet["id"]), json_decode($rRow["bouquets"], True))) {
-                                                                                                echo "selected ";
-                                                                                            } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
-                                                                                <?php } ?>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                            <?php }
+                                                                                        <?php foreach (getCategories_admin("series") as $rCategory) { ?>
+                                                                                                <option <?php if (intval($rRow["category_id"]) == intval($rCategory["id"])) {
+                                                                                                    echo "selected ";
+                                                                                                } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                        <?php } ?>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <label class="col-md-2 col-form-label" for="bouquettv_<?= $rRow["genre_id"] ?>"><?= $_["add_to_bouquets"] ?></label>
+                                                                                <div class="col-md-4">
+                                                                                    <select name="bouquettv_<?= $rRow["genre_id"] ?>[]" id="bouquettv_<?= $rRow["genre_id"] ?>" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                                        <?php foreach ($rBouquets as $rBouquet) { ?>
+                                                                                                <option <?php if (in_array(intval($rBouquet["id"]), json_decode($rRow["bouquets"], True))) {
+                                                                                                    echo "selected ";
+                                                                                                } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                                        <?php } ?>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                <?php }
                                                             } ?>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->

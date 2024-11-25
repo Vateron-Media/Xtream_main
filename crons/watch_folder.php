@@ -8,9 +8,9 @@ $rSettings = getSettings();
 $rServers = getStreamingServers();
 $rWatchCategories = array(1 => getWatchCategories(1), 2 => getWatchCategories(2));
 
-$rResult = $db->query("SELECT * FROM `watch_settings`;");
-if (($rResult) && ($rResult->num_rows == 1)) {
-    $rWatchSettings = $rResult->fetch_assoc();
+$ipTV_db_admin->query("SELECT * FROM `watch_settings`;");
+if ($ipTV_db_admin->num_rows() == 1) {
+    $rWatchSettings = $ipTV_db_admin->get_row();
 }
 
 $rPID = getmypid();
@@ -18,10 +18,10 @@ if (isset($rAdminSettings["watch_pid"])) {
     if ((file_exists("/proc/" . $rAdminSettings["watch_pid"])) && (strlen($rAdminSettings["watch_pid"]) > 0)) {
         exit;
     } else {
-        $db->query("UPDATE `admin_settings` SET `value` = " . intval($rPID) . " WHERE `type` = 'watch_pid';");
+        $ipTV_db_admin->query("UPDATE `admin_settings` SET `value` = " . intval($rPID) . " WHERE `type` = 'watch_pid';");
     }
 } else {
-    $db->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('watch_pid', " . intval($rPID) . ");");
+    $ipTV_db_admin->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('watch_pid', " . intval($rPID) . ");");
 }
 
 $rTimeout = 3000;       // Limit by time.
@@ -47,9 +47,9 @@ if ($rAdminSettings["local_api"]) {
 }
 
 $rStreamDatabase = array();
-$result = $db->query("SELECT `stream_source` FROM `streams` WHERE `type` IN (2,5);");
-if (($result) && ($result->num_rows > 0)) {
-    while ($row = $result->fetch_assoc()) {
+$ipTV_db_admin->query("SELECT `stream_source` FROM `streams` WHERE `type` IN (2,5);");
+if ($ipTV_db_admin->num_rows() > 0) {
+    foreach ($ipTV_db_admin->get_rows() as $row) {
         foreach (json_decode($row["stream_source"], True) as $rSource) {
             if (strlen($rSource) > 0) {
                 $rStreamDatabase[] = $rSource;
@@ -61,11 +61,11 @@ if (($result) && ($result->num_rows > 0)) {
 $rChanged = False;
 $rUpdateSeries = array();
 $rArray = array("movie_symlink" => 0, "type" => 0, "target_container" => array("mp4"), "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 1, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "movie_subtitles" => array(), "category_id" => 0, "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 128000);
-$rResult = $db->query("SELECT * FROM `watch_folders` WHERE `active` = 1 AND UNIX_TIMESTAMP() - `last_run` > " . intval($rScanOffset) . " ORDER BY `id` ASC;");
-if (($rResult) && ($rResult->num_rows > 0)) {
-    while ($rRow = $rResult->fetch_assoc()) {
+$ipTV_db_admin->query("SELECT * FROM `watch_folders` WHERE `active` = 1 AND UNIX_TIMESTAMP() - `last_run` > " . intval($rScanOffset) . " ORDER BY `id` ASC;");
+if ($ipTV_db_admin->num_rows() > 0) {
+    foreach ($ipTV_db_admin->get_rows() as $rRow) {
         $rArray["type"] = array("movie" => 2, "series" => 5)[$rRow["type"]];
-        $db->query("UPDATE `watch_folders` SET `last_run` = UNIX_TIMESTAMP() WHERE `id` = " . intval($rRow["id"]) . ";");
+        $ipTV_db_admin->query("UPDATE `watch_folders` SET `last_run` = UNIX_TIMESTAMP() WHERE `id` = " . intval($rRow["id"]) . ";");
         $rImportStreams = array();
         $rExtensions = json_decode($rRow["allowed_extensions"], True);
         if (!$rExtensions) {
@@ -93,7 +93,7 @@ if (($rResult) && ($rResult->num_rows > 0)) {
             foreach (array_keys($rImportStream) as $rKey) {
                 $rImportArray[$rKey] = $rImportStream[$rKey];
             }
-            $db->query("DELETE FROM `watch_output` WHERE `filename` = '" . $db->real_escape_string($rFile) . "' AND `type` = " . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ";");
+            $ipTV_db_admin->query("DELETE FROM `watch_output` WHERE `filename` = '" . $ipTV_db_admin->escape($rFile) . "' AND `type` = " . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ";");
             if ((!$rWatchSettings["ffprobe_input"]) or (isset(checkSource($rRow["server_id"], $rFile)["streams"]))) {
                 $rFilename = pathinfo($rFile)["filename"];
                 if ($rAdminSettings["release_parser"] == "php") {
@@ -255,12 +255,12 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                                         if (is_null($rValue)) {
                                             $rValues .= 'NULL';
                                         } else {
-                                            $rValues .= '\'' . $db->real_escape_string($rValue) . '\'';
+                                            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
                                         }
                                     }
-                                    $rQuery = "INSERT INTO `series`(" . $db->real_escape_string($rCols) . ") VALUES(" . $rValues . ");";
-                                    if ($db->query($rQuery)) {
-                                        $rInsertID = $db->insert_id;
+                                    $rQuery = "INSERT INTO `series`(" . $ipTV_db_admin->escape($rCols) . ") VALUES(" . $rValues . ");";
+                                    if ($ipTV_db_admin->query($rQuery)) {
+                                        $rInsertID = $ipTV_db_admin->last_insert_id();
                                         $rSeries = getSerie($rInsertID);
                                         $rORBouquets = json_decode($rRow["bouquets"], True);
                                         if (!$rORBouquets) {
@@ -380,13 +380,13 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                             if (is_null($rValue)) {
                                 $rValues .= 'NULL';
                             } else {
-                                $rValues .= '\'' . $db->real_escape_string($rValue) . '\'';
+                                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
                             }
                         }
-                        $rQuery = "INSERT INTO `streams`(" . $db->real_escape_string($rCols) . ") VALUES(" . $rValues . ");";
-                        if ($db->query($rQuery)) {
-                            $rInsertID = $db->insert_id;
-                            $db->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . intval($rRow["server_id"]) . ", 0, 0);");
+                        $rQuery = "INSERT INTO `streams`(" . $ipTV_db_admin->escape($rCols) . ") VALUES(" . $rValues . ");";
+                        if ($ipTV_db_admin->query($rQuery)) {
+                            $rInsertID = $ipTV_db_admin->last_insert_id();
+                            $ipTV_db_admin->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . intval($rRow["server_id"]) . ", 0, 0);");
                             if ($rWatchSettings["auto_encode"]) {
                                 $rPost = array("action" => "vod", "sub" => "start", "stream_ids" => array($rInsertID));
                                 $rContext = stream_context_create(array(
@@ -404,28 +404,28 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                                     $rChanged = True;
                                 }
                             } else {
-                                $db->query("INSERT INTO `series_episodes`(`season_num`, `series_id`, `stream_id`, `sort`) VALUES(" . intval($rReleaseSeason) . ", " . intval($rSeries["id"]) . ", " . $rInsertID . ", " . intval($rReleaseEpisode) . ");");
+                                $ipTV_db_admin->query("INSERT INTO `series_episodes`(`season_num`, `series_id`, `stream_id`, `sort`) VALUES(" . intval($rReleaseSeason) . ", " . intval($rSeries["id"]) . ", " . $rInsertID . ", " . intval($rReleaseEpisode) . ");");
                                 if (!in_array($rSeries["id"], $rUpdateSeries)) {
                                     $rUpdateSeries[] = $rSeries["id"];
                                 }
                             }
                             // Success!
-                            $db->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $db->real_escape_string($rFile) . "', 1, " . intval($rInsertID) . ");");
+                            $ipTV_db_admin->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $ipTV_db_admin->escape($rFile) . "', 1, " . intval($rInsertID) . ");");
                         } else {
                             // Insert failed.
-                            $db->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $db->real_escape_string($rFile) . "', 2, 0);");
+                            $ipTV_db_admin->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $ipTV_db_admin->escape($rFile) . "', 2, 0);");
                         }
                     } else {
                         // No category.
-                        $db->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $db->real_escape_string($rFile) . "', 3, 0);");
+                        $ipTV_db_admin->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $ipTV_db_admin->escape($rFile) . "', 3, 0);");
                     }
                 } else {
                     // No match.
-                    $db->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $db->real_escape_string($rFile) . "', 4, 0);");
+                    $ipTV_db_admin->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $ipTV_db_admin->escape($rFile) . "', 4, 0);");
                 }
             } else {
                 // File is broken.
-                $db->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $db->real_escape_string($rFile) . "', 5, 0);");
+                $ipTV_db_admin->query("INSERT INTO `watch_output`(`type`, `server_id`, `filename`, `status`, `stream_id`) VALUES(" . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ", " . intval($rRow["server_id"]) . ", '" . $ipTV_db_admin->escape($rFile) . "', 5, 0);");
             }
         }
     }

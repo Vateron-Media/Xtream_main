@@ -217,15 +217,15 @@ function log_error($rErrNo, $rMessage, $rFile, $rLine, $rContext = null) {
 }
 
 function log_exception($e) {
-    panellog(
-        'exception',
-        $e->getMessage(),
-        getExceptionTraceAsString($e),
-        $e->getLine()
-    );
+    // panellog(
+    //     'exception',
+    //     $e->getMessage(),
+    //     getExceptionTraceAsString($e),
+    //     $e->getLine()
+    // );
 
 
-    //  panellog('exception', $e->getMessage(), $e->getTraceAsString(), $e->getLine());
+    panellog('exception', $e->getMessage(), $e->getTraceAsString(), $e->getLine());
 }
 
 function log_fatal() {

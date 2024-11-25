@@ -33,18 +33,18 @@ if (isset($_POST["submit_user"])) {
         $_POST["password"] = generateString(10);
     }
     if (!isset($_POST["edit"])) {
-        $result = $db->query("SELECT `id` FROM `users` WHERE `username` = '" . ESC($_POST["username"]) . "';");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = '" . ESC($_POST["username"]) . "';");
+        if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 3; // Username in use.
         }
     }
     if ((($_POST["is_mag"]) && (!filter_var($_POST["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen($_POST["mac_address_e2"]) > 0) && (!filter_var($_POST["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
         $_STATUS = 4;
     } else if ($_POST["is_mag"]) {
-        $result = $db->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . ESC(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . ESC(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
+        if ($ipTV_db_admin->num_rows() > 0) {
             if (isset($_POST["edit"])) {
-                if (intval($result->fetch_assoc()["user_id"]) <> intval($_POST["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
                     $_STATUS = 5; // MAC in use.
                 }
             } else {
@@ -52,10 +52,10 @@ if (isset($_POST["submit_user"])) {
             }
         }
     } else if ($_POST["is_e2"]) {
-        $result = $db->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . ESC($_POST["mac_address_e2"]) . "' LIMIT 1;");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . ESC($_POST["mac_address_e2"]) . "' LIMIT 1;");
+        if ($ipTV_db_admin->num_rows() > 0) {
             if (isset($_POST["edit"])) {
-                if (intval($result->fetch_assoc()["user_id"]) <> intval($_POST["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
                     $_STATUS = 5; // MAC in use.
                 }
             } else {
@@ -155,11 +155,11 @@ if (isset($_POST["submit_user"])) {
             $rValues = ESC($_POST["edit"]) . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
-        if ($db->query($rQuery)) {
+        if ($ipTV_db_admin->query($rQuery)) {
             if (isset($_POST["edit"])) {
                 $rInsertID = intval($_POST["edit"]);
             } else {
-                $rInsertID = $db->insert_id;
+                $rInsertID = $ipTV_db_admin->last_insert_id();
             }
             if ((isset($rInsertID)) && (isset($_POST["access_output"]))) {
                 if ($rArray["is_mag"] == 1) {
@@ -169,31 +169,31 @@ if (isset($_POST["submit_user"])) {
                         } else {
                             $rSTBLock = 0;
                         }
-                        $result = $db->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
-                        if ((isset($result)) && ($result->num_rows == 1)) {
-                            $db->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ESC($_POST["mac_address_mag"])) . "', `lock_device` = " . intval($rSTBLock) . " WHERE `user_id` = " . intval($rInsertID) . ";");
+                        $ipTV_db_admin->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
+                        if ($ipTV_db_admin->num_rows() == 0) {
+                            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ESC($_POST["mac_address_mag"])) . "', `lock_device` = " . intval($rSTBLock) . " WHERE `user_id` = " . intval($rInsertID) . ";");
                         } else {
-                            $db->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(base64_encode($_POST["mac_address_mag"])) . "', " . intval($rSTBLock) . ");");
+                            $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(base64_encode($_POST["mac_address_mag"])) . "', " . intval($rSTBLock) . ");");
                         }
                         if (isset($_POST["edit"])) {
-                            $db->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
+                            $ipTV_db_admin->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                         }
                     }
                 } else if ($rArray["is_e2"] == 1) {
                     if (hasPermissions("adv", "add_e2")) {
-                        $result = $db->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
-                        if ((isset($result)) && ($result->num_rows == 1)) {
-                            $db->query("UPDATE `enigma2_devices` SET `mac` = '" . ESC($_POST["mac_address_e2"]) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
+                        $ipTV_db_admin->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
+                        if ($ipTV_db_admin->num_rows() == 0) {
+                            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . ESC($_POST["mac_address_e2"]) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
                         } else {
-                            $db->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rInsertID) . ", '" . ESC($_POST["mac_address_e2"]) . "');");
+                            $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rInsertID) . ", '" . ESC($_POST["mac_address_e2"]) . "');");
                         }
                         if (isset($_POST["edit"])) {
-                            $db->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
+                            $ipTV_db_admin->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                         }
                     }
                 } else if (isset($_POST["edit"])) {
-                    $db->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
-                    $db->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
+                    $ipTV_db_admin->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
+                    $ipTV_db_admin->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                 }
             }
             header("Location: ./user.php?id=" . $rInsertID);

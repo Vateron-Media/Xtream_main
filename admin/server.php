@@ -16,7 +16,7 @@ if (isset($_POST["submit_server"])) {
         if (!hasPermissions("adv", "add_server")) {
             exit;
         }
-        $rArray = array("server_name" => "", "domain_name" => "", "server_ip" => "", "vpn_ip" => "", "diff_time_main" => 0, "http_broadcast_port" => 25461, "total_clients" => 1000, "system_os" => "", "network_interface" => "", "status" => 2, "enable_geoip" => 0, "geoip_countries" => "[]", "geoip_type" => "low_priority", "isp_names" => "[]", "isp_type" => "low_priority", "can_delete" => 1, "rtmp_port" => 25462, "enable_isp" => 0, "network_guaranteed_speed" => 1000, "https_broadcast_port" => 25463, "whitelist_ips" => array(), "timeshift_only" => 0);
+        $rArray = array("server_name" => "", "domain_name" => "", "server_ip" => "", "vpn_ip" => "", "http_broadcast_port" => 25461, "total_clients" => 1000, "system_os" => "", "network_interface" => "", "status" => 2, "enable_geoip" => 0, "geoip_countries" => "[]", "geoip_type" => "low_priority", "isp_names" => "[]", "isp_type" => "low_priority", "can_delete" => 1, "rtmp_port" => 25462, "enable_isp" => 0, "network_guaranteed_speed" => 1000, "https_broadcast_port" => 25463, "whitelist_ips" => array(), "timeshift_only" => 0);
     }
     if (strlen($_POST["server_ip"]) == 0) {
         $_STATUS = 1;
@@ -48,10 +48,6 @@ if (isset($_POST["submit_server"])) {
     if (isset($_POST["http_isp_port"])) {
         $rArray["http_isp_port"] = intval($_POST["http_isp_port"]);
         unset($_POST["http_isp_port"]);
-    }
-    if (isset($_POST["diff_time_main"])) {
-        $rArray["diff_time_main"] = intval($_POST["diff_time_main"]);
-        unset($_POST["diff_time_main"]);
     }
     if (isset($_POST["network_guaranteed_speed"])) {
         $rArray["network_guaranteed_speed"] = intval($_POST["network_guaranteed_speed"]);
@@ -116,7 +112,7 @@ if (isset($_POST["submit_server"])) {
             $rValues = ESC($_POST["edit"]) . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `streaming_servers`(" . $rCols . ") VALUES(" . $rValues . ");";
-        if ($db->query($rQuery)) {
+        if ($ipTV_db_admin->query($rQuery)) {
             if (isset($_POST["edit"])) {
                 $rInsertID = intval($_POST["edit"]);
                 // Replace ports
@@ -133,10 +129,8 @@ if (isset($_POST["submit_server"])) {
                     changePort($rInsertID, 3, $rPorts[3], $rArray["http_isp_port"]);
                 }
             } else {
-                $rInsertID = $db->insert_id;
+                $rInsertID = $ipTV_db_admin->last_insert_id();
             }
-            $rDifference = getTimeDifference($rInsertID);
-            $db->query("UPDATE `streaming_servers` SET `diff_time_main` = " . intval($rDifference) . " WHERE `id` = " . intval($rInsertID) . ";");
             $_STATUS = 0;
             $rServers = getStreamingServers();
             header("Location: ./server.php?id=" . $rInsertID);
@@ -339,17 +333,6 @@ if ($rSettings["sidebar"]) { ?>
                                                                                                                                                                 } ?>" required data-parsley-trigger="change">
                                                                     </div>
                                                                 <?php } ?>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-
-                                                                <label class="col-md-4 col-form-label" for="diff_time_main"><?= $_["time_difference"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input type="text" disabled class="form-control" id="diff_time_main" name="diff_time_main" value="<?php if (isset($rServerArr)) {
-                                                                                                                                                                            echo htmlspecialchars($rServerArr["diff_time_main"]);
-                                                                                                                                                                        } else {
-                                                                                                                                                                            echo "0";
-                                                                                                                                                                        } ?>">
-                                                                </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="network_interface">Network Interface</label>
@@ -621,9 +604,6 @@ if ($rSettings["sidebar"]) { ?>
                         });
                         $("#http_isp_port").inputFilter(function(value) {
                             return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 65535);
-                        });
-                        $("#diff_time_main").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
                         });
                         $("#network_guaranteed_speed").inputFilter(function(value) {
                             return /^\d*$/.test(value);

@@ -13,15 +13,15 @@ if (isset($_POST["stream_order_array"])) {
     $rOrder = json_decode($_POST["stream_order_array"], True);
     $rSort = 0;
     foreach ($rOrder as $rStream) {
-        $db->query("UPDATE `streams` SET `order` = " . intval($rSort) . " WHERE `id` = " . intval($rStream) . ";");
+        $ipTV_db_admin->query("UPDATE `streams` SET `order` = " . intval($rSort) . " WHERE `id` = " . intval($rStream) . ";");
         $rSort++;
     }
 }
 
 $rOrdered = array();
-$result = $db->query("SELECT `id`, `type`, `stream_display_name`, `category_id` FROM `streams` ORDER BY `order` ASC, `stream_display_name` ASC;");
-if (($result) && ($result->num_rows > 0)) {
-    while ($row = $result->fetch_assoc()) {
+$ipTV_db_admin->query("SELECT `id`, `type`, `stream_display_name`, `category_id` FROM `streams` ORDER BY `order` ASC, `stream_display_name` ASC;");
+if ($ipTV_db_admin->num_rows() > 0) {
+    foreach ($ipTV_db_admin->get_rows() as $row) {
         $rOrdered[$row["category_id"]][] = array("id" => $row["id"], "value" => $row["stream_display_name"]);
     }
 }

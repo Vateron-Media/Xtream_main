@@ -9,10 +9,10 @@ if (isset($_POST["categories"])) {
     $rPostCategories = json_decode($_POST["categories"], True);
     if (count($rPostCategories) > 0) {
         foreach ($rPostCategories as $rOrder => $rPostCategory) {
-            $db->query("UPDATE `stream_categories` SET `cat_order` = " . (intval($rOrder) + 1) . ", `parent_id` = 0 WHERE `id` = " . intval($rPostCategory["id"]) . ";");
+            $ipTV_db_admin->query("UPDATE `stream_categories` SET `cat_order` = " . (intval($rOrder) + 1) . ", `parent_id` = 0 WHERE `id` = " . intval($rPostCategory["id"]) . ";");
             if (isset($rPostCategory["children"])) {
                 foreach ($rPostCategory["children"] as $rChildOrder => $rChildCategory) {
-                    $db->query("UPDATE `stream_categories` SET `cat_order` = " . (intval($rChildOrder) + 1) . ", `parent_id` = " . intval($rPostCategory["id"]) . " WHERE `id` = " . intval($rChildCategory["id"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `stream_categories` SET `cat_order` = " . (intval($rChildOrder) + 1) . ", `parent_id` = " . intval($rPostCategory["id"]) . " WHERE `id` = " . intval($rChildCategory["id"]) . ";");
                 }
             }
         }

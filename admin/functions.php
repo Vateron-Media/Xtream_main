@@ -30,7 +30,7 @@ if (isset($_SESSION['hash'])) {
             $rServerError = True;
         }
         if (($rServer["status"] == 3) && ($rServer["last_check_ago"] > 0)) {
-            $db->query("UPDATE `streaming_servers` SET `status` = 1 WHERE `id` = " . intval($rServer["id"]) . ";");
+            $ipTV_db_admin->query("UPDATE `streaming_servers` SET `status` = 1 WHERE `id` = " . intval($rServer["id"]) . ";");
             $rServers[intval($rServer["id"])]["status"] = 1;
         }
     }

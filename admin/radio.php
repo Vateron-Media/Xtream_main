@@ -70,8 +70,8 @@ if (isset($_POST["submit_radio"])) {
         if (isset($_POST["edit"])) {
             $rImportStreams[] = $rImportArray;
         } else {
-            $rResult = $db->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . ESC($rImportArray["stream_display_name"]) . "' AND `type` = 4;");
-            if ($rResult->fetch_assoc()["count"] == 0) {
+            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . ESC($rImportArray["stream_display_name"]) . "' AND `type` = 4;");
+            if ($ipTV_db_admin->get_row()["count"] == 0) {
                 $rImportStreams[] = $rImportArray;
             } else {
                 $_STATUS = 2;
@@ -109,19 +109,19 @@ if (isset($_POST["submit_radio"])) {
                 $rValues = ESC($_POST["edit"]) . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
-            if ($db->query($rQuery)) {
+            if ($ipTV_db_admin->query($rQuery)) {
                 if (isset($_POST["edit"])) {
                     $rInsertID = intval($_POST["edit"]);
                 } else {
-                    $rInsertID = $db->insert_id;
+                    $rInsertID = $ipTV_db_admin->last_insert_id();
                 }
             }
             if (isset($rInsertID)) {
                 $rStationExists = array();
                 if (isset($_POST["edit"])) {
-                    $result = $db->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
-                    if (($result) && ($result->num_rows > 0)) {
-                        while ($row = $result->fetch_assoc()) {
+                    $ipTV_db_admin->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
+                    if ($ipTV_db_admin->num_rows() > 0) {
+                        foreach ($ipTV_db_admin->get_rows() as $row) {
                             $rStationExists[intval($row["server_id"])] = intval($row["server_stream_id"]);
                         }
                     }
@@ -144,30 +144,30 @@ if (isset($_POST["submit_radio"])) {
                                 $rOD = 0;
                             }
                             if (isset($rStationExists[$rServerID])) {
-                                $db->query("UPDATE `streams_servers` SET `parent_id` = " . $rParent . ", `on_demand` = " . $rOD . " WHERE `server_stream_id` = " . $rStationExists[$rServerID] . ";");
+                                $ipTV_db_admin->query("UPDATE `streams_servers` SET `parent_id` = " . $rParent . ", `on_demand` = " . $rOD . " WHERE `server_stream_id` = " . $rStationExists[$rServerID] . ";");
                             } else {
-                                $db->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", " . $rOD . ");");
+                                $ipTV_db_admin->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", " . $rOD . ");");
                             }
                         }
                     }
                     foreach ($rStationExists as $rServerID => $rDBID) {
                         if (!in_array($rServerID, $rStationsAdded)) {
-                            $db->query("DELETE FROM `streams_servers` WHERE `server_stream_id` = " . $rDBID . ";");
+                            $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `server_stream_id` = " . $rDBID . ";");
                         }
                     }
                 }
-                $db->query("DELETE FROM `streams_options` WHERE `stream_id` = " . intval($rInsertID) . ";");
+                $ipTV_db_admin->query("DELETE FROM `streams_options` WHERE `stream_id` = " . intval($rInsertID) . ";");
                 if ((isset($_POST["user_agent"])) && (strlen($_POST["user_agent"]) > 0)) {
-                    $db->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 1, '" . ESC($_POST["user_agent"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 1, '" . ESC($_POST["user_agent"]) . "');");
                 }
                 if ((isset($_POST["http_proxy"])) && (strlen($_POST["http_proxy"]) > 0)) {
-                    $db->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 2, '" . ESC($_POST["http_proxy"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 2, '" . ESC($_POST["http_proxy"]) . "');");
                 }
                 if ((isset($_POST["cookie"])) && (strlen($_POST["cookie"]) > 0)) {
-                    $db->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 17, '" . ESC($_POST["cookie"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 17, '" . ESC($_POST["cookie"]) . "');");
                 }
                 if ((isset($_POST["headers"])) && (strlen($_POST["headers"]) > 0)) {
-                    $db->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 19, '" . ESC($_POST["headers"]) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 19, '" . ESC($_POST["headers"]) . "');");
                 }
                 if ($rRestart) {
                     APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rInsertID)));
@@ -269,7 +269,8 @@ if ($rSettings["sidebar"]) { ?>
                                     <ol class="breadcrumb m-0">
                                         <li>
                                             <a href="./radios.php">
-                                                <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
+                                                <button type="button"
+                                                    class="btn btn-primary waves-effect waves-light btn-sm">
                                                     <?= $_["view_stations"] ?>
                                                 </button>
                                             </a>
@@ -277,10 +278,10 @@ if ($rSettings["sidebar"]) { ?>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rStation["id"])) {
-                                                            echo $rStation["stream_display_name"];
-                                                        } else {
-                                                            echo $_["add_radio_station"];
-                                                        } ?></h4>
+                                    echo $rStation["stream_display_name"];
+                                } else {
+                                    echo $_["add_radio_station"];
+                                } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -295,19 +296,19 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["radio_success"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["radio_info_1"] ?>
-                                </div>
+                                    </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                     <?= $_["radio_info_2"] ?>
-                                </div>
+                                        </div>
                             <?php }
                             if (isset($rStation["id"])) { ?>
                                 <div class="card text-xs-center">
@@ -326,7 +327,8 @@ if ($rSettings["sidebar"]) { ?>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td colspan="7" class="text-center"><?= $_["loading_station_information"] ?>...</td>
+                                                    <td colspan="7" class="text-center">
+                                                        <?= $_["loading_station_information"] ?>...</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -336,8 +338,8 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./radio.php<?php if (isset($_GET["id"])) {
-                                                                    echo "?id=" . $_GET["id"];
-                                                                } ?>" method="POST" id="radio_form" data-parsley-validate="">
+                                        echo "?id=" . $_GET["id"];
+                                    } ?>" method="POST" id="radio_form" data-parsley-validate="">
                                         <?php if (isset($rStation["id"])) { ?>
                                             <input type="hidden" name="edit" value="<?= $rStation["id"] ?>" />
                                         <?php } ?>
@@ -345,25 +347,30 @@ if ($rSettings["sidebar"]) { ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#stream-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#stream-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#advanced-options" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#advanced-options" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-folder-alert-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["advanced"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#auto-restart" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#auto-restart" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-clock-outline mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["auto_restart"] ?></span>
+                                                        <span
+                                                            class="d-none d-sm-inline"><?= $_["auto_restart"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#load-balancing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#load-balancing" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-server-network mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["servers"] ?></span>
                                                     </a>
@@ -374,72 +381,92 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="stream_display_name"><?= $_["station_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="stream_display_name"><?= $_["station_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="stream_display_name" name="stream_display_name" value="<?php if (isset($rStation)) {
-                                                                                                                                                                            echo htmlspecialchars($rStation["stream_display_name"]);
-                                                                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" class="form-control"
+                                                                        id="stream_display_name"
+                                                                        name="stream_display_name" value="<?php if (isset($rStation)) {
+                                                                            echo htmlspecialchars($rStation["stream_display_name"]);
+                                                                        } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4 stream-url">
-                                                                <label class="col-md-4 col-form-label" for="stream_source"><?= $_["station_url"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="stream_source"><?= $_["station_url"] ?></label>
                                                                 <div class="col-md-8 input-group">
-                                                                    <input type="text" id="stream_source" name="stream_source[]" class="form-control" value="<?php if (isset($rStation)) {
-                                                                                                                                                                    echo htmlspecialchars(json_decode($rStation["stream_source"], True)[0]);
-                                                                                                                                                                } ?>">
+                                                                    <input type="text" id="stream_source"
+                                                                        name="stream_source[]" class="form-control"
+                                                                        value="<?php if (isset($rStation)) {
+                                                                            echo htmlspecialchars(json_decode($rStation["stream_source"], True)[0]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="category_id"><?= $_["category_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="category_id"><?= $_["category_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="category_id" id="category_id" class="form-control" data-toggle="select2">
+                                                                    <select name="category_id" id="category_id"
+                                                                        class="form-control" data-toggle="select2">
                                                                         <?php foreach (getCategories_admin("radio") as $rCategory) { ?>
                                                                             <option <?php if (isset($rStation)) {
-                                                                                        if (intval($rStation["category_id"]) == intval($rCategory["id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } else if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                        echo "selected ";
-                                                                                    } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                if (intval($rStation["category_id"]) == intval($rCategory["id"])) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } else if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                                echo "selected ";
+                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="bouquets"><?= $_["add_to_bouquets"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="bouquets"><?= $_["add_to_bouquets"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="bouquets[]" id="bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>...">
+                                                                    <select name="bouquets[]" id="bouquets"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <option <?php if (isset($rStation)) {
-                                                                                        if (in_array($rStation["id"], json_decode($rBouquet["bouquet_radios"], True))) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rBouquet["id"] ?>"><?= htmlspecialchars($rBouquet["bouquet_name"]) ?></option>
+                                                                                if (in_array($rStation["id"], json_decode($rBouquet["bouquet_radios"], True))) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                <?= htmlspecialchars($rBouquet["bouquet_name"]) ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="stream_icon"><?= $_["station_logo_url"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="stream_icon"><?= $_["station_logo_url"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="stream_icon" name="stream_icon" value="<?php if (isset($rStation)) {
-                                                                                                                                                            echo htmlspecialchars($rStation["stream_icon"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="stream_icon" name="stream_icon" value="<?php if (isset($rStation)) {
+                                                                            echo htmlspecialchars($rStation["stream_icon"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="notes"><?= $_["notes"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="notes"><?= $_["notes"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <textarea id="notes" name="notes" class="form-control" rows="3" placeholder=""><?php if (isset($rStation)) {
-                                                                                                                                                        echo htmlspecialchars($rStation["notes"]);
-                                                                                                                                                    } ?></textarea>
+                                                                    <textarea id="notes" name="notes"
+                                                                        class="form-control" rows="3" placeholder=""><?php if (isset($rStation)) {
+                                                                            echo htmlspecialchars($rStation["notes"]);
+                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -447,85 +474,132 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="direct_source"><?= $_["direct_source"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Don't run source through Xtream Codes, just redirect instead." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="direct_source"><?= $_["direct_source"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Don't run source through Xtream Codes, just redirect instead."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="direct_source" id="direct_source" type="checkbox" <?php if (isset($rStation)) {
-                                                                                                                                        if ($rStation["direct_source"] == 1) {
-                                                                                                                                            echo "checked ";
-                                                                                                                                        }
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="direct_source" id="direct_source"
+                                                                        type="checkbox" <?php if (isset($rStation)) {
+                                                                            if ($rStation["direct_source"] == 1) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="custom_sid"><?= $_["custom_channel_sid"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Here you can specify the SID of the channel in order to work with the epg on the enigma2 devices. You have to specify the code with the ':' but without the first number, 1 or 4097 . Example: if we have this code:  '1:0:1:13f:157c:13e:820000:0:0:0:2097' then you have to add on this field:  ':0:1:13f:157c:13e:820000:0:0:0:" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="custom_sid"><?= $_["custom_channel_sid"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Here you can specify the SID of the channel in order to work with the epg on the enigma2 devices. You have to specify the code with the ':' but without the first number, 1 or 4097 . Example: if we have this code:  '1:0:1:13f:157c:13e:820000:0:0:0:2097' then you have to add on this field:  ':0:1:13f:157c:13e:820000:0:0:0:"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="custom_sid" name="custom_sid" value="<?php if (isset($rStation)) {
-                                                                                                                                                            echo htmlspecialchars($rStation["custom_sid"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="custom_sid" name="custom_sid" value="<?php if (isset($rStation)) {
+                                                                            echo htmlspecialchars($rStation["custom_sid"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="custom_ffmpeg"><?= $_["custom_ffmpeg_command"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="In this field you can write your own custom FFmpeg command. Please note that this command will be placed after the input and before the output. If the command you will specify here is about to do changes in the output video or audio, it may require to transcode the stream. In this case, you have to use and change at least the Video/Audio Codecs using the transcoding attributes below. The custom FFmpeg command will only be used by the server(s) that take the stream from the Source." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="custom_ffmpeg"><?= $_["custom_ffmpeg_command"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="In this field you can write your own custom FFmpeg command. Please note that this command will be placed after the input and before the output. If the command you will specify here is about to do changes in the output video or audio, it may require to transcode the stream. In this case, you have to use and change at least the Video/Audio Codecs using the transcoding attributes below. The custom FFmpeg command will only be used by the server(s) that take the stream from the Source."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="custom_ffmpeg" name="custom_ffmpeg" value="<?php if (isset($rStation)) {
-                                                                                                                                                                echo htmlspecialchars($rStation["custom_ffmpeg"]);
-                                                                                                                                                            } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="custom_ffmpeg" name="custom_ffmpeg" value="<?php if (isset($rStation)) {
+                                                                            echo htmlspecialchars($rStation["custom_ffmpeg"]);
+                                                                        } ?>">
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="probesize_ondemand"><?= $_["on_demand_probesize"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Adjustable probesize for ondemand streams. Adjust this setting if you experience issues with no audio." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="probesize_ondemand"><?= $_["on_demand_probesize"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Adjustable probesize for ondemand streams. Adjust this setting if you experience issues with no audio."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input type="text" class="form-control" id="probesize_ondemand" name="probesize_ondemand" value="<?php if (isset($rStation)) {
-                                                                                                                                                                            echo htmlspecialchars($rStation["probesize_ondemand"]);
-                                                                                                                                                                        } else {
-                                                                                                                                                                            echo "128000";
-                                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="probesize_ondemand"
+                                                                        name="probesize_ondemand" value="<?php if (isset($rStation)) {
+                                                                            echo htmlspecialchars($rStation["probesize_ondemand"]);
+                                                                        } else {
+                                                                            echo "128000";
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="user_agent"><?= $_["user_agent"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="user_agent"><?= $_["user_agent"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="user_agent" name="user_agent" value="<?php if (isset($rStationOptions[1])) {
-                                                                                                                                                            echo htmlspecialchars($rStationOptions[1]["value"]);
-                                                                                                                                                        } else {
-                                                                                                                                                            echo htmlspecialchars($rStationArguments["user_agent"]["argument_default_value"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="user_agent" name="user_agent" value="<?php if (isset($rStationOptions[1])) {
+                                                                            echo htmlspecialchars($rStationOptions[1]["value"]);
+                                                                        } else {
+                                                                            echo htmlspecialchars($rStationArguments["user_agent"]["argument_default_value"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="http_proxy"><?= $_["http_proxy"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Format: ip:port" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="http_proxy"><?= $_["http_proxy"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title="" data-original-title="Format: ip:port"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="http_proxy" name="http_proxy" value="<?php if (isset($rStationOptions[2])) {
-                                                                                                                                                            echo htmlspecialchars($rStationOptions[2]["value"]);
-                                                                                                                                                        } else {
-                                                                                                                                                            echo htmlspecialchars($rStationArguments["proxy"]["argument_default_value"]);
-                                                                                                                                                        } ?>">
+                                                                    <input type="text" class="form-control"
+                                                                        id="http_proxy" name="http_proxy" value="<?php if (isset($rStationOptions[2])) {
+                                                                            echo htmlspecialchars($rStationOptions[2]["value"]);
+                                                                        } else {
+                                                                            echo htmlspecialchars($rStationArguments["proxy"]["argument_default_value"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="cookie"><?= $_["cookie"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Format: key=value;" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="cookie"><?= $_["cookie"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="Format: key=value;"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="cookie" name="cookie" value="<?php if (isset($rStationOptions[17])) {
-                                                                                                                                                    echo htmlspecialchars($rStationOptions[17]["value"]);
-                                                                                                                                                } else {
-                                                                                                                                                    echo htmlspecialchars($rStationArguments["cookie"]["argument_default_value"]);
-                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control" id="cookie"
+                                                                        name="cookie" value="<?php if (isset($rStationOptions[17])) {
+                                                                            echo htmlspecialchars($rStationOptions[17]["value"]);
+                                                                        } else {
+                                                                            echo htmlspecialchars($rStationArguments["cookie"]["argument_default_value"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="headers"><?= $_["headers"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="FFmpeg -headers command." class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="headers"><?= $_["headers"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="FFmpeg -headers command."
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="headers" name="headers" value="<?php if (isset($rStreamOptions[19])) {
-                                                                                                                                                    echo htmlspecialchars($rStreamOptions[19]["value"]);
-                                                                                                                                                } else {
-                                                                                                                                                    echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]);
-                                                                                                                                                } ?>">
+                                                                    <input type="text" class="form-control" id="headers"
+                                                                        name="headers" value="<?php if (isset($rStreamOptions[19])) {
+                                                                            echo htmlspecialchars($rStreamOptions[19]["value"]);
+                                                                        } else {
+                                                                            echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]);
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -533,7 +607,8 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="days_to_restart"><?= $_["days_to_restart"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="days_to_restart"><?= $_["days_to_restart"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <?php
                                                                     $rAutoRestart = array("days" => array(), "at" => "06:00");
@@ -548,22 +623,33 @@ if ($rSettings["sidebar"]) { ?>
                                                                             }
                                                                         }
                                                                     } ?>
-                                                                    <select id="days_to_restart" name="days_to_restart[]" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>...">
+                                                                    <select id="days_to_restart"
+                                                                        name="days_to_restart[]"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach (array($_["monday"] => "Monday", $_["tuesday"] => "Tuesday", $_["wednesday"] => "Wednesday", $_["thursday"] => "Thursday", $_["friday"] => "Friday", $_["saturday"] => "Saturday", $_["sunday"] => "Sunday") as $rDay) { ?>
                                                                             <option value="<?= $rDay ?>" <?php if (in_array($rDay, $rAutoRestart["days"])) {
-                                                                                                                echo " selected";
-                                                                                                            } ?>><?= $rDay ?></option>
+                                                                                  echo " selected";
+                                                                              } ?>><?= $rDay ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="time_to_restart"><?= $_["time_to_restart"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="time_to_restart"><?= $_["time_to_restart"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <div class="input-group clockpicker" data-placement="top" data-align="top" data-autoclose="true">
-                                                                        <input id="time_to_restart" name="time_to_restart" type="text" class="form-control" value="<?= $rAutoRestart["at"] ?>">
+                                                                    <div class="input-group clockpicker"
+                                                                        data-placement="top" data-align="top"
+                                                                        data-autoclose="true">
+                                                                        <input id="time_to_restart"
+                                                                            name="time_to_restart" type="text"
+                                                                            class="form-control"
+                                                                            value="<?= $rAutoRestart["at"] ?>">
                                                                         <div class="input-group-append">
-                                                                            <span class="input-group-text"><i class="mdi mdi-clock-outline"></i></span>
+                                                                            <span class="input-group-text"><i
+                                                                                    class="mdi mdi-clock-outline"></i></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -572,10 +658,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -583,41 +671,52 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="servers"><?= $_["server_tree"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="servers"><?= $_["server_tree"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <div id="server_tree"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="on_demand"><?= $_["on_demand"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="on_demand"><?= $_["on_demand"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select id="on_demand" name="on_demand[]" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>...">
+                                                                    <select id="on_demand" name="on_demand[]"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach ($rServers as $rServerItem) { ?>
                                                                             <option value="<?= $rServerItem["id"] ?>" <?php if (in_array($rServerItem["id"], $rOnDemand)) {
-                                                                                                                            echo " selected";
-                                                                                                                        } ?>><?= $rServerItem["server_name"] ?></option>
+                                                                                  echo " selected";
+                                                                              } ?>>
+                                                                                <?= $rServerItem["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="restart_on_edit"><?php if (isset($rStation["id"])) { ?><?= $_["restart_on_edit"] ?><?php } else { ?><?= $_["start_stream_now"] ?><?php } ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="restart_on_edit"><?php if (isset($rStation["id"])) { ?><?= $_["restart_on_edit"] ?><?php } else { ?><?= $_["start_stream_now"] ?><?php } ?></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="restart_on_edit" id="restart_on_edit" type="checkbox" data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="restart_on_edit" id="restart_on_edit"
+                                                                        type="checkbox" data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                            <a href="javascript: void(0);"
+                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
-                                                            <input name="submit_radio" type="submit" class="btn btn-primary" value="<?php if (isset($rStation["id"])) {
-                                                                                                                                        echo $_["edit"];
-                                                                                                                                    } else {
-                                                                                                                                        echo $_["add"];
-                                                                                                                                    } ?>" />
+                                                            <input name="submit_radio" type="submit"
+                                                                class="btn btn-primary" value="<?php if (isset($rStation["id"])) {
+                                                                    echo $_["edit"];
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -628,232 +727,232 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- file preview template -->
-                <div class="d-none" id="uploadPreviewTemplate">
-                    <div class="card mt-1 mb-0 shadow-none border">
-                        <div class="p-2">
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <img data-dz-thumbnail class="avatar-sm rounded bg-light" alt="">
-                                </div>
-                                <div class="col pl-0">
-                                    <a href="javascript:void(0);" class="text-muted font-weight-bold" data-dz-name></a>
-                                    <p class="mb-0" data-dz-size></p>
-                                </div>
-                                <div class="col-auto">
-                                    <!-- Button -->
-                                    <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
-                                        <i class="mdi mdi-close-circle"></i>
-                                    </a>
-                                </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- file preview template -->
+            <div class="d-none" id="uploadPreviewTemplate">
+                <div class="card mt-1 mb-0 shadow-none border">
+                    <div class="p-2">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <img data-dz-thumbnail class="avatar-sm rounded bg-light" alt="">
+                            </div>
+                            <div class="col pl-0">
+                                <a href="javascript:void(0);" class="text-muted font-weight-bold" data-dz-name></a>
+                                <p class="mb-0" data-dz-size></p>
+                            </div>
+                            <div class="col-auto">
+                                <!-- Button -->
+                                <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                                    <i class="mdi mdi-close-circle"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/magnific-popup/jquery.magnific-popup.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/treeview/jstree.min.js"></script>
+            <script src="assets/js/pages/treeview.init.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/js/app.min.js"></script>
 
-                <script>
-                    var rSwitches = [];
+            <script>
+                var rSwitches = [];
 
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
-
-                    function reloadStream() {
-                        $("#datatable").DataTable().ajax.reload(null, false);
-                        setTimeout(reloadStream, 5000);
-                    }
-
-                    function api(rID, rServerID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('<?= $_["radio_delete_confirm"] ?>') == false) {
-                                return;
+                (function ($) {
+                    $.fn.inputFilter = function (inputFilter) {
+                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                            if (inputFilter(this.value)) {
+                                this.oldValue = this.value;
+                                this.oldSelectionStart = this.selectionStart;
+                                this.oldSelectionEnd = this.selectionEnd;
+                            } else if (this.hasOwnProperty("oldValue")) {
+                                this.value = this.oldValue;
+                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
                             }
+                        });
+                    };
+                }(jQuery));
+
+                function reloadStream() {
+                    $("#datatable").DataTable().ajax.reload(null, false);
+                    setTimeout(reloadStream, 5000);
+                }
+
+                function api(rID, rServerID, rType) {
+                    if (rType == "delete") {
+                        if (confirm('<?= $_["radio_delete_confirm"] ?>') == false) {
+                            return;
                         }
-                        $.getJSON("./api.php?action=stream&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function(data) {
-                            if (data.result == true) {
-                                if (rType == "start") {
-                                    $.toast("<?= $_["radio_started"] ?>");
-                                } else if (rType == "stop") {
-                                    $.toast("<?= $_["radio_stopped"] ?>");
-                                } else if (rType == "restart") {
-                                    $.toast("<?= $_["radio_restarted"] ?>");
-                                } else if (rType == "delete") {
-                                    $("#stream-" + rID + "-" + rServerID).remove();
-                                    $.toast("<?= $_["radio_deleted"] ?>");
-                                }
-                                $("#datatable").DataTable().ajax.reload(null, false);
-                            } else {
-                                $.toast("<?= $_["error_occured"] ?>");
+                    }
+                    $.getJSON("./api.php?action=stream&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function (data) {
+                        if (data.result == true) {
+                            if (rType == "start") {
+                                $.toast("<?= $_["radio_started"] ?>");
+                            } else if (rType == "stop") {
+                                $.toast("<?= $_["radio_stopped"] ?>");
+                            } else if (rType == "restart") {
+                                $.toast("<?= $_["radio_restarted"] ?>");
+                            } else if (rType == "delete") {
+                                $("#stream-" + rID + "-" + rServerID).remove();
+                                $.toast("<?= $_["radio_deleted"] ?>");
                             }
-                        }).fail(function() {
+                            $("#datatable").DataTable().ajax.reload(null, false);
+                        } else {
                             $.toast("<?= $_["error_occured"] ?>");
-                        });
-                    }
-
-                    function setSwitch(switchElement, checkedBool) {
-                        if ((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
-                            switchElement.setPosition(true);
-                            switchElement.handleOnchange(true);
                         }
-                    }
-                    $(document).ready(function() {
-                        $('select').select2({
-                            width: '100%'
-                        })
-                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                        elems.forEach(function(html) {
-                            var switchery = new Switchery(html);
-                            window.rSwitches[$(html).attr("id")] = switchery;
-                        });
-                        $(".clockpicker").clockpicker();
-                        $('#server_tree').jstree({
-                            'core': {
-                                'check_callback': function(op, node, parent, position, more) {
-                                    switch (op) {
-                                        case 'move_node':
-                                            if (node.id == "source") {
-                                                return false;
-                                            }
-                                            return true;
-                                    }
-                                },
-                                'data': <?= json_encode($rServerTree) ?>
-                            },
-                            "plugins": ["dnd"]
-                        });
-                        $("#direct_source").change(function() {
-                            evaluateDirectSource();
-                        });
+                    }).fail(function () {
+                        $.toast("<?= $_["error_occured"] ?>");
+                    });
+                }
 
-                        function evaluateDirectSource() {
-                            $(["custom_ffmpeg", "probesize_ondemand", "user_agent", "http_proxy", "cookie", "headers", "days_to_restart", "time_to_restart", "on_demand", "restart_on_edit"]).each(function(rID, rElement) {
-                                if ($(rElement)) {
-                                    if ($("#direct_source").is(":checked")) {
-                                        if (window.rSwitches[rElement]) {
-                                            setSwitch(window.rSwitches[rElement], false);
-                                            window.rSwitches[rElement].disable();
-                                        } else {
-                                            $("#" + rElement).prop("disabled", true);
+                function setSwitch(switchElement, checkedBool) {
+                    if ((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
+                        switchElement.setPosition(true);
+                        switchElement.handleOnchange(true);
+                    }
+                }
+                $(document).ready(function () {
+                    $('select').select2({
+                        width: '100%'
+                    })
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+                    elems.forEach(function (html) {
+                        var switchery = new Switchery(html);
+                        window.rSwitches[$(html).attr("id")] = switchery;
+                    });
+                    $(".clockpicker").clockpicker();
+                    $('#server_tree').jstree({
+                        'core': {
+                            'check_callback': function (op, node, parent, position, more) {
+                                switch (op) {
+                                    case 'move_node':
+                                        if (node.id == "source") {
+                                            return false;
                                         }
-                                    } else {
-                                        if (window.rSwitches[rElement]) {
-                                            window.rSwitches[rElement].enable();
-                                        } else {
-                                            $("#" + rElement).prop("disabled", false);
-                                        }
-                                    }
+                                        return true;
                                 }
-                            });
-                        }
-
-                        $("#radio_form").submit(function(e) {
-                            if ($("#stream_display_name").val().length == 0) {
-                                e.preventDefault();
-                                $.toast("<?= $_["enter_a_radio_station_name"] ?>");
-                            }
-                            $("#server_tree_data").val(JSON.stringify($('#server_tree').jstree(true).get_json('#', {
-                                flat: true
-                            })));
-                        });
-
-                        $(document).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-
-                        $("#probesize_ondemand").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#delay_minutes").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("#tv_archive_duration").inputFilter(function(value) {
-                            return /^\d*$/.test(value);
-                        });
-                        $("form").attr('autocomplete', 'off');
-                        <?php if (isset($rStation["id"])) { ?>
-                            $("#datatable").DataTable({
-                                ordering: false,
-                                paging: false,
-                                searching: false,
-                                processing: true,
-                                serverSide: true,
-                                bInfo: false,
-                                ajax: {
-                                    url: "./table_search.php",
-                                    "data": function(d) {
-                                        d.id = "radios";
-                                        d.stream_id = <?= $rStation["id"] ?>;
-                                    }
-                                },
-                                columnDefs: [{
-                                        "className": "dt-center",
-                                        "targets": [2, 3, 4, 5]
-                                    },
-                                    {
-                                        "visible": false,
-                                        "targets": [0, 1, 6]
-                                    }
-                                ],
-                            });
-                            setTimeout(reloadStream, 5000);
-                        <?php } ?>
+                            },
+                            'data': <?= json_encode($rServerTree) ?>
+                        },
+                        "plugins": ["dnd"]
+                    });
+                    $("#direct_source").change(function () {
                         evaluateDirectSource();
                     });
-                </script>
-                </body>
 
-                </html>
+                    function evaluateDirectSource() {
+                        $(["custom_ffmpeg", "probesize_ondemand", "user_agent", "http_proxy", "cookie", "headers", "days_to_restart", "time_to_restart", "on_demand", "restart_on_edit"]).each(function (rID, rElement) {
+                            if ($(rElement)) {
+                                if ($("#direct_source").is(":checked")) {
+                                    if (window.rSwitches[rElement]) {
+                                        setSwitch(window.rSwitches[rElement], false);
+                                        window.rSwitches[rElement].disable();
+                                    } else {
+                                        $("#" + rElement).prop("disabled", true);
+                                    }
+                                } else {
+                                    if (window.rSwitches[rElement]) {
+                                        window.rSwitches[rElement].enable();
+                                    } else {
+                                        $("#" + rElement).prop("disabled", false);
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    $("#radio_form").submit(function (e) {
+                        if ($("#stream_display_name").val().length == 0) {
+                            e.preventDefault();
+                            $.toast("<?= $_["enter_a_radio_station_name"] ?>");
+                        }
+                        $("#server_tree_data").val(JSON.stringify($('#server_tree').jstree(true).get_json('#', {
+                            flat: true
+                        })));
+                    });
+
+                    $(document).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+
+                    $("#probesize_ondemand").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#delay_minutes").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("#tv_archive_duration").inputFilter(function (value) {
+                        return /^\d*$/.test(value);
+                    });
+                    $("form").attr('autocomplete', 'off');
+                    <?php if (isset($rStation["id"])) { ?>
+                        $("#datatable").DataTable({
+                            ordering: false,
+                            paging: false,
+                            searching: false,
+                            processing: true,
+                            serverSide: true,
+                            bInfo: false,
+                            ajax: {
+                                url: "./table_search.php",
+                                "data": function (d) {
+                                    d.id = "radios";
+                                    d.stream_id = <?= $rStation["id"] ?>;
+                                }
+                            },
+                            columnDefs: [{
+                                "className": "dt-center",
+                                "targets": [2, 3, 4, 5]
+                            },
+                            {
+                                "visible": false,
+                                "targets": [0, 1, 6]
+                            }
+                            ],
+                        });
+                        setTimeout(reloadStream, 5000);
+                    <?php } ?>
+                    evaluateDirectSource();
+                });
+            </script>
+            </body>
+
+            </html>

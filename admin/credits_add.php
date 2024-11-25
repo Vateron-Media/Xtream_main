@@ -20,10 +20,10 @@ if ((isset($_POST["submit_credits"])) && (isset($_POST["id"]))) {
     if ((!isset($_STATUS)) && ($rUser)) {
         $rNewCredits = floatval($rUserInfo["credits"]) - floatval($rCost);
         $rUpdCredits = floatval($rUser["credits"]) + floatval($rCost);
-        $db->query("UPDATE `reg_users` SET `credits` = " . $rNewCredits . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
-        $db->query("UPDATE `reg_users` SET `credits` = " . $rUpdCredits . " WHERE `id` = " . intval($rUser["id"]) . ";");
-        $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rUser["username"]) . "', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["transfer_credits_to"] . " [" . ESC($rUser["username"]) . "] Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
-        $db->query("INSERT INTO `credits_log`(`target_id`, `admin_id`, `amount`, `date`, `reason`) VALUES(" . $rUser["id"] . ", " . intval($rUserInfo["id"]) . ", " . ESC($rCost) . ", " . intval(time()) . ", 'Reseller credits transfer');");
+        $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = " . $rNewCredits . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+        $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = " . $rUpdCredits . " WHERE `id` = " . intval($rUser["id"]) . ";");
+        $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rUser["username"]) . "', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["transfer_credits_to"] . " [" . ESC($rUser["username"]) . "] Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+        $ipTV_db_admin->query("INSERT INTO `credits_log`(`target_id`, `admin_id`, `amount`, `date`, `reason`) VALUES(" . $rUser["id"] . ", " . intval($rUserInfo["id"]) . ", " . ESC($rCost) . ", " . intval(time()) . ", 'Reseller credits transfer');");
         header("Location: ./reg_users.php");
         exit;
     }

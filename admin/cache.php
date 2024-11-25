@@ -33,7 +33,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     }
 
     if ($rCheck[0] && $rCheck[1]) {
-        $db->query("UPDATE `crontab` SET `time` = '" . $rCronOutput . "' WHERE `filename` = 'cache_engine.php';");
+        $ipTV_db_admin->query("UPDATE `crontab` SET `time` = '" . $rCronOutput . "' WHERE `filename` = 'cache_engine.php';");
         ipTV_lib::setSettings(["cache_thread_count" => $_POST['cache_thread_count'], "cache_changes" => $rCacheChanges]);
 
         if (file_exists(TMP_PATH . 'crontab')) {

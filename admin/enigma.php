@@ -17,8 +17,8 @@ if (isset($_POST["submit_e2"])) {
                     exit;
                 }
                 $rCurE2 = getEnigma($_POST["edit"]);
-                $db->query("DELETE FROM `users` WHERE `id` = " . intval($rCurE2["user_id"]) . ";"); // Delete existing user.
-                $db->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rCurE2["user_id"]) . ";");
+                $ipTV_db_admin->query("DELETE FROM `users` WHERE `id` = " . intval($rCurE2["user_id"]) . ";"); // Delete existing user.
+                $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rCurE2["user_id"]) . ";");
             } else if (!hasPermissions("adv", "add_e2")) {
                 exit;
             }
@@ -40,24 +40,24 @@ if (isset($_POST["submit_e2"])) {
                 }
             }
             $rQuery = "INSERT INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
-            if ($db->query($rQuery)) {
-                $rNewID = $db->insert_id;
+            if ($ipTV_db_admin->query($rQuery)) {
+                $rNewID = $ipTV_db_admin->last_insert_id();
                 $rArray = array("user_id" => $rNewID, "mac" => $_POST["mac"]);
                 // Create / Edit Enigma.
                 if (isset($_POST["edit"])) {
-                    $db->query("UPDATE `enigma2_devices` SET `user_id` = " . intval($rNewID) . ", `mac` = '" . ESC($_POST["mac"]) . "' WHERE `device_id` = " . intval($_POST["edit"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `user_id` = " . intval($rNewID) . ", `mac` = '" . ESC($_POST["mac"]) . "' WHERE `device_id` = " . intval($_POST["edit"]) . ";");
                     $rEditID = $_POST["edit"];
                 } else {
-                    $db->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rNewID) . ", '" . ESC($_POST["mac"]) . "');");
-                    $rEditID = $db->insert_id;
+                    $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rNewID) . ", '" . ESC($_POST["mac"]) . "');");
+                    $rEditID = $ipTV_db_admin->last_insert_id();
                 }
-                $db->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rNewID) . ", 2);");
+                $ipTV_db_admin->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rNewID) . ", 2);");
                 header("Location: ./enigma.php?id=" . $rNewID);
                 exit;
             }
-        } else if ((isset($_POST["edit"])) && (strlen($_POST["edit"]))) {
+        } elseif ((isset($_POST["edit"])) && (strlen($_POST["edit"]))) {
             // Don't create a new user, legacy support for device.
-            $db->query("UPDATE `enigma2_devices` SET `mac` = '" . ESC($_POST["mac"]) . "' WHERE `device_id` = " . intval($_POST["edit"]) . ";");
+            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . ESC($_POST["mac"]) . "' WHERE `device_id` = " . intval($_POST["edit"]) . ";");
             header("Location: ./enigma.php?id=" . $_POST["edit"]);
             exit;
         }

@@ -7,8 +7,8 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_bouquet")) && 
 
 if (isset($_POST["submit_bouquet"])) {
     $rArray = array("bouquet_name" => "", "bouquet_channels" => array(), "bouquet_movies" => array(), "bouquet_radios" => array(), "bouquet_series" => array());
-    if (is_array(json_decode($_POST["bouquet_data"], True))) {
-        $rBouquetData = json_decode($_POST["bouquet_data"], True);
+    if (is_array(json_decode($_POST["bouquet_data"], true))) {
+        $rBouquetData = json_decode($_POST["bouquet_data"], true);
         $rArray["bouquet_channels"] = array_values($rBouquetData["stream"]);
         $rArray["bouquet_series"] = array_values($rBouquetData["series"]);
         $rArray["bouquet_movies"] = array_values($rBouquetData["vod"]);
@@ -18,7 +18,8 @@ if (isset($_POST["submit_bouquet"])) {
         exit;
     }
     if (!isset($_POST["edit"])) {
-        $rArray["bouquet_order"] = intval($db->query("SELECT MAX(`bouquet_order`) AS `max` FROM `bouquets`;")->fetch_assoc()["max"]) + 1;
+        $ipTV_db_admin->query("SELECT MAX(`bouquet_order`) AS `max` FROM `bouquets`;");
+        $rArray["bouquet_order"] = intval($ipTV_db_admin->get_row()["max"]) + 1;
     }
     foreach ($_POST as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
@@ -47,11 +48,11 @@ if (isset($_POST["submit_bouquet"])) {
         exit;
     }
     $rQuery = "REPLACE INTO `bouquets`(" . $rCols . ") VALUES(" . $rValues . ");";
-    if ($db->query($rQuery)) {
+    if ($ipTV_db_admin->query($rQuery)) {
         if (isset($_POST["edit"])) {
             $rInsertID = intval($_POST["edit"]);
         } else {
-            $rInsertID = $db->insert_id;
+            $rInsertID = $ipTV_db_admin->last_insert_id();
         }
         $_STATUS = 0;
         scanBouquet($rInsertID);
@@ -546,16 +547,16 @@ if ($rSettings["sidebar"]) { ?>
 
             <script>
                 <?php if (isset($rBouquetArr)) {
-                    if (!is_array(json_decode($rBouquetArr["bouquet_series"], True))) {
+                    if (!is_array(json_decode($rBouquetArr["bouquet_series"], true))) {
                         $rBouquetArr["bouquet_series"] = "[]";
                     }
-                    if (!is_array(json_decode($rBouquetArr["bouquet_channels"], True))) {
+                    if (!is_array(json_decode($rBouquetArr["bouquet_channels"], true))) {
                         $rBouquetArr["bouquet_channels"] = "[]";
                     }
-                    if (!is_array(json_decode($rBouquetArr["bouquet_movies"], True))) {
+                    if (!is_array(json_decode($rBouquetArr["bouquet_movies"], true))) {
                         $rBouquetArr["bouquet_movies"] = "[]";
                     }
-                    if (!is_array(json_decode($rBouquetArr["bouquet_radios"], True))) {
+                    if (!is_array(json_decode($rBouquetArr["bouquet_radios"], true))) {
                         $rBouquetArr["bouquet_radios"] = "[]";
                     }
                     ?>

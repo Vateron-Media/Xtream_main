@@ -8,9 +8,9 @@ $rSettings = getSettings();
 $rCategories = getCategories_admin();
 $rServers = getStreamingServers();
 
-$rResult = $db->query("SELECT * FROM `watch_settings`;");
-if (($rResult) && ($rResult->num_rows == 1)) {
-    $rWatchSettings = $rResult->fetch_assoc();
+$ipTV_db_admin->query("SELECT * FROM `watch_settings`;");
+if ($ipTV_db_admin->num_rows() == 1) {
+    $rWatchSettings = $ipTV_db_admin->get_row();
 }
 
 $rPID = getmypid();
@@ -18,10 +18,10 @@ if (isset($rAdminSettings["tmdb_pid"])) {
     if ((file_exists("/proc/" . $rAdminSettings["tmdb_pid"])) && (strlen($rAdminSettings["tmdb_pid"]) > 0)) {
         exit;
     } else {
-        $db->query("UPDATE `admin_settings` SET `value` = " . intval($rPID) . " WHERE `type` = 'tmdb_pid';");
+        $ipTV_db_admin->query("UPDATE `admin_settings` SET `value` = " . intval($rPID) . " WHERE `type` = 'tmdb_pid';");
     }
 } else {
-    $db->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('tmdb_pid', " . intval($rPID) . ");");
+    $ipTV_db_admin->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('tmdb_pid', " . intval($rPID) . ");");
 }
 
 $rLimit = 250;      // Limit by quantity.
@@ -41,14 +41,14 @@ if (strlen($rAdminSettings["tmdb_language"]) > 0) {
 }
 
 $rUpdateSeries = array();
-$rResult = $db->query("SELECT `id`, `type`, `stream_id` FROM `tmdb_async` WHERE `status` = 0 ORDER BY `stream_id` ASC LIMIT " . intval($rLimit) . ";");
-if (($rResult) && ($rResult->num_rows > 0)) {
-    while ($rRow = $rResult->fetch_assoc()) {
+$ipTV_db_admin->query("SELECT `id`, `type`, `stream_id` FROM `tmdb_async` WHERE `status` = 0 ORDER BY `stream_id` ASC LIMIT " . intval($rLimit) . ";");
+if ($ipTV_db_admin->num_rows() > 0) {
+    foreach ($ipTV_db_admin->get_rows() as $rRow) {
         if ($rRow["type"] == 1) { // Movies
-            $rResultB = $db->query("SELECT * FROM `streams` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
-            if (($rResultB) && ($rResultB->num_rows == 1)) {
-                $rStream = $rResultB->fetch_assoc();
-                $rFilename = pathinfo(json_decode($rStream["stream_source"], True)[0])["filename"];
+            $ipTV_db_admin->query("SELECT * FROM `streams` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
+            if ($ipTV_db_admin->num_rows() == 1) {
+                $rStream = $ipTV_db_admin->get_row();
+                $rFilename = pathinfo(json_decode($rStream["stream_source"], true)[0])["filename"];
                 if ($rAdminSettings["release_parser"] == "php") {
                     $rRelease = new Release($rFilename);
                     $rTitle = $rRelease->getTitle();
@@ -80,7 +80,7 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                 }
                 if ($rMatch) {
                     $rMovie = $rTMDB->getMovie($rMatch->get("id"));
-                    $rMovieData = json_decode($rMovie->getJSON(), True);
+                    $rMovieData = json_decode($rMovie->getJSON(), true);
                     $rMovieData["trailer"] = $rMovie->getTrailer();
                     $rThumb = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rMovieData['poster_path'];
                     $rBG = "https://image.tmdb.org/t/p/w1280" . $rMovieData['backdrop_path'];
@@ -118,18 +118,18 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                     if (strlen($rMovieData["release_date"]) > 0) {
                         $rTitle .= " (" . intval(substr($rMovieData["release_date"], 0, 4)) . ")";
                     }
-                    $db->query("UPDATE `tmdb_async` SET `status` = 1 WHERE `id` = " . intval($rRow["id"]) . ";");
-                    $db->query("UPDATE `streams` SET `stream_display_name` = '" . $db->real_escape_string($rTitle) . "', `movie_properties` = '" . $db->real_escape_string(json_encode($rProperties)) . "' WHERE `id` = " . intval($rRow["stream_id"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = 1 WHERE `id` = " . intval($rRow["id"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `streams` SET `stream_display_name` = '" . $ipTV_db_admin->escape($rTitle) . "', `movie_properties` = '" . $ipTV_db_admin->escape(json_encode($rProperties)) . "' WHERE `id` = " . intval($rRow["stream_id"]) . ";");
                 } else {
-                    $db->query("UPDATE `tmdb_async` SET `status` = -1 WHERE `id` = " . intval($rRow["id"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = -1 WHERE `id` = " . intval($rRow["id"]) . ";");
                 }
             } else {
-                $db->query("UPDATE `tmdb_async` SET `status` = -2 WHERE `id` = " . intval($rRow["id"]) . ";");
+                $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = -2 WHERE `id` = " . intval($rRow["id"]) . ";");
             }
         } else if ($rRow["type"] == 2) { // Series
-            $rResultB = $db->query("SELECT * FROM `series` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
-            if (($rResultB) && ($rResultB->num_rows == 1)) {
-                $rStream = $rResultB->fetch_assoc();
+            $ipTV_db_admin->query("SELECT * FROM `series` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
+            if ($ipTV_db_admin->num_rows() == 1) {
+                $rStream = $ipTV_db_admin->get_row();
                 $rFilename = $rStream["title"];
                 if ($rAdminSettings["release_parser"] == "php") {
                     $rRelease = new Release($rFilename);
@@ -162,7 +162,7 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                 }
                 if ($rMatch) {
                     $rShow = $rTMDB->getTVShow($rMatch->get("id"));
-                    $rShowData = json_decode($rShow->getJSON(), True);
+                    $rShowData = json_decode($rShow->getJSON(), true);
                     $rSeriesArray = $rStream;
                     $rSeriesArray["title"] = $rShowData["name"];
                     $rSeriesArray["tmdb_id"] = $rShowData["id"];
@@ -209,36 +209,36 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                         if (is_null($rValue)) {
                             $rValues .= 'NULL';
                         } else {
-                            $rValues .= '\'' . $db->real_escape_string($rValue) . '\'';
+                            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
                         }
                     }
-                    $rQuery = "REPLACE INTO `series`(" . $db->real_escape_string($rCols) . ") VALUES(" . $rValues . ");";
-                    $db->query($rQuery);
-                    $rInsertID = $db->insert_id;
+                    $rQuery = "REPLACE INTO `series`(" . $ipTV_db_admin->escape($rCols) . ") VALUES(" . $rValues . ");";
+                    $ipTV_db_admin->query($rQuery);
+                    $rInsertID = $ipTV_db_admin->last_insert_id();
                     updateSeries(intval($rInsertID));
-                    $db->query("UPDATE `tmdb_async` SET `status` = 1 WHERE `id` = " . intval($rRow["id"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = 1 WHERE `id` = " . intval($rRow["id"]) . ";");
                 } else {
-                    $db->query("UPDATE `tmdb_async` SET `status` = -1 WHERE `id` = " . intval($rRow["id"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = -1 WHERE `id` = " . intval($rRow["id"]) . ";");
                 }
             } else {
-                $db->query("UPDATE `tmdb_async` SET `status` = -2 WHERE `id` = " . intval($rRow["id"]) . ";");
+                $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = -2 WHERE `id` = " . intval($rRow["id"]) . ";");
             }
         } else if ($rRow["type"] == 3) { // Episodes
-            $rResultB = $db->query("SELECT * FROM `streams` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
-            if (($rResultB) && ($rResultB->num_rows == 1)) {
-                $rStream = $rResultB->fetch_assoc();
-                $rResultC = $db->query("SELECT * FROM `series_episodes` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
-                if (($rResultC) && ($rResultC->num_rows == 1)) {
-                    $rSeriesEpisode = $rResultC->fetch_assoc();
-                    $rResultD = $db->query("SELECT * FROM `series` WHERE `id` = " . intval($rSeriesEpisode["series_id"]) . ";");
-                    if (($rResultD) && ($rResultD->num_rows == 1)) {
-                        $rSeries = $rResultD->fetch_assoc();
+            $ipTV_db_admin->query("SELECT * FROM `streams` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
+            if ($ipTV_db_admin->num_rows() == 1) {
+                $rStream = $ipTV_db_admin->get_row();
+                $ipTV_db_admin->query("SELECT * FROM `series_episodes` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
+                if ($ipTV_db_admin->num_rows() == 1) {
+                    $rSeriesEpisode = $ipTV_db_admin->get_row();
+                    $rResultD = $ipTV_db_admin->query("SELECT * FROM `series` WHERE `id` = " . intval($rSeriesEpisode["series_id"]) . ";");
+                    if ($ipTV_db_admin->num_rows() == 1) {
+                        $rSeries = $ipTV_db_admin->get_row();
                         if (strlen($rSeries["tmdb_id"]) > 0) {
                             $rShow = $rTMDB->getTVShow($rSeries["tmdb_id"]);
-                            $rShowData = json_decode($rShow->getJSON(), True);
+                            $rShowData = json_decode($rShow->getJSON(), true);
                             if (isset($rShowData["name"])) {
                                 // Get season and episode from filename.
-                                $rFilename = pathinfo(json_decode($rStream["stream_source"], True)[0])["filename"];
+                                $rFilename = pathinfo(json_decode($rStream["stream_source"], true)[0])["filename"];
                                 if ($rAdminSettings["release_parser"] == "php") {
                                     $rRelease = new Release($rFilename);
                                     $rReleaseSeason = $rRelease->getSeason();
@@ -253,7 +253,7 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                                     $rReleaseEpisode = $rSeriesEpisode["sort"];
                                 }
                                 $rTitle = $rShowData["name"] . " - S" . sprintf('%02d', intval($rReleaseSeason)) . "E" . sprintf('%02d', $rReleaseEpisode);
-                                $rEpisodes = json_decode($rTMDB->getSeason($rShowData["id"], intval($rReleaseSeason))->getJSON(), True);
+                                $rEpisodes = json_decode($rTMDB->getSeason($rShowData["id"], intval($rReleaseSeason))->getJSON(), true);
                                 $rProperties = array();
                                 foreach ($rEpisodes["episodes"] as $rEpisode) {
                                     if (intval($rEpisode["episode_number"]) == $rReleaseEpisode) {
@@ -274,24 +274,24 @@ if (($rResult) && ($rResult->num_rows > 0)) {
                                         break;
                                     }
                                 }
-                                $db->query("UPDATE `tmdb_async` SET `status` = 1 WHERE `id` = " . intval($rRow["id"]) . ";");
-                                $db->query("UPDATE `streams` SET `stream_display_name` = '" . $db->real_escape_string($rTitle) . "', `movie_properties` = '" . $db->real_escape_string(json_encode($rProperties)) . "' WHERE `id` = " . intval($rRow["stream_id"]) . ";");
-                                $db->query("UPDATE `series_episodes` SET `season_num` = " . intval($rReleaseSeason) . ", `sort` = " . intval($rReleaseEpisode) . " WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
+                                $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = 1 WHERE `id` = " . intval($rRow["id"]) . ";");
+                                $ipTV_db_admin->query("UPDATE `streams` SET `stream_display_name` = '" . $ipTV_db_admin->escape($rTitle) . "', `movie_properties` = '" . $$ipTV_db_admin->escape(json_encode($rProperties)) . "' WHERE `id` = " . intval($rRow["stream_id"]) . ";");
+                                $ipTV_db_admin->query("UPDATE `series_episodes` SET `season_num` = " . intval($rReleaseSeason) . ", `sort` = " . intval($rReleaseEpisode) . " WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
                                 if (!in_array($rSeries["id"], $rUpdateSeries)) {
                                     $rUpdateSeries[] = $rSeries["id"];
                                 }
                             }
                         } else {
-                            $db->query("UPDATE `tmdb_async` SET `status` = -5 WHERE `id` = " . intval($rRow["id"]) . ";");
+                            $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = -5 WHERE `id` = " . intval($rRow["id"]) . ";");
                         }
                     } else {
-                        $db->query("UPDATE `tmdb_async` SET `status` = -4 WHERE `id` = " . intval($rRow["id"]) . ";");
+                        $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = -4 WHERE `id` = " . intval($rRow["id"]) . ";");
                     }
                 } else {
-                    $db->query("UPDATE `tmdb_async` SET `status` = -3 WHERE `id` = " . intval($rRow["id"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = -3 WHERE `id` = " . intval($rRow["id"]) . ";");
                 }
             } else {
-                $db->query("UPDATE `tmdb_async` SET `status` = -2 WHERE `id` = " . intval($rRow["id"]) . ";");
+                $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = -2 WHERE `id` = " . intval($rRow["id"]) . ";");
             }
         }
     }

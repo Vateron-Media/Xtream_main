@@ -12,8 +12,8 @@ if (isset($_POST["submit_folder"])) {
         if (isset($_POST["edit"])) {
             $rExtra = " AND `id` <> " . intval($_POST["edit"]);
         }
-        $result = $db->query("SELECT `id` FROM `watch_folders` WHERE `type` = '" . ESC($_POST["folder_type"]) . "' AND `directory` = '" . ESC($rPath) . "' AND `server_id` = " . intval($_POST["server_id"]) . $rExtra . ";");
-        if (($result) && ($result->num_rows == 0)) {
+        $ipTV_db_admin->query("SELECT `id` FROM `watch_folders` WHERE `type` = '" . ESC($_POST["folder_type"]) . "' AND `directory` = '" . ESC($rPath) . "' AND `server_id` = " . intval($_POST["server_id"]) . $rExtra . ";");
+        if ($ipTV_db_admin->num_rows() == 0) {
             if (isset($_POST["edit"])) {
                 $rArray = getWatchFolder($_POST["edit"]);
                 unset($rArray["id"]);
@@ -72,11 +72,11 @@ if (isset($_POST["submit_folder"])) {
                 $rValues = ESC($_POST["edit"]) . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `watch_folders`(" . $rCols . ") VALUES(" . $rValues . ");";
-            if ($db->query($rQuery)) {
+            if ($ipTV_db_admin->query($rQuery)) {
                 if (isset($_POST["edit"])) {
                     $rInsertID = intval($_POST["edit"]);
                 } else {
-                    $rInsertID = $db->insert_id;
+                    $rInsertID = $ipTV_db_admin->last_insert_id();
                 }
             }
             header("Location: ./watch.php");
@@ -118,15 +118,16 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <a href="./watch.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_folder_watch"] ?></li>
+                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                                <?= $_["back_to_folder_watch"] ?></li>
                                         </a>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rFolder)) {
-                                                            echo $_["edit"];
-                                                        } else {
-                                                            echo $_["add"];
-                                                        } ?> <?= $_["folder"] ?></h4>
+                                    echo $_["edit"];
+                                } else {
+                                    echo $_["add"];
+                                } ?> <?= $_["folder"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -141,33 +142,37 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["please_select_a_directory"] ?>
                                 </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     <?= $_["the_selected_directory"] ?>
-                                </div>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./watch_add.php<?php if (isset($_GET["id"])) {
-                                                                        echo "?id=" . $_GET["id"];
-                                                                    } ?>" method="POST" id="ip_form" data-parsley-validate="">
+                                        echo "?id=" . $_GET["id"];
+                                    } ?>" method="POST" id="ip_form"
+                                        data-parsley-validate="">
                                         <?php if (isset($rFolder)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rFolder["id"] ?>" />
                                         <?php } ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">
-                                                    <a href="#folder-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#folder-details" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-account-card-details-outline mr-1"></i>
                                                         <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#override" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                    <a href="#override" data-toggle="tab"
+                                                        class="nav-link rounded-0 pt-2 pb-2">
                                                         <i class="mdi mdi-movie mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["override_settings"] ?></span>
+                                                        <span
+                                                            class="d-none d-sm-inline"><?= $_["override_settings"] ?></span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -176,39 +181,51 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="folder_type"><?= $_["folder_type"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="folder_type"><?= $_["folder_type"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select id="folder_type" name="folder_type" class="form-control" data-toggle="select2">
+                                                                    <select id="folder_type" name="folder_type"
+                                                                        class="form-control" data-toggle="select2">
                                                                         <?php foreach (array("movie" => "Movies", "series" => "TV Series") as $rTypeID => $rType) { ?>
                                                                             <option value="<?= $rTypeID ?>" <?php if ((isset($rFolder)) && ($rFolder["type"] == $rTypeID)) {
-                                                                                                                echo " selected";
-                                                                                                            } ?>><?= $rType ?></option>
+                                                                                  echo " selected";
+                                                                              } ?>><?= $rType ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="server_id"><?= $_["server_name"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="server_id"><?= $_["server_name"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <select id="server_id" name="server_id" class="form-control" data-toggle="select2">
+                                                                    <select id="server_id" name="server_id"
+                                                                        class="form-control" data-toggle="select2">
                                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset($rFolder)) && ($rFolder["server_id"] == $rServer["id"])) {
-                                                                                                                        echo " selected";
-                                                                                                                    } ?>><?= $rServer["server_name"] ?></option>
+                                                                                  echo " selected";
+                                                                              } ?>>
+                                                                                <?= $rServer["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="selected_path"><?= $_["selected_path"] ?></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="selected_path"><?= $_["selected_path"] ?></label>
                                                                 <div class="col-md-8 input-group">
-                                                                    <input type="text" id="selected_path" name="selected_path" class="form-control" value="<?php if (isset($rFolder)) {
-                                                                                                                                                                echo htmlspecialchars($rFolder["directory"]);
-                                                                                                                                                            } else {
-                                                                                                                                                                echo "/";
-                                                                                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                    <input type="text" id="selected_path"
+                                                                        name="selected_path" class="form-control"
+                                                                        value="<?php if (isset($rFolder)) {
+                                                                            echo htmlspecialchars($rFolder["directory"]);
+                                                                        } else {
+                                                                            echo "/";
+                                                                        } ?>"
+                                                                        required data-parsley-trigger="change">
                                                                     <div class="input-group-append">
-                                                                        <button class="btn btn-primary waves-effect waves-light" type="button" id="changeDir"><i class="mdi mdi-chevron-right"></i></button>
+                                                                        <button
+                                                                            class="btn btn-primary waves-effect waves-light"
+                                                                            type="button" id="changeDir"><i
+                                                                                class="mdi mdi-chevron-right"></i></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -240,11 +257,13 @@ if ($rSettings["sidebar"]) { ?>
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_folder" type="submit" class="btn btn-primary" value="<?php if (isset($rFolder)) {
-                                                                                                                                            echo $_["edit"];
-                                                                                                                                        } else {
-                                                                                                                                            echo $_["add"];
-                                                                                                                                        } ?>" />
+                                                            <input name="submit_folder" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?php if (isset($rFolder)) {
+                                                                    echo $_["edit"];
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -252,180 +271,273 @@ if ($rSettings["sidebar"]) { ?>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-group row mb-4" id="category_movie" <?php if (isset($rFolder)) {
-                                                                                                                        if ($rFolder["type"] <> "movie") {
-                                                                                                                            echo ' style="display: none;"';
-                                                                                                                        }
-                                                                                                                    } ?>>
-                                                                <label class="col-md-4 col-form-label" for="category_id_movie"><?= $_["override_category"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["ignore_category_allocation_category"] ?>" class="mdi mdi-information"></i></label>
+                                                                if ($rFolder["type"] <> "movie") {
+                                                                    echo ' style="display: none;"';
+                                                                }
+                                                            } ?>>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="category_id_movie"><?= $_["override_category"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["ignore_category_allocation_category"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="category_id_movie" id="category_id_movie" class="form-control select2" data-toggle="select2">
+                                                                    <select name="category_id_movie"
+                                                                        id="category_id_movie"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <option <?php if (isset($rFolder)) {
-                                                                                    if (intval($rFolder["category_id"]) == 0) {
-                                                                                        echo "selected ";
-                                                                                    }
-                                                                                } ?>value="0"><?= $_["do_not_use"] ?></option>
+                                                                            if (intval($rFolder["category_id"]) == 0) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } ?>value="0">
+                                                                            <?= $_["do_not_use"] ?></option>
                                                                         <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                        if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4" id="category_series" <?php if (isset($rFolder)) {
-                                                                                                                        if ($rFolder["type"] <> "series") {
-                                                                                                                            echo ' style="display: none;"';
-                                                                                                                        }
-                                                                                                                    } else {
-                                                                                                                        echo ' style="display: none;"';
-                                                                                                                    } ?>>
-                                                                <label class="col-md-4 col-form-label" for="category_id_series"><?= $_["override_category"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["ignore_category_allocation_category"] ?>" class="mdi mdi-information"></i></label>
+                                                                if ($rFolder["type"] <> "series") {
+                                                                    echo ' style="display: none;"';
+                                                                }
+                                                            } else {
+                                                                echo ' style="display: none;"';
+                                                            } ?>>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="category_id_series"><?= $_["override_category"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["ignore_category_allocation_category"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="category_id_series" id="category_id_series" class="form-control select2" data-toggle="select2">
+                                                                    <select name="category_id_series"
+                                                                        id="category_id_series"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <option <?php if (isset($rFolder)) {
-                                                                                    if (intval($rFolder["category_id"]) == 0) {
-                                                                                        echo "selected ";
-                                                                                    }
-                                                                                } ?>value="0"><?= $_["do_not_use"] ?></option>
+                                                                            if (intval($rFolder["category_id"]) == 0) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } ?>value="0">
+                                                                            <?= $_["do_not_use"] ?></option>
                                                                         <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                        if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="bouquets"><?= $_["override_bouquets"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["ignore_category_allocation_bouquet"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="bouquets"><?= $_["override_bouquets"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["ignore_category_allocation_bouquet"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="bouquets[]" id="bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose...">
+                                                                    <select name="bouquets[]" id="bouquets"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="Choose...">
                                                                         <?php foreach ($rBouquets as $rBouquet) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                        if (in_array(intval($rBouquet["id"]), json_decode($rFolder["bouquets"], True))) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                                if (in_array(intval($rBouquet["id"]), json_decode($rFolder["bouquets"], True))) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                <?= $rBouquet["bouquet_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group row mb-4" id="fb_category_movie" <?php if (isset($rFolder)) {
-                                                                                                                        if ($rFolder["type"] <> "movie") {
-                                                                                                                            echo ' style="display: none;"';
-                                                                                                                        }
-                                                                                                                    } ?>>
-                                                                <label class="col-md-4 col-form-label" for="fb_category_id_movie"><?= $_["fallback_category"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["add_to_this category"] ?>" class="mdi mdi-information"></i></label>
+                                                            <div class="form-group row mb-4" id="fb_category_movie"
+                                                                <?php if (isset($rFolder)) {
+                                                                    if ($rFolder["type"] <> "movie") {
+                                                                        echo ' style="display: none;"';
+                                                                    }
+                                                                } ?>>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="fb_category_id_movie"><?= $_["fallback_category"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["add_to_this category"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="fb_category_id_movie" id="fb_category_id_movie" class="form-control select2" data-toggle="select2">
+                                                                    <select name="fb_category_id_movie"
+                                                                        id="fb_category_id_movie"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <option <?php if (isset($rFolder)) {
-                                                                                    if (intval($rFolder["fb_category_id"]) == 0) {
-                                                                                        echo "selected ";
-                                                                                    }
-                                                                                } ?>value="0"><?= $_["do_not_use"] ?></option>
+                                                                            if (intval($rFolder["fb_category_id"]) == 0) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } ?>value="0">
+                                                                            <?= $_["do_not_use"] ?></option>
                                                                         <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                        if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group row mb-4" id="fb_category_series" <?php if (isset($rFolder)) {
-                                                                                                                            if ($rFolder["type"] <> "series") {
-                                                                                                                                echo ' style="display: none;"';
-                                                                                                                            }
-                                                                                                                        } else {
-                                                                                                                            echo ' style="display: none;"';
-                                                                                                                        } ?>>
-                                                                <label class="col-md-4 col-form-label" for="fb_category_id_series"><?= $_["fallback_category"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["add_to_this category"] ?>" class="mdi mdi-information"></i></label>
+                                                            <div class="form-group row mb-4" id="fb_category_series"
+                                                                <?php if (isset($rFolder)) {
+                                                                    if ($rFolder["type"] <> "series") {
+                                                                        echo ' style="display: none;"';
+                                                                    }
+                                                                } else {
+                                                                    echo ' style="display: none;"';
+                                                                } ?>>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="fb_category_id_series"><?= $_["fallback_category"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["add_to_this category"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="fb_category_id_series" id="fb_category_id_series" class="form-control select2" data-toggle="select2">
+                                                                    <select name="fb_category_id_series"
+                                                                        id="fb_category_id_series"
+                                                                        class="form-control select2"
+                                                                        data-toggle="select2">
                                                                         <option <?php if (isset($rFolder)) {
-                                                                                    if (intval($rFolder["fb_category_id"]) == 0) {
-                                                                                        echo "selected ";
-                                                                                    }
-                                                                                } ?>value="0"><?= $_["do_not_use"] ?></option>
+                                                                            if (intval($rFolder["fb_category_id"]) == 0) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } ?>value="0">
+                                                                            <?= $_["do_not_use"] ?></option>
                                                                         <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                        if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
-                                                                                            echo $_["checked "];
-                                                                                        }
-                                                                                    } ?>value="<?= $rCategory["id"] ?>"><?= $rCategory["category_name"] ?></option>
+                                                                                if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
+                                                                                    echo $_["checked "];
+                                                                                }
+                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="fb_bouquets"><?= $_["fallback_bouquets"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["add_to_these_bouquets"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="fb_bouquets"><?= $_["fallback_bouquets"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["add_to_these_bouquets"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="fb_bouquets[]" id="fb_bouquets" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>...">
+                                                                    <select name="fb_bouquets[]" id="fb_bouquets"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach ($rBouquets as $rBouquet) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                        if (in_array(intval($rBouquet["id"]), json_decode($rFolder["fb_bouquets"], True))) {
-                                                                                            echo "selected ";
-                                                                                        }
-                                                                                    } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                                if (in_array(intval($rBouquet["id"]), json_decode($rFolder["fb_bouquets"], True))) {
+                                                                                    echo "selected ";
+                                                                                }
+                                                                            } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                <?= $rBouquet["bouquet_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="allowed_extensions"><?= $_["allowed_extensions"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["allow_scanning_of"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="allowed_extensions"><?= $_["allowed_extensions"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["allow_scanning_of"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-8">
-                                                                    <select name="allowed_extensions[]" id="allowed_extensions" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
+                                                                    <select name="allowed_extensions[]"
+                                                                        id="allowed_extensions"
+                                                                        class="form-control select2-multiple"
+                                                                        data-toggle="select2" multiple="multiple"
+                                                                        data-placeholder="<?= $_["choose"] ?>">
                                                                         <?php foreach (array("mp4", "mkv", "avi", "mpg", "flv") as $rExtension) { ?>
                                                                             <option <?php if (isset($rFolder)) {
-                                                                                        if (in_array($rExtension, json_decode($rFolder["allowed_extensions"], True))) {
-                                                                                            echo $_["checked "];
-                                                                                        }
-                                                                                    } ?>value="<?= $rExtension ?>"><?= $rExtension ?></option>
+                                                                                if (in_array($rExtension, json_decode($rFolder["allowed_extensions"], True))) {
+                                                                                    echo $_["checked "];
+                                                                                }
+                                                                            } ?>value="<?= $rExtension ?>">
+                                                                                <?= $rExtension ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="disable_tmdb"><?= $_["disable_tmdb"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["do_not_use_tmdb"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="disable_tmdb"><?= $_["disable_tmdb"] ?> <i
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["do_not_use_tmdb"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="disable_tmdb" id="disable_tmdb" type="checkbox" <?php if (isset($rFolder)) {
-                                                                                                                                        if ($rFolder["disable_tmdb"]) {
-                                                                                                                                            echo $_["checked "];
-                                                                                                                                        }
-                                                                                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="disable_tmdb" id="disable_tmdb"
+                                                                        type="checkbox" <?php if (isset($rFolder)) {
+                                                                            if ($rFolder["disable_tmdb"]) {
+                                                                                echo $_["checked "];
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
-                                                                <label class="col-md-4 col-form-label" for="ignore_no_match"><?= $_["ignore_no match"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["add_to_database_even"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="ignore_no_match"><?= $_["ignore_no match"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["add_to_database_even"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="ignore_no_match" id="ignore_no_match" type="checkbox" <?php if (isset($rFolder)) {
-                                                                                                                                            if ($rFolder["ignore_no_match"]) {
-                                                                                                                                                echo $_["checked "];
-                                                                                                                                            }
-                                                                                                                                        } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="ignore_no_match" id="ignore_no_match"
+                                                                        type="checkbox" <?php if (isset($rFolder)) {
+                                                                            if ($rFolder["ignore_no_match"]) {
+                                                                                echo $_["checked "];
+                                                                            }
+                                                                        } ?>data-plugin="switchery"
+                                                                        class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="auto_subtitles"><?= $_["auto-add_subtitles"] ?> <i data-toggle="tooltip" data-placement="top" title="" data-original-title="<?= $_["automatically_embed_subtitles"] ?>" class="mdi mdi-information"></i></label>
+                                                                <label class="col-md-4 col-form-label"
+                                                                    for="auto_subtitles"><?= $_["auto-add_subtitles"] ?>
+                                                                    <i data-toggle="tooltip" data-placement="top"
+                                                                        title=""
+                                                                        data-original-title="<?= $_["automatically_embed_subtitles"] ?>"
+                                                                        class="mdi mdi-information"></i></label>
                                                                 <div class="col-md-2">
-                                                                    <input name="auto_subtitles" id="auto_subtitles" type="checkbox" <?php if (isset($rFolder)) {
-                                                                                                                                            if ($rFolder["auto_subtitles"]) {
-                                                                                                                                                echo "checked ";
-                                                                                                                                            }
-                                                                                                                                        } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    <input name="auto_subtitles" id="auto_subtitles"
+                                                                        type="checkbox" <?php if (isset($rFolder)) {
+                                                                            if ($rFolder["auto_subtitles"]) {
+                                                                                echo "checked ";
+                                                                            }
+                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
                                                     </div> <!-- end row -->
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item float-right">
-                                                            <input name="submit_folder" type="submit" class="btn btn-primary" value="<?php if (isset($rFolder)) {
-                                                                                                                                            echo $_["edit"];
-                                                                                                                                        } else {
-                                                                                                                                            echo $_["add"];
-                                                                                                                                        } ?>" />
+                                                            <input name="submit_folder" type="submit"
+                                                                class="btn btn-primary"
+                                                                value="<?php if (isset($rFolder)) {
+                                                                    echo $_["edit"];
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -437,174 +549,174 @@ if ($rSettings["sidebar"]) { ?>
                             </div> <!-- end card-->
                         </div> <!-- end col -->
                     </div>
-                    </div> <!-- end container -->
-                </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+                </div> <!-- end container -->
+            </div>
+            <!-- end wrapper -->
+            <?php if ($rSettings["sidebar"]) {
+                echo "</div>";
+            } ?>
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                </div>
+            </footer>
+            <!-- end Footer -->
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-                <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-                <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-                <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-                <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-                <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-                <script src="assets/libs/datatables/buttons.print.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-                <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
+            <script src="assets/js/vendor.min.js"></script>
+            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+            <script src="assets/libs/switchery/switchery.min.js"></script>
+            <script src="assets/libs/select2/select2.min.js"></script>
+            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+            <script src="assets/libs/moment/moment.min.js"></script>
+            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+            <script src="assets/libs/datatables/buttons.print.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+            <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+            <script src="assets/js/pages/form-wizard.init.js"></script>
 
-                <script>
-                    function selectDirectory(elem) {
-                        window.currentDirectory += elem + "/";
-                        $("#selected_path").val(window.currentDirectory);
-                        $("#changeDir").click();
-                    }
+            <script>
+                function selectDirectory(elem) {
+                    window.currentDirectory += elem + "/";
+                    $("#selected_path").val(window.currentDirectory);
+                    $("#changeDir").click();
+                }
 
-                    function selectParent() {
-                        $("#selected_path").val(window.currentDirectory.split("/").slice(0, -2).join("/") + "/");
-                        $("#changeDir").click();
-                    }
+                function selectParent() {
+                    $("#selected_path").val(window.currentDirectory.split("/").slice(0, -2).join("/") + "/");
+                    $("#changeDir").click();
+                }
 
-                    $(document).ready(function() {
-                        $('select').select2({
-                            width: '100%'
-                        });
-
-                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                        elems.forEach(function(html) {
-                            var switchery = new Switchery(html);
-                        });
-
-                        $("#datatable").DataTable({
-                            responsive: false,
-                            paging: false,
-                            bInfo: false,
-                            searching: false,
-                            scrollY: "250px",
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0]
-                            }, ],
-                            "language": {
-                                "emptyTable": ""
-                            }
-                        });
-
-                        $("#datatable-files").DataTable({
-                            responsive: false,
-                            paging: false,
-                            bInfo: false,
-                            searching: true,
-                            scrollY: "250px",
-                            columnDefs: [{
-                                "className": "dt-center",
-                                "targets": [0]
-                            }, ],
-                            "language": {
-                                "emptyTable": "<?= $_["no_compatible_file"] ?>"
-                            }
-                        });
-
-                        $("#select_folder").click(function() {
-                            $("#import_folder").val("s:" + $("#server_id").val() + ":" + window.currentDirectory);
-                            $.magnificPopup.close();
-                        });
-
-                        $("#changeDir").click(function() {
-                            window.currentDirectory = $("#selected_path").val();
-                            if (window.currentDirectory.substr(-1) != "/") {
-                                window.currentDirectory += "/";
-                            }
-                            $("#selected_path").val(window.currentDirectory);
-                            $("#datatable").DataTable().clear();
-                            $("#datatable").DataTable().row.add(["", "<?= $_["loading"] ?>..."]);
-                            $("#datatable").DataTable().draw(true);
-                            $("#datatable-files").DataTable().clear();
-                            $("#datatable-files").DataTable().row.add(["", "<?= $_["please_wait"] ?>..."]);
-                            $("#datatable-files").DataTable().draw(true);
-                            $.getJSON("./api.php?action=listdir&dir=" + window.currentDirectory + "&server=" + $("#server_id").val() + "&filter=video", function(data) {
-                                $("#datatable").DataTable().clear();
-                                $("#datatable-files").DataTable().clear();
-                                if (window.currentDirectory != "/") {
-                                    $("#datatable").DataTable().row.add(["<i class='mdi mdi-subdirectory-arrow-left'></i>", "Parent Directory"]);
-                                }
-                                if (data.result == true) {
-                                    $(data.data.dirs).each(function(id, dir) {
-                                        $("#datatable").DataTable().row.add(["<i class='mdi mdi-folder-open-outline'></i>", dir]);
-                                    });
-                                    $("#datatable").DataTable().draw(true);
-                                    $(data.data.files).each(function(id, dir) {
-                                        $("#datatable-files").DataTable().row.add(["<i class='mdi mdi-file-video'></i>", dir]);
-                                    });
-                                    $("#datatable-files").DataTable().draw(true);
-                                }
-                            });
-                        });
-
-                        $('#datatable').on('click', 'tbody > tr', function() {
-                            if ($(this).find("td").eq(1).html() == "Parent Directory") {
-                                selectParent();
-                            } else {
-                                selectDirectory($(this).find("td").eq(1).html());
-                            }
-                        });
-
-                        $("#server_id").change(function() {
-                            $("#selected_path").val("/");
-                            $("#changeDir").click();
-                        });
-
-                        $("#changeDir").click();
-
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
-
-                        $("#folder_type").change(function() {
-                            if ($(this).val() == "movie") {
-                                $("#category_movie").show();
-                                $("#category_series").hide();
-                                $("#fb_category_movie").show();
-                                $("#fb_category_series").hide();
-                            } else {
-                                $("#category_movie").hide();
-                                $("#category_series").show();
-                                $("#fb_category_movie").hide();
-                                $("#fb_category_series").show();
-                            }
-                        });
-
-                        $("form").attr('autocomplete', 'off');
+                $(document).ready(function () {
+                    $('select').select2({
+                        width: '100%'
                     });
-                </script>
 
-                <!-- App js-->
-                <script src="assets/js/app.min.js"></script>
-                </body>
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+                    elems.forEach(function (html) {
+                        var switchery = new Switchery(html);
+                    });
 
-                </html>
+                    $("#datatable").DataTable({
+                        responsive: false,
+                        paging: false,
+                        bInfo: false,
+                        searching: false,
+                        scrollY: "250px",
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0]
+                        },],
+                        "language": {
+                            "emptyTable": ""
+                        }
+                    });
+
+                    $("#datatable-files").DataTable({
+                        responsive: false,
+                        paging: false,
+                        bInfo: false,
+                        searching: true,
+                        scrollY: "250px",
+                        columnDefs: [{
+                            "className": "dt-center",
+                            "targets": [0]
+                        },],
+                        "language": {
+                            "emptyTable": "<?= $_["no_compatible_file"] ?>"
+                        }
+                    });
+
+                    $("#select_folder").click(function () {
+                        $("#import_folder").val("s:" + $("#server_id").val() + ":" + window.currentDirectory);
+                        $.magnificPopup.close();
+                    });
+
+                    $("#changeDir").click(function () {
+                        window.currentDirectory = $("#selected_path").val();
+                        if (window.currentDirectory.substr(-1) != "/") {
+                            window.currentDirectory += "/";
+                        }
+                        $("#selected_path").val(window.currentDirectory);
+                        $("#datatable").DataTable().clear();
+                        $("#datatable").DataTable().row.add(["", "<?= $_["loading"] ?>..."]);
+                        $("#datatable").DataTable().draw(true);
+                        $("#datatable-files").DataTable().clear();
+                        $("#datatable-files").DataTable().row.add(["", "<?= $_["please_wait"] ?>..."]);
+                        $("#datatable-files").DataTable().draw(true);
+                        $.getJSON("./api.php?action=listdir&dir=" + window.currentDirectory + "&server=" + $("#server_id").val() + "&filter=video", function (data) {
+                            $("#datatable").DataTable().clear();
+                            $("#datatable-files").DataTable().clear();
+                            if (window.currentDirectory != "/") {
+                                $("#datatable").DataTable().row.add(["<i class='mdi mdi-subdirectory-arrow-left'></i>", "Parent Directory"]);
+                            }
+                            if (data.result == true) {
+                                $(data.data.dirs).each(function (id, dir) {
+                                    $("#datatable").DataTable().row.add(["<i class='mdi mdi-folder-open-outline'></i>", dir]);
+                                });
+                                $("#datatable").DataTable().draw(true);
+                                $(data.data.files).each(function (id, dir) {
+                                    $("#datatable-files").DataTable().row.add(["<i class='mdi mdi-file-video'></i>", dir]);
+                                });
+                                $("#datatable-files").DataTable().draw(true);
+                            }
+                        });
+                    });
+
+                    $('#datatable').on('click', 'tbody > tr', function () {
+                        if ($(this).find("td").eq(1).html() == "Parent Directory") {
+                            selectParent();
+                        } else {
+                            selectDirectory($(this).find("td").eq(1).html());
+                        }
+                    });
+
+                    $("#server_id").change(function () {
+                        $("#selected_path").val("/");
+                        $("#changeDir").click();
+                    });
+
+                    $("#changeDir").click();
+
+                    $(window).keypress(function (event) {
+                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                    });
+
+                    $("#folder_type").change(function () {
+                        if ($(this).val() == "movie") {
+                            $("#category_movie").show();
+                            $("#category_series").hide();
+                            $("#fb_category_movie").show();
+                            $("#fb_category_series").hide();
+                        } else {
+                            $("#category_movie").hide();
+                            $("#category_series").show();
+                            $("#fb_category_movie").hide();
+                            $("#fb_category_series").show();
+                        }
+                    });
+
+                    $("form").attr('autocomplete', 'off');
+                });
+            </script>
+
+            <!-- App js-->
+            <script src="assets/js/app.min.js"></script>
+            </body>
+
+            </html>

@@ -129,18 +129,18 @@ if (isset($_POST["submit_user"])) {
     $rArray["username"] = $_POST["username"];
     $rArray["password"] = $_POST["password"];
     if (!isset($rUser)) {
-        $result = $db->query("SELECT `id` FROM `users` WHERE `username` = '" . ESC($rArray["username"]) . "';");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = '" . ESC($rArray["username"]) . "';");
+        if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 6; // Username in use.
         }
     }
     if ((($_POST["is_mag"]) && (!filter_var($_POST["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen($_POST["mac_address_e2"]) > 0) && (!filter_var($_POST["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
         $_STATUS = 7;
     } else if ($_POST["is_mag"]) {
-        $result = $db->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . ESC(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . ESC(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
+        if ($ipTV_db_admin->num_rows() > 0) {
             if (isset($_POST["edit"])) {
-                if (intval($result->fetch_assoc()["user_id"]) <> intval($_POST["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
                     $_STATUS = 8; // MAC in use.
                 }
             } else {
@@ -148,10 +148,10 @@ if (isset($_POST["submit_user"])) {
             }
         }
     } else if ($_POST["is_e2"]) {
-        $result = $db->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . ESC($_POST["mac_address_e2"]) . "' LIMIT 1;");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . ESC($_POST["mac_address_e2"]) . "' LIMIT 1;");
+        if ($ipTV_db_admin->num_rows() > 0) {
             if (isset($_POST["edit"])) {
-                if (intval($result->fetch_assoc()["user_id"]) <> intval($_POST["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
                     $_STATUS = 8; // MAC in use.
                 }
             } else {
@@ -213,30 +213,30 @@ if (isset($_POST["submit_user"])) {
         } else {
             // Checks completed, run,
             $rQuery = "REPLACE INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
-            if ($db->query($rQuery)) {
+            if ($ipTV_db_admin->query($rQuery)) {
                 if (isset($rUser)) {
                     $rInsertID = intval($rUser["id"]);
                 } else {
-                    $rInsertID = $db->insert_id;
+                    $rInsertID = $ipTV_db_admin->last_insert_id();
                 }
                 if (isset($rCost)) {
                     $rNewCredits = floatval($rUserInfo["credits"]) - floatval($rCost);
-                    $db->query("UPDATE `reg_users` SET `credits` = '" . floatval($rNewCredits) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+                    $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = '" . floatval($rNewCredits) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
                     if (isset($rUser)) {
                         if ($isMag) {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_mag"]) . " ] " . $_["extend_mag"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
-                        } else if ($isE2) {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_e2"]) . " ] " . $_["extend_enigma"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_mag"]) . " ] " . $_["extend_mag"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                        } elseif ($isE2) {
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_e2"]) . " ] " . $_["extend_enigma"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         } else {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["username"]) . " ] " . $_["extend_m3u"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["username"]) . " ] " . $_["extend_m3u"] . " [ " . ESC($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         }
                     } else {
                         if ($isMag) {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_mag"]) . " ] " . $_["new_mag"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
-                        } else if ($isE2) {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_e2"]) . " ] " . $_["new_enigma"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_mag"]) . " ] " . $_["new_mag"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                        } elseif ($isE2) {
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["mac_address_e2"]) . " ] " . $_["new_enigma"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         } else {
-                            $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["username"]) . " ] " . $_["new_m3u"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ESC($_POST["username"]) . " ] " . $_["new_m3u"] . " [" . ESC($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . ESC($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         }
                         $rAccessOutput = json_decode($rPackage["output_formats"], True);
                         $rLockDevice = $rPackage["lock_device"];
@@ -244,24 +244,24 @@ if (isset($_POST["submit_user"])) {
                     $rUserInfo["credits"] = $rNewCredits;
                 }
                 if ((!isset($rUser)) && ((isset($rInsertID)) && (isset($rAccessOutput)))) {
-                    $db->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rInsertID) . ";");
+                    $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rInsertID) . ";");
                     foreach ($rAccessOutput as $rOutputID) {
-                        $db->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rInsertID) . ", " . intval($rOutputID) . ");");
+                        $ipTV_db_admin->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rInsertID) . ", " . intval($rOutputID) . ");");
                     }
                 }
                 if ($isMag) {
-                    $result = $db->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
-                    if ((isset($result)) && ($result->num_rows == 1)) {
-                        $db->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ESC(strtoupper($_POST["mac_address_mag"]))) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
-                    } else if (!isset($rUser)) {
-                        $db->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(base64_encode(strtoupper($_POST["mac_address_mag"]))) . "', " . intval($rLockDevice) . ");");
+                    $ipTV_db_admin->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
+                    if ($ipTV_db_admin->num_rows() == 1) {
+                        $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ESC(strtoupper($_POST["mac_address_mag"]))) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
+                    } elseif (!isset($rUser)) {
+                        $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(base64_encode(strtoupper($_POST["mac_address_mag"]))) . "', " . intval($rLockDevice) . ");");
                     }
-                } else if ($isE2) {
-                    $result = $db->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
-                    if ((isset($result)) && ($result->num_rows == 1)) {
-                        $db->query("UPDATE `enigma2_devices` SET `mac` = '" . ESC(strtoupper($_POST["mac_address_e2"])) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
-                    } else if (!isset($rUser)) {
-                        $db->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(strtoupper($_POST["mac_address_e2"])) . "', " . intval($rLockDevice) . ");");
+                } elseif ($isE2) {
+                    $ipTV_db_admin->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
+                    if ($ipTV_db_admin->num_rows() == 1) {
+                        $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . ESC(strtoupper($_POST["mac_address_e2"])) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
+                    } elseif (!isset($rUser)) {
+                        $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . ESC(strtoupper($_POST["mac_address_e2"])) . "', " . intval($rLockDevice) . ");");
                     }
                 }
                 header("Location: ./user_reseller.php?id=" . $rInsertID);

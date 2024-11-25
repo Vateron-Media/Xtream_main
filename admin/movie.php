@@ -88,9 +88,9 @@ if (isset($_POST["submit_movie"])) {
             exit;
         }
         $rStreamDatabase = array();
-        $result = $db->query("SELECT `stream_source` FROM `streams` WHERE `type` = 2;");
-        if (($result) && ($result->num_rows > 0)) {
-            while ($row = $result->fetch_assoc()) {
+        $ipTV_db_admin->query("SELECT `stream_source` FROM `streams` WHERE `type` = 2;");
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $row) {
                 foreach (json_decode($row["stream_source"], True) as $rSource) {
                     if (strlen($rSource) > 0) {
                         $rStreamDatabase[] = $rSource;
@@ -129,9 +129,9 @@ if (isset($_POST["submit_movie"])) {
             exit;
         }
         $rStreamDatabase = array();
-        $result = $db->query("SELECT `stream_source` FROM `streams` WHERE `type` = 2;");
-        if (($result) && ($result->num_rows > 0)) {
-            while ($row = $result->fetch_assoc()) {
+        $ipTV_db_admin->query("SELECT `stream_source` FROM `streams` WHERE `type` = 2;");
+        if ($ipTV_db_admin->num_rows() > 0) {
+            foreach ($ipTV_db_admin->get_rows() as $row) {
                 foreach (json_decode($row["stream_source"], True) as $rSource) {
                     if (strlen($rSource) > 0) {
                         $rStreamDatabase[] = $rSource;
@@ -177,8 +177,8 @@ if (isset($_POST["submit_movie"])) {
         if (isset($_POST["edit"])) {
             $rImportStreams[] = $rImportArray;
         } else {
-            $rResult = $db->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . ESC($rImportArray["stream_display_name"]) . "' AND `type` = 2;");
-            if ($rResult->fetch_assoc()["count"] == 0) {
+            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . ESC($rImportArray["stream_display_name"]) . "' AND `type` = 2;");
+            if ($ipTV_db_admin->get_row()["count"] == 0) {
                 $rImportStreams[] = $rImportArray;
             } else {
                 $_STATUS = 2;
@@ -215,17 +215,17 @@ if (isset($_POST["submit_movie"])) {
                 $rValues = ESC($_POST["edit"]) . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
-            if ($db->query($rQuery)) {
+            if ($ipTV_db_admin->query($rQuery)) {
                 if (isset($_POST["edit"])) {
                     $rInsertID = intval($_POST["edit"]);
                 } else {
-                    $rInsertID = $db->insert_id;
+                    $rInsertID = $ipTV_db_admin->last_insert_id();
                 }
                 $rStreamExists = array();
                 if (isset($_POST["edit"])) {
-                    $result = $db->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
-                    if (($result) && ($result->num_rows > 0)) {
-                        while ($row = $result->fetch_assoc()) {
+                    $ipTV_db_admin->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
+                    if ($ipTV_db_admin->num_rows() > 0) {
+                        foreach ($ipTV_db_admin->get_rows() as $row) {
                             $rStreamExists[intval($row["server_id"])] = intval($row["server_stream_id"]);
                         }
                     }
@@ -243,15 +243,15 @@ if (isset($_POST["submit_movie"])) {
                                 $rParent = intval($rServer["parent"]);
                             }
                             if (isset($rStreamExists[$rServerID])) {
-                                $db->query("UPDATE `streams_servers` SET `parent_id` = " . $rParent . ", `on_demand` = 0 WHERE `server_stream_id` = " . $rStreamExists[$rServerID] . ";");
+                                $ipTV_db_admin->query("UPDATE `streams_servers` SET `parent_id` = " . $rParent . ", `on_demand` = 0 WHERE `server_stream_id` = " . $rStreamExists[$rServerID] . ";");
                             } else {
-                                $db->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", 0);");
+                                $ipTV_db_admin->query("INSERT INTO `streams_servers`(`stream_id`, `server_id`, `parent_id`, `on_demand`) VALUES(" . intval($rInsertID) . ", " . $rServerID . ", " . $rParent . ", 0);");
                             }
                         }
                     }
                     foreach ($rStreamExists as $rServerID => $rDBID) {
                         if (!in_array($rServerID, $rStreamsAdded)) {
-                            $db->query("DELETE FROM `streams_servers` WHERE `server_stream_id` = " . $rDBID . ";");
+                            $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `server_stream_id` = " . $rDBID . ";");
                         }
                     }
                 }
@@ -268,7 +268,7 @@ if (isset($_POST["submit_movie"])) {
                 }
                 if ($rSync) {
                     // Sync TMDb in background.
-                    $db->query("INSERT INTO `tmdb_async`(`type`, `stream_id`) VALUES(1, " . intval($rInsertID) . ");");
+                    $ipTV_db_admin->query("INSERT INTO `tmdb_async`(`type`, `stream_id`) VALUES(1, " . intval($rInsertID) . ");");
                 }
             }
         }

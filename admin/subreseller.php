@@ -24,13 +24,13 @@ if (isset($_POST["submit_user"])) {
         if ($rUserInfo["credits"] - $rCost < 0) {
             $_STATUS = 3;
         }
-        $result = $db->query("SELECT `id` FROM `reg_users` WHERE `username` = '" . ESC($_POST["username"]) . "';");
-        if (($result) && ($result->num_rows > 0)) {
+        $ipTV_db_admin->query("SELECT `id` FROM `reg_users` WHERE `username` = '" . ESC($_POST["username"]) . "';");
+        if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 4;
         }
-        $result = $db->query("SELECT `subreseller` FROM `subreseller_setup` WHERE `reseller` = " . intval($rUserInfo["member_group_id"]) . ";");
-        if (($result) && ($result->num_rows > 0)) {
-            $rArray["member_group_id"] = intval($result->fetch_assoc()["subreseller"]);
+        $ipTV_db_admin->query("SELECT `subreseller` FROM `subreseller_setup` WHERE `reseller` = " . intval($rUserInfo["member_group_id"]) . ";");
+        if ($ipTV_db_admin->num_rows() > 0) {
+            $rArray["member_group_id"] = intval($ipTV_db_admin->get_row()["subreseller"]);
         } else {
             $_STATUS = 5;
         }
@@ -68,16 +68,16 @@ if (isset($_POST["submit_user"])) {
             $rValues = ESC($_POST["edit"]) . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `reg_users`(" . $rCols . ") VALUES(" . $rValues . ");";
-        if ($db->query($rQuery)) {
+        if ($ipTV_db_admin->query($rQuery)) {
             if (isset($_POST["edit"])) {
                 $rInsertID = intval($_POST["edit"]);
             } else {
-                $rInsertID = $db->insert_id;
+                $rInsertID = $ipTV_db_admin->last_insert_id();
             }
             if (isset($rCost)) {
                 $rNewCredits = floatval($rUserInfo["credits"]) - $rCost;
-                $db->query("UPDATE `reg_users` SET `credits` = " . floatval($rNewCredits) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
-                $db->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["new_subreseller"] . " [" . ESC($_POST["username"]) . "] Credits: <font color=\"green\">" . floatval($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = " . floatval($rNewCredits) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+                $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . ESC($rArray["username"]) . "', '" . ESC($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["new_subreseller"] . " [" . ESC($_POST["username"]) . "] Credits: <font color=\"green\">" . floatval($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                 $rUserInfo["credits"] = $rNewCredits;
             }
             header("Location: ./subreseller.php?id=" . $rInsertID);
@@ -103,12 +103,12 @@ if ($rSettings["sidebar"]) {
     include "header.php";
 }
 if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content boxed-layout">
-            <div class="container-fluid">
+        <div class="content-page">
+            <div class="content boxed-layout">
+                <div class="container-fluid">
             <?php } else { ?>
-                <div class="wrapper boxed-layout">
-                    <div class="container-fluid">
+                    <div class="wrapper boxed-layout">
+                        <div class="container-fluid">
                     <?php } ?>
                     <!-- start page title -->
                     <div class="row">
@@ -122,10 +122,10 @@ if ($rSettings["sidebar"]) { ?>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rUser)) {
-                                                            echo $_["edit"];
-                                                        } else {
-                                                            echo $_["add"];
-                                                        } ?> <?= $_["subreseller"] ?></h4>
+                                    echo $_["edit"];
+                                } else {
+                                    echo $_["add"];
+                                } ?> <?= $_["subreseller"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -133,55 +133,55 @@ if ($rSettings["sidebar"]) { ?>
                     <div class="row">
                         <div class="col-xl-12">
                             <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["subreseller_operation"] ?>
-                                </div>
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <?= $_["subreseller_operation"] ?>
+                                    </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["please_ensure_you"] ?>
-                                </div>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        <?= $_["please_ensure_you"] ?>
+                                        </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["generic_fail"] ?>
-                                </div>
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                        <?= $_["generic_fail"] ?>
+                                            </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["you_don't_have_enough"] ?>
-                                </div>
+                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                        <?= $_["you_don't_have_enough"] ?>
+                                                </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["this_username_has_already"] ?>
-                                </div>
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                        <?= $_["this_username_has_already"] ?>
+                                                    </div>
                             <?php } else if ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["your_group_has_not_been"] ?>
-                                </div>
+                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                        <?= $_["your_group_has_not_been"] ?>
+                                                        </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./subreseller.php<?php if (isset($_GET["id"])) {
-                                                                        echo "?id=" . $_GET["id"];
-                                                                    } ?>" method="POST" id="user_form" data-parsley-validate="">
+                                        echo "?id=" . $_GET["id"];
+                                    } ?>" method="POST" id="user_form" data-parsley-validate="">
                                         <?php if (isset($_GET["id"])) { ?>
-                                            <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
+                                                <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
                                         <?php } ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
@@ -192,12 +192,12 @@ if ($rSettings["sidebar"]) { ?>
                                                     </a>
                                                 </li>
                                                 <?php if (!isset($_GET["id"])) { ?>
-                                                    <li class="nav-item">
-                                                        <a href="#review-purchase" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                                            <i class="mdi mdi-book-open-variant mr-1"></i>
-                                                            <span class="d-none d-sm-inline"><?= $_["review_purchase"] ?></span>
-                                                        </a>
-                                                    </li>
+                                                        <li class="nav-item">
+                                                            <a href="#review-purchase" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                                                <i class="mdi mdi-book-open-variant mr-1"></i>
+                                                                <span class="d-none d-sm-inline"><?= $_["review_purchase"] ?></span>
+                                                            </a>
+                                                        </li>
                                                 <?php } ?>
                                             </ul>
                                             <div class="tab-content b-0 mb-0 pt-0">
@@ -208,44 +208,44 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <label class="col-md-4 col-form-label" for="username"><?= $_["username"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input <?php if (isset($_GET["id"])) {
-                                                                                echo "disabled ";
-                                                                            } ?>type="text" class="form-control" id="username" name="username" value="<?php if (isset($rUser)) {
-                                                                                                                                                            echo htmlspecialchars($rUser["username"]);
-                                                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                        echo "disabled ";
+                                                                    } ?>type="text" class="form-control" id="username" name="username" value="<?php if (isset($rUser)) {
+                                                                         echo htmlspecialchars($rUser["username"]);
+                                                                     } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="password"><?php if (isset($_GET["id"])) { ?><?= $_["change"] ?> <?php } ?><?= $_["password"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="password" name="password" <?php if (!isset($rUser)) {
-                                                                                                                                                echo 'value="' . generateString(10) . '" required data-parsley-trigger="change"';
-                                                                                                                                            } else {
-                                                                                                                                                echo 'value=""';
-                                                                                                                                            } ?> required data-parsley-trigger="change">
+                                                                        echo 'value="' . generateString(10) . '" required data-parsley-trigger="change"';
+                                                                    } else {
+                                                                        echo 'value=""';
+                                                                    } ?> required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="email"><?= $_["email_address"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="email" name="email" value="<?php if (isset($rUser)) {
-                                                                                                                                                echo htmlspecialchars($rUser["email"]);
-                                                                                                                                            } ?>" required data-parsley-trigger="change">
+                                                                        echo htmlspecialchars($rUser["email"]);
+                                                                    } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="reseller_dns"><?= $_["reseller_dns"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="reseller_dns" name="reseller_dns" value="<?php if (isset($rUser)) {
-                                                                                                                                                                echo htmlspecialchars($rUser["reseller_dns"]);
-                                                                                                                                                            } ?>">
+                                                                        echo htmlspecialchars($rUser["reseller_dns"]);
+                                                                    } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="notes"><?= $_["notes"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <textarea id="notes" name="notes" class="form-control" rows="3" placeholder=""><?php if (isset($rUser)) {
-                                                                                                                                                        echo htmlspecialchars($rUser["notes"]);
-                                                                                                                                                    } ?></textarea>
+                                                                        echo htmlspecialchars($rUser["notes"]);
+                                                                    } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -253,53 +253,53 @@ if ($rSettings["sidebar"]) { ?>
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
                                                             <?php if (!isset($_GET["id"])) { ?>
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                                    <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
                                                             <?php } else { ?>
-                                                                <input name="submit_user" type="submit" class="btn btn-primary" value="<?= $_["edit"] ?>" />
+                                                                    <input name="submit_user" type="submit" class="btn btn-primary" value="<?= $_["edit"] ?>" />
                                                             <?php } ?>
                                                         </li>
                                                     </ul>
                                                 </div>
                                                 <?php if (!isset($_GET["id"])) { ?>
-                                                    <div class="tab-pane" id="review-purchase">
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <?php if ($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"] < 0) { ?>
-                                                                    <div class="alert alert-danger" role="alert" id="no-credits">
-                                                                        <i class="mdi mdi-block-helper mr-2"></i> <?= $_["you_do_not_have_enough_credits"] ?>
+                                                        <div class="tab-pane" id="review-purchase">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <?php if ($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"] < 0) { ?>
+                                                                            <div class="alert alert-danger" role="alert" id="no-credits">
+                                                                                <i class="mdi mdi-block-helper mr-2"></i> <?= $_["you_do_not_have_enough_credits"] ?>
+                                                                            </div>
+                                                                    <?php } ?>
+                                                                    <div class="form-group row mb-4">
+                                                                        <table class="table" id="credits-cost">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="text-center"><?= $_["total_credits"] ?></th>
+                                                                                    <th class="text-center"><?= $_["purchase_cost"] ?></th>
+                                                                                    <th class="text-center"><?= $_["remaining_credits"] ?></th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="text-center"><?= number_format($rUserInfo["credits"], 2) ?></td>
+                                                                                    <td class="text-center" id="cost_credits"><?= number_format($rPermissions["create_sub_resellers_price"], 2) ?></td>
+                                                                                    <td class="text-center" id="remaining_credits"><?= number_format($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"], 2) ?></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
                                                                     </div>
-                                                                <?php } ?>
-                                                                <div class="form-group row mb-4">
-                                                                    <table class="table" id="credits-cost">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th class="text-center"><?= $_["total_credits"] ?></th>
-                                                                                <th class="text-center"><?= $_["purchase_cost"] ?></th>
-                                                                                <th class="text-center"><?= $_["remaining_credits"] ?></th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td class="text-center"><?= number_format($rUserInfo["credits"], 2) ?></td>
-                                                                                <td class="text-center" id="cost_credits"><?= number_format($rPermissions["create_sub_resellers_price"], 2) ?></td>
-                                                                                <td class="text-center" id="remaining_credits"><?= number_format($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"], 2) ?></td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div> <!-- end col -->
-                                                        </div> <!-- end row -->
-                                                        <ul class="list-inline wizard mb-0">
-                                                            <li class="previous list-inline-item">
-                                                                <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
-                                                            </li>
-                                                            <li class="next list-inline-item float-right">
-                                                                <input <?php if ($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"] < 0) {
-                                                                            echo "disabled ";
-                                                                        } ?>name="submit_user" type="submit" class="btn btn-primary purchase" value="<?= $_["purchase"] ?>" />
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                                </div> <!-- end col -->
+                                                            </div> <!-- end row -->
+                                                            <ul class="list-inline wizard mb-0">
+                                                                <li class="previous list-inline-item">
+                                                                    <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                                </li>
+                                                                <li class="next list-inline-item float-right">
+                                                                    <input <?php if ($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"] < 0) {
+                                                                        echo "disabled ";
+                                                                    } ?>name="submit_user" type="submit" class="btn btn-primary purchase" value="<?= $_["purchase"] ?>" />
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                 <?php } ?>
                                             </div> <!-- tab-content -->
                                         </div> <!-- end #basicwizard-->

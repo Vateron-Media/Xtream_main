@@ -164,9 +164,9 @@ if ($rSettings["sidebar"]) { ?>
                                         <select id="download_type" class="form-control" data-toggle="select2">
                                             <option value=""><?= $_["select_an_ouput_format"] ?> </option>
                                             <?php
-                                            $result = $db->query("SELECT * FROM `devices` ORDER BY `device_id` ASC;");
-                                            if (($result) && ($result->num_rows > 0)) {
-                                                while ($row = $result->fetch_assoc()) {
+                                            $ipTV_db_admin->query("SELECT * FROM `devices` ORDER BY `device_id` ASC;");
+                                            if ($ipTV_db_admin->num_rows() > 0) {
+                                                foreach ($ipTV_db_admin->get_rows() as $row) {
                                                     if ($row["copy_text"]) {
                                                         echo '<optgroup label="' . $row["device_name"] . '"><option data-text="' . str_replace('"', '\"', $row["copy_text"]) . '" value="type=' . $row["device_key"] . '&amp;output=hls&key=live">' . $row["device_name"] . ' - HLS </option><option data-text="' . str_replace('"', '\"', $row["copy_text"]) . '" value="type=' . $row["device_key"] . '&amp;output=mpegts&key=live">' . $row["device_name"] . ' - MPEGTS</option></optgroup>';
                                                     } else {
