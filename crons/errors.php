@@ -34,7 +34,6 @@ function parseLog($rLog) {
                         $errorHashes[] = $errorHash;
                     }
                 }
-                break;
             }
         }
         fclose($rFP);
