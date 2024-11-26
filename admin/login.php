@@ -19,7 +19,7 @@ if (!isset($_STATUS)) {
 	$rGA = new PHPGangsta_GoogleAuthenticator();
 	if ((isset($_POST["username"])) && (isset($_POST["password"]))) {
 		if ($rSettings["recaptcha_enable"]) {
-			$rResponse = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $rSettings["recaptcha_v2_secret_key"] . '&response=' . $_POST['g-recaptcha-response']), True);
+			$rResponse = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $rSettings["recaptcha_v2_secret_key"] . '&response=' . $_POST['g-recaptcha-response']), true);
 			if ((!$rResponse["success"]) && (!in_array("invalid-input-secret", $rResponse["error-codes"]))) {
 				$_STATUS = 5;
 			}
@@ -32,7 +32,7 @@ if (!isset($_STATUS)) {
 				} else {
 					$rPermissions = getPermissions($rUserInfo["member_group_id"]);
 					if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-						$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = '" . $ipTV_db_admin->escape(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+						$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = ? WHERE `id` = ?;", $ipTV_db_admin->escape(getIP()), intval($rUserInfo["id"]));
 						$_SESSION['hash'] = md5($rUserInfo["username"]);
 						$_SESSION['ip'] = getIP();
 						if ($rPermissions["is_admin"]) {
@@ -49,9 +49,9 @@ if (!isset($_STATUS)) {
 								header("Location: ./reseller.php");
 							}
 						}
-					} else if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
+					} elseif (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
 						$_STATUS = 2;
-					} else if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && (!$rUserInfo["status"]))) {
+					} elseif (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && (!$rUserInfo["status"]))) {
 						$_STATUS = 3;
 					} else {
 						$_STATUS = 4;
@@ -64,7 +64,7 @@ if (!isset($_STATUS)) {
 				$_STATUS = 0;
 			}
 		}
-	} else if ((isset($_POST["newpass"])) && (isset($_POST["confirm"])) && (isset($_POST["hash"])) && (isset($_POST["change"]))) {
+	} elseif ((isset($_POST["newpass"])) && (isset($_POST["confirm"])) && (isset($_POST["hash"])) && (isset($_POST["change"]))) {
 		$rUserInfo = getRegisteredUserHash($_POST["hash"]);
 		$rChangePass = $_POST["change"];
 		if (($rUserInfo) && ($rChangePass == md5($rUserInfo["password"]))) {
@@ -80,9 +80,9 @@ if (!isset($_STATUS)) {
 						$ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> Logged In');");
 						header("Location: ./reseller.php");
 					}
-				} else if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
+				} elseif (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
 					$_STATUS = 2;
-				} else if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && (!$rUserInfo["status"]))) {
+				} elseif (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && (!$rUserInfo["status"]))) {
 					$_STATUS = 3;
 				} else {
 					$_STATUS = 4;
@@ -145,42 +145,42 @@ if (!isset($_STATUS)) {
 									aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_2"] ?>
 						</div>
-					<?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
 							<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
 								role="alert">
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
 										aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_3"] ?>
 							</div>
-					<?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
 								<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
 									role="alert">
 									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
 											aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_4"] ?>
 								</div>
-					<?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
+					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
 									<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
 										role="alert">
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
 												aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_5"] ?>
 									</div>
-					<?php } else if ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
+					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
 										<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
 											role="alert">
 											<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
 													aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_6"] ?>
 										</div>
-					<?php } else if ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
+					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
 											<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
 												role="alert">
 												<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
 														aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_7"] ?>
 											</div>
-					<?php } else if ((isset($_STATUS)) && ($_STATUS == 6)) { ?>
+					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 6)) { ?>
 												<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
 													role="alert">
 													<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
@@ -222,7 +222,7 @@ if (!isset($_STATUS)) {
 													data-sitekey="<?= $rSettings["recaptcha_v2_site_key"] ?>"></div>
 											</h5>
 										<?php }
-									} else if (isset($rChangePass)) { ?>
+									} elseif (isset($rChangePass)) { ?>
 											<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
 											<input type="hidden" name="change" value="<?= $rChangePass ?>" />
 											<div class="form-group mb-3 text-center">

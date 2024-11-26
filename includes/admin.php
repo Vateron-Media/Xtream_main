@@ -1392,27 +1392,60 @@ function get_recent_stable_release(string $url) {
  * @param string $currentVersion The current version string.
  * @return bool Returns true if an update is needed, false otherwise.
  */
-function isUpdateNeeded(string $requiredVersion = null, string $currentVersion = null): bool {
-    if ($requiredVersion == null && $currentVersion == null) {
+/**
+ * Compares two version strings to determine if an update is needed
+ *
+ * @param string|null $requiredVersion The minimum required version (e.g., "2.1.0")
+ * @param string|null $currentVersion The current installed version
+ * @return bool True if current version is lower than required version
+ * @throws InvalidArgumentException If version strings are malformed
+ */
+function isUpdateNeeded(?string $requiredVersion, ?string $currentVersion): bool
+{
+    // Early return if versions are not provided
+    if ($requiredVersion === null || $currentVersion === null) {
         return false;
     }
-    // Convert version strings to arrays of integers
-    $currentVersionArray = array_map('intval', explode('.', $currentVersion));
-    $requiredVersionArray = array_map('intval', explode('.', $requiredVersion));
-    // Compare each part of the version numbers
-    $length = max(count($currentVersionArray), count($requiredVersionArray));
-    for ($i = 0; $i < $length; $i++) {
-        $currentPart = $currentVersionArray[$i] ?? 0;
-        $requiredPart = $requiredVersionArray[$i] ?? 0;
 
-        if ($currentPart < $requiredPart) {
-            return true;
-        } elseif ($currentPart > $requiredPart) {
-            return false;
-        }
+    // Validate version string format
+    if (!preg_match('/^\d+(\.\d+)*$/', $requiredVersion) ||
+        !preg_match('/^\d+(\.\d+)*$/', $currentVersion)) {
+        throw new InvalidArgumentException('Invalid version format. Expected format: X.Y.Z');
     }
 
-    // Versions are equal
+    // Convert version strings to normalized arrays
+    $current = normalizeVersionArray($currentVersion);
+    $required = normalizeVersionArray($requiredVersion);
+
+    return compareVersionArrays($current, $required);
+}
+
+/**
+ * Converts version string to normalized integer array
+ */
+function normalizeVersionArray(string $version): array
+{
+    return array_map('intval', explode('.', $version));
+}
+
+/**
+ * Compares two version arrays
+ */
+function compareVersionArrays(array $current, array $required): bool
+{
+    $length = max(count($current), count($required));
+    
+    for ($i = 0; $i < $length; $i++) {
+        $currentPart = $current[$i] ?? 0;
+        $requiredPart = $required[$i] ?? 0;
+        
+        if ($currentPart < $requiredPart) {
+            return true;    // Current version is older, update needed
+        }
+        if ($currentPart > $requiredPart) {
+            return false;    // Current version is newer, no update needed
+        }
+    }
     return false;
 }
 
@@ -1443,10 +1476,7 @@ function updateGeoLite2() {
             )
         )
     );
-    $URLTagsRelease = "https://api.github.com/repos/Vateron-Media/Xtream_Update/git/refs/tags";
-    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), true);
-    $latestTag = $tags[0]['ref'];
-    $rGeoLite2_version = str_replace("refs/tags/", "", $latestTag);
+    $rGeoLite2_version = get_recent_stable_release("https://github.com/Vateron-Media/Xtream_Update/releases/latest");
 
     if ($rGeoLite2_version) {
         $fileNames = ["GeoLite2-City.mmdb", "GeoLite2-Country.mmdb", "GeoLite2-ASN.mmdb"];

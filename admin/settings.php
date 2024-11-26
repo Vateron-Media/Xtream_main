@@ -10,10 +10,9 @@ if ((!hasPermissions("adv", "settings")) && (!hasPermissions("adv", "database"))
 
 #Get versions
 $rGeoLite2Latest = get_recent_stable_release("https://github.com/Vateron-Media/Xtream_Update/releases/latest");
-$rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true);
+$rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true)["geolite2_version"];
 $rUpdatePanel = mb_substr(get_recent_stable_release("https://github.com/Vateron-Media/Xtream_main/releases/latest"), 1);
 $rInfosUpdate = array();
-
 
 if (isset($_GET["geolite2"])) {
     if (updateGeoLite2()) {
@@ -282,7 +281,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["there_was_an_error_saving_settings"] ?>
                                                             </div>
                                 <?php } ?>
-                                <?php if (isUpdateNeeded($rGeoLite2Latest, $rGeoLite2Curent["geolite2_version"] ? $rGeoLite2Curent["geolite2_version"] : "0.0.0")) { ?>
+                                <?php if (isUpdateNeeded($rGeoLite2Latest, $rGeoLite2Curent ? $rGeoLite2Curent : "0.0.0")) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -326,7 +325,7 @@ if ($rSettings["sidebar"]) { ?>
                                                     <h2 class="font-weight-normal mb-3">
                                                         <small
                                                             class="mdi mdi-checkbox-blank-circle text-pink align-middle mr-1"></small>
-                                                        <span><?= $rGeoLite2Curent["geolite2_version"] ?></span>
+                                                        <span><?= $rGeoLite2Curent ?></span>
                                                     </h2>
                                                 </div>
                                             </div>
@@ -2462,7 +2461,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </td>
                                                                 </tr>
                                                             <?php }
-                                                            $ipTV_db_admin->query("SELECT `username`, `reseller_dns` FROM `users` WHERE `reseller_dns` <> '' AND `verified` = 1 ORDER BY `username` ASC;");
+                                                            $ipTV_db_admin->query("SELECT `username`, `reseller_dns` FROM `reg_users` WHERE `reseller_dns` <> '' AND `verified` = 1 ORDER BY `username` ASC;");
                                                             if ($ipTV_db_admin->num_rows() > 0) {
                                                                 foreach ($ipTV_db_admin->get_rows() as $row) { ?>
                                                                     <tr>
