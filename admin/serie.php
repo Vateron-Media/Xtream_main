@@ -56,7 +56,7 @@ if (isset($_POST["submit_series"])) {
         $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `series`(" . $rCols . ") VALUES(" . $rValues . ");";
-    if ($ipTV_db_adminTV_db_admin->query($rQuery)) {
+    if ($ipTV_db_admin->query($rQuery)) {
         if (isset($_POST["edit"])) {
             $rInsertID = intval($_POST["edit"]);
         } else {

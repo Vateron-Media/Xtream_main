@@ -31,7 +31,7 @@ function loadCron() {
                 $rFirstID = $ipTV_db->last_insert_id();
                 $i = 0;
                 while ($i < $rCount) {
-                    $rUpdateQuery .= '(' . $rUpdates[$i][0] . ',\'' . $ipTV_db->escape($rUpdates[$i][1]) . '\',' . ($rFirstID + $i) . ',' . json_encode($rUpdates[$i][2]) . '),';
+                    $rUpdateQuery .= '(' . $rUpdates[$i][0] . ',' . $ipTV_db->escape($rUpdates[$i][1]) . ',' . ($rFirstID + $i) . ',' . $ipTV_db->escape($rUpdates[$i][2]) . '),';
                     $i++;
                 }
             }

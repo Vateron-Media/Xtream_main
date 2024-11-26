@@ -4,15 +4,17 @@ include "functions.php";
 if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_user")) && (!hasPermissions("adv", "edit_user")))) {
     exit;
 }
+if (isset(ipTV_lib::$request["submit_user"])) {
+    $log = date('Y-m-d H:i:s') . ' ' . print_r(ipTV_lib::$request, true);
+    file_put_contents(__DIR__ . '/log.txt', $log . PHP_EOL, FILE_APPEND);
 
-if (isset($_POST["submit_user"])) {
-    $_POST["mac_address_mag"] = strtoupper($_POST["mac_address_mag"]);
-    $_POST["mac_address_e2"] = strtoupper($_POST["mac_address_e2"]);
-    if (isset($_POST["edit"])) {
+    ipTV_lib::$request["mac_address_mag"] = strtoupper(ipTV_lib::$request["mac_address_mag"]);
+    ipTV_lib::$request["mac_address_e2"] = strtoupper(ipTV_lib::$request["mac_address_e2"]);
+    if (isset(ipTV_lib::$request["edit"])) {
         if (!hasPermissions("adv", "edit_user")) {
             exit;
         }
-        $rArray = getUser($_POST["edit"]);
+        $rArray = getUser(ipTV_lib::$request["edit"]);
         if (($rArray["is_mag"]) && (!hasPermissions("adv", "edit_mag"))) {
             exit;
         }
@@ -26,36 +28,36 @@ if (isset($_POST["submit_user"])) {
         }
         $rArray = array("member_id" => 0, "username" => "", "password" => "", "exp_date" => null, "admin_enabled" => 1, "enabled" => 1, "admin_notes" => "", "reseller_notes" => "", "bouquet" => array(), "max_connections" => 1, "is_restreamer" => 0, "allowed_ips" => array(), "allowed_ua" => array(), "created_at" => time(), "created_by" => -1, "is_mag" => 0, "is_e2" => 0, "force_server_id" => 0, "is_isplock" => 0, "isp_desc" => "", "forced_country" => "", "is_stalker" => 0, "bypass_ua" => 0, "play_token" => "");
     }
-    if (strlen($_POST["username"]) == 0) {
-        $_POST["username"] = generateString(10);
+    if (strlen(ipTV_lib::$request["username"]) == 0) {
+        ipTV_lib::$request["username"] = generateString(10);
     }
-    if (strlen($_POST["password"]) == 0) {
-        $_POST["password"] = generateString(10);
+    if (strlen(ipTV_lib::$request["password"]) == 0) {
+        ipTV_lib::$request["password"] = generateString(10);
     }
-    if (!isset($_POST["edit"])) {
-        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = '" . $ipTV_db_admin->escape($_POST["username"]) . "';");
+    if (!isset(ipTV_lib::$request["edit"])) {
+        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = ?;", ipTV_lib::$request["username"]);
         if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 3; // Username in use.
         }
     }
-    if ((($_POST["is_mag"]) && (!filter_var($_POST["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen($_POST["mac_address_e2"]) > 0) && (!filter_var($_POST["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
+    if (((ipTV_lib::$request["is_mag"]) && (!filter_var(ipTV_lib::$request["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen(ipTV_lib::$request["mac_address_e2"]) > 0) && (!filter_var(ipTV_lib::$request["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
         $_STATUS = 4;
-    } elseif ($_POST["is_mag"]) {
-        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . $ipTV_db_admin->escape(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
+    } elseif (ipTV_lib::$request["is_mag"]) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . base64_encode(ipTV_lib::$request["mac_address_mag"]) . "' LIMIT 1;");
         if ($ipTV_db_admin->num_rows() > 0) {
-            if (isset($_POST["edit"])) {
-                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
+            if (isset(ipTV_lib::$request["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval(ipTV_lib::$request["edit"])) {
                     $_STATUS = 5; // MAC in use.
                 }
             } else {
                 $_STATUS = 5; // MAC in use.
             }
         }
-    } elseif ($_POST["is_e2"]) {
-        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . $ipTV_db_admin->escape($_POST["mac_address_e2"]) . "' LIMIT 1;");
+    } elseif (ipTV_lib::$request["is_e2"]) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . ipTV_lib::$request["mac_address_e2"] . "' LIMIT 1;");
         if ($ipTV_db_admin->num_rows() > 0) {
-            if (isset($_POST["edit"])) {
-                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
+            if (isset(ipTV_lib::$request["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval(ipTV_lib::$request["edit"])) {
                     $_STATUS = 5; // MAC in use.
                 }
             } else {
@@ -64,72 +66,72 @@ if (isset($_POST["submit_user"])) {
         }
     }
     foreach (array("max_connections", "enabled", "admin_enabled") as $rSelection) {
-        if (isset($_POST[$rSelection])) {
-            $rArray[$rSelection] = intval($_POST[$rSelection]);
-            unset($_POST[$rSelection]);
+        if (isset(ipTV_lib::$request[$rSelection])) {
+            $rArray[$rSelection] = intval(ipTV_lib::$request[$rSelection]);
+            unset(ipTV_lib::$request[$rSelection]);
         } else {
             $rArray[$rSelection] = 1;
         }
     }
     foreach (array("is_stalker", "is_e2", "is_mag", "is_restreamer", "is_trial") as $rSelection) {
-        if (isset($_POST[$rSelection])) {
+        if (isset(ipTV_lib::$request[$rSelection])) {
             $rArray[$rSelection] = 1;
-            unset($_POST[$rSelection]);
+            unset(ipTV_lib::$request[$rSelection]);
         } else {
             $rArray[$rSelection] = 0;
         }
     }
-    $rArray["bouquet"] = sortArrayByArray(array_values(json_decode($_POST["bouquets_selected"], true)), array_keys(getBouquetOrder()));
+    $rArray["bouquet"] = sortArrayByArray(array_values(json_decode(ipTV_lib::$request["bouquets_selected"], true)), array_keys(getBouquetOrder()));
     $rArray["bouquet"] = "[" . join(",", $rArray["bouquet"]) . "]";
-    unset($_POST["bouquets_selected"]);
-    if ((isset($_POST["exp_date"])) && (!isset($_POST["no_expire"]))) {
-        if ((strlen($_POST["exp_date"]) > 0) and ($_POST["exp_date"] <> "1970-01-01")) {
+    unset(ipTV_lib::$request["bouquets_selected"]);
+    if ((isset(ipTV_lib::$request["exp_date"])) && (!isset(ipTV_lib::$request["no_expire"]))) {
+        if ((strlen(ipTV_lib::$request["exp_date"]) > 0) and (ipTV_lib::$request["exp_date"] <> "1970-01-01")) {
             try {
-                $rDate = new DateTime($_POST["exp_date"]);
+                $rDate = new DateTime(ipTV_lib::$request["exp_date"]);
                 $rArray["exp_date"] = $rDate->format("U");
             } catch (Exception $e) {
                 echo "Incorrect date.";
                 $_STATUS = 1;
             }
         }
-        unset($_POST["exp_date"]);
+        unset(ipTV_lib::$request["exp_date"]);
     } else {
         $rArray["exp_date"] = null;
     }
-    if (isset($_POST["allowed_ips"])) {
-        if (!is_array($_POST["allowed_ips"])) {
-            $_POST["allowed_ips"] = array($_POST["allowed_ips"]);
+    if (isset(ipTV_lib::$request["allowed_ips"])) {
+        if (!is_array(ipTV_lib::$request["allowed_ips"])) {
+            ipTV_lib::$request["allowed_ips"] = array(ipTV_lib::$request["allowed_ips"]);
         }
-        $rArray["allowed_ips"] = json_encode($_POST["allowed_ips"]);
+        $rArray["allowed_ips"] = json_encode(ipTV_lib::$request["allowed_ips"]);
     } else {
         $rArray["allowed_ips"] = "[]";
     }
-    if (isset($_POST["allowed_ua"])) {
-        if (!is_array($_POST["allowed_ua"])) {
-            $_POST["allowed_ua"] = array($_POST["allowed_ua"]);
+    if (isset(ipTV_lib::$request["allowed_ua"])) {
+        if (!is_array(ipTV_lib::$request["allowed_ua"])) {
+            ipTV_lib::$request["allowed_ua"] = array(ipTV_lib::$request["allowed_ua"]);
         }
-        $rArray["allowed_ua"] = json_encode($_POST["allowed_ua"]);
+        $rArray["allowed_ua"] = json_encode(ipTV_lib::$request["allowed_ua"]);
     } else {
         $rArray["allowed_ua"] = "[]";
     }
-    if (isset($_POST["access_output"])) {
-        if (!is_array($_POST["access_output"])) {
-            $_POST["access_output"] = array($_POST["access_output"]);
+    if (isset(ipTV_lib::$request["access_output"])) {
+        if (!is_array(ipTV_lib::$request["access_output"])) {
+            ipTV_lib::$request["access_output"] = array(ipTV_lib::$request["access_output"]);
         }
-        $rArray["allowed_outputs"] = json_encode($_POST["access_output"]);
+        $rArray["allowed_outputs"] = json_encode(ipTV_lib::$request["access_output"]);
     } else {
         $rArray["allowed_outputs"] = "[]";
     }
     //isp lock_device
-    if (isset($_POST["is_isplock"])) {
+    if (isset(ipTV_lib::$request["is_isplock"])) {
         $rArray["is_isplock"] = true;
-        unset($_POST["is_isplock"]);
+        unset(ipTV_lib::$request["is_isplock"]);
     } else {
         $rArray["is_isplock"] = false;
     }
     //isp lock_device
     if (!isset($_STATUS)) {
-        foreach ($_POST as $rKey => $rValue) {
+        foreach (ipTV_lib::$request as $rKey => $rValue) {
             if (isset($rArray[$rKey])) {
                 $rArray[$rKey] = $rValue;
             }
@@ -138,7 +140,7 @@ if (isset($_POST["submit_user"])) {
             $rArray["member_id"] = -1;
         }
         $rArray["created_by"] = $rArray["member_id"];
-        $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+        $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
             if (is_array($rValue)) {
@@ -147,35 +149,35 @@ if (isset($_POST["submit_user"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+                $rValues .= '\'' . $rValue . '\'';
             }
         }
-        if (isset($_POST["edit"])) {
+        if (isset(ipTV_lib::$request["edit"])) {
             $rCols = "`id`," . $rCols;
-            $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
+            $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
-            if (isset($_POST["edit"])) {
-                $rInsertID = intval($_POST["edit"]);
+            if (isset(ipTV_lib::$request["edit"])) {
+                $rInsertID = intval(ipTV_lib::$request["edit"]);
             } else {
                 $rInsertID = $ipTV_db_admin->last_insert_id();
             }
-            if ((isset($rInsertID)) && (isset($_POST["access_output"]))) {
+            if ((isset($rInsertID)) && (isset(ipTV_lib::$request["access_output"]))) {
                 if ($rArray["is_mag"] == 1) {
                     if (hasPermissions("adv", "add_mag")) {
-                        if (isset($_POST["lock_device"])) {
+                        if (isset(ipTV_lib::$request["lock_device"])) {
                             $rSTBLock = 1;
                         } else {
                             $rSTBLock = 0;
                         }
                         $ipTV_db_admin->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
                         if ($ipTV_db_admin->num_rows() == 0) {
-                            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode($ipTV_db_admin->escape($_POST["mac_address_mag"])) . "', `lock_device` = " . intval($rSTBLock) . " WHERE `user_id` = " . intval($rInsertID) . ";");
+                            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ipTV_lib::$request["mac_address_mag"]) . "', `lock_device` = " . intval($rSTBLock) . " WHERE `user_id` = " . intval($rInsertID) . ";");
                         } else {
-                            $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . $ipTV_db_admin->escape(base64_encode($_POST["mac_address_mag"])) . "', " . intval($rSTBLock) . ");");
+                            $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . base64_encode(ipTV_lib::$request["mac_address_mag"]) . "', " . intval($rSTBLock) . ");");
                         }
-                        if (isset($_POST["edit"])) {
+                        if (isset(ipTV_lib::$request["edit"])) {
                             $ipTV_db_admin->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                         }
                     }
@@ -183,15 +185,15 @@ if (isset($_POST["submit_user"])) {
                     if (hasPermissions("adv", "add_e2")) {
                         $ipTV_db_admin->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
                         if ($ipTV_db_admin->num_rows() == 0) {
-                            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . $ipTV_db_admin->escape($_POST["mac_address_e2"]) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
+                            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . ipTV_lib::$request["mac_address_e2"] . "' WHERE `user_id` = " . intval($rInsertID) . ";");
                         } else {
-                            $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rInsertID) . ", '" . $ipTV_db_admin->escape($_POST["mac_address_e2"]) . "');");
+                            $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rInsertID) . ", '" . ipTV_lib::$request["mac_address_e2"] . "');");
                         }
-                        if (isset($_POST["edit"])) {
+                        if (isset(ipTV_lib::$request["edit"])) {
                             $ipTV_db_admin->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                         }
                     }
-                } elseif (isset($_POST["edit"])) {
+                } elseif (isset(ipTV_lib::$request["edit"])) {
                     $ipTV_db_admin->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                     $ipTV_db_admin->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
                 }
@@ -204,8 +206,8 @@ if (isset($_POST["submit_user"])) {
     }
 }
 
-if (isset($_GET["id"])) {
-    $rUser = getUser($_GET["id"]);
+if (isset(ipTV_lib::$request["id"])) {
+    $rUser = getUser(ipTV_lib::$request["id"]);
     if ((!$rUser) or (!hasPermissions("adv", "edit_user"))) {
         exit;
     }
@@ -215,13 +217,13 @@ if (isset($_GET["id"])) {
     if (($rUser["is_e2"]) && (!hasPermissions("adv", "edit_e2"))) {
         exit;
     }
-    $rMAGUser = getMAGUser($_GET["id"]);
+    $rMAGUser = getMAGUser(ipTV_lib::$request["id"]);
     if (($rUser["is_mag"])) {
         $rUser["lock_device"] = $rMAGUser["lock_device"];
         $rUser["mac_address_mag"] = base64_decode($rMAGUser["mac"]);
     }
     if (($rUser["is_e2"])) {
-        $rUser["mac_address_e2"] = getE2User($_GET["id"])["mac"];
+        $rUser["mac_address_e2"] = getE2User(ipTV_lib::$request["id"])["mac"];
     }
     $rUser["outputs"] = getOutputs($rUser["id"]);
 } elseif (!hasPermissions("adv", "add_user")) {
@@ -250,9 +252,9 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="page-title-box">
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
-                                        <a href="./users.php<?php if (isset($_GET["mag"])) {
+                                        <a href="./users.php<?php if (isset(ipTV_lib::$request["mag"])) {
                                                                 echo "?mag";
-                                                            } elseif (isset($_GET["e2"])) {
+                                                            } elseif (isset(ipTV_lib::$request["e2"])) {
                                                                 echo "?e2";
                                                             } ?>">
                                             <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
@@ -318,8 +320,8 @@ if ($rSettings["sidebar"]) { ?>
                             } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./user.php<?php if (isset($_GET["id"])) {
-                                                                echo "?id=" . $_GET["id"];
+                                    <form action="./user.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                                                echo "?id=" . ipTV_lib::$request["id"];
                                                             } ?>" method="POST" id="user_form"
                                         data-parsley-validate="">
                                         <?php if (isset($rUser)) { ?>
@@ -573,7 +575,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rUser["is_e2"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } elseif ((isset($_GET["e2"])) && (hasPermissions("adv", "add_e2"))) {
+                                                                                        } elseif ((isset(ipTV_lib::$request["e2"])) && (hasPermissions("adv", "add_e2"))) {
                                                                                             echo "checked ";
                                                                                         } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
@@ -592,7 +594,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rUser["is_mag"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                                    } elseif ((isset($_GET["mag"])) && (hasPermissions("adv", "add_mag"))) {
+                                                                                                    } elseif ((isset(ipTV_lib::$request["mag"])) && (hasPermissions("adv", "add_mag"))) {
                                                                                                         echo "checked ";
                                                                                                     } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
@@ -811,14 +813,15 @@ if ($rSettings["sidebar"]) { ?>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <?php foreach (getBouquets() as $rBouquet) { ?>
-                                                                            <tr<?php if (isset($rUser)) {
+                                                                        <?php foreach (getBouquets() as $rBouquet) {
+                                                                            echo "<tr";
+                                                                            if (isset($rUser)) {
                                                                                 if (in_array($rBouquet["id"], json_decode($rUser["bouquet"], true))) {
                                                                                     echo " class='selected selectedfilter ui-selected'";
                                                                                 }
-                                                                               } ?>>
-                                                                                <td class="text-center">
-                                                                                    <?= $rBouquet["id"] ?></td>
+                                                                            }
+                                                                            echo ">";?>
+                                                                                <td class="text-center"><?= $rBouquet["id"] ?></td>
                                                                                 <td><?= $rBouquet["bouquet_name"] ?></td>
                                                                                 <td class="text-center">
                                                                                     <?= count(json_decode($rBouquet["bouquet_channels"], true)) ?>
@@ -826,7 +829,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 <td class="text-center">
                                                                                     <?= count(json_decode($rBouquet["bouquet_series"], true)) ?>
                                                                                 </td>
-                                                                                </tr>
+                                                                                </>
                                                                         <?php } ?>
                                                                     </tbody>
                                                                 </table>
@@ -1009,7 +1012,7 @@ if ($rSettings["sidebar"]) { ?>
                             var init = new Switchery(element);
                             window.swObjs[element.id] = init;
                         });
-                        <?php if (hasPermissions("adv", "edit_user") && (!empty($_GET["id"]))) {
+                        <?php if (hasPermissions("adv", "edit_user") && (!empty(ipTV_lib::$request["id"]))) {
                             $startDate = "startDate: '" . date("Y-m-d H:i:s", $rUser["exp_date"]) . "'";
                         } else {
                             $startDate = "startDate: '" . date('Y-m-d H:i:s') . "'";

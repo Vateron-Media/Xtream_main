@@ -6,7 +6,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_bouquet"))) {
 }
 
 if (isset($_POST["reorder"])) {
-    $rOrder = json_decode($_POST["stream_order_array"], True);
+    $rOrder = json_decode($_POST["stream_order_array"], true);
     if (is_array($rOrder)) {
         $rStreamOrder = $rOrder["stream"];
         foreach ($rOrder["movie"] as $rID) {
@@ -29,8 +29,8 @@ if (!$rBouquet) {
 
 $rListings = array("stream" => array(), "movie" => array(), "radio" => array(), "series" => array());
 $rOrdered = array("stream" => array(), "movie" => array(), "radio" => array(), "series" => array());
-$rChannels = json_decode($rBouquet["bouquet_channels"], True);
-$rSeries = json_decode($rBouquet["bouquet_series"], True);
+$rChannels = json_decode($rBouquet["bouquet_channels"], true);
+$rSeries = json_decode($rBouquet["bouquet_series"], true);
 
 if (is_array($rChannels)) {
     $ipTV_db_admin->query("SELECT `streams`.`id`, `streams`.`type`, `streams`.`category_id`, `streams`.`stream_display_name`, `stream_categories`.`category_name` FROM `streams`, `stream_categories` WHERE `streams`.`category_id` = `stream_categories`.`id` AND `streams`.`id` IN (" . $ipTV_db_admin->escape(join(",", $rChannels)) . ");");
@@ -38,7 +38,7 @@ if (is_array($rChannels)) {
         foreach ($ipTV_db_admin->get_rows() as $row) {
             if ($row["type"] == 2) {
                 $rListings["movie"][intval($row["id"])] = $row;
-            } else if ($row["type"] == 4) {
+            } elseif ($row["type"] == 4) {
                 $rListings["radio"][intval($row["id"])] = $row;
             } else {
                 $rListings["stream"][intval($row["id"])] = $row;
@@ -58,9 +58,9 @@ if (is_array($rSeries)) {
 foreach ($rChannels as $rChannel) {
     if (isset($rListings["stream"][intval($rChannel)])) {
         $rOrdered["stream"][] = $rListings["stream"][intval($rChannel)];
-    } else if (isset($rListings["movie"][intval($rChannel)])) {
+    } elseif (isset($rListings["movie"][intval($rChannel)])) {
         $rOrdered["movie"][] = $rListings["movie"][intval($rChannel)];
-    } else if (isset($rListings["radio"][intval($rChannel)])) {
+    } elseif (isset($rListings["radio"][intval($rChannel)])) {
         $rOrdered["radio"][] = $rListings["radio"][intval($rChannel)];
     }
 }
@@ -79,10 +79,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">

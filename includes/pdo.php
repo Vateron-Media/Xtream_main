@@ -80,7 +80,6 @@ class Database {
 
             $this->connected = true;
             return true;
-
         } catch (PDOException $e) {
             $this->handleConnectionError($e);
         }
@@ -103,7 +102,7 @@ class Database {
 
     /**
      * Executes a prepared SQL query with optional parameter binding
-     * 
+     *
      * @throws PDOException When database query execution fails
      * @return bool Returns true on successful query execution, false on failure or if database handle is not initialized
      *
@@ -140,7 +139,6 @@ class Database {
             if (strlen($actual_query) == 0) {
                 $actual_query = $query;
             }
-
             if (class_exists('ipTV_lib')) {
                 ipTV_lib::saveLog('pdo', $e->getMessage(), $actual_query);
             }
@@ -172,7 +170,7 @@ class Database {
      * $rows = $db->get_rows(); // Returns: [['id'=>1, 'name'=>'John'], ['id'=>2, 'name'=>'Jane']]
      *
      * // Index by ID
-     * $rows = $db->get_rows(true, 'id'); 
+     * $rows = $db->get_rows(true, 'id');
      * // Returns: [1=>['id'=>1, 'name'=>'John'], 2=>['id'=>2, 'name'=>'Jane']]
      *
      * // Multiple rows per ID with sub-index
@@ -213,7 +211,7 @@ class Database {
     }
     /**
      * Fetches a single row from the result set
-     * 
+     *
      * Retrieves the next row from the current result set and cleans it.
      * After fetching the row, the result set is cleared.
      * If there's no active connection, result set, or no rows are found,
@@ -287,7 +285,7 @@ class Database {
 
     /**
      * Escapes a string for safe database usage
-     * 
+     *
      * @param string $string The string to escape
      * @return string|null The escaped string or null if database handle is not available
      * @throws PDOException If the quote operation fails
@@ -317,7 +315,7 @@ class Database {
     }
     /**
      * Gets the ID of the last inserted row
-     * 
+     *
      * Returns the ID of the last inserted row, or the last value from a sequence.
      * If no insert operation has been performed or if the connection is not established,
      * the method returns 0.
@@ -334,7 +332,7 @@ class Database {
     }
     /**
      * Gets the number of rows in the result set
-     * 
+     *
      * This method returns the number of rows from the last query result.
      * If there's no active connection or result set, it returns 0.
      * Note: For SELECT statements, rowCount() may not return the actual number
@@ -372,7 +370,7 @@ class Database {
     }
     /**
      * Cleans all non-empty values in a database row using parseCleanValue().
-     * 
+     *
      * @param array $row The database row to clean
      * @return array The cleaned row with sanitized values
      */
@@ -414,7 +412,7 @@ class Database {
 
     /**
      * Handles PDO connection errors by formatting and outputting error details
-     * 
+     *
      * @param PDOException $e The PDO exception that was caught
      * @throws never This method never returns as it terminates execution
      * @return never The function never returns due to exit() call
