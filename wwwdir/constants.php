@@ -1,7 +1,5 @@
 <?php
 
-$showErrors = false;
-
 $rErrorCodes = array(
     'API_IP_NOT_ALLOWED' => 'IP is not allowed to access the API.',
     'ASN_BLOCKED' => 'ASN has been blocked.',
@@ -132,20 +130,18 @@ define('CACHE_STREAMS', false);
 define('CACHE_STREAMS_TIME', 10);
 define('STREAM_TYPE', array('live', 'series', 'movie', 'created_live', 'radio_streams'));
 
+if (file_exists(CACHE_TMP_PATH . 'settings')) {
+    $Settings = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'settings'));
+} else {
+    $Settings = array('verify_host' => false, 'debug_show_errors' => false, 'enable_cache' => false, 'exit' => true);
+}
+
 global $argc;
+$showErrors = false;
+
 if (!$argc) {
-    $rIP = $_SERVER['REMOTE_ADDR'];
-    if (empty($rIP) || !file_exists(FLOOD_TMP_PATH . 'block_' . $rIP)) {
-        define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
-        if (file_exists(CACHE_TMP_PATH . 'settings')) {
-            $data = file_get_contents(CACHE_TMP_PATH . 'settings');
-            $settings = igbinary_unserialize($data);
-            $showErrors = (isset($settings['debug_show_errors']) ? $settings['debug_show_errors'] : false);
-        }
-    } else {
-        http_response_code(403);
-        exit();
-    }
+    define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
+    $showErrors = (isset($Settings['debug_show_errors']) ? $Settings['debug_show_errors'] : false);
 }
 
 define('PHP_ERRORS', $showErrors);
@@ -252,13 +248,12 @@ function panelLog($rType, $rMessage, $rExtra = '', $rLine = 0) {
 
 function generateError($rError, $rKill = true, $rCode = null) {
     global $rErrorCodes;
-    global $showErrors;
+    global $Settings;
 
-    if ($showErrors) {
+    if ($Settings['debug_show_errors']) {
         $rErrorDescription = ($rErrorCodes[$rError] ?: '');
         $rStyle = '*{-webkit-box-sizing:border-box;box-sizing:border-box}body{padding:0;margin:0}#notfound{position:relative;height:100vh}#notfound .notfound{position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.notfound{max-width:520px;width:100%;line-height:1.4;text-align:center}.notfound .notfound-404{position:relative;height:200px;margin:0 auto 20px;z-index:-1}.notfound .notfound-404 h1{font-family:Montserrat,sans-serif;font-size:236px;font-weight:200;margin:0;color:#211b19;text-transform:uppercase;position:absolute;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.notfound .notfound-404 h2{font-family:Montserrat,sans-serif;font-size:28px;font-weight:400;text-transform:uppercase;color:#211b19;background:#fff;padding:10px 5px;margin:auto;display:inline-block;position:absolute;bottom:0;left:0;right:0}.notfound p{font-family:Montserrat,sans-serif;font-size:14px;font-weight:300;text-transform:uppercase}@media only screen and (max-width:767px){.notfound .notfound-404 h1{font-size:148px}}@media only screen and (max-width:480px){.notfound .notfound-404{height:148px;margin:0 auto 10px}.notfound .notfound-404 h1{font-size:86px}.notfound .notfound-404 h2{font-size:16px}}';
-        echo '<html><head><title>Debug Mode</title><link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,700" rel="stylesheet"><style>' . $rStyle . '</style></head><body><div id="notfound"><div class="notfound"><div class="notfound-404"><h1>XTREAMUI</h1><h2>' . $rError . '</h2><br/></div><p>' . $rErrorDescription . '</p></div></div></body></html>';
-
+        echo '<html><head><title>XC_VM - Debug Mode</title><link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,700" rel="stylesheet"><style>' . $rStyle . '</style></head><body><div id="notfound"><div class="notfound"><div class="notfound-404"><h1>XC_VM</h1><h2>' . $rError . '</h2><br/></div><p>' . $rErrorDescription . '</p></div></div></body></html>';
         if ($rKill) {
             exit();
         }
@@ -268,7 +263,6 @@ function generateError($rError, $rKill = true, $rCode = null) {
                 generate404();
             } else {
                 http_response_code($rCode);
-
                 exit();
             }
         }

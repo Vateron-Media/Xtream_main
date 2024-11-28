@@ -1,11 +1,12 @@
 <?php
+
 require_once 'constants.php';
 require_once INCLUDES_PATH . 'lib.php';
 require_once INCLUDES_PATH . 'functions.php';
 require_once INCLUDES_PATH . 'pdo.php';
 require_once INCLUDES_PATH . 'streaming.php';
-require_once INCLUDES_PATH . 'servers.php';
 require_once INCLUDES_PATH . 'stream.php';
+require_once INCLUDES_PATH . 'servers.php';
 require_once IPTV_ROOT_PATH . 'langs/English.php';
 
 if (!function_exists('getallheaders')) {
@@ -13,8 +14,7 @@ if (!function_exists('getallheaders')) {
         $rHeaders = array();
 
         foreach ($_SERVER as $rName => $rValue) {
-            if (substr($rName, 0, 5) == 'HTTP_') {
-            } else {
+            if (substr($rName, 0, 5) != 'HTTP_') {
                 $rHeaders[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($rName, 5)))))] = $rValue;
             }
         }

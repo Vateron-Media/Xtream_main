@@ -101,7 +101,7 @@ class ipTV_stream {
         shell_exec(PHP_BIN . ' ' . CLI_PATH . 'monitor.php ' . intval($streamID) . ' ' . intval($rRestart) . ' >/dev/null 2>/dev/null &');
         return true;
     }
-    static function checkPID($pid, $search) {
+    public static function checkPID($pid, $search) {
         if (file_exists('/proc/' . $pid)) {
             $value = trim(file_get_contents("/proc/{$pid}/cmdline"));
             if (stristr($value, $search)) {
@@ -110,7 +110,7 @@ class ipTV_stream {
         }
         return false;
     }
-    static function startMovie($streamID) {
+    public static function startMovie($streamID) {
         $stream = array();
         self::$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 0 LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = ?', $streamID);
         if (self::$ipTV_db->num_rows() > 0) {
@@ -822,8 +822,7 @@ class ipTV_stream {
     }
     public static function startLLOD($streamID, $rStreamInfo, $rStreamArguments, $rForceSource = null) {
         shell_exec('rm -f ' . STREAMS_PATH . intval($streamID) . '_*.ts');
-        if (!file_exists(STREAMS_PATH . $streamID . '_.pid')) {
-        } else {
+        if (file_exists(STREAMS_PATH . $streamID . '_.pid')) {
             unlink(STREAMS_PATH . $streamID . '_.pid');
         }
         $sources = ($rForceSource ? array($rForceSource) : json_decode($rStreamInfo['stream_source'], true));
