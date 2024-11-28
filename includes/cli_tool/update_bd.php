@@ -26,6 +26,8 @@ $ipTV_db->query("ALTER TABLE `streaming_servers` ALTER network_guaranteed_speed 
 $ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `fps_restart` tinyint(1) DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `vframes_server_id` int(11) DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `vframes_pid` int(11) DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `year` int(4) DEFAULT NULL;");
+
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('restart_php_fpm', '1')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('max_encode_movies', '10')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('max_encode_cc', '1')");
@@ -42,6 +44,9 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_v2_
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_v2_site_key', '')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('recaptcha_enable', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('total_users', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('request_prebuffer', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('playlist_from_mysql', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('cloudflare', '0')");
 
 
 $ipTV_db->query("UPDATE `crontab` SET `filename`='series.php' WHERE `filename`='vod_cc_series.php'");

@@ -16,12 +16,7 @@ $rUserAgent = trim($_SERVER['HTTP_USER_AGENT']);
 $rOffset = (empty(ipTV_lib::$request['params']['offset']) ? 0 : abs(intval(ipTV_lib::$request['params']['offset'])));
 $rLimit = (empty(ipTV_lib::$request['params']['items_per_page']) ? 0 : abs(intval(ipTV_lib::$request['params']['items_per_page'])));
 $rNameTypes = array('live' => 'Live Streams', 'movie' => 'Movies', 'created_live' => 'Created Channels', 'radio_streams' => 'Radio Stations', 'series' => 'TV Series');
-if (ipTV_lib::$settings['use_mdomain_in_lists'] == 1) {
-    $rDomainName = ipTV_lib::$Servers[SERVER_ID]['site_url'];
-} else {
-    list($host, $act) = explode(':', $_SERVER['HTTP_HOST']);
-    $rDomainName = ipTV_lib::$Servers[SERVER_ID]['server_protocol'] . '://' . $host . ':' . ipTV_lib::$Servers[SERVER_ID]['request_port'] . '/';
-}
+$rDomainName = getDomainName();
 $rDomain = parse_url($rDomainName)['host'];
 $rValidActions = array(200 => 'get_vod_categories', 201 => 'get_live_categories', 202 => 'get_live_streams', 203 => 'get_vod_streams', 204 => 'get_series_info', 205 => 'get_short_epg', 206 => 'get_series_categories', 207 => 'get_simple_data_table', 208 => 'get_series', 209 => 'get_vod_info');
 $output = array();

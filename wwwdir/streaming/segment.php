@@ -2,7 +2,7 @@
 
 header('Access-Control-Allow-Origin: *');
 set_time_limit(0);
-require '../init.php';
+require_once '../init.php';
 
 $rSettings = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'settings'));
 $rServers = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'servers'));

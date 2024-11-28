@@ -856,7 +856,7 @@ class ipTV_streaming {
             }
         }
     }
-    public static function generateAdminHLS($rM3U8, $rPassword, $streamID, $rUIToken) {
+    public static function generateAdminHLS($rM3U8, $password, $streamID, $rUIToken) {
         if (file_exists($rM3U8)) {
             $rSource = file_get_contents($rM3U8);
             if (preg_match_all('/(.*?)\\.ts/', $rSource, $rMatches)) {
@@ -864,7 +864,7 @@ class ipTV_streaming {
                     if ($rUIToken) {
                         $rSource = str_replace($rMatch, '/admin/live.php?extension=m3u8&segment=' . $rMatch . '&uitoken=' . $rUIToken, $rSource);
                     } else {
-                        $rSource = str_replace($rMatch, '/admin/live.php?password=' . $rPassword . '&extension=m3u8&segment=' . $rMatch . '&stream=' . $streamID, $rSource);
+                        $rSource = str_replace($rMatch, '/admin/live.php?password=' . $password . '&extension=m3u8&segment=' . $rMatch . '&stream=' . $streamID, $rSource);
                     }
                 }
                 return $rSource;
@@ -875,14 +875,18 @@ class ipTV_streaming {
     public static function generateHLS($rM3U8, $username, $password, $streamID, $rUUID, $IP, $rVideoCodec = 'h264', $rOnDemand = 0, $serverID = null) {
         if (file_exists($rM3U8)) {
             $rSource = file_get_contents($rM3U8);
-            if (ipTV_lib::$settings['encrypt_hls'] || $rOnDemand) {
+            if (ipTV_lib::$settings['encrypt_hls']) {
                 $rKeyToken = encryptData($IP . '/' . $streamID, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                $rSource = "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\" /key/" . $rKeyToken . '",IV=0x' . bin2hex(file_get_contents(STREAMS_PATH . $streamID . '_.iv')) . "\n" . substr($rSource, 8, strlen($rSource) - 8);
+                $rSource = "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"" . '/key/' . $rKeyToken . '",IV=0x' . bin2hex(file_get_contents(STREAMS_PATH . $streamID . '_.iv')) . "\n" . substr($rSource, 8, strlen($rSource) - 8);
             }
             if (preg_match_all('/(.*?)\\.ts/', $rSource, $rMatches)) {
                 foreach ($rMatches[0] as $rMatch) {
                     $rToken = encryptData($username . '/' . $password . '/' . $IP . '/' . $streamID . '/' . $rMatch . '/' . $rUUID . '/' . $serverID . '/' . $rVideoCodec . '/' . $rOnDemand, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                    $rSource = str_replace($rMatch, '/hls/' . $rToken, $rSource);
+                    if (ipTV_lib::$settings['allow_cdn_access']) {
+                        $rSource = str_replace($rMatch, '/hls/' . $rMatch . '?token=' . $rToken, $rSource);
+                    } else {
+                        $rSource = str_replace($rMatch, '/hls/' . $rToken, $rSource);
+                    }
                 }
                 return $rSource;
             }

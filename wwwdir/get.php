@@ -103,7 +103,7 @@ if ($rUserInfo) {
     $rDownloading = true;
 
     if (startDownload('playlist', $rUserInfo, getmypid())) {
-        if (!generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey, $rTypeKey, $rNoCache)) {
+        if (!generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey, $rTypeKey, $rNoCache)) {
             generateError('GENERATE_PLAYLIST_FAILED');
         }
     } else {

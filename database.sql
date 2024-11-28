@@ -1200,7 +1200,10 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('191', 'cc_time', 0),
 ('192', 'recaptcha_v2_secret_key', ''),
 ('193', 'recaptcha_v2_site_key', ''),
-('194', 'recaptcha_enable', '0');
+('194', 'recaptcha_enable', '0'),
+('195', 'request_prebuffer', '1'),
+('196', 'playlist_from_mysql', '0'),
+('197', 'cloudflare', '0');
 -- --------------------------------------------------------
 
 --
@@ -1340,6 +1343,7 @@ CREATE TABLE IF NOT EXISTS `streams` (
   `fps_restart` tinyint(1) DEFAULT '0',
   `vframes_server_id` int(11) DEFAULT '0',
   `vframes_pid` int(11) DEFAULT '0',
+  `year` int(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `type` (`type`),
   KEY `created_channel_location` (`created_channel_location`),

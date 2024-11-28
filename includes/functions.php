@@ -83,18 +83,18 @@ function KillProcessCmd($file, $time = 600) {
     file_put_contents($file, getmypid());
     return false;
 }
-/** 
- * Checks for flood attempts based on IP address. 
- * 
- * This function checks for flood attempts based on the provided IP address. 
- * It handles the restriction of flood attempts based on settings and time intervals. 
- * If the IP is not provided, it retrieves the user's IP address. 
- * It excludes certain IPs from flood checking based on settings. 
- * It tracks and limits flood attempts within a specified time interval. 
- * If the number of requests exceeds the limit, it blocks the IP and logs the attack. 
- * 
- * @param string|null $rIP (Optional) The IP address to check for flood attempts. 
- * @return null|null Returns null if no flood attempt is detected, or a string indicating the block status if the IP is blocked. 
+/**
+ * Checks for flood attempts based on IP address.
+ *
+ * This function checks for flood attempts based on the provided IP address.
+ * It handles the restriction of flood attempts based on settings and time intervals.
+ * If the IP is not provided, it retrieves the user's IP address.
+ * It excludes certain IPs from flood checking based on settings.
+ * It tracks and limits flood attempts within a specified time interval.
+ * If the number of requests exceeds the limit, it blocks the IP and logs the attack.
+ *
+ * @param string|null $rIP (Optional) The IP address to check for flood attempts.
+ * @return null|null Returns null if no flood attempt is detected, or a string indicating the block status if the IP is blocked.
  */
 function checkFlood($rIP = null) {
     global $ipTV_db;
@@ -145,17 +145,17 @@ function checkFlood($rIP = null) {
         return null;
     }
 }
-/** 
- * Checks for authentication flood attempts for a user and IP address. 
- * 
- * This function checks for authentication flood attempts for a user and optional IP address. 
- * It verifies if the user is not a restreamer and checks the IP address against allowed IPs and exclusions. 
- * It tracks and limits authentication flood attempts based on settings and time intervals. 
- * If the number of attempts exceeds the limit, it blocks further attempts until a specified time. 
- * 
- * @param array $rUser The user information containing the ID and restreamer status. 
- * @param string|null $rIP (Optional) The IP address of the user. 
- * @return null|null Returns null if no authentication flood attempt is detected, or a string indicating the block status if the user is blocked. 
+/**
+ * Checks for authentication flood attempts for a user and IP address.
+ *
+ * This function checks for authentication flood attempts for a user and optional IP address.
+ * It verifies if the user is not a restreamer and checks the IP address against allowed IPs and exclusions.
+ * It tracks and limits authentication flood attempts based on settings and time intervals.
+ * If the number of attempts exceeds the limit, it blocks further attempts until a specified time.
+ *
+ * @param array $rUser The user information containing the ID and restreamer status.
+ * @param string|null $rIP (Optional) The IP address of the user.
+ * @return null|null Returns null if no authentication flood attempt is detected, or a string indicating the block status if the user is blocked.
  */
 function checkAuthFlood($rUser, $rIP = null) {
     if (ipTV_lib::$settings['auth_flood_limit'] != 0) {
@@ -193,20 +193,20 @@ function checkAuthFlood($rUser, $rIP = null) {
         return null;
     }
 }
-/** 
- * Checks for brute force attempts based on IP, MAC address, and username. 
- * 
- * This function checks for brute force attempts based on the provided IP, MAC address, and username. 
- * It handles the restriction of brute force attempts based on settings and frequency. 
- * If the IP is not provided, it retrieves the user's IP address. 
- * It excludes certain IPs from flood checking based on settings. 
- * It tracks and limits brute force attempts for MAC and username separately. 
- * If the number of attempts exceeds the limit, it blocks the IP and logs the attack. 
- * 
- * @param string|null $rIP (Optional) The IP address of the user. 
- * @param string|null $rMAC (Optional) The MAC address of the device. 
- * @param string|null $rUsername (Optional) The username of the user. 
- * @return null|null|string Returns null if no brute force attempt is detected, or a string indicating the type of attack if the IP is blocked. 
+/**
+ * Checks for brute force attempts based on IP, MAC address, and username.
+ *
+ * This function checks for brute force attempts based on the provided IP, MAC address, and username.
+ * It handles the restriction of brute force attempts based on settings and frequency.
+ * If the IP is not provided, it retrieves the user's IP address.
+ * It excludes certain IPs from flood checking based on settings.
+ * It tracks and limits brute force attempts for MAC and username separately.
+ * If the number of attempts exceeds the limit, it blocks the IP and logs the attack.
+ *
+ * @param string|null $rIP (Optional) The IP address of the user.
+ * @param string|null $rMAC (Optional) The MAC address of the device.
+ * @param string|null $rUsername (Optional) The username of the user.
+ * @return null|null|string Returns null if no brute force attempt is detected, or a string indicating the type of attack if the IP is blocked.
  */
 function checkBruteforce($rIP = null, $rMAC = null, $rUsername = null) {
     global $ipTV_db;
@@ -264,19 +264,19 @@ function checkBruteforce($rIP = null, $rMAC = null, $rUsername = null) {
         return null;
     }
 }
-/** 
- * Truncates the attempts based on a given frequency. 
- * 
- * This function takes an array of attempts and a frequency value as input. 
- * It checks if the time difference between the current time and each attempt time is less than the given frequency. 
- * If the $rList parameter is true, it iterates through the attempt times directly. 
- * If $rList is false, it iterates through the attempts as key-value pairs. 
- * It returns an array of allowed attempts that meet the frequency criteria. 
- * 
- * @param array $rAttempts An array of attempt times or key-value pairs. 
- * @param int $rFrequency The time frequency in seconds to compare against. 
- * @param bool $rList (Optional) If true, iterates through attempts directly; otherwise, iterates through key-value pairs. 
- * @return array An array containing the allowed attempts based on the frequency criteria. 
+/**
+ * Truncates the attempts based on a given frequency.
+ *
+ * This function takes an array of attempts and a frequency value as input.
+ * It checks if the time difference between the current time and each attempt time is less than the given frequency.
+ * If the $rList parameter is true, it iterates through the attempt times directly.
+ * If $rList is false, it iterates through the attempts as key-value pairs.
+ * It returns an array of allowed attempts that meet the frequency criteria.
+ *
+ * @param array $rAttempts An array of attempt times or key-value pairs.
+ * @param int $rFrequency The time frequency in seconds to compare against.
+ * @param bool $rList (Optional) If true, iterates through attempts directly; otherwise, iterates through key-value pairs.
+ * @return array An array containing the allowed attempts based on the frequency criteria.
  */
 function truncateAttempts($rAttempts, $rFrequency, $rList = false) {
     $rAllowedAttempts = array();
@@ -346,7 +346,7 @@ function GetCategories($type = null) {
 function generateUniqueCode() {
     return substr(md5(ipTV_lib::$settings['live_streaming_pass']), 0, 15);
 }
-function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey = null, $rNoCache = false) {
+function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey = null, $rNoCache = false) {
     global $ipTV_db;
     if (!empty($rDeviceKey)) {
         if ($rOutputKey == 'mpegts') {
@@ -362,17 +362,12 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
         }
         if ($ipTV_db->num_rows() > 0) {
             $rCacheName = $rUserInfo['id'] . '_' . $rDeviceKey . '_' . $rOutputKey . '_' . implode('_', ($rTypeKey ?: array()));
-            $rOutputExt = $ipTV_db->get_col();
+            $rOutputExt = $ipTV_db->get_row()["output_ext"];
             $rEncryptPlaylist = ($rUserInfo['is_restreamer'] ? ipTV_lib::$settings['encrypt_playlist_restreamer'] : ipTV_lib::$settings['encrypt_playlist']);
             if ($rUserInfo['is_stalker']) {
                 $rEncryptPlaylist = false;
             }
-            if (ipTV_lib::$settings['use_mdomain_in_lists'] == 1) {
-                $rDomainName = ipTV_lib::$Servers[SERVER_ID]['site_url'];
-            } else {
-                list($host, $act) = explode(':', $_SERVER['HTTP_HOST']);
-                $rDomainName = ipTV_lib::$Servers[SERVER_ID]['server_protocol'] . '://' . $host . ':' . ipTV_lib::$Servers[SERVER_ID]['request_port'] . '/';
-            }
+            $rDomainName = getDomainName();
             if ($rDomainName) {
                 $rRTMPRows = array();
                 if ($rOutputKey == 'rtmp') {
@@ -397,15 +392,29 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                     $rSeriesAllocation = $rSeriesEpisodes = $rSeriesInfo = array();
                     $rUserInfo['episode_ids'] = array();
                     if (count($rUserInfo['series_ids']) > 0) {
-                        $ipTV_db->query('SELECT * FROM `streams_series` WHERE `id` IN (' . implode(',', $rUserInfo['series_ids']) . ')');
-                        $rSeriesInfo = $ipTV_db->get_rows(true, 'id');
-                        if (count($rUserInfo['series_ids']) > 0) {
-                            $ipTV_db->query('SELECT stream_id, series_id, season_num, episode_num FROM `streams_episodes` WHERE series_id IN (' . implode(',', $rUserInfo['series_ids']) . ') ORDER BY FIELD(series_id,' . implode(',', $rUserInfo['series_ids']) . '), season_num ASC, episode_num ASC');
-                            foreach ($ipTV_db->get_rows(true, 'series_id', false) as $rSeriesID => $rEpisodes) {
-                                foreach ($rEpisodes as $rEpisode) {
-                                    $rSeriesEpisodes[$rEpisode['stream_id']] = array($rEpisode['season_num'], $rEpisode['episode_num']);
-                                    $rSeriesAllocation[$rEpisode['stream_id']] = $rSeriesID;
-                                    $rUserInfo['episode_ids'][] = $rEpisode['stream_id'];
+                        if (ipTV_lib::$cached) {
+                            foreach ($rUserInfo['series_ids'] as $rSeriesID) {
+                                $rSeriesInfo[$rSeriesID] = igbinary_unserialize(file_get_contents(SERIES_TMP_PATH . 'series_' . intval($rSeriesID)));
+                                $rSeriesData = igbinary_unserialize(file_get_contents(SERIES_TMP_PATH . 'episodes_' . intval($rSeriesID)));
+                                foreach ($rSeriesData as $rSeasonID => $rEpisodes) {
+                                    foreach ($rEpisodes as $rEpisode) {
+                                        $rSeriesEpisodes[$rEpisode['stream_id']] = array($rSeasonID, $rEpisode['episode_num']);
+                                        $rSeriesAllocation[$rEpisode['stream_id']] = $rSeriesID;
+                                        $rUserInfo['episode_ids'][] = $rEpisode['stream_id'];
+                                    }
+                                }
+                            }
+                        } else {
+                            $ipTV_db->query('SELECT * FROM `streams_series` WHERE `id` IN (' . implode(',', $rUserInfo['series_ids']) . ')');
+                            $rSeriesInfo = $ipTV_db->get_rows(true, 'id');
+                            if (count($rUserInfo['series_ids']) > 0) {
+                                $ipTV_db->query('SELECT stream_id, series_id, season_num, episode_num FROM `streams_episodes` WHERE series_id IN (' . implode(',', $rUserInfo['series_ids']) . ') ORDER BY FIELD(series_id,' . implode(',', $rUserInfo['series_ids']) . '), season_num ASC, episode_num ASC');
+                                foreach ($ipTV_db->get_rows(true, 'series_id', false) as $rSeriesID => $rEpisodes) {
+                                    foreach ($rEpisodes as $rEpisode) {
+                                        $rSeriesEpisodes[$rEpisode['stream_id']] = array($rEpisode['season_num'], $rEpisode['episode_num']);
+                                        $rSeriesAllocation[$rEpisode['stream_id']] = $rSeriesID;
+                                        $rUserInfo['episode_ids'][] = $rEpisode['stream_id'];
+                                    }
                                 }
                             }
                         }
@@ -467,9 +476,16 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                         $rOutput['iptvstreams_list']['group']['name'] = 'IPTV';
                         $rOutput['iptvstreams_list']['group']['channel'] = array();
                         foreach (array_chunk($rChannelIDs, 1000) as $rBlockIDs) {
-                            $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
-                            $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
-                            $rRows = $ipTV_db->get_rows();
+                            if (ipTV_lib::$settings['playlist_from_mysql'] || !ipTV_lib::$cached) {
+                                $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
+                                $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.year,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
+                                $rRows = $ipTV_db->get_rows();
+                            } else {
+                                $rRows = array();
+                                foreach ($rBlockIDs as $rID) {
+                                    $rRows[] = igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rID)))['info'];
+                                }
+                            }
                             foreach ($rRows as $rChannelInfo) {
                                 if (!$rTypeKey || in_array($rChannelInfo['type_output'], $rTypeKey)) {
                                     if (!$rChannelInfo['target_container']) {
@@ -483,13 +499,13 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                         $rChannelInfo['movie_properties'] = array('movie_image' => (!empty($rProperties['movie_image']) ? $rProperties['movie_image'] : $rSeriesInfo['cover']));
                                         $rChannelInfo['type_output'] = 'series';
                                         $rChannelInfo['category_id'] = $rSeriesInfo[$rSeriesID]['category_id'];
-                                    } else {
-                                        $rChannelInfo['stream_display_name'] = $rChannelInfo['stream_display_name'];
                                     }
                                     if (strlen($rUserInfo['access_token']) == 32) {
                                         $rURL = $rDomainName . $rChannelInfo['type_output'] . '/' . $rUserInfo['access_token'] . '/';
                                         if ($rChannelInfo['live'] == 0) {
                                             $rURL .= $rChannelInfo['id'] . '.' . $rChannelInfo['target_container'];
+                                        } elseif (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                            $rURL .= $rChannelInfo['id'];
                                         } else {
                                             $rURL .= $rChannelInfo['id'] . '.' . $rOutputExt;
                                         }
@@ -498,6 +514,8 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                             $rEncData = $rChannelInfo['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/';
                                             if ($rChannelInfo['live'] == 0) {
                                                 $rEncData .= $rChannelInfo['id'] . '/' . $rChannelInfo['target_container'];
+                                            } elseif (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                                $rEncData .= $rChannelInfo['id'];
                                             } else {
                                                 $rEncData .= $rChannelInfo['id'] . '/' . $rOutputExt;
                                             }
@@ -510,6 +528,8 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                             $rURL = $rDomainName . $rChannelInfo['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/';
                                             if ($rChannelInfo['live'] == 0) {
                                                 $rURL .= $rChannelInfo['id'] . '.' . $rChannelInfo['target_container'];
+                                            } elseif (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                                $rURL .= $rChannelInfo['id'];
                                             } else {
                                                 $rURL .= $rChannelInfo['id'] . '.' . $rOutputExt;
                                             }
@@ -535,7 +555,7 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                         $rData = json_encode((object) $rOutput);
                     } else {
                         if (!empty($rDeviceInfo['device_header'])) {
-                            $rAppend = ($rDeviceInfo['device_header'] == '#EXTM3U' ? "\n" . '#EXT-X-SESSION-DATA:DATA-ID="XtreamUI.' . str_replace('.', '_', SCRIPT_VERSION) . '"' : '');
+                            $rAppend = ($rDeviceInfo['device_header'] == '#EXTM3U' ? "\n" . '#EXT-X-SESSION-DATA:DATA-ID="XC_VM.' . str_replace('.', '_', SCRIPT_VERSION) . '"' : '');
                             $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array('{BOUQUET_NAME}', '{USERNAME}', '{PASSWORD}', '{SERVER_URL}', '{OUTPUT_KEY}'), array(ipTV_lib::$settings['server_name'], $rUserInfo['username'], $rUserInfo['password'], $rDomainName, $rOutputKey), $rDeviceInfo['device_header'] . $rAppend)) . "\n";
                             if ($rOutputFile) {
                                 fwrite($rOutputFile, $rData);
@@ -552,9 +572,16 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                 $rPattern = '{URL}';
                             }
                             foreach (array_chunk($rChannelIDs, 1000) as $rBlockIDs) {
-                                $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
-                                $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live,t1.tv_archive_duration,t1.tv_archive_server_id FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
-                                $rRows = $ipTV_db->get_rows();
+                                if (ipTV_lib::$settings['playlist_from_mysql'] || !ipTV_lib::$cached) {
+                                    $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
+                                    $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.year,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live,t1.tv_archive_duration,t1.tv_archive_server_id FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
+                                    $rRows = $ipTV_db->get_rows();
+                                } else {
+                                    $rRows = array();
+                                    foreach ($rBlockIDs as $rID) {
+                                        $rRows[] = igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rID)))['info'];
+                                    }
+                                }
                                 foreach ($rRows as $rChannel) {
                                     if (!empty($rTypeKey) && in_array($rChannel['type_output'], $rTypeKey)) {
                                         if (!$rChannel['target_container']) {
@@ -599,19 +626,29 @@ function generateUserPlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTyp
                                         } else {
                                             if ($rOutputKey != 'rtmp' || !array_key_exists($rChannel['id'], $rRTMPRows)) {
                                                 if (strlen($rUserInfo['access_token']) == 32) {
-                                                    $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['access_token'] . '/' . $rChannel['id'] . '.' . $rOutputExt;
-                                                } else {
-                                                    if ($rEncryptPlaylist) {
-                                                        $rEncData = $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'];
-                                                        $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                                                        $rURL = $rDomainName . 'play/' . $rToken . '/' . $rOutputExt;
+                                                    if (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                                        $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['access_token'] . '/' . $rChannel['id'];
                                                     } else {
-                                                        $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'] . '.' . $rOutputExt;
+                                                        $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['access_token'] . '/' . $rChannel['id'] . '.' . $rOutputExt;
                                                     }
+                                                } elseif ($rEncryptPlaylist) {
+                                                    $rEncData = $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'];
+                                                    $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                                    if (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                                        $rURL = $rDomainName . 'play/' . $rToken;
+                                                    } else {
+                                                        $rURL = $rDomainName . 'play/' . $rToken . '/' . $rOutputExt;
+                                                    }
+                                                } else {
+                                                    if (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                                        $rURL = $rDomainName . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'];
+                                                    } else {
+                                                        $rURL = $rDomainName . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'] . '.' . $rOutputExt;
+                                                    }
+
                                                 }
                                             } else {
                                                 $rAvailableServers = array_values(array_keys($rRTMPRows[$rChannel['id']]));
-
                                                 if (in_array($rUserInfo['force_server_id'], $rAvailableServers)) {
                                                     $rServerID = $rUserInfo['force_server_id'];
                                                 } else {
@@ -777,46 +814,46 @@ function secondsToTime($inputSeconds) {
     $final .= "{$seconds}s";
     return $final;
 }
-/** 
- * Encrypts the provided data using AES-256-CBC encryption with a given decryption key and device ID. 
- *  
- * @param string $rData The data to be encrypted. 
- * @param string $decryptionKey The decryption key used to encrypt the data. 
- * @param string $rDeviceID The device ID used in the encryption process. 
- * @return string The encrypted data in base64url encoding. 
+/**
+ * Encrypts the provided data using AES-256-CBC encryption with a given decryption key and device ID.
+ *
+ * @param string $rData The data to be encrypted.
+ * @param string $decryptionKey The decryption key used to encrypt the data.
+ * @param string $rDeviceID The device ID used in the encryption process.
+ * @return string The encrypted data in base64url encoding.
  */
 function encryptData($rData, $decryptionKey, $rDeviceID) {
     return base64url_encode(openssl_encrypt($rData, 'aes-256-cbc', md5(sha1($rDeviceID) . $decryptionKey), OPENSSL_RAW_DATA, substr(md5(sha1($decryptionKey)), 0, 16)));
 }
-/** 
- * Decrypts the provided data using AES-256-CBC decryption with a given decryption key and device ID. 
- *  
- * @param string $rData The data to be decrypted. 
- * @param string $decryptionKey The decryption key used to decrypt the data. 
- * @param string $rDeviceID The device ID used in the decryption process. 
- * @return string The decrypted data. 
+/**
+ * Decrypts the provided data using AES-256-CBC decryption with a given decryption key and device ID.
+ *
+ * @param string $rData The data to be decrypted.
+ * @param string $decryptionKey The decryption key used to decrypt the data.
+ * @param string $rDeviceID The device ID used in the decryption process.
+ * @return string The decrypted data.
  */
 function decryptData($rData, $decryptionKey, $rDeviceID) {
     return openssl_decrypt(base64url_decode($rData), 'aes-256-cbc', md5(sha1($rDeviceID) . $decryptionKey), OPENSSL_RAW_DATA, substr(md5(sha1($decryptionKey)), 0, 16));
 }
-/** 
- * Encodes the input data using base64url encoding. 
- * 
- * This function takes the input data and encodes it using base64 encoding. It then replaces the characters '+' and '/' with '-' and '_', respectively, to make the encoding URL-safe. Finally, it removes any padding '=' characters at the end of the encoded string. 
- * 
- * @param string $rData The input data to be encoded. 
- * @return string The base64url encoded string. 
+/**
+ * Encodes the input data using base64url encoding.
+ *
+ * This function takes the input data and encodes it using base64 encoding. It then replaces the characters '+' and '/' with '-' and '_', respectively, to make the encoding URL-safe. Finally, it removes any padding '=' characters at the end of the encoded string.
+ *
+ * @param string $rData The input data to be encoded.
+ * @return string The base64url encoded string.
  */
 function base64url_encode($rData) {
     return rtrim(strtr(base64_encode($rData), '+/', '-_'), '=');
 }
-/** 
- * Decodes the input data encoded using base64url encoding. 
- * 
- * This function takes the input data encoded using base64url encoding and decodes it. It first replaces the characters '-' and '_' back to '+' and '/' respectively, to revert the URL-safe encoding. Then, it decodes the base64 encoded string to retrieve the original data. 
- * 
- * @param string $rData The base64url encoded data to be decoded. 
- * @return string|false The decoded original data, or false if decoding fails. 
+/**
+ * Decodes the input data encoded using base64url encoding.
+ *
+ * This function takes the input data encoded using base64url encoding and decodes it. It first replaces the characters '-' and '_' back to '+' and '/' respectively, to revert the URL-safe encoding. Then, it decodes the base64 encoded string to retrieve the original data.
+ *
+ * @param string $rData The base64url encoded data to be decoded.
+ * @return string|false The decoded original data, or false if decoding fails.
  */
 function base64url_decode($rData) {
     return base64_decode(strtr($rData, '-_', '+/'));
@@ -881,15 +918,15 @@ function stopDownload($rType, $rUser, $rDownloadPID) {
         return null;
     }
 }
-/** 
- * Function to display the call stack, showing the sequence of function calls leading up to the current point in the code. 
- * 
- * This function retrieves the backtrace of the current execution point, excluding the current function call itself. 
- * It then iterates through the backtrace array, extracting information such as function name, file, and line number for each call. 
- * The extracted information is formatted and stored in an array, with each entry representing a function call in the call stack. 
- * Finally, the formatted call stack information is concatenated into a string with newline characters and returned. 
- * 
- * @return string The formatted call stack information as a string with each function call entry on a new line. 
+/**
+ * Function to display the call stack, showing the sequence of function calls leading up to the current point in the code.
+ *
+ * This function retrieves the backtrace of the current execution point, excluding the current function call itself.
+ * It then iterates through the backtrace array, extracting information such as function name, file, and line number for each call.
+ * The extracted information is formatted and stored in an array, with each entry representing a function call in the call stack.
+ * Finally, the formatted call stack information is concatenated into a string with newline characters and returned.
+ *
+ * @return string The formatted call stack information as a string with each function call entry on a new line.
  */
 function display_call_stack() {
     $trace = debug_backtrace();
@@ -908,4 +945,21 @@ function display_call_stack() {
     }
 
     return implode("\n", $stack) . "\n";
+}
+
+function getDomainName($rForceSSL = false) {
+    $rDomainName = null;
+    $rKey = ($rForceSSL ? 'https_url' : 'site_url');
+
+    if (ipTV_lib::$settings['use_mdomain_in_lists'] == 1) {
+        $rDomainName = ipTV_lib::$Servers[SERVER_ID][$rKey];
+    } else {
+        list($serverIPAddress, $serverPort) = explode(':', $_SERVER['HTTP_HOST']);
+        if ($rForceSSL) {
+            $rDomainName = 'https://' . $serverIPAddress . ':' . ipTV_lib::$Servers[SERVER_ID]['https_broadcast_port'] . '/';
+        } else {
+            $rDomainName = ipTV_lib::$Servers[SERVER_ID]['server_protocol'] . '://' . $serverIPAddress . ':' . ipTV_lib::$Servers[SERVER_ID]['request_port'] . '/';
+        }
+    }
+    return $rDomainName;
 }
