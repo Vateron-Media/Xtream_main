@@ -64,12 +64,9 @@ $nabilos = getRegisteredUserHash($_SESSION['hash']);
 if (file_exists("/home/xtreamcodes/admin/.update")) {
     unlink("/home/xtreamcodes/admin/.update");
     if (!file_exists("/home/xtreamcodes/admin/.update")) {
-        //priority backup
-        //$ipTV_db_admin->query("UPDATE settings SET priority_backup = 1;");
 
         // Update Categories
         updateTMDbCategories();
-        $ipTV_db_admin->query('UPDATE `streaming_servers` SET `server_ip` = ? WHERE `id` = 1;', $_SERVER['SERVER_ADDR']);
     }
 }
 
@@ -223,16 +220,29 @@ function getFooter() {
 }
 
 function getIP() {
+    $ip = null;
+
+    // Check IP in order of priority
     if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
         $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
     } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         $ip = $_SERVER['HTTP_CLIENT_IP'];
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        // May contain a list of IPs, take the first one (original IP)
+        $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $ip = trim($ipList[0]);
     } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = $_SERVER['REMOTE_ADDR'] ?? null;
     }
-    return $ip;
+
+    // Check if the IP address is correct
+    if (filter_var($ip, FILTER_VALIDATE_IP)) {
+        // XSS protection (if IP is displayed on the page)
+        return htmlspecialchars($ip, ENT_QUOTES, 'UTF-8');
+    }
+
+    // If IP is incorrect, return null
+    return null;
 }
 
 function changePort_new($rServerID, $rType, $rPorts, $rReload = false) {
@@ -326,45 +336,50 @@ function getBackups() {
 
 function hasPermissions($rType, $rID) {
     global $rUserInfo, $ipTV_db_admin, $rPermissions;
-    if ($rType == "user") {
-        if (in_array(intval(getUser($rID)["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
-            return true;
-        }
-    } elseif ($rType == "pid") {
-        $ipTV_db_admin->query("SELECT `user_id` FROM `lines_live` WHERE `pid` = " . intval($rID) . ";");
-        if ($ipTV_db_admin->num_rows() > 0) {
-            if (in_array(intval(getUser($ipTV_db_admin->get_row()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
+
+    if (isset($rUserInfo) && isset($rPermissions)) {
+        if ($rType == "user") {
+            if (in_array(intval(getUser($rID)["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
                 return true;
             }
-        }
-    } elseif ($rType == "reg_user") {
-        if ((in_array(intval($rID), array_keys(getRegisteredUsers($rUserInfo["id"])))) && (intval($rID) <> intval($rUserInfo["id"]))) {
-            return true;
-        }
-    } elseif ($rType == "ticket") {
-        if (in_array(intval(getTicket($rID)["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
-            return true;
-        }
-    } elseif ($rType == "mag") {
-        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE `mag_id` = " . intval($rID) . ";");
-        if ($ipTV_db_admin->num_rows() > 0) {
-            if (in_array(intval(getUser($ipTV_db_admin->get_row()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
+        } elseif ($rType == "pid") {
+            $ipTV_db_admin->query("SELECT `user_id` FROM `lines_live` WHERE `pid` = " . intval($rID) . ";");
+            if ($ipTV_db_admin->num_rows() > 0) {
+                if (in_array(intval(getUser($ipTV_db_admin->get_row()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
+                    return true;
+                }
+            }
+        } elseif ($rType == "reg_user") {
+            if ((in_array(intval($rID), array_keys(getRegisteredUsers($rUserInfo["id"])))) && (intval($rID) <> intval($rUserInfo["id"]))) {
                 return true;
             }
-        }
-    } elseif ($rType == "e2") {
-        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE `device_id` = " . intval($rID) . ";");
-        if ($ipTV_db_admin->num_rows() > 0) {
-            if (in_array(intval(getUser($ipTV_db_admin->get_row()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
+        } elseif ($rType == "ticket") {
+            if (in_array(intval(getTicket($rID)["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
                 return true;
             }
+        } elseif ($rType == "mag") {
+            $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE `mag_id` = " . intval($rID) . ";");
+            if ($ipTV_db_admin->num_rows() > 0) {
+                if (in_array(intval(getUser($ipTV_db_admin->get_row()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
+                    return true;
+                }
+            }
+        } elseif ($rType == "e2") {
+            $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE `device_id` = " . intval($rID) . ";");
+            if ($ipTV_db_admin->num_rows() > 0) {
+                if (in_array(intval(getUser($ipTV_db_admin->get_row()["user_id"])["member_id"]), array_keys(getRegisteredUsers($rUserInfo["id"])))) {
+                    return true;
+                }
+            }
         }
-    } elseif (($rType == "adv") && ($rPermissions["is_admin"])) {
-        if ((count($rPermissions["advanced"]) > 0) && ($rUserInfo["member_group_id"] <> 1)) {
-            return in_array($rID, $rPermissions["advanced"]);
-        } else {
-            return true;
+        if (!($rType == 'adv' && $rPermissions['is_admin'])) {
+            return false;
         }
+
+        if (0 < count($rPermissions['advanced']) && $rUserInfo['member_group_id'] != 1) {
+            return in_array($rID, ($rPermissions['advanced'] ?: array()));
+        }
+        return true;
     }
     return false;
 }
@@ -1400,8 +1415,7 @@ function get_recent_stable_release(string $url) {
  * @return bool True if current version is lower than required version
  * @throws InvalidArgumentException If version strings are malformed
  */
-function isUpdateNeeded(?string $requiredVersion, ?string $currentVersion): bool
-{
+function isUpdateNeeded(?string $requiredVersion, ?string $currentVersion): bool {
     // Early return if versions are not provided
     if ($requiredVersion === null || $currentVersion === null) {
         return false;
@@ -1423,22 +1437,20 @@ function isUpdateNeeded(?string $requiredVersion, ?string $currentVersion): bool
 /**
  * Converts version string to normalized integer array
  */
-function normalizeVersionArray(string $version): array
-{
+function normalizeVersionArray(string $version): array {
     return array_map('intval', explode('.', $version));
 }
 
 /**
  * Compares two version arrays
  */
-function compareVersionArrays(array $current, array $required): bool
-{
+function compareVersionArrays(array $current, array $required): bool {
     $length = max(count($current), count($required));
-    
+
     for ($i = 0; $i < $length; $i++) {
         $currentPart = $current[$i] ?? 0;
         $requiredPart = $required[$i] ?? 0;
-        
+
         if ($currentPart < $requiredPart) {
             return true;    // Current version is older, update needed
         }

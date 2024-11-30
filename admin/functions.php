@@ -14,7 +14,7 @@ if (isset($_SESSION['hash'])) {
     if ($rPermissions["is_admin"]) {
         $rPermissions["is_reseller"] = 0;
     }
-    $rPermissions["advanced"] = json_decode($rPermissions["allowed_pages"], True);
+    $rPermissions["advanced"] = json_decode($rPermissions["allowed_pages"], true);
     if ((!$rUserInfo) or (!$rPermissions) or ((!$rPermissions["is_admin"]) && (!$rPermissions["is_reseller"])) or (($_SESSION['ip'] <> getIP()) && ($rAdminSettings["ip_logout"]))) {
         unset($rUserInfo);
         unset($rPermissions);
@@ -24,10 +24,10 @@ if (isset($_SESSION['hash'])) {
     }
     $rCategories = getCategories_admin();
     $rServers = getStreamingServers();
-    $rServerError = False;
+    $rServerError = false;
     foreach ($rServers as $rServer) {
         if (((((time() - $rServer["last_check_ago"]) > 360)) or ($rServer["status"] == 2)) and ($rServer["can_delete"] == 1) and ($rServer["status"] <> 3)) {
-            $rServerError = True;
+            $rServerError = true;
         }
         if (($rServer["status"] == 3) && ($rServer["last_check_ago"] > 0)) {
             $ipTV_db_admin->query("UPDATE `streaming_servers` SET `status` = 1 WHERE `id` = " . intval($rServer["id"]) . ";");
@@ -40,4 +40,13 @@ if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos[
     include "./lang/" . $nabilos["default_lang"] . ".php";
 } else {
     include "/home/xtreamcodes/admin/lang/en.php";
+}
+
+if (getPageName() != 'setup') {
+	$ipTV_db_admin->query('SELECT COUNT(`id`) AS `count` FROM `reg_users` LEFT JOIN `users_groups` ON `users_groups`.`group_id` = `reg_users`.`member_group_id` WHERE `users_groups`.`is_admin` = 1;');
+
+	if ($ipTV_db_admin->get_row()['count'] == 0) {
+		header('Location: ./setup.php');
+		exit();
+	}
 }

@@ -1128,7 +1128,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 ('119','split_by','conn'),
 ('120','use_mdomain_in_lists','0'),
 ('121','use_https',''),
-('122','priority_backup','0'),
+('122','priority_backup','1'),
 ('123','use_buffer_table','0'),
 ('124','tmdb_api_key',''),
 ('125','toggle_menu','0'),
