@@ -17,17 +17,17 @@ if (intval($rAdminSettings["login_flood"]) > 0) {
 
 if (!isset($_STATUS)) {
 	$rGA = new PHPGangsta_GoogleAuthenticator();
-	if ((isset($_POST["username"])) && (isset($_POST["password"]))) {
+	if ((isset(ipTV_lib::$request["username"])) && (isset(ipTV_lib::$request["password"]))) {
 		if ($rSettings["recaptcha_enable"]) {
-			$rResponse = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $rSettings["recaptcha_v2_secret_key"] . '&response=' . $_POST['g-recaptcha-response']), true);
+			$rResponse = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $rSettings["recaptcha_v2_secret_key"] . '&response=' . ipTV_lib::$request['g-recaptcha-response']), true);
 			if ((!$rResponse["success"]) && (!in_array("invalid-input-secret", $rResponse["error-codes"]))) {
 				$_STATUS = 5;
 			}
 		}
 		if (!isset($_STATUS)) {
-			$rUserInfo = doLogin($_POST["username"], $_POST["password"]);
+			$rUserInfo = doLogin(ipTV_lib::$request["username"], ipTV_lib::$request["password"]);
 			if (isset($rUserInfo)) {
-				if ((strlen($_POST["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
+				if ((strlen(ipTV_lib::$request["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
 					$rChangePass = md5($rUserInfo["password"]);
 				} else {
 					$rPermissions = getPermissions($rUserInfo["member_group_id"]);
@@ -36,15 +36,15 @@ if (!isset($_STATUS)) {
 						$_SESSION['hash'] = md5($rUserInfo["username"]);
 						$_SESSION['ip'] = getIP();
 						if ($rPermissions["is_admin"]) {
-							if (strlen($_POST["referrer"]) > 0) {
-								header("Location: ." . $ipTV_db_admin->escape($_POST["referrer"]));
+							if (strlen(ipTV_lib::$request["referrer"]) > 0) {
+								header("Location: ." . ipTV_lib::$request["referrer"]);
 							} else {
 								header("Location: ./dashboard.php");
 							}
 						} else {
 							$ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> Logged In');");
-							if (strlen($_POST["referrer"]) > 0) {
-								header("Location: ." . $ipTV_db_admin->escape($_POST["referrer"]));
+							if (strlen(ipTV_lib::$request["referrer"]) > 0) {
+								header("Location: ." . ipTV_lib::$request["referrer"]);
 							} else {
 								header("Location: ./reseller.php");
 							}
@@ -59,19 +59,19 @@ if (!isset($_STATUS)) {
 				}
 			} else {
 				if (intval($rAdminSettings["login_flood"]) > 0) {
-					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . $ipTV_db_admin->escape($_POST["username"]) . "', '" . $ipTV_db_admin->escape(getIP()) . "');");
+					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . $ipTV_db_admin->escape(getIP()) . "');");
 				}
 				$_STATUS = 0;
 			}
 		}
-	} elseif ((isset($_POST["newpass"])) && (isset($_POST["confirm"])) && (isset($_POST["hash"])) && (isset($_POST["change"]))) {
-		$rUserInfo = getRegisteredUserHash($_POST["hash"]);
-		$rChangePass = $_POST["change"];
+	} elseif ((isset(ipTV_lib::$request["newpass"])) && (isset(ipTV_lib::$request["confirm"])) && (isset(ipTV_lib::$request["hash"])) && (isset(ipTV_lib::$request["change"]))) {
+		$rUserInfo = getRegisteredUserHash(ipTV_lib::$request["hash"]);
+		$rChangePass = ipTV_lib::$request["change"];
 		if (($rUserInfo) && ($rChangePass == md5($rUserInfo["password"]))) {
-			if (($_POST["newpass"] == $_POST["confirm"]) && (strlen($_POST["newpass"]) >= intval($rSettings["pass_length"]))) {
+			if ((ipTV_lib::$request["newpass"] == ipTV_lib::$request["confirm"]) && (strlen(ipTV_lib::$request["newpass"]) >= intval($rSettings["pass_length"]))) {
 				$rPermissions = getPermissions($rUserInfo["member_group_id"]);
 				if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . $ipTV_db_admin->escape(cryptPassword($_POST["newpass"])) . "', `ip` = '" . $ipTV_db_admin->escape(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . cryptPassword(ipTV_lib::$request["newpass"]) . "', `ip` = '" . $ipTV_db_admin->escape(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
 					$_SESSION['hash'] = md5($rUserInfo["username"]);
 					$_SESSION['ip'] = getIP();
 					if ($rPermissions["is_admin"]) {
@@ -92,7 +92,7 @@ if (!isset($_STATUS)) {
 			}
 		} else {
 			if (intval($rAdminSettings["login_flood"]) > 0) {
-				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . $ipTV_db_admin->escape($_POST["username"]) . "', '" . $ipTV_db_admin->escape(getIP()) . "');");
+				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . $ipTV_db_admin->escape(getIP()) . "');");
 			}
 			$_STATUS = 0;
 		}
@@ -146,47 +146,47 @@ if (!isset($_STATUS)) {
 							<?= $_["login_message_2"] ?>
 						</div>
 					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-							<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-								role="alert">
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-										aria-hidden="true">&times;</span></button>
+						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+							role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+									aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_3"] ?>
-							</div>
+						</div>
 					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-								<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-									role="alert">
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-											aria-hidden="true">&times;</span></button>
+						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+							role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+									aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_4"] ?>
-								</div>
+						</div>
 					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
-									<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-										role="alert">
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-												aria-hidden="true">&times;</span></button>
+						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+							role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+									aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_5"] ?>
-									</div>
+						</div>
 					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
-										<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-											role="alert">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-													aria-hidden="true">&times;</span></button>
+						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+							role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+									aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_6"] ?>
-										</div>
+						</div>
 					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
-											<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-												role="alert">
-												<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-														aria-hidden="true">&times;</span></button>
+						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+							role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+									aria-hidden="true">&times;</span></button>
 							<?= $_["login_message_7"] ?>
-											</div>
+						</div>
 					<?php } elseif ((isset($_STATUS)) && ($_STATUS == 6)) { ?>
-												<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-													role="alert">
-													<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-															aria-hidden="true">&times;</span></button>
+						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
+							role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+									aria-hidden="true">&times;</span></button>
 							<?= str_replace("{num}", $rSettings["pass_length"], $_["login_message_8"]) ?>
-												</div>
+						</div>
 					<?php } ?>
 					<div class="card-login">
 						<div class="card-body p-4">
@@ -201,8 +201,7 @@ if (!isset($_STATUS)) {
 							<h5 class="auth-title"><?= $_["admin_reseller_interface"] ?></h5>
 							<?php if ((!isset($_STATUS)) or ($_STATUS <> 7)) { ?>
 								<form action="./login.php" method="POST" data-parsley-validate="" id="login_form">
-									<input type="hidden" name="referrer"
-										value="<?= $ipTV_db_admin->escape($_GET["referrer"]) ?>" />
+									<input type="hidden" name="referrer" value="<?= ipTV_lib::$request["referrer"] ?>" />
 									<?php if ((!isset($rQR)) && (!isset($rChangePass))) { ?>
 										<div class="form-group mblog-3" id="username_group">
 											<label class="label-login" for="username"><?= $_["username"] ?></label>
@@ -223,38 +222,38 @@ if (!isset($_STATUS)) {
 											</h5>
 										<?php }
 									} elseif (isset($rChangePass)) { ?>
-											<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
-											<input type="hidden" name="change" value="<?= $rChangePass ?>" />
-											<div class="form-group mb-3 text-center">
-												<p><?= str_replace("{num}", $rSettings["pass_length"], $_["login_message_9"]) ?>
-												</p>
-											</div>
-											<div class="form-group mb-3">
-												<label for="newpass"><?= $_["new_password"] ?></label>
-												<input class="form-login" autocomplete="off" type="password" id="newpass"
-													name="newpass" required data-parsley-trigger="change"
-													placeholder="<?= $_["enter_a_new_password"] ?>">
-											</div>
-											<div class="form-group mb-3">
-												<label for="confirm"><?= $_["confirm_password"] ?></label>
-												<input class="form-login" autocomplete="off" type="password" id="confirm"
-													name="confirm" required data-parsley-trigger="change"
-													placeholder="<?= $_["confirm_your_password"] ?>">
-											</div>
+										<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
+										<input type="hidden" name="change" value="<?= $rChangePass ?>" />
+										<div class="form-group mb-3 text-center">
+											<p><?= str_replace("{num}", $rSettings["pass_length"], $_["login_message_9"]) ?>
+											</p>
+										</div>
+										<div class="form-group mb-3">
+											<label for="newpass"><?= $_["new_password"] ?></label>
+											<input class="form-login" autocomplete="off" type="password" id="newpass"
+												name="newpass" required data-parsley-trigger="change"
+												placeholder="<?= $_["enter_a_new_password"] ?>">
+										</div>
+										<div class="form-group mb-3">
+											<label for="confirm"><?= $_["confirm_password"] ?></label>
+											<input class="form-login" autocomplete="off" type="password" id="confirm"
+												name="confirm" required data-parsley-trigger="change"
+												placeholder="<?= $_["confirm_your_password"] ?>">
+										</div>
 									<?php } else { ?>
-											<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
-											<input type="hidden" name="auth" value="<?= $rAuth ?>" />
+										<input type="hidden" name="hash" value="<?= md5($rUserInfo["username"]) ?>" />
+										<input type="hidden" name="auth" value="<?= $rAuth ?>" />
 										<?php if (isset($rNew2F)) { ?>
-												<div class="form-group mb-3 text-center">
-													<p><?= $_["login_message_10"] ?></p>
-													<img src="<?= $rQR ?>">
-												</div>
-										<?php } ?>
-											<div class="form-group mb-3">
-												<label for="gauth"><?= $_["google_authenticator_code"] ?></label>
-												<input class="form-login" autocomplete="off" type="gauth" required="" id="gauth"
-													name="gauth" placeholder="<?= $_["enter_your_auth_code"] ?>">
+											<div class="form-group mb-3 text-center">
+												<p><?= $_["login_message_10"] ?></p>
+												<img src="<?= $rQR ?>">
 											</div>
+										<?php } ?>
+										<div class="form-group mb-3">
+											<label for="gauth"><?= $_["google_authenticator_code"] ?></label>
+											<input class="form-login" autocomplete="off" type="gauth" required="" id="gauth"
+												name="gauth" placeholder="<?= $_["enter_your_auth_code"] ?>">
+										</div>
 									<?php } ?>
 									<div class="form-group mb-0 text-center">
 										<button class="btn btn-dangerlog btn-block" type="submit"
