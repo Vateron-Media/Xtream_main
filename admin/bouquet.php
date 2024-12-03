@@ -5,28 +5,28 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_bouquet")) && 
     exit;
 }
 
-if (isset($_POST["submit_bouquet"])) {
+if (isset(ipTV_lib::$request["submit_bouquet"])) {
     $rArray = array("bouquet_name" => "", "bouquet_channels" => array(), "bouquet_movies" => array(), "bouquet_radios" => array(), "bouquet_series" => array());
-    if (is_array(json_decode($_POST["bouquet_data"], true))) {
-        $rBouquetData = json_decode($_POST["bouquet_data"], true);
+    if (is_array(json_decode(ipTV_lib::$request["bouquet_data"], true))) {
+        $rBouquetData = json_decode(ipTV_lib::$request["bouquet_data"], true);
         $rArray["bouquet_channels"] = array_values($rBouquetData["stream"]);
         $rArray["bouquet_series"] = array_values($rBouquetData["series"]);
         $rArray["bouquet_movies"] = array_values($rBouquetData["vod"]);
         $rArray["bouquet_radios"] = array_values($rBouquetData["radios"]);
-    } else if (isset($_POST["edit"])) {
+    } elseif (isset(ipTV_lib::$request["edit"])) {
         echo $_["bouquet_data_not_transfered"];
         exit;
     }
-    if (!isset($_POST["edit"])) {
+    if (!isset(ipTV_lib::$request["edit"])) {
         $ipTV_db_admin->query("SELECT MAX(`bouquet_order`) AS `max` FROM `bouquets`;");
         $rArray["bouquet_order"] = intval($ipTV_db_admin->get_row()["max"]) + 1;
     }
-    foreach ($_POST as $rKey => $rValue) {
+    foreach (ipTV_lib::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
     }
-    $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+    $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
     foreach (array_values($rArray) as $rValue) {
         isset($rValues) ? $rValues .= ',' : $rValues = '';
         if (is_array($rValue)) {
@@ -35,22 +35,22 @@ if (isset($_POST["submit_bouquet"])) {
         if (is_null($rValue)) {
             $rValues .= 'NULL';
         } else {
-            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+            $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset($_POST["edit"])) {
+    if (isset(ipTV_lib::$request["edit"])) {
         if (!hasPermissions("adv", "edit_bouquet")) {
             exit;
         }
         $rCols = "id," . $rCols;
-        $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
-    } else if (!hasPermissions("adv", "add_bouquet")) {
+        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+    } elseif (!hasPermissions("adv", "add_bouquet")) {
         exit;
     }
     $rQuery = "REPLACE INTO `bouquets`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset($_POST["edit"])) {
-            $rInsertID = intval($_POST["edit"]);
+        if (isset(ipTV_lib::$request["edit"])) {
+            $rInsertID = intval(ipTV_lib::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -63,13 +63,13 @@ if (isset($_POST["submit_bouquet"])) {
     }
 }
 
-if (isset($_GET["id"])) {
+if (isset(ipTV_lib::$request["id"])) {
     $rBouquets = getBouquets();
-    $rBouquetArr = $rBouquets[$_GET["id"]];
+    $rBouquetArr = $rBouquets[ipTV_lib::$request["id"]];
     if ((!$rBouquetArr) or (!hasPermissions("adv", "edit_bouquet"))) {
         exit;
     }
-} else if (!hasPermissions("adv", "add_bouquet")) {
+} elseif (!hasPermissions("adv", "add_bouquet")) {
     exit;
 }
 
@@ -116,18 +116,18 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["bouquet_success"]; ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                     <?= $_["generic_fail"]; ?>
-                                    </div>
+                                </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./bouquet.php<?php if (isset($_GET["id"])) {
-                                        echo "?id=" . $_GET["id"];
+                                    <form action="./bouquet.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                        echo "?id=" . ipTV_lib::$request["id"];
                                     } ?>" method="POST" id="bouquet_form" data-parsley-validate="">
                                         <?php if (isset($rBouquetArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rBouquetArr["id"] ?>" />
