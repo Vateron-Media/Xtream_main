@@ -339,7 +339,6 @@ class ipTV_lib {
      *
      * @return array Returns an associative array of streaming servers with their details, including:
      *
-     * @throws Exception If there is an issue with the database query or data retrieval.
      */
     public static function getServers($rForce = false) {
         if (!$rForce) {
@@ -692,25 +691,29 @@ class ipTV_lib {
         }
         return $rNginx > 0;
     }
+
     public static function generateCron() {
         if (!file_exists(TMP_PATH . 'crontab')) {
-            $rJobs = array();
-            self::$ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
-            foreach (self::$ipTV_db->get_rows() as $rRow) {
-                $rFullPath = CRON_PATH . $rRow['filename'];
-                if (pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && file_exists($rFullPath)) {
-                    $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XC_VM';
+            if (posix_getpwuid(posix_geteuid())['name'] == "xtreamcodes") {
+                $rJobs = array();
+                self::$ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
+                foreach (self::$ipTV_db->get_rows() as $rRow) {
+                    $rFullPath = CRON_PATH . $rRow['filename'];
+                    if (pathinfo($rFullPath, PATHINFO_EXTENSION) == 'php' && file_exists($rFullPath)) {
+                        $rJobs[] = $rRow['time'] . ' ' . PHP_BIN . ' ' . $rFullPath . ' # XC_VM';
+                    }
                 }
+                shell_exec('crontab -r');
+                $rTempName = tempnam('/tmp', 'crontab');
+                $rHandle = fopen($rTempName, 'w');
+                fwrite($rHandle, implode("\n", $rJobs) . "\n");
+                fclose($rHandle);
+                shell_exec('crontab -u xtreamcodes ' . $rTempName);
+                @unlink($rTempName);
+                file_put_contents(TMP_PATH . 'crontab', 1);
+                return true;
             }
-            shell_exec('crontab -r');
-            $rTempName = tempnam('/tmp', 'crontab');
-            $rHandle = fopen($rTempName, 'w');
-            fwrite($rHandle, implode("\n", $rJobs) . "\n");
-            fclose($rHandle);
-            shell_exec('crontab -u xtreamcodes ' . $rTempName);
-            @unlink($rTempName);
-            file_put_contents(TMP_PATH . 'crontab', 1);
-            return true;
+            return false;
         } else {
             return false;
         }
@@ -748,4 +751,38 @@ class ipTV_lib {
         }
         return true;
     }
+    /**
+     * Creates a stack trace in a readable format.
+     *
+     * @return string Трассировка стека.
+     */
+    public static function generateStackTrace(): string {
+        // Get the call stack
+        $trace = debug_backtrace();
+
+        // String to accumulate the result
+        $stackTrace = "Stack trace:\n";
+
+        // Iterate over the stack and generate readable output
+        foreach ($trace as $index => $frame) {
+            $file = $frame['file'] ?? '[internal function]';
+            $line = $frame['line'] ?? 'N/A';
+            $function = $frame['function'] ?? 'unknown';
+            $class = $frame['class'] ?? '';
+            $type = $frame['type'] ?? '';
+
+            $stackTrace .= sprintf(
+                "#%d %s(%s): %s%s%s()\n",
+                $index,
+                $file,
+                $line,
+                $class,
+                $type,
+                $function
+            );
+        }
+
+        return $stackTrace;
+    }
+
 }
