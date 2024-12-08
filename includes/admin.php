@@ -1923,8 +1923,6 @@ function updateSeries($rID) {
     }
 }
 
-
-
 function getURL() {
     global $rServers, $_INFO;
     if (strlen($rServers[$_INFO["server_id"]]["domain_name"]) > 0) {
