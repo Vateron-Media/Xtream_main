@@ -43,7 +43,7 @@ if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos[
 }
 
 if (getPageName() != 'setup') {
-	$ipTV_db_admin->query('SELECT COUNT(`id`) AS `count` FROM `reg_users` LEFT JOIN `users_groups` ON `users_groups`.`group_id` = `reg_users`.`member_group_id` WHERE `users_groups`.`is_admin` = 1;');
+	$ipTV_db_admin->query('SELECT COUNT(`id`) AS `count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` WHERE `member_groups`.`is_admin` = 1;');
 
 	if ($ipTV_db_admin->get_row()['count'] == 0) {
 		header('Location: ./setup.php');
