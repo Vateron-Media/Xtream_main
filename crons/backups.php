@@ -24,13 +24,13 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 if (file_exists('/proc/' . ipTV_lib::$settings['backups_pid']) && 0 < strlen(ipTV_lib::$settings['backups_pid'])) {
                     exit();
                 }
-                $ipTV_db_admin->query('UPDATE `settings` SET `backups_pid` = ?;', $rPID);
+                ipTV_lib::setSettings(["backups_pid" => $rPID]);
             }
 
             if (isset($rBackups) && $rBackups != 'off' || $rForce) {
                 if ($rLastBackup + $rPeriod[$rBackups] <= time() || $rForce) {
                     if (!$rForce) {
-                        $ipTV_db_admin->query('UPDATE `settings` SET `last_backup` = ?;', time());
+                        ipTV_lib::setSettings(["last_backup" => time()]);
                     }
                     $ipTV_db_admin->close_mysql();
 

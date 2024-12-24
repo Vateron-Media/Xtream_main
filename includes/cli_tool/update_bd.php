@@ -47,6 +47,7 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('total_users',
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('request_prebuffer', '1')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('playlist_from_mysql', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('cloudflare', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('backups_pid', '0')");
 
 
 $ipTV_db->query("UPDATE `crontab` SET `filename`='series.php' WHERE `filename`='vod_cc_series.php'");
@@ -60,7 +61,8 @@ if ($ipTV_db->num_rows() > 0) {
         $rAdminSettings[$rRow['type']] = $rRow['value'];
     }
     if (0 < strlen($rAdminSettings['recaptcha_v2_secret_key']) && 0 < strlen($rAdminSettings['recaptcha_v2_site_key'])) {
-        $ipTV_db->query('UPDATE `settings` SET `recaptcha_v2_secret_key` = ?, `recaptcha_v2_site_key` = ?;', $rAdminSettings['recaptcha_v2_secret_key'], $rAdminSettings['recaptcha_v2_site_key']);
+        ipTV_lib::setSettings(["recaptcha_v2_secret_key" => $rAdminSettings['recaptcha_v2_secret_key']]);
+        ipTV_lib::setSettings(["recaptcha_v2_site_key" => $rAdminSettings['recaptcha_v2_site_key']]);
     }
 }
 
