@@ -155,11 +155,6 @@ if ($rSettings["sidebar"]) { ?>
                                                 </div>
                                             <?php } ?>
                                         </div>
-                                        <div class="col-11">
-                                            <div class="text-left">
-                                                <?= $rSettings["userpanel_mainpage"] ?>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

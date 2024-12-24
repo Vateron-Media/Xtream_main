@@ -45,11 +45,6 @@ if ($rSettings["sidebar"]) { ?>
                                                 </div>
                                             <?php } ?>
                                         </div>
-                                        <div class="col-11">
-                                            <div class="text-left">
-                                                <?= $rSettings["page_mannuals"] ?>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

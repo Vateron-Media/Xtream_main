@@ -48,6 +48,8 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('request_prebu
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('playlist_from_mysql', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('cloudflare', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('backups_pid', '0')");
+$ipTV_db->query("DELETE FROM `settings` WHERE `name`='userpanel_mainpage'");
+$ipTV_db->query("DELETE FROM `settings` WHERE `name`='page_mannuals'");
 
 
 $ipTV_db->query("UPDATE `crontab` SET `filename`='series.php' WHERE `filename`='vod_cc_series.php'");

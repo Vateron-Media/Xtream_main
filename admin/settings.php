@@ -627,36 +627,6 @@ if ($rSettings["sidebar"]) { ?>
                                                                             value="<?= htmlspecialchars($rSettings["recaptcha_v2_secret_key"]) ?>">
                                                                     </div>
                                                                 </div>
-                                                                </br>
-                                                                <h5 class="card-title mb-4">Message</h5>
-                                                                </br>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="userpanel_mainpage"><?= $_["mensagem_dashboard_Revendedores"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["ativar_mensagem_dashboard_revendedores"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-8">
-                                                                        <input type="text" class="form-control"
-                                                                            id="userpanel_mainpage"
-                                                                            name="userpanel_mainpage"
-                                                                            value="<?= htmlspecialchars($rSettings["userpanel_mainpage"]) ?>">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row mb-4">
-                                                                    <label class="col-md-4 col-form-label"
-                                                                        for="page_mannuals"><?= $_["mannuals_revendedores"] ?>
-                                                                        <i data-toggle="tooltip" data-placement="top"
-                                                                            title=""
-                                                                            data-original-title="<?= $_["manualls_revendedores"] ?>"
-                                                                            class="mdi mdi-information"></i></label>
-                                                                    <div class="col-md-8">
-                                                                        <input type="text" class="form-control"
-                                                                            id="page_mannuals" name="page_mannuals"
-                                                                            value="<?= htmlspecialchars($rSettings["page_mannuals"]) ?>">
-                                                                    </div>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                         <ul class="list-inline wizard mb-0">
@@ -2495,7 +2465,6 @@ if ($rSettings["sidebar"]) { ?>
                 </div>
             </footer>
             <!-- end Footer -->
-            <link rel="stylesheet" href="assets/js/minified/themes/default.min.css" id="theme-style" />
             <script src="assets/js/minified/sceditor.min.js"></script>
             <script src="assets/js/minified/formats/xhtml.js"></script>
             <script src="assets/js/vendor.min.js"></script>
@@ -2652,38 +2621,6 @@ if ($rSettings["sidebar"]) { ?>
                         return /^\d*$/.test(value);
                     });
                 });
-            </script>
-            <script>
-                var textarea = document.getElementById('userpanel_mainpage');
-                sceditor.create(textarea, {
-                    format: 'bbcode',
-                    icons: 'monocons',
-                    style: '../assets/js/minified/themes/content/default.min.css',
-                });
-
-
-                var themeInput = document.getElementById('theme');
-                themeInput.onchange = function () {
-                    var theme = '../assets/js/minified/themes/' + themeInput.value + '.min.css';
-
-                    document.getElementById('theme-style').href = theme;
-                };
-            </script>
-            <script>
-                var textarea = document.getElementById('page_mannuals');
-                sceditor.create(textarea, {
-                    format: 'bbcode',
-                    icons: 'monocons',
-                    style: '../assets/js/minified/themes/content/default.min.css'
-                });
-
-
-                var themeInput = document.getElementById('theme');
-                themeInput.onchange = function () {
-                    var theme = '../assets/js/minified/themes/' + themeInput.value + '.min.css';
-
-                    document.getElementById('theme-style').href = theme;
-                };
             </script>
             </body>
 
