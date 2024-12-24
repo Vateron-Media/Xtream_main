@@ -64,7 +64,6 @@ $nabilos = getRegisteredUserHash($_SESSION['hash']);
 if (file_exists("/home/xtreamcodes/admin/.update")) {
     unlink("/home/xtreamcodes/admin/.update");
     if (!file_exists("/home/xtreamcodes/admin/.update")) {
-
         // Update Categories
         updateTMDbCategories();
     }
@@ -1338,6 +1337,73 @@ function updateTMDbCategories() {
 }
 
 /**
+ * Fetches the latest release and pre-release information from a GitHub repository
+ *
+ * @param string $repo The repository name in format "owner/repository"
+ *
+ * @return array{
+ *     latest_release?: string|null,
+ *     latest_prerelease?: string|null,
+ *     error?: string
+ * } Returns an array containing:
+ *           - latest_release: The tag name of the latest stable release (null if none found)
+ *           - latest_prerelease: The tag name of the latest pre-release (null if none found)
+ *           - error: Error message if the request fails
+ *
+ * @throws Exception When the GitHub API request fails or returns invalid data
+ */
+function getGithubReleases(string $repo): array {
+    $url = "https://api.github.com/repos/$repo/releases";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'User-Agent: PHP-Request'
+    ]);
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        return ['error' => 'Request error: ' . curl_error($ch)];
+    }
+
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode !== 200) {
+        return ['error' => "GitHub API returned HTTP code $httpCode"];
+    }
+
+    $releases = json_decode($response, true);
+    if (empty($releases)) {
+        return ['error' => 'No releases found'];
+    }
+
+    $latestRelease = null;
+    $latestPrerelease = null;
+
+    foreach ($releases as $release) {
+        if (!$release['prerelease'] && !$latestRelease) {
+            $latestRelease = $release['tag_name'];
+        }
+        if ($release['prerelease'] && !$latestPrerelease) {
+            $latestPrerelease = $release['tag_name'];
+        }
+
+        if ($latestRelease && $latestPrerelease) {
+            break;
+        }
+    }
+
+    return [
+        'latest_release' => $latestRelease,
+        'latest_prerelease' => $latestPrerelease
+    ];
+}
+
+
+/**
  * Retrieves the most recent stable release version from a given URL.
  *
  * This function sends a HEAD request to the provided URL, follows any redirects,
@@ -1390,80 +1456,6 @@ function get_recent_stable_release(string $url) {
 
     return $version;
 }
-/**
- * Determines if an update is needed based on the current version and the required version.
- *
- * This function compares two version strings, `currentVersion` and `requiredVersion`,
- * which are expected to be in a dot-separated format (e.g., "1.0.0"). It converts these
- * version strings into arrays of integers, then compares each part of the version numbers
- * to determine if the current version is less than the required version.
- *
- * If any part of the current version is less than the corresponding part of the required
- * version, the function returns true, indicating that an update is needed. If any part
- * of the current version is greater, it returns false, indicating that no update is needed.
- * If both versions are equal, it also returns false.
- *
- * @param string $requiredVersion The required version string to compare against.
- * @param string $currentVersion The current version string.
- * @return bool Returns true if an update is needed, false otherwise.
- */
-/**
- * Compares two version strings to determine if an update is needed
- *
- * @param string|null $requiredVersion The minimum required version (e.g., "2.1.0")
- * @param string|null $currentVersion The current installed version
- * @return bool True if current version is lower than required version
- * @throws InvalidArgumentException If version strings are malformed
- */
-function isUpdateNeeded(?string $requiredVersion, ?string $currentVersion): bool {
-    // Early return if versions are not provided
-    if ($requiredVersion === null || $currentVersion === null) {
-        return false;
-    }
-
-    // Validate version string format
-    if (!preg_match('/^\d+(\.\d+)*$/', $requiredVersion) ||
-        !preg_match('/^\d+(\.\d+)*$/', $currentVersion)) {
-        throw new InvalidArgumentException('Invalid version format. Expected format: X.Y.Z');
-    }
-
-    // Convert version strings to normalized arrays
-    $current = normalizeVersionArray($currentVersion);
-    $required = normalizeVersionArray($requiredVersion);
-
-    return compareVersionArrays($current, $required);
-}
-
-/**
- * Converts version string to normalized integer array
- */
-function normalizeVersionArray(string $version): array {
-    return array_map('intval', explode('.', $version));
-}
-
-/**
- * Compares two version arrays
- */
-function compareVersionArrays(array $current, array $required): bool {
-    $length = max(count($current), count($required));
-
-    for ($i = 0; $i < $length; $i++) {
-        $currentPart = $current[$i] ?? 0;
-        $requiredPart = $required[$i] ?? 0;
-
-        if ($currentPart < $requiredPart) {
-            return true;    // Current version is older, update needed
-        }
-        if ($currentPart > $requiredPart) {
-            return false;    // Current version is newer, no update needed
-        }
-    }
-    return false;
-}
-
-
-
-
 
 
 ////// NOT CHECKED ////////

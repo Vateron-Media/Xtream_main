@@ -9,9 +9,9 @@ if ((!hasPermissions("adv", "settings")) && (!hasPermissions("adv", "database"))
 }
 
 #Get versions
-$rGeoLite2Latest = get_recent_stable_release("https://github.com/Vateron-Media/Xtream_Update/releases/latest");
+$rGeoLite2Latest = getGithubReleases("Vateron-Media/Xtream_Update")['latest_release'];
 $rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true)["geolite2_version"];
-$rUpdatePanel = mb_substr(get_recent_stable_release("https://github.com/Vateron-Media/Xtream_main/releases/latest"), 1);
+$rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")['latest_release'], 1);
 $rInfosUpdate = array();
 
 if (isset($_GET["geolite2"])) {
@@ -281,7 +281,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <?= $_["there_was_an_error_saving_settings"] ?>
                                                             </div>
                                 <?php } ?>
-                                <?php if (isUpdateNeeded($rGeoLite2Latest, $rGeoLite2Curent ? $rGeoLite2Curent : "0.0.0")) { ?>
+                                <?php if (version_compare($rGeoLite2Latest, $rGeoLite2Curent ? $rGeoLite2Curent : "0.0.0")) { ?>
                                     <div class="alert alert-info alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -291,7 +291,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <a href="./settings.php?geolite2"><?= $_["click_here_to_update"] ?></a>
                                     </div>
                                 <?php } ?>
-                                <?php if (isUpdateNeeded($rUpdatePanel, getScriptVer())) { ?>
+                                <?php if (version_compare($rUpdatePanel, getScriptVer())) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>

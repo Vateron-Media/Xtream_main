@@ -66,7 +66,7 @@ function getNextVersionUpdate($curentVersion, $updateVersion) {
         )
     );
     $URLTagsRelease = "https://api.github.com/repos/Vateron-Media/Xtream_main/git/refs/tags";
-    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), True);
+    $tags = json_decode(file_get_contents($URLTagsRelease, false, $context), true);
 
     $versions = [];
     foreach ($tags as $value) {
