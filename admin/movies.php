@@ -18,15 +18,15 @@ if ($rSettings["sidebar"]) {
 if ($rSettings["sidebar"]) { ?>
     <div class="content-page<?php if ($rPermissions["is_reseller"]) {
         echo " boxed-layout-ext";
-    } ?>">
+                            } ?>">
         <div class="content">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper<?php if ($rPermissions["is_reseller"]) {
                     echo " boxed-layout-ext";
-                } ?>">
+                                   } ?>">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -104,9 +104,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     <select id="movies_server" class="form-control" data-toggle="select2">
                                                         <option value="" selected><?= $_["all_servers"] ?></option>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                            <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
+                                                            <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
                                                                   echo " selected";
-                                                              } ?>><?= $rServer["server_name"] ?></option>
+                                                                           } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -118,8 +118,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                 echo " selected";
-                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                            <?php } ?>
+                                                                   } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>
                                             <?php } else { ?>
@@ -131,9 +131,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     <select id="movies_server" class="form-control" data-toggle="select2">
                                                         <option value="" selected><?= $_["all_servers"] ?></option>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                            <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
+                                                            <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
                                                                   echo " selected";
-                                                              } ?>><?= $rServer["server_name"] ?></option>
+                                                                           } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -167,8 +167,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                 echo " selected";
-                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                            <?php } ?>
+                                                                   } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>
                                             <?php } ?>
@@ -371,7 +371,8 @@ if ($rSettings["sidebar"]) { ?>
                             }
                         },
                         columnDefs: [
-                            <?php if ($rPermissions["is_admin"]) { ?> {
+                            <?php if ($rPermissions["is_admin"]) {
+                                ?> {
                                     "className": "dt-center",
                                     "targets": [0, 3, 4, 5, 6, 7]
                                 },
@@ -379,11 +380,12 @@ if ($rSettings["sidebar"]) { ?>
                                     "orderable": false,
                                     "targets": [5, 6]
                                 }
-                                <?php } else { ?> {
+                            <?php } else {
+                                ?> {
                                     "className": "dt-center",
                                     "targets": [0, 3]
                                 }
-                                <?php } ?>
+                            <?php } ?>
                         ],
                         order: [
                             [0, "desc"]

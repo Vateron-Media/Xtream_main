@@ -9,7 +9,7 @@ if (!isset($_SESSION['hash'])) {
     exit;
 }
 
-if (isset($_POST["submit_secret"])) {
+if (isset(ipTV_lib::$request["submit_secret"])) {
     $salt = "!SMARTERS!";
     $return = array();
     $result = $ipTV_db_admin->query("CREATE TABLE IF NOT EXISTS reseller_credentials (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,member_id VARCHAR(30), api_key VARCHAR(100) NOT NULL,ip_allow VARCHAR(30))");
@@ -17,9 +17,9 @@ if (isset($_POST["submit_secret"])) {
     $encrypted = resellerapi_encrypt($password, $salt);
     $ipTV_db_admin->query("SELECT * FROM `reseller_credentials` WHERE member_id = '" . intval($rUserInfo['id']) . "'");
     if ($ipTV_db_admin->num_rows() > 0) {
-        $rQuery = "UPDATE `reseller_credentials` SET api_key = '" . $ipTV_db_admin->escape($encrypted) . "', ip_allow= '' WHERE member_id = '" . intval($rUserInfo['id']) . "'";
+        $rQuery = "UPDATE `reseller_credentials` SET api_key = '" . $encrypted . "', ip_allow= '' WHERE member_id = '" . intval($rUserInfo['id']) . "'";
     } else {
-        $rQuery = "INSERT INTO `reseller_credentials`(`member_id`,`api_key`, `ip_allow`) VALUES('" . intval($rUserInfo['id']) . "','" . $ipTV_db_admin->escape($encrypted) . "','11.11.11.11');";
+        $rQuery = "INSERT INTO `reseller_credentials`(`member_id`,`api_key`, `ip_allow`) VALUES('" . intval($rUserInfo['id']) . "','" . $encrypted . "','11.11.11.11');";
     }
     if ($ipTV_db_admin->query($rQuery)) {
         $return['result'] = 'success';
@@ -65,10 +65,10 @@ if ($rSettings["sidebar"]) {
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">

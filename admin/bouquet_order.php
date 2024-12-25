@@ -5,8 +5,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_bouquet"))) {
     exit;
 }
 
-if (isset($_POST["reorder"])) {
-    $rOrder = json_decode($_POST["stream_order_array"], true);
+if (isset(ipTV_lib::$request["reorder"])) {
+    $rOrder = json_decode(ipTV_lib::$request["stream_order_array"], true);
     if (is_array($rOrder)) {
         $rStreamOrder = $rOrder["stream"];
         foreach ($rOrder["movie"] as $rID) {
@@ -15,14 +15,14 @@ if (isset($_POST["reorder"])) {
         foreach ($rOrder["radio"] as $rID) {
             $rStreamOrder[] = $rID;
         }
-        $ipTV_db_admin->query("UPDATE `bouquets` SET `bouquet_channels` = '" . $ipTV_db_admin->escape(json_encode($rStreamOrder)) . "', `bouquet_series` = '" . $ipTV_db_admin->escape(json_encode($rOrder["series"])) . "' WHERE `id` = " . intval($_POST["reorder"]) . ";");
+        $ipTV_db_admin->query("UPDATE `bouquets` SET `bouquet_channels` = '" . json_encode($rStreamOrder) . "', `bouquet_series` = '" . json_encode($rOrder["series"]) . "' WHERE `id` = " . intval(ipTV_lib::$request["reorder"]) . ";");
     }
 }
 
-if (!isset($_GET["id"])) {
+if (!isset(ipTV_lib::$request["id"])) {
     exit;
 }
-$rBouquet = getBouquet($_GET["id"]);
+$rBouquet = getBouquet(ipTV_lib::$request["id"]);
 if (!$rBouquet) {
     exit;
 }
@@ -33,7 +33,7 @@ $rChannels = json_decode($rBouquet["bouquet_channels"], true);
 $rSeries = json_decode($rBouquet["bouquet_series"], true);
 
 if (is_array($rChannels)) {
-    $ipTV_db_admin->query("SELECT `streams`.`id`, `streams`.`type`, `streams`.`category_id`, `streams`.`stream_display_name`, `stream_categories`.`category_name` FROM `streams`, `stream_categories` WHERE `streams`.`category_id` = `stream_categories`.`id` AND `streams`.`id` IN (" . $ipTV_db_admin->escape(join(",", $rChannels)) . ");");
+    $ipTV_db_admin->query("SELECT `streams`.`id`, `streams`.`type`, `streams`.`category_id`, `streams`.`stream_display_name`, `stream_categories`.`category_name` FROM `streams`, `stream_categories` WHERE `streams`.`category_id` = `stream_categories`.`id` AND `streams`.`id` IN (" . join(",", $rChannels) . ");");
     if ($ipTV_db_admin->num_rows() > 0) {
         foreach ($ipTV_db_admin->get_rows() as $row) {
             if ($row["type"] == 2) {
@@ -47,7 +47,7 @@ if (is_array($rChannels)) {
     }
 }
 if (is_array($rSeries)) {
-    $ipTV_db_admin->query("SELECT `series`.`id`, `series`.`category_id`, `series`.`title`, `stream_categories`.`category_name` FROM `series`, `stream_categories` WHERE `series`.`category_id` = `stream_categories`.`id` AND `series`.`id` IN (" . $ipTV_db_admin->escape(join(",", $rSeries)) . ");");
+    $ipTV_db_admin->query("SELECT `series`.`id`, `series`.`category_id`, `series`.`title`, `stream_categories`.`category_name` FROM `series`, `stream_categories` WHERE `series`.`category_id` = `stream_categories`.`id` AND `series`.`id` IN (" . join(",", $rSeries) . ");");
     if ($ipTV_db_admin->num_rows() > 0) {
         foreach ($ipTV_db_admin->get_rows() as $row) {
             $rListings["series"][intval($row["id"])] = $row;
@@ -90,7 +90,7 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <li>
-                                            <a href="bouquet.php?id=<?= $_GET["id"] ?>">
+                                            <a href="bouquet.php?id=<?= ipTV_lib::$request["id"] ?>">
                                                 <button type="button"
                                                     class="btn btn-success waves-effect waves-light btn-sm">
                                                     <i class="mdi mdi-pencil-outline"></i> <?= $_["edit_bouquet"] ?>
@@ -108,11 +108,11 @@ if ($rSettings["sidebar"]) { ?>
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./bouquet_order.php?id=<?= $_GET["id"] ?>" method="POST"
+                                    <form action="./bouquet_order.php?id=<?= ipTV_lib::$request["id"] ?>" method="POST"
                                         id="bouquet_order_form">
                                         <input type="hidden" id="stream_order_array" name="stream_order_array"
                                             value="" />
-                                        <input type="hidden" name="reorder" value="<?= $_GET["id"] ?>" />
+                                        <input type="hidden" name="reorder" value="<?= ipTV_lib::$request["id"] ?>" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">

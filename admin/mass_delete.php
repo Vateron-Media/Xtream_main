@@ -8,8 +8,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_delete"))) {
 set_time_limit(0);
 ini_set('max_execution_time', 0);
 
-if (isset($_POST["submit_streams"])) {
-    $rStreams = json_decode($_POST["streams"], True);
+if (isset(ipTV_lib::$request["submit_streams"])) {
+    $rStreams = json_decode(ipTV_lib::$request["streams"], true);
     foreach ($rStreams as $rStream) {
         $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStream) . ";");
         $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rStream) . ";");
@@ -17,8 +17,8 @@ if (isset($_POST["submit_streams"])) {
     $_STATUS = 0;
 }
 
-if (isset($_POST["submit_movies"])) {
-    $rMovies = json_decode($_POST["movies"], True);
+if (isset(ipTV_lib::$request["submit_movies"])) {
+    $rMovies = json_decode(ipTV_lib::$request["movies"], true);
     foreach ($rMovies as $rMovie) {
         $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
         if ($ipTV_db_admin->num_rows() > 0) {
@@ -32,8 +32,8 @@ if (isset($_POST["submit_movies"])) {
     $_STATUS = 1;
 }
 
-if (isset($_POST["submit_users"])) {
-    $rUsers = json_decode($_POST["users"], True);
+if (isset(ipTV_lib::$request["submit_users"])) {
+    $rUsers = json_decode(ipTV_lib::$request["users"], true);
     foreach ($rUsers as $rUser) {
         $ipTV_db_admin->query("DELETE FROM `users` WHERE `id` = " . intval($rUser) . ";");
         $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
@@ -43,8 +43,8 @@ if (isset($_POST["submit_users"])) {
     $_STATUS = 2;
 }
 
-if (isset($_POST["submit_series"])) {
-    $rSeries = json_decode($_POST["series"], True);
+if (isset(ipTV_lib::$request["submit_series"])) {
+    $rSeries = json_decode(ipTV_lib::$request["series"], true);
     foreach ($rSeries as $rSerie) {
         $ipTV_db_admin->query("DELETE FROM `series` WHERE `id` = " . intval($rSerie) . ";");
         $ipTV_db_admin->query("SELECT `stream_id` FROM `series_episodes` WHERE `series_id` = " . intval($rSerie) . ";");
@@ -66,8 +66,8 @@ if (isset($_POST["submit_series"])) {
     $_STATUS = 3;
 }
 
-if (isset($_POST["submit_episodes"])) {
-    $rEpisodes = json_decode($_POST["episodes"], True);
+if (isset(ipTV_lib::$request["submit_episodes"])) {
+    $rEpisodes = json_decode(ipTV_lib::$request["episodes"], true);
     foreach ($rEpisodes as $rEpisode) {
         $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rEpisode) . ";");
         if ($ipTV_db_admin->num_rows() > 0) {
@@ -82,7 +82,7 @@ if (isset($_POST["submit_episodes"])) {
     $_STATUS = 4;
 }
 
-if ((isset($_POST["submit_streams"])) or (isset($_POST["submit_movies"]))) {
+if ((isset(ipTV_lib::$request["submit_streams"])) or (isset(ipTV_lib::$request["submit_movies"]))) {
     scanBouquets();
 }
 
@@ -95,10 +95,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -117,28 +117,28 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["mass_delete_message_1"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
                                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     <?= $_["mass_delete_message_2"] ?>
                                     </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
                                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                     <?= $_["mass_delete_message_3"] ?>
                                         </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
                                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                     <?= $_["mass_delete_message_4"] ?>
                                             </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
                                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
@@ -201,9 +201,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <option value="" selected><?= $_["all_categories"] ?>
                                                                 </option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
-                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                           echo " selected";
-                                                                      } ?>><?= $rCategory["category_name"] ?>
+                                                                                   } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -216,8 +216,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
@@ -262,9 +262,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <option value="" selected><?= $_["all_categories"] ?>
                                                                 </option>
                                                                 <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
-                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                           echo " selected";
-                                                                      } ?>><?= $rCategory["category_name"] ?>
+                                                                                   } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -288,8 +288,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
@@ -336,9 +336,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </option>
                                                                 <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                                 <?php foreach (getCategories_admin("series") as $rCategory) { ?>
-                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                           echo " selected";
-                                                                      } ?>><?= $rCategory["category_name"] ?>
+                                                                                   } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -349,8 +349,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
@@ -418,8 +418,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
@@ -491,8 +491,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">

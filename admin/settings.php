@@ -14,7 +14,7 @@ $rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/
 $rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")['latest_release'], 1);
 $rInfosUpdate = array();
 
-if (isset($_GET["geolite2"])) {
+if (isset(ipTV_lib::$request["geolite2"])) {
     if (updateGeoLite2()) {
         $_STATUS = 3;
     } else {
@@ -22,175 +22,175 @@ if (isset($_GET["geolite2"])) {
     }
 }
 
-if (isset($_GET["panel_version"])) {
-    $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . $ipTV_db_admin->escape(json_encode(array('action' => 'update'))) . "`;");
-    $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . $ipTV_db_admin->escape($_INFO["server_id"]) . "', '" . $ipTV_db_admin->escape(time()) . "', '" . $ipTV_db_admin->escape(json_encode(array('action' => 'update'))) . "');");
+if (isset(ipTV_lib::$request["panel_version"])) {
+    $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . json_encode(array('action' => 'update')) . "`;");
+    $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . $_INFO["server_id"] . "', '" . time() . "', '" . json_encode(array('action' => 'update')) . "');");
     $_STATUS = 5;
 }
 
-if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
+if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rArray = getSettings();
     foreach (array("recaptcha_enable", "disable_trial", "mag_disable_ssl", "disable_mag_token", "ignore_invalid_users", "block_streaming_servers", "block_proxies", "detect_restream_block_user", "allow_cdn_access", "restrict_same_ip", "ip_subnet_match", "kill_rogue_ffmpeg", "ignore_keyframes", "ffmpeg_warnings", "ondemand_balance_equal", "on_demand_failure_exit", "on_demand_instant_off", "restrict_playlists", "encrypt_playlist_restreamer", "encrypt_playlist", "encrypt_hls", "disable_ts_allow_restream", "disable_ts", "disable_hls", "disable_hls_allow_restream", "disallow_empty_user_agents", "persistent_connections", "monitor_connection_status", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "use_mdomain_in_lists", "hash_lb", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup", "debug_show_errors") as $rSetting) {
-        if (isset($_POST[$rSetting])) {
+        if (isset(ipTV_lib::$request[$rSetting])) {
             $rArray[$rSetting] = 1;
-            unset($_POST[$rSetting]);
+            unset(ipTV_lib::$request[$rSetting]);
         } else {
             $rArray[$rSetting] = 0;
         }
     }
-    if (!isset($_POST["allowed_stb_types_for_local_recording"])) {
+    if (!isset(ipTV_lib::$request["allowed_stb_types_for_local_recording"])) {
         $rArray["allowed_stb_types_for_local_recording"] = array();
     }
-    if (!isset($_POST["allowed_stb_types"])) {
+    if (!isset(ipTV_lib::$request["allowed_stb_types"])) {
         $rArray["allowed_stb_types"] = array();
     }
     //next 6 lines are for reseller mag events
-    if (isset($_POST["reseller_mag_events"])) {
+    if (isset(ipTV_lib::$request["reseller_mag_events"])) {
         $rAdminSettings["reseller_mag_events"] = true;
-        unset($_POST["reseller_mag_events"]);
+        unset(ipTV_lib::$request["reseller_mag_events"]);
     } else {
         $rAdminSettings["reseller_mag_events"] = false;
     }
     // previous 6 lines are for reseller mag events
-    if (isset($_POST["ip_logout"])) {
+    if (isset(ipTV_lib::$request["ip_logout"])) {
         $rAdminSettings["ip_logout"] = true;
-        unset($_POST["ip_logout"]);
+        unset(ipTV_lib::$request["ip_logout"]);
     } else {
         $rAdminSettings["ip_logout"] = false;
     }
-    if (isset($_POST["alternate_scandir"])) {
+    if (isset(ipTV_lib::$request["alternate_scandir"])) {
         $rAdminSettings["alternate_scandir"] = true;
-        unset($_POST["alternate_scandir"]);
+        unset(ipTV_lib::$request["alternate_scandir"]);
     } else {
         $rAdminSettings["alternate_scandir"] = false;
     }
-    if (isset($_POST["download_images"])) {
+    if (isset(ipTV_lib::$request["download_images"])) {
         $rAdminSettings["download_images"] = true;
-        unset($_POST["download_images"]);
+        unset(ipTV_lib::$request["download_images"]);
     } else {
         $rAdminSettings["download_images"] = false;
     }
-    if (isset($_POST["auto_refresh"])) {
+    if (isset(ipTV_lib::$request["auto_refresh"])) {
         $rAdminSettings["auto_refresh"] = true;
-        unset($_POST["auto_refresh"]);
+        unset(ipTV_lib::$request["auto_refresh"]);
     } else {
         $rAdminSettings["auto_refresh"] = false;
     }
-    if (isset($_POST["local_api"])) {
+    if (isset(ipTV_lib::$request["local_api"])) {
         $rAdminSettings["local_api"] = true;
-        unset($_POST["local_api"]);
+        unset(ipTV_lib::$request["local_api"]);
     } else {
         $rAdminSettings["local_api"] = false;
     }
-    if (isset($_POST["dark_mode_login"])) {
+    if (isset(ipTV_lib::$request["dark_mode_login"])) {
         $rAdminSettings["dark_mode_login"] = true;
-        unset($_POST["dark_mode_login"]);
+        unset(ipTV_lib::$request["dark_mode_login"]);
     } else {
         $rAdminSettings["dark_mode_login"] = false;
     }
-    if (isset($_POST["dashboard_stats"])) {
+    if (isset(ipTV_lib::$request["dashboard_stats"])) {
         $rAdminSettings["dashboard_stats"] = true;
-        unset($_POST["dashboard_stats"]);
+        unset(ipTV_lib::$request["dashboard_stats"]);
     } else {
         $rAdminSettings["dashboard_stats"] = false;
     }
-    if (isset($_POST["dashboard_world_map_live"])) {
+    if (isset(ipTV_lib::$request["dashboard_world_map_live"])) {
         $rAdminSettings["dashboard_world_map_live"] = true;
-        unset($_POST["dashboard_world_map_live"]);
+        unset(ipTV_lib::$request["dashboard_world_map_live"]);
     } else {
         $rAdminSettings["dashboard_world_map_live"] = false;
     }
-    if (isset($_POST["dashboard_world_map_activity"])) {
+    if (isset(ipTV_lib::$request["dashboard_world_map_activity"])) {
         $rAdminSettings["dashboard_world_map_activity"] = true;
-        unset($_POST["dashboard_world_map_activity"]);
+        unset(ipTV_lib::$request["dashboard_world_map_activity"]);
     } else {
         $rAdminSettings["dashboard_world_map_activity"] = false;
     }
-    if (isset($_POST["change_usernames"])) {
+    if (isset(ipTV_lib::$request["change_usernames"])) {
         $rAdminSettings["change_usernames"] = true;
-        unset($_POST["change_usernames"]);
+        unset(ipTV_lib::$request["change_usernames"]);
     } else {
         $rAdminSettings["change_usernames"] = false;
     }
-    if (isset($_POST["change_own_dns"])) {
+    if (isset(ipTV_lib::$request["change_own_dns"])) {
         $rAdminSettings["change_own_dns"] = true;
-        unset($_POST["change_own_dns"]);
+        unset(ipTV_lib::$request["change_own_dns"]);
     } else {
         $rAdminSettings["change_own_dns"] = false;
     }
-    if (isset($_POST["change_own_email"])) {
+    if (isset(ipTV_lib::$request["change_own_email"])) {
         $rAdminSettings["change_own_email"] = true;
-        unset($_POST["change_own_email"]);
+        unset(ipTV_lib::$request["change_own_email"]);
     } else {
         $rAdminSettings["change_own_email"] = false;
     }
-    if (isset($_POST["change_own_password"])) {
+    if (isset(ipTV_lib::$request["change_own_password"])) {
         $rAdminSettings["change_own_password"] = true;
-        unset($_POST["change_own_password"]);
+        unset(ipTV_lib::$request["change_own_password"]);
     } else {
         $rAdminSettings["change_own_password"] = false;
     }
-    if (isset($_POST["reseller_restrictions"])) {
+    if (isset(ipTV_lib::$request["reseller_restrictions"])) {
         $rAdminSettings["reseller_restrictions"] = true;
-        unset($_POST["reseller_restrictions"]);
+        unset(ipTV_lib::$request["reseller_restrictions"]);
     } else {
         $rAdminSettings["reseller_restrictions"] = false;
     }
-    if (isset($_POST["default_entries"])) {
-        $rAdminSettings["default_entries"] = $_POST["default_entries"];
+    if (isset(ipTV_lib::$request["default_entries"])) {
+        $rAdminSettings["default_entries"] = ipTV_lib::$request["default_entries"];
     }
-    if (isset($_POST["tmdb_language"])) {
-        $rAdminSettings["tmdb_language"] = $_POST["tmdb_language"];
-        unset($_POST["tmdb_language"]);
+    if (isset(ipTV_lib::$request["tmdb_language"])) {
+        $rAdminSettings["tmdb_language"] = ipTV_lib::$request["tmdb_language"];
+        unset(ipTV_lib::$request["tmdb_language"]);
     }
-    if (isset($_POST["release_parser"])) {
-        $rAdminSettings["release_parser"] = $_POST["release_parser"];
-        unset($_POST["release_parser"]);
+    if (isset(ipTV_lib::$request["release_parser"])) {
+        $rAdminSettings["release_parser"] = ipTV_lib::$request["release_parser"];
+        unset(ipTV_lib::$request["release_parser"]);
     }
-    if (isset($_POST["backups_to_keep"])) {
-        $rAdminSettings["backups_to_keep"] = $_POST["backups_to_keep"];
-        unset($_POST["backups_to_keep"]);
+    if (isset(ipTV_lib::$request["backups_to_keep"])) {
+        $rAdminSettings["backups_to_keep"] = ipTV_lib::$request["backups_to_keep"];
+        unset(ipTV_lib::$request["backups_to_keep"]);
     }
-    if (isset($_POST["change_own_lang"])) {
+    if (isset(ipTV_lib::$request["change_own_lang"])) {
         $rAdminSettings["change_own_lang"] = true;
-        unset($_POST["change_own_lang"]);
+        unset(ipTV_lib::$request["change_own_lang"]);
     } else {
         $rAdminSettings["change_own_lang"] = false;
     }
-    /*if (isset($_POST["reseller_select_bouquets"])) {
+    /*if (isset(ipTV_lib::$request["reseller_select_bouquets"])) {
         $rAdminSettings["reseller_select_bouquets"] = true;
-        unset($_POST["reseller_select_bouquets"]);
+        unset(ipTV_lib::$request["reseller_select_bouquets"]);
     } else {
         $rAdminSettings["reseller_select_bouquets"] = false;
     }	*/
-    if (isset($_POST["active_mannuals"])) {
+    if (isset(ipTV_lib::$request["active_mannuals"])) {
         $rAdminSettings["active_mannuals"] = true;
-        unset($_POST["active_mannuals"]);
+        unset(ipTV_lib::$request["active_mannuals"]);
     } else {
         $rAdminSettings["active_mannuals"] = false;
     }
-    if (isset($_POST["reseller_can_isplock"])) {
+    if (isset(ipTV_lib::$request["reseller_can_isplock"])) {
         $rAdminSettings["reseller_can_isplock"] = true;
-        unset($_POST["reseller_can_isplock"]);
+        unset(ipTV_lib::$request["reseller_can_isplock"]);
     } else {
         $rAdminSettings["reseller_can_isplock"] = false;
     }
-    if (isset($_POST["reseller_reset_isplock"])) {
+    if (isset(ipTV_lib::$request["reseller_reset_isplock"])) {
         $rAdminSettings["reseller_reset_isplock"] = true;
-        unset($_POST["reseller_reset_isplock"]);
+        unset(ipTV_lib::$request["reseller_reset_isplock"]);
     } else {
         $rAdminSettings["reseller_reset_isplock"] = false;
     }
-    if (isset($_POST["login_flood"])) {
-        $rAdminSettings["login_flood"] = $_POST["login_flood"];
-        unset($_POST["login_flood"]);
+    if (isset(ipTV_lib::$request["login_flood"])) {
+        $rAdminSettings["login_flood"] = ipTV_lib::$request["login_flood"];
+        unset(ipTV_lib::$request["login_flood"]);
     }
-    if (isset($_POST["dashboard_stats_frequency"])) {
-        $rAdminSettings["dashboard_stats_frequency"] = $_POST["dashboard_stats_frequency"];
-        unset($_POST["dashboard_stats_frequency"]);
+    if (isset(ipTV_lib::$request["dashboard_stats_frequency"])) {
+        $rAdminSettings["dashboard_stats_frequency"] = ipTV_lib::$request["dashboard_stats_frequency"];
+        unset(ipTV_lib::$request["dashboard_stats_frequency"]);
     }
     writeAdminSettings();
-    foreach ($_POST as $rKey => $rValue) {
+    foreach (ipTV_lib::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }

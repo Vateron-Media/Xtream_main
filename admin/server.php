@@ -5,12 +5,12 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_server")) && (
     exit;
 }
 
-if (isset($_POST["submit_server"])) {
-    if (isset($_POST["edit"])) {
+if (isset(ipTV_lib::$request["submit_server"])) {
+    if (isset(ipTV_lib::$request["edit"])) {
         if (!hasPermissions("adv", "edit_server")) {
             exit;
         }
-        $rArray = getStreamingServersByID($_POST["edit"]);
+        $rArray = getStreamingServersByID(ipTV_lib::$request["edit"]);
         unset($rArray["id"]);
     } else {
         if (!hasPermissions("adv", "add_server")) {
@@ -18,84 +18,84 @@ if (isset($_POST["submit_server"])) {
         }
         $rArray = array("server_name" => "", "domain_name" => "", "server_ip" => "", "vpn_ip" => "", "http_broadcast_port" => 25461, "total_clients" => 1000, "system_os" => "", "network_interface" => "", "status" => 2, "enable_geoip" => 0, "geoip_countries" => "[]", "geoip_type" => "low_priority", "isp_names" => "[]", "isp_type" => "low_priority", "can_delete" => 1, "rtmp_port" => 25462, "enable_isp" => 0, "network_guaranteed_speed" => 1000, "https_broadcast_port" => 25463, "whitelist_ips" => array(), "timeshift_only" => 0);
     }
-    if (strlen($_POST["server_ip"]) == 0) {
+    if (strlen(ipTV_lib::$request["server_ip"]) == 0) {
         $_STATUS = 1;
     }
-    if (isset($rServers[$_POST["edit"]]["can_delete"])) {
-        $rArray["can_delete"] = intval($rServers[$_POST["edit"]]["can_delete"]);
+    if (isset($rServers[ipTV_lib::$request["edit"]]["can_delete"])) {
+        $rArray["can_delete"] = intval($rServers[ipTV_lib::$request["edit"]]["can_delete"]);
     }
-    if (isset($_POST["enabled"])) {
-        $rArray["enabled"] = intval($_POST["enabled"]);
-        unset($_POST["enabled"]);
+    if (isset(ipTV_lib::$request["enabled"])) {
+        $rArray["enabled"] = intval(ipTV_lib::$request["enabled"]);
+        unset(ipTV_lib::$request["enabled"]);
     }
-    if (isset($_POST["total_clients"])) {
-        $rArray["total_clients"] = intval($_POST["total_clients"]);
-        unset($_POST["total_clients"]);
+    if (isset(ipTV_lib::$request["total_clients"])) {
+        $rArray["total_clients"] = intval(ipTV_lib::$request["total_clients"]);
+        unset(ipTV_lib::$request["total_clients"]);
     }
     $rPorts = array($rArray["http_broadcast_port"], $rArray["https_broadcast_port"], $rArray["rtmp_port"], $rArray["http_isp_port"]);
-    if (isset($_POST["http_broadcast_port"])) {
-        $rArray["http_broadcast_port"] = intval($_POST["http_broadcast_port"]);
-        unset($_POST["http_broadcast_port"]);
+    if (isset(ipTV_lib::$request["http_broadcast_port"])) {
+        $rArray["http_broadcast_port"] = intval(ipTV_lib::$request["http_broadcast_port"]);
+        unset(ipTV_lib::$request["http_broadcast_port"]);
     }
-    if (isset($_POST["https_broadcast_port"])) {
-        $rArray["https_broadcast_port"] = intval($_POST["https_broadcast_port"]);
-        unset($_POST["https_broadcast_port"]);
+    if (isset(ipTV_lib::$request["https_broadcast_port"])) {
+        $rArray["https_broadcast_port"] = intval(ipTV_lib::$request["https_broadcast_port"]);
+        unset(ipTV_lib::$request["https_broadcast_port"]);
     }
-    if (isset($_POST["rtmp_port"])) {
-        $rArray["rtmp_port"] = intval($_POST["rtmp_port"]);
-        unset($_POST["rtmp_port"]);
+    if (isset(ipTV_lib::$request["rtmp_port"])) {
+        $rArray["rtmp_port"] = intval(ipTV_lib::$request["rtmp_port"]);
+        unset(ipTV_lib::$request["rtmp_port"]);
     }
-    if (isset($_POST["http_isp_port"])) {
-        $rArray["http_isp_port"] = intval($_POST["http_isp_port"]);
-        unset($_POST["http_isp_port"]);
+    if (isset(ipTV_lib::$request["http_isp_port"])) {
+        $rArray["http_isp_port"] = intval(ipTV_lib::$request["http_isp_port"]);
+        unset(ipTV_lib::$request["http_isp_port"]);
     }
-    if (isset($_POST["network_guaranteed_speed"])) {
-        $rArray["network_guaranteed_speed"] = intval($_POST["network_guaranteed_speed"]);
-        unset($_POST["network_guaranteed_speed"]);
+    if (isset(ipTV_lib::$request["network_guaranteed_speed"])) {
+        $rArray["network_guaranteed_speed"] = intval(ipTV_lib::$request["network_guaranteed_speed"]);
+        unset(ipTV_lib::$request["network_guaranteed_speed"]);
     }
-    if (isset($_POST["timeshift_only"])) {
+    if (isset(ipTV_lib::$request["timeshift_only"])) {
         $rArray["timeshift_only"] = true;
-        unset($_POST["timeshift_only"]);
+        unset(ipTV_lib::$request["timeshift_only"]);
     } else {
         $rArray["timeshift_only"] = false;
     }
-    if (isset($_POST["enable_geoip"])) {
+    if (isset(ipTV_lib::$request["enable_geoip"])) {
         $rArray["enable_geoip"] = true;
-        unset($_POST["enable_geoip"]);
+        unset(ipTV_lib::$request["enable_geoip"]);
     } else {
         $rArray["enable_geoip"] = false;
     }
-    if (isset($_POST["geoip_countries"])) {
+    if (isset(ipTV_lib::$request["geoip_countries"])) {
         $rArray["geoip_countries"] = array();
-        foreach ($_POST["geoip_countries"] as $rCountry) {
+        foreach (ipTV_lib::$request["geoip_countries"] as $rCountry) {
             $rArray["geoip_countries"][] = $rCountry;
         }
-        unset($_POST["geoip_countries"]);
+        unset(ipTV_lib::$request["geoip_countries"]);
     } else {
         $rArray["geoip_countries"] = array();
     }
 
-    if (isset($_POST["enable_isp"])) {
+    if (isset(ipTV_lib::$request["enable_isp"])) {
         $rArray["enable_isp"] = true;
-        unset($_POST["enable_isp"]);
+        unset(ipTV_lib::$request["enable_isp"]);
     } else {
         $rArray["enable_isp"] = false;
     }
-    if (isset($_POST["isp_names"])) {
-        if (!is_array($_POST["isp_names"])) {
-            $_POST["isp_names"] = array($_POST["isp_names"]);
+    if (isset(ipTV_lib::$request["isp_names"])) {
+        if (!is_array(ipTV_lib::$request["isp_names"])) {
+            ipTV_lib::$request["isp_names"] = array(ipTV_lib::$request["isp_names"]);
         }
-        $rArray["isp_names"] = json_encode($_POST["isp_names"]);
+        $rArray["isp_names"] = json_encode(ipTV_lib::$request["isp_names"]);
     } else {
         $rArray["isp_names"] = "[]";
     }
     if (!isset($_STATUS)) {
-        foreach ($_POST as $rKey => $rValue) {
+        foreach (ipTV_lib::$request as $rKey => $rValue) {
             if (isset($rArray[$rKey])) {
                 $rArray[$rKey] = $rValue;
             }
         }
-        $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+        $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
             if (is_array($rValue)) {
@@ -104,17 +104,17 @@ if (isset($_POST["submit_server"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+                $rValues .= '\'' . $rValue . '\'';
             }
         }
-        if (isset($_POST["edit"])) {
+        if (isset(ipTV_lib::$request["edit"])) {
             $rCols = "id," . $rCols;
-            $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
+            $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `streaming_servers`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
-            if (isset($_POST["edit"])) {
-                $rInsertID = intval($_POST["edit"]);
+            if (isset(ipTV_lib::$request["edit"])) {
+                $rInsertID = intval(ipTV_lib::$request["edit"]);
                 // Replace ports
                 if ($rArray["http_broadcast_port"] <> $rPorts[0]) {
                     changePort($rInsertID, 0, $rPorts[0], $rArray["http_broadcast_port"]);
@@ -141,12 +141,12 @@ if (isset($_POST["submit_server"])) {
     }
 }
 
-if (isset($_GET["id"])) {
-    $rServerArr = $rServers[$_GET["id"]];
+if (isset(ipTV_lib::$request["id"])) {
+    $rServerArr = $rServers[ipTV_lib::$request["id"]];
     if ((!$rServerArr) or (!hasPermissions("adv", "edit_server"))) {
         exit;
     }
-} else if (!hasPermissions("adv", "add_server")) {
+} elseif (!hasPermissions("adv", "add_server")) {
     exit;
 }
 
@@ -160,10 +160,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -178,9 +178,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rServerArr)) {
                                     echo $_["edit"];
-                                } else {
-                                    echo $_["add"];
-                                } ?> <?= $_["server"] ?></h4>
+                                                       } else {
+                                                           echo $_["add"];
+                                                       } ?> <?= $_["server"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -194,7 +194,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["server_operation_was_completed"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -204,9 +204,9 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./server.php<?php if (isset($_GET["id"])) {
-                                        echo "?id=" . $_GET["id"];
-                                    } ?>" method="POST" id="server_form"
+                                    <form action="./server.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                        echo "?id=" . ipTV_lib::$request["id"];
+                                                              } ?>" method="POST" id="server_form"
                                         data-parsley-validate="">
                                         <?php if (isset($rServerArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rServerArr["id"] ?>" />
@@ -248,7 +248,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="server_name" name="server_name"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["server_name"]);
-                                                                        } ?>"
+                                                                               } ?>"
                                                                         required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
@@ -260,7 +260,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="domain_name" name="domain_name"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["domain_name"]);
-                                                                        } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -271,7 +271,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="server_ip" name="server_ip"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["server_ip"]);
-                                                                        } ?>"
+                                                                               } ?>"
                                                                         required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
@@ -283,7 +283,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         name="vpn_ip"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["vpn_ip"]);
-                                                                        } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -294,9 +294,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="total_clients" name="total_clients"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["total_clients"]);
-                                                                        } else {
-                                                                            echo "1000";
-                                                                        } ?>"
+                                                                               } else {
+                                                                                   echo "1000";
+                                                                               } ?>"
                                                                         required data-parsley-trigger="change">
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -307,7 +307,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rServerArr["timeshift_only"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -332,9 +332,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         name="http_broadcast_port"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["http_broadcast_port"]);
-                                                                        } else {
-                                                                            echo "25461";
-                                                                        } ?>"
+                                                                               } else {
+                                                                                   echo "25461";
+                                                                               } ?>"
                                                                         required data-parsley-trigger="change">
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -345,9 +345,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         name="https_broadcast_port"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["https_broadcast_port"]);
-                                                                        } else {
-                                                                            echo "25463";
-                                                                        } ?>"
+                                                                               } else {
+                                                                                   echo "25463";
+                                                                               } ?>"
                                                                         required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
@@ -359,12 +359,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="rtmp_port" name="rtmp_port"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["rtmp_port"]);
-                                                                        } else {
-                                                                            echo "25462";
-                                                                        } ?>"
+                                                                               } else {
+                                                                                   echo "25462";
+                                                                               } ?>"
                                                                         required data-parsley-trigger="change">
                                                                 </div>
-                                                                <?php if (($_GET["id"] == 1)) { ?>
+                                                                <?php if ((ipTV_lib::$request["id"] == 1)) { ?>
                                                                     <label class="col-md-4 col-form-label"
                                                                         for="http_isp_port"><?= $_["isp_port"] ?></label>
                                                                     <div class="col-md-2">
@@ -372,9 +372,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                             id="http_isp_port" name="http_isp_port"
                                                                             value="<?php if (isset($rServerArr)) {
                                                                                 echo htmlspecialchars($rServerArr["http_isp_port"]);
-                                                                            } else {
-                                                                                echo "";
-                                                                            } ?>"
+                                                                                   } else {
+                                                                                       echo "";
+                                                                                   } ?>"
                                                                             required data-parsley-trigger="change">
                                                                     </div>
                                                                 <?php } ?>
@@ -388,12 +388,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control select2"
                                                                         data-toggle="select2">network interface
                                                                         <?php
-                                                                        foreach (netnet($_GET["id"]) as $bbb) { ?>
+                                                                        foreach (netnet(ipTV_lib::$request["id"]) as $bbb) { ?>
                                                                             <option <?php if (isset($rServerArr)) {
                                                                                 if ($rServerArr["network_interface"] == $bbb) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $bbb ?>">
+                                                                                    } ?>value="<?= $bbb ?>">
                                                                                 <?= $bbb ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -406,9 +406,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         name="network_guaranteed_speed"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["network_guaranteed_speed"]);
-                                                                        } else {
-                                                                            echo "1000";
-                                                                        } ?>"
+                                                                               } else {
+                                                                                   echo "1000";
+                                                                               } ?>"
                                                                         required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
@@ -420,9 +420,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="system_os" name="system_os"
                                                                         value="<?php if (isset($rServerArr)) {
                                                                             echo htmlspecialchars($rServerArr["system_os"]);
-                                                                        } else {
-                                                                            echo "Ubuntu 14.04.5 LTS";
-                                                                        } ?>">
+                                                                               } else {
+                                                                                   echo "Ubuntu 14.04.5 LTS";
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -434,7 +434,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rServerArr["enable_geoip"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <div class="col-md-6">
@@ -446,7 +446,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if ($rServerArr["geoip_type"] == $rType) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rType ?>">
+                                                                                    } ?>value="<?= $rType ?>">
                                                                                 <?= $rText ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -461,18 +461,18 @@ if ($rSettings["sidebar"]) { ?>
                                                                         class="form-control select2-multiple"
                                                                         data-toggle="select2" multiple="multiple"
                                                                         data-placeholder="<?= $_["choose"] ?>">
-                                                                        <?php $rSelected = json_decode($rServerArr["geoip_countries"], True);
+                                                                        <?php $rSelected = json_decode($rServerArr["geoip_countries"], true);
                                                                         foreach ($rCountries as $rCountry) { ?>
                                                                             <!--<option <?php if (isset($rServerArr)) {
                                                                                 if (!empty($rSelected) && in_array($rCountry["id"], $rSelected)) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rCountry["id"] ?>"><?= $rCountry["name"] ?></option>-->
+                                                                                        } ?>value="<?= $rCountry["id"] ?>"><?= $rCountry["name"] ?></option>-->
                                                                             <option <?php if (isset($rServerArr)) {
                                                                                 if (!empty($rSelected) && in_array($rCountry["id"], $rSelected)) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rCountry["id"] ?>">
+                                                                                    } ?>value="<?= $rCountry["id"] ?>">
                                                                                 <?= $rCountry["name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -505,7 +505,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rServerArr["enable_isp"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <div class="col-md-6">
@@ -517,7 +517,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if ($rServerArr["isp_type"] == $rType) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rType ?>">
+                                                                                    } ?>value="<?= $rType ?>">
                                                                                 <?= $rText ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -545,7 +545,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <select id="isp_names" name="isp_names[]" size=6
                                                                         class="form-control" multiple="multiple">
-                                                                        <?php $rnabilosss = json_decode($rServerArr["isp_names"], True);
+                                                                        <?php $rnabilosss = json_decode($rServerArr["isp_names"], true);
                                                                         if ((isset($rServerArr)) & (is_array($rnabilosss))) {
                                                                             foreach ($rnabilosss as $ispnom) { ?>
                                                                                 <option value="<?= $ispnom ?>"><?= $ispnom ?>
@@ -568,9 +568,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 class="btn btn-primary"
                                                                 value="<?php if (isset($rServerArr)) {
                                                                     echo $_["edit"];
-                                                                } else {
-                                                                    echo $_["add"];
-                                                                } ?>" />
+                                                                       } else {
+                                                                           echo $_["add"];
+                                                                       } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

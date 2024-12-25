@@ -5,8 +5,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
     exit;
 }
 
-if (isset($_POST["categories"])) {
-    $rPostCategories = json_decode($_POST["categories"], True);
+if (isset(ipTV_lib::$request["categories"])) {
+    $rPostCategories = json_decode(ipTV_lib::$request["categories"], true);
     if (count($rPostCategories) > 0) {
         foreach ($rPostCategories as $rOrder => $rPostCategory) {
             $ipTV_db_admin->query("UPDATE `stream_categories` SET `cat_order` = " . (intval($rOrder) + 1) . ", `parent_id` = 0 WHERE `id` = " . intval($rPostCategory["id"]) . ";");
@@ -42,10 +42,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">

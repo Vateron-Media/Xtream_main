@@ -198,7 +198,7 @@ if (isset(ipTV_lib::$request["submit_stream"])) {
         if (isset(ipTV_lib::$request["edit"])) {
             $rImportStreams[] = $rImportArray;
         } else {
-            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . $ipTV_db_admin->escape($rImportArray["stream_display_name"]) . "' AND `type` IN (1,3);");
+            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . $rImportArray["stream_display_name"] . "' AND `type` IN (1,3);");
             if ($ipTV_db_admin->get_row()["count"] == 0) {
                 $rImportStreams[] = $rImportArray;
             } else {

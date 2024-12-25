@@ -5,29 +5,29 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_bouquet"))) {
     exit;
 }
 
-if (isset($_POST["bouquet_order_array"])) {
+if (isset(ipTV_lib::$request["bouquet_order_array"])) {
     set_time_limit(0);
     ini_set('mysql.connect_timeout', 0);
     ini_set('max_execution_time', 0);
     ini_set('default_socket_timeout', 0);
-    $rOrder = json_decode($_POST["bouquet_order_array"], True);
+    $rOrder = json_decode(ipTV_lib::$request["bouquet_order_array"], true);
     $rSort = 1;
     foreach ($rOrder as $rBouquetID) {
         $ipTV_db_admin->query("UPDATE `bouquets` SET `bouquet_order` = " . intval($rSort) . " WHERE `id` = " . intval($rBouquetID) . ";");
         $rSort++;
     }
-    if (isset($_POST["confirmReplace"])) {
+    if (isset(ipTV_lib::$request["confirmReplace"])) {
         $rUsers = getUserBouquets();
         foreach ($rUsers as $rUser) {
-            $rBouquet = json_decode($rUser["bouquet"], True);
+            $rBouquet = json_decode($rUser["bouquet"], true);
             $rBouquet = sortArrayByArray($rBouquet, $rOrder);
-            $ipTV_db_admin->query("UPDATE `users` SET `bouquet` = '[" . $ipTV_db_admin->escape(join(",", $rBouquet)) . "]' WHERE `id` = " . intval($rUser["id"]) . ";");
+            $ipTV_db_admin->query("UPDATE `users` SET `bouquet` = '[" . join(",", $rBouquet) . "]' WHERE `id` = " . intval($rUser["id"]) . ";");
         }
         $rPackages = getPackages();
         foreach ($rPackages as $rPackage) {
-            $rBouquet = json_decode($rPackage["bouquets"], True);
+            $rBouquet = json_decode($rPackage["bouquets"], true);
             $rBouquet = sortArrayByArray($rBouquet, $rOrder);
-            $ipTV_db_admin->query("UPDATE `packages` SET `bouquets` = '[" . $ipTV_db_admin->escape(join(",", $rBouquet)) . "]' WHERE `id` = " . intval($rPackage["id"]) . ";");
+            $ipTV_db_admin->query("UPDATE `packages` SET `bouquets` = '[" . join(",", $rBouquet) . "]' WHERE `id` = " . intval($rPackage["id"]) . ";");
         }
         $_STATUS = 0;
     } else {
@@ -44,10 +44,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -63,7 +63,7 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="alert alert-success show" role="alert">
                                     <?= $_["bouquet_order_has_taken_effect_and"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
                                     <div class="alert alert-success show" role="alert">
                                     <?= $_["bouquet_order_has_taken_effect_any"] ?>
                                     </div>

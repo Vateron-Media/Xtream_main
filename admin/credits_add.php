@@ -5,12 +5,12 @@ if ((!$rPermissions["is_reseller"]) or (!$rPermissions["create_sub_resellers"]))
     exit;
 }
 
-if ((isset($_POST["submit_credits"])) && (isset($_POST["id"]))) {
-    if (!hasPermissions("reg_user", $_POST["id"])) {
+if ((isset(ipTV_lib::$request["submit_credits"])) && (isset(ipTV_lib::$request["id"]))) {
+    if (!hasPermissions("reg_user", ipTV_lib::$request["id"])) {
         exit;
     }
-    $rUser = getRegisteredUser($_POST["id"]);
-    $rCost = intval($_POST["credits"]);
+    $rUser = getRegisteredUser(ipTV_lib::$request["id"]);
+    $rCost = intval(ipTV_lib::$request["credits"]);
     if (($rUserInfo["credits"] - $rCost < 0) && ($rCost > 0)) {
         $_STATUS = 1;
     }
@@ -22,20 +22,20 @@ if ((isset($_POST["submit_credits"])) && (isset($_POST["id"]))) {
         $rUpdCredits = floatval($rUser["credits"]) + floatval($rCost);
         $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = " . $rNewCredits . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
         $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = " . $rUpdCredits . " WHERE `id` = " . intval($rUser["id"]) . ";");
-        $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $ipTV_db_admin->escape($rUser["username"]) . "', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["transfer_credits_to"] . " [" . $ipTV_db_admin->escape($rUser["username"]) . "] Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
-        $ipTV_db_admin->query("INSERT INTO `credits_log`(`target_id`, `admin_id`, `amount`, `date`, `reason`) VALUES(" . $rUser["id"] . ", " . intval($rUserInfo["id"]) . ", " . $ipTV_db_admin->escape($rCost) . ", " . intval(time()) . ", 'Reseller credits transfer');");
+        $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rUser["username"] . "', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["transfer_credits_to"] . " [" . $rUser["username"] . "] Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+        $ipTV_db_admin->query("INSERT INTO `credits_log`(`target_id`, `admin_id`, `amount`, `date`, `reason`) VALUES(" . $rUser["id"] . ", " . intval($rUserInfo["id"]) . ", " . $rCost . ", " . intval(time()) . ", 'Reseller credits transfer');");
         header("Location: ./reg_users.php");
         exit;
     }
 }
 
-if (!isset($_GET["id"])) {
+if (!isset(ipTV_lib::$request["id"])) {
     exit;
 }
-if (!hasPermissions("reg_user", $_GET["id"])) {
+if (!hasPermissions("reg_user", ipTV_lib::$request["id"])) {
     exit;
 }
-$rUser = getRegisteredUser($_GET["id"]);
+$rUser = getRegisteredUser(ipTV_lib::$request["id"]);
 if (!$rUser) {
     exit;
 }
@@ -49,10 +49,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -79,7 +79,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["transfer_success"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -89,10 +89,10 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./credits_add.php<?php if (isset($_GET["id"])) {
-                                        echo "?id=" . $_GET["id"];
-                                    } ?>" method="POST" id="credits_form" data-parsley-validate="">
-                                        <input type="hidden" name="id" value="<?= $_GET["id"] ?>" />
+                                    <form action="./credits_add.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                        echo "?id=" . ipTV_lib::$request["id"];
+                                                                   } ?>" method="POST" id="credits_form" data-parsley-validate="">
+                                        <input type="hidden" name="id" value="<?= ipTV_lib::$request["id"] ?>" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <li class="nav-item">

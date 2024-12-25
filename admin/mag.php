@@ -5,21 +5,21 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_mag")) && (!ha
     exit;
 }
 
-if (isset($_GET["id"])) {
-    $rEditID = $_GET["id"];
+if (isset(ipTV_lib::$request["id"])) {
+    $rEditID = ipTV_lib::$request["id"];
 }
 
-if (isset($_POST["submit_mag"])) {
-    if (filter_var($_POST["mac"], FILTER_VALIDATE_MAC)) {
-        if ($rArray = getUser($_POST["paired_user"])) {
-            if ((isset($_POST["edit"])) && (strlen($_POST["edit"]))) {
+if (isset(ipTV_lib::$request["submit_mag"])) {
+    if (filter_var(ipTV_lib::$request["mac"], FILTER_VALIDATE_MAC)) {
+        if ($rArray = getUser(ipTV_lib::$request["paired_user"])) {
+            if ((isset(ipTV_lib::$request["edit"])) && (strlen(ipTV_lib::$request["edit"]))) {
                 if (!hasPermissions("adv", "edit_mag")) {
                     exit;
                 }
-                $rCurMag = getMag($_POST["edit"]);
+                $rCurMag = getMag(ipTV_lib::$request["edit"]);
                 $ipTV_db_admin->query("DELETE FROM `users` WHERE `id` = " . intval($rCurMag["user_id"]) . ";"); // Delete existing user.
                 $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rCurMag["user_id"]) . ";");
-            } else if (!hasPermissions("adv", "add_mag")) {
+            } elseif (!hasPermissions("adv", "add_mag")) {
                 exit;
             }
             $rArray["username"] .= rand(0, 999999);
@@ -27,7 +27,7 @@ if (isset($_POST["submit_mag"])) {
             $rArray["pair_id"] = $rArray["id"];
             unset($rArray["id"]);
             // Create new user.
-            $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+            $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
             foreach (array_values($rArray) as $rValue) {
                 isset($rValues) ? $rValues .= ',' : $rValues = '';
                 if (is_array($rValue)) {
@@ -36,33 +36,33 @@ if (isset($_POST["submit_mag"])) {
                 if (is_null($rValue)) {
                     $rValues .= 'NULL';
                 } else {
-                    $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+                    $rValues .= '\'' . $rValue . '\'';
                 }
             }
             $rQuery = "INSERT INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
                 $rNewID = $ipTV_db_admin->last_insert_id();
-                $rArray = array("user_id" => $rNewID, "mac" => base64_encode($_POST["mac"]));
+                $rArray = array("user_id" => $rNewID, "mac" => base64_encode(ipTV_lib::$request["mac"]));
                 // Create / Edit MAG.
-                if (isset($_POST["edit"])) {
-                    $ipTV_db_admin->query("UPDATE `mag_devices` SET `user_id` = " . intval($rNewID) . ", `mac` = '" . $ipTV_db_admin->escape(base64_encode($_POST["mac"])) . "' WHERE `mag_id` = " . intval($_POST["edit"]) . ";");
-                    $rEditID = $_POST["edit"];
+                if (isset(ipTV_lib::$request["edit"])) {
+                    $ipTV_db_admin->query("UPDATE `mag_devices` SET `user_id` = " . intval($rNewID) . ", `mac` = '" . base64_encode(ipTV_lib::$request["mac"]) . "' WHERE `mag_id` = " . intval(ipTV_lib::$request["edit"]) . ";");
+                    $rEditID = ipTV_lib::$request["edit"];
                 } else {
-                    $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`) VALUES(" . intval($rNewID) . ", '" . $ipTV_db_admin->escape(base64_encode($_POST["mac"])) . "');");
+                    $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`) VALUES(" . intval($rNewID) . ", '" . base64_encode(ipTV_lib::$request["mac"]) . "');");
                     $rEditID = $ipTV_db_admin->last_insert_id();
                 }
                 $ipTV_db_admin->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rNewID) . ", 2);");
                 header("Location: ./mag.php?id=" . $rEditID);
                 exit;
             }
-        } else if ((isset($_POST["edit"])) && (strlen($_POST["edit"]))) {
+        } elseif ((isset(ipTV_lib::$request["edit"])) && (strlen(ipTV_lib::$request["edit"]))) {
             // Don't create a new user, legacy support for device.
-            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . $ipTV_db_admin->escape(base64_encode($_POST["mac"])) . "' WHERE `mag_id` = " . intval($_POST["edit"]) . ";");
-            header("Location: ./mag.php?id=" . $_POST["edit"]);
+            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ipTV_lib::$request["mac"]) . "' WHERE `mag_id` = " . intval(ipTV_lib::$request["edit"]) . ";");
+            header("Location: ./mag.php?id=" . ipTV_lib::$request["edit"]);
             exit;
         }
     } else {
-        $rMagArr = array("mac" => base64_encode($_POST["mac"]), "paired_user" => $_POST["paired_user"]);
+        $rMagArr = array("mac" => base64_encode(ipTV_lib::$request["mac"]), "paired_user" => ipTV_lib::$request["paired_user"]);
         $_STATUS = 1;
     }
 }
@@ -80,7 +80,7 @@ if ((isset($rEditID)) && (!isset($rMagArr))) {
     if (!$rMagArr) {
         exit;
     }
-} else if (!hasPermissions("adv", "add_mag")) {
+} elseif (!hasPermissions("adv", "add_mag")) {
     exit;
 }
 
@@ -93,10 +93,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -123,7 +123,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["device_success"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -135,7 +135,7 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body">
                                     <form action="./mag.php<?php if (isset($rEditID)) {
                                         echo "?id=" . $rEditID;
-                                    } ?>" method="POST" id="mag_form" data-parsley-validate="">
+                                                           } ?>" method="POST" id="mag_form" data-parsley-validate="">
                                         <?php if (isset($rMagArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rEditID ?>" />
                                         <?php } ?>
@@ -163,7 +163,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="mac"
                                                                         name="mac" value="<?php if (isset($rMagArr)) {
                                                                             echo htmlspecialchars(base64_decode($rMagArr["mac"]));
-                                                                        } ?>" required data-parsley-trigger="change">
+                                                                                          } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -188,9 +188,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             <input name="submit_mag" type="submit"
                                                                 class="btn btn-primary" value="<?php if (isset($rMagArr)) {
                                                                     echo $_["edit"];
-                                                                } else {
-                                                                    echo $_["add"];
-                                                                } ?>" />
+                                                                                               } else {
+                                                                                                   echo $_["add"];
+                                                                                               } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

@@ -5,55 +5,55 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch_settin
     exit;
 }
 
-if (isset($_GET["update"])) {
+if (isset(ipTV_lib::$request["update"])) {
     updateTMDbCategories();
     header("Location: ./settings_watch.php");
 }
 
-if (isset($_POST["submit_settings"])) {
-    foreach ($_POST as $rKey => $rValue) {
+if (isset(ipTV_lib::$request["submit_settings"])) {
+    foreach (ipTV_lib::$request as $rKey => $rValue) {
         $rSplit = explode("_", $rKey);
         if ($rSplit[0] == "genre") {
             $rGenreID = intval($rSplit[1]);
-            $rBouquets = json_encode($_POST["bouquet_" . $rGenreID]);
+            $rBouquets = json_encode(ipTV_lib::$request["bouquet_" . $rGenreID]);
             if (!$rBouquets) {
                 $rBouquets = "[]";
             }
-            $ipTV_db_admin->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . $ipTV_db_admin->escape($rBouquets) . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 1;");
+            $ipTV_db_admin->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . $rBouquets . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 1;");
         }
     }
-    foreach ($_POST as $rKey => $rValue) {
+    foreach (ipTV_lib::$request as $rKey => $rValue) {
         $rSplit = explode("_", $rKey);
         if ($rSplit[0] == "genretv") {
             $rGenreID = intval($rSplit[1]);
-            $rBouquets = json_encode($_POST["bouquettv_" . $rGenreID]);
+            $rBouquets = json_encode(ipTV_lib::$request["bouquettv_" . $rGenreID]);
             if (!$rBouquets) {
                 $rBouquets = "[]";
             }
-            $ipTV_db_admin->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . $ipTV_db_admin->escape($rBouquets) . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 2;");
+            $ipTV_db_admin->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . $rBouquets . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 2;");
         }
     }
-    if (isset($_POST["read_native"])) {
+    if (isset(ipTV_lib::$request["read_native"])) {
         $rNative = 1;
     } else {
         $rNative = 0;
     }
-    if (isset($_POST["movie_symlink"])) {
+    if (isset(ipTV_lib::$request["movie_symlink"])) {
         $rSymLink = 1;
     } else {
         $rSymLink = 0;
     }
-    if (isset($_POST["auto_encode"])) {
+    if (isset(ipTV_lib::$request["auto_encode"])) {
         $rAutoEncode = 1;
     } else {
         $rAutoEncode = 0;
     }
-    if (isset($_POST["ffprobe_input"])) {
+    if (isset(ipTV_lib::$request["ffprobe_input"])) {
         $rProbeInput = 1;
     } else {
         $rProbeInput = 0;
     }
-    $ipTV_db_admin->query("UPDATE `watch_settings` SET `ffprobe_input` = " . $rProbeInput . ", `percentage_match` = " . intval($_POST["percentage_match"]) . ", `read_native` = " . $rNative . ", `movie_symlink` = " . $rSymLink . ", `auto_encode` = " . $rAutoEncode . ", `transcode_profile_id` = " . intval($_POST["transcode_profile_id"]) . ", `scan_seconds` = " . intval($_POST["scan_seconds"]) . ";");
+    $ipTV_db_admin->query("UPDATE `watch_settings` SET `ffprobe_input` = " . $rProbeInput . ", `percentage_match` = " . intval(ipTV_lib::$request["percentage_match"]) . ", `read_native` = " . $rNative . ", `movie_symlink` = " . $rSymLink . ", `auto_encode` = " . $rAutoEncode . ", `transcode_profile_id` = " . intval(ipTV_lib::$request["transcode_profile_id"]) . ", `scan_seconds` = " . intval(ipTV_lib::$request["scan_seconds"]) . ";");
 }
 
 $rBouquets = getBouquets();
@@ -72,10 +72,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -154,7 +154,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input name="read_native" id="read_native"
                                                                         type="checkbox" <?php if ($rWatchSettings["read_native"] == 1) {
                                                                             echo "checked ";
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -167,7 +167,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input name="movie_symlink" id="movie_symlink"
                                                                         type="checkbox" <?php if ($rWatchSettings["movie_symlink"] == 1) {
                                                                             echo "checked ";
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -182,7 +182,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input name="auto_encode" id="auto_encode"
                                                                         type="checkbox" <?php if ($rWatchSettings["auto_encode"] == 1) {
                                                                             echo "checked ";
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -195,7 +195,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input name="ffprobe_input" id="ffprobe_input"
                                                                         type="checkbox" <?php if ($rWatchSettings["ffprobe_input"] == 1) {
                                                                             echo "checked ";
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -237,12 +237,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-toggle="select2">
                                                                         <option <?php if (intval($rWatchSettings["transcode_profile_id"]) == 0) {
                                                                             echo "selected ";
-                                                                        } ?>value="0">
+                                                                                } ?>value="0">
                                                                             <?= $_["transcoding_disabled"] ?> </option>
                                                                         <?php foreach (getTranscodeProfiles() as $rProfile) { ?>
                                                                             <option <?php if (intval($rWatchSettings["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
                                                                                 echo "selected ";
-                                                                            } ?>value="<?= $rProfile["profile_id"] ?>">
+                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>">
                                                                                 <?= $rProfile["profile_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -277,12 +277,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 data-toggle="select2">
                                                                                 <option <?php if (intval($rRow["category_id"]) == 0) {
                                                                                     echo "selected ";
-                                                                                } ?>value="0">
+                                                                                        } ?>value="0">
                                                                                     <?= $_["do_not_use"] ?> </option>
                                                                                 <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                                                     <option <?php if (intval($rRow["category_id"]) == intval($rCategory["id"])) {
                                                                                         echo "selected ";
-                                                                                    } ?>value="<?= $rCategory["id"] ?>">
+                                                                                            } ?>value="<?= $rCategory["id"] ?>">
                                                                                         <?= $rCategory["category_name"] ?></option>
                                                                                 <?php } ?>
                                                                             </select>
@@ -297,9 +297,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 data-toggle="select2" multiple="multiple"
                                                                                 data-placeholder="<?= $_["choose"] ?>">
                                                                                 <?php foreach ($rBouquets as $rBouquet) { ?>
-                                                                                    <option <?php if (in_array(intval($rBouquet["id"]), json_decode($rRow["bouquets"], True))) {
+                                                                                    <option <?php if (in_array(intval($rBouquet["id"]), json_decode($rRow["bouquets"], true))) {
                                                                                         echo "selected ";
-                                                                                    } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                            } ?>value="<?= $rBouquet["id"] ?>">
                                                                                         <?= $rBouquet["bouquet_name"] ?></option>
                                                                                 <?php } ?>
                                                                             </select>
@@ -336,12 +336,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 data-toggle="select2">
                                                                                 <option <?php if (intval($rRow["category_id"]) == 0) {
                                                                                     echo "selected ";
-                                                                                } ?>value="0">
+                                                                                        } ?>value="0">
                                                                                     <?= $_["do_not_use"] ?></option>
                                                                                 <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                                                     <option <?php if (intval($rRow["category_id"]) == intval($rCategory["id"])) {
                                                                                         echo "selected ";
-                                                                                    } ?>value="<?= $rCategory["id"] ?>">
+                                                                                            } ?>value="<?= $rCategory["id"] ?>">
                                                                                         <?= $rCategory["category_name"] ?></option>
                                                                                 <?php } ?>
                                                                             </select>
@@ -355,9 +355,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 data-toggle="select2" multiple="multiple"
                                                                                 data-placeholder="<?= $_["choose"] ?>">
                                                                                 <?php foreach ($rBouquets as $rBouquet) { ?>
-                                                                                    <option <?php if (in_array(intval($rBouquet["id"]), json_decode($rRow["bouquets"], True))) {
+                                                                                    <option <?php if (in_array(intval($rBouquet["id"]), json_decode($rRow["bouquets"], true))) {
                                                                                         echo "selected ";
-                                                                                    } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                            } ?>value="<?= $rBouquet["id"] ?>">
                                                                                         <?= $rBouquet["bouquet_name"] ?></option>
                                                                                 <?php } ?>
                                                                             </select>

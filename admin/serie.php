@@ -7,12 +7,12 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_series")) && (
 
 $rCategories = getCategories_admin("series");
 
-if (isset($_POST["submit_series"])) {
-    if (isset($_POST["edit"])) {
+if (isset(ipTV_lib::$request["submit_series"])) {
+    if (isset(ipTV_lib::$request["edit"])) {
         if (!hasPermissions("adv", "edit_series")) {
             exit;
         }
-        $rArray = getSerie($_POST["edit"]);
+        $rArray = getSerie(ipTV_lib::$request["edit"]);
         unset($rArray["id"]);
     } else {
         if (!hasPermissions("adv", "add_series")) {
@@ -21,24 +21,24 @@ if (isset($_POST["submit_series"])) {
         $rArray = array("title" => "", "category_id" => "", "episode_run_time" => 0, "tmdb_id" => 0, "cover" => "", "genre" => "", "plot" => "", "cast" => "", "rating" => 0, "director" => "", "releaseDate" => "", "last_modified" => time(), "seasons" => array(), "backdrop_path" => array(), "youtube_trailer" => "");
     }
     if ($rAdminSettings["download_images"]) {
-        $_POST["cover"] = downloadImage($_POST["cover"]);
-        $_POST["backdrop_path"] = downloadImage($_POST["backdrop_path"]);
+        ipTV_lib::$request["cover"] = downloadImage(ipTV_lib::$request["cover"]);
+        ipTV_lib::$request["backdrop_path"] = downloadImage(ipTV_lib::$request["backdrop_path"]);
     }
-    $rBouquets = $_POST["bouquets"];
-    unset($_POST["bouquets"]);
-    if (strlen($_POST["backdrop_path"]) == 0) {
+    $rBouquets = ipTV_lib::$request["bouquets"];
+    unset(ipTV_lib::$request["bouquets"]);
+    if (strlen(ipTV_lib::$request["backdrop_path"]) == 0) {
         $rArray["backdrop_path"] = array();
     } else {
-        $rArray["backdrop_path"] = array($_POST["backdrop_path"]);
+        $rArray["backdrop_path"] = array(ipTV_lib::$request["backdrop_path"]);
     }
-    unset($_POST["backdrop_path"]);
+    unset(ipTV_lib::$request["backdrop_path"]);
     $rArray["cover_big"] = $rArray["cover"];
-    foreach ($_POST as $rKey => $rValue) {
+    foreach (ipTV_lib::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
     }
-    $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+    $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
     $rValues = null;
     foreach (array_values($rArray) as $rValue) {
         isset($rValues) ? $rValues .= ',' : $rValues = '';
@@ -48,17 +48,17 @@ if (isset($_POST["submit_series"])) {
         if (is_null($rValue)) {
             $rValues .= 'NULL';
         } else {
-            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+            $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset($_POST["edit"])) {
+    if (isset(ipTV_lib::$request["edit"])) {
         $rCols = "`id`," . $rCols;
-        $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
+        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `series`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset($_POST["edit"])) {
-            $rInsertID = intval($_POST["edit"]);
+        if (isset(ipTV_lib::$request["edit"])) {
+            $rInsertID = intval(ipTV_lib::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -81,8 +81,8 @@ if (isset($_POST["submit_series"])) {
     }
 }
 
-if (isset($_GET["id"])) {
-    $rSeries = getSerie($_GET["id"]);
+if (isset(ipTV_lib::$request["id"])) {
+    $rSeries = getSerie(ipTV_lib::$request["id"]);
     if ((!$rSeries) or (!hasPermissions("adv", "edit_series"))) {
         exit;
     }
@@ -143,8 +143,8 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./serie.php<?php if (isset($_GET["id"])) {
-                                        echo "?id=" . $_GET["id"];
+                                    <form action="./serie.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                        echo "?id=" . ipTV_lib::$request["id"];
                                                              } ?>" method="POST" id="series_form" data-parsley-validate="">
                                         <?php if (isset($rSeries)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rSeries["id"] ?>" />
@@ -202,7 +202,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if (intval($rSeries["category_id"]) == intval($rCategory["id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                                    } elseif ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                                    } elseif ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                                         echo "selected ";
                                                                                     } ?>value="<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?>

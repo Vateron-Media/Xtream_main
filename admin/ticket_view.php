@@ -1,20 +1,20 @@
 <?php
 include "session.php";
 include "functions.php";
-if (!isset($_GET["id"])) {
+if (!isset(ipTV_lib::$request["id"])) {
     exit;
 }
 if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_tickets"))) {
     exit;
 }
 
-$rTicket = getTicket($_GET["id"]);
+$rTicket = getTicket(ipTV_lib::$request["id"]);
 if (!$rTicket) {
     exit;
 }
 
 if ($rUserInfo["id"] <> $rTicket["member_id"]) {
-    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 1 WHERE `id` = " . intval($_GET["id"]) . ";");
+    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 1 WHERE `id` = " . intval(ipTV_lib::$request["id"]) . ";");
 }
 
 if ($rSettings["sidebar"]) {
@@ -26,10 +26,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <div class="row">
                         <div class="col-12">
                             <div class="page-title-box">
@@ -55,16 +55,16 @@ if ($rSettings["sidebar"]) { ?>
                                 <?php foreach ($rTicket["replies"] as $rReply) { ?>
                                     <article class="timeline-item<?php if (!$rReply["admin_reply"]) {
                                         echo " timeline-item-left";
-                                    } ?>">
+                                                                 } ?>">
                                         <div class="timeline-desk">
                                             <div class="timeline-box">
                                                 <span class="arrow-alt"></span>
                                                 <span class="timeline-icon"><i class="mdi mdi-adjust"></i></span>
                                                 <h4 class="mt-0 font-16"><?php if (!$rReply["admin_reply"]) {
                                                     echo $rTicket["user"]["username"];
-                                                } else {
-                                                    echo "Admin";
-                                                } ?></h4>
+                                                                         } else {
+                                                                             echo "Admin";
+                                                                         } ?></h4>
                                                 <p class="text-muted">
                                                     <small><?= date("Y-m-d H:i", $rReply["date"]) ?></small>
                                                 </p>

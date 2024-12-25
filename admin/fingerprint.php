@@ -14,10 +14,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -70,9 +70,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <option value="" selected><?= $_["all_categories"] ?>
                                                                 </option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
-                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                           echo " selected";
-                                                                      } ?>><?= $rCategory["category_name"] ?>
+                                                                                   } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -85,8 +85,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <table id="datatable-md1"

@@ -8,11 +8,11 @@ if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "streams"))) {
     exit;
 }
 
-if (isset($_GET["category"])) {
-    if (!isset($rCategories[$_GET["category"]])) {
+if (isset(ipTV_lib::$request["category"])) {
+    if (!isset($rCategories[ipTV_lib::$request["category"]])) {
         exit;
     } else {
-        $rCategory = $rCategories[$_GET["category"]];
+        $rCategory = $rCategories[ipTV_lib::$request["category"]];
     }
 } else {
     $rCategory = null;
@@ -26,15 +26,15 @@ if ($rSettings["sidebar"]) {
 if ($rSettings["sidebar"]) { ?>
     <div class="content-page<?php if ($rPermissions["is_reseller"]) {
         echo " boxed-layout-ext";
-    } ?>">
+                            } ?>">
         <div class="content">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper<?php if ($rPermissions["is_reseller"]) {
                     echo " boxed-layout-ext";
-                } ?>">
+                                   } ?>">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -92,7 +92,7 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?= $_["streams"] ?> <?php if ($rCategory) {
                                        echo " - " . $rCategory["category_name"];
-                                   } ?></h4>
+                                                       } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -114,9 +114,9 @@ if ($rSettings["sidebar"]) { ?>
                                                         data-toggle="select2">
                                                         <option value="" selected><?= $_["all_categories"] ?></option>
                                                         <?php foreach ($rCategories as $rCategory) { ?>
-                                                            <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                            <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                   echo " selected";
-                                                              } ?>><?= $rCategory["category_name"] ?></option>
+                                                                           } ?>><?= $rCategory["category_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -125,9 +125,9 @@ if ($rSettings["sidebar"]) { ?>
                                                         data-toggle="select2">
                                                         <option value="" selected><?= $_["all_servers"] ?></option>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                            <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
+                                                            <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
                                                                   echo " selected";
-                                                              } ?>><?= $rServer["server_name"] ?></option>
+                                                                           } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -139,8 +139,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                 echo " selected";
-                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                            <?php } ?>
+                                                                   } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>
                                             <?php } else { ?>
@@ -153,9 +153,9 @@ if ($rSettings["sidebar"]) { ?>
                                                         data-toggle="select2">
                                                         <option value="" selected><?= $_["all_servers"] ?></option>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                            <option value="<?= $rServer["id"] ?>" <?php if ((isset($_GET["server"])) && ($_GET["server"] == $rServer["id"])) {
+                                                            <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
                                                                   echo " selected";
-                                                              } ?>><?= $rServer["server_name"] ?></option>
+                                                                           } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -164,41 +164,41 @@ if ($rSettings["sidebar"]) { ?>
                                                         data-toggle="select2">
                                                         <option value="" selected><?= $_["all_categories"] ?></option>
                                                         <?php foreach ($rCategories as $rCategory) { ?>
-                                                            <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                            <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                   echo " selected";
-                                                              } ?>><?= $rCategory["category_name"] ?></option>
+                                                                           } ?>><?= $rCategory["category_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <select id="stream_filter" class="form-control" data-toggle="select2">
-                                                        <option value="" <?php if (!isset($_GET["filter"])) {
+                                                        <option value="" <?php if (!isset(ipTV_lib::$request["filter"])) {
                                                             echo " selected";
-                                                        } ?>><?= $_["no_filter"] ?></option>
-                                                        <option value="1" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 1)) {
+                                                                         } ?>><?= $_["no_filter"] ?></option>
+                                                        <option value="1" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 1)) {
                                                             echo " selected";
-                                                        } ?>><?= $_["online"] ?></option>
-                                                        <option value="2" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 2)) {
+                                                                          } ?>><?= $_["online"] ?></option>
+                                                        <option value="2" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 2)) {
                                                             echo " selected";
-                                                        } ?>><?= $_["down"] ?></option>
-                                                        <option value="3" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 3)) {
+                                                                          } ?>><?= $_["down"] ?></option>
+                                                        <option value="3" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 3)) {
                                                             echo " selected";
-                                                        } ?>><?= $_["stopped"] ?></option>
-                                                        <option value="4" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 4)) {
+                                                                          } ?>><?= $_["stopped"] ?></option>
+                                                        <option value="4" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 4)) {
                                                             echo " selected";
-                                                        } ?>><?= $_["starting"] ?></option>
-                                                        <option value="5" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 5)) {
+                                                                          } ?>><?= $_["starting"] ?></option>
+                                                        <option value="5" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 5)) {
                                                             echo " selected";
-                                                        } ?>><?= $_["on_demand"] ?></option>
-                                                        <option value="6" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 6)) {
+                                                                          } ?>><?= $_["on_demand"] ?></option>
+                                                        <option value="6" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 6)) {
                                                             echo " selected";
-                                                        } ?>><?= $_["direct"] ?></option>
-                                                        <option value="7" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 7)) {
+                                                                          } ?>><?= $_["direct"] ?></option>
+                                                        <option value="7" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 7)) {
                                                             echo " selected";
-                                                        } ?>><?= $_["timeshift"] ?></option>
-                                                        <option value="8" <?php if ((isset($_GET["filter"])) && ($_GET["filter"] == 8)) {
+                                                                          } ?>><?= $_["timeshift"] ?></option>
+                                                        <option value="8" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 8)) {
                                                             echo " selected";
-                                                        } ?>><?= $_["created_channel"] ?></option>
+                                                                          } ?>><?= $_["created_channel"] ?></option>
                                                     </select>
                                                 </div>
                                                 <label class="col-md-1 col-form-label text-center"
@@ -209,8 +209,8 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                             <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                 echo " selected";
-                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                            <?php } ?>
+                                                                   } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>
                                             <?php } ?>
@@ -381,7 +381,7 @@ if ($rSettings["sidebar"]) { ?>
                         if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
                     });
                     formCache.init();
-                    <?php if (!isset($_GET["filter"])) { ?>
+                    <?php if (!isset(ipTV_lib::$request["filter"])) { ?>
                         formCache.fetch();
                     <?php } ?>
 
@@ -419,7 +419,8 @@ if ($rSettings["sidebar"]) { ?>
                             }
                         },
                         columnDefs: [
-                            <?php if ($rPermissions["is_admin"]) { ?> {
+                            <?php if ($rPermissions["is_admin"]) {
+                                ?> {
                                     "className": "dt-center",
                                     "targets": [0, 1, 4, 5, 6, 7, 8, 9]
                                 },
@@ -427,11 +428,12 @@ if ($rSettings["sidebar"]) { ?>
                                     "orderable": false,
                                     "targets": [6, 7]
                                 }
-                                <?php } else { ?> {
+                            <?php } else {
+                                ?> {
                                     "className": "dt-center",
                                     "targets": [0, 1, 4]
                                 }
-                                <?php } ?>
+                            <?php } ?>
                         ],
                         order: [
                             [0, "desc"]

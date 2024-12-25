@@ -5,7 +5,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "flood_login"))) {
     exit;
 }
 
-if (isset($_GET["flush"])) {
+if (isset(ipTV_lib::$request["flush"])) {
     flushLogins();
     header("Location: ./flood_login.php");
 }
@@ -19,10 +19,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">

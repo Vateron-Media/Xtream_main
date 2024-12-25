@@ -5,10 +5,10 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_ips"))) {
     exit;
 }
 
-if (isset($_POST["submit_ip"])) {
-    if (filter_var($_POST["ip"], FILTER_VALIDATE_IP)) {
-        $rArray = array("ip" => $_POST["ip"], "notes" => $_POST["notes"], "date" => time(), "attempts_blocked" => 0);
-        $rCols = "`" . $ipTV_db_admin->escapeTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+if (isset(ipTV_lib::$request["submit_ip"])) {
+    if (filter_var(ipTV_lib::$request["ip"], FILTER_VALIDATE_IP)) {
+        $rArray = array("ip" => ipTV_lib::$request["ip"], "notes" => ipTV_lib::$request["notes"], "date" => time(), "attempts_blocked" => 0);
+        $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
             if (is_array($rValue)) {
@@ -17,7 +17,7 @@ if (isset($_POST["submit_ip"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+                $rValues .= '\'' . $rValue . '\'';
             }
         }
         $rQuery = "REPLACE INTO `blocked_ips`(" . $rCols . ") VALUES(" . $rValues . ");";
@@ -45,10 +45,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -75,20 +75,20 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["block_ip_success"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                     <?= $_["generic_fail"] ?>
-                                    </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                                </div>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                     <?= $_["please_enter_a_valid_ip_address"] ?>
-                                        </div>
+                                </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">

@@ -13,9 +13,9 @@ $rStatusArray = array(0 => "<button type='button' class='btn btn-outline-warning
 $rVODStatusArray = array(0 => "<i class='text-dark mdi mdi-checkbox-blank-circle-outline'></i>", 1 => "<i class='text-success mdi mdi-check-circle'></i>", 2 => "<i class='text-warning mdi mdi-checkbox-blank-circle'></i>", 3 => "<i class='text-primary mdi mdi-web'></i>", 4 => "<i class='text-danger mdi mdi-triangle'></i>");
 $rWatchStatusArray = array(1 => "<button type='button' class='btn btn-outline-success btn-rounded btn-xs waves-effect waves-light'>ADDED</button>", 2 => "<button type='button' class='btn btn-outline-danger btn-rounded btn-xs waves-effect waves-light'>SQL FAILED</button>", 3 => "<button type='button' class='btn btn-outline-danger btn-rounded btn-xs waves-effect waves-light'>NO CATEGORY</button>", 4 => "<button type='button' class='btn btn-outline-danger btn-rounded btn-xs waves-effect waves-light'>NO TMDb MATCH</button>", 5 => "<button type='button' class='btn btn-outline-danger btn-rounded btn-xs waves-effect waves-light'>INVALID FILE</button>");
 
-$rType = $_GET["id"];
-$rStart = intval($_GET["start"]);
-$rLimit = intval($_GET["length"]);
+$rType = ipTV_lib::$request["id"];
+$rStart = intval(ipTV_lib::$request["start"]);
+$rLimit = intval(ipTV_lib::$request["length"]);
 
 if (($rLimit > 1000) or ($rLimit == -1) or ($rLimit == 0)) {
     $rLimit = 1000;
@@ -26,15 +26,15 @@ if ($rType == "users") {
         exit;
     }
     $rAvailableMembers = array_keys(getRegisteredUsers($rUserInfo["id"]));
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`users`.`id`", "`users`.`username`", "`users`.`password`", "`reg_users`.`username`", "`users`.`enabled`", "`active_connections`", "`users`.`is_trial`", "`users`.`exp_date`", "`users`.`max_connections`", "`users`.`max_connections`", "`users`.`isp_desc`", "`lines_live`.`user_ip`", false);
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
-    if (isset($_GET["showall"])) {
+    if (isset(ipTV_lib::$request["showall"])) {
         if ($rPermissions["is_reseller"]) {
             $rWhere[] = "`users`.`member_id` IN (" . join(",", $rAvailableMembers) . ")";
         }
@@ -45,29 +45,29 @@ if ($rType == "users") {
             $rWhere[] = "`users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`member_id` IN (" . join(",", $rAvailableMembers) . ")";
         }
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`users`.`username` LIKE '%{$rSearch}%' OR `users`.`password` LIKE '%{$rSearch}%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`exp_date`) LIKE '%{$rSearch}%' OR `users`.`max_connections` LIKE '%{$rSearch}%' OR `users`.`reseller_notes` LIKE '%{$rSearch}%' OR `users`.`admin_notes` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["filter"]) > 0) {
-        if ($_GET["filter"] == 1) {
+    if (strlen(ipTV_lib::$request["filter"]) > 0) {
+        if (ipTV_lib::$request["filter"] == 1) {
             $rWhere[] = "(`users`.`admin_enabled` = 1 AND `users`.`enabled` = 1 AND (`users`.`exp_date` IS NULL OR `users`.`exp_date` > UNIX_TIMESTAMP()))";
-        } else if ($_GET["filter"] == 2) {
+        } elseif (ipTV_lib::$request["filter"] == 2) {
             $rWhere[] = "`users`.`enabled` = 0";
-        } else if ($_GET["filter"] == 3) {
+        } elseif (ipTV_lib::$request["filter"] == 3) {
             $rWhere[] = "`users`.`admin_enabled` = 0";
-        } else if ($_GET["filter"] == 4) {
+        } elseif (ipTV_lib::$request["filter"] == 4) {
             $rWhere[] = "(`users`.`exp_date` IS NOT NULL AND `users`.`exp_date` <= UNIX_TIMESTAMP())";
-        } else if ($_GET["filter"] == 5) {
+        } elseif (ipTV_lib::$request["filter"] == 5) {
             $rWhere[] = "`users`.`is_trial` = 1";
-        } else if ($_GET["filter"] == 6) {
+        } elseif (ipTV_lib::$request["filter"] == 6) {
             $rWhere[] = "`users`.`is_mag` = 1";
-        } else if ($_GET["filter"] == 7) {
+        } elseif (ipTV_lib::$request["filter"] == 7) {
             $rWhere[] = "`users`.`is_e2` = 1";
         }
     }
-    if (strlen($_GET["reseller"]) > 0) {
-        $rWhere[] = "`users`.`member_id` = " . intval($_GET["reseller"]);
+    if (strlen(ipTV_lib::$request["reseller"]) > 0) {
+        $rWhere[] = "`users`.`member_id` = " . intval(ipTV_lib::$request["reseller"]);
     }
     if (count($rWhere) > 0) {
         $rWhereString = "WHERE " . join(" AND ", $rWhere);
@@ -75,7 +75,7 @@ if ($rType == "users") {
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(`users`.`id`) AS `count` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` {$rWhereString};";
@@ -97,7 +97,7 @@ if ($rType == "users") {
                 } else {
                     if (!$rRow["enabled"]) {
                         $rStatus = '<span class="mdi mdi-close mdi-24px text-secondary" role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Disabled"></span>';
-                    } else if (($rRow["exp_date"]) && ($rRow["exp_date"] < time())) {
+                    } elseif (($rRow["exp_date"]) && ($rRow["exp_date"] < time())) {
                         $rStatus = '<span class="mdi mdi-close mdi-24px text-warning role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Expired"></span>';
                     } else {
                         $rStatus = '<span class="mdi mdi-check mdi-24px text-success role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Active"></span>';
@@ -136,12 +136,12 @@ if ($rType == "users") {
                 $rButtons = '<div class="btn-group">';
                 if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_reset_isplock"]))) {
                     //if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {	
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'resetispuser\');"><i class="mdi mdi-lock-reset"></i></button>
 					';
                 }
                 if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_can_isplock"]))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {	
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     if ($rRow["is_isplock"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unlock isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unlockk\');"><i class="mdi mdi-lock"></i></button>';
                     } else {
@@ -216,13 +216,13 @@ if ($rType == "users") {
                 $leftMinNumber = ($rRow["exp_date"] - $today) / (60);
                 if ($leftdaynumber > 0 && $leftdaynumber <= 1) {
                     $rLeftDate = "1 Day";
-                } else if ($leftdaynumber > 1) {
+                } elseif ($leftdaynumber > 1) {
                     $rLeftDate = round($leftdaynumber) . " Days";
-                } else if ($leftHourNumber > 0 && $leftHourNumber <= 1) {
+                } elseif ($leftHourNumber > 0 && $leftHourNumber <= 1) {
                     $rLeftDate = round($leftMinNumber) . " Minutes";
-                } else if (round($leftHourNumber) == 1) {
+                } elseif (round($leftHourNumber) == 1) {
                     $rLeftDate = "1 Hour";
-                } else if ($leftHourNumber > 1) {
+                } elseif ($leftHourNumber > 1) {
                     $rLeftDate = round($leftHourNumber) . " Hours";
                 } else {
                     $rLeftDate = "<center>-</center>";
@@ -243,14 +243,14 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "mags") {
+} elseif ($rType == "mags") {
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_mag"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`users`.`id`", "`users`.`username`", "`mag_devices`.`mac`", "`reg_users`.`username`", "`users`.`enabled`", "`active_connections`", "`users`.`is_trial`", "`users`.`exp_date`", "`users`.`isp_desc`", "`lines_live`.`user_ip`", false);
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
@@ -258,26 +258,26 @@ if ($rType == "users") {
     if ($rPermissions["is_reseller"]) {
         $rWhere[] = "`users`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`users`.`username` LIKE '%{$rSearch}%' OR from_base64(`mag_devices`.`mac`) LIKE '%" . strtoupper($rSearch) . "%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`exp_date`) LIKE '%{$rSearch}%' OR `users`.`reseller_notes` LIKE '%{$rSearch}%' OR `users`.`admin_notes` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["filter"]) > 0) {
-        if ($_GET["filter"] == 1) {
+    if (strlen(ipTV_lib::$request["filter"]) > 0) {
+        if (ipTV_lib::$request["filter"] == 1) {
             $rWhere[] = "(`users`.`admin_enabled` = 1 AND `users`.`enabled` = 1 AND (`users`.`exp_date` IS NULL OR `users`.`exp_date` > UNIX_TIMESTAMP()))";
-        } else if ($_GET["filter"] == 2) {
+        } elseif (ipTV_lib::$request["filter"] == 2) {
             $rWhere[] = "`users`.`enabled` = 0";
-        } else if ($_GET["filter"] == 3) {
+        } elseif (ipTV_lib::$request["filter"] == 3) {
             $rWhere[] = "`users`.`admin_enabled` = 0";
-        } else if ($_GET["filter"] == 4) {
+        } elseif (ipTV_lib::$request["filter"] == 4) {
             $rWhere[] = "(`users`.`exp_date` IS NOT NULL AND `users`.`exp_date` <= UNIX_TIMESTAMP())";
-        } else if ($_GET["filter"] == 5) {
+        } elseif (ipTV_lib::$request["filter"] == 5) {
             $rWhere[] = "`users`.`is_trial` = 1";
         }
     }
     if ($rPermissions["is_admin"]) {
-        if (strlen($_GET["reseller"]) > 0) {
-            $rWhere[] = "`users`.`member_id` = " . intval($_GET["reseller"]);
+        if (strlen(ipTV_lib::$request["reseller"]) > 0) {
+            $rWhere[] = "`users`.`member_id` = " . intval(ipTV_lib::$request["reseller"]);
         }
     }
     if (count($rWhere) > 0) {
@@ -286,7 +286,7 @@ if ($rType == "users") {
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(`users`.`id`) AS `count` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` {$rWhereString};";
@@ -308,7 +308,7 @@ if ($rType == "users") {
                 } else {
                     if (!$rRow["enabled"]) {
                         $rStatus = '<span class="mdi mdi-close mdi-24px text-secondary" role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Disabled"></span>';
-                    } else if (($rRow["exp_date"]) && ($rRow["exp_date"] < time())) {
+                    } elseif (($rRow["exp_date"]) && ($rRow["exp_date"] < time())) {
                         $rStatus = '<span class="mdi mdi-close mdi-24px text-warning role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Expired"></span>';
                     } else {
                         $rStatus = '<span class="mdi mdi-check mdi-24px text-success role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Active"></span>';
@@ -341,12 +341,12 @@ if ($rType == "users") {
                 $rButtons = '<div class="btn-group">';
                 if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_reset_isplock"]))) {
                     //if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {	
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'resetispuser\');"><i class="mdi mdi-lock-reset"></i></button>
 					';
                 }
                 if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_can_isplock"]))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {	
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     if ($rRow["is_isplock"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unlock isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unlockk\');"><i class="mdi mdi-lock"></i></button>';
                     } else {
@@ -430,13 +430,13 @@ if ($rType == "users") {
                 $leftMinNumber = ($rRow["exp_date"] - $today) / (60);
                 if ($leftdaynumber > 0 && $leftdaynumber <= 1) {
                     $rLeftDate = "1 Day";
-                } else if ($leftdaynumber > 1) {
+                } elseif ($leftdaynumber > 1) {
                     $rLeftDate = round($leftdaynumber) . " Days";
-                } else if ($leftHourNumber > 0 && $leftHourNumber <= 1) {
+                } elseif ($leftHourNumber > 0 && $leftHourNumber <= 1) {
                     $rLeftDate = round($leftMinNumber) . " Minutes";
-                } else if (round($leftHourNumber) == 1) {
+                } elseif (round($leftHourNumber) == 1) {
                     $rLeftDate = "1 Hour";
-                } else if ($leftHourNumber > 1) {
+                } elseif ($leftHourNumber > 1) {
                     $rLeftDate = round($leftHourNumber) . " Hours";
                 } else {
                     $rLeftDate = "<center>-</center>";
@@ -457,14 +457,14 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "enigmas") {
+} elseif ($rType == "enigmas") {
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_e2"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`users`.`id`", "`users`.`username`", "`enigma2_devices`.`mac`", "`reg_users`.`username`", "`users`.`enabled`", "`active_connections`", "`users`.`is_trial`", "`users`.`exp_date`", "`users`.`isp_desc`", "`lines_live`.`user_ip`", false);
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
@@ -472,26 +472,26 @@ if ($rType == "users") {
     if ($rPermissions["is_reseller"]) {
         $rWhere[] = "`users`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`users`.`username` LIKE '%{$rSearch}%' OR `enigma2_devices`.`mac` LIKE '%{$rSearch}%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`exp_date`) LIKE '%{$rSearch}%' OR `users`.`reseller_notes` LIKE '%{$rSearch}%' OR `users`.`admin_notes` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["filter"]) > 0) {
-        if ($_GET["filter"] == 1) {
+    if (strlen(ipTV_lib::$request["filter"]) > 0) {
+        if (ipTV_lib::$request["filter"] == 1) {
             $rWhere[] = "(`users`.`admin_enabled` = 1 AND `users`.`enabled` = 1 AND (`users`.`exp_date` IS NULL OR `users`.`exp_date` > UNIX_TIMESTAMP()))";
-        } else if ($_GET["filter"] == 2) {
+        } elseif (ipTV_lib::$request["filter"] == 2) {
             $rWhere[] = "`users`.`enabled` = 0";
-        } else if ($_GET["filter"] == 3) {
+        } elseif (ipTV_lib::$request["filter"] == 3) {
             $rWhere[] = "`users`.`admin_enabled` = 0";
-        } else if ($_GET["filter"] == 4) {
+        } elseif (ipTV_lib::$request["filter"] == 4) {
             $rWhere[] = "(`users`.`exp_date` IS NOT NULL AND `users`.`exp_date` <= UNIX_TIMESTAMP())";
-        } else if ($_GET["filter"] == 5) {
+        } elseif (ipTV_lib::$request["filter"] == 5) {
             $rWhere[] = "`users`.`is_trial` = 1";
         }
     }
     if ($rPermissions["is_admin"]) {
-        if (strlen($_GET["reseller"]) > 0) {
-            $rWhere[] = "`users`.`member_id` = " . intval($_GET["reseller"]);
+        if (strlen(ipTV_lib::$request["reseller"]) > 0) {
+            $rWhere[] = "`users`.`member_id` = " . intval(ipTV_lib::$request["reseller"]);
         }
     }
     if (count($rWhere) > 0) {
@@ -500,7 +500,7 @@ if ($rType == "users") {
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(`users`.`id`) AS `count` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `enigma2_devices` ON `enigma2_devices`.`user_id` = `users`.`id` {$rWhereString};";
@@ -522,7 +522,7 @@ if ($rType == "users") {
                 } else {
                     if (!$rRow["enabled"]) {
                         $rStatus = '<span class="mdi mdi-close mdi-24px text-secondary" role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Disabled"></span>';
-                    } else if (($rRow["exp_date"]) && ($rRow["exp_date"] < time())) {
+                    } elseif (($rRow["exp_date"]) && ($rRow["exp_date"] < time())) {
                         $rStatus = '<span class="mdi mdi-close mdi-24px text-warning role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Expired"></span>';
                     } else {
                         $rStatus = '<span class="mdi mdi-check mdi-24px text-success role="button" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Active"></span>';
@@ -555,12 +555,12 @@ if ($rType == "users") {
                 $rButtons = '<div class="btn-group">';
                 if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_reset_isplock"]))) {
                     //if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {	
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'resetispuser\');"><i class="mdi mdi-lock-reset"></i></button>
 					';
                 }
                 if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_can_isplock"]))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {	
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     if ($rRow["is_isplock"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unlock isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unlockk\');"><i class="mdi mdi-lock"></i></button>';
                     } else {
@@ -625,13 +625,13 @@ if ($rType == "users") {
                 $leftMinNumber = ($rRow["exp_date"] - $today) / (60);
                 if ($leftdaynumber > 0 && $leftdaynumber <= 1) {
                     $rLeftDate = "1 Day";
-                } else if ($leftdaynumber > 1) {
+                } elseif ($leftdaynumber > 1) {
                     $rLeftDate = round($leftdaynumber) . " Days";
-                } else if ($leftHourNumber > 0 && $leftHourNumber <= 1) {
+                } elseif ($leftHourNumber > 0 && $leftHourNumber <= 1) {
                     $rLeftDate = round($leftMinNumber) . " Minutes";
-                } else if (round($leftHourNumber) == 1) {
+                } elseif (round($leftHourNumber) == 1) {
                     $rLeftDate = "1 Hour";
-                } else if ($leftHourNumber > 1) {
+                } elseif ($leftHourNumber > 1) {
                     $rLeftDate = round($leftHourNumber) . " Hours";
                 } else {
                     $rLeftDate = "<center>-</center>";
@@ -652,57 +652,57 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "streams") {
+} elseif ($rType == "streams") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "streams")) && (!hasPermissions("adv", "mass_edit_streams"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`streams`.`id`", false, "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`clients`", "`streams_servers`.`stream_started`", false, false, false, "`streams_servers`.`bitrate`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
     $rWhere[] = "`streams`.`type` in (1,3)";
-    if (isset($_GET["stream_id"])) {
-        $rWhere[] = "`streams`.`id` = " . intval($_GET["stream_id"]);
+    if (isset(ipTV_lib::$request["stream_id"])) {
+        $rWhere[] = "`streams`.`id` = " . intval(ipTV_lib::$request["stream_id"]);
         $rOrderBy = "ORDER BY `streams_servers`.`server_stream_id` ASC";
     } else {
-        if (strlen($_GET["search"]["value"]) > 0) {
-            $rSearch = $_GET["search"]["value"];
+        if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+            $rSearch = ipTV_lib::$request["search"]["value"];
             $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_servers`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
         }
-        if (strlen($_GET["filter"]) > 0) {
-            if ($_GET["filter"] == 1) {
+        if (strlen(ipTV_lib::$request["filter"]) > 0) {
+            if (ipTV_lib::$request["filter"] == 1) {
                 $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0)";
-            } else if ($_GET["filter"] == 2) {
+            } elseif (ipTV_lib::$request["filter"] == 2) {
                 $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0)";
-            } else if ($_GET["filter"] == 3) {
+            } elseif (ipTV_lib::$request["filter"] == 3) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
-            } else if ($_GET["filter"] == 4) {
+            } elseif (ipTV_lib::$request["filter"] == 4) {
                 $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 0)";
-            } else if ($_GET["filter"] == 5) {
+            } elseif (ipTV_lib::$request["filter"] == 5) {
                 $rWhere[] = "`streams_servers`.`on_demand` = 1";
-            } else if ($_GET["filter"] == 6) {
+            } elseif (ipTV_lib::$request["filter"] == 6) {
                 $rWhere[] = "`streams`.`direct_source` = 1";
-            } else if ($_GET["filter"] == 7) {
+            } elseif (ipTV_lib::$request["filter"] == 7) {
                 $rWhere[] = "`streams`.`tv_archive_duration` > 0";
-            } else if ($_GET["filter"] == 8) {
+            } elseif (ipTV_lib::$request["filter"] == 8) {
                 $rWhere[] = "`streams`.`type` = 3";
             }
         }
-        if (strlen($_GET["category"]) > 0) {
-            $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
+        if (strlen(ipTV_lib::$request["category"]) > 0) {
+            $rWhere[] = "`streams`.`category_id` = " . intval(ipTV_lib::$request["category"]);
         }
-        if (strlen($_GET["server"]) > 0) {
-            $rWhere[] = "`streams_servers`.`server_id` = " . intval($_GET["server"]);
+        if (strlen(ipTV_lib::$request["server"]) > 0) {
+            $rWhere[] = "`streams_servers`.`server_id` = " . intval(ipTV_lib::$request["server"]);
         }
         if ($rOrder[$rOrderRow]) {
-            $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+            $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
             $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
         }
     }
@@ -752,7 +752,7 @@ if ($rType == "users") {
                 if (intval($rRow["direct_source"]) == 1) {
                     // Direct
                     $rActualStatus = 5;
-                } else if ($rRow["monitor_pid"]) {
+                } elseif ($rRow["monitor_pid"]) {
                     // Started
                     if (($rRow["pid"]) && ($rRow["pid"] > 0)) {
                         // Running
@@ -767,7 +767,7 @@ if ($rType == "users") {
                             $rActualStatus = 3;
                         }
                     }
-                } else if (intval($rRow["on_demand"]) == 1) {
+                } elseif (intval($rRow["on_demand"]) == 1) {
                     // On Demand
                     $rActualStatus = 4;
                 } else {
@@ -879,7 +879,7 @@ if ($rType == "users") {
                 }
                 if ($rRow["count_epg"] > 0) {
                     $rEPG = '<i class="text-success fas fa-circle"></i>';
-                } else if ($rRow["channel_id"]) {
+                } elseif ($rRow["channel_id"]) {
                     $rEPG = '<i class="text-warning fas fa-circle"></i>';
                 } else {
                     $rEPG = '<i class="text-danger far fa-circle"></i>';
@@ -899,57 +899,57 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "radios") {
+} elseif ($rType == "radios") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "radio")) && (!hasPermissions("adv", "mass_edit_radio"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     if ($rPermissions["is_admin"]) {
         $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`clients`", "`streams_servers`.`stream_started`", false, "`streams_servers`.`bitrate`");
     } else {
         $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`streams_servers`.`bitrate`");
     }
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
     $rWhere[] = "`streams`.`type` = 4";
-    if (isset($_GET["stream_id"])) {
-        $rWhere[] = "`streams`.`id` = " . intval($_GET["stream_id"]);
+    if (isset(ipTV_lib::$request["stream_id"])) {
+        $rWhere[] = "`streams`.`id` = " . intval(ipTV_lib::$request["stream_id"]);
         $rOrderBy = "ORDER BY `streams_servers`.`server_stream_id` ASC";
     } else {
-        if (strlen($_GET["search"]["value"]) > 0) {
-            $rSearch = $_GET["search"]["value"];
+        if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+            $rSearch = ipTV_lib::$request["search"]["value"];
             $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_servers`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
         }
-        if (strlen($_GET["filter"]) > 0) {
-            if ($_GET["filter"] == 1) {
+        if (strlen(ipTV_lib::$request["filter"]) > 0) {
+            if (ipTV_lib::$request["filter"] == 1) {
                 $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0)";
-            } else if ($_GET["filter"] == 2) {
+            } elseif (ipTV_lib::$request["filter"] == 2) {
                 $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0)";
-            } else if ($_GET["filter"] == 3) {
+            } elseif (ipTV_lib::$request["filter"] == 3) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
-            } else if ($_GET["filter"] == 4) {
+            } elseif (ipTV_lib::$request["filter"] == 4) {
                 $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 0)";
-            } else if ($_GET["filter"] == 5) {
+            } elseif (ipTV_lib::$request["filter"] == 5) {
                 $rWhere[] = "`streams_servers`.`on_demand` = 1";
-            } else if ($_GET["filter"] == 6) {
+            } elseif (ipTV_lib::$request["filter"] == 6) {
                 $rWhere[] = "`streams`.`direct_source` = 1";
             }
         }
-        if (strlen($_GET["category"]) > 0) {
-            $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
+        if (strlen(ipTV_lib::$request["category"]) > 0) {
+            $rWhere[] = "`streams`.`category_id` = " . intval(ipTV_lib::$request["category"]);
         }
-        if (strlen($_GET["server"]) > 0) {
-            $rWhere[] = "`streams_servers`.`server_id` = " . intval($_GET["server"]);
+        if (strlen(ipTV_lib::$request["server"]) > 0) {
+            $rWhere[] = "`streams_servers`.`server_id` = " . intval(ipTV_lib::$request["server"]);
         }
         if ($rOrder[$rOrderRow]) {
-            $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+            $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
             $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
         }
     }
@@ -992,7 +992,7 @@ if ($rType == "users") {
                 if (intval($rRow["direct_source"]) == 1) {
                     // Direct
                     $rActualStatus = 5;
-                } else if ($rRow["monitor_pid"]) {
+                } elseif ($rRow["monitor_pid"]) {
                     // Started
                     if (($rRow["pid"]) && ($rRow["pid"] > 0)) {
                         // Running
@@ -1007,7 +1007,7 @@ if ($rType == "users") {
                             $rActualStatus = 3;
                         }
                     }
-                } else if (intval($rRow["on_demand"]) == 1) {
+                } elseif (intval($rRow["on_demand"]) == 1) {
                     // On Demand
                     $rActualStatus = 4;
                 } else {
@@ -1115,53 +1115,53 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "movies") {
+} elseif ($rType == "movies") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "movies")) && (!hasPermissions("adv", "mass_sedits_vod"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`streaming_servers`.`server_name`", "`clients`", "`streams_servers`.`stream_started`", false, false, "`streams_servers`.`bitrate`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
     $rWhere[] = "`streams`.`type` = 2";
-    if (isset($_GET["stream_id"])) {
-        $rWhere[] = "`streams`.`id` = " . intval($_GET["stream_id"]);
+    if (isset(ipTV_lib::$request["stream_id"])) {
+        $rWhere[] = "`streams`.`id` = " . intval(ipTV_lib::$request["stream_id"]);
         $rOrderBy = "ORDER BY `streams_servers`.`server_stream_id` ASC";
     } else {
-        if (strlen($_GET["search"]["value"]) > 0) {
-            $rSearch = $_GET["search"]["value"];
+        if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+            $rSearch = ipTV_lib::$request["search"]["value"];
             $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_servers`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
         }
-        if (strlen($_GET["filter"]) > 0) {
-            if ($_GET["filter"] == 1) {
+        if (strlen(ipTV_lib::$request["filter"]) > 0) {
+            if (ipTV_lib::$request["filter"] == 1) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 0 AND `streams_servers`.`stream_status` <> 1)";
-            } else if ($_GET["filter"] == 2) {
+            } elseif (ipTV_lib::$request["filter"] == 2) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 1 AND `streams_servers`.`stream_status` <> 1)";
-            } else if ($_GET["filter"] == 3) {
+            } elseif (ipTV_lib::$request["filter"] == 3) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`stream_status` = 1)";
-            } else if ($_GET["filter"] == 4) {
+            } elseif (ipTV_lib::$request["filter"] == 4) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 1)";
-            } else if ($_GET["filter"] == 5) {
+            } elseif (ipTV_lib::$request["filter"] == 5) {
                 $rWhere[] = "`streams`.`direct_source` = 1";
-            } else if ($_GET["filter"] == 6) {
+            } elseif (ipTV_lib::$request["filter"] == 6) {
                 $rWhere[] = "(`streams`.`movie_properties` IS NULL OR `streams`.`movie_properties` = '' OR `streams`.`movie_properties` = '[]' OR `streams`.`movie_properties` = '{}' OR `streams`.`movie_properties` LIKE '%tmdb_id\":\"\"%')";
             }
         }
-        if (strlen($_GET["category"]) > 0) {
-            $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
+        if (strlen(ipTV_lib::$request["category"]) > 0) {
+            $rWhere[] = "`streams`.`category_id` = " . intval(ipTV_lib::$request["category"]);
         }
-        if (strlen($_GET["server"]) > 0) {
-            $rWhere[] = "`streams_servers`.`server_id` = " . intval($_GET["server"]);
+        if (strlen(ipTV_lib::$request["server"]) > 0) {
+            $rWhere[] = "`streams_servers`.`server_id` = " . intval(ipTV_lib::$request["server"]);
         }
         if ($rOrder[$rOrderRow]) {
-            $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+            $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
             $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
         }
     }
@@ -1200,10 +1200,10 @@ if ($rType == "users") {
                 if (intval($rRow["direct_source"]) == 1) {
                     // Direct
                     $rActualStatus = 3;
-                } else if ($rRow["pid"]) {
+                } elseif ($rRow["pid"]) {
                     if ($rRow["to_analyze"] == 1) {
                         $rActualStatus = 2; // Encoding
-                    } else if ($rRow["stream_status"] == 1) {
+                    } elseif ($rRow["stream_status"] == 1) {
                         $rActualStatus = 4; // Down
                     } else {
                         $rActualStatus = 1; // Encoded
@@ -1232,10 +1232,10 @@ if ($rType == "users") {
                     if (intval($rActualStatus) == 1) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Encode" type="button" class="btn btn-light waves-effect waves-light btn-xs api-start" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'start\');"><i class="mdi mdi-refresh"></i></button>
 						';
-                    } else if (intval($rActualStatus) == 3) {
+                    } elseif (intval($rActualStatus) == 3) {
                         $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs api-stop"><i class="mdi mdi-stop"></i></button>
 						';
-                    } else if (intval($rActualStatus) == 2) {
+                    } elseif (intval($rActualStatus) == 2) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Stop Encoding" type="button" class="btn btn-light waves-effect waves-light btn-xs api-stop" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'stop\');"><i class="mdi mdi-stop"></i></button>
 						';
                     } else {
@@ -1284,41 +1284,41 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "episode_list") {
+} elseif ($rType == "episode_list") {
     if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "import_episodes")) && (!hasPermissions("adv", "mass_delete")))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`series`.`title`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
     $rWhere[] = "`streams`.`type` = 5";
-    if (strlen($_GET["series"]) > 0) {
-        $rWhere[] = "`series_episodes`.`series_id` = " . intval($_GET["series"]);
+    if (strlen(ipTV_lib::$request["series"]) > 0) {
+        $rWhere[] = "`series_episodes`.`series_id` = " . intval(ipTV_lib::$request["series"]);
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `series`.`title` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["filter"]) > 0) {
-        if ($_GET["filter"] == 1) {
+    if (strlen(ipTV_lib::$request["filter"]) > 0) {
+        if (ipTV_lib::$request["filter"] == 1) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 0 AND `streams_servers`.`stream_status` <> 1)";
-        } else if ($_GET["filter"] == 2) {
+        } elseif (ipTV_lib::$request["filter"] == 2) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 1 AND `streams_servers`.`stream_status` <> 1)";
-        } else if ($_GET["filter"] == 3) {
+        } elseif (ipTV_lib::$request["filter"] == 3) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`stream_status` = 1)";
-        } else if ($_GET["filter"] == 4) {
+        } elseif (ipTV_lib::$request["filter"] == 4) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 1)";
-        } else if ($_GET["filter"] == 5) {
+        } elseif (ipTV_lib::$request["filter"] == 5) {
             $rWhere[] = "`streams`.`direct_source` = 1";
         }
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     if (count($rWhere) > 0) {
@@ -1343,10 +1343,10 @@ if ($rType == "users") {
                 if (intval($rRow["direct_source"]) == 1) {
                     // Direct
                     $rActualStatus = 3;
-                } else if ($rRow["pid"]) {
+                } elseif ($rRow["pid"]) {
                     if ($rRow["to_analyze"] == 1) {
                         $rActualStatus = 2; // Encoding
-                    } else if ($rRow["stream_status"] == 1) {
+                    } elseif ($rRow["stream_status"] == 1) {
                         $rActualStatus = 4; // Down
                     } else {
                         $rActualStatus = 1; // Encoded
@@ -1361,17 +1361,17 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "user_activity") {
+} elseif ($rType == "user_activity") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reseller_client_connection_logs"])) {
         exit;
     }
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "connection_logs"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`user_activity`.`activity_id`", "`users`.`username`", "`streams`.`stream_display_name`", "`streaming_servers`.`server_name`", "`user_activity`.`date_start`", "`user_activity`.`date_end`", "`user_activity`.`user_ip`", "`user_activity`.`geoip_country_code`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
@@ -1379,13 +1379,13 @@ if ($rType == "users") {
     if ($rPermissions["is_reseller"]) {
         $rWhere[] = "`users`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`user_activity`.`user_agent` LIKE '%{$rSearch}%' OR `user_activity`.`user_agent` LIKE '%{$rSearch}%' OR `user_activity`.`user_ip` LIKE '%{$rSearch}%' OR `user_activity`.`container` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`user_activity`.`date_start`) LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`user_activity`.`date_end`) LIKE '%{$rSearch}%' OR `user_activity`.`geoip_country_code` LIKE '%{$rSearch}%' OR `users`.`username` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["range"]) > 0) {
-        $rStartTime = substr($_GET["range"], 0, 10);
-        $rEndTime = substr($_GET["range"], strlen($_GET["range"]) - 10, 10);
+    if (strlen(ipTV_lib::$request["range"]) > 0) {
+        $rStartTime = substr(ipTV_lib::$request["range"], 0, 10);
+        $rEndTime = substr(ipTV_lib::$request["range"], strlen(ipTV_lib::$request["range"]) - 10, 10);
         if (!$rStartTime = strtotime($rStartTime . " 00:00:00")) {
             $rStartTime = null;
         }
@@ -1396,8 +1396,8 @@ if ($rType == "users") {
             $rWhere[] = "(`user_activity`.`date_start` >= " . $rStartTime . " AND `user_activity`.`date_end` <= " . $rEndTime . ")";
         }
     }
-    if (strlen($_GET["server"]) > 0) {
-        $rWhere[] = "`user_activity`.`server_id` = " . intval($_GET["server"]);
+    if (strlen(ipTV_lib::$request["server"]) > 0) {
+        $rWhere[] = "`user_activity`.`server_id` = " . intval(ipTV_lib::$request["server"]);
     }
     if (count($rWhere) > 0) {
         $rWhereString = "WHERE " . join(" AND ", $rWhere);
@@ -1405,7 +1405,7 @@ if ($rType == "users") {
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `user_activity` LEFT JOIN `users` ON `user_activity`.`user_id` = `users`.`id` LEFT JOIN `streams` ON `user_activity`.`stream_id` = `streams`.`id` LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_servers`.`id` {$rWhereString};";
@@ -1428,7 +1428,7 @@ LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_server
                 // Format Rows
                 if ($rPermissions["is_admin"]) {
                     if (hasPermissions("adv", "edit_user")) {
-                        if ($rRow["mag"] == NULL) {
+                        if ($rRow["mag"] == null) {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                         } else {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
@@ -1436,7 +1436,7 @@ LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_server
                         }
                     }
                 } else {
-                    if ($rRow["mag"] == NULL) {
+                    if ($rRow["mag"] == null) {
                         $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                     } else {
                         $rUsername = "<a href='./user_reseller_edit.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
@@ -1475,17 +1475,17 @@ LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_server
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "live_connections") {
+} elseif ($rType == "live_connections") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reseller_client_connection_logs"])) {
         exit;
     }
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "live_connections"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`lines_live`.`activity_id`", "`lines_live`.`divergence`", "`users`.`username`", "`streams`.`stream_display_name`", "`streaming_servers`.`server_name`", "`lines_live`.`date_start`", "`lines_live`.`user_ip`", "`lines_live`.`geoip_country_code`", "`lines_live`.`isp`", false);
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
@@ -1493,18 +1493,18 @@ LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_server
     if ($rPermissions["is_reseller"]) {
         $rWhere[] = "`users`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`lines_live`.`user_agent` LIKE '%{$rSearch}%' OR `lines_live`.`user_agent` LIKE '%{$rSearch}%' OR `lines_live`.`user_ip` LIKE '%{$rSearch}%' OR `lines_live`.`container` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`lines_live`.`date_start`) LIKE '%{$rSearch}%' OR `lines_live`.`geoip_country_code` LIKE '%{$rSearch}%' OR `users`.`username` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["server_id"]) > 0) {
-        $rWhere[] = "`lines_live`.`server_id` = " . intval($_GET["server_id"]);
+    if (strlen(ipTV_lib::$request["server_id"]) > 0) {
+        $rWhere[] = "`lines_live`.`server_id` = " . intval(ipTV_lib::$request["server_id"]);
     }
-    if (strlen($_GET["stream_id"]) > 0) {
-        $rWhere[] = "`lines_live`.`stream_id` = " . intval($_GET["stream_id"]);
+    if (strlen(ipTV_lib::$request["stream_id"]) > 0) {
+        $rWhere[] = "`lines_live`.`stream_id` = " . intval(ipTV_lib::$request["stream_id"]);
     }
-    if (strlen($_GET["user_id"]) > 0) {
-        $rWhere[] = "`lines_live`.`user_id` = " . intval($_GET["user_id"]);
+    if (strlen(ipTV_lib::$request["user_id"]) > 0) {
+        $rWhere[] = "`lines_live`.`user_id` = " . intval(ipTV_lib::$request["user_id"]);
     }
     if (count($rWhere) > 0) {
         $rWhereString = "WHERE " . join(" AND ", $rWhere);
@@ -1512,7 +1512,7 @@ LEFT JOIN `streaming_servers` ON `user_activity`.`server_id` = `streaming_server
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `lines_live` LEFT JOIN `users` ON `lines_live`.`user_id` = `users`.`id` LEFT JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id` LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.`id` {$rWhereString};";
@@ -1536,14 +1536,14 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                 if ($rRow['divergence'] <= 50) {
                     $rDivergence = '<button type="button" class="btn btn-outline-success btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
                     ;
-                } else if ($rRow['divergence'] <= 80) {
+                } elseif ($rRow['divergence'] <= 80) {
                     $rDivergence = '<button type="button" class="btn btn-outline-warning btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
                 } else {
                     $rDivergence = '<button type="button" class="btn btn-outline-danger btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
                 }
                 if ($rPermissions["is_admin"]) {
                     if (hasPermissions("adv", "edit_user")) {
-                        if ($rRow["mag"] == NULL) {
+                        if ($rRow["mag"] == null) {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                         } else {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
@@ -1551,7 +1551,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                         }
                     }
                 } else {
-                    if ($rRow["mag"] == NULL) {
+                    if ($rRow["mag"] == null) {
                         $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                     } else {
                         $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
@@ -1587,7 +1587,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                         if (3600 <= $rDuration) {
                             if (14400 < $rDuration) {
                                 $rColour = 'warning';
-                            } else if (43200 < $rDuration) {
+                            } elseif (43200 < $rDuration) {
                                 $rColour = 'danger';
                             }
                             $rDuration = sprintf('%02dh %02dm', $rDuration / 3600, ($rDuration / 60) % 60);
@@ -1611,7 +1611,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                 } else {
                     $rnisp2 = "no isp";
                 }
-                if (isset($_GET["fingerprint"])) {
+                if (isset(ipTV_lib::$request["fingerprint"])) {
                     $rButtons = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Kill Connection" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["pid"] . ', \'kill\', ' . $rRow["activity_id"] . ');"><i class="fas fa-hammer"></i></button>';
                 } else {
                     $rButtons = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Kill Connection" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["pid"] . ', \'kill\');"><i class="fas fa-hammer"></i></button>';
@@ -1622,47 +1622,47 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "stream_list") {
+} elseif ($rType == "stream_list") {
     if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "import_streams")) && (!hasPermissions("adv", "mass_delete")))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`stream_categories`.`category_name`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
-    if (isset($_GET["include_channels"])) {
+    if (isset(ipTV_lib::$request["include_channels"])) {
         $rWhere[] = "`streams`.`type` IN (1,3)";
     } else {
         $rWhere[] = "`streams`.`type` = 1";
     }
-    if (strlen($_GET["category"]) > 0) {
-        $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
+    if (strlen(ipTV_lib::$request["category"]) > 0) {
+        $rWhere[] = "`streams`.`category_id` = " . intval(ipTV_lib::$request["category"]);
     }
-    if (strlen($_GET["filter"]) > 0) {
-        if ($_GET["filter"] == 1) {
+    if (strlen(ipTV_lib::$request["filter"]) > 0) {
+        if (ipTV_lib::$request["filter"] == 1) {
             $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0)";
-        } else if ($_GET["filter"] == 2) {
+        } elseif (ipTV_lib::$request["filter"] == 2) {
             $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0)";
-        } else if ($_GET["filter"] == 3) {
+        } elseif (ipTV_lib::$request["filter"] == 3) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
-        } else if ($_GET["filter"] == 4) {
+        } elseif (ipTV_lib::$request["filter"] == 4) {
             $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 0)";
-        } else if ($_GET["filter"] == 5) {
+        } elseif (ipTV_lib::$request["filter"] == 5) {
             $rWhere[] = "`streams_servers`.`on_demand` = 1";
-        } else if ($_GET["filter"] == 6) {
+        } elseif (ipTV_lib::$request["filter"] == 6) {
             $rWhere[] = "`streams`.`direct_source` = 1";
         }
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%')";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     if (count($rWhere) > 0) {
@@ -1689,43 +1689,43 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "movie_list") {
+} elseif ($rType == "movie_list") {
     if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "import_movies")) && (!hasPermissions("adv", "mass_delete")))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`stream_categories`.`category_name`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
     $rWhere[] = "`streams`.`type` = 2";
-    if (strlen($_GET["category"]) > 0) {
-        $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
+    if (strlen(ipTV_lib::$request["category"]) > 0) {
+        $rWhere[] = "`streams`.`category_id` = " . intval(ipTV_lib::$request["category"]);
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["filter"]) > 0) {
-        if ($_GET["filter"] == 1) {
+    if (strlen(ipTV_lib::$request["filter"]) > 0) {
+        if (ipTV_lib::$request["filter"] == 1) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 0 AND `streams_servers`.`stream_status` <> 1)";
-        } else if ($_GET["filter"] == 2) {
+        } elseif (ipTV_lib::$request["filter"] == 2) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 1 AND `streams_servers`.`stream_status` <> 1)";
-        } else if ($_GET["filter"] == 3) {
+        } elseif (ipTV_lib::$request["filter"] == 3) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`stream_status` = 1)";
-        } else if ($_GET["filter"] == 4) {
+        } elseif (ipTV_lib::$request["filter"] == 4) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 1)";
-        } else if ($_GET["filter"] == 5) {
+        } elseif (ipTV_lib::$request["filter"] == 5) {
             $rWhere[] = "`streams`.`direct_source` = 1";
-        } else if ($_GET["filter"] == 6) {
+        } elseif (ipTV_lib::$request["filter"] == 6) {
             $rWhere[] = "(`streams`.`movie_properties` IS NULL OR `streams`.`movie_properties` = '' OR `streams`.`movie_properties` = '[]' OR `streams`.`movie_properties` = '{}' OR `streams`.`movie_properties` LIKE '%tmdb_id\":\"\"%')";
         }
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     if (count($rWhere) > 0) {
@@ -1750,10 +1750,10 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                 if (intval($rRow["direct_source"]) == 1) {
                     // Direct
                     $rActualStatus = 3;
-                } else if ($rRow["pid"]) {
+                } elseif ($rRow["pid"]) {
                     if ($rRow["to_analyze"] == 1) {
                         $rActualStatus = 2; // Encoding
-                    } else if ($rRow["stream_status"] == 1) {
+                    } elseif ($rRow["stream_status"] == 1) {
                         $rActualStatus = 4; // Down
                     } else {
                         $rActualStatus = 1; // Encoded
@@ -1768,43 +1768,43 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "radio_list") {
+} elseif ($rType == "radio_list") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_delete"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`stream_categories`.`category_name`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
     $rWhere[] = "`streams`.`type` = 4";
-    if (strlen($_GET["category"]) > 0) {
-        $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
+    if (strlen(ipTV_lib::$request["category"]) > 0) {
+        $rWhere[] = "`streams`.`category_id` = " . intval(ipTV_lib::$request["category"]);
     }
-    if (strlen($_GET["filter"]) > 0) {
-        if ($_GET["filter"] == 1) {
+    if (strlen(ipTV_lib::$request["filter"]) > 0) {
+        if (ipTV_lib::$request["filter"] == 1) {
             $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0)";
-        } else if ($_GET["filter"] == 2) {
+        } elseif (ipTV_lib::$request["filter"] == 2) {
             $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0)";
-        } else if ($_GET["filter"] == 3) {
+        } elseif (ipTV_lib::$request["filter"] == 3) {
             $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
-        } else if ($_GET["filter"] == 4) {
+        } elseif (ipTV_lib::$request["filter"] == 4) {
             $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 0)";
-        } else if ($_GET["filter"] == 5) {
+        } elseif (ipTV_lib::$request["filter"] == 5) {
             $rWhere[] = "`streams_servers`.`on_demand` = 1";
-        } else if ($_GET["filter"] == 6) {
+        } elseif (ipTV_lib::$request["filter"] == 6) {
             $rWhere[] = "`streams`.`direct_source` = 1";
         }
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%')";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     if (count($rWhere) > 0) {
@@ -1831,31 +1831,31 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "series_list") {
+} elseif ($rType == "series_list") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_delete"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`series`.`id`", "`series`.`title`", "`stream_categories`.`category_name`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
-    if (strlen($_GET["category"]) > 0) {
-        if ($_GET["category"] == -1) {
+    if (strlen(ipTV_lib::$request["category"]) > 0) {
+        if (ipTV_lib::$request["category"] == -1) {
             $rWhere[] = "(`series`.`tmdb_id` = 0 OR `series`.`tmdb_id` IS NULL)";
         } else {
-            $rWhere[] = "`series`.`category_id` = " . intval($_GET["category"]);
+            $rWhere[] = "`series`.`category_id` = " . intval(ipTV_lib::$request["category"]);
         }
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`series`.`id` LIKE '%{$rSearch}%' OR `series`.`title` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%')";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     if (count($rWhere) > 0) {
@@ -1882,25 +1882,25 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "credits_log") {
+} elseif ($rType == "credits_log") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "credits_log"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`credits_log`.`id`", "`owner_username`", "`target_username`", "`credits_log`.`amount`", "`credits_log`.`reason`", "`date`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`target`.`username` LIKE '%{$rSearch}%' OR `owner`.`username` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`date`) LIKE '%{$rSearch}%' OR `credits_log`.`amount` LIKE '%{$rSearch}%' OR `credits_log`.`reason` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["range"]) > 0) {
-        $rStartTime = substr($_GET["range"], 0, 10);
-        $rEndTime = substr($_GET["range"], strlen($_GET["range"]) - 10, 10);
+    if (strlen(ipTV_lib::$request["range"]) > 0) {
+        $rStartTime = substr(ipTV_lib::$request["range"], 0, 10);
+        $rEndTime = substr(ipTV_lib::$request["range"], strlen(ipTV_lib::$request["range"]) - 10, 10);
         if (!$rStartTime = strtotime($rStartTime . " 00:00:00")) {
             $rStartTime = null;
         }
@@ -1911,8 +1911,8 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
             $rWhere[] = "(`credits_log`.`date` >= " . $rStartTime . " AND `credits_log`.`date` <= " . $rEndTime . ")";
         }
     }
-    if (strlen($_GET["reseller"]) > 0) {
-        $rWhere[] = "(`credits_log`.`target_id` = " . intval($_GET["reseller"]) . " OR `credits_log`.`admin_id` = " . intval($_GET["reseller"]) . ")";
+    if (strlen(ipTV_lib::$request["reseller"]) > 0) {
+        $rWhere[] = "(`credits_log`.`target_id` = " . intval(ipTV_lib::$request["reseller"]) . " OR `credits_log`.`admin_id` = " . intval(ipTV_lib::$request["reseller"]) . ")";
     }
     if (count($rWhere) > 0) {
         $rWhereString = "WHERE " . join(" AND ", $rWhere);
@@ -1920,7 +1920,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `credits_log` LEFT JOIN `reg_users` AS `target` ON `target`.`id` = `credits_log`.`target_id` LEFT JOIN `reg_users` AS `owner` ON `owner`.`id` = `credits_log`.`admin_id` {$rWhereString};";
@@ -1949,25 +1949,25 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "user_ips") {
+} elseif ($rType == "user_ips") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "connection_logs"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`user_activity`.`user_id`", "`users`.`username`", "`ip_count`", false);
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
-    $rWhere = array("`date_start` >= (UNIX_TIMESTAMP()-" . intval($_GET["range"]) . ")");
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    $rWhere = array("`date_start` >= (UNIX_TIMESTAMP()-" . intval(ipTV_lib::$request["range"]) . ")");
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`users`.`username` LIKE '%{$rSearch}%' OR `user_activity`.`user_id` LIKE '%{$rSearch}%' OR `user_activity`.`user_ip` LIKE '%{$rSearch}%')";
     }
     $rWhereString = "WHERE " . join(" AND ", $rWhere);
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(DISTINCT(`user_activity`.`user_id`)) AS `count` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` {$rWhereString};";
@@ -1983,7 +1983,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
-                $rDates = date("Y-m-d H:i", time() - intval($_GET["range"])) . " - " . date("Y-m-d H:i", time());
+                $rDates = date("Y-m-d H:i", time() - intval(ipTV_lib::$request["range"])) . " - " . date("Y-m-d H:i", time());
                 $rButtons = '<a href="./user_activity.php?search=' . $rRow["username"] . '&dates=' . $rDates . '"><button type="button" class="btn btn-light waves-effect waves-light btn-xs">View Logs</button></a>';
                 $rReturn["data"][] = array("<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["user_id"] . "</a>", $rRow["username"], $rRow["ip_count"], $rButtons);
             }
@@ -1991,25 +1991,25 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "client_logs") {
+} elseif ($rType == "client_logs") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "client_request_log"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`client_logs`.`id`", "`users`.`username`", "`streams`.`stream_display_name`", "`client_logs`,`client_status`", "`client_logs`.`extra_data`", "`client_logs`.`ip`", "`client_logs`.`date`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`client_logs`.`client_status` LIKE '%{$rSearch}%' OR `client_logs`.`query_string` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`date`) LIKE '%{$rSearch}%' OR `client_logs`.`extra_data` LIKE '%{$rSearch}%' OR `client_logs`.`ip` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `users`.`username` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["range"]) > 0) {
-        $rStartTime = substr($_GET["range"], 0, 10);
-        $rEndTime = substr($_GET["range"], strlen($_GET["range"]) - 10, 10);
+    if (strlen(ipTV_lib::$request["range"]) > 0) {
+        $rStartTime = substr(ipTV_lib::$request["range"], 0, 10);
+        $rEndTime = substr(ipTV_lib::$request["range"], strlen(ipTV_lib::$request["range"]) - 10, 10);
         if (!$rStartTime = strtotime($rStartTime . " 00:00:00")) {
             $rStartTime = null;
         }
@@ -2020,8 +2020,8 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
             $rWhere[] = "(`client_logs`.`date` >= " . $rStartTime . " AND `client_logs`.`date` <= " . $rEndTime . ")";
         }
     }
-    if (strlen($_GET["filter"]) > 0) {
-        $rWhere[] = "`client_logs`.`client_status` = '" . $_GET["filter"] . "'";
+    if (strlen(ipTV_lib::$request["filter"]) > 0) {
+        $rWhere[] = "`client_logs`.`client_status` = '" . ipTV_lib::$request["filter"] . "'";
     }
     if (count($rWhere) > 0) {
         $rWhereString = "WHERE " . join(" AND ", $rWhere);
@@ -2029,7 +2029,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `client_logs` LEFT JOIN `streams` ON `streams`.`id` = `client_logs`.`stream_id` LEFT JOIN `users` ON `users`.`id` = `client_logs`.`user_id` {$rWhereString};";
@@ -2056,25 +2056,25 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "reg_user_logs") {
+} elseif ($rType == "reg_user_logs") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "reg_userlog"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`reg_userlog`.`id`", "`reg_users`.`username`", "`reg_userlog`.`username`", "`reg_userlog`.`type`", "`reg_userlog`.`date`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`reg_userlog`.`username` LIKE '%{$rSearch}%' OR `reg_userlog`.`type` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`date`) LIKE '%{$rSearch}%' OR `reg_users`.`username` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["range"]) > 0) {
-        $rStartTime = substr($_GET["range"], 0, 10);
-        $rEndTime = substr($_GET["range"], strlen($_GET["range"]) - 10, 10);
+    if (strlen(ipTV_lib::$request["range"]) > 0) {
+        $rStartTime = substr(ipTV_lib::$request["range"], 0, 10);
+        $rEndTime = substr(ipTV_lib::$request["range"], strlen(ipTV_lib::$request["range"]) - 10, 10);
         if (!$rStartTime = strtotime($rStartTime . " 00:00:00")) {
             $rStartTime = null;
         }
@@ -2085,8 +2085,8 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
             $rWhere[] = "(`reg_userlog`.`date` >= " . $rStartTime . " AND `reg_userlog`.`date` <= " . $rEndTime . ")";
         }
     }
-    if (strlen($_GET["reseller"]) > 0) {
-        $rWhere[] = "`reg_userlog`.`owner` = '" . intval($_GET["reseller"]) . "'";
+    if (strlen(ipTV_lib::$request["reseller"]) > 0) {
+        $rWhere[] = "`reg_userlog`.`owner` = '" . intval(ipTV_lib::$request["reseller"]) . "'";
     }
     if (count($rWhere) > 0) {
         $rWhereString = "WHERE " . join(" AND ", $rWhere);
@@ -2094,7 +2094,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `reg_userlog` LEFT JOIN `reg_users` ON `reg_users`.`id` = `reg_userlog`.`owner` {$rWhereString};";
@@ -2121,25 +2121,25 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "stream_logs") {
+} elseif ($rType == "stream_logs") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "stream_errors"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`stream_logs`.`id`", "`streams`.`stream_display_name`", "`streaming_servers`.`server_name`", "`stream_logs`.`error`", "`stream_logs`.`date`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`date`) LIKE '%{$rSearch}%' OR `stream_logs`.`error` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["range"]) > 0) {
-        $rStartTime = substr($_GET["range"], 0, 10);
-        $rEndTime = substr($_GET["range"], strlen($_GET["range"]) - 10, 10);
+    if (strlen(ipTV_lib::$request["range"]) > 0) {
+        $rStartTime = substr(ipTV_lib::$request["range"], 0, 10);
+        $rEndTime = substr(ipTV_lib::$request["range"], strlen(ipTV_lib::$request["range"]) - 10, 10);
         if (!$rStartTime = strtotime($rStartTime . " 00:00:00")) {
             $rStartTime = null;
         }
@@ -2150,8 +2150,8 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
             $rWhere[] = "(`stream_logs`.`date` >= " . $rStartTime . " AND `stream_logs`.`date` <= " . $rEndTime . ")";
         }
     }
-    if (strlen($_GET["server"]) > 0) {
-        $rWhere[] = "`stream_logs`.`server_id` = '" . intval($_GET["server"]) . "'";
+    if (strlen(ipTV_lib::$request["server"]) > 0) {
+        $rWhere[] = "`stream_logs`.`server_id` = '" . intval(ipTV_lib::$request["server"]) . "'";
     }
     if (count($rWhere) > 0) {
         $rWhereString = "WHERE " . join(" AND ", $rWhere);
@@ -2159,7 +2159,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `stream_logs` LEFT JOIN `streams` ON `streams`.`id` = `stream_logs`.`stream_id` LEFT JOIN `streaming_servers` ON `streaming_servers`.`id` = `stream_logs`.`server_id` {$rWhereString};";
@@ -2181,29 +2181,29 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "stream_unique") {
+} elseif ($rType == "stream_unique") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "fingerprint"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`stream_categories`.`category_name`", "`active_count`", null);
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
     $rWhere[] = "`streams`.`type` = 1";
     $rWhere[] = "(SELECT COUNT(*) FROM `lines_live` WHERE `container` = 'ts' AND `lines_live`.`stream_id` = `streams`.`id`) > 0";
-    if (strlen($_GET["category"]) > 0) {
-        $rWhere[] = "`streams`.`category_id` = " . intval($_GET["category"]);
+    if (strlen(ipTV_lib::$request["category"]) > 0) {
+        $rWhere[] = "`streams`.`category_id` = " . intval(ipTV_lib::$request["category"]);
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%')";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     if (count($rWhere) > 0) {
@@ -2230,7 +2230,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "reg_users") {
+} elseif ($rType == "reg_users") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["create_sub_resellers"])) {
         exit;
     }
@@ -2238,10 +2238,10 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         exit;
     }
     $rAvailableMembers = array_keys(getRegisteredUsers($rUserInfo["id"]));
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`reg_users`.`id`", "`reg_users`.`username`", "`r`.`username`", "`reg_users`.`ip`", "`member_groups`.`group_name`", "`reg_users`.`status`", "`reg_users`.`credits`", "`user_count`", "`reg_users`.`last_login`", false);
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
@@ -2249,19 +2249,19 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     if ($rPermissions["is_reseller"]) {
         $rWhere[] = "`reg_users`.`owner_id` IN (" . join(",", $rAvailableMembers) . ")";
     }
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`reg_users`.`id` LIKE '%{$rSearch}%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR `reg_users`.`notes` LIKE '%{$rSearch}%' OR `r`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`reg_users`.`date_registered`) LIKE '%{$rSearch}%' OR from_unixtime(`reg_users`.`last_login`) LIKE '%{$rSearch}%' OR `reg_users`.`email` LIKE '%{$rSearch}%' OR `reg_users`.`ip` LIKE '%{$rSearch}%' OR `member_groups`.`group_name` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["filter"]) > 0) {
-        if ($_GET["filter"] == 1) {
+    if (strlen(ipTV_lib::$request["filter"]) > 0) {
+        if (ipTV_lib::$request["filter"] == 1) {
             $rWhere[] = "`reg_users`.`status` = 1";
-        } else if ($_GET["filter"] == 2) {
+        } elseif (ipTV_lib::$request["filter"] == 2) {
             $rWhere[] = "`reg_users`.`status` = 0";
         }
     }
-    if (strlen($_GET["reseller"]) > 0) {
-        $rWhere[] = "`reg_users`.`owner_id` = " . intval($_GET["reseller"]);
+    if (strlen(ipTV_lib::$request["reseller"]) > 0) {
+        $rWhere[] = "`reg_users`.`owner_id` = " . intval(ipTV_lib::$request["reseller"]);
     }
     if (count($rWhere) > 0) {
         $rWhereString = "WHERE " . join(" AND ", $rWhere);
@@ -2269,7 +2269,7 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
         $rWhereString = "";
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     $rCountQuery = "SELECT COUNT(*) AS `count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` LEFT JOIN `reg_users` AS `r` on `r`.`id` = `reg_users`.`owner_id` {$rWhereString};";
@@ -2329,34 +2329,34 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "series") {
+} elseif ($rType == "series") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "series")) && (!hasPermissions("adv", "mass_sedits"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`series`.`id`", "`series`.`title`", "`stream_categories`.`category_name`", "`latest_season`", "`episode_count`", "`series`.`releaseDate`", "`series`.`last_modified`", false);
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`series`.`id` LIKE '%{$rSearch}%' OR `series`.`title` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `series`.`releaseDate` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["category"]) > 0) {
-        if ($_GET["category"] == -1) {
+    if (strlen(ipTV_lib::$request["category"]) > 0) {
+        if (ipTV_lib::$request["category"] == -1) {
             $rWhere[] = "(`series`.`tmdb_id` = 0 OR `series`.`tmdb_id` IS NULL)";
         } else {
-            $rWhere[] = "`series`.`category_id` = " . intval($_GET["category"]);
+            $rWhere[] = "`series`.`category_id` = " . intval(ipTV_lib::$request["category"]);
         }
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection . ", `series`.`id` ASC";
     }
     if (count($rWhere) > 0) {
@@ -2410,51 +2410,51 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "episodes") {
+} elseif ($rType == "episodes") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "episodes")) && (!hasPermissions("adv", "mass_sedits"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`streams`.`id`", "`streams`.`stream_display_name`", "`series`.`title`", "`streaming_servers`.`server_name`", "`clients`", "`streams_servers`.`stream_started`", false, false, "`streams_servers`.`bitrate`");
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
     $rWhere[] = "`streams`.`type` = 5";
-    if (isset($_GET["stream_id"])) {
-        $rWhere[] = "`streams`.`id` = " . intval($_GET["stream_id"]);
+    if (isset(ipTV_lib::$request["stream_id"])) {
+        $rWhere[] = "`streams`.`id` = " . intval(ipTV_lib::$request["stream_id"]);
         $rOrderBy = "ORDER BY `streams_servers`.`server_stream_id` ASC";
     } else {
-        if (strlen($_GET["search"]["value"]) > 0) {
-            $rSearch = $_GET["search"]["value"];
+        if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+            $rSearch = ipTV_lib::$request["search"]["value"];
             $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `series`.`title` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_servers`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `streaming_servers`.`server_name` LIKE '%{$rSearch}%')";
         }
-        if (strlen($_GET["filter"]) > 0) {
-            if ($_GET["filter"] == 1) {
+        if (strlen(ipTV_lib::$request["filter"]) > 0) {
+            if (ipTV_lib::$request["filter"] == 1) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 0 AND `streams_servers`.`stream_status` <> 1)";
-            } else if ($_GET["filter"] == 2) {
+            } elseif (ipTV_lib::$request["filter"] == 2) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`to_analyze` = 1 AND `streams_servers`.`stream_status` <> 1)";
-            } else if ($_GET["filter"] == 3) {
+            } elseif (ipTV_lib::$request["filter"] == 3) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND `streams_servers`.`stream_status` = 1)";
-            } else if ($_GET["filter"] == 4) {
+            } elseif (ipTV_lib::$request["filter"] == 4) {
                 $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 1)";
-            } else if ($_GET["filter"] == 5) {
+            } elseif (ipTV_lib::$request["filter"] == 5) {
                 $rWhere[] = "`streams`.`direct_source` = 1";
             }
         }
-        if (strlen($_GET["series"]) > 0) {
-            $rWhere[] = "`series`.`id` = " . intval($_GET["series"]);
+        if (strlen(ipTV_lib::$request["series"]) > 0) {
+            $rWhere[] = "`series`.`id` = " . intval(ipTV_lib::$request["series"]);
         }
-        if (strlen($_GET["server"]) > 0) {
-            $rWhere[] = "`streams_servers`.`server_id` = " . intval($_GET["server"]);
+        if (strlen(ipTV_lib::$request["server"]) > 0) {
+            $rWhere[] = "`streams_servers`.`server_id` = " . intval(ipTV_lib::$request["server"]);
         }
         if ($rOrder[$rOrderRow]) {
-            $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+            $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
             $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
         }
     }
@@ -2493,10 +2493,10 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                 if (intval($rRow["direct_source"]) == 1) {
                     // Direct
                     $rActualStatus = 3;
-                } else if ($rRow["pid"]) {
+                } elseif ($rRow["pid"]) {
                     if ($rRow["to_analyze"] == 1) {
                         $rActualStatus = 2; // Encoding
-                    } else if ($rRow["stream_status"] == 1) {
+                    } elseif ($rRow["stream_status"] == 1) {
                         $rActualStatus = 4; // Down
                     } else {
                         $rActualStatus = 1; // Encoded
@@ -2525,10 +2525,10 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
                     if (intval($rActualStatus) == 1) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Encode" type="button" class="btn btn-light waves-effect waves-light btn-xs api-start" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'start\');"><i class="mdi mdi-refresh"></i></button>
 						';
-                    } else if (intval($rActualStatus) == 3) {
+                    } elseif (intval($rActualStatus) == 3) {
                         $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs api-stop"><i class="mdi mdi-stop"></i></button>
 						';
-                    } else if (intval($rActualStatus) == 2) {
+                    } elseif (intval($rActualStatus) == 2) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Stop Encoding" type="button" class="btn btn-light waves-effect waves-light btn-xs api-stop" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'stop\');"><i class="mdi mdi-stop"></i></button>
 						';
                     } else {
@@ -2578,12 +2578,12 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "backups") {
+} elseif ($rType == "backups") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
         exit;
     }
     $rBackups = getBackups();
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => count($rBackups), "recordsFiltered" => count($rBackups), "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => count($rBackups), "recordsFiltered" => count($rBackups), "data" => array());
     foreach ($rBackups as $rBackup) {
         $rButtons = '<div class="btn-group"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Restore Backup" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(\'' . $rBackup["filename"] . '\', \'restore\');"><i class="mdi mdi-folder-upload"></i></button>
 		<button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete Backup" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(\'' . $rBackup["filename"] . '\', \'delete\');"><i class="mdi mdi-close"></i></button></div>';
@@ -2591,40 +2591,40 @@ LEFT JOIN `streaming_servers` ON `lines_live`.`server_id` = `streaming_servers`.
     }
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "conn") {
+} elseif ($rType == "conn") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 1, "recordsFiltered" => 1, "data" => array($_INFO['hostname'], $_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['port']));
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 1, "recordsFiltered" => 1, "data" => array($_INFO['hostname'], $_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['port']));
     echo json_encode($rReturn);
     exit;
-} else if ($rType == "watch_output") {
+} elseif ($rType == "watch_output") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch_output"))) {
         exit;
     }
-    $rReturn = array("draw" => $_GET["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
+    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`watch_output`.`id`", "`watch_output`.`type`", "`watch_output`.`server_id`", "`watch_output`.`filename`", "`watch_output`.`status`", "`watch_output`.`dateadded`", false);
-    if (strlen($_GET["order"][0]["column"]) > 0) {
-        $rOrderRow = intval($_GET["order"][0]["column"]);
+    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
+        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
         $rOrderRow = 0;
     }
     $rWhere = array();
-    if (strlen($_GET["search"]["value"]) > 0) {
-        $rSearch = $_GET["search"]["value"];
+    if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
+        $rSearch = ipTV_lib::$request["search"]["value"];
         $rWhere[] = "(`watch_output`.`id` LIKE '%{$rSearch}%' OR `watch_output`.`filename` LIKE '%{$rSearch}%' OR `watch_output`.`dateadded` LIKE '%{$rSearch}%')";
     }
-    if (strlen($_GET["server"]) > 0) {
-        $rWhere[] = "`watch_output`.`server_id` = " . intval($_GET["server"]);
+    if (strlen(ipTV_lib::$request["server"]) > 0) {
+        $rWhere[] = "`watch_output`.`server_id` = " . intval(ipTV_lib::$request["server"]);
     }
-    if (strlen($_GET["type"]) > 0) {
-        $rWhere[] = "`watch_output`.`type` = " . intval($_GET["type"]);
+    if (strlen(ipTV_lib::$request["type"]) > 0) {
+        $rWhere[] = "`watch_output`.`type` = " . intval(ipTV_lib::$request["type"]);
     }
-    if (strlen($_GET["status"]) > 0) {
-        $rWhere[] = "`watch_output`.`status` = " . intval($_GET["status"]);
+    if (strlen(ipTV_lib::$request["status"]) > 0) {
+        $rWhere[] = "`watch_output`.`status` = " . intval(ipTV_lib::$request["status"]);
     }
     if ($rOrder[$rOrderRow]) {
-        $rOrderDirection = strtolower($_GET["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+        $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
     if (count($rWhere) > 0) {

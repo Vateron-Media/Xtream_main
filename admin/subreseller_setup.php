@@ -5,18 +5,18 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "subreseller"))) {
     exit;
 }
 
-if (isset($_POST["submit_subreseller"])) {
-    if (!((intval($_POST["reseller"]) > 0) && (intval($_POST["subreseller"]) > 0) && (intval($_POST["reseller"]) <> intval($_POST["subreseller"])))) {
+if (isset(ipTV_lib::$request["submit_subreseller"])) {
+    if (!((intval(ipTV_lib::$request["reseller"]) > 0) && (intval(ipTV_lib::$request["subreseller"]) > 0) && (intval(ipTV_lib::$request["reseller"]) <> intval(ipTV_lib::$request["subreseller"])))) {
         $_STATUS = 1;
     }
     if (!isset($_STATUS)) {
         $rArray = array("reseller" => 0, "subreseller" => 0);
-        foreach ($_POST as $rKey => $rValue) {
+        foreach (ipTV_lib::$request as $rKey => $rValue) {
             if (isset($rArray[$rKey])) {
                 $rArray[$rKey] = $rValue;
             }
         }
-        $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+        $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
             if (is_array($rValue)) {
@@ -25,17 +25,17 @@ if (isset($_POST["submit_subreseller"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+                $rValues .= '\'' . $rValue . '\'';
             }
         }
-        if (isset($_POST["edit"])) {
+        if (isset(ipTV_lib::$request["edit"])) {
             $rCols = "id," . $rCols;
-            $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
+            $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `subreseller_setup`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
-            if (isset($_POST["edit"])) {
-                $rInsertID = intval($_POST["edit"]);
+            if (isset(ipTV_lib::$request["edit"])) {
+                $rInsertID = intval(ipTV_lib::$request["edit"]);
             } else {
                 $rInsertID = $ipTV_db_admin->last_insert_id();
             }
@@ -49,8 +49,8 @@ if (isset($_POST["submit_subreseller"])) {
     }
 }
 
-if (isset($_GET["id"])) {
-    $rSubreseller = getSubresellerSetup($_GET["id"]);
+if (isset(ipTV_lib::$request["id"])) {
+    $rSubreseller = getSubresellerSetup(ipTV_lib::$request["id"]);
     if (!$rSubreseller) {
         exit;
     }
@@ -65,10 +65,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -100,7 +100,7 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body">
                                     <form action="./subreseller_setup.php<?php if (isset($rSubreseller)) {
                                         echo "?id=" . $rSubreseller["id"];
-                                    } ?>" method="POST" id="subreseller_form">
+                                                                         } ?>" method="POST" id="subreseller_form">
                                         <?php if (isset($rSubreseller)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rSubreseller["id"] ?>" />
                                         <?php } ?>
@@ -134,7 +134,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                     if (intval($rSubreseller["reseller"]) == intval($rGroup["group_id"])) {
                                                                                         echo "selected ";
                                                                                     }
-                                                                                } ?>value="<?= $rGroup["group_id"] ?>"><?= $rGroup["group_name"] ?></option>
+                                                                                        } ?>value="<?= $rGroup["group_id"] ?>"><?= $rGroup["group_name"] ?></option>
                                                                             <?php }
                                                                         } ?>
                                                                     </select>
@@ -153,7 +153,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                     if (intval($rSubreseller["subreseller"]) == intval($rGroup["group_id"])) {
                                                                                         echo "selected ";
                                                                                     }
-                                                                                } ?>value="<?= $rGroup["group_id"] ?>"><?= $rGroup["group_name"] ?></option>
+                                                                                        } ?>value="<?= $rGroup["group_id"] ?>"><?= $rGroup["group_name"] ?></option>
                                                                             <?php }
                                                                         } ?>
                                                                     </select>

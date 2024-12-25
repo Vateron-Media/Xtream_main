@@ -5,9 +5,9 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_rtmp"))) {
     exit;
 }
 
-if (isset($_POST["submit_ip"])) {
-    $rArray = array("ip" => $_POST["ip"], "notes" => $_POST["notes"]);
-    $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+if (isset(ipTV_lib::$request["submit_ip"])) {
+    $rArray = array("ip" => ipTV_lib::$request["ip"], "notes" => ipTV_lib::$request["notes"]);
+    $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
     foreach (array_values($rArray) as $rValue) {
         isset($rValues) ? $rValues .= ',' : $rValues = '';
         if (is_array($rValue)) {
@@ -16,17 +16,17 @@ if (isset($_POST["submit_ip"])) {
         if (is_null($rValue)) {
             $rValues .= 'NULL';
         } else {
-            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+            $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset($_POST["edit"])) {
+    if (isset(ipTV_lib::$request["edit"])) {
         $rCols = "id," . $rCols;
-        $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
+        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `rtmp_ips`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset($_POST["edit"])) {
-            $rInsertID = intval($_POST["edit"]);
+        if (isset(ipTV_lib::$request["edit"])) {
+            $rInsertID = intval(ipTV_lib::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -39,8 +39,8 @@ if (isset($_POST["submit_ip"])) {
     }
 }
 
-if (isset($_GET["id"])) {
-    $rIPArr = getRTMPIP($_GET["id"]);
+if (isset(ipTV_lib::$request["id"])) {
+    $rIPArr = getRTMPIP(ipTV_lib::$request["id"]);
     if (!$rIPArr) {
         exit;
     }
@@ -55,10 +55,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -73,9 +73,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rIPArr)) {
                                     echo $_["edit"];
-                                } else {
-                                    echo $_["add"];
-                                } ?> <?= $_["rtmp_ip"] ?></h4>
+                                                       } else {
+                                                           echo $_["add"];
+                                                       } ?> <?= $_["rtmp_ip"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["rtmp_ip_operation"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -99,9 +99,9 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./rtmp_ip.php<?php if (isset($_GET["id"])) {
-                                        echo "?id=" . $_GET["id"];
-                                    } ?>" method="POST" id="ip_form" data-parsley-validate="">
+                                    <form action="./rtmp_ip.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                        echo "?id=" . ipTV_lib::$request["id"];
+                                                               } ?>" method="POST" id="ip_form" data-parsley-validate="">
                                         <?php if (isset($rIPArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rIPArr["id"] ?>" />
                                         <?php } ?>
@@ -126,7 +126,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="ip"
                                                                         name="ip" value="<?php if (isset($rIPArr)) {
                                                                             echo htmlspecialchars($rIPArr["ip"]);
-                                                                        } ?>" required data-parsley-trigger="change">
+                                                                                         } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -137,7 +137,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         name="notes" required
                                                                         data-parsley-trigger="change"><?php if (isset($rIPArr)) {
                                                                             echo htmlspecialchars($rIPArr["notes"]);
-                                                                        } ?></textarea>
+                                                                                                      } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -147,9 +147,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             <input name="submit_ip" type="submit"
                                                                 class="btn btn-primary" value="<?php if (isset($rIPArr)) {
                                                                     echo $_["edit"];
-                                                                } else {
-                                                                    echo $_["add"];
-                                                                } ?>" />
+                                                                                               } else {
+                                                                                                   echo $_["add"];
+                                                                                               } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

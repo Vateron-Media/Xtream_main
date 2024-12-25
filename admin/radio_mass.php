@@ -7,28 +7,28 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_edit_radio")))
 
 $rCategories = getCategories_admin("radio");
 
-if (isset($_POST["submit_radio"])) {
+if (isset(ipTV_lib::$request["submit_radio"])) {
     $rArray = array();
-    if (isset($_POST["c_direct_source"])) {
-        if (isset($_POST["direct_source"])) {
+    if (isset(ipTV_lib::$request["c_direct_source"])) {
+        if (isset(ipTV_lib::$request["direct_source"])) {
             $rArray["direct_source"] = 1;
         } else {
             $rArray["direct_source"] = 0;
         }
     }
-    if (isset($_POST["c_category_id"])) {
-        $categoriesIDs = intval($_POST["category_id"]);
+    if (isset(ipTV_lib::$request["c_category_id"])) {
+        $categoriesIDs = intval(ipTV_lib::$request["category_id"]);
     }
-    if (isset($_POST["c_custom_sid"])) {
-        $rArray["custom_sid"] = $_POST["custom_sid"];
+    if (isset(ipTV_lib::$request["c_custom_sid"])) {
+        $rArray["custom_sid"] = ipTV_lib::$request["custom_sid"];
     }
-    $rStreamIDs = json_decode($_POST["streams"], True);
+    $rStreamIDs = json_decode(ipTV_lib::$request["streams"], true);
     if (count($rStreamIDs) > 0) {
         foreach ($rStreamIDs as $rStreamID) {
             $rQueries = array();
             $rArray["category_id"] = '[' . implode(',', array_map('intval', $categoriesIDs)) . ']';
             foreach ($rArray as $rKey => $rValue) {
-                $rQueries[] = "`" . $ipTV_db_admin->escape($rKey) . "` = '" . $ipTV_db_admin->escape($rValue) . "'";
+                $rQueries[] = "`" . $rKey . "` = '" . $rValue . "'";
             }
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);
@@ -37,10 +37,10 @@ if (isset($_POST["submit_radio"])) {
                     $_STATUS = 1;
                 }
             }
-            if (isset($_POST["c_server_tree"])) {
+            if (isset(ipTV_lib::$request["c_server_tree"])) {
                 $rOnDemandArray = array();
-                if (isset($_POST["on_demand"])) {
-                    foreach ($_POST["on_demand"] as $rID) {
+                if (isset(ipTV_lib::$request["on_demand"])) {
+                    foreach (ipTV_lib::$request["on_demand"] as $rID) {
                         $rOnDemandArray[] = intval($rID);
                     }
                 }
@@ -52,7 +52,7 @@ if (isset($_POST["submit_radio"])) {
                     }
                 }
                 $rStreamsAdded = array();
-                $rServerTree = json_decode($_POST["server_tree_data"], True);
+                $rServerTree = json_decode(ipTV_lib::$request["server_tree_data"], true);
                 foreach ($rServerTree as $rServer) {
                     if ($rServer["parent"] <> "#") {
                         $rServerID = intval($rServer["id"]);
@@ -84,8 +84,8 @@ if (isset($_POST["submit_radio"])) {
                     }
                 }
             }
-            if (isset($_POST["c_bouquets"])) {
-                $rBouquets = $_POST["bouquets"];
+            if (isset(ipTV_lib::$request["c_bouquets"])) {
+                $rBouquets = ipTV_lib::$request["bouquets"];
                 foreach ($rBouquets as $rBouquet) {
                     addToBouquet("radio", $rBouquet, $rStreamID);
                 }
@@ -96,10 +96,10 @@ if (isset($_POST["submit_radio"])) {
                 }
             }
         }
-        if (isset($_POST["restart_on_edit"])) {
+        if (isset(ipTV_lib::$request["restart_on_edit"])) {
             APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array_values($rStreamIDs)));
         }
-        if (isset($_POST["c_bouquets"])) {
+        if (isset(ipTV_lib::$request["c_bouquets"])) {
             scanBouquets();
         }
     }
@@ -121,10 +121,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -152,7 +152,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["mass_edit_of_stations"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -202,9 +202,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <option value="" selected><?= $_["all_categories"] ?>
                                                                 </option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
-                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                           echo " selected";
-                                                                      } ?>><?= $rCategory["category_name"] ?>
+                                                                                   } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -217,8 +217,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">

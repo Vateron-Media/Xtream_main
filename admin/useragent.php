@@ -5,18 +5,18 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_uas"))) {
     exit;
 }
 
-if (isset($_POST["submit_ua"])) {
+if (isset(ipTV_lib::$request["submit_ua"])) {
     $rArray = array("user_agent" => "", "exact_match" => 0, "attempts_blocked" => 0);
-    if (isset($_POST["exact_match"])) {
+    if (isset(ipTV_lib::$request["exact_match"])) {
         $rArray["exact_match"] = true;
-        unset($_POST["exact_match"]);
+        unset(ipTV_lib::$request["exact_match"]);
     }
-    foreach ($_POST as $rKey => $rValue) {
+    foreach (ipTV_lib::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
     }
-    $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+    $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
     foreach (array_values($rArray) as $rValue) {
         isset($rValues) ? $rValues .= ',' : $rValues = '';
         if (is_array($rValue)) {
@@ -25,17 +25,17 @@ if (isset($_POST["submit_ua"])) {
         if (is_null($rValue)) {
             $rValues .= 'NULL';
         } else {
-            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+            $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset($_POST["edit"])) {
+    if (isset(ipTV_lib::$request["edit"])) {
         $rCols = "id," . $rCols;
-        $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
+        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `blocked_user_agents`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset($_POST["edit"])) {
-            $rInsertID = intval($_POST["edit"]);
+        if (isset(ipTV_lib::$request["edit"])) {
+            $rInsertID = intval(ipTV_lib::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -48,8 +48,8 @@ if (isset($_POST["submit_ua"])) {
     }
 }
 
-if (isset($_GET["id"])) {
-    $rUAArr = getUserAgent($_GET["id"]);
+if (isset(ipTV_lib::$request["id"])) {
+    $rUAArr = getUserAgent(ipTV_lib::$request["id"]);
     if (!$rUAArr) {
         exit;
     }
@@ -64,10 +64,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -81,9 +81,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rUAArr)) {
                                                             echo $_["edit"];
-                                                        } else {
-                                                            echo $_["block"];
-                                                        } ?> <?= $_["user-agent"] ?></h4>
+                                                       } else {
+                                                           echo $_["block"];
+                                                       } ?> <?= $_["user-agent"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["user-agent_operation"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -107,9 +107,9 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./useragent.php<?php if (isset($_GET["id"])) {
-                                                                        echo "?id=" . $_GET["id"];
-                                                                    } ?>" method="POST" id="useragent_form" data-parsley-validate="">
+                                    <form action="./useragent.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                                                        echo "?id=" . ipTV_lib::$request["id"];
+                                                                 } ?>" method="POST" id="useragent_form" data-parsley-validate="">
                                         <?php if (isset($rUAArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rUAArr["id"] ?>" />
                                         <?php } ?>
@@ -131,17 +131,17 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="user_agent" name="user_agent" value="<?php if (isset($rUAArr)) {
                                                                                                                                                             echo htmlspecialchars($rUAArr["user_agent"]);
-                                                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                                                                                                     } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="exact_match"><?= $_["exact_match"] ?></label>
                                                                 <div class="col-md-2">
                                                                     <input name="exact_match" id="exact_match" type="checkbox" <?php if (isset($rUAArr)) {
-                                                                                                                                    if ($rUAArr["exact_match"] == 1) {
-                                                                                                                                        echo "checked ";
-                                                                                                                                    }
-                                                                                                                                } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                        if ($rUAArr["exact_match"] == 1) {
+                                                                            echo "checked ";
+                                                                        }
+                                                                                                                               } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -150,9 +150,9 @@ if ($rSettings["sidebar"]) { ?>
                                                         <li class="next list-inline-item float-right">
                                                             <input name="submit_ua" type="submit" class="btn btn-primary" value="<?php if (isset($rUAArr)) {
                                                                                                                                         echo $_["edit"];
-                                                                                                                                    } else {
-                                                                                                                                        echo $_["block"];
-                                                                                                                                    } ?>" />
+                                                                                                                                 } else {
+                                                                                                                                     echo $_["block"];
+                                                                                                                                 } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

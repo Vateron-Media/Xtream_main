@@ -20,10 +20,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -94,8 +94,8 @@ if ($rSettings["sidebar"]) { ?>
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                             echo " selected";
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                        <?php } ?>
+                                                               } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -339,11 +339,11 @@ if ($rSettings["sidebar"]) { ?>
                             $("#datatable-activity").DataTable().ajax.reload(null, false);
                         }
                     })
-                    <?php if (isset($_GET["search"])) { ?>
-                        $("#act_search").val("<?= str_replace('"', '\"', $_GET["search"]) ?>").trigger('change');
+                    <?php if (isset(ipTV_lib::$request["search"])) { ?>
+                        $("#act_search").val("<?= str_replace('"', '\"', ipTV_lib::$request["search"]) ?>").trigger('change');
                     <?php }
-                    if (isset($_GET["dates"])) { ?>
-                        $("#act_range").val("<?= str_replace('"', '\"', $_GET["dates"]) ?>").trigger('change');
+                    if (isset(ipTV_lib::$request["dates"])) { ?>
+                        $("#act_range").val("<?= str_replace('"', '\"', ipTV_lib::$request["dates"]) ?>").trigger('change');
                     <?php } ?>
                     if ($('#act_search').val().length > 0) {
                         $('#datatable-activity').DataTable().search($('#act_search').val()).draw();

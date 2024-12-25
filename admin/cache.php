@@ -14,19 +14,19 @@ if ($rSettings["sidebar"]) {
 } else {
     include "header.php";
 }
-if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
+if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rCheck = array(false, false);
     $rCron = array('*', '*', '*', '*', '*');
     $rPattern = '/^[0-9\\/*,-]+$/';
-    $rCron[0] = $_POST['minute'];
+    $rCron[0] = ipTV_lib::$request['minute'];
     preg_match($rPattern, $rCron[0], $rMatches);
     $rCheck[0] = 0 < count($rMatches);
-    $rCron[1] = $_POST['hour'];
+    $rCron[1] = ipTV_lib::$request['hour'];
     preg_match($rPattern, $rCron[1], $rMatches);
     $rCheck[1] = 0 < count($rMatches);
     $rCronOutput = implode(' ', $rCron);
 
-    if (isset($_POST['cache_changes'])) {
+    if (isset(ipTV_lib::$request['cache_changes'])) {
         $rCacheChanges = true;
     } else {
         $rCacheChanges = false;
@@ -34,7 +34,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
 
     if ($rCheck[0] && $rCheck[1]) {
         $ipTV_db_admin->query("UPDATE `crontab` SET `time` = '" . $rCronOutput . "' WHERE `filename` = 'cache_engine.php';");
-        ipTV_lib::setSettings(["cache_thread_count" => $_POST['cache_thread_count'], "cache_changes" => $rCacheChanges]);
+        ipTV_lib::setSettings(["cache_thread_count" => ipTV_lib::$request['cache_thread_count'], "cache_changes" => $rCacheChanges]);
 
         if (file_exists(TMP_PATH . 'crontab')) {
             unlink(TMP_PATH . 'crontab');
@@ -49,9 +49,9 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
 
 <div class="wrapper boxed-layout-ext" <?php if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
     echo '';
-} else {
-    echo ' style="display: none;"';
-} ?>>
+                                      } else {
+                                          echo ' style="display: none;"';
+                                      } ?>>
     <div class="container-fluid">
         <form action="./cache.php" method="POST">
             <div class="row">
@@ -63,7 +63,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
             </div>
             <div class="row">
                 <div class="col-xl-12">
-                    <?php if (isset($_STATUS) && $_STATUS == STATUS_SUCCESS): ?>
+                    <?php if (isset($_STATUS) && $_STATUS == STATUS_SUCCESS) : ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -130,7 +130,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                     <div class="tab-pane" id="cache">
                                         <div class="row">
                                             <div class="col-12">
-                                                <?php if ($rSettings['enable_cache']): ?>
+                                                <?php if ($rSettings['enable_cache']) : ?>
                                                     <?php
                                                     $ipTV_db_admin->query("SELECT `time` FROM `crontab` WHERE `filename` = 'cache_engine.php';");
                                                     list($rMinute, $rHour, $rDayOfMonth, $rMonth, $rDayOfWeek) = explode(' ', $ipTV_db_admin->get_row()['time']);
@@ -147,13 +147,13 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                     $rFreeCache = 100 - intval(disk_free_space(TMP_PATH) / disk_total_space(TMP_PATH) * 100);
                                                     ?>
 
-                                                    <?php if ($rFreeCache >= 90): ?>
+                                                    <?php if ($rFreeCache >= 90) : ?>
                                                         <div class="alert alert-danger mb-4" role="alert">
                                                             <?= str_replace("{free_cache}", $rFreeCache, $_["cache_cron_danger"]) ?>
                                                         </div>
                                                     <?php endif; ?>
 
-                                                    <?php if (!file_exists(CACHE_TMP_PATH . 'cache_complete')): ?>
+                                                    <?php if (!file_exists(CACHE_TMP_PATH . 'cache_complete')) : ?>
                                                         <div class="alert alert-warning mb-4" role="alert">
                                                             <?= $_["cache_cron_warning"] ?>
                                                         </div>
@@ -231,7 +231,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                <?php else: ?>
+                                                <?php else : ?>
                                                     <h5 class="card-title">Cache is Disabled</h5>
                                                     <p>You have chosen to disable Cache system. You can re-enable it by
                                                         clicking the Enable Cache box below, however when doing so you would
@@ -239,7 +239,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                 <?php endif; ?>
 
                                                 <ul class="list-inline wizard mb-0" style="margin-top:30px;">
-                                                    <?php if ($rSettings['enable_cache']): ?>
+                                                    <?php if ($rSettings['enable_cache']) : ?>
                                                         <li class="list-inline-item">
                                                             <button id="disable_cache" onClick="api('disable_cache')"
                                                                 class="btn btn-danger" type="button">Disable Cache</button>
@@ -250,7 +250,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                             <input name="submit_settings" type="submit"
                                                                 class="btn btn-primary" value="Save Cron" />
                                                         </li>
-                                                    <?php else: ?>
+                                                    <?php else : ?>
                                                         <li class="list-inline-item">
                                                             <button id="enable_cache" onClick="api('enable_cache')"
                                                                 class="btn btn-success" type="button">Enable Cache</button>
@@ -288,7 +288,7 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                     Connections in Lines or Content pages etc.<br /><br />The best way
                                                     to decide if Redis is right for you is to try it for yourself.</p>
 
-                                                <?php if ($rSettings['redis_handler']):
+                                                <?php if ($rSettings['redis_handler']) :
                                                     try {
                                                         ipTV_lib::$redis = new Redis();
                                                         ipTV_lib::$redis->connect(ipTV_lib::$Servers[SERVER_ID]['server_ip'], 6379);
@@ -312,20 +312,20 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                                 <tr>
                                                                     <td class="text-center">Server Status</td>
                                                                     <td class="text-center">
-                                                                        <?php if ($rStatus): ?>
+                                                                        <?php if ($rStatus) : ?>
                                                                             <button type="button"
                                                                                 class="btn btn-success btn-xs waves-effect waves-light btn-fixed-xl">ONLINE</button>
-                                                                        <?php else: ?>
+                                                                        <?php else : ?>
                                                                             <button type="button"
                                                                                 class="btn btn-danger btn-xs waves-effect waves-light btn-fixed-xl">OFFLINE</button>
                                                                         <?php endif; ?>
                                                                     </td>
                                                                     <td class="text-center">Authentication</td>
                                                                     <td class="text-center">
-                                                                        <?php if ($rAuth): ?>
+                                                                        <?php if ($rAuth) : ?>
                                                                             <button type="button"
                                                                                 class="btn btn-success btn-xs waves-effect waves-light btn-fixed-xl">AUTHENTICATED</button>
-                                                                        <?php else: ?>
+                                                                        <?php else : ?>
                                                                             <button type="button"
                                                                                 class="btn btn-danger btn-xs waves-effect waves-light btn-fixed-xl">INVALID
                                                                                 PASSWORD</button>
@@ -335,21 +335,21 @@ if ((isset($_POST["submit_settings"])) && (hasPermissions("adv", "settings"))) {
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                <?php else: ?>
+                                                <?php else : ?>
                                                     <p><strong>You have chosen to disable Redis Connection Handler. Click
                                                             the button below to re-enable it.</strong></p>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
                                         <ul class="list-inline wizard mb-0" style="margin-top:30px;">
-                                            <?php if ($rSettings['redis_handler']): ?>
+                                            <?php if ($rSettings['redis_handler']) : ?>
                                                 <li class="list-inline-item">
                                                     <button id="disable_handler" onClick="api('disable_handler')"
                                                         class="btn btn-danger" type="button">Disable Handler</button>
                                                     <button id="clear_redis" onClick="api('clear_redis')"
                                                         class="btn btn-info" type="button">Clear Database</button>
                                                 </li>
-                                            <?php else: ?>
+                                            <?php else : ?>
                                                 <li class="list-inline-item">
                                                     <button id="enable_handler" onClick="api('enable_handler')"
                                                         class="btn btn-success" type="button">Enable Handler</button>

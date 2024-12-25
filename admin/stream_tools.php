@@ -5,14 +5,14 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "stream_tools"))) {
     exit;
 }
 
-if (isset($_POST["replace_dns"])) {
-    $rOldDNS = $ipTV_db_admin->escape(str_replace("/", "\/", $_POST["old_dns"]));
-    $rNewDNS = $ipTV_db_admin->escape(str_replace("/", "\/", $_POST["new_dns"]));
+if (isset(ipTV_lib::$request["replace_dns"])) {
+    $rOldDNS = str_replace("/", "\/", ipTV_lib::$request["old_dns"]);
+    $rNewDNS = str_replace("/", "\/", ipTV_lib::$request["new_dns"]);
     $ipTV_db_admin->query("UPDATE `streams` SET `stream_source` = REPLACE(`stream_source`, '" . $rOldDNS . "', '" . $rNewDNS . "');");
     $_STATUS = 1;
-} else if (isset($_POST["move_streams"])) {
-    $rSource = $_POST["source_server"];
-    $rReplacement = $_POST["replacement_server"];
+} elseif (isset(ipTV_lib::$request["move_streams"])) {
+    $rSource = ipTV_lib::$request["source_server"];
+    $rReplacement = ipTV_lib::$request["replacement_server"];
     $rExisting = array();
     $ipTV_db_admin->query("SELECT `id` FROM `streams_servers` WHERE `server_id` = " . intval($rReplacement) . ";");
     if ($ipTV_db_admin->num_rows() > 0) {
@@ -30,7 +30,7 @@ if (isset($_POST["replace_dns"])) {
     }
     $ipTV_db_admin->query("UPDATE `streams_servers` SET `server_id` = " . intval($rReplacement) . " WHERE `server_id` = " . intval($rSource) . ";");
     $_STATUS = 2;
-} else if (isset($_POST["cleanup_streams"])) {
+} elseif (isset(ipTV_lib::$request["cleanup_streams"])) {
     $rStreams = getStreamList();
     $rStreamArray = array();
     foreach ($rStreams as $rStream) {
@@ -96,10 +96,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -126,14 +126,14 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["stream_dns_replacement"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
                                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     <?= $_["streams_have_been_moved"] ?>
                                     </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
                                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>

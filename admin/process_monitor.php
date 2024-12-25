@@ -5,25 +5,25 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "process_monitor")))
     exit;
 }
 
-if ((!isset($_GET["server"])) or (!isset($rServers[$_GET["server"]]))) {
+if ((!isset(ipTV_lib::$request["server"])) or (!isset($rServers[ipTV_lib::$request["server"]]))) {
     header("Location: ./dashboard.php");
     exit;
 }
 
-if (isset($_GET["clear"])) {
-    freeTemp($_GET["server"]);
-    header("Location: ./process_monitor.php?server=" . $_GET["server"]);
+if (isset(ipTV_lib::$request["clear"])) {
+    freeTemp(ipTV_lib::$request["server"]);
+    header("Location: ./process_monitor.php?server=" . ipTV_lib::$request["server"]);
     exit;
 }
 
-if (isset($_GET["clear_s"])) {
-    freeStreams($_GET["server"]);
-    header("Location: ./process_monitor.php?server=" . $_GET["server"]);
+if (isset(ipTV_lib::$request["clear_s"])) {
+    freeStreams(ipTV_lib::$request["server"]);
+    header("Location: ./process_monitor.php?server=" . ipTV_lib::$request["server"]);
     exit;
 }
 
-$rStreams = getStreamPIDs($_GET["server"]);
-$rFS = getFreeSpace($_GET["server"]);
+$rStreams = getStreamPIDs(ipTV_lib::$request["server"]);
+$rFS = getFreeSpace(ipTV_lib::$request["server"]);
 
 if ($rSettings["sidebar"]) {
     include "header_sidebar.php";
@@ -34,10 +34,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -84,23 +84,23 @@ if ($rSettings["sidebar"]) { ?>
                                                         <td class="text-center"><?= $rSystem["avail"] ?></td>
                                                         <td class="text-center"><?php if (intval(rtrim($rSystem["percentage"], "%")) >= 80) {
                                                             echo "<span class='text-danger'>" . $rSystem["percentage"] . "</span>";
-                                                        } else {
-                                                            echo $rSystem["percentage"];
-                                                        }
-                                                        ; ?></td>
+                                                                                } else {
+                                                                                    echo $rSystem["percentage"];
+                                                                                }
+                                                                                ; ?></td>
                                                         <td class="text-center">
                                                             <div class="btn-group">
                                                                 <?php if (substr($rSystem["mount"], strlen($rSystem["mount"]) - 3, 3) == "tmp") { ?>
                                                                     <a
-                                                                        href="./process_monitor.php?server=<?= $_GET["server"] ?>&clear"><button
+                                                                        href="./process_monitor.php?server=<?= ipTV_lib::$request["server"] ?>&clear"><button
                                                                             data-toggle="tooltip" data-placement="top" title=""
                                                                             data-original-title="<?= $_["clear_temp"] ?>"
                                                                             type="button"
                                                                             class="btn btn-light waves-effect waves-light btn-xs"><i
                                                                                 class="mdi mdi-close"></i></button></a>
-                                                                <?php } else if (substr($rSystem["mount"], strlen($rSystem["mount"]) - 7, 7) == "streams") { ?>
+                                                                <?php } elseif (substr($rSystem["mount"], strlen($rSystem["mount"]) - 7, 7) == "streams") { ?>
                                                                         <a
-                                                                            href="./process_monitor.php?server=<?= $_GET["server"] ?>&clear_s"><button
+                                                                            href="./process_monitor.php?server=<?= ipTV_lib::$request["server"] ?>&clear_s"><button
                                                                                 data-toggle="tooltip" data-placement="top" title=""
                                                                                 data-original-title="<?= $_["clear_streams"] ?>"
                                                                                 type="button"
@@ -129,9 +129,9 @@ if ($rSettings["sidebar"]) { ?>
                                             <div class="col-md-3">
                                                 <select id="live_filter" class="form-control" data-toggle="select2">
                                                     <?php foreach ($rServers as $rServer) { ?>
-                                                        <option value="<?= $rServer["id"] ?>" <?php if ($_GET["server"] == $rServer["id"]) {
+                                                        <option value="<?= $rServer["id"] ?>" <?php if (ipTV_lib::$request["server"] == $rServer["id"]) {
                                                               echo " selected";
-                                                          } ?>><?= $rServer["server_name"] ?></option>
+                                                                       } ?>><?= $rServer["server_name"] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -143,8 +143,8 @@ if ($rSettings["sidebar"]) { ?>
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                             echo " selected";
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                        <?php } ?>
+                                                               } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -164,7 +164,7 @@ if ($rSettings["sidebar"]) { ?>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach (getPIDs($_GET["server"]) as $rProcess) { ?>
+                                            <?php foreach (getPIDs(ipTV_lib::$request["server"]) as $rProcess) { ?>
                                                 <tr>
                                                     <td><?= $rProcess["pid"] ?></td>
                                                     <td><?= $rProcess["user"] ?></td>
@@ -172,9 +172,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     </td>
                                                     <td><?php if (isset($rStreams[$rProcess["pid"]])) {
                                                         echo "<a href='" . array(1 => "stream", 2 => "movie", 3 => "created_channel", 4 => "radio", 5 => "episode")[$rStreams[$rProcess["pid"]]["type"]] . ".php?id=" . $rStreams[$rProcess["pid"]]["id"] . "'>" . $rStreams[$rProcess["pid"]]["title"] . '</a>';
-                                                    } else {
-                                                        echo $rProcess["command"];
-                                                    } ?></td>
+                                                        } else {
+                                                            echo $rProcess["command"];
+                                                        } ?></td>
                                                     <td><?= number_format($rProcess["cpu"], 1) ?></td>
                                                     <td><?= number_format($rProcess["rss"] / 1024.0, 0) ?></td>
                                                     <td><?= $rProcess["time"] ?></td>
@@ -197,7 +197,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     data-original-title="<?= $_["kill_process_info"] ?>"
                                                                     type="button"
                                                                     class="btn btn-light waves-effect waves-light btn-xs"
-                                                                    onClick="kill(<?= $_GET["server"] ?>, <?= $rProcess["pid"] ?>);"><i
+                                                                    onClick="kill(<?= ipTV_lib::$request["server"] ?>, <?= $rProcess["pid"] ?>);"><i
                                                                         class="mdi mdi-close"></i></button>
                                                             <?php } else { ?>
                                                                 <button disabled type="button"
@@ -289,7 +289,7 @@ if ($rSettings["sidebar"]) { ?>
                             "targets": [0, 1, 2, 4, 5, 6, 7]
                         }],
 
-                        <?php if (isset($_GET["mem"])) { ?>
+                        <?php if (isset(ipTV_lib::$request["mem"])) { ?>
                                         order: [
                                 [5, "desc"]
                             ],

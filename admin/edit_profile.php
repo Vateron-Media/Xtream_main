@@ -4,58 +4,57 @@ include "functions.php";
 
 $nabillangues = array("" => "Default - EN", "fr" => "French", "es" => "Spanish", "it" => "Italian", "pt" => "Portuguese", "ru" => "Русский");
 
-if (isset($_POST["submit_profile"])) {
-    if ((strlen($_POST["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
+if (isset(ipTV_lib::$request["submit_profile"])) {
+    if ((strlen(ipTV_lib::$request["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
         $_STATUS = 1;
     }
-    if (((strlen($_POST["email"]) == 0) or (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))) && (($rAdminSettings["change_own_email"]) or ($rPermissions["is_admin"]))) {
+    if (((strlen(ipTV_lib::$request["email"]) == 0) or (!filter_var(ipTV_lib::$request["email"], FILTER_VALIDATE_EMAIL))) && (($rAdminSettings["change_own_email"]) or ($rPermissions["is_admin"]))) {
         $_STATUS = 2;
     }
-    if ((strlen($_POST["reseller_dns"]) > 0) && (!filter_var("http://" . $_POST["reseller_dns"], FILTER_VALIDATE_URL))) {
+    if ((strlen(ipTV_lib::$request["reseller_dns"]) > 0) && (!filter_var("http://" . ipTV_lib::$request["reseller_dns"], FILTER_VALIDATE_URL))) {
         $_STATUS = 3;
     }
-    if (isset($_POST["sidebar"])) {
+    if (isset(ipTV_lib::$request["sidebar"])) {
         $rSidebar = true;
     } else {
         $rSidebar = false;
     }
-    if (isset($_POST["dark_mode"])) {
+    if (isset(ipTV_lib::$request["dark_mode"])) {
         $rDarkMode = true;
     } else {
         $rDarkMode = false;
     }
-    if (isset($_POST["expanded_sidebar"])) {
+    if (isset(ipTV_lib::$request["expanded_sidebar"])) {
         $rExpanded = true;
     } else {
         $rExpanded = false;
     }
     if (!isset($_STATUS)) {
-        if ((strlen($_POST["password"]) > 0) && (($rAdminSettings["change_own_password"]) or ($rPermissions["is_admin"]))) {
-            $rPassword = cryptPassword($_POST["password"]);
+        if ((strlen(ipTV_lib::$request["password"]) > 0) && (($rAdminSettings["change_own_password"]) or ($rPermissions["is_admin"]))) {
+            $rPassword = cryptPassword(ipTV_lib::$request["password"]);
         } else {
             $rPassword = $rUserInfo["password"];
         }
         if (($rAdminSettings["change_own_email"]) or ($rPermissions["is_admin"])) {
-            $rEmail = $_POST["email"];
+            $rEmail = ipTV_lib::$request["email"];
         } else {
             $rEmail = $rUserInfo["email"];
         }
         if (($rAdminSettings["change_own_dns"]) or ($rPermissions["is_admin"])) {
-            $rDNS = $_POST["reseller_dns"];
+            $rDNS = ipTV_lib::$request["reseller_dns"];
         } else {
             $rDNS = $rUserInfo["reseller_dns"];
         }
         if (($rAdminSettings["change_own_lang"]) or ($rPermissions["is_admin"])) {
-
-            $bob = $_POST["default_lang"];
+            $bob = ipTV_lib::$request["default_lang"];
         } else {
             $bob = $rUserInfo["default_lang"];
         }
-        if (isset($_POST['port_admin']) && $rPermissions["is_admin"] && $_POST['port_admin'] != $rSettings["port_admin"]) {
-            $portadmin = $_POST["port_admin"];
-            exec("sed -i 's/listen " . $rSettings["port_admin"] . "/listen " . intval($_POST["port_admin"]) . "/g' /home/xtreamcodes/bin/nginx/conf/nginx.conf");
+        if (isset(ipTV_lib::$request['port_admin']) && $rPermissions["is_admin"] && ipTV_lib::$request['port_admin'] != $rSettings["port_admin"]) {
+            $portadmin = ipTV_lib::$request["port_admin"];
+            exec("sed -i 's/listen " . $rSettings["port_admin"] . "/listen " . intval(ipTV_lib::$request["port_admin"]) . "/g' /home/xtreamcodes/bin/nginx/conf/nginx.conf");
             if ($rSettings["is_ufw"] == 1) {
-                exec("sudo ufw allow " . intval($_POST["port_admin"]) . " && sudo ufw delete allow " . $rSettings["port_admin"] . "");
+                exec("sudo ufw allow " . intval(ipTV_lib::$request["port_admin"]) . " && sudo ufw delete allow " . $rSettings["port_admin"] . "");
             }
             exec("sudo /home/xtreamcodes/bin/nginx/sbin/nginx -s reload");
             sleep(1);
@@ -63,7 +62,7 @@ if (isset($_POST["submit_profile"])) {
             $portadmin = $rSettings["port_admin"];
         }
         ipTV_lib::setSettings(["port_admin" => $portadmin]);
-        $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $ipTV_db_admin->escape($rPassword) . "', `email` = '" . $ipTV_db_admin->escape($rEmail) . "', `reseller_dns` = '" . $ipTV_db_admin->escape($rDNS) . "', `default_lang` = '" . $ipTV_db_admin->escape($bob) . "', `dark_mode` = " . intval($rDarkMode) . ", `sidebar` = " . intval($rSidebar) . ", `expanded_sidebar` = " . intval($rExpanded) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+        $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $rPassword . "', `email` = '" . $rEmail . "', `reseller_dns` = '" . $rDNS . "', `default_lang` = '" . $bob . "', `dark_mode` = " . intval($rDarkMode) . ", `sidebar` = " . intval($rSidebar) . ", `expanded_sidebar` = " . intval($rExpanded) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
         $rUserInfo = getRegisteredUser($rUserInfo["id"]);
         $rAdminSettings["dark_mode"] = $rUserInfo["dark_mode"];
         $rAdminSettings["expanded_sidebar"] = $rUserInfo["expanded_sidebar"];
@@ -82,10 +81,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -104,21 +103,21 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["profile_success"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                     <?= str_replace("{num}", $rSettings["pass_length"], $_["profile_fail_1"]) ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                     <?= $_["profile_fail_2"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -180,8 +179,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <?php foreach ($nabillangues as $rKey => $rLanguage) { ?>
                                                                                 <option<?php if ($rUserInfo["default_lang"] == $rKey) {
                                                                                             echo " selected";
-                                                                                        } ?> value="<?= $rKey ?>"><?= $rLanguage ?></option>
-                                                                                <?php } ?>
+                                                                                       } ?> value="<?= $rKey ?>"><?= $rLanguage ?></option>
+                                                                            <?php } ?>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -191,13 +190,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="sidebar" id="sidebar" type="checkbox" <?php if ($rUserInfo["sidebar"] == 1) {
                                                                                                                             echo "checked ";
-                                                                                                                        } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                                                                       } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label" for="expanded_sidebar"><?= $_["expanded_sidebar"] ?></label>
                                                                 <div class="col-md-2">
                                                                     <input name="expanded_sidebar" id="expanded_sidebar" type="checkbox" <?php if ($rUserInfo["expanded_sidebar"] == 1) {
                                                                                                                                                 echo "checked ";
-                                                                                                                                            } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                                                                                         } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -205,7 +204,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="dark_mode" id="dark_mode" type="checkbox" <?php if ($rUserInfo["dark_mode"] == 1) {
                                                                                                                                 echo "checked ";
-                                                                                                                            } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                                                                           } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->

@@ -10,11 +10,11 @@ if (($rPermissions["is_reseller"]) && (!$rPermissions["reseller_can_select_bouqu
 
 $rRegisteredUsers = getRegisteredUsers($rUserInfo["id"]);
 
-if ((isset($_GET["trial"])) or (isset($_POST["trial"]))) {
+if ((isset(ipTV_lib::$request["trial"])) or (isset(ipTV_lib::$request["trial"]))) {
     if ($rSettings["disable_trial"]) {
-        $canGenerateTrials = False;
-    } else if (floatval($rUserInfo["credits"]) < floatval($rPermissions["minimum_trial_credits"])) {
-        $canGenerateTrials = False;
+        $canGenerateTrials = false;
+    } elseif (floatval($rUserInfo["credits"]) < floatval($rPermissions["minimum_trial_credits"])) {
+        $canGenerateTrials = false;
     } else {
         $canGenerateTrials = checkTrials();
     }
@@ -22,14 +22,14 @@ if ((isset($_GET["trial"])) or (isset($_POST["trial"]))) {
     $canGenerateTrials = true;
 }
 
-if (isset($_POST["submit_user"])) {
-    $_POST["mac_address_mag"] = strtoupper($_POST["mac_address_mag"]);
-    $_POST["mac_address_e2"] = strtoupper($_POST["mac_address_e2"]);
-    if (isset($_POST["edit"])) {
-        if (!hasPermissions("user", $_POST["edit"])) {
+if (isset(ipTV_lib::$request["submit_user"])) {
+    ipTV_lib::$request["mac_address_mag"] = strtoupper(ipTV_lib::$request["mac_address_mag"]);
+    ipTV_lib::$request["mac_address_e2"] = strtoupper(ipTV_lib::$request["mac_address_e2"]);
+    if (isset(ipTV_lib::$request["edit"])) {
+        if (!hasPermissions("user", ipTV_lib::$request["edit"])) {
             exit;
         }
-        $rUser = getUser($_POST["edit"]);
+        $rUser = getUser(ipTV_lib::$request["edit"]);
         if (!$rUser) {
             exit;
         }
@@ -40,12 +40,12 @@ if (isset($_POST["submit_user"])) {
     } else {
         $rArray = array("member_id" => 0, "username" => "", "password" => "", "exp_date" => null, "admin_enabled" => 1, "enabled" => 1, "admin_notes" => "", "reseller_notes" => "", "bouquet" => array(), "max_connections" => 1, "is_restreamer" => 0, "allowed_ips" => array(), "allowed_ua" => array(), "created_at" => time(), "created_by" => -1, "is_mag" => 0, "is_e2" => 0, "force_server_id" => 0, "is_isplock" => 0, "isp_desc" => "", "forced_country" => "", "is_stalker" => 0, "bypass_ua" => 0, "play_token" => "");
     }
-    if (!empty($_POST["package"])) {
-        $rPackage = getPackage($_POST["package"]);
+    if (!empty(ipTV_lib::$request["package"])) {
+        $rPackage = getPackage(ipTV_lib::$request["package"]);
         // Check package is within permissions.
         if (($rPackage) && (in_array($rUserInfo["member_group_id"], json_decode($rPackage["groups"], true)))) {
             // Ignore post and get information from package instead.
-            if ($_POST["trial"]) {
+            if (ipTV_lib::$request["trial"]) {
                 $rCost = floatval($rPackage["trial_credits"]);
             } else {
                 $rOverride = json_decode($rUserInfo["override_packages"], true);
@@ -56,7 +56,7 @@ if (isset($_POST["submit_user"])) {
                 }
             }
             if ((floatval($rUserInfo["credits"]) >= $rCost) && ($canGenerateTrials)) {
-                if ($_POST["trial"]) {
+                if (ipTV_lib::$request["trial"]) {
                     $rArray["exp_date"] = strtotime('+' . intval($rPackage["trial_duration"]) . ' ' . $rPackage["trial_duration_in"]);
                     $rArray["is_trial"] = 1;
                 } else {
@@ -74,17 +74,17 @@ if (isset($_POST["submit_user"])) {
                 $rArray["bouquet"] = $rPackage["bouquets"];
                 $rArray["max_connections"] = $rPackage["max_connections"];
                 $rArray["is_restreamer"] = $rPackage["is_restreamer"];
-                $rOwner = $_POST["member_id"];
+                $rOwner = ipTV_lib::$request["member_id"];
                 if (in_array($rOwner, array_keys($rRegisteredUsers))) {
                     $rArray["member_id"] = $rOwner;
                 } else {
                     $rArray["member_id"] = $rUserInfo["id"]; // Invalid owner, reset.
                 }
-                $rArray["reseller_notes"] = $_POST["reseller_notes"];
-                if (isset($_POST["is_mag"])) {
+                $rArray["reseller_notes"] = ipTV_lib::$request["reseller_notes"];
+                if (isset(ipTV_lib::$request["is_mag"])) {
                     $rArray["is_mag"] = 1;
                 }
-                if (isset($_POST["is_e2"])) {
+                if (isset(ipTV_lib::$request["is_e2"])) {
                     $rArray["is_e2"] = 1;
                 }
             } else {
@@ -93,10 +93,10 @@ if (isset($_POST["submit_user"])) {
         } else {
             $_STATUS = 3; // Invalid package.
         }
-    } else if (isset($rUser)) {
+    } elseif (isset($rUser)) {
         // No package, just editing fields.
-        $rArray["reseller_notes"] = $_POST["reseller_notes"];
-        $rOwner = $_POST["member_id"];
+        $rArray["reseller_notes"] = ipTV_lib::$request["reseller_notes"];
+        $rOwner = ipTV_lib::$request["member_id"];
         if (in_array($rOwner, array_keys($rRegisteredUsers))) {
             $rArray["member_id"] = $rOwner;
         } else {
@@ -107,54 +107,54 @@ if (isset($_POST["submit_user"])) {
     }
     if (!$rPermissions["allow_change_pass"]) {
         if (isset($rUser)) {
-            $_POST["password"] = $rUser["password"];
+            ipTV_lib::$request["password"] = $rUser["password"];
         } else {
-            $_POST["password"] = "";
+            ipTV_lib::$request["password"] = "";
         }
     }
     if ((!$rPermissions["allow_change_pass"]) && (!$rAdminSettings["change_usernames"])) {
         if (isset($rUser)) {
-            $_POST["username"] = $rUser["username"];
+            ipTV_lib::$request["username"] = $rUser["username"];
         } else {
-            $_POST["username"] = "";
+            ipTV_lib::$request["username"] = "";
         }
     }
-    if ((strlen($_POST["username"]) == 0) or (($rArray["is_mag"]) && (!isset($rUser))) or (($rArray["is_e2"]) && (!isset($rUser)))) {
-        $_POST["username"] = generateString(10);
-    } else if ((($rArray["is_mag"]) && (isset($rUser))) or (($rArray["is_e2"]) && (isset($rUser)))) {
-        $_POST["username"] = $rUser["username"];
+    if ((strlen(ipTV_lib::$request["username"]) == 0) or (($rArray["is_mag"]) && (!isset($rUser))) or (($rArray["is_e2"]) && (!isset($rUser)))) {
+        ipTV_lib::$request["username"] = generateString(10);
+    } elseif ((($rArray["is_mag"]) && (isset($rUser))) or (($rArray["is_e2"]) && (isset($rUser)))) {
+        ipTV_lib::$request["username"] = $rUser["username"];
     }
-    if ((strlen($_POST["password"]) == 0) or (($rArray["is_mag"]) && (!isset($rUser))) or (($rArray["is_e2"]) && (!isset($rUser)))) {
-        $_POST["password"] = generateString(10);
-    } else if ((($rArray["is_mag"]) && (isset($rUser))) or (($rArray["is_e2"]) && (isset($rUser)))) {
-        $_POST["password"] = $rUser["password"];
+    if ((strlen(ipTV_lib::$request["password"]) == 0) or (($rArray["is_mag"]) && (!isset($rUser))) or (($rArray["is_e2"]) && (!isset($rUser)))) {
+        ipTV_lib::$request["password"] = generateString(10);
+    } elseif ((($rArray["is_mag"]) && (isset($rUser))) or (($rArray["is_e2"]) && (isset($rUser)))) {
+        ipTV_lib::$request["password"] = $rUser["password"];
     }
-    $rArray["username"] = $_POST["username"];
-    $rArray["password"] = $_POST["password"];
+    $rArray["username"] = ipTV_lib::$request["username"];
+    $rArray["password"] = ipTV_lib::$request["password"];
     if (!isset($rUser)) {
-        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = '" . $ipTV_db_admin->escape($rArray["username"]) . "';");
+        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = '" . $rArray["username"] . "';");
         if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 6; // Username in use.
         }
     }
-    if ((($_POST["is_mag"]) && (!filter_var($_POST["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen($_POST["mac_address_e2"]) > 0) && (!filter_var($_POST["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
+    if (((ipTV_lib::$request["is_mag"]) && (!filter_var(ipTV_lib::$request["mac_address_mag"], FILTER_VALIDATE_MAC))) or ((strlen(ipTV_lib::$request["mac_address_e2"]) > 0) && (!filter_var(ipTV_lib::$request["mac_address_e2"], FILTER_VALIDATE_MAC)))) {
         $_STATUS = 7;
-    } else if ($_POST["is_mag"]) {
-        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . $ipTV_db_admin->escape(base64_encode($_POST["mac_address_mag"])) . "' LIMIT 1;");
+    } elseif (ipTV_lib::$request["is_mag"]) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `mag_devices` WHERE mac = '" . base64_encode(ipTV_lib::$request["mac_address_mag"]) . "' LIMIT 1;");
         if ($ipTV_db_admin->num_rows() > 0) {
-            if (isset($_POST["edit"])) {
-                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
+            if (isset(ipTV_lib::$request["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval(ipTV_lib::$request["edit"])) {
                     $_STATUS = 8; // MAC in use.
                 }
             } else {
                 $_STATUS = 8; // MAC in use.
             }
         }
-    } else if ($_POST["is_e2"]) {
-        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . $ipTV_db_admin->escape($_POST["mac_address_e2"]) . "' LIMIT 1;");
+    } elseif (ipTV_lib::$request["is_e2"]) {
+        $ipTV_db_admin->query("SELECT `user_id` FROM `enigma2_devices` WHERE mac = '" . ipTV_lib::$request["mac_address_e2"] . "' LIMIT 1;");
         if ($ipTV_db_admin->num_rows() > 0) {
-            if (isset($_POST["edit"])) {
-                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval($_POST["edit"])) {
+            if (isset(ipTV_lib::$request["edit"])) {
+                if (intval($ipTV_db_admin->get_row()["user_id"]) <> intval(ipTV_lib::$request["edit"])) {
                     $_STATUS = 8; // MAC in use.
                 }
             } else {
@@ -163,28 +163,28 @@ if (isset($_POST["submit_user"])) {
         }
     }
     if ($rAdminSettings["reseller_restrictions"]) {
-        if (isset($_POST["allowed_ips"])) {
-            if (!is_array($_POST["allowed_ips"])) {
-                $_POST["allowed_ips"] = array($_POST["allowed_ips"]);
+        if (isset(ipTV_lib::$request["allowed_ips"])) {
+            if (!is_array(ipTV_lib::$request["allowed_ips"])) {
+                ipTV_lib::$request["allowed_ips"] = array(ipTV_lib::$request["allowed_ips"]);
             }
-            $rArray["allowed_ips"] = json_encode($_POST["allowed_ips"]);
+            $rArray["allowed_ips"] = json_encode(ipTV_lib::$request["allowed_ips"]);
         } else {
             $rArray["allowed_ips"] = "[]";
         }
-        if (isset($_POST["allowed_ua"])) {
-            if (!is_array($_POST["allowed_ua"])) {
-                $_POST["allowed_ua"] = array($_POST["allowed_ua"]);
+        if (isset(ipTV_lib::$request["allowed_ua"])) {
+            if (!is_array(ipTV_lib::$request["allowed_ua"])) {
+                ipTV_lib::$request["allowed_ua"] = array(ipTV_lib::$request["allowed_ua"]);
             }
-            $rArray["allowed_ua"] = json_encode($_POST["allowed_ua"]);
+            $rArray["allowed_ua"] = json_encode(ipTV_lib::$request["allowed_ua"]);
         } else {
             $rArray["allowed_ua"] = "[]";
         }
     }
-    $rArray["bouquet"] = array_values(json_decode($_POST["bouquets_selected"], true));
-    unset($_POST["bouquets_selected"]);
+    $rArray["bouquet"] = array_values(json_decode(ipTV_lib::$request["bouquets_selected"], true));
+    unset(ipTV_lib::$request["bouquets_selected"]);
     if (!isset($_STATUS)) {
         $rArray["created_by"] = $rUserInfo["id"];
-        $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+        $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';
             if (is_array($rValue)) {
@@ -193,15 +193,15 @@ if (isset($_POST["submit_user"])) {
             if (is_null($rValue)) {
                 $rValues .= 'NULL';
             } else {
-                $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+                $rValues .= '\'' . $rValue . '\'';
             }
         }
         if (isset($rUser)) {
             $rCols = "`id`," . $rCols;
-            $rValues = $ipTV_db_admin->escape($rUser["id"]) . "," . $rValues;
+            $rValues = $rUser["id"] . "," . $rValues;
         }
-        $isMag = False;
-        $isE2 = False;
+        $isMag = false;
+        $isE2 = false;
         // Confirm Reseller can generate MAG.
         if ($rArray["is_mag"]) {
             if (($rPackage["can_gen_mag"]) or (isset($rUser))) {
@@ -229,19 +229,19 @@ if (isset($_POST["submit_user"])) {
                     $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = '" . floatval($rNewCredits) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
                     if (isset($rUser)) {
                         if ($isMag) {
-                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $ipTV_db_admin->escape($rArray["username"]) . "', '" . $ipTV_db_admin->escape($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . $ipTV_db_admin->escape($_POST["mac_address_mag"]) . " ] " . $_["extend_mag"] . " [ " . $ipTV_db_admin->escape($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . $ipTV_db_admin->escape($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
-                        } else if ($isE2) {
-                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $ipTV_db_admin->escape($rArray["username"]) . "', '" . $ipTV_db_admin->escape($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . $ipTV_db_admin->escape($_POST["mac_address_e2"]) . " ] " . $_["extend_enigma"] . " [ " . $ipTV_db_admin->escape($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . $ipTV_db_admin->escape($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rArray["username"] . "', '" . $rArray["password"] . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ipTV_lib::$request["mac_address_mag"] . " ] " . $_["extend_mag"] . " [ " . $rPackage["package_name"] . " ], Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                        } elseif ($isE2) {
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rArray["username"] . "', '" . $rArray["password"] . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ipTV_lib::$request["mac_address_e2"] . " ] " . $_["extend_enigma"] . " [ " . $rPackage["package_name"] . " ], Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         } else {
-                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $ipTV_db_admin->escape($rArray["username"]) . "', '" . $ipTV_db_admin->escape($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . $ipTV_db_admin->escape($_POST["username"]) . " ] " . $_["extend_m3u"] . " [ " . $ipTV_db_admin->escape($rPackage["package_name"]) . " ], Credits: <font color=\"green\">" . $ipTV_db_admin->escape($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rArray["username"] . "', '" . $rArray["password"] . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ipTV_lib::$request["username"] . " ] " . $_["extend_m3u"] . " [ " . $rPackage["package_name"] . " ], Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         }
                     } else {
                         if ($isMag) {
-                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $ipTV_db_admin->escape($rArray["username"]) . "', '" . $ipTV_db_admin->escape($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . $ipTV_db_admin->escape($_POST["mac_address_mag"]) . " ] " . $_["new_mag"] . " [" . $ipTV_db_admin->escape($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . $ipTV_db_admin->escape($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
-                        } else if ($isE2) {
-                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $ipTV_db_admin->escape($rArray["username"]) . "', '" . $ipTV_db_admin->escape($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . $ipTV_db_admin->escape($_POST["mac_address_e2"]) . " ] " . $_["new_enigma"] . " [" . $ipTV_db_admin->escape($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . $ipTV_db_admin->escape($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rArray["username"] . "', '" . $rArray["password"] . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ipTV_lib::$request["mac_address_mag"] . " ] " . $_["new_mag"] . " [" . $rPackage["package_name"] . "], Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                        } elseif ($isE2) {
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rArray["username"] . "', '" . $rArray["password"] . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ipTV_lib::$request["mac_address_e2"] . " ] " . $_["new_enigma"] . " [" . $rPackage["package_name"] . "], Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         } else {
-                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $ipTV_db_admin->escape($rArray["username"]) . "', '" . $ipTV_db_admin->escape($rArray["password"]) . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . $ipTV_db_admin->escape($_POST["username"]) . " ] " . $_["new_m3u"] . " [" . $ipTV_db_admin->escape($rPackage["package_name"]) . "], Credits: <font color=\"green\">" . $ipTV_db_admin->escape($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                            $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rArray["username"] . "', '" . $rArray["password"] . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> [ " . ipTV_lib::$request["username"] . " ] " . $_["new_m3u"] . " [" . $rPackage["package_name"] . "], Credits: <font color=\"green\">" . $rUserInfo["credits"] . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                         }
                         $rAccessOutput = json_decode($rPackage["output_formats"], true);
                         $rLockDevice = $rPackage["lock_device"];
@@ -257,16 +257,16 @@ if (isset($_POST["submit_user"])) {
                 if ($isMag) {
                     $ipTV_db_admin->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
                     if ($ipTV_db_admin->num_rows() == 1) {
-                        $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode($ipTV_db_admin->escape(strtoupper($_POST["mac_address_mag"]))) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
-                    } else if (!isset($rUser)) {
-                        $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . $ipTV_db_admin->escape(base64_encode(strtoupper($_POST["mac_address_mag"]))) . "', " . intval($rLockDevice) . ");");
+                        $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(strtoupper(ipTV_lib::$request["mac_address_mag"])) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
+                    } elseif (!isset($rUser)) {
+                        $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . base64_encode(strtoupper(ipTV_lib::$request["mac_address_mag"])) . "', " . intval($rLockDevice) . ");");
                     }
-                } else if ($isE2) {
+                } elseif ($isE2) {
                     $ipTV_db_admin->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
                     if ($ipTV_db_admin->num_rows() == 1) {
-                        $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . $ipTV_db_admin->escape(strtoupper($_POST["mac_address_e2"])) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
-                    } else if (!isset($rUser)) {
-                        $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . $ipTV_db_admin->escape(strtoupper($_POST["mac_address_e2"])) . "', " . intval($rLockDevice) . ");");
+                        $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . strtoupper(ipTV_lib::$request["mac_address_e2"]) . "' WHERE `user_id` = " . intval($rInsertID) . ";");
+                    } elseif (!isset($rUser)) {
+                        $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . strtoupper(ipTV_lib::$request["mac_address_e2"]) . "', " . intval($rLockDevice) . ");");
                     }
                 }
                 header("Location: ./user_reseller.php?id=" . $rInsertID);
@@ -278,21 +278,21 @@ if (isset($_POST["submit_user"])) {
     }
 }
 
-if (isset($_GET["id"])) {
-    if (!hasPermissions("user", $_GET["id"])) {
+if (isset(ipTV_lib::$request["id"])) {
+    if (!hasPermissions("user", ipTV_lib::$request["id"])) {
         exit;
     }
-    $rUser = getUser($_GET["id"]);
+    $rUser = getUser(ipTV_lib::$request["id"]);
     if (!$rUser) {
         exit;
     }
-    $rMAGUser = getMAGUser($_GET["id"]);
+    $rMAGUser = getMAGUser(ipTV_lib::$request["id"]);
     if (($rUser["is_mag"])) {
         $rUser["lock_device"] = $rMAGUser["lock_device"];
         $rUser["mac_address_mag"] = base64_decode($rMAGUser["mac"]);
     }
     if (($rUser["is_e2"])) {
-        $rUser["mac_address_e2"] = getE2User($_GET["id"])["mac"];
+        $rUser["mac_address_e2"] = getE2User(ipTV_lib::$request["id"])["mac"];
     }
     $rUser["outputs"] = getOutputs($rUser["id"]);
 }
@@ -308,10 +308,10 @@ if ($rSettings["sidebar"]) { ?>
         <div class="content-page">
             <div class="content boxed-layout">
                 <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                     <div class="wrapper boxed-layout">
                         <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -326,11 +326,11 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rUser)) {
                                     echo $_["edit"];
-                                } else {
-                                    echo $_["add"];
-                                } ?> <?php if (isset($_GET["trial"])) {
-                                      echo $_["trial"];
-                                  } ?> <?= $_["user"] ?></h4>
+                                                       } else {
+                                                           echo $_["add"];
+                                                       } ?> <?php if (isset(ipTV_lib::$request["trial"])) {
+               echo $_["trial"];
+                                                       } ?> <?= $_["user"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -353,63 +353,63 @@ if ($rSettings["sidebar"]) { ?>
                                                 </button>
                                                 <?= $_["user_operation_was_completed_successfully"] ?>
                                             </div>
-                                    <?php } else if ($_STATUS == 1) { ?>
+                                <?php } elseif ($_STATUS == 1) { ?>
                                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                 <?= $_["an_invalid_expiration_date_was_entered"] ?>
                                                     </div>
-                                    <?php } else if ($_STATUS == 2) { ?>
+                                <?php } elseif ($_STATUS == 2) { ?>
                                                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                 <?= $_["there_was_an_error"] ?>
                                                             </div>
-                                    <?php } else if ($_STATUS == 3) { ?>
+                                <?php } elseif ($_STATUS == 3) { ?>
                                                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                             <span aria-hidden="true">&times;</span>
                                                                         </button>
                                                 <?= $_["an_invalid_package_was_selected"] ?>
                                                                     </div>
-                                    <?php } else if ($_STATUS == 4) { ?>
+                                <?php } elseif ($_STATUS == 4) { ?>
                                                                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                                     <span aria-hidden="true">&times;</span>
                                                                                 </button>
                                                 <?= $_["you_don't_have_enough_credits"] ?>
                                                                             </div>
-                                    <?php } else if ($_STATUS == 5) { ?>
+                                <?php } elseif ($_STATUS == 5) { ?>
                                                                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                                             <span aria-hidden="true">&times;</span>
                                                                                         </button>
                                                 <?= $_["you_are_not_permitted_to_generate"] ?>
                                                                                     </div>
-                                    <?php } else if ($_STATUS == 6) { ?>
+                                <?php } elseif ($_STATUS == 6) { ?>
                                                                                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                                                     <span aria-hidden="true">&times;</span>
                                                                                                 </button>
                                                 <?= $_["this_username_already_exists"] ?>
                                                                                             </div>
-                                    <?php } else if ($_STATUS == 7) { ?>
+                                <?php } elseif ($_STATUS == 7) { ?>
                                                                                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                                                             <span aria-hidden="true">&times;</span>
                                                                                                         </button>
                                                 <?= $_["an_invalid_mac_address_was_entered"] ?>
                                                                                                     </div>
-                                    <?php } else if ($_STATUS == 8) { ?>
+                                <?php } elseif ($_STATUS == 8) { ?>
                                                                                                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                                                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                                                                     <span aria-hidden="true">&times;</span>
                                                                                                                 </button>
                                                 <?= $_["this_mac_address_is_already_in_use"] ?>
                                                                                                             </div>
-                                    <?php }
+                                <?php }
                             }
                             if ((isset($rUser)) and ($rUser["is_trial"])) { ?>
                                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -421,13 +421,13 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./user_reseller_edit.php<?php if (isset($_GET["id"])) {
-                                        echo "?id=" . $_GET["id"];
-                                    } ?>" method="POST" id="user_form">
+                                    <form action="./user_reseller_edit.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                        echo "?id=" . ipTV_lib::$request["id"];
+                                                                          } ?>" method="POST" id="user_form">
                                         <?php if (isset($rUser)) { ?>
                                                 <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
                                         <?php }
-                                        if (isset($_GET["trial"])) { ?>
+                                        if (isset(ipTV_lib::$request["trial"])) { ?>
                                                 <input type="hidden" name="trial" value="1" />
                                         <?php } ?>
                                         <input type="hidden" name="bouquets_selected" id="bouquets_selected" value="" />
@@ -451,13 +451,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <input<?php if ((!$rPermissions["allow_change_pass"]) && (!$rAdminSettings["change_usernames"])) {
                                                                         echo $_[" disabled"];
-                                                                    } ?> type="text"
+                                                                          } ?> type="text"
                                                                         class="form-control" id="username"
                                                                         name="username"
                                                                         placeholder="<?= $_["auto_generate_if_blank"] ?>"
                                                                         value="<?php if (isset($rUser)) {
                                                                             echo htmlspecialchars($rUser["username"]);
-                                                                        } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4" id="pass">
@@ -466,13 +466,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <input<?php if (!$rPermissions["allow_change_pass"]) {
                                                                         echo " disabled";
-                                                                    } ?> type="text"
+                                                                          } ?> type="text"
                                                                         class="form-control" id="password"
                                                                         name="password"
                                                                         placeholder="<?= $_["auto_generate_if_blank"] ?>"
                                                                         value="<?php if (isset($rUser)) {
                                                                             echo htmlspecialchars($rUser["password"]);
-                                                                        } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -487,9 +487,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                                     if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
                                                                                         echo "selected ";
                                                                                     }
-                                                                                } else if ($rUserInfo["id"] == $rRegisteredUser["id"]) {
-                                                                                    echo "selected ";
-                                                                                } ?>value="<?= $rRegisteredUser["id"] ?>">
+                                                                                        } elseif ($rUserInfo["id"] == $rRegisteredUser["id"]) {
+                                                                                            echo "selected ";
+                                                                                        } ?>value="<?= $rRegisteredUser["id"] ?>">
                                                                                     <?= $rRegisteredUser["username"] ?>
                                                                                 </option>
                                                                         <?php } ?>
@@ -499,7 +499,7 @@ if ($rSettings["sidebar"]) { ?>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="package"><?php if (isset($rUser)) {
                                                                     echo "Extend ";
-                                                                } ?><?= $_["package"] ?></label>
+                                                                                                                     } ?><?= $_["package"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <select name="package" id="package"
                                                                         class="form-control select2"
@@ -510,11 +510,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php }
                                                                         foreach (getPackages() as $rPackage) {
                                                                             if (in_array($rUserInfo["member_group_id"], json_decode($rPackage["groups"], true))) {
-                                                                                if ((($rPackage["is_trial"]) && ((isset($_GET["trial"])) or (isset($_POST["trial"])))) or (($rPackage["is_official"]) && ((!isset($_GET["trial"])) and (!isset($_POST["trial"]))))) { ?>
+                                                                                if ((($rPackage["is_trial"]) && ((isset(ipTV_lib::$request["trial"])) or (isset(ipTV_lib::$request["trial"])))) or (($rPackage["is_official"]) && ((!isset(ipTV_lib::$request["trial"])) and (!isset(ipTV_lib::$request["trial"]))))) { ?>
                                                                                                 <option value="<?= $rPackage["id"] ?>">
                                                                                                     <?= $rPackage["package_name"] ?>
                                                                                                 </option>
-                                                                                        <?php }
+                                                                                <?php }
                                                                             }
                                                                         } ?>
                                                                     </select>
@@ -528,9 +528,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="max_connections" name="max_connections"
                                                                         value="<?php if (isset($rUser)) {
                                                                             echo htmlspecialchars($rUser["max_connections"]);
-                                                                        } else {
-                                                                            echo "1";
-                                                                        } ?>">
+                                                                               } else {
+                                                                                   echo "1";
+                                                                               } ?>">
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="exp_date"><?= $_["expiry"] ?> <i
@@ -547,7 +547,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             } else {
                                                                                 echo "\" disabled=\"disabled";
                                                                             }
-                                                                        } ?>" data-toggle="date-picker"
+                                                                                                             } ?>" data-toggle="date-picker"
                                                                         data-single-date-picker="true">
                                                                 </div>
                                                             </div>
@@ -561,12 +561,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input<?php if (isset($rUser)) {
                                                                         echo " disabled";
-                                                                    } ?> name="is_mag" id="is_mag" type="checkbox"
+                                                                          } ?> name="is_mag" id="is_mag" type="checkbox"
                                                                         <?php if (isset($rUser)) {
                                                                             if ($rUser["is_mag"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                        } else if (isset($_GET["mag"])) {
+                                                                        } elseif (isset(ipTV_lib::$request["mag"])) {
                                                                             echo "checked ";
                                                                         } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
@@ -580,13 +580,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input<?php if (isset($rUser)) {
                                                                         echo " disabled";
-                                                                    } ?> name="is_e2" id="is_e2" type="checkbox" <?php if (isset($rUser)) {
-                                                                          if ($rUser["is_e2"] == 1) {
+                                                                          } ?> name="is_e2" id="is_e2" type="checkbox" <?php if (isset($rUser)) {
+    if ($rUser["is_e2"] == 1) {
+        echo "checked ";
+    }
+                                                                          } elseif (isset(ipTV_lib::$request["e2"])) {
                                                                               echo "checked ";
-                                                                          }
-                                                                      } else if (isset($_GET["e2"])) {
-                                                                          echo "checked ";
-                                                                      } ?>data-plugin="switchery" class="js-switch"
+                                                                          } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -599,7 +599,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="mac_address_mag" name="mac_address_mag"
                                                                         value="<?php if (isset($rUser)) {
                                                                             echo htmlspecialchars($rUser["mac_address_mag"]);
-                                                                        } ?>">
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4" style="display:none"
@@ -610,7 +610,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="mac_address_e2" name="mac_address_e2" value="<?php if (isset($rUser)) {
                                                                             echo htmlspecialchars($rUser["mac_address_e2"]);
-                                                                        } ?>">
+                                                                                                                         } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -620,7 +620,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <textarea id="reseller_notes" name="reseller_notes"
                                                                         class="form-control" rows="3" placeholder=""><?php if (isset($rUser)) {
                                                                             echo htmlspecialchars($rUser["reseller_notes"]);
-                                                                        } ?></textarea>
+                                                                                                                     } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -662,7 +662,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 <?php if (isset($rUser)) {
                                                                                     foreach (json_decode($rUser["allowed_ips"], true) as $rIP) { ?>
                                                                                                 <option value="<?= $rIP ?>"><?= $rIP ?></option>
-                                                                                        <?php }
+                                                                                    <?php }
                                                                                 } ?>
                                                                             </select>
                                                                         </div>
@@ -693,7 +693,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 <?php if (isset($rUser)) {
                                                                                     foreach (json_decode($rUser["allowed_ua"], true) as $rUA) { ?>
                                                                                                 <option value="<?= $rUA ?>"><?= $rUA ?></option>
-                                                                                        <?php }
+                                                                                    <?php }
                                                                                 } ?>
                                                                             </select>
                                                                         </div>
@@ -772,9 +772,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                             <input name="submit_user" type="submit"
                                                                                 class="btn btn-primary" value="<?php if (isset($rUser)) {
                                                                                     echo $_["edit"];
-                                                                                } else {
-                                                                                    echo $_["add"];
-                                                                                } ?>" />
+                                                                                                               } else {
+                                                                                                                   echo $_["add"];
+                                                                                                               } ?>" />
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -937,11 +937,11 @@ if ($rSettings["sidebar"]) { ?>
                     rTable.clear();
                     rTable.draw();
                     if ($("#package").val().length > 0) {
-                        $.getJSON("./api.php?action=get_package<?php if (isset($_GET["trial"])) {
+                        $.getJSON("./api.php?action=get_package<?php if (isset(ipTV_lib::$request["trial"])) {
                             echo "_trial";
-                        } ?>&package_id=" + $("#package").val() <?php if (isset($rUser)) {
-                             echo " + \"&user_id=" . $rUser["id"] . "\"";
-                         } ?>, function (rData) {
+                                                               } ?>&package_id=" + $("#package").val() <?php if (isset($rUser)) {
+    echo " + \"&user_id=" . $rUser["id"] . "\"";
+                                                               } ?>, function (rData) {
                                 if (rData.result === true) {
                                     $("#max_connections").val(rData.data.max_connections);
                                     $("#cost_credits").html($.number(rData.data.cost_credits, 2));
@@ -988,7 +988,7 @@ if ($rSettings["sidebar"]) { ?>
                             $rBouquetData = getBouquet($rBouquetID);
                             if (strlen($rBouquetID) > 0) { ?>
                                         rTable.row.add([<?= $rBouquetID ?>, '<?= $rBouquetData["bouquet_name"] ?>', <?= count(json_decode($rBouquetData["bouquet_channels"], true)) ?>, <?= count(json_decode($rBouquetData["bouquet_series"], true)) ?>]);
-                                <?php }
+                            <?php }
                         } ?>
                         rTable.draw();
                     }

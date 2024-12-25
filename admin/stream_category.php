@@ -5,14 +5,14 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_cat"))) {
     exit;
 }
 
-if (isset($_POST["submit_category"])) {
+if (isset(ipTV_lib::$request["submit_category"])) {
     $rArray = array("category_type" => "live", "category_name" => "", "parent_id" => 0, "cat_order" => 99);
-    foreach ($_POST as $rKey => $rValue) {
+    foreach (ipTV_lib::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
     }
-    $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+    $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
     foreach (array_values($rArray) as $rValue) {
         isset($rValues) ? $rValues .= ',' : $rValues = '';
         if (is_array($rValue)) {
@@ -21,17 +21,17 @@ if (isset($_POST["submit_category"])) {
         if (is_null($rValue)) {
             $rValues .= 'NULL';
         } else {
-            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+            $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if ((isset($_POST["edit"])) && (hasPermissions("adv", "edit_cat"))) {
+    if ((isset(ipTV_lib::$request["edit"])) && (hasPermissions("adv", "edit_cat"))) {
         $rCols = "id," . $rCols;
-        $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
+        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `stream_categories`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset($_POST["edit"])) {
-            $rInsertID = intval($_POST["edit"]);
+        if (isset(ipTV_lib::$request["edit"])) {
+            $rInsertID = intval(ipTV_lib::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -44,8 +44,8 @@ if (isset($_POST["submit_category"])) {
     }
 }
 
-if (isset($_GET["id"])) {
-    $rCategoryArr = getCategory($_GET["id"]);
+if (isset(ipTV_lib::$request["id"])) {
+    $rCategoryArr = getCategory(ipTV_lib::$request["id"]);
     if ((!$rCategoryArr) or (!hasPermissions("adv", "edit_cat"))) {
         exit;
     }
@@ -60,10 +60,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -78,9 +78,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rCategoryArr)) {
                                     echo $_["edit"];
-                                } else {
-                                    echo $_["add"];
-                                } ?> <?= $_["category"] ?> </h4>
+                                                       } else {
+                                                           echo $_["add"];
+                                                       } ?> <?= $_["category"] ?> </h4>
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["category_operation_was_completed_successfully"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -104,9 +104,9 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./stream_category.php<?php if (isset($_GET["id"])) {
-                                        echo "?id=" . $_GET["id"];
-                                    } ?>" method="POST" id="category_form" data-parsley-validate="">
+                                    <form action="./stream_category.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                        echo "?id=" . ipTV_lib::$request["id"];
+                                                                       } ?>" method="POST" id="category_form" data-parsley-validate="">
                                         <?php if (isset($rCategoryArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rCategoryArr["id"] ?>" />
                                             <input type="hidden" name="cat_order"
@@ -150,7 +150,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                     if ($rCategoryArr["category_type"] == $rGroupID) {
                                                                                         echo "selected ";
                                                                                     }
-                                                                                } ?>value="<?= $rGroupID ?>"><?= $rGroup ?></option>
+                                                                                        } ?>value="<?= $rGroupID ?>"><?= $rGroup ?></option>
                                                                             <?php } ?>
                                                                         </select>
                                                                     </div>
@@ -167,7 +167,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="category_name" name="category_name" value="<?php if (isset($rCategoryArr)) {
                                                                             echo htmlspecialchars($rCategoryArr["category_name"]);
-                                                                        } ?>" required data-parsley-trigger="change">
+                                                                                                                       } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -177,9 +177,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             <input name="submit_category" type="submit"
                                                                 class="btn btn-primary" value="<?php if (isset($rCategoryArr)) {
                                                                     echo $_["edit"];
-                                                                } else {
-                                                                    echo $_["add"];
-                                                                } ?>" />
+                                                                                               } else {
+                                                                                                   echo $_["add"];
+                                                                                               } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -282,9 +282,9 @@ if ($rSettings["sidebar"]) { ?>
                                 "data": function (d) {
                                     <?php if ($rCategoryArr["category_type"] == "live") { ?>
                                         d.id = "streams_short";
-                                    <?php } else if ($rCategoryArr["category_type"] == "movie") { ?>
+                                    <?php } elseif ($rCategoryArr["category_type"] == "movie") { ?>
                                             d.id = "movies_short";
-                                    <?php } else if ($rCategoryArr["category_type"] == "radio") { ?>
+                                    <?php } elseif ($rCategoryArr["category_type"] == "radio") { ?>
                                                 d.id = "radios_short";
                                     <?php } else { ?>
                                                 d.id = "series_short";

@@ -7,7 +7,7 @@ if (isset($_SESSION['hash'])) {
 
 $rAdminSettings = getAdminSettings();
 if (intval($rAdminSettings["login_flood"]) > 0) {
-	$ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `login_flood` WHERE `ip` = '" . $ipTV_db_admin->escape(getIP()) . "' AND TIME_TO_SEC(TIMEDIFF(NOW(), `dateadded`)) <= 86400;");
+	$ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `login_flood` WHERE `ip` = '" . getIP() . "' AND TIME_TO_SEC(TIMEDIFF(NOW(), `dateadded`)) <= 86400;");
 	if ($ipTV_db_admin->num_rows() == 1) {
 		if (intval($ipTV_db_admin->get_row()["count"]) >= intval($rAdminSettings["login_flood"])) {
 			$_STATUS = 7;
@@ -32,7 +32,7 @@ if (!isset($_STATUS)) {
 				} else {
 					$rPermissions = getPermissions($rUserInfo["member_group_id"]);
 					if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-						$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = ? WHERE `id` = ?;", $ipTV_db_admin->escape(getIP()), intval($rUserInfo["id"]));
+						$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = ? WHERE `id` = ?;", getIP(), intval($rUserInfo["id"]));
 						$_SESSION['hash'] = md5($rUserInfo["username"]);
 						$_SESSION['ip'] = getIP();
 						if ($rPermissions["is_admin"]) {
@@ -59,7 +59,7 @@ if (!isset($_STATUS)) {
 				}
 			} else {
 				if (intval($rAdminSettings["login_flood"]) > 0) {
-					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . $ipTV_db_admin->escape(getIP()) . "');");
+					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . getIP() . "');");
 				}
 				$_STATUS = 0;
 			}
@@ -71,7 +71,7 @@ if (!isset($_STATUS)) {
 			if ((ipTV_lib::$request["newpass"] == ipTV_lib::$request["confirm"]) && (strlen(ipTV_lib::$request["newpass"]) >= intval($rSettings["pass_length"]))) {
 				$rPermissions = getPermissions($rUserInfo["member_group_id"]);
 				if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . cryptPassword(ipTV_lib::$request["newpass"]) . "', `ip` = '" . $ipTV_db_admin->escape(getIP()) . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . cryptPassword(ipTV_lib::$request["newpass"]) . "', `ip` = '" . getIP() . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
 					$_SESSION['hash'] = md5($rUserInfo["username"]);
 					$_SESSION['ip'] = getIP();
 					if ($rPermissions["is_admin"]) {
@@ -92,7 +92,7 @@ if (!isset($_STATUS)) {
 			}
 		} else {
 			if (intval($rAdminSettings["login_flood"]) > 0) {
-				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . $ipTV_db_admin->escape(getIP()) . "');");
+				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . getIP() . "');");
 			}
 			$_STATUS = 0;
 		}

@@ -23,8 +23,8 @@ function getImageSizeKeepAspectRatio($imageUrl, $maxWidth, $maxHeight) {
     return $imageSize;
 }
 
-$rURL = $_GET["url"];
-$rMax = $_GET["max"];
+$rURL = ipTV_lib::$request["url"];
+$rMax = ipTV_lib::$request["max"];
 
 header('Content-Type: image/png');
 if ($rURL && $rMax) {

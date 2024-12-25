@@ -5,20 +5,20 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "permission_block_is
     exit;
 }
 
-if (isset($_POST["submit_isp"])) {
+if (isset(ipTV_lib::$request["submit_isp"])) {
     $rArray = array("isp" => "", "blocked" => 0);
-    if (isset($_POST["blocked"])) {
+    if (isset(ipTV_lib::$request["blocked"])) {
         $rArray["blocked"] = 1;
-        unset($_POST["blocked"]);
+        unset(ipTV_lib::$request["blocked"]);
     } else {
         $rArray["blocked"] = 0;
     }
-    foreach ($_POST as $rKey => $rValue) {
+    foreach (ipTV_lib::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
     }
-    $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rArray))) . "`";
+    $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
     foreach (array_values($rArray) as $rValue) {
         isset($rValues) ? $rValues .= ',' : $rValues = '';
         if (is_array($rValue)) {
@@ -27,17 +27,17 @@ if (isset($_POST["submit_isp"])) {
         if (is_null($rValue)) {
             $rValues .= 'NULL';
         } else {
-            $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+            $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset($_POST["edit"])) {
+    if (isset(ipTV_lib::$request["edit"])) {
         $rCols = "id," . $rCols;
-        $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
+        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `isp_addon`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset($_POST["edit"])) {
-            $rInsertID = intval($_POST["edit"]);
+        if (isset(ipTV_lib::$request["edit"])) {
+            $rInsertID = intval(ipTV_lib::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -50,8 +50,8 @@ if (isset($_POST["submit_isp"])) {
     }
 }
 
-if (isset($_GET["id"])) {
-    $rISPArr = getISP($_GET["id"]);
+if (isset(ipTV_lib::$request["id"])) {
+    $rISPArr = getISP(ipTV_lib::$request["id"]);
     if (!$rISPArr) {
         exit;
     }
@@ -66,10 +66,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -83,9 +83,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rISPArr)) {
                                                             echo $_["edit"];
-                                                        } else {
-                                                            echo $_["block"];
-                                                        } ?> <?= $_["isp"] ?></h4>
+                                                       } else {
+                                                           echo $_["block"];
+                                                       } ?> <?= $_["isp"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -99,7 +99,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["isp_operation_was_completed_successfully"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -109,9 +109,9 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./isp.php<?php if (isset($_GET["id"])) {
-                                                                echo "?id=" . $_GET["id"];
-                                                            } ?>" method="POST" id="isp_form" data-parsley-validate="">
+                                    <form action="./isp.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                                                echo "?id=" . ipTV_lib::$request["id"];
+                                                           } ?>" method="POST" id="isp_form" data-parsley-validate="">
                                         <?php if (isset($rISPArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rISPArr["id"] ?>" />
                                         <?php } ?>
@@ -133,17 +133,17 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="isp" name="isp" value="<?php if (isset($rISPArr)) {
                                                                                                                                             echo htmlspecialchars($rISPArr["isp"]);
-                                                                                                                                        } ?>" required data-parsley-trigger="change">
+                                                                                                                                       } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="is_restreamer"><?= $_["blocked"] ?></label>
                                                                 <div class="col-md-2">
                                                                     <input name="blocked" id="blocked" type="checkbox" <?php if (isset($rISPArr)) {
-                                                                                                                            if ($rISPArr["blocked"] == 1) {
-                                                                                                                                echo "checked ";
-                                                                                                                            }
-                                                                                                                        } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                        if ($rISPArr["blocked"] == 1) {
+                                                                            echo "checked ";
+                                                                        }
+                                                                                                                       } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -152,9 +152,9 @@ if ($rSettings["sidebar"]) { ?>
                                                         <li class="next list-inline-item float-right">
                                                             <input name="submit_isp" type="submit" class="btn btn-primary" value="<?php if (isset($rISPArr)) {
                                                                                                                                         echo $_["edit"];
-                                                                                                                                    } else {
-                                                                                                                                        echo $_["block"];
-                                                                                                                                    } ?>" />
+                                                                                                                                  } else {
+                                                                                                                                      echo $_["block"];
+                                                                                                                                  } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

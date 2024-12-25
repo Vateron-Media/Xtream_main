@@ -17,10 +17,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -88,8 +88,8 @@ if ($rSettings["sidebar"]) { ?>
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                             echo " selected";
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                        <?php } ?>
+                                                               } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -214,8 +214,8 @@ if ($rSettings["sidebar"]) { ?>
                     formCache.init();
                     formCache.fetch();
 
-                    <?php if (isset($_GET["server_id"])) { ?>
-                        $("#live_filter").val(<?= $_GET["server_id"] ?>);
+                    <?php if (isset(ipTV_lib::$request["server_id"])) { ?>
+                        $("#live_filter").val(<?= ipTV_lib::$request["server_id"] ?>);
                     <?php } ?>
 
                     $('select').select2({
@@ -241,10 +241,10 @@ if ($rSettings["sidebar"]) { ?>
                             "data": function (d) {
                                 d.id = "live_connections";
                                 d.server_id = getServer();
-                                <?php if (isset($_GET["stream_id"])) { ?>
-                                    d.stream_id = <?= intval($_GET["stream_id"]) ?>;
-                                <?php } else if (isset($_GET["user_id"])) { ?>
-                                        d.user_id = <?= intval($_GET["user_id"]) ?>;
+                                <?php if (isset(ipTV_lib::$request["stream_id"])) { ?>
+                                    d.stream_id = <?= intval(ipTV_lib::$request["stream_id"]) ?>;
+                                <?php } elseif (isset(ipTV_lib::$request["user_id"])) { ?>
+                                        d.user_id = <?= intval(ipTV_lib::$request["user_id"]) ?>;
                                 <?php } ?>
                             }
                         },

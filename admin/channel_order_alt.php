@@ -5,12 +5,12 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "channel_order"))) {
     exit;
 }
 
-if (isset($_POST["stream_order_array"])) {
+if (isset(ipTV_lib::$request["stream_order_array"])) {
     set_time_limit(0);
     ini_set('mysql.connect_timeout', 0);
     ini_set('max_execution_time', 0);
     ini_set('default_socket_timeout', 0);
-    $rOrder = json_decode($_POST["stream_order_array"], True);
+    $rOrder = json_decode(ipTV_lib::$request["stream_order_array"], true);
     $rSort = 0;
     foreach ($rOrder as $rStream) {
         $ipTV_db_admin->query("UPDATE `streams` SET `order` = " . intval($rSort) . " WHERE `id` = " . intval($rStream) . ";");
@@ -35,10 +35,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">

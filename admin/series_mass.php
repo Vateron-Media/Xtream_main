@@ -7,17 +7,17 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_sedits"))) {
 
 $rCategories = getCategories_admin("series");
 
-if (isset($_POST["submit_series"])) {
+if (isset(ipTV_lib::$request["submit_series"])) {
     $rArray = array();
-    if (isset($_POST["c_category_id"])) {
-        $rArray["category_id"] = intval($_POST["category_id"]);
+    if (isset(ipTV_lib::$request["c_category_id"])) {
+        $rArray["category_id"] = intval(ipTV_lib::$request["category_id"]);
     }
-    $rSeriesIDs = json_decode($_POST["series"], True);
+    $rSeriesIDs = json_decode(ipTV_lib::$request["series"], true);
     if (count($rSeriesIDs) > 0) {
         foreach ($rSeriesIDs as $rSeriesID) {
             $rQueries = array();
             foreach ($rArray as $rKey => $rValue) {
-                $rQueries[] = "`" . $ipTV_db_admin->escape($rKey) . "` = '" . $ipTV_db_admin->escape($rValue) . "'";
+                $rQueries[] = "`" . $rKey . "` = '" . $rValue . "'";
             }
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);
@@ -26,8 +26,8 @@ if (isset($_POST["submit_series"])) {
                     $_STATUS = 1;
                 }
             }
-            if (isset($_POST["c_bouquets"])) {
-                $rBouquets = $_POST["bouquets"];
+            if (isset(ipTV_lib::$request["c_bouquets"])) {
+                $rBouquets = ipTV_lib::$request["bouquets"];
                 foreach ($rBouquets as $rBouquet) {
                     addToBouquet("series", $rBouquet, $rSeriesID);
                 }
@@ -38,14 +38,14 @@ if (isset($_POST["submit_series"])) {
                 }
             }
         }
-        if (isset($_POST["reprocess_tmdb"])) {
+        if (isset(ipTV_lib::$request["reprocess_tmdb"])) {
             foreach ($rSeriesIDs as $rSeriesID) {
                 if (intval($rSeriesID) > 0) {
                     $ipTV_db_admin->query("INSERT INTO `tmdb_async`(`type`, `stream_id`, `status`) VALUES(2, " . intval($rSeriesID) . ", 0);");
                 }
             }
         }
-        if (isset($_POST["c_bouquets"])) {
+        if (isset(ipTV_lib::$request["c_bouquets"])) {
             scanBouquets();
         }
     }
@@ -61,10 +61,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -92,7 +92,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["mass_edit_of_series_was_successfully"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -135,9 +135,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 </option>
                                                                 <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
-                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                           echo " selected";
-                                                                      } ?>><?= $rCategory["category_name"] ?>
+                                                                                   } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -148,8 +148,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">

@@ -7,60 +7,60 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_sedits_vod")))
 
 $rCategories = getCategories_admin("movie");
 
-if (isset($_POST["submit_stream"])) {
+if (isset(ipTV_lib::$request["submit_stream"])) {
     $rArray = array();
-    if (isset($_POST["c_movie_symlink"])) {
-        if (isset($_POST["movie_symlink"])) {
+    if (isset(ipTV_lib::$request["c_movie_symlink"])) {
+        if (isset(ipTV_lib::$request["movie_symlink"])) {
             $rArray["movie_symlink"] = 1;
         } else {
             $rArray["movie_symlink"] = 0;
         }
     }
-    if (isset($_POST["c_direct_source"])) {
-        if (isset($_POST["direct_source"])) {
+    if (isset(ipTV_lib::$request["c_direct_source"])) {
+        if (isset(ipTV_lib::$request["direct_source"])) {
             $rArray["direct_source"] = 1;
         } else {
             $rArray["direct_source"] = 0;
         }
     }
-    if (isset($_POST["c_read_native"])) {
-        if (isset($_POST["read_native"])) {
+    if (isset(ipTV_lib::$request["c_read_native"])) {
+        if (isset(ipTV_lib::$request["read_native"])) {
             $rArray["read_native"] = 1;
         } else {
             $rArray["read_native"] = 0;
         }
     }
-    if (isset($_POST["c_remove_subtitles"])) {
-        if (isset($_POST["remove_subtitles"])) {
+    if (isset(ipTV_lib::$request["c_remove_subtitles"])) {
+        if (isset(ipTV_lib::$request["remove_subtitles"])) {
             $rArray["remove_subtitles"] = 1;
         } else {
             $rArray["remove_subtitles"] = 0;
         }
     }
-    if (isset($_POST["c_category_id"])) {
-        $categoriesIDs = intval($_POST["category_id"]);
+    if (isset(ipTV_lib::$request["c_category_id"])) {
+        $categoriesIDs = intval(ipTV_lib::$request["category_id"]);
     }
-    if (isset($_POST["c_custom_sid"])) {
-        $rArray["custom_sid"] = $_POST["custom_sid"];
+    if (isset(ipTV_lib::$request["c_custom_sid"])) {
+        $rArray["custom_sid"] = ipTV_lib::$request["custom_sid"];
     }
-    if (isset($_POST["c_target_container"])) {
-        $rArray["target_container"] = json_encode(array($_POST["target_container"]));
+    if (isset(ipTV_lib::$request["c_target_container"])) {
+        $rArray["target_container"] = json_encode(array(ipTV_lib::$request["target_container"]));
     }
-    if (isset($_POST["c_transcode_profile_id"])) {
-        $rArray["transcode_profile_id"] = $_POST["transcode_profile_id"];
+    if (isset(ipTV_lib::$request["c_transcode_profile_id"])) {
+        $rArray["transcode_profile_id"] = ipTV_lib::$request["transcode_profile_id"];
         if ($rArray["transcode_profile_id"] > 0) {
             $rArray["enable_transcode"] = 1;
         } else {
             $rArray["enable_transcode"] = 0;
         }
     }
-    $rStreamIDs = json_decode($_POST["streams"], True);
+    $rStreamIDs = json_decode(ipTV_lib::$request["streams"], true);
     if (count($rStreamIDs) > 0) {
         foreach ($rStreamIDs as $rStreamID) {
             $rQueries = array();
             $rArray["category_id"] = '[' . implode(',', array_map('intval', $categoriesIDs)) . ']';
             foreach ($rArray as $rKey => $rValue) {
-                $rQueries[] = "`" . $ipTV_db_admin->escape($rKey) . "` = '" . $ipTV_db_admin->escape($rValue) . "'";
+                $rQueries[] = "`" . $rKey . "` = '" . $rValue . "'";
             }
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);
@@ -69,7 +69,7 @@ if (isset($_POST["submit_stream"])) {
                     $_STATUS = 1;
                 }
             }
-            if (isset($_POST["c_server_tree"])) {
+            if (isset(ipTV_lib::$request["c_server_tree"])) {
                 $rStreamExists = array();
                 $ipTV_db_admin->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . ";");
                 if ($ipTV_db_admin->num_rows() > 0) {
@@ -78,7 +78,7 @@ if (isset($_POST["submit_stream"])) {
                     }
                 }
                 $rStreamsAdded = array();
-                $rServerTree = json_decode($_POST["server_tree_data"], True);
+                $rServerTree = json_decode(ipTV_lib::$request["server_tree_data"], true);
                 foreach ($rServerTree as $rServer) {
                     if ($rServer["parent"] <> "#") {
                         $rServerID = intval($rServer["id"]);
@@ -105,8 +105,8 @@ if (isset($_POST["submit_stream"])) {
                     }
                 }
             }
-            if (isset($_POST["c_bouquets"])) {
-                $rBouquets = $_POST["bouquets"];
+            if (isset(ipTV_lib::$request["c_bouquets"])) {
+                $rBouquets = ipTV_lib::$request["bouquets"];
                 foreach ($rBouquets as $rBouquet) {
                     addToBouquet("movie", $rBouquet, $rStreamID);
                 }
@@ -117,17 +117,17 @@ if (isset($_POST["submit_stream"])) {
                 }
             }
         }
-        if (isset($_POST["reencode_on_edit"])) {
+        if (isset(ipTV_lib::$request["reencode_on_edit"])) {
             APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => array_values($rStreamIDs)));
         }
-        if (isset($_POST["reprocess_tmdb"])) {
+        if (isset(ipTV_lib::$request["reprocess_tmdb"])) {
             foreach ($rStreamIDs as $rStreamID) {
                 if (intval($rStreamID) > 0) {
                     $ipTV_db_admin->query("INSERT INTO `tmdb_async`(`type`, `stream_id`, `status`) VALUES(1, " . intval($rStreamID) . ", 0);");
                 }
             }
         }
-        if (isset($_POST["c_bouquets"])) {
+        if (isset(ipTV_lib::$request["c_bouquets"])) {
             scanBouquets();
         }
     }
@@ -151,10 +151,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -182,7 +182,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["mass_edit_movies_success"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -232,9 +232,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <option value="" selected><?= $_["all_categories"] ?>
                                                                 </option>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
-                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
+                                                                    <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                           echo " selected";
-                                                                      } ?>><?= $rCategory["category_name"] ?>
+                                                                                   } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -258,8 +258,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">

@@ -5,12 +5,12 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_radio")) && (!
     exit;
 }
 
-if (isset($_POST["submit_radio"])) {
-    if (isset($_POST["edit"])) {
+if (isset(ipTV_lib::$request["submit_radio"])) {
+    if (isset(ipTV_lib::$request["edit"])) {
         if (!hasPermissions("adv", "edit_radio")) {
             exit;
         }
-        $rArray = getStream($_POST["edit"]);
+        $rArray = getStream(ipTV_lib::$request["edit"]);
         unset($rArray["id"]);
     } else {
         if (!hasPermissions("adv", "add_radio")) {
@@ -18,9 +18,9 @@ if (isset($_POST["submit_radio"])) {
         }
         $rArray = array("type" => 4, "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 0, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "category_id" => array(), "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "custom_map" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 128000);
     }
-    if ((isset($_POST["days_to_restart"])) && (preg_match("/^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/", $_POST["time_to_restart"]))) {
-        $rTimeArray = array("days" => array(), "at" => $_POST["time_to_restart"]);
-        foreach ($_POST["days_to_restart"] as $rID => $rDay) {
+    if ((isset(ipTV_lib::$request["days_to_restart"])) && (preg_match("/^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/", ipTV_lib::$request["time_to_restart"]))) {
+        $rTimeArray = array("days" => array(), "at" => ipTV_lib::$request["time_to_restart"]);
+        foreach (ipTV_lib::$request["days_to_restart"] as $rID => $rDay) {
             $rTimeArray["days"][] = $rDay;
         }
         $rArray["auto_restart"] = $rTimeArray;
@@ -28,49 +28,49 @@ if (isset($_POST["submit_radio"])) {
         $rArray["auto_restart"] = "";
     }
     $rOnDemandArray = array();
-    if (isset($_POST["on_demand"])) {
-        foreach ($_POST["on_demand"] as $rID) {
+    if (isset(ipTV_lib::$request["on_demand"])) {
+        foreach (ipTV_lib::$request["on_demand"] as $rID) {
             $rOnDemandArray[] = $rID;
         }
     }
-    if (isset($_POST["custom_ffmpeg"])) {
-        $rArray["custom_ffmpeg"] = $_POST["custom_ffmpeg"];
+    if (isset(ipTV_lib::$request["custom_ffmpeg"])) {
+        $rArray["custom_ffmpeg"] = ipTV_lib::$request["custom_ffmpeg"];
     }
-    if (isset($_POST["custom_sid"])) {
-        $rArray["custom_sid"] = $_POST["custom_sid"];
+    if (isset(ipTV_lib::$request["custom_sid"])) {
+        $rArray["custom_sid"] = ipTV_lib::$request["custom_sid"];
     }
-    if (isset($_POST["direct_source"])) {
+    if (isset(ipTV_lib::$request["direct_source"])) {
         $rArray["direct_source"] = 1;
-        unset($_POST["direct_source"]);
+        unset(ipTV_lib::$request["direct_source"]);
     } else {
         $rArray["direct_source"] = 0;
     }
-    if (isset($_POST["probesize_ondemand"])) {
-        $rArray["probesize_ondemand"] = intval($_POST["probesize_ondemand"]);
-        unset($_POST["probesize_ondemand"]);
+    if (isset(ipTV_lib::$request["probesize_ondemand"])) {
+        $rArray["probesize_ondemand"] = intval(ipTV_lib::$request["probesize_ondemand"]);
+        unset(ipTV_lib::$request["probesize_ondemand"]);
     } else {
         $rArray["probesize_ondemand"] = 128000;
     }
-    if (isset($_POST["restart_on_edit"])) {
+    if (isset(ipTV_lib::$request["restart_on_edit"])) {
         $rRestart = true;
-        unset($_POST["restart_on_edit"]);
+        unset(ipTV_lib::$request["restart_on_edit"]);
     } else {
         $rRestart = false;
     }
-    $rBouquets = $_POST["bouquets"];
-    unset($_POST["bouquets"]);
-    foreach ($_POST as $rKey => $rValue) {
+    $rBouquets = ipTV_lib::$request["bouquets"];
+    unset(ipTV_lib::$request["bouquets"]);
+    foreach (ipTV_lib::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
     }
     $rImportStreams = array();
-    if (strlen($_POST["stream_source"][0]) > 0) {
-        $rImportArray = array("stream_source" => $_POST["stream_source"], "stream_icon" => $rArray["stream_icon"], "stream_display_name" => $rArray["stream_display_name"]);
-        if (isset($_POST["edit"])) {
+    if (strlen(ipTV_lib::$request["stream_source"][0]) > 0) {
+        $rImportArray = array("stream_source" => ipTV_lib::$request["stream_source"], "stream_icon" => $rArray["stream_icon"], "stream_display_name" => $rArray["stream_display_name"]);
+        if (isset(ipTV_lib::$request["edit"])) {
             $rImportStreams[] = $rImportArray;
         } else {
-            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . $ipTV_db_admin->escape($rImportArray["stream_display_name"]) . "' AND `type` = 4;");
+            $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . $rImportArray["stream_display_name"] . "' AND `type` = 4;");
             if ($ipTV_db_admin->get_row()["count"] == 0) {
                 $rImportStreams[] = $rImportArray;
             } else {
@@ -91,7 +91,7 @@ if (isset($_POST["submit_radio"])) {
                 $rImportArray[$rKey] = $rImportStream[$rKey];
             }
             $rImportArray["order"] = getNextOrder();
-            $rCols = "`" . $ipTV_db_admin->escape(implode('`,`', array_keys($rImportArray))) . "`";
+            $rCols = "`" . implode('`,`', array_keys($rImportArray)) . "`";
             $rValues = null;
             foreach (array_values($rImportArray) as $rValue) {
                 isset($rValues) ? $rValues .= ',' : $rValues = '';
@@ -101,24 +101,24 @@ if (isset($_POST["submit_radio"])) {
                 if (is_null($rValue)) {
                     $rValues .= 'NULL';
                 } else {
-                    $rValues .= '\'' . $ipTV_db_admin->escape($rValue) . '\'';
+                    $rValues .= '\'' . $rValue . '\'';
                 }
             }
-            if (isset($_POST["edit"])) {
+            if (isset(ipTV_lib::$request["edit"])) {
                 $rCols = "`id`," . $rCols;
-                $rValues = $ipTV_db_admin->escape($_POST["edit"]) . "," . $rValues;
+                $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
-                if (isset($_POST["edit"])) {
-                    $rInsertID = intval($_POST["edit"]);
+                if (isset(ipTV_lib::$request["edit"])) {
+                    $rInsertID = intval(ipTV_lib::$request["edit"]);
                 } else {
                     $rInsertID = $ipTV_db_admin->last_insert_id();
                 }
             }
             if (isset($rInsertID)) {
                 $rStationExists = array();
-                if (isset($_POST["edit"])) {
+                if (isset(ipTV_lib::$request["edit"])) {
                     $ipTV_db_admin->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
                     if ($ipTV_db_admin->num_rows() > 0) {
                         foreach ($ipTV_db_admin->get_rows() as $row) {
@@ -126,9 +126,9 @@ if (isset($_POST["submit_radio"])) {
                         }
                     }
                 }
-                if (isset($_POST["server_tree_data"])) {
+                if (isset(ipTV_lib::$request["server_tree_data"])) {
                     $rStationsAdded = array();
-                    $rServerTree = json_decode($_POST["server_tree_data"], True);
+                    $rServerTree = json_decode(ipTV_lib::$request["server_tree_data"], true);
                     foreach ($rServerTree as $rServer) {
                         if ($rServer["parent"] <> "#") {
                             $rServerID = intval($rServer["id"]);
@@ -157,17 +157,17 @@ if (isset($_POST["submit_radio"])) {
                     }
                 }
                 $ipTV_db_admin->query("DELETE FROM `streams_options` WHERE `stream_id` = " . intval($rInsertID) . ";");
-                if ((isset($_POST["user_agent"])) && (strlen($_POST["user_agent"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 1, '" . $ipTV_db_admin->escape($_POST["user_agent"]) . "');");
+                if ((isset(ipTV_lib::$request["user_agent"])) && (strlen(ipTV_lib::$request["user_agent"]) > 0)) {
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 1, '" . ipTV_lib::$request["user_agent"] . "');");
                 }
-                if ((isset($_POST["http_proxy"])) && (strlen($_POST["http_proxy"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 2, '" . $ipTV_db_admin->escape($_POST["http_proxy"]) . "');");
+                if ((isset(ipTV_lib::$request["http_proxy"])) && (strlen(ipTV_lib::$request["http_proxy"]) > 0)) {
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 2, '" . ipTV_lib::$request["http_proxy"] . "');");
                 }
-                if ((isset($_POST["cookie"])) && (strlen($_POST["cookie"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 17, '" . $ipTV_db_admin->escape($_POST["cookie"]) . "');");
+                if ((isset(ipTV_lib::$request["cookie"])) && (strlen(ipTV_lib::$request["cookie"]) > 0)) {
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 17, '" . ipTV_lib::$request["cookie"] . "');");
                 }
-                if ((isset($_POST["headers"])) && (strlen($_POST["headers"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 19, '" . $ipTV_db_admin->escape($_POST["headers"]) . "');");
+                if ((isset(ipTV_lib::$request["headers"])) && (strlen(ipTV_lib::$request["headers"]) > 0)) {
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 19, '" . ipTV_lib::$request["headers"] . "');");
                 }
                 if ($rRestart) {
                     APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rInsertID)));
@@ -175,7 +175,7 @@ if (isset($_POST["submit_radio"])) {
                 foreach ($rBouquets as $rBouquet) {
                     addToBouquet("radio", $rBouquet, $rInsertID);
                 }
-                if (isset($_POST["edit"])) {
+                if (isset(ipTV_lib::$request["edit"])) {
                     foreach (getBouquets() as $rBouquet) {
                         if (!in_array($rBouquet["id"], $rBouquets)) {
                             removeFromBouquet("radio", $rBouquet["id"], $rInsertID);
@@ -213,16 +213,16 @@ $rStationArguments = getStreamArguments();
 $rServerTree = array();
 $rOnDemand = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>" . $_["stream_source"] . "</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
-if (isset($_GET["id"])) {
+if (isset(ipTV_lib::$request["id"])) {
     if (!hasPermissions("adv", "edit_radio")) {
         exit;
     }
-    $rStation = getStream($_GET["id"]);
+    $rStation = getStream(ipTV_lib::$request["id"]);
     if ((!$rStation) or ($rStation["type"] <> 4)) {
         exit;
     }
-    $rStationOptions = getStreamOptions($_GET["id"]);
-    $rStationSys = getStreamSys($_GET["id"]);
+    $rStationOptions = getStreamOptions(ipTV_lib::$request["id"]);
+    $rStationSys = getStreamSys(ipTV_lib::$request["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStationSys[intval($rServer["id"])])) {
             if ($rStationSys[intval($rServer["id"])]["parent_id"] <> 0) {
@@ -257,10 +257,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -279,9 +279,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rStation["id"])) {
                                     echo $rStation["stream_display_name"];
-                                } else {
-                                    echo $_["add_radio_station"];
-                                } ?></h4>
+                                                       } else {
+                                                           echo $_["add_radio_station"];
+                                                       } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -295,14 +295,14 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["radio_success"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     <?= $_["radio_info_1"] ?>
                                     </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
@@ -337,9 +337,9 @@ if ($rSettings["sidebar"]) { ?>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./radio.php<?php if (isset($_GET["id"])) {
-                                        echo "?id=" . $_GET["id"];
-                                    } ?>" method="POST" id="radio_form" data-parsley-validate="">
+                                    <form action="./radio.php<?php if (isset(ipTV_lib::$request["id"])) {
+                                        echo "?id=" . ipTV_lib::$request["id"];
+                                                             } ?>" method="POST" id="radio_form" data-parsley-validate="">
                                         <?php if (isset($rStation["id"])) { ?>
                                             <input type="hidden" name="edit" value="<?= $rStation["id"] ?>" />
                                         <?php } ?>
@@ -388,7 +388,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="stream_display_name"
                                                                         name="stream_display_name" value="<?php if (isset($rStation)) {
                                                                             echo htmlspecialchars($rStation["stream_display_name"]);
-                                                                        } ?>" required data-parsley-trigger="change">
+                                                                                                          } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4 stream-url">
@@ -398,8 +398,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" id="stream_source"
                                                                         name="stream_source[]" class="form-control"
                                                                         value="<?php if (isset($rStation)) {
-                                                                            echo htmlspecialchars(json_decode($rStation["stream_source"], True)[0]);
-                                                                        } ?>">
+                                                                            echo htmlspecialchars(json_decode($rStation["stream_source"], true)[0]);
+                                                                               } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -413,9 +413,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if (intval($rStation["category_id"]) == intval($rCategory["id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } else if ((isset($_GET["category"])) && ($_GET["category"] == $rCategory["id"])) {
-                                                                                echo "selected ";
-                                                                            } ?>value="<?= $rCategory["id"] ?>">
+                                                                                    } elseif ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
+                                                                                        echo "selected ";
+                                                                                    } ?>value="<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -431,10 +431,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                         data-placeholder="<?= $_["choose"] ?>...">
                                                                         <?php foreach (getBouquets() as $rBouquet) { ?>
                                                                             <option <?php if (isset($rStation)) {
-                                                                                if (in_array($rStation["id"], json_decode($rBouquet["bouquet_radios"], True))) {
+                                                                                if (in_array($rStation["id"], json_decode($rBouquet["bouquet_radios"], true))) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                            } ?>value="<?= $rBouquet["id"] ?>">
+                                                                                    } ?>value="<?= $rBouquet["id"] ?>">
                                                                                 <?= htmlspecialchars($rBouquet["bouquet_name"]) ?>
                                                                             </option>
                                                                         <?php } ?>
@@ -448,7 +448,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="stream_icon" name="stream_icon" value="<?php if (isset($rStation)) {
                                                                             echo htmlspecialchars($rStation["stream_icon"]);
-                                                                        } ?>">
+                                                                                                                   } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -458,7 +458,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <textarea id="notes" name="notes"
                                                                         class="form-control" rows="3" placeholder=""><?php if (isset($rStation)) {
                                                                             echo htmlspecialchars($rStation["notes"]);
-                                                                        } ?></textarea>
+                                                                                                                     } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -486,7 +486,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rStation["direct_source"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                        } ?>data-plugin="switchery"
+                                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -499,7 +499,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="custom_sid" name="custom_sid" value="<?php if (isset($rStation)) {
                                                                             echo htmlspecialchars($rStation["custom_sid"]);
-                                                                        } ?>">
+                                                                                                                 } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -513,7 +513,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="custom_ffmpeg" name="custom_ffmpeg" value="<?php if (isset($rStation)) {
                                                                             echo htmlspecialchars($rStation["custom_ffmpeg"]);
-                                                                        } ?>">
+                                                                                                                       } ?>">
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="probesize_ondemand"><?= $_["on_demand_probesize"] ?>
@@ -526,9 +526,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="probesize_ondemand"
                                                                         name="probesize_ondemand" value="<?php if (isset($rStation)) {
                                                                             echo htmlspecialchars($rStation["probesize_ondemand"]);
-                                                                        } else {
-                                                                            echo "128000";
-                                                                        } ?>">
+                                                                                                         } else {
+                                                                                                             echo "128000";
+                                                                                                         } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -538,9 +538,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="user_agent" name="user_agent" value="<?php if (isset($rStationOptions[1])) {
                                                                             echo htmlspecialchars($rStationOptions[1]["value"]);
-                                                                        } else {
-                                                                            echo htmlspecialchars($rStationArguments["user_agent"]["argument_default_value"]);
-                                                                        } ?>">
+                                                                                                                 } else {
+                                                                                                                     echo htmlspecialchars($rStationArguments["user_agent"]["argument_default_value"]);
+                                                                                                                 } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -553,9 +553,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="http_proxy" name="http_proxy" value="<?php if (isset($rStationOptions[2])) {
                                                                             echo htmlspecialchars($rStationOptions[2]["value"]);
-                                                                        } else {
-                                                                            echo htmlspecialchars($rStationArguments["proxy"]["argument_default_value"]);
-                                                                        } ?>">
+                                                                                                                 } else {
+                                                                                                                     echo htmlspecialchars($rStationArguments["proxy"]["argument_default_value"]);
+                                                                                                                 } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -569,9 +569,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="cookie"
                                                                         name="cookie" value="<?php if (isset($rStationOptions[17])) {
                                                                             echo htmlspecialchars($rStationOptions[17]["value"]);
-                                                                        } else {
-                                                                            echo htmlspecialchars($rStationArguments["cookie"]["argument_default_value"]);
-                                                                        } ?>">
+                                                                                             } else {
+                                                                                                 echo htmlspecialchars($rStationArguments["cookie"]["argument_default_value"]);
+                                                                                             } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -585,9 +585,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="headers"
                                                                         name="headers" value="<?php if (isset($rStreamOptions[19])) {
                                                                             echo htmlspecialchars($rStreamOptions[19]["value"]);
-                                                                        } else {
-                                                                            echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]);
-                                                                        } ?>">
+                                                                                              } else {
+                                                                                                  echo htmlspecialchars($rStreamArguments["headers"]["argument_default_value"]);
+                                                                                              } ?>">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -614,7 +614,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     $rAutoRestart = array("days" => array(), "at" => "06:00");
                                                                     if (isset($rStation)) {
                                                                         if (strlen($rStation["auto_restart"])) {
-                                                                            $rAutoRestart = json_decode($rStation["auto_restart"], True);
+                                                                            $rAutoRestart = json_decode($rStation["auto_restart"], true);
                                                                             if (!isset($rAutoRestart["days"])) {
                                                                                 $rAutoRestart["days"] = array();
                                                                             }
@@ -631,7 +631,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php foreach (array($_["monday"] => "Monday", $_["tuesday"] => "Tuesday", $_["wednesday"] => "Wednesday", $_["thursday"] => "Thursday", $_["friday"] => "Friday", $_["saturday"] => "Saturday", $_["sunday"] => "Sunday") as $rDay) { ?>
                                                                             <option value="<?= $rDay ?>" <?php if (in_array($rDay, $rAutoRestart["days"])) {
                                                                                   echo " selected";
-                                                                              } ?>><?= $rDay ?></option>
+                                                                                           } ?>><?= $rDay ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -688,7 +688,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php foreach ($rServers as $rServerItem) { ?>
                                                                             <option value="<?= $rServerItem["id"] ?>" <?php if (in_array($rServerItem["id"], $rOnDemand)) {
                                                                                   echo " selected";
-                                                                              } ?>>
+                                                                                           } ?>>
                                                                                 <?= $rServerItem["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
@@ -696,7 +696,11 @@ if ($rSettings["sidebar"]) { ?>
                                                             </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label"
-                                                                    for="restart_on_edit"><?php if (isset($rStation["id"])) { ?><?= $_["restart_on_edit"] ?><?php } else { ?><?= $_["start_stream_now"] ?><?php } ?></label>
+                                                                    for="restart_on_edit"><?php if (isset($rStation["id"])) {
+                                                                        ?><?= $_["restart_on_edit"] ?><?php
+                                                                                          } else {
+                                                                                                ?><?= $_["start_stream_now"] ?><?php
+                                                                                          } ?></label>
                                                                 <div class="col-md-2">
                                                                     <input name="restart_on_edit" id="restart_on_edit"
                                                                         type="checkbox" data-plugin="switchery"
@@ -714,9 +718,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             <input name="submit_radio" type="submit"
                                                                 class="btn btn-primary" value="<?php if (isset($rStation["id"])) {
                                                                     echo $_["edit"];
-                                                                } else {
-                                                                    echo $_["add"];
-                                                                } ?>" />
+                                                                                               } else {
+                                                                                                   echo $_["add"];
+                                                                                               } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>

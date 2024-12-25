@@ -5,49 +5,49 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_edit_users")))
     exit;
 }
 
-if (isset($_POST["submit_user"])) {
+if (isset(ipTV_lib::$request["submit_user"])) {
     $rArray = array();
     foreach (array("is_stalker", "is_mag", "is_e2", "is_restreamer", "is_trial") as $rItem) {
-        if (isset($_POST["c_" . $rItem])) {
-            if (isset($_POST[$rItem])) {
+        if (isset(ipTV_lib::$request["c_" . $rItem])) {
+            if (isset(ipTV_lib::$request[$rItem])) {
                 $rArray[$rItem] = 1;
             } else {
                 $rArray[$rItem] = 0;
             }
         }
     }
-    if (isset($_POST["c_admin_notes"])) {
-        $rArray["admin_notes"] = $_POST["admin_notes"];
+    if (isset(ipTV_lib::$request["c_admin_notes"])) {
+        $rArray["admin_notes"] = ipTV_lib::$request["admin_notes"];
     }
-    if (isset($_POST["c_reseller_notes"])) {
-        $rArray["reseller_notes"] = $_POST["reseller_notes"];
+    if (isset(ipTV_lib::$request["c_reseller_notes"])) {
+        $rArray["reseller_notes"] = ipTV_lib::$request["reseller_notes"];
     }
-    if (isset($_POST["c_forced_country"])) {
-        $rArray["forced_country"] = $_POST["forced_country"];
+    if (isset(ipTV_lib::$request["c_forced_country"])) {
+        $rArray["forced_country"] = ipTV_lib::$request["forced_country"];
     }
-    if (isset($_POST["c_member_id"])) {
-        $rArray["member_id"] = intval($_POST["member_id"]);
+    if (isset(ipTV_lib::$request["c_member_id"])) {
+        $rArray["member_id"] = intval(ipTV_lib::$request["member_id"]);
     }
-    if (isset($_POST["c_force_server_id"])) {
-        $rArray["force_server_id"] = intval($_POST["force_server_id"]);
+    if (isset(ipTV_lib::$request["c_force_server_id"])) {
+        $rArray["force_server_id"] = intval(ipTV_lib::$request["force_server_id"]);
     }
-    if (isset($_POST["c_max_connections"])) {
-        $rArray["max_connections"] = intval($_POST["max_connections"]);
+    if (isset(ipTV_lib::$request["c_max_connections"])) {
+        $rArray["max_connections"] = intval(ipTV_lib::$request["max_connections"]);
     }
-    if (isset($_POST["c_exp_date"])) {
-        if (isset($_POST["no_expire"])) {
+    if (isset(ipTV_lib::$request["c_exp_date"])) {
+        if (isset(ipTV_lib::$request["no_expire"])) {
             $rArray["exp_date"] = "NULL";
         } else {
             try {
-                $rDate = new DateTime($_POST["exp_date"]);
+                $rDate = new DateTime(ipTV_lib::$request["exp_date"]);
                 $rArray["exp_date"] = $rDate->format("U");
             } catch (Exception $e) {
             }
         }
     }
-    if (isset($_POST["c_bouquets"])) {
+    if (isset(ipTV_lib::$request["c_bouquets"])) {
         $rArray["bouquet"] = array();
-        foreach (json_decode($_POST["bouquets_selected"], True) as $rBouquet) {
+        foreach (json_decode(ipTV_lib::$request["bouquets_selected"], true) as $rBouquet) {
             if (is_numeric($rBouquet)) {
                 $rArray["bouquet"][] = intval($rBouquet);
             }
@@ -55,35 +55,35 @@ if (isset($_POST["submit_user"])) {
         $rArray["bouquet"] = sortArrayByArray($rArray["bouquet"], array_keys(getBouquetOrder()));
         $rArray["bouquet"] = "[" . join(",", $rArray["bouquet"]) . "]";
     }
-    $rUsers = json_decode($_POST["users_selected"], True);
+    $rUsers = json_decode(ipTV_lib::$request["users_selected"], true);
     if (count($rUsers) > 0) {
         foreach ($rUsers as $rUser) {
             $rQueries = array();
             foreach ($rArray as $rKey => $rValue) {
-                $rQueries[] = "`" . $ipTV_db_admin->escape($rKey) . "` = '" . $ipTV_db_admin->escape($rValue) . "'";
+                $rQueries[] = "`" . $rKey . "` = '" . $rValue . "'";
             }
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);
                 $rQuery = "UPDATE `users` SET " . $rQueryString . " WHERE `id` = " . intval($rUser) . ";";
                 $ipTV_db_admin->query($rQuery);
             }
-            if (isset($_POST["c_access_output"])) {
+            if (isset(ipTV_lib::$request["c_access_output"])) {
                 $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
-                foreach ($_POST["access_output"] as $rOutputID) {
+                foreach (ipTV_lib::$request["access_output"] as $rOutputID) {
                     $ipTV_db_admin->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rUser) . ", " . intval($rOutputID) . ");");
                 }
             }
         }
-        if ((isset($_POST["c_lock_device"])) or (isset($_POST["reset_stb_lock"]))) {
+        if ((isset(ipTV_lib::$request["c_lock_device"])) or (isset(ipTV_lib::$request["reset_stb_lock"]))) {
             $ipTV_db_admin->query("SELECT `mag_id`, `user_id` FROM `mag_devices`;");
             if ($ipTV_db_admin->num_rows() > 0) {
                 foreach ($ipTV_db_admin->get_rows() as $rRow) {
                     if (in_array($rRow["user_id"], $rUsers)) {
-                        if (isset($_POST["reset_stb_lock"])) {
+                        if (isset(ipTV_lib::$request["reset_stb_lock"])) {
                             resetSTB($rRow["mag_id"]);
                         }
-                        if (isset($_POST["c_lock_device"])) {
-                            if (isset($_POST["lock_device"])) {
+                        if (isset(ipTV_lib::$request["c_lock_device"])) {
+                            if (isset(ipTV_lib::$request["lock_device"])) {
                                 $ipTV_db_admin->query("UPDATE `mag_devices` SET `lock_device` = 1 WHERE `mag_id` = " . intval($rRow["mag_id"]) . ";");
                             } else {
                                 $ipTV_db_admin->query("UPDATE `mag_devices` SET `lock_device` = 0 WHERE `mag_id` = " . intval($rRow["mag_id"]) . ";");
@@ -106,10 +106,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -137,7 +137,7 @@ if ($rSettings["sidebar"]) { ?>
                                     </button>
                                     <?= $_["mass_edit_of_users"] ?>
                                 </div>
-                            <?php } else if ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -213,8 +213,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                                     <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
@@ -552,10 +552,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 </td>
                                                                                 <td><?= $rBouquet["bouquet_name"] ?></td>
                                                                                 <td class="text-center">
-                                                                                    <?= count(json_decode($rBouquet["bouquet_channels"], True)) ?>
+                                                                                    <?= count(json_decode($rBouquet["bouquet_channels"], true)) ?>
                                                                                 </td>
                                                                                 <td class="text-center">
-                                                                                    <?= count(json_decode($rBouquet["bouquet_series"], True)) ?>
+                                                                                    <?= count(json_decode($rBouquet["bouquet_series"], true)) ?>
                                                                                 </td>
                                                                             </tr>
                                                                         <?php } ?>

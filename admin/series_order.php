@@ -5,8 +5,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_series"))) {
     exit;
 }
 
-if (isset($_POST["reorder"])) {
-    $rOrder = json_decode($_POST["episode_order_array"], True);
+if (isset(ipTV_lib::$request["reorder"])) {
+    $rOrder = json_decode(ipTV_lib::$request["episode_order_array"], true);
     if (is_array($rOrder)) {
         foreach ($rOrder as $rSeason => $rEpisodes) {
             $rSort = 0;
@@ -18,10 +18,10 @@ if (isset($_POST["reorder"])) {
     }
 }
 
-if (!isset($_GET["id"])) {
+if (!isset(ipTV_lib::$request["id"])) {
     exit;
 }
-$rSeries = getSerie($_GET["id"]);
+$rSeries = getSerie(ipTV_lib::$request["id"]);
 if (!$rSeries) {
     exit;
 }
@@ -43,10 +43,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-            <?php } else { ?>
+<?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-                    <?php } ?>
+<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -68,11 +68,11 @@ if ($rSettings["sidebar"]) { ?>
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./series_order.php?id=<?= $_GET["id"] ?>" method="POST"
+                                    <form action="./series_order.php?id=<?= ipTV_lib::$request["id"] ?>" method="POST"
                                         id="episode_order_form">
                                         <input type="hidden" id="episode_order_array" name="episode_order_array"
                                             value="" />
-                                        <input type="hidden" name="reorder" value="<?= $_GET["id"] ?>" />
+                                        <input type="hidden" name="reorder" value="<?= ipTV_lib::$request["id"] ?>" />
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                                 <?php foreach ($rSeasons as $rSeasonNum => $rSeasonArray) { ?>
