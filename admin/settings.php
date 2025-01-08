@@ -8,12 +8,6 @@ if ((!hasPermissions("adv", "settings")) && (!hasPermissions("adv", "database"))
     exit;
 }
 
-#Get versions
-$rGeoLite2Latest = getGithubReleases("Vateron-Media/Xtream_Update")['latest_release'];
-$rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true)["geolite2_version"];
-$rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")['latest_release'], 1);
-$rInfosUpdate = array();
-
 if (isset(ipTV_lib::$request["geolite2"])) {
     if (updateGeoLite2()) {
         $_STATUS = 3;
@@ -21,6 +15,12 @@ if (isset(ipTV_lib::$request["geolite2"])) {
         $_STATUS = 2;
     }
 }
+
+#Get versions
+$rGeoLite2Latest = getGithubReleases("Vateron-Media/Xtream_Update")['latest_release'];
+$rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true)["geolite2_version"];
+$rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")['latest_release'], 1);
+$rInfosUpdate = array();
 
 if (isset(ipTV_lib::$request["panel_version"])) {
     $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . json_encode(array('action' => 'update')) . "`;");

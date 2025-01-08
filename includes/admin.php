@@ -1473,20 +1473,16 @@ function sortArrayByArray(array $rArray, array $rSort) {
 
 function updateGeoLite2() {
     global $rAdminSettings;
-    $context = stream_context_create(
-        array(
-            "http" => array(
-                "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
-            )
-        )
-    );
-    $rGeoLite2_version = get_recent_stable_release("https://github.com/Vateron-Media/Xtream_Update/releases/latest");
-
-    if ($rGeoLite2_version) {
+    $rGeoLite2Latest = get_recent_stable_release("https://github.com/Vateron-Media/Xtream_Update/releases/latest");
+    $rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true)["geolite2_version"];
+    if ($rGeoLite2Latest == $rGeoLite2Curent) {
+        return true;
+    }
+    if ($rGeoLite2Latest) {
         $fileNames = ["GeoLite2-City.mmdb", "GeoLite2-Country.mmdb", "GeoLite2-ASN.mmdb"];
         $checker = [false, false, false];
         foreach ($fileNames as $key => $value) {
-            $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/releases/download/{$rGeoLite2_version}/{$value}");
+            $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/releases/download/{$rGeoLite2Latest}/{$value}");
             if (stripos($rFileData, "MaxMind.com") !== false) {
                 $rFilePath = "/home/xtreamcodes/bin/maxmind/{$value}";
                 exec("sudo chattr -i {$rFilePath}");
@@ -1501,9 +1497,11 @@ function updateGeoLite2() {
         }
         if ($checker[0] && $checker[1] && $checker[2]) {
             # create json version file and write version geolite
-            $data = ["geolite2_version" => $rGeoLite2_version];
+            $versionFile = "/home/xtreamcodes/bin/maxmind/version.json";
+            $data = ["geolite2_version" => $rGeoLite2Latest];
             $json = json_encode($data);
-            file_put_contents("/home/xtreamcodes/bin/maxmind/version.json", $json);
+            unlink($versionFile);
+            file_put_contents($versionFile, $json);
             return true;
         } else {
             return false;
