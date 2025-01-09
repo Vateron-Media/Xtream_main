@@ -28,7 +28,7 @@
     <link href="assets/libs/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css" />
     <link href="assets/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
-    <?php if (!$rAdminSettings["dark_mode"]) { ?>
+    <?php if (!$rSettings["dark_mode"]) { ?>
         <link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/app.css" rel="stylesheet" type="text/css" />
     <?php } else { ?>
@@ -695,7 +695,7 @@
                                 </ul>
                             </li>
                         <?php }
-                        if (($rPermissions["is_reseller"]) && ($rAdminSettings["active_mannuals"])) { ?>
+                        if (($rPermissions["is_reseller"]) && ($rSettings["active_mannuals"])) { ?>
                             <li>
                                 <a href="./reseller_mannuals.php"> <i
                                         class="mdi mdi-book-open-page-variant mdi-18px text-info"></i><?= $_["mannuals"] ?></a>

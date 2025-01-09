@@ -123,7 +123,7 @@ if ($rSettings["sidebar"]) { ?>
                                                 <select id="mag_show_entries" class="form-control"
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                        <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                        <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                             echo " selected";
                                                         } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
@@ -161,7 +161,7 @@ if ($rSettings["sidebar"]) { ?>
                 </div> <!-- end container -->
             </div>
             <?php // if ($rPermissions["is_admin"])
-            if (($rPermissions["is_admin"]) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_mag_events"]))) { ?>
+            if (($rPermissions["is_admin"]) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_mag_events"]))) { ?>
                 <div class="modal fade messageModal" role="dialog" aria-labelledby="messageModal" aria-hidden="true"
                     style="display: none;" data-id="">
                     <div class="modal-dialog modal-dialog-centered">
@@ -346,7 +346,7 @@ if ($rSettings["sidebar"]) { ?>
                     $("#mag_search").val("").trigger('change');
                     $('#mag_filter').val("").trigger('change');
                     $('#mag_reseller').val("").trigger('change');
-                    $('#mag_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    $('#mag_show_entries').val("<?= $rSettings["default_entries"] ?: 10 ?>").trigger('change');
                     window.rClearing = false;
                     $('#datatable-users').DataTable().search($("#mag_search").val());
                     $('#datatable-users').DataTable().page.len($('#mag_show_entries').val());
@@ -355,7 +355,7 @@ if ($rSettings["sidebar"]) { ?>
                     $("#datatable-users").DataTable().ajax.reload(null, false);
                 }
                 <?php // if ($rPermissions["is_admin"])
-                if (($rPermissions["is_admin"]) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_mag_events"]))) { ?>
+                if (($rPermissions["is_admin"]) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_mag_events"]))) { ?>
 
                     function message(id, mac) {
                         $('.messageModal').data('id', id);
@@ -424,7 +424,7 @@ if ($rSettings["sidebar"]) { ?>
                         order: [
                             [0, "desc"]
                         ],
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         stateSave: true
                     });
                     $("#datatable-users").css("width", "100%");
@@ -451,7 +451,7 @@ if ($rSettings["sidebar"]) { ?>
                         }
                     });
                     <?php // if ($rPermissions["is_admin"])
-                    if (($rPermissions["is_admin"]) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_mag_events"]))) { ?>
+                    if (($rPermissions["is_admin"]) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_mag_events"]))) { ?>
                         $("#message_type").change(function () {
                             if ($(this).val() == "send_msg") {
                                 $("#send_msg_form").show();
@@ -536,7 +536,7 @@ if ($rSettings["sidebar"]) { ?>
                         setTimeout(reloadUsers, 10000);
                     <?php } ?>
                     $('#datatable-users').DataTable().search($(this).val()).draw();
-                    <?php if (!$rAdminSettings["auto_refresh"]) { ?>
+                    <?php if (!$rSettings["auto_refresh"]) { ?>
                         toggleAuto();
                     <?php } ?>
                 });

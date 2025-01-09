@@ -20,10 +20,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -92,10 +92,10 @@ if ($rSettings["sidebar"]) { ?>
                                                 <select id="act_show_entries" class="form-control"
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                        <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                        <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                             echo " selected";
-                                                               } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                    <?php } ?>
+                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                        <?php } ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -206,7 +206,7 @@ if ($rSettings["sidebar"]) { ?>
                     $("#act_search").val("").trigger('change');
                     $('#act_filter').val("").trigger('change');
                     $('#act_range').val("").trigger('change');
-                    $('#act_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    $('#act_show_entries').val("<?= $rSettings["default_entries"] ?: 10 ?>").trigger('change');
                     window.rClearing = false;
                     $('#datatable-activity').DataTable().search($("#act_search").val());
                     $('#datatable-activity').DataTable().page.len($('#act_show_entries').val());
@@ -320,7 +320,7 @@ if ($rSettings["sidebar"]) { ?>
                         "order": [
                             [0, "desc"]
                         ],
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         stateSave: true
                     });
                     $("#datatable-activity").css("width", "100%");

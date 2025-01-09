@@ -34,10 +34,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -84,10 +84,10 @@ if ($rSettings["sidebar"]) { ?>
                                                         <td class="text-center"><?= $rSystem["avail"] ?></td>
                                                         <td class="text-center"><?php if (intval(rtrim($rSystem["percentage"], "%")) >= 80) {
                                                             echo "<span class='text-danger'>" . $rSystem["percentage"] . "</span>";
-                                                                                } else {
-                                                                                    echo $rSystem["percentage"];
-                                                                                }
-                                                                                ; ?></td>
+                                                        } else {
+                                                            echo $rSystem["percentage"];
+                                                        }
+                                                        ; ?></td>
                                                         <td class="text-center">
                                                             <div class="btn-group">
                                                                 <?php if (substr($rSystem["mount"], strlen($rSystem["mount"]) - 3, 3) == "tmp") { ?>
@@ -99,13 +99,13 @@ if ($rSettings["sidebar"]) { ?>
                                                                             class="btn btn-light waves-effect waves-light btn-xs"><i
                                                                                 class="mdi mdi-close"></i></button></a>
                                                                 <?php } elseif (substr($rSystem["mount"], strlen($rSystem["mount"]) - 7, 7) == "streams") { ?>
-                                                                        <a
-                                                                            href="./process_monitor.php?server=<?= ipTV_lib::$request["server"] ?>&clear_s"><button
-                                                                                data-toggle="tooltip" data-placement="top" title=""
-                                                                                data-original-title="<?= $_["clear_streams"] ?>"
-                                                                                type="button"
-                                                                                class="btn btn-light waves-effect waves-light btn-xs"><i
-                                                                                    class="mdi mdi-close"></i></button></a>
+                                                                    <a
+                                                                        href="./process_monitor.php?server=<?= ipTV_lib::$request["server"] ?>&clear_s"><button
+                                                                            data-toggle="tooltip" data-placement="top" title=""
+                                                                            data-original-title="<?= $_["clear_streams"] ?>"
+                                                                            type="button"
+                                                                            class="btn btn-light waves-effect waves-light btn-xs"><i
+                                                                                class="mdi mdi-close"></i></button></a>
                                                                 <?php } ?>
                                                             </div>
                                                         </td>
@@ -131,7 +131,7 @@ if ($rSettings["sidebar"]) { ?>
                                                     <?php foreach ($rServers as $rServer) { ?>
                                                         <option value="<?= $rServer["id"] ?>" <?php if (ipTV_lib::$request["server"] == $rServer["id"]) {
                                                               echo " selected";
-                                                                       } ?>><?= $rServer["server_name"] ?></option>
+                                                          } ?>><?= $rServer["server_name"] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -141,10 +141,10 @@ if ($rSettings["sidebar"]) { ?>
                                                 <select id="live_show_entries" class="form-control"
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                        <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                        <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                             echo " selected";
-                                                               } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                    <?php } ?>
+                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                        <?php } ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -172,9 +172,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     </td>
                                                     <td><?php if (isset($rStreams[$rProcess["pid"]])) {
                                                         echo "<a href='" . array(1 => "stream", 2 => "movie", 3 => "created_channel", 4 => "radio", 5 => "episode")[$rStreams[$rProcess["pid"]]["type"]] . ".php?id=" . $rStreams[$rProcess["pid"]]["id"] . "'>" . $rStreams[$rProcess["pid"]]["title"] . '</a>';
-                                                        } else {
-                                                            echo $rProcess["command"];
-                                                        } ?></td>
+                                                    } else {
+                                                        echo $rProcess["command"];
+                                                    } ?></td>
                                                     <td><?= number_format($rProcess["cpu"], 1) ?></td>
                                                     <td><?= number_format($rProcess["rss"] / 1024.0, 0) ?></td>
                                                     <td><?= $rProcess["time"] ?></td>
@@ -290,15 +290,15 @@ if ($rSettings["sidebar"]) { ?>
                         }],
 
                         <?php if (isset(ipTV_lib::$request["mem"])) { ?>
-                                        order: [
+                                            order: [
                                 [5, "desc"]
                             ],
                         <?php } else { ?>
-                                        order: [
+                                            order: [
                                 [4, "desc"]
                             ],
                         <?php } ?>
-                            pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                            pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         lengthMenu: [10, 25, 50, 250, 500, 1000]
                     });
                     $("#datatable-activity").css("width", "100%");

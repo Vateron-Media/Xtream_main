@@ -90,7 +90,7 @@ if ($rSettings["sidebar"]) { ?>
                                                 <select id="result_show_entries" class="form-control"
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                        <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                        <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                             echo " selected";
                                                         } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
@@ -232,7 +232,7 @@ if ($rSettings["sidebar"]) { ?>
                     $('#result_server').val("").trigger('change');
                     $('#result_type').val("").trigger('change');
                     $('#result_status').val("").trigger('change');
-                    $('#result_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    $('#result_show_entries').val("<?= $rSettings["default_entries"] ?: 10 ?>").trigger('change');
                     window.rClearing = false;
                     $('#datatable-md1').DataTable().search($("#result_search").val());
                     $('#datatable-md1').DataTable().page.len($('#result_show_entries').val());
@@ -285,7 +285,7 @@ if ($rSettings["sidebar"]) { ?>
                         order: [
                             [5, "desc"]
                         ],
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         stateSave: true
                     });
                     $("#datatable-md1").css("width", "100%");

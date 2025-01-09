@@ -112,7 +112,7 @@ if (isset(ipTV_lib::$request["submit_user"])) {
             ipTV_lib::$request["password"] = "";
         }
     }
-    if ((!$rPermissions["allow_change_pass"]) && (!$rAdminSettings["change_usernames"])) {
+    if ((!$rPermissions["allow_change_pass"]) && (!$rSettings["change_usernames"])) {
         if (isset($rUser)) {
             ipTV_lib::$request["username"] = $rUser["username"];
         } else {
@@ -162,7 +162,7 @@ if (isset(ipTV_lib::$request["submit_user"])) {
             }
         }
     }
-    if ($rAdminSettings["reseller_restrictions"]) {
+    if ($rSettings["reseller_restrictions"]) {
         if (isset(ipTV_lib::$request["allowed_ips"])) {
             if (!is_array(ipTV_lib::$request["allowed_ips"])) {
                 ipTV_lib::$request["allowed_ips"] = array(ipTV_lib::$request["allowed_ips"]);
@@ -449,7 +449,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="username"><?= $_["username"] ?></label>
                                                                 <div class="col-md-8">
-                                                                    <input<?php if ((!$rPermissions["allow_change_pass"]) && (!$rAdminSettings["change_usernames"])) {
+                                                                    <input<?php if ((!$rPermissions["allow_change_pass"]) && (!$rSettings["change_usernames"])) {
                                                                         echo $_[" disabled"];
                                                                           } ?> type="text"
                                                                         class="form-control" id="username"
@@ -632,7 +632,7 @@ if ($rSettings["sidebar"]) { ?>
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <?php if ($rAdminSettings["reseller_restrictions"]) { ?>
+                                                <?php if ($rSettings["reseller_restrictions"]) { ?>
                                                         <div class="tab-pane" id="restrictions">
                                                             <div class="row">
                                                                 <div class="col-12">

@@ -3,7 +3,6 @@ include "/home/xtreamcodes/admin/functions.php";
 include "/home/xtreamcodes/admin/tmdb.php";
 include "/home/xtreamcodes/admin/tmdb_release.php";
 
-$rAdminSettings = getAdminSettings();
 $rSettings = getSettings();
 $rServers = getStreamingServers();
 $rWatchCategories = array(1 => getWatchCategories(1), 2 => getWatchCategories(2));
@@ -14,14 +13,12 @@ if ($ipTV_db_admin->num_rows() == 1) {
 }
 
 $rPID = getmypid();
-if (isset($rAdminSettings["watch_pid"])) {
-    if ((file_exists("/proc/" . $rAdminSettings["watch_pid"])) && (strlen($rAdminSettings["watch_pid"]) > 0)) {
+if (isset($rSettings["watch_pid"])) {
+    if ((file_exists("/proc/" . $rSettings["watch_pid"])) && (strlen($rSettings["watch_pid"]) > 0)) {
         exit;
     } else {
-        $ipTV_db_admin->query("UPDATE `admin_settings` SET `value` = " . intval($rPID) . " WHERE `type` = 'watch_pid';");
+        ipTV_lib::setSettings(["watch_pid" => intval($rPID)]);
     }
-} else {
-    $ipTV_db_admin->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('watch_pid', " . intval($rPID) . ");");
 }
 
 $rTimeout = 3000;       // Limit by time.
@@ -34,13 +31,13 @@ if (strlen($rSettings["tmdb_api_key"]) == 0) {
     exit;
 }
 
-if (strlen($rAdminSettings["tmdb_language"]) > 0) {
-    $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rAdminSettings["tmdb_language"]);
+if (strlen($rSettings["tmdb_language"]) > 0) {
+    $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rSettings["tmdb_language"]);
 } else {
     $rTMDB = new TMDB($rSettings["tmdb_api_key"]);
 }
 
-if ($rAdminSettings["local_api"]) {
+if ($rSettings["local_api"]) {
     $rAPI = "http://127.0.0.1:" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "/api.php";
 } else {
     $rAPI = "http://" . $rServers[$_INFO["server_id"]]["server_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "/api.php";
@@ -96,7 +93,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
             $ipTV_db_admin->query("DELETE FROM `watch_output` WHERE `filename` = '" . $ipTV_db_admin->escape($rFile) . "' AND `type` = " . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ";");
             if ((!$rWatchSettings["ffprobe_input"]) or (isset(checkSource($rRow["server_id"], $rFile)["streams"]))) {
                 $rFilename = pathinfo($rFile)["filename"];
-                if ($rAdminSettings["release_parser"] == "php") {
+                if ($rSettings["release_parser"] == "php") {
                     $rRelease = new Release($rFilename);
                     $rTitle = $rRelease->getTitle();
                     $rYear = $rRelease->getYear();
@@ -149,7 +146,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                             $rMovieData["trailer"] = $rMovie->getTrailer();
                             $rThumb = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rMovieData['poster_path'];
                             $rBG = "https://image.tmdb.org/t/p/w1280" . $rMovieData['backdrop_path'];
-                            if ($rAdminSettings["download_images"]) {
+                            if ($rSettings["download_images"]) {
                                 $rThumb = downloadImage($rThumb);
                                 $rBG = downloadImage($rBG);
                             } else {
@@ -208,7 +205,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                                 $rSeriesArray["cover"] = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rShowData['poster_path'];
                                 $rSeriesArray["cover_big"] = $rSeriesArray["cover"];
                                 $rSeriesArray["backdrop_path"] = array("https://image.tmdb.org/t/p/w1280" . $rShowData['backdrop_path']);
-                                if ($rAdminSettings["download_images"]) {
+                                if ($rSettings["download_images"]) {
                                     $rSeriesArray["cover"] = downloadImage($rSeriesArray["cover"]);
                                     $rSeriesArray["backdrop_path"] = array(downloadImage($rSeriesArray["backdrop_path"][0]));
                                 }
@@ -295,7 +292,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                                     if (intval($rEpisode["episode_number"]) == $rReleaseEpisode) {
                                         if (strlen($rEpisode["still_path"]) > 0) {
                                             $rImage = "https://image.tmdb.org/t/p/w300" . $rEpisode["still_path"];
-                                            if ($rAdminSettings["download_images"]) {
+                                            if ($rSettings["download_images"]) {
                                                 $rImage = downloadImage($rImage);
                                             }
                                         }

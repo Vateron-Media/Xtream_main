@@ -17,10 +17,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -86,10 +86,10 @@ if ($rSettings["sidebar"]) { ?>
                                                 <select id="live_show_entries" class="form-control"
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                        <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                        <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                             echo " selected";
-                                                               } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                    <?php } ?>
+                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                        <?php } ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -199,7 +199,7 @@ if ($rSettings["sidebar"]) { ?>
                     window.rClearing = true;
                     $("#live_search").val("").trigger('change');
                     $('#live_filter').val("").trigger('change');
-                    $('#live_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    $('#live_show_entries').val("<?= $rSettings["default_entries"] ?: 10 ?>").trigger('change');
                     window.rClearing = false;
                     $('#datatable-activity').DataTable().search($("#live_search").val());
                     $('#datatable-activity').DataTable().page.len($('#live_show_entries').val());
@@ -244,7 +244,7 @@ if ($rSettings["sidebar"]) { ?>
                                 <?php if (isset(ipTV_lib::$request["stream_id"])) { ?>
                                     d.stream_id = <?= intval(ipTV_lib::$request["stream_id"]) ?>;
                                 <?php } elseif (isset(ipTV_lib::$request["user_id"])) { ?>
-                                        d.user_id = <?= intval(ipTV_lib::$request["user_id"]) ?>;
+                                    d.user_id = <?= intval(ipTV_lib::$request["user_id"]) ?>;
                                 <?php } ?>
                             }
                         },
@@ -260,7 +260,7 @@ if ($rSettings["sidebar"]) { ?>
                         order: [
                             [0, "desc"]
                         ],
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         lengthMenu: [10, 25, 50, 250, 500, 1000],
                         stateSave: true
                     });
@@ -285,7 +285,7 @@ if ($rSettings["sidebar"]) { ?>
                         setTimeout(reloadUsers, 5000);
                     <?php } ?>
                     $('#datatable-activity').DataTable().search($(this).val()).draw();
-                    <?php if (!$rAdminSettings["auto_refresh"]) { ?>
+                    <?php if (!$rSettings["auto_refresh"]) { ?>
                         toggleAuto();
                     <?php } ?>
                 });

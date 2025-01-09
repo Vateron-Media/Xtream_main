@@ -28,7 +28,7 @@
     <link href="assets/libs/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css" />
     <link href="assets/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
-    <?php if (!$rAdminSettings["dark_mode"]) { ?>
+    <?php if (!$rSettings["dark_mode"]) { ?>
         <link href="assets/css/app_sidebar.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
     <?php } else { ?>
@@ -37,9 +37,9 @@
     <?php } ?>
 </head>
 
-<body class="<?php if (!$rAdminSettings["dark_mode"]) {
+<body class="<?php if (!$rSettings["dark_mode"]) {
     echo "topbar-dark left-side-menu-light ";
-} ?><?php if (!$rAdminSettings["expanded_sidebar"]) {
+} ?><?php if (!$rSettings["expanded_sidebar"]) {
      echo 'enlarged" data-keep-enlarged="true"';
  } else {
      echo '"';
@@ -612,7 +612,7 @@
                             </ul>
                         </li>
                     <?php }
-                    if (($rPermissions["is_reseller"]) && ($rAdminSettings["active_mannuals"])) { ?>
+                    if (($rPermissions["is_reseller"]) && ($rSettings["active_mannuals"])) { ?>
                         <li>
                             <a href="./reseller_mannuals.php"> <i
                                     class="mdi mdi-book-open-page-variant mdi-18px text-info"></i><span><?= $_["mannuals"] ?></span></a>

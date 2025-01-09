@@ -719,7 +719,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
             $rStatistics = array("users" => array(), "conns" => array());
-            $rPeriod = intval($rAdminSettings["dashboard_stats_frequency"]) ?: 600;
+            $rPeriod = intval($rSettings["dashboard_stats_frequency"]) ?: 600;
             $rMax = roundUpToAny(time(), $rPeriod);
             $rMin = $rMax - (60 * 60 * 24 * 7);
             $ipTV_db_admin->query("SELECT `type`, `time`, `count` FROM `dashboard_statistics` WHERE `time` >= " . intval($rMin) . " AND `time` <= " . intval($rMax) . " AND `type` = 'conns';");
@@ -944,13 +944,13 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
             include "tmdb.php";
-            if (strlen($rAdminSettings["tmdb_language"]) > 0) {
-                $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rAdminSettings["tmdb_language"]);
+            if (strlen($rSettings["tmdb_language"]) > 0) {
+                $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rSettings["tmdb_language"]);
             } else {
                 $rTMDB = new TMDB($rSettings["tmdb_api_key"]);
             }
             $rTerm = ipTV_lib::$request["term"];
-            if ($rAdminSettings["release_parser"] == "php") {
+            if ($rSettings["release_parser"] == "php") {
                 include "tmdb_release.php";
                 $rRelease = new Release($rTerm);
                 $rTerm = $rRelease->getTitle();
@@ -984,8 +984,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
             include "tmdb.php";
-            if (strlen($rAdminSettings["tmdb_language"]) > 0) {
-                $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rAdminSettings["tmdb_language"]);
+            if (strlen($rSettings["tmdb_language"]) > 0) {
+                $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rSettings["tmdb_language"]);
             } else {
                 $rTMDB = new TMDB($rSettings["tmdb_api_key"]);
             }
@@ -1225,7 +1225,7 @@ if (isset(ipTV_lib::$request["action"])) {
 */
         // SEND MAG EVENT RESELLERS
         case "send_event":
-            if (($rPermissions["is_admin"]) && (hasPermissions("adv", "manage_events")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_mag_events"]))) {
+            if (($rPermissions["is_admin"]) && (hasPermissions("adv", "manage_events")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_mag_events"]))) {
                 $rData = json_decode(ipTV_lib::$request["data"], true);
                 $rMag = getMag($rData["id"]);
                 if ($rMag) {

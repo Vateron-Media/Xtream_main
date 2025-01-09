@@ -3,17 +3,14 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
 	include "/home/xtreamcodes/admin/functions.php";
 
 	$rPID = getmypid();
-	if (isset($rAdminSettings["stats_pid"])) {
-		if ((file_exists("/proc/" . $rAdminSettings["stats_pid"])) && (strlen($rAdminSettings["stats_pid"]) > 0)) {
+	if (isset($rSettings["stats_pid"])) {
+		if ((file_exists("/proc/" . $rSettings["stats_pid"])) && (strlen($rSettings["stats_pid"]) > 0)) {
 			exit;
 		} else {
-			$ipTV_db_admin->query("UPDATE `admin_settings` SET `value` = " . intval($rPID) . " WHERE `type` = 'stats_pid';");
+			ipTV_lib::setSettings(["stats_pid" => intval($rPID)]);
 		}
-	} else {
-		$ipTV_db_admin->query("INSERT INTO `admin_settings`(`type`, `value`) VALUES('stats_pid', " . intval($rPID) . ");");
 	}
 
-	$rAdminSettings = getAdminSettings();
 	$rSettings = getSettings();
 
 	$rTimeout = 3000;       // Limit by time.
@@ -21,9 +18,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
 	ini_set('max_execution_time', $rTimeout);
 
 	$rStatistics = array("users" => array(), "conns" => array());
-	$rPeriod = intval($rAdminSettings["dashboard_stats_frequency"]) ?: 600;
+	$rPeriod = intval($rSettings["dashboard_stats_frequency"]) ?: 600;
 
-	if (($rPeriod >= 60) && ($rAdminSettings["dashboard_stats"])) {
+	if (($rPeriod >= 60) && ($rSettings["dashboard_stats"])) {
 		$ipTV_db_admin->query("SELECT MIN(`date_start`) AS `min` FROM `user_activity`;");
 		$rMin = roundUpToAny(intval($ipTV_db_admin->get_row()["min"]), $rPeriod);
 		$ipTV_db_admin->query("SELECT MAX(`time`) AS `max` FROM `dashboard_statistics` WHERE `type` IN ('users', 'conns');");

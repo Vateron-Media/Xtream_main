@@ -56,7 +56,7 @@ if (isset(ipTV_lib::$request["submit_stream"])) {
         }
     }
     if (count($rArray["stream_source"]) > 0) {
-        if ($rAdminSettings["download_images"]) {
+        if ($rSettings["download_images"]) {
             $rArray["stream_icon"] = downloadImage($rArray["stream_icon"]);
         }
         $rArray["order"] = getNextOrder();
@@ -201,10 +201,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -223,9 +223,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rChannel)) {
                                     echo $rChannel["stream_display_name"] . ' &nbsp;<button type="button" class="btn btn-outline-info waves-effect waves-light btn-xs" onClick="player(' . $rChannel["id"] . ', \'' . json_decode($rChannel["target_container"], true)[0] . '\');"><i class="mdi mdi-play"></i></button>';
-                                                       } else {
-                                                           echo $_["create_channel"];
-                                                       } ?></h4>
+                                } else {
+                                    echo $_["create_channel"];
+                                } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -245,19 +245,19 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["channel_operation_was"] ?>
                                 </div>
                             <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                     <?= $_["generic_fail"] ?>
-                                    </div>
+                                </div>
                             <?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                     <?= $_["the_series_you_have"] ?>
-                                        </div>
+                                </div>
                             <?php }
                             if (isset($rChannel)) { ?>
                                 <div class="card text-xs-center">
@@ -301,14 +301,15 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body">
                                     <form action="./created_channel.php<?php if (isset(ipTV_lib::$request["id"])) {
                                         echo "?id=" . ipTV_lib::$request["id"];
-                                                                       } ?>" method="POST" id="stream_form" data-parsley-validate="">
+                                    } ?>" method="POST" id="stream_form"
+                                        data-parsley-validate="">
                                         <?php if (isset($rChannel)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rChannel["id"] ?>" />
                                         <?php } ?>
                                         <input type="hidden" name="created_channel_location"
                                             id="created_channel_location" value="<?php if (isset($rChannel)) {
                                                 echo $rChannel["created_channel_location"];
-                                                                                 } ?>" />
+                                            } ?>" />
                                         <input type="hidden" name="video_files" id="video_files" value="" />
                                         <input type="hidden" name="server_tree_data" id="server_tree_data" value="" />
                                         <div id="basicwizard">
@@ -365,7 +366,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if ($rProperties["type"] == $rID) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                                    } ?>value="<?= $rID ?>"><?= $rType ?></option>
+                                                                            } ?>value="<?= $rID ?>"><?= $rType ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -385,7 +386,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if (intval($rChannel["series_no"]) == intval($rSeries["id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                                    } ?>value="<?= $rSeries["id"] ?>"><?= $rSeries["title"] ?></option>
+                                                                            } ?>value="<?= $rSeries["id"] ?>"><?= $rSeries["title"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -398,7 +399,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="stream_display_name"
                                                                         name="stream_display_name" value="<?php if (isset($rChannel)) {
                                                                             echo htmlspecialchars($rChannel["stream_display_name"]);
-                                                                                                          } ?>" required data-parsley-trigger="change">
+                                                                        } ?>"
+                                                                        required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -413,9 +415,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if (intval($rChannel["category_id"]) == intval($rCategory["id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                                    } elseif ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
-                                                                                        echo "selected ";
-                                                                                    } ?>value="<?= $rCategory["id"] ?>">
+                                                                            } elseif ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
+                                                                                echo "selected ";
+                                                                            } ?>value="<?= $rCategory["id"] ?>">
                                                                                 <?= $rCategory["category_name"] ?>
                                                                             </option>
                                                                         <?php } ?>
@@ -435,7 +437,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if (intval($rChannel["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>"><?= $rProfile["profile_name"] ?></option>
+                                                                            } ?>value="<?= $rProfile["profile_id"] ?>"><?= $rProfile["profile_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -453,7 +455,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if (in_array($rChannel["id"], json_decode($rBouquet["bouquet_channels"], true))) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                                    } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
+                                                                            } ?>value="<?= $rBouquet["id"] ?>"><?= $rBouquet["bouquet_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -463,9 +465,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="stream_icon"><?= $_["stream_logo_url"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control"
-                                                                        id="stream_icon" name="stream_icon" value="<?php if (isset($rChannel)) {
+                                                                        id="stream_icon" name="stream_icon"
+                                                                        value="<?php if (isset($rChannel)) {
                                                                             echo htmlspecialchars($rChannel["stream_icon"]);
-                                                                                                                   } ?>">
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -473,9 +476,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="notes"><?= $_["notes"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <textarea id="notes" name="notes"
-                                                                        class="form-control" rows="3" placeholder=""><?php if (isset($rChannel)) {
+                                                                        class="form-control" rows="3"
+                                                                        placeholder=""><?php if (isset($rChannel)) {
                                                                             echo htmlspecialchars($rChannel["notes"]);
-                                                                                                                     } ?></textarea>
+                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -499,7 +503,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                                             <option value="<?= $rServer["id"] ?>" <?php if (isset($rChannel) && ($rChannel["created_channel_location"] == $rServer["id"])) {
                                                                                   echo " selected";
-                                                                                           } ?>><?= $rServer["server_name"] ?></option>
+                                                                              } ?>><?= $rServer["server_name"] ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -609,7 +613,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         name="import_folder" readonly
                                                                         class="form-control" value="<?php if (isset($rChannel)) {
                                                                             echo htmlspecialchars($rServers[$rChannel["created_channel_location"]]["server_name"]);
-                                                                                                    } ?>">
+                                                                        } ?>">
                                                                     <div class="input-group-append">
                                                                         <a href="#file-browser" id="filebrowser"
                                                                             class="btn btn-primary waves-effect waves-light"><i
@@ -664,9 +668,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="restart_on_edit"><?php if (isset($rChannel)) {
                                                                         ?><?= $_["restart_on_edit"] ?><?php
-                                                                                          } else {
-                                                                                                ?><?= $_["start_channel_now"] ?><?php
-                                                                                          } ?></label>
+                                                                    } else {
+                                                                        ?><?= $_["start_channel_now"] ?><?php
+                                                                    } ?></label>
                                                                 <div class="col-md-2">
                                                                     <input name="restart_on_edit" id="restart_on_edit"
                                                                         type="checkbox" data-plugin="switchery"
@@ -684,9 +688,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             <input name="submit_stream" type="submit"
                                                                 class="btn btn-primary" value="<?php if (isset($rChannel)) {
                                                                     echo $_["edit"];
-                                                                                               } else {
-                                                                                                   echo $_["create"];
-                                                                                               } ?>" />
+                                                                } else {
+                                                                    echo $_["create"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -704,7 +708,7 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if (isset($rChannel) && ($rChannel["created_channel_location"] == $rServer["id"])) {
                                                                   echo " selected";
-                                                                           } ?>><?= $rServer["server_name"] ?></option>
+                                                              } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>

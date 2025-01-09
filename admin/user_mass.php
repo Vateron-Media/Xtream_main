@@ -106,10 +106,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -138,12 +138,12 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["mass_edit_of_users"] ?>
                                 </div>
                             <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                     <?= $_["there_was_an_error"] ?>
-                                    </div>
+                                </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
@@ -211,10 +211,10 @@ if ($rSettings["sidebar"]) { ?>
                                                             <select id="show_entries" class="form-control"
                                                                 data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                                    <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                                    <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                <?php } ?>
+                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                    <?php } ?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-1 col-2">
@@ -831,7 +831,7 @@ if ($rSettings["sidebar"]) { ?>
                                 $(row).addClass("selected");
                             }
                         },
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
                     });
                     bTable = $("#datatable-bouquets").DataTable({
                         columnDefs: [{

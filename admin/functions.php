@@ -7,15 +7,15 @@ $rTableSearch = strtolower(basename($_SERVER["SCRIPT_FILENAME"], '.php')) === "t
 
 if (isset($_SESSION['hash'])) {
     $rUserInfo = getRegisteredUserHash($_SESSION['hash']);
-    $rAdminSettings["dark_mode"] = $rUserInfo["dark_mode"];
-    $rAdminSettings["expanded_sidebar"] = $rUserInfo["expanded_sidebar"];
+    $rSettings["dark_mode"] = $rUserInfo["dark_mode"];
+    $rSettings["expanded_sidebar"] = $rUserInfo["expanded_sidebar"];
     $rSettings["sidebar"] = $rUserInfo["sidebar"];
     $rPermissions = getPermissions($rUserInfo['member_group_id']);
     if ($rPermissions["is_admin"]) {
         $rPermissions["is_reseller"] = 0;
     }
     $rPermissions["advanced"] = json_decode($rPermissions["allowed_pages"], true);
-    if ((!$rUserInfo) or (!$rPermissions) or ((!$rPermissions["is_admin"]) && (!$rPermissions["is_reseller"])) or (($_SESSION['ip'] <> getIP()) && ($rAdminSettings["ip_logout"]))) {
+    if ((!$rUserInfo) or (!$rPermissions) or ((!$rPermissions["is_admin"]) && (!$rPermissions["is_reseller"])) or (($_SESSION['ip'] <> getIP()) && ($rSettings["ip_logout"]))) {
         unset($rUserInfo);
         unset($rPermissions);
         session_unset();
@@ -43,10 +43,10 @@ if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos[
 }
 
 if (getPageName() != 'setup') {
-	$ipTV_db_admin->query('SELECT COUNT(`id`) AS `count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` WHERE `member_groups`.`is_admin` = 1;');
+    $ipTV_db_admin->query('SELECT COUNT(`id`) AS `count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` WHERE `member_groups`.`is_admin` = 1;');
 
-	if ($ipTV_db_admin->get_row()['count'] == 0) {
-		header('Location: ./setup.php');
-		exit();
-	}
+    if ($ipTV_db_admin->get_row()['count'] == 0) {
+        header('Location: ./setup.php');
+        exit();
+    }
 }

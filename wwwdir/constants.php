@@ -47,11 +47,17 @@ $rErrorCodes = array(
     'NO_SERVERS_AVAILABLE' => 'No servers are currently available for this stream.'
 );
 
+if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
+	generate404();
+}
+
 @ini_set('user_agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:9.0) Gecko/20100101 Firefox/9.0');
 @ini_set('default_socket_timeout', 5);
 
 // FOLDERS
-define('MAIN_DIR', '/home/xtreamcodes/');
+if (!defined('MAIN_DIR')) {
+	define('MAIN_DIR', '/home/xtreamcodes/');
+}
 define('IPTV_ROOT_PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');
 define('INCLUDES_PATH', MAIN_DIR . 'includes/');
 define('IPTV_TEMPLATES_PATH', IPTV_ROOT_PATH . 'templates/');
@@ -87,7 +93,9 @@ define('FFPROBE_BIN_44', BIN_PATH . 'ffmpeg_bin/4.4/ffprobe');
 // -------------------
 
 // TEMP FOLDERS
-define('TMP_PATH', MAIN_DIR . 'tmp/');
+if (!defined('TMP_PATH')) {
+	define('TMP_PATH', MAIN_DIR . 'tmp/');
+}
 define('CACHE_TMP_PATH', TMP_PATH . 'cache/');
 define('CONS_TMP_PATH', TMP_PATH . 'opened_cons/');
 define('DIVERGENCE_TMP_PATH', TMP_PATH . 'divergence/');
@@ -106,7 +114,9 @@ define('SERIES_TMP_PATH', CACHE_TMP_PATH . 'series/');
 // -------------------
 
 //CONTENT FOLDERS
-define('CONTENT_PATH', MAIN_DIR . 'content/');
+if (!defined('CONTENT_PATH')) {
+	define('CONTENT_PATH', MAIN_DIR . 'content/');
+}
 define('CREATED_CHANNELS', CONTENT_PATH . 'created_channels/');
 define('DELAY_PATH', CONTENT_PATH . 'delayed/');
 define('EPG_PATH', CONTENT_PATH . 'epg/');
@@ -130,18 +140,25 @@ define('CACHE_STREAMS', false);
 define('CACHE_STREAMS_TIME', 10);
 define('STREAM_TYPE', array('live', 'series', 'movie', 'created_live', 'radio_streams'));
 
-if (file_exists(CACHE_TMP_PATH . 'settings')) {
-    $Settings = igbinary_unserialize(file_get_contents(CACHE_TMP_PATH . 'settings'));
-} else {
-    $Settings = array('verify_host' => false, 'debug_show_errors' => false, 'enable_cache' => false, 'exit' => true);
-}
-
 global $argc;
 $showErrors = false;
 
 if (!$argc) {
-    define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
-    $showErrors = (isset($Settings['debug_show_errors']) ? $Settings['debug_show_errors'] : false);
+	$rIP = $_SERVER['REMOTE_ADDR'];
+	if (empty($rIP) || !file_exists(FLOOD_TMP_PATH . 'block_' . $rIP)) {
+		define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
+
+		if (file_exists(CACHE_TMP_PATH . 'settings')) {
+			$rData = file_get_contents(CACHE_TMP_PATH . 'settings');
+			$Settings = igbinary_unserialize($rData);
+
+			$showErrors = (isset($Settings['debug_show_errors']) ? $Settings['debug_show_errors'] : false);
+		}
+	} else {
+		http_response_code(403);
+
+		exit();
+	}
 }
 
 define('PHP_ERRORS', $showErrors);

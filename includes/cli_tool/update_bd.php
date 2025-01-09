@@ -48,9 +48,38 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('request_prebu
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('playlist_from_mysql', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('cloudflare', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('backups_pid', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('dashboard_stats_frequency', '600')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('login_flood', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('backups_to_keep', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('release_parser', 'python')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('tmdb_language', '')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('default_entries', '10')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('reseller_mag_events', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('ip_logout', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('alternate_scandir', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('download_images', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('auto_refresh', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('local_api', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('dark_mode_login', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('dashboard_stats', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('dashboard_world_map_live', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('dashboard_world_map_activity', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('change_usernames', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('change_own_dns', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('change_own_email', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('change_own_password', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('reseller_restrictions', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('change_own_lang', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('active_mannuals', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('reseller_can_isplock', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('reseller_reset_isplock', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('watch_pid', '102634')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('tmdb_pid', '')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('stats_pid', '')");
 $ipTV_db->query("DELETE FROM `settings` WHERE `name`='userpanel_mainpage'");
 $ipTV_db->query("DELETE FROM `settings` WHERE `name`='page_mannuals'");
 
+$ipTV_db->query("DROP TABLE admin_settings;");
 
 $ipTV_db->query("UPDATE `crontab` SET `filename`='series.php' WHERE `filename`='vod_cc_series.php'");
 $ipTV_db->query("UPDATE `crontab` SET `filename`='backups.php' WHERE `filename`='auto_backups.php'");

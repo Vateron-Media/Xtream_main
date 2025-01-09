@@ -80,8 +80,8 @@ if (isset(ipTV_lib::$request["submit_stream"])) {
         set_time_limit(0);
         include "tmdb.php";
         $rSeries = getSerie(intval(ipTV_lib::$request["series"]));
-        if (strlen($rAdminSettings["tmdb_language"]) > 0) {
-            $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rAdminSettings["tmdb_language"]);
+        if (strlen($rSettings["tmdb_language"]) > 0) {
+            $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rSettings["tmdb_language"]);
         } else {
             $rTMDB = new TMDB($rSettings["tmdb_api_key"]);
         }
@@ -106,7 +106,7 @@ if (isset(ipTV_lib::$request["submit_stream"])) {
                         if (intval($rEpisode["episode_number"]) == $rEpisodeNum) {
                             if (strlen($rEpisode["still_path"]) > 0) {
                                 $rImage = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rEpisode["still_path"];
-                                if ($rAdminSettings["download_images"]) {
+                                if ($rSettings["download_images"]) {
                                     $rImage = downloadImage($rImage);
                                 }
                             }
@@ -129,7 +129,7 @@ if (isset(ipTV_lib::$request["submit_stream"])) {
         }
     } else {
         $rImportArray = array("filename" => $rArray["stream_source"][0], "properties" => array(), "name" => $rArray["stream_display_name"], "episode" => ipTV_lib::$request["episode"]);
-        if ($rAdminSettings["download_images"]) {
+        if ($rSettings["download_images"]) {
             ipTV_lib::$request["movie_image"] = downloadImage(ipTV_lib::$request["movie_image"]);
         }
         $rSeconds = intval(ipTV_lib::$request["episode_run_time"]) * 60;
@@ -296,10 +296,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper boxed-layout">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -335,11 +335,11 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rEpisode)) {
                                     echo $rEpisode["stream_display_name"] . ' &nbsp;<button type="button" class="btn btn-outline-info waves-effect waves-light btn-xs" onClick="player(' . $rEpisode["id"] . ', \'' . json_decode($rEpisode["target_container"], true)[0] . '\');"><i class="mdi mdi-play"></i></button>';
-                                                       } elseif ($rMulti) {
-                                                           echo $_["add_multiple"];
-                                                       } else {
-                                                           echo $_["add_single"];
-                                                       } ?></h4>
+                                } elseif ($rMulti) {
+                                    echo $_["add_multiple"];
+                                } else {
+                                    echo $_["add_single"];
+                                } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -354,12 +354,12 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["episode_success"] ?>
                                 </div>
                             <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                     <?= $_["generic_fail"] ?>
-                                    </div>
+                                </div>
                             <?php }
                             if (isset($rEpisode)) { ?>
                                 <div class="card text-xs-center">
@@ -400,14 +400,14 @@ if ($rSettings["sidebar"]) { ?>
                                 <div class="card-body">
                                     <form action="./episode.php<?php if (isset(ipTV_lib::$request["id"])) {
                                         echo "?id=" . ipTV_lib::$request["id"];
-                                                               } ?>" method="POST" id="stream_form" data-parsley-validate="">
+                                    } ?>" method="POST" id="stream_form" data-parsley-validate="">
                                         <?php if (isset($rEpisode)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rEpisode["id"] ?>" />
                                         <?php }
                                         if (!isset($rMulti)) { ?>
                                             <input type="hidden" id="tmdb_id" name="tmdb_id" value="<?php if (isset($rEpisode)) {
                                                 echo htmlspecialchars($rEpisode["properties"]["tmdb_id"]);
-                                                                                                    } ?>" />
+                                            } ?>" />
                                         <?php } else { ?>
                                             <input type="hidden" name="multi" id="multi" value="" />
                                             <input type="hidden" name="server" id="server" value="" />
@@ -471,7 +471,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             id="season_num" name="season_num" placeholder=""
                                                                             value="<?php if (isset($rEpisode)) {
                                                                                 echo htmlspecialchars($rEpisode["season"]);
-                                                                                   } ?>" required
+                                                                            } ?>" required
                                                                             data-parsley-trigger="change">
                                                                     </div>
                                                                     <label class="col-md-4 col-form-label"
@@ -481,7 +481,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             id="episode" name="episode" placeholder=""
                                                                             value="<?php if (isset($rEpisode)) {
                                                                                 echo htmlspecialchars($rEpisode["episode"]);
-                                                                                   } ?>" required
+                                                                            } ?>" required
                                                                             data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
@@ -501,7 +501,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             id="stream_display_name"
                                                                             name="stream_display_name" value="<?php if (isset($rEpisode)) {
                                                                                 echo htmlspecialchars($rEpisode["stream_display_name"]);
-                                                                                                              } ?>" required
+                                                                            } ?>" required
                                                                             data-parsley-trigger="change">
                                                                     </div>
                                                                 </div>
@@ -533,7 +533,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <textarea id="notes" name="notes"
                                                                             class="form-control" rows="3" placeholder=""><?php if (isset($rEpisode)) {
                                                                                 echo htmlspecialchars($rEpisode["notes"]);
-                                                                                                                         } ?></textarea>
+                                                                            } ?></textarea>
                                                                     </div>
                                                                 </div>
                                                             </div> <!-- end col -->
@@ -620,7 +620,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="movie_image" name="movie_image" value="<?php if (isset($rEpisode)) {
                                                                             echo htmlspecialchars($rEpisode["properties"]["movie_image"]);
-                                                                                                                   } ?>">
+                                                                        } ?>">
                                                                     <div class="input-group-append">
                                                                         <a href="javascript:void(0)"
                                                                             onClick="openImage(this)"
@@ -636,7 +636,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <textarea rows="6" class="form-control" id="plot"
                                                                         name="plot"><?php if (isset($rEpisode)) {
                                                                             echo htmlspecialchars($rEpisode["properties"]["plot"]);
-                                                                                    } ?></textarea>
+                                                                        } ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -646,7 +646,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control"
                                                                         id="releasedate" name="releasedate" value="<?php if (isset($rEpisode)) {
                                                                             echo htmlspecialchars($rEpisode["properties"]["releasedate"]);
-                                                                                                                   } ?>">
+                                                                        } ?>">
                                                                 </div>
                                                                 <label class="col-md-2 col-form-label"
                                                                     for="episode_run_time"><?= $_["runtime"] ?></label>
@@ -655,7 +655,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         id="episode_run_time" name="episode_run_time"
                                                                         value="<?php if (isset($rEpisode)) {
                                                                             echo intval($rEpisode["properties"]["duration_secs"] / 60.0);
-                                                                               } ?>">
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -665,7 +665,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                     <input type="text" class="form-control" id="rating"
                                                                         name="rating" value="<?php if (isset($rEpisode)) {
                                                                             echo htmlspecialchars($rEpisode["properties"]["rating"]);
-                                                                                             } ?>">
+                                                                        } ?>">
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -697,7 +697,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rEpisode["direct_source"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery"
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -708,7 +708,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rEpisode["read_native"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -725,7 +725,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rEpisode["movie_symlink"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery"
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -740,7 +740,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rEpisode["remove_subtitles"] == 1) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery"
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -761,7 +761,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                     if (json_decode($rEpisode["target_container"], true)[0] == $rContainer) {
                                                                                         echo "selected ";
                                                                                     }
-                                                                                        } ?>value="<?= $rContainer ?>">
+                                                                                } ?>value="<?= $rContainer ?>">
                                                                                     <?= $rContainer ?>
                                                                                 </option>
                                                                             <?php } ?>
@@ -777,7 +777,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <input type="text" class="form-control"
                                                                             id="custom_sid" name="custom_sid" value="<?php if (isset($rEpisode)) {
                                                                                 echo htmlspecialchars($rEpisode["custom_sid"]);
-                                                                                                                     } ?>">
+                                                                            } ?>">
                                                                     </div>
                                                                 </div>
                                                             <?php }
@@ -802,7 +802,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             name="movie_subtitles" class="form-control"
                                                                             value="<?php if (isset($rEpisode)) {
                                                                                 echo htmlspecialchars($rSubFile);
-                                                                                   } ?>">
+                                                                            } ?>">
                                                                         <div class="input-group-append">
                                                                             <a href="#file-browser" id="filebrowser-sub"
                                                                                 class="btn btn-primary waves-effect waves-light"><i
@@ -826,7 +826,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if (intval($rEpisode["transcode_profile_id"]) == 0) {
                                                                                 echo "selected ";
                                                                             }
-                                                                                } ?>value="0">
+                                                                        } ?>value="0">
                                                                             <?= $_["transcoding_disabled"] ?>
                                                                         </option>
                                                                         <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
@@ -834,7 +834,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if (intval($rEpisode["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                                    } ?>value="<?= $rProfile["profile_id"] ?>">
+                                                                            } ?>value="<?= $rProfile["profile_id"] ?>">
                                                                                 <?= $rProfile["profile_name"] ?>
                                                                             </option>
                                                                         <?php } ?>
@@ -868,9 +868,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="restart_on_edit"><?php if (isset($rEpisode)) {
                                                                         ?><?= $_["reprocess_on_edit"] ?><?php
-                                                                                          } else {
-                                                                                                ?><?= $_["process_now"] ?><?php
-                                                                                          } ?></label>
+                                                                    } else {
+                                                                        ?><?= $_["process_now"] ?><?php
+                                                                    } ?></label>
                                                                 <div class="col-md-2">
                                                                     <input name="restart_on_edit" id="restart_on_edit"
                                                                         type="checkbox" data-plugin="switchery"
@@ -888,9 +888,9 @@ if ($rSettings["sidebar"]) { ?>
                                                             <input name="submit_stream" type="submit"
                                                                 class="btn btn-primary" value="<?php if (isset($rEpisode)) {
                                                                     echo $_["edit"];
-                                                                                               } else {
-                                                                                                   echo $_["add"];
-                                                                                               } ?>" />
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -907,7 +907,7 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
                                                                   echo " selected";
-                                                                           } ?>>
+                                                              } ?>>
                                                                 <?= htmlspecialchars($rServer["server_name"]) ?>
                                                             </option>
                                                         <?php } ?>
@@ -929,7 +929,7 @@ if ($rSettings["sidebar"]) { ?>
                                             </div>
                                             <div class="form-group row mb-4" <?php if (isset($rMulti)) {
                                                 echo "style='display:none;'";
-                                                                             } ?>>
+                                            } ?>>
                                                 <label class="col-md-4 col-form-label"
                                                     for="search"><?= $_["search_directory"] ?></label>
                                                 <div class="col-md-8 input-group">

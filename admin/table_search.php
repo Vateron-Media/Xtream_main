@@ -134,13 +134,13 @@ if ($rType == "users") {
                     $rActiveConnections = "" . $rRow["active_connections"] . " / " . $max_connections . "</a>";
                 }
                 $rButtons = '<div class="btn-group">';
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_reset_isplock"]))) {
+                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_reset_isplock"]))) {
                     //if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
                     //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'resetispuser\');"><i class="mdi mdi-lock-reset"></i></button>
 					';
                 }
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_can_isplock"]))) {
+                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_can_isplock"]))) {
                     //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     if ($rRow["is_isplock"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unlock isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unlockk\');"><i class="mdi mdi-lock"></i></button>';
@@ -339,13 +339,13 @@ if ($rType == "users") {
                     $rActiveConnections = $rRow["active_connections"];
                 }
                 $rButtons = '<div class="btn-group">';
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_reset_isplock"]))) {
+                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_reset_isplock"]))) {
                     //if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
                     //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'resetispuser\');"><i class="mdi mdi-lock-reset"></i></button>
 					';
                 }
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_can_isplock"]))) {
+                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_can_isplock"]))) {
                     //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     if ($rRow["is_isplock"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unlock isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unlockk\');"><i class="mdi mdi-lock"></i></button>';
@@ -381,7 +381,7 @@ if ($rType == "users") {
                     }
                 } else {
                     // next 4 lines add mag event button for resellers
-                    if ($rAdminSettings["reseller_mag_events"]) {
+                    if ($rSettings["reseller_mag_events"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Seng MAG Event" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="message(' . $rRow["mag_id"] . ', \'' . base64_decode($rRow["mac"]) . '\');"><i class="mdi mdi-comment-alert-outline"></i></button>
 						';
                     }
@@ -553,13 +553,13 @@ if ($rType == "users") {
                     $rActiveConnections = $rRow["active_connections"];
                 }
                 $rButtons = '<div class="btn-group">';
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_reset_isplock"]))) {
+                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_reset_isplock"]))) {
                     //if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
                     //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'resetispuser\');"><i class="mdi mdi-lock-reset"></i></button>
 					';
                 }
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rAdminSettings["reseller_can_isplock"]))) {
+                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_can_isplock"]))) {
                     //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
                     if ($rRow["is_isplock"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unlock isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unlockk\');"><i class="mdi mdi-lock"></i></button>';

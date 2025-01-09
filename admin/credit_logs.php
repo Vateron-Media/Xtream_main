@@ -63,7 +63,7 @@ if ($rSettings["sidebar"]) { ?>
                                         <div class="col-md-2">
                                             <select id="show_entries" class="form-control" data-toggle="select2">
                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                    <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                    <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                         echo " selected";
                                                     } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                     <?php } ?>
@@ -259,7 +259,7 @@ if ($rSettings["sidebar"]) { ?>
                         "order": [
                             [0, "desc"]
                         ],
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
                     });
                     $("#datatable-activity").css("width", "100%");
                     $('#log_search').keyup(function () {

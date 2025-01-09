@@ -5,11 +5,10 @@ if (isset($_SESSION['hash'])) {
 	exit;
 }
 
-$rAdminSettings = getAdminSettings();
-if (intval($rAdminSettings["login_flood"]) > 0) {
+if (intval($rSettings["login_flood"]) > 0) {
 	$ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `login_flood` WHERE `ip` = '" . getIP() . "' AND TIME_TO_SEC(TIMEDIFF(NOW(), `dateadded`)) <= 86400;");
 	if ($ipTV_db_admin->num_rows() == 1) {
-		if (intval($ipTV_db_admin->get_row()["count"]) >= intval($rAdminSettings["login_flood"])) {
+		if (intval($ipTV_db_admin->get_row()["count"]) >= intval($rSettings["login_flood"])) {
 			$_STATUS = 7;
 		}
 	}
@@ -58,7 +57,7 @@ if (!isset($_STATUS)) {
 					}
 				}
 			} else {
-				if (intval($rAdminSettings["login_flood"]) > 0) {
+				if (intval($rSettings["login_flood"]) > 0) {
 					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . getIP() . "');");
 				}
 				$_STATUS = 0;
@@ -91,7 +90,7 @@ if (!isset($_STATUS)) {
 				$_STATUS = 6;
 			}
 		} else {
-			if (intval($rAdminSettings["login_flood"]) > 0) {
+			if (intval($rSettings["login_flood"]) > 0) {
 				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . getIP() . "');");
 			}
 			$_STATUS = 0;
@@ -111,7 +110,7 @@ if (!isset($_STATUS)) {
 	<link rel="shortcut icon" href="assets/images/favicon.ico">
 	<!-- App css -->
 	<link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
-	<?php if ($rAdminSettings["dark_mode_login"]) { ?>
+	<?php if ($rSettings["dark_mode_login"]) { ?>
 		<link href="assets/css/bootstrap.dark.css" rel="stylesheet" type="text/css" />
 		<link href="assets/css/app.dark.css" rel="stylesheet" type="text/css" />
 	<?php } else { ?>
@@ -191,7 +190,7 @@ if (!isset($_STATUS)) {
 					<div class="card-login">
 						<div class="card-body p-4">
 							<div class="text-center w-auto m-autologin">
-								<?php if ($rAdminSettings["dark_mode_login"]) { ?>
+								<?php if ($rSettings["dark_mode_login"]) { ?>
 									<span><img src="<?= $rSettings["logo_url"] ?>" width="100px" alt=""></span>
 								<?php } else { ?>
 									<span><img src="<?= $rSettings["logo_url"] ?>" width="100px" alt=""></span>

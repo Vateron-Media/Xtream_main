@@ -40,29 +40,6 @@ INSERT INTO `access_output` (`access_output_id`, `output_name`, `output_key`, `o
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admin_settings`
---
-
-CREATE TABLE IF NOT EXISTS `admin_settings` (
-  `type` varchar(128) NOT NULL DEFAULT '',
-  `value` varchar(4096) NOT NULL DEFAULT '',
-  PRIMARY KEY (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `admin_settings`
---
-
-INSERT INTO `admin_settings` (`type`, `value`) VALUES
-('active_mannuals', '1'),
-('auto_refresh', '1'),
-('reseller_can_isplock', '1'),
-('reseller_reset_isplock', '1'),
-('watch_pid', '102634');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `blocked_ips`
 --
 
@@ -1224,7 +1201,35 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 (200, 'max_encode_cc', '1'),
 (201, 'queue_loop', '1'),
 (202, 'total_users', '0'),
-(203, 'backups_pid', '0');
+(203, 'backups_pid', '0'),
+(218,'dashboard_stats_frequency','600'),
+(219,'login_flood','0'),
+(220,'backups_to_keep','0'),
+(221,'release_parser','python'),
+(222,'tmdb_language',''),
+(223,'default_entries','10'),
+(224,'reseller_mag_events','0'),
+(225,'ip_logout','0'),
+(226,'alternate_scandir','0'),
+(227,'download_images','0'),
+(228,'auto_refresh','1'),
+(229,'local_api','0'),
+(230,'dark_mode_login','0'),
+(231,'dashboard_stats','0'),
+(232,'dashboard_world_map_live','0'),
+(233,'dashboard_world_map_activity','0'),
+(234,'change_usernames','0'),
+(235,'change_own_dns','0'),
+(236,'change_own_email','0'),
+(237,'change_own_password','0'),
+(238,'reseller_restrictions','0'),
+(239,'change_own_lang','0'),
+(240,'active_mannuals','0'),
+(241,'reseller_can_isplock','0'),
+(242,'reseller_reset_isplock','0'),
+(243,'watch_pid','102634'),
+(244,'tmdb_pid',''),
+(245,'stats_pid','');
 
 -- --------------------------------------------------------
 

@@ -84,7 +84,7 @@ if (isset(ipTV_lib::$request["submit_radio"])) {
     if (count($rImportStreams) > 0) {
         foreach ($rImportStreams as $rImportStream) {
             $rImportArray = $rArray;
-            if ($rAdminSettings["download_images"]) {
+            if ($rSettings["download_images"]) {
                 $rImportStream["stream_icon"] = downloadImage($rImportStream["stream_icon"]);
             }
             foreach (array_keys($rImportStream) as $rKey) {

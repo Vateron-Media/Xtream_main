@@ -16,16 +16,16 @@ if ($rSettings["sidebar"]) {
     include "header.php";
 }
 if ($rSettings["sidebar"]) { ?>
-    <div class="content-page<?php if ($rPermissions["is_reseller"]) {
-        echo " boxed-layout-ext";
-    } ?>">
-        <div class="content">
-            <div class="container-fluid">
+        <div class="content-page<?php if ($rPermissions["is_reseller"]) {
+            echo " boxed-layout-ext";
+        } ?>">
+            <div class="content">
+                <div class="container-fluid">
             <?php } else { ?>
-                <div class="wrapper<?php if ($rPermissions["is_reseller"]) {
-                    echo " boxed-layout-ext";
-                } ?>">
-                    <div class="container-fluid">
+                    <div class="wrapper<?php if ($rPermissions["is_reseller"]) {
+                        echo " boxed-layout-ext";
+                    } ?>">
+                        <div class="container-fluid">
                     <?php } ?>
                     <!-- start page title -->
                     <div class="row">
@@ -47,28 +47,28 @@ if ($rSettings["sidebar"]) { ?>
                                                 </button>
                                             </a>
                                             <?php if (!$detect->isMobile()) { ?>
-                                                <a href="#" onClick="toggleAuto();">
-                                                    <button type="button"
-                                                        class="btn btn-dark waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-refresh"></i> <span
-                                                            class="auto-text"><?= $_["auto_refresh"] ?></span>
-                                                    </button>
-                                                </a>
+                                                    <a href="#" onClick="toggleAuto();">
+                                                        <button type="button"
+                                                            class="btn btn-dark waves-effect waves-light btn-sm">
+                                                            <i class="mdi mdi-refresh"></i> <span
+                                                                class="auto-text"><?= $_["auto_refresh"] ?></span>
+                                                        </button>
+                                                    </a>
                                             <?php } else { ?>
-                                                <a href="javascript:location.reload();" onClick="toggleAuto();">
-                                                    <button type="button"
-                                                        class="btn btn-dark waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
-                                                    </button>
-                                                </a>
+                                                    <a href="javascript:location.reload();" onClick="toggleAuto();">
+                                                        <button type="button"
+                                                            class="btn btn-dark waves-effect waves-light btn-sm">
+                                                            <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
+                                                        </button>
+                                                    </a>
                                             <?php }
                                             if (($rPermissions["is_admin"]) && (hasPermissions("adv", "add_series"))) { ?>
-                                                <a href="serie.php">
-                                                    <button type="button"
-                                                        class="btn btn-success waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-plus"></i> <?= $_["add_series"] ?>
-                                                    </button>
-                                                </a>
+                                                    <a href="serie.php">
+                                                        <button type="button"
+                                                            class="btn btn-success waves-effect waves-light btn-sm">
+                                                            <i class="mdi mdi-plus"></i> <?= $_["add_series"] ?>
+                                                        </button>
+                                                    </a>
                                             <?php } ?>
                                         </li>
                                     </ol>
@@ -94,9 +94,9 @@ if ($rSettings["sidebar"]) { ?>
                                                     <option value="" selected><?= $_["all_categories"] ?></option>
                                                     <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                     <?php foreach ($rCategories as $rCategory) { ?>
-                                                        <option value="<?= $rCategory["id"] ?>">
-                                                            <?= $rCategory["category_name"] ?>
-                                                        </option>
+                                                            <option value="<?= $rCategory["id"] ?>">
+                                                                <?= $rCategory["category_name"] ?>
+                                                            </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -106,9 +106,9 @@ if ($rSettings["sidebar"]) { ?>
                                                 <select id="series_show_entries" class="form-control"
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                        <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                            echo $_["selected"];
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                            <option<?php if ($rSettings["default_entries"] == $rShow) {
+                                                                echo $_["selected"];
+                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -125,8 +125,8 @@ if ($rSettings["sidebar"]) { ?>
                                                 <th class="text-center"><?= $_["episodes"] ?></th>
                                                 <th class="text-center"><?= $_["first_aired"] ?></th>
                                                 <?php if ($rPermissions["is_admin"]) { ?>
-                                                    <th class="text-center"><?= $_["last_updated"] ?></th>
-                                                    <th class="text-center"><?= $_["actions"] ?></th>
+                                                        <th class="text-center"><?= $_["last_updated"] ?></th>
+                                                        <th class="text-center"><?= $_["actions"] ?></th>
                                                 <?php } ?>
                                             </tr>
                                         </thead>
@@ -186,29 +186,29 @@ if ($rSettings["sidebar"]) { ?>
                 }
                 <?php if ($rPermissions["is_admin"]) { ?>
 
-                    function api(rID, rType) {
-                        if (rType == "delete") {
-                            if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_series"] ?>') == false) {
-                                return;
-                            }
-                        }
-                        $.getJSON("./api.php?action=series&sub=" + rType + "&series_id=" + rID, function (data) {
-                            if (data.result == true) {
-                                if (rType == "delete") {
-                                    $.toast("<?= $_["series_successfully_deleted"] ?>");
+                        function api(rID, rType) {
+                            if (rType == "delete") {
+                                if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_series"] ?>') == false) {
+                                    return;
                                 }
-                                $.each($('.tooltip'), function (index, element) {
-                                    $(this).remove();
-                                });
-                                $('[data-toggle="tooltip"]').tooltip("hide");
-                                $("#datatable-streampage").DataTable().ajax.reload(null, false);
-                            } else {
-                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
                             }
-                        }).fail(function () {
-                            $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-                        });
-                    }
+                            $.getJSON("./api.php?action=series&sub=" + rType + "&series_id=" + rID, function (data) {
+                                if (data.result == true) {
+                                    if (rType == "delete") {
+                                        $.toast("<?= $_["series_successfully_deleted"] ?>");
+                                    }
+                                    $.each($('.tooltip'), function (index, element) {
+                                        $(this).remove();
+                                    });
+                                    $('[data-toggle="tooltip"]').tooltip("hide");
+                                    $("#datatable-streampage").DataTable().ajax.reload(null, false);
+                                } else {
+                                    $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                                }
+                            }).fail(function () {
+                                $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
+                            });
+                        }
                 <?php } ?>
 
                 function reloadStreams() {
@@ -241,7 +241,7 @@ if ($rSettings["sidebar"]) { ?>
                     window.rClearing = true;
                     $("#series_search").val("").trigger('change');
                     $('#series_category_id').val("").trigger('change');
-                    $('#series_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    $('#series_show_entries').val("<?= $rSettings["default_entries"] ?: 10 ?>").trigger('change');
                     window.rClearing = false;
                     $('#datatable-streampage').DataTable().search($("#series_search").val());
                     $('#datatable-streampage').DataTable().page.len($('#series_show_entries').val());
@@ -285,23 +285,23 @@ if ($rSettings["sidebar"]) { ?>
                         },
                         columnDefs: [
                             <?php if ($rPermissions["is_reseller"]) { ?> {
-                                    "className": "dt-center",
-                                    "targets": [0, 3, 4, 5]
-                                },
+                                        "className": "dt-center",
+                                        "targets": [0, 3, 4, 5]
+                                    },
                             <?php } else { ?> {
-                                    "className": "dt-center",
-                                    "targets": [0, 3, 4, 5, 6, 7]
-                                },
-                                {
-                                    "orderable": false,
-                                    "targets": [7]
-                                }
+                                        "className": "dt-center",
+                                        "targets": [0, 3, 4, 5, 6, 7]
+                                    },
+                                    {
+                                        "orderable": false,
+                                        "targets": [7]
+                                    }
                                 <?php } ?>
                         ],
                         order: [
                             [0, "desc"]
                         ],
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         stateSave: true
                     });
                     $("#datatable-streampage").css("width", "100%");
@@ -322,10 +322,10 @@ if ($rSettings["sidebar"]) { ?>
                         }
                     })
                     <?php if (!$detect->isMobile()) { ?>
-                        setTimeout(reloadStreams, 5000);
+                            setTimeout(reloadStreams, 5000);
                     <?php }
-                    if (!$rAdminSettings["auto_refresh"]) { ?>
-                        toggleAuto();
+                    if (!$rSettings["auto_refresh"]) { ?>
+                            toggleAuto();
                     <?php } ?>
                     if ($('#series_search').val().length > 0) {
                         $('#datatable-streampage').DataTable().search($('#series_search').val()).draw();

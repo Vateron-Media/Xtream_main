@@ -18,15 +18,15 @@ if ($rSettings["sidebar"]) {
 if ($rSettings["sidebar"]) { ?>
     <div class="content-page<?php if ($rPermissions["is_reseller"]) {
         echo " boxed-layout-ext";
-                            } ?>">
+    } ?>">
         <div class="content">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper<?php if ($rPermissions["is_reseller"]) {
                     echo " boxed-layout-ext";
-                                   } ?>">
+                } ?>">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -106,7 +106,7 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
                                                                   echo " selected";
-                                                                           } ?>><?= $rServer["server_name"] ?></option>
+                                                              } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -116,10 +116,10 @@ if ($rSettings["sidebar"]) { ?>
                                                     <select id="movies_show_entries" class="form-control"
                                                         data-toggle="select2">
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                            <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                            <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                                 echo " selected";
-                                                                   } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                        <?php } ?>
+                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                            <?php } ?>
                                                     </select>
                                                 </div>
                                             <?php } else { ?>
@@ -133,7 +133,7 @@ if ($rSettings["sidebar"]) { ?>
                                                         <?php foreach (getStreamingServers() as $rServer) { ?>
                                                             <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
                                                                   echo " selected";
-                                                                           } ?>><?= $rServer["server_name"] ?></option>
+                                                              } ?>><?= $rServer["server_name"] ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -165,10 +165,10 @@ if ($rSettings["sidebar"]) { ?>
                                                     <select id="movies_show_entries" class="form-control"
                                                         data-toggle="select2">
                                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                            <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                            <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                                 echo " selected";
-                                                                   } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                        <?php } ?>
+                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                            <?php } ?>
                                                     </select>
                                                 </div>
                                             <?php } ?>
@@ -322,7 +322,7 @@ if ($rSettings["sidebar"]) { ?>
                     $('#movies_filter').val("").trigger('change');
                     $('#movies_server').val("").trigger('change');
                     $('#movies_category_id').val("").trigger('change');
-                    $('#movies_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    $('#movies_show_entries').val("<?= $rSettings["default_entries"] ?: 10 ?>").trigger('change');
                     window.rClearing = false;
                     $('#datatable-streampage').DataTable().search($("#movies_search").val());
                     $('#datatable-streampage').DataTable().page.len($('#movies_show_entries').val());
@@ -390,7 +390,7 @@ if ($rSettings["sidebar"]) { ?>
                         order: [
                             [0, "desc"]
                         ],
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         stateSave: true
                     });
                     $("#datatable-streampage").css("width", "100%");
@@ -425,7 +425,7 @@ if ($rSettings["sidebar"]) { ?>
                     <?php if (!$detect->isMobile()) { ?>
                         setTimeout(reloadStreams, 5000);
                     <?php }
-                    if (!$rAdminSettings["auto_refresh"]) { ?>
+                    if (!$rSettings["auto_refresh"]) { ?>
                         toggleAuto();
                     <?php } ?>
                     if ($('#movies_search').val().length > 0) {

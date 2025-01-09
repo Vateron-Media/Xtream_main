@@ -6,8 +6,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch"))) {
 }
 
 if (isset(ipTV_lib::$request["kill"])) {
-    if (isset($rAdminSettings["watch_pid"])) {
-        exec("pkill -9 " . $rAdminSettings["watch_pid"]);
+    if (isset($rSettings["watch_pid"])) {
+        exec("pkill -9 " . $rSettings["watch_pid"]);
     }
 }
 
@@ -20,10 +20,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">

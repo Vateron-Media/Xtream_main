@@ -14,10 +14,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content boxed-layout-ext">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -72,7 +72,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <?php foreach ($rCategories as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
                                                                           echo " selected";
-                                                                                   } ?>><?= $rCategory["category_name"] ?>
+                                                                      } ?>><?= $rCategory["category_name"] ?>
                                                                     </option>
                                                                 <?php } ?>
                                                             </select>
@@ -83,10 +83,10 @@ if ($rSettings["sidebar"]) { ?>
                                                             <select id="show_entries" class="form-control"
                                                                 data-toggle="select2">
                                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                                    <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                                    <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
-                                                                           } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                <?php } ?>
+                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                    <?php } ?>
                                                             </select>
                                                         </div>
                                                         <table id="datatable-md1"
@@ -343,7 +343,7 @@ if ($rSettings["sidebar"]) { ?>
                                     d.category = getCategory()
                             }
                         },
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         columnDefs: [{
                             "className": "dt-center",
                             "targets": [0, 3, 4]
@@ -389,7 +389,7 @@ if ($rSettings["sidebar"]) { ?>
                                     d.fingerprint = true;
                             }
                         },
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         columnDefs: [{
                             "className": "dt-center",
                             "targets": [0, 1, 5, 6, 7, 8]
@@ -399,7 +399,7 @@ if ($rSettings["sidebar"]) { ?>
                             "targets": [1, 3]
                         }
                         ],
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         lengthMenu: [10, 25, 50, 250, 500, 1000],
                         order: [
                             [0, "desc"]

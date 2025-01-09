@@ -20,12 +20,12 @@ if ($rSettings["sidebar"]) {
     include "header.php";
 }
 if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content">
-            <div class="container-fluid">
+        <div class="content-page">
+            <div class="content">
+                <div class="container-fluid">
             <?php } else { ?>
-                <div class="wrapper">
-                    <div class="container-fluid">
+                    <div class="wrapper">
+                        <div class="container-fluid">
                     <?php } ?>
                     <!-- start page title -->
                     <div class="row">
@@ -47,42 +47,42 @@ if ($rSettings["sidebar"]) { ?>
                                                 </button>
                                             </a>
                                             <?php if (!$detect->isMobile()) { ?>
-                                                <a href="#" onClick="toggleAuto();">
-                                                    <button type="button"
-                                                        class="btn btn-dark waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-refresh"></i> <span
-                                                            class="auto-text"><?= $_["auto_refresh"] ?></span>
-                                                    </button>
-                                                </a>
+                                                    <a href="#" onClick="toggleAuto();">
+                                                        <button type="button"
+                                                            class="btn btn-dark waves-effect waves-light btn-sm">
+                                                            <i class="mdi mdi-refresh"></i> <span
+                                                                class="auto-text"><?= $_["auto_refresh"] ?></span>
+                                                        </button>
+                                                    </a>
                                             <?php } else { ?>
-                                                <a href="javascript:location.reload();" onClick="toggleAuto();">
-                                                    <button type="button"
-                                                        class="btn btn-dark waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
-                                                    </button>
-                                                </a>
+                                                    <a href="javascript:location.reload();" onClick="toggleAuto();">
+                                                        <button type="button"
+                                                            class="btn btn-dark waves-effect waves-light btn-sm">
+                                                            <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
+                                                        </button>
+                                                    </a>
                                             <?php }
                                             if ((hasPermissions("adv", "add_reguser")) or ($rPermissions["is_reseller"])) { ?>
-                                                <a href="<?php if ($rPermissions["is_admin"]) {
-                                                    echo "reg_user";
-                                                } else {
-                                                    echo "subreseller";
-                                                } ?>.php">
-                                                    <button type="button"
-                                                        class="btn btn-success waves-effect waves-light btn-sm">
-                                                        <i class="mdi mdi-plus"></i> <?= $_["add"] ?>
-                                                        <?php if ($rPermissions["is_admin"]) { ?>
-                                                            <?= $_["registered_user"] ?>     <?php } else { ?>
-                                                            <?= $_["subresellers"] ?>     <?php } ?>
-                                                    </button>
-                                                </a>
+                                                    <a href="<?php if ($rPermissions["is_admin"]) {
+                                                        echo "reg_user";
+                                                    } else {
+                                                        echo "subreseller";
+                                                    } ?>.php">
+                                                        <button type="button"
+                                                            class="btn btn-success waves-effect waves-light btn-sm">
+                                                            <i class="mdi mdi-plus"></i> <?= $_["add"] ?>
+                                                            <?php if ($rPermissions["is_admin"]) { ?>
+                                                                    <?= $_["registered_user"] ?>         <?php } else { ?>
+                                                                    <?= $_["subresellers"] ?>         <?php } ?>
+                                                        </button>
+                                                    </a>
                                             <?php } ?>
                                         </li>
                                     </ol>
                                 </div>
                                 <h4 class="page-title">
                                     <?php if ($rPermissions["is_admin"]) { ?>
-                                        <?= $_["registered_users"] ?><?php } else { ?>     <?= $_["subresellers"] ?><?php } ?>
+                                            <?= $_["registered_users"] ?><?php } else { ?>         <?= $_["subresellers"] ?><?php } ?>
                                 </h4>
                             </div>
                         </div>
@@ -104,12 +104,12 @@ if ($rSettings["sidebar"]) { ?>
                                                 <select id="reg_reseller" class="form-control" data-toggle="select2">
                                                     <option value="" selected><?= $_["all_owners"] ?></option>
                                                     <?php if ($rPermissions["is_admin"]) { ?>
-                                                        <option value="0"><?= $_["no_owner"] ?></option>
+                                                            <option value="0"><?= $_["no_owner"] ?></option>
                                                     <?php }
                                                     foreach ($rRegisteredUsers as $rRegisteredUser) { ?>
-                                                        <option value="<?= $rRegisteredUser["id"] ?>">
-                                                            <?= $rRegisteredUser["username"] ?>
-                                                        </option>
+                                                            <option value="<?= $rRegisteredUser["id"] ?>">
+                                                                <?= $rRegisteredUser["username"] ?>
+                                                            </option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -126,9 +126,9 @@ if ($rSettings["sidebar"]) { ?>
                                                 <select id="reg_show_entries" class="form-control"
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                        <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
-                                                            echo " selected";
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                            <option<?php if ($rSettings["default_entries"] == $rShow) {
+                                                                echo " selected";
+                                                            } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -265,7 +265,7 @@ if ($rSettings["sidebar"]) { ?>
                     $("#reg_search").val("").trigger('change');
                     $('#reg_filter').val("").trigger('change');
                     $('#reg_reseller').val("").trigger('change');
-                    $('#reg_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    $('#reg_show_entries').val("<?= $rSettings["default_entries"] ?: 10 ?>").trigger('change');
                     window.rClearing = false;
                     $('#datatable-users').DataTable().search($("#reg_search").val());
                     $('#datatable-users').DataTable().page.len($('#reg_show_entries').val());
@@ -317,9 +317,9 @@ if ($rSettings["sidebar"]) { ?>
                             "targets": [0, 3, 4, 5, 6, 7, 8, 9]
                         },
                             <?php if ($rPermissions["is_reseller"]) { ?> {
-                                "visible": false,
-                                "targets": [4]
-                            }
+                                    "visible": false,
+                                    "targets": [4]
+                                }
                                 <?php } ?>
                         ],
                         order: [
@@ -351,10 +351,10 @@ if ($rSettings["sidebar"]) { ?>
                         }
                     });
                     <?php if (!$detect->isMobile()) { ?>
-                        setTimeout(reloadUsers, 5000);
+                            setTimeout(reloadUsers, 5000);
                     <?php }
-                    if (!$rAdminSettings["auto_refresh"]) { ?>
-                        toggleAuto();
+                    if (!$rSettings["auto_refresh"]) { ?>
+                            toggleAuto();
                     <?php } ?>
                     if ($('#reg_search').val().length > 0) {
                         $('#datatable-users').DataTable().search($('#reg_search').val()).draw();

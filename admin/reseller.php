@@ -14,10 +14,10 @@ if ($rSettings["sidebar"]) { ?>
     <div class="content-page">
         <div class="content">
             <div class="container-fluid">
-<?php } else { ?>
+            <?php } else { ?>
                 <div class="wrapper">
                     <div class="container-fluid">
-<?php } ?>
+                    <?php } ?>
                     <!-- start page title -->
                     <!--<div class="row">
                     <div class="col-12">
@@ -36,7 +36,7 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card-box active-connections bg-info">
                                 <div class="row">
                                     <div class="col-6">
-                                        <?php if ($rAdminSettings["dark_mode"]) { ?>
+                                        <?php if ($rSettings["dark_mode"]) { ?>
                                             <div class="avatar-md rounded">
                                                 <i class="fe-zap avatar-title font-22 text-white"></i>
                                             </div>
@@ -61,7 +61,7 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card-box online-users bg-success">
                                 <div class="row">
                                     <div class="col-6">
-                                        <?php if ($rAdminSettings["dark_mode"]) { ?>
+                                        <?php if ($rSettings["dark_mode"]) { ?>
                                             <div class="avatar-md rounded">
                                                 <i class="fe-zap avatar-title font-22 text-white"></i>
                                             </div>
@@ -86,7 +86,7 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card-box active-accounts bg-purple">
                                 <div class="row">
                                     <div class="col-6">
-                                        <?php if ($rAdminSettings["dark_mode"]) { ?>
+                                        <?php if ($rSettings["dark_mode"]) { ?>
                                             <div class="avatar-md rounded">
                                                 <i class="fe-zap avatar-title font-22 text-white"></i>
                                             </div>
@@ -111,7 +111,7 @@ if ($rSettings["sidebar"]) { ?>
                             <div class="card-box credits bg-warning">
                                 <div class="row">
                                     <div class="col-6">
-                                        <?php if ($rAdminSettings["dark_mode"]) { ?>
+                                        <?php if ($rSettings["dark_mode"]) { ?>
                                             <div class="avatar-md rounded">
                                                 <i class="fe-zap avatar-title font-22 text-white"></i>
                                             </div>
@@ -145,7 +145,7 @@ if ($rSettings["sidebar"]) { ?>
                                     style="margin-bottom:-8px;">
                                     <div class="row">
                                         <div class="col-1">
-                                            <?php if ($rAdminSettings["dark_mode"]) { ?>
+                                            <?php if ($rSettings["dark_mode"]) { ?>
                                                 <div class="avatar-sm bg-secondary rounded">
                                                     <i class="fas fa-info-circle avatar-title font-24 text-white"></i>
                                                 </div>

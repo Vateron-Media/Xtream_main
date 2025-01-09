@@ -122,7 +122,7 @@ if ($rSettings["sidebar"]) { ?>
                                             <div class="col-md-1">
                                                 <select id="e2_show_entries" class="form-control" data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                        <option<?php if ($rAdminSettings["default_entries"] == $rShow) {
+                                                        <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                             echo " selected";
                                                         } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
@@ -277,7 +277,7 @@ if ($rSettings["sidebar"]) { ?>
                     $("#e2_search").val("").trigger('change');
                     $('#e2_filter').val("").trigger('change');
                     $('#e2_reseller').val("").trigger('change');
-                    $('#e2_show_entries').val("<?= $rAdminSettings["default_entries"] ?: 10 ?>").trigger('change');
+                    $('#e2_show_entries').val("<?= $rSettings["default_entries"] ?: 10 ?>").trigger('change');
                     window.rClearing = false;
                     $('#datatable-users').DataTable().search($("#e2_search").val());
                     $('#datatable-users').DataTable().page.len($('#e2_show_entries').val());
@@ -338,7 +338,7 @@ if ($rSettings["sidebar"]) { ?>
                         order: [
                             [0, "desc"]
                         ],
-                        pageLength: <?= $rAdminSettings["default_entries"] ?: 10 ?>,
+                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>,
                         stateSave: true
                     });
                     $("#datatable-users").css("width", "100%");
@@ -368,7 +368,7 @@ if ($rSettings["sidebar"]) { ?>
                         setTimeout(reloadUsers, 10000);
                     <?php } ?>
                     $('#datatable-users').DataTable().search($(this).val()).draw();
-                    <?php if (!$rAdminSettings["auto_refresh"]) { ?>
+                    <?php if (!$rSettings["auto_refresh"]) { ?>
                         toggleAuto();
                     <?php } ?>
                 });
