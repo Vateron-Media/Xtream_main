@@ -74,6 +74,7 @@ if (!isset(ipTV_lib::$request['update'])) {
                     $_SESSION['ip'] = getIP();
                     $_SESSION['verify'] = md5($rArray['username'] . '||' . $rArray['password']);
                     $ipTV_db_admin->query('UPDATE `streaming_servers` SET `server_ip` = ? WHERE `is_main` = 1 AND `server_type` = 0 LIMIT 1;', $_SERVER['SERVER_ADDR']);
+                    ipTV_lib::setSettings(["live_streaming_pass" => generateString(15)]);
 
                     header('Location: ./dashboard.php');
 
