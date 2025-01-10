@@ -324,7 +324,6 @@ if ($rChannelInfo) {
                         }
                         $rBytes += $fileSize; // Changed from concatenation to addition
                     }
-
                     $rTotalTime = time() - $rStartTime;
                     $rDivergence = 0;
                     if ($rTotalTime > 0) {
@@ -350,8 +349,8 @@ if ($rChannelInfo) {
             }
             $rMonitorCheck = $rLastCheck = time();
             while (true) {
-                $rSegmentFile = sprintf("%d_%d.ts", $rChannelInfo["stream_id"], $rCurrent + 1);
-                $rNextSegment = sprintf("%d_%d.ts", $rChannelInfo["stream_id"], $rCurrent + 2);
+                $rSegmentFile = sprintf("%d_%d.ts", $streamID, $rCurrent + 1);
+                $rNextSegment = sprintf("%d_%d.ts", $streamID, $rCurrent + 2);
                 for ($rChecks = 0; !file_exists(STREAMS_PATH . $rSegmentFile) && $rChecks < $rTotalFails; $rChecks++) {
                     sleep(1);
                 }
