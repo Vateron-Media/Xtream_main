@@ -170,9 +170,9 @@ if (isset(ipTV_lib::$request["submit_user"])) {
                         }
                         $ipTV_db_admin->query("SELECT `mag_id` FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
                         if ($ipTV_db_admin->num_rows() == 0) {
-                            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ipTV_lib::$request["mac_address_mag"]) . "', `lock_device` = " . intval($rSTBLock) . " WHERE `user_id` = " . intval($rInsertID) . ";");
-                        } else {
                             $ipTV_db_admin->query("INSERT INTO `mag_devices`(`user_id`, `mac`, `lock_device`) VALUES(" . intval($rInsertID) . ", '" . base64_encode(ipTV_lib::$request["mac_address_mag"]) . "', " . intval($rSTBLock) . ");");
+                        } else {
+                            $ipTV_db_admin->query("UPDATE `mag_devices` SET `mac` = '" . base64_encode(ipTV_lib::$request["mac_address_mag"]) . "', `lock_device` = " . intval($rSTBLock) . " WHERE `user_id` = " . intval($rInsertID) . ";");
                         }
                         if (isset(ipTV_lib::$request["edit"])) {
                             $ipTV_db_admin->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
@@ -182,9 +182,9 @@ if (isset(ipTV_lib::$request["submit_user"])) {
                     if (hasPermissions("adv", "add_e2")) {
                         $ipTV_db_admin->query("SELECT `device_id` FROM `enigma2_devices` WHERE `user_id` = " . intval($rInsertID) . " LIMIT 1;");
                         if ($ipTV_db_admin->num_rows() == 0) {
-                            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . ipTV_lib::$request["mac_address_e2"] . "' WHERE `user_id` = " . intval($rInsertID) . ";");
-                        } else {
                             $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rInsertID) . ", '" . ipTV_lib::$request["mac_address_e2"] . "');");
+                        } else {     
+                            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . ipTV_lib::$request["mac_address_e2"] . "' WHERE `user_id` = " . intval($rInsertID) . ";");
                         }
                         if (isset(ipTV_lib::$request["edit"])) {
                             $ipTV_db_admin->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rInsertID) . ";");
