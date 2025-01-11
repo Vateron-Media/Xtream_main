@@ -1258,6 +1258,7 @@ CREATE TABLE IF NOT EXISTS `signals` (
 
 CREATE TABLE IF NOT EXISTS `streaming_servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `server_type` int(1) DEFAULT '0',
   `server_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `domain_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `server_ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1317,8 +1318,8 @@ CREATE TABLE IF NOT EXISTS `streaming_servers` (
 -- Dumping data for table `streaming_servers`
 --
 
-INSERT INTO `streaming_servers` (`id`, `server_name`, `domain_name`, `server_ip`, `vpn_ip`, `ssh_password`, `ssh_port`, `http_broadcast_port`, `total_clients`, `system_os`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`, `http_isp_port`, `time_offset`, `script_version`, `is_main`, `php_pids`, `remote_status`, `last_status`, `interfaces`, `ping`, `video_devices`, `sysctl`, `audio_devices`, `gpu_info`, `limit_requests`, `enable_gzip`, `requests_per_second`, `connections`, `users`) VALUES
-(1, 'Main Server', '', '127.0.0.1', '', NULL, NULL, 25461, 1000, '', '', 0, 1, 0, '[]', 0, 0, '', 3, 0, 25462, 'low_priority', '[]', 'low_priority', 0, '', 0, 25463, '', '', '', 0, 8805, 0, 'NULL', 1, '', 1, 1, '', 0, NULL, '', NULL, NULL, 0, 0, 0, 0, 0);
+INSERT INTO `streaming_servers` (`id`, `server_type`, `server_name`, `domain_name`, `server_ip`, `vpn_ip`, `ssh_password`, `ssh_port`, `http_broadcast_port`, `total_clients`, `system_os`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`, `http_isp_port`, `time_offset`, `script_version`, `is_main`, `php_pids`, `remote_status`, `last_status`, `interfaces`, `ping`, `video_devices`, `sysctl`, `audio_devices`, `gpu_info`, `limit_requests`, `enable_gzip`, `requests_per_second`, `connections`, `users`) VALUES
+(1, 0, 'Main Server', '', '127.0.0.1', '', NULL, NULL, 25461, 1000, '', '', 0, 1, 0, '[]', 0, 0, '', 3, 0, 25462, 'low_priority', '[]', 'low_priority', 0, '', 0, 25463, '', '', '', 0, 8805, 0, 'NULL', 1, '', 1, 1, '', 0, NULL, '', NULL, NULL, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 

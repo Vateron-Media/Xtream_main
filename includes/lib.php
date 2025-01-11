@@ -449,6 +449,7 @@ class ipTV_lib {
         $serializedData = igbinary_serialize($data);
         if (!file_exists(CACHE_TMP_PATH)) {
             mkdir(CACHE_TMP_PATH);
+            exec('sudo chown -R xtreamcodes:xtreamcodes ' . CACHE_TMP_PATH);
         }
         file_put_contents(CACHE_TMP_PATH . $cache, $serializedData, LOCK_EX);
     }

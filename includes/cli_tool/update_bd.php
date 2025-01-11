@@ -15,6 +15,7 @@ $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_gzip` TINYIN
 $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `requests_per_second` INT(11) NULL DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `connections` INT(16) NULL DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `users` INT(16) NULL DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `server_type` int(1) DEFAULT '0';");
 
 $ipTV_db->query("ALTER TABLE `streaming_servers` ALTER http_broadcast_port SET DEFAULT 25461;");
 $ipTV_db->query("ALTER TABLE `streaming_servers` ALTER https_broadcast_port SET DEFAULT 25463;");
