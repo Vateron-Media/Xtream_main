@@ -446,12 +446,13 @@ class ipTV_lib {
      * @return void
      */
     public static function setCache($cache, $data) {
-        $serializedData = igbinary_serialize($data);
-        if (!file_exists(CACHE_TMP_PATH)) {
-            mkdir(CACHE_TMP_PATH);
-            exec('sudo chown -R xtreamcodes:xtreamcodes ' . CACHE_TMP_PATH);
+        if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+            $serializedData = igbinary_serialize($data);
+            if (!file_exists(CACHE_TMP_PATH)) {
+                mkdir(CACHE_TMP_PATH);
+            }
+            file_put_contents(CACHE_TMP_PATH . $cache, $serializedData, LOCK_EX);
         }
-        file_put_contents(CACHE_TMP_PATH . $cache, $serializedData, LOCK_EX);
     }
     /**
      * Retrieves the cached data for a given cache key if it exists and is not expired.
