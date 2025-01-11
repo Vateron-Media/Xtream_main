@@ -943,7 +943,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            include "tmdb.php";
+            include INCLUDES_PATH . 'libs/tmdb.php';
             if (strlen($rSettings["tmdb_language"]) > 0) {
                 $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rSettings["tmdb_language"]);
             } else {
@@ -951,7 +951,7 @@ if (isset(ipTV_lib::$request["action"])) {
             }
             $rTerm = ipTV_lib::$request["term"];
             if ($rSettings["release_parser"] == "php") {
-                include "tmdb_release.php";
+                include INCLUDES_PATH . "libs/tmdb_release.php";
                 $rRelease = new Release($rTerm);
                 $rTerm = $rRelease->getTitle();
             } else {
@@ -983,7 +983,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            include "tmdb.php";
+            include INCLUDES_PATH . 'libs/tmdb.php';
             if (strlen($rSettings["tmdb_language"]) > 0) {
                 $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rSettings["tmdb_language"]);
             } else {

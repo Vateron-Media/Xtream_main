@@ -78,7 +78,7 @@ if (isset(ipTV_lib::$request["submit_stream"])) {
             exit;
         }
         set_time_limit(0);
-        include "tmdb.php";
+        include INCLUDES_PATH . 'libs/tmdb.php';
         $rSeries = getSerie(intval(ipTV_lib::$request["series"]));
         if (strlen($rSettings["tmdb_language"]) > 0) {
             $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rSettings["tmdb_language"]);

@@ -48,7 +48,7 @@ $rErrorCodes = array(
 );
 
 if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
-	generate404();
+    generate404();
 }
 
 @ini_set('user_agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:9.0) Gecko/20100101 Firefox/9.0');
@@ -56,7 +56,7 @@ if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
 
 // FOLDERS
 if (!defined('MAIN_DIR')) {
-	define('MAIN_DIR', '/home/xtreamcodes/');
+    define('MAIN_DIR', '/home/xtreamcodes/');
 }
 define('IPTV_ROOT_PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');
 define('INCLUDES_PATH', MAIN_DIR . 'includes/');
@@ -94,7 +94,7 @@ define('FFPROBE_BIN_44', BIN_PATH . 'ffmpeg_bin/4.4/ffprobe');
 
 // TEMP FOLDERS
 if (!defined('TMP_PATH')) {
-	define('TMP_PATH', MAIN_DIR . 'tmp/');
+    define('TMP_PATH', MAIN_DIR . 'tmp/');
 }
 define('CACHE_TMP_PATH', TMP_PATH . 'cache/');
 define('CONS_TMP_PATH', TMP_PATH . 'opened_cons/');
@@ -115,7 +115,7 @@ define('SERIES_TMP_PATH', CACHE_TMP_PATH . 'series/');
 
 //CONTENT FOLDERS
 if (!defined('CONTENT_PATH')) {
-	define('CONTENT_PATH', MAIN_DIR . 'content/');
+    define('CONTENT_PATH', MAIN_DIR . 'content/');
 }
 define('CREATED_CHANNELS', CONTENT_PATH . 'created_channels/');
 define('DELAY_PATH', CONTENT_PATH . 'delayed/');
@@ -144,21 +144,21 @@ global $argc;
 $showErrors = false;
 
 if (!$argc) {
-	$rIP = $_SERVER['REMOTE_ADDR'];
-	if (empty($rIP) || !file_exists(FLOOD_TMP_PATH . 'block_' . $rIP)) {
-		define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
+    $rIP = $_SERVER['REMOTE_ADDR'];
+    if (empty($rIP) || !file_exists(FLOOD_TMP_PATH . 'block_' . $rIP)) {
+        define('HOST', trim(explode(':', $_SERVER['HTTP_HOST'])[0]));
 
-		if (file_exists(CACHE_TMP_PATH . 'settings')) {
-			$rData = file_get_contents(CACHE_TMP_PATH . 'settings');
-			$Settings = igbinary_unserialize($rData);
+        if (file_exists(CACHE_TMP_PATH . 'settings')) {
+            $rData = file_get_contents(CACHE_TMP_PATH . 'settings');
+            $Settings = igbinary_unserialize($rData);
 
-			$showErrors = (isset($Settings['debug_show_errors']) ? $Settings['debug_show_errors'] : false);
-		}
-	} else {
-		http_response_code(403);
+            $showErrors = (isset($Settings['debug_show_errors']) ? $Settings['debug_show_errors'] : false);
+        }
+    } else {
+        http_response_code(403);
 
-		exit();
-	}
+        exit();
+    }
 }
 
 define('PHP_ERRORS', $showErrors);

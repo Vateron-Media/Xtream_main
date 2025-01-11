@@ -1280,7 +1280,7 @@ function flushLogins() {
 
 function updateTMDbCategories() {
     global $ipTV_db_admin, $rSettings;
-    include "tmdb.php";
+    include INCLUDES_PATH . 'libs/tmdb.php';
     if (strlen($rSettings["tmdb_language"]) > 0) {
         $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rSettings["tmdb_language"]);
     } else {
@@ -1865,7 +1865,7 @@ function downloadImage($rImage) {
 
 function updateSeries($rID) {
     global $ipTV_db_admin, $rSettings;
-    require_once("tmdb.php");
+    require_once INCLUDES_PATH . 'libs/tmdb.php';
     $ipTV_db_admin->query("SELECT `tmdb_id` FROM `series` WHERE `id` = " . intval($rID) . ";");
     if ($ipTV_db_admin->num_rows() == 1) {
         $rTMDBID = $ipTV_db_admin->get_row()["tmdb_id"];

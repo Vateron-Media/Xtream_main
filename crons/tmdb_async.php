@@ -1,7 +1,7 @@
 <?php
 include "/home/xtreamcodes/admin/functions.php";
-include "/home/xtreamcodes/admin/tmdb.php";
-include "/home/xtreamcodes/admin/tmdb_release.php";
+require INCLUDES_PATH . 'libs/tmdb.php';
+require INCLUDES_PATH . 'libs/tmdb_release.php';
 
 $rSettings = getSettings();
 $rCategories = getCategories_admin();
