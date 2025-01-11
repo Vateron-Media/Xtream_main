@@ -5,9 +5,6 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_user")) && (!h
     exit;
 }
 if (isset(ipTV_lib::$request["submit_user"])) {
-    $log = date('Y-m-d H:i:s') . ' ' . print_r(ipTV_lib::$request, true);
-    file_put_contents(__DIR__ . '/log.txt', $log . PHP_EOL, FILE_APPEND);
-
     ipTV_lib::$request["mac_address_mag"] = strtoupper(ipTV_lib::$request["mac_address_mag"]);
     ipTV_lib::$request["mac_address_e2"] = strtoupper(ipTV_lib::$request["mac_address_e2"]);
     if (isset(ipTV_lib::$request["edit"])) {
