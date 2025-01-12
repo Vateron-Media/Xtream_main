@@ -3,9 +3,8 @@ include "session.php";
 include "functions.php";
 
 $nabillangues = array("" => "Default - EN", "fr" => "French", "es" => "Spanish", "it" => "Italian", "pt" => "Portuguese", "ru" => "Русский");
-
 if (isset(ipTV_lib::$request["submit_profile"])) {
-    if ((strlen(ipTV_lib::$request["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
+    if (((strlen(ipTV_lib::$request["password"]) > 0)) && (strlen(ipTV_lib::$request["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
         $_STATUS = 1;
     }
     if (((strlen(ipTV_lib::$request["email"]) == 0) or (!filter_var(ipTV_lib::$request["email"], FILTER_VALIDATE_EMAIL))) && (($rSettings["change_own_email"]) or ($rPermissions["is_admin"]))) {
