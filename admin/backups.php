@@ -23,12 +23,7 @@ if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "da
 
 $rSettings = getSettings(); // Update
 
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
-
+include "header.php";
 
 ?>
 <div class="wrapper boxed-layout-ext" <?php if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
@@ -138,9 +133,6 @@ if ($rSettings["sidebar"]) {
     </div>
 </div>
 <!-- end wrapper -->
-<?php if ($rSettings["sidebar"]) {
-    echo "</div>";
-} ?>
 <!-- Footer Start -->
 <footer class="footer">
     <div class="container-fluid">
