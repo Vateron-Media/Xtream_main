@@ -124,7 +124,7 @@ class TMDB {
 	 *  @param boolean $debug The flag for debug output
 	 */
 	public function __construct($apikey = null, $lang = null, $adult = null, $debug = null) {
-		require_once("data/config/config.php");
+		require_once("TMDb/config/config.php");
 
 		// Set config params
 		$this->setConfig($cnf);
@@ -589,7 +589,7 @@ class TMDB {
 	 *  @param string $appendToResponse The extra append of the request
 	 *  @return string
 	 */
-	private function _call($action, $appendToResponse = '') {
+	private function _call($action, $appendToResponse = ''): array {
 
 		$url = self::_API_URL_ . $action . '?api_key=' . $this->getApikey() . '&language=' . $this->getLang() . '&append_to_response=' . implode(',', (array) $appendToResponse) . '&include_adult=' . $this->getAdult();
 
@@ -607,7 +607,7 @@ class TMDB {
 
 		curl_close($ch);
 
-		return (array) json_decode(($results), true);
+		return json_decode(($results), true);
 	}
 
 	//------------------------------------------------------------------------------
