@@ -3,10 +3,10 @@ include "functions.php";
 
 if (isset($_SESSION['hash'])) {
 	if (!$rPermissions["is_admin"]) {
-		header("Location: ./reseller.php");
+		header("Location: ./reseller");
 	} else {
-		header("Location: ./dashboard.php");
+		header("Location: ./dashboard");
 	}
 } else {
-	header("Location: ./login.php");
+	header("Location: ./login");
 }
