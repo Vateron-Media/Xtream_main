@@ -8,7 +8,6 @@ if (!$rPermissions["is_admin"]) {
 ipTV_lib::$settings = ipTV_lib::getSettings(true);
 $rSettings = ipTV_lib::$settings;
 
-$_TITLE = 'Cache Settings';
 if ($rSettings["sidebar"]) {
     include "header_sidebar.php";
 } else {
