@@ -1010,7 +1010,7 @@ $_ = array(
   "balancer_will_be_remaked_shortly" => "Balancer will be remaked shortly.",
   "server_will_be_full_remaked_shortly" => "Server will be full remaked shortly.",
   "balancer_will_be_full_remaked_shortly" => "Balancer will be full remaked shortly.",
-  "are_you_sure_you_want_to_delete_this_server" => "Are you sure you want to delete this server and it\'s accompanying streams? This cannot be undone!",
+  "are_you_sure_you_want_to_delete_this_server" => "Are you sure you want to delete this server and it\\'s accompanying streams? This cannot be undone!",
   "are_you_sure_you_want_to_kill_all_servers" => "Are you sure you want to kill all connections to this server?",
   "are_you_sure_you_want_to_start_all_severs" => "Are you sure you want to start all streams on this server? This will restart already running streams.",
   "are_you_sure_you_want_to_stop_all_streams" => "Are you sure you want to stop all streams on this server?",
@@ -1453,6 +1453,7 @@ $_ = array(
   "width:" => "width:",
   "debug_show_errors" => "Enable debug panel logging",
   "security" => "Security",
+  "backup_settings" => "Backup Settings",
 
   //Cache
   "cache_cron_redis_settings" => "Cache & Redis Settings",
