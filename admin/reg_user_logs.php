@@ -5,19 +5,10 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "reg_userlog"))) {
     exit;
 }
 
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
-if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content">
-            <div class="container-fluid">
-            <?php } else { ?>
+include "header.php";
+?>
                 <div class="wrapper">
                     <div class="container-fluid">
-                    <?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -52,8 +43,8 @@ if ($rSettings["sidebar"]) { ?>
                                             <select id="reseller" class="form-control" data-toggle="select2">
                                                 <option value="" selected><?= $_["all_resellers"] ?></option>
                                                 <?php foreach (getRegisteredUsers() as $rReseller) { ?>
-                                                    <option value="<?= $rReseller["id"] ?>"><?= $rReseller["username"] ?>
-                                                    </option>
+                                                        <option value="<?= $rReseller["id"] ?>"><?= $rReseller["username"] ?>
+                                                        </option>
                                                 <?php } ?>
                                             </select>
                                         </div>
@@ -69,9 +60,9 @@ if ($rSettings["sidebar"]) { ?>
                                         <div class="col-md-1">
                                             <select id="show_entries" class="form-control" data-toggle="select2">
                                                 <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                    <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                        echo " selected";
-                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                        <option<?php if ($rSettings["default_entries"] == $rShow) {
+                                                            echo " selected";
+                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                     <?php } ?>
                                             </select>
                                         </div>
@@ -127,9 +118,6 @@ if ($rSettings["sidebar"]) { ?>
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
             <!-- end wrapper -->
-            <?php if ($rSettings["sidebar"]) {
-                echo "</div>";
-            } ?>
             <!-- Footer Start -->
             <footer class="footer">
                 <div class="container-fluid">

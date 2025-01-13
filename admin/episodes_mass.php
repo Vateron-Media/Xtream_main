@@ -129,592 +129,570 @@ foreach ($rServers as $rServer) {
     $rServerTree[] = array("id" => $rServer["id"], "parent" => "#", "text" => $rServer["server_name"], "icon" => "mdi mdi-server-network", "state" => array("opened" => true));
 }
 
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
-if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content boxed-layout">
-            <div class="container-fluid">
-            <?php } else { ?>
-                <div class="wrapper boxed-layout">
-                    <div class="container-fluid">
-                    <?php } ?>
-                    <!-- start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box">
-                                <div class="page-title-right">
-                                    <ol class="breadcrumb m-0">
-                                        <a href="./episodes.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
-                                                <?= $_["back_to_episodes"] ?></li>
-                                        </a>
-                                    </ol>
-                                </div>
-                                <h4 class="page-title"><?= $_["mass_edit_episodes"] ?> <small
-                                        id="selected_count"></small></h4>
-                            </div>
-                        </div>
+include "header.php";
+?>
+<div class="wrapper boxed-layout">
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <a href="./episodes.php">
+                                <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                    <?= $_["back_to_episodes"] ?></li>
+                            </a>
+                        </ol>
                     </div>
-                    <!-- end page title -->
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["mass_edit_episodes_success"] ?>
-                                </div>
-                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["generic_fail"] ?>
-                                </div>
-                            <?php } ?>
-                            <div class="card">
-                                <div class="card-body">
-                                    <form action="./episodes_mass.php" method="POST" id="stream_form">
-                                        <input type="hidden" name="server_tree_data" id="server_tree_data" value="" />
-                                        <input type="hidden" name="streams" id="streams" value="" />
-                                        <div id="basicwizard">
-                                            <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
-                                                <li class="nav-item">
-                                                    <a href="#stream-selection" data-toggle="tab"
-                                                        class="nav-link rounded-0 pt-2 pb-2">
-                                                        <i class="mdi mdi-play mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["episodes"] ?></span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#stream-details" data-toggle="tab"
-                                                        class="nav-link rounded-0 pt-2 pb-2">
-                                                        <i class="mdi mdi-account-card-details-outline mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#load-balancing" data-toggle="tab"
-                                                        class="nav-link rounded-0 pt-2 pb-2">
-                                                        <i class="mdi mdi-server-network mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["servers"] ?></span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                            <div class="tab-content b-0 mb-0 pt-0">
-                                                <div class="tab-pane" id="stream-selection">
-                                                    <div class="row">
-                                                        <div class="col-md-3 col-6">
-                                                            <input type="text" class="form-control" id="stream_search"
-                                                                value="" placeholder="<?= $_["search_episodes"] ?>...">
-                                                        </div>
-                                                        <div class="col-md-3 col-6">
-                                                            <select id="series_id" class="form-control"
-                                                                data-toggle="select2">
-                                                                <option value=""><?= $_["all_series"] ?></option>
-                                                                <?php foreach ($rSeries as $rSerie) { ?>
-                                                                    <option value="<?= $rSerie["id"] ?>">
-                                                                        <?= $rSerie["title"] ?>
-                                                                    </option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-3 col-6">
-                                                            <select id="filter" class="form-control"
-                                                                data-toggle="select2">
-                                                                <option value="" selected><?= $_["no_filter"] ?>
+                    <h4 class="page-title"><?= $_["mass_edit_episodes"] ?> <small id="selected_count"></small></h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        <div class="row">
+            <div class="col-xl-12">
+                <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["mass_edit_episodes_success"] ?>
+                    </div>
+                <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["generic_fail"] ?>
+                    </div>
+                <?php } ?>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="./episodes_mass.php" method="POST" id="stream_form">
+                            <input type="hidden" name="server_tree_data" id="server_tree_data" value="" />
+                            <input type="hidden" name="streams" id="streams" value="" />
+                            <div id="basicwizard">
+                                <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
+                                    <li class="nav-item">
+                                        <a href="#stream-selection" data-toggle="tab"
+                                            class="nav-link rounded-0 pt-2 pb-2">
+                                            <i class="mdi mdi-play mr-1"></i>
+                                            <span class="d-none d-sm-inline"><?= $_["episodes"] ?></span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#stream-details" data-toggle="tab"
+                                            class="nav-link rounded-0 pt-2 pb-2">
+                                            <i class="mdi mdi-account-card-details-outline mr-1"></i>
+                                            <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#load-balancing" data-toggle="tab"
+                                            class="nav-link rounded-0 pt-2 pb-2">
+                                            <i class="mdi mdi-server-network mr-1"></i>
+                                            <span class="d-none d-sm-inline"><?= $_["servers"] ?></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content b-0 mb-0 pt-0">
+                                    <div class="tab-pane" id="stream-selection">
+                                        <div class="row">
+                                            <div class="col-md-3 col-6">
+                                                <input type="text" class="form-control" id="stream_search" value=""
+                                                    placeholder="<?= $_["search_episodes"] ?>...">
+                                            </div>
+                                            <div class="col-md-3 col-6">
+                                                <select id="series_id" class="form-control" data-toggle="select2">
+                                                    <option value=""><?= $_["all_series"] ?></option>
+                                                    <?php foreach ($rSeries as $rSerie) { ?>
+                                                        <option value="<?= $rSerie["id"] ?>">
+                                                            <?= $rSerie["title"] ?>
+                                                        </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 col-6">
+                                                <select id="filter" class="form-control" data-toggle="select2">
+                                                    <option value="" selected><?= $_["no_filter"] ?>
+                                                    </option>
+                                                    <option value="1"><?= $_["encoded"] ?></option>
+                                                    <option value="2"><?= $_["encoding"] ?></option>
+                                                    <option value="3"><?= $_["down"] ?></option>
+                                                    <option value="4"><?= $_["ready"] ?></option>
+                                                    <option value="5"><?= $_["direct"] ?></option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2 col-8">
+                                                <select id="show_entries" class="form-control" data-toggle="select2">
+                                                    <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
+                                                        <option<?php if ($rSettings["default_entries"] == $rShow) {
+                                                            echo " selected";
+                                                        } ?> value="<?= $rShow ?>">
+                                                            <?= $rShow ?></option>
+                                                        <?php } ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1 col-2">
+                                                <button type="button" class="btn btn-info waves-effect waves-light"
+                                                    onClick="toggleStreams()">
+                                                    <i class="mdi mdi-selection"></i>
+                                                </button>
+                                            </div>
+                                            <table id="datatable-mass" class="table table-hover table-borderless mb-0">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th class="text-center"><?= $_["id"] ?></th>
+                                                        <th><?= $_["episode_name"] ?></th>
+                                                        <th><?= $_["series"] ?></th>
+                                                        <th class="text-center"><?= $_["status"] ?></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="stream-details">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p class="sub-header">
+                                                    <?= $_["mass_edit_info"] ?>
+                                                </p>
+
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="serie_name"
+                                                            name="c_serie_name">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="serie_name"><?= $_["series_name"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <select disabled name="serie_name" id="serie_name"
+                                                            class="form-control" data-toggle="select2">
+                                                            <?php foreach ($rSeries as $rCategory) { ?>
+                                                                <option value="<?= $rCategory["id"] ?>">
+                                                                    <?= $rCategory["title"] ?>
                                                                 </option>
-                                                                <option value="1"><?= $_["encoded"] ?></option>
-                                                                <option value="2"><?= $_["encoding"] ?></option>
-                                                                <option value="3"><?= $_["down"] ?></option>
-                                                                <option value="4"><?= $_["ready"] ?></option>
-                                                                <option value="5"><?= $_["direct"] ?></option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-2 col-8">
-                                                            <select id="show_entries" class="form-control"
-                                                                data-toggle="select2">
-                                                                <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                                    <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                                        echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-1 col-2">
-                                                            <button type="button"
-                                                                class="btn btn-info waves-effect waves-light"
-                                                                onClick="toggleStreams()">
-                                                                <i class="mdi mdi-selection"></i>
-                                                            </button>
-                                                        </div>
-                                                        <table id="datatable-mass"
-                                                            class="table table-hover table-borderless mb-0">
-                                                            <thead class="bg-light">
-                                                                <tr>
-                                                                    <th class="text-center"><?= $_["id"] ?></th>
-                                                                    <th><?= $_["episode_name"] ?></th>
-                                                                    <th><?= $_["series"] ?></th>
-                                                                    <th class="text-center"><?= $_["status"] ?></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody></tbody>
-                                                        </table>
+                                                            <?php } ?>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="tab-pane" id="stream-details">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <p class="sub-header">
-                                                                <?= $_["mass_edit_info"] ?>
-                                                            </p>
 
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="serie_name" name="c_serie_name">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="serie_name"><?= $_["series_name"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <select disabled name="serie_name" id="serie_name"
-                                                                        class="form-control" data-toggle="select2">
-                                                                        <?php foreach ($rSeries as $rCategory) { ?>
-                                                                            <option value="<?= $rCategory["id"] ?>">
-                                                                                <?= $rCategory["title"] ?>
-                                                                            </option>
-                                                                        <?php } ?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="direct_source" data-type="switch"
-                                                                        name="c_direct_source">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="direct_source"><?= $_["direct_source"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input name="direct_source" id="direct_source"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="read_native"><?= $_["native_frames"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input name="read_native" id="read_native"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="read_native" data-type="switch"
-                                                                        name="c_read_native">
-                                                                    <label></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="movie_symlink" data-type="switch"
-                                                                        name="c_movie_symlink">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="movie_symlink"><?= $_["create_symlink"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input name="movie_symlink" id="movie_symlink"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="custom_sid"><?= $_["custom_channel_sid"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input type="text" disabled class="form-control"
-                                                                        id="custom_sid" name="custom_sid" value="">
-                                                                </div>
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="custom_sid" name="c_custom_sid">
-                                                                    <label></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="target_container"
-                                                                        name="c_target_container">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="target_container"><?= $_["target_container"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <select disabled name="target_container"
-                                                                        id="target_container" class="form-control"
-                                                                        data-toggle="select2">
-                                                                        <?php foreach (array("mp4", "mkv", "avi", "mpg") as $rContainer) { ?>
-                                                                            <option value="<?= $rContainer ?>">
-                                                                                <?= $rContainer ?>
-                                                                            </option>
-                                                                        <?php } ?>
-                                                                    </select>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="remove_subtitles"><?= $_["remove_subtitles"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input name="remove_subtitles" id="remove_subtitles"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="remove_subtitles" data-type="switch"
-                                                                        name="c_remove_subtitles">
-                                                                    <label></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="transcode_profile_id"
-                                                                        name="c_transcode_profile_id">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="transcode_profile_id"><?= $_["transcoding_profile"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <select name="transcode_profile_id" disabled
-                                                                        id="transcode_profile_id" class="form-control"
-                                                                        data-toggle="select2">
-                                                                        <option selected value="0">
-                                                                            <?= $_["transcoding_disabled"] ?>
-                                                                        </option>
-                                                                        <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
-                                                                            <option value="<?= $rProfile["profile_id"] ?>">
-                                                                                <?= $rProfile["profile_name"] ?>
-                                                                            </option>
-                                                                        <?php } ?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div> <!-- end col -->
-                                                    </div> <!-- end row -->
-                                                    <ul class="list-inline wizard mb-0">
-                                                        <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);"
-                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
-                                                        </li>
-                                                        <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);"
-                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
-                                                        </li>
-                                                    </ul>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="direct_source" data-type="switch"
+                                                            name="c_direct_source">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="direct_source"><?= $_["direct_source"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input name="direct_source" id="direct_source" type="checkbox"
+                                                            data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="read_native"><?= $_["native_frames"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input name="read_native" id="read_native" type="checkbox"
+                                                            data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="read_native"
+                                                            data-type="switch" name="c_read_native">
+                                                        <label></label>
+                                                    </div>
                                                 </div>
-                                                <div class="tab-pane" id="load-balancing">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" data-name="on_demand"
-                                                                        class="activate" name="c_server_tree"
-                                                                        id="c_server_tree">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="server_tree"><?= $_["server_tree"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <div id="server_tree"></div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div class="col-md-1"></div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="reencode_on_edit"><?= $_["reencode_on_edit"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input name="reencode_on_edit" id="reencode_on_edit"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <div class="col-md-1"></div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="reprocess_tmdb"><?= $_["reprocess_tmdb_data"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input name="reprocess_tmdb" id="reprocess_tmdb"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                            </div>
-                                                        </div> <!-- end col -->
-                                                    </div> <!-- end row -->
-                                                    <ul class="list-inline wizard mb-0">
-                                                        <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);"
-                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
-                                                        </li>
-                                                        <li class="next list-inline-item float-right">
-                                                            <input name="submit_stream" type="submit"
-                                                                class="btn btn-primary"
-                                                                value="<?= $_["edit_episodes"] ?>" />
-                                                        </li>
-                                                    </ul>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="movie_symlink" data-type="switch"
+                                                            name="c_movie_symlink">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="movie_symlink"><?= $_["create_symlink"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input name="movie_symlink" id="movie_symlink" type="checkbox"
+                                                            data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="custom_sid"><?= $_["custom_channel_sid"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" disabled class="form-control" id="custom_sid"
+                                                            name="custom_sid" value="">
+                                                    </div>
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="custom_sid"
+                                                            name="c_custom_sid">
+                                                        <label></label>
+                                                    </div>
                                                 </div>
-                                            </div> <!-- tab-content -->
-                                        </div> <!-- end #basicwizard-->
-                                    </form>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="target_container" name="c_target_container">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="target_container"><?= $_["target_container"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <select disabled name="target_container" id="target_container"
+                                                            class="form-control" data-toggle="select2">
+                                                            <?php foreach (array("mp4", "mkv", "avi", "mpg") as $rContainer) { ?>
+                                                                <option value="<?= $rContainer ?>">
+                                                                    <?= $rContainer ?>
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="remove_subtitles"><?= $_["remove_subtitles"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input name="remove_subtitles" id="remove_subtitles"
+                                                            type="checkbox" data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="remove_subtitles" data-type="switch"
+                                                            name="c_remove_subtitles">
+                                                        <label></label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="transcode_profile_id"
+                                                            name="c_transcode_profile_id">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="transcode_profile_id"><?= $_["transcoding_profile"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <select name="transcode_profile_id" disabled
+                                                            id="transcode_profile_id" class="form-control"
+                                                            data-toggle="select2">
+                                                            <option selected value="0">
+                                                                <?= $_["transcoding_disabled"] ?>
+                                                            </option>
+                                                            <?php foreach ($rTranscodeProfiles as $rProfile) { ?>
+                                                                <option value="<?= $rProfile["profile_id"] ?>">
+                                                                    <?= $rProfile["profile_name"] ?>
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col -->
+                                        </div> <!-- end row -->
+                                        <ul class="list-inline wizard mb-0">
+                                            <li class="previous list-inline-item">
+                                                <a href="javascript: void(0);"
+                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                            </li>
+                                            <li class="next list-inline-item float-right">
+                                                <a href="javascript: void(0);"
+                                                    class="btn btn-secondary"><?= $_["next"] ?></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" id="load-balancing">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" data-name="on_demand" class="activate"
+                                                            name="c_server_tree" id="c_server_tree">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="server_tree"><?= $_["server_tree"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <div id="server_tree"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <div class="col-md-1"></div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="reencode_on_edit"><?= $_["reencode_on_edit"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input name="reencode_on_edit" id="reencode_on_edit"
+                                                            type="checkbox" data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <div class="col-md-1"></div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="reprocess_tmdb"><?= $_["reprocess_tmdb_data"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input name="reprocess_tmdb" id="reprocess_tmdb" type="checkbox"
+                                                            data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col -->
+                                        </div> <!-- end row -->
+                                        <ul class="list-inline wizard mb-0">
+                                            <li class="previous list-inline-item">
+                                                <a href="javascript: void(0);"
+                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                            </li>
+                                            <li class="next list-inline-item float-right">
+                                                <input name="submit_stream" type="submit" class="btn btn-primary"
+                                                    value="<?= $_["edit_episodes"] ?>" />
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> <!-- tab-content -->
+                            </div> <!-- end #basicwizard-->
+                        </form>
 
-                                </div> <!-- end card-body -->
-                            </div> <!-- end card-->
-                        </div> <!-- end col -->
-                    </div>
-                </div> <!-- end container -->
-            </div>
-            <!-- end wrapper -->
-            <?php if ($rSettings["sidebar"]) {
-                echo "</div>";
-            } ?>
+                    </div> <!-- end card-body -->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+    </div> <!-- end container -->
+</div>
+<!-- end wrapper -->
 
-            <!-- Footer Start -->
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                    </div>
-                </div>
-            </footer>
-            <!-- end Footer -->
+<!-- Footer Start -->
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+        </div>
+    </div>
+</footer>
+<!-- end Footer -->
 
-            <?php if ($rSettings["premiumui"]) {
-                include 'footer.php';
-            } else { ?>
-                <script src="assets/js/vendor.min.js"></script>
-            <?php } ?>
-            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-            <script src="assets/libs/jquery-ui/jquery-ui.min.js"></script>
-            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-            <script src="assets/libs/switchery/switchery.min.js"></script>
-            <script src="assets/libs/select2/select2.min.js"></script>
-            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-            <script src="assets/libs/datatables/buttons.print.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-            <script src="assets/libs/treeview/jstree.min.js"></script>
-            <script src="assets/js/pages/treeview.init.js"></script>
-            <script src="assets/js/pages/form-wizard.init.js"></script>
-            <script src="assets/js/app.min.js"></script>
+<?php if ($rSettings["premiumui"]) {
+    include 'footer.php';
+} else { ?>
+    <script src="assets/js/vendor.min.js"></script>
+<?php } ?>
+<script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+<script src="assets/libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+<script src="assets/libs/switchery/switchery.min.js"></script>
+<script src="assets/libs/select2/select2.min.js"></script>
+<script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+<script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+<script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+<script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+<script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+<script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+<script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+<script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+<script src="assets/libs/datatables/buttons.html5.min.js"></script>
+<script src="assets/libs/datatables/buttons.flash.min.js"></script>
+<script src="assets/libs/datatables/buttons.print.min.js"></script>
+<script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+<script src="assets/libs/datatables/dataTables.select.min.js"></script>
+<script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+<script src="assets/libs/treeview/jstree.min.js"></script>
+<script src="assets/js/pages/treeview.init.js"></script>
+<script src="assets/js/pages/form-wizard.init.js"></script>
+<script src="assets/js/app.min.js"></script>
 
-            <script>
-                var rSwitches = [];
-                var rSelected = [];
+<script>
+    var rSwitches = [];
+    var rSelected = [];
 
-                function getSeries() {
-                    return $("#series_id").val();
+    function getSeries() {
+        return $("#series_id").val();
+    }
+
+    function getFilter() {
+        return $("#filter").val();
+    }
+
+    function toggleStreams() {
+        $("#datatable-mass tr").each(function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                if ($(this).find("td:eq(0)").html()) {
+                    window.rSelected.splice($.inArray($(this).find("td:eq(0)").html(), window.rSelected), 1);
                 }
-
-                function getFilter() {
-                    return $("#filter").val();
+            } else {
+                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                if ($(this).find("td:eq(0)").html()) {
+                    window.rSelected.push($(this).find("td:eq(0)").html());
                 }
-
-                function toggleStreams() {
-                    $("#datatable-mass tr").each(function () {
-                        if ($(this).hasClass('selected')) {
-                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                            if ($(this).find("td:eq(0)").html()) {
-                                window.rSelected.splice($.inArray($(this).find("td:eq(0)").html(), window.rSelected), 1);
-                            }
-                        } else {
-                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                            if ($(this).find("td:eq(0)").html()) {
-                                window.rSelected.push($(this).find("td:eq(0)").html());
-                            }
-                        }
-                    });
-                    $("#selected_count").html(" - " + window.rSelected.length + " selected")
+            }
+        });
+        $("#selected_count").html(" - " + window.rSelected.length + " selected")
+    }
+    (function ($) {
+        $.fn.inputFilter = function (inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                if (inputFilter(this.value)) {
+                    this.oldValue = this.value;
+                    this.oldSelectionStart = this.selectionStart;
+                    this.oldSelectionEnd = this.selectionEnd;
+                } else if (this.hasOwnProperty("oldValue")) {
+                    this.value = this.oldValue;
+                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
                 }
-                (function ($) {
-                    $.fn.inputFilter = function (inputFilter) {
-                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
-                            if (inputFilter(this.value)) {
-                                this.oldValue = this.value;
-                                this.oldSelectionStart = this.selectionStart;
-                                this.oldSelectionEnd = this.selectionEnd;
-                            } else if (this.hasOwnProperty("oldValue")) {
-                                this.value = this.oldValue;
-                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            });
+        };
+    }(jQuery));
+    $(document).ready(function () {
+        $('select').select2({
+            width: '100%'
+        })
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+        elems.forEach(function (html) {
+            var switchery = new Switchery(html);
+            window.rSwitches[$(html).attr("id")] = switchery;
+            if (($(html).attr("id") != "reencode_on_edit") && ($(html).attr("id") != "reprocess_tmdb")) {
+                window.rSwitches[$(html).attr("id")].disable();
+            }
+        });
+        $('#server_tree').jstree({
+            'core': {
+                'check_callback': function (op, node, parent, position, more) {
+                    switch (op) {
+                        case 'move_node':
+                            if (node.id == "source") {
+                                return false;
                             }
-                        });
-                    };
-                }(jQuery));
-                $(document).ready(function () {
-                    $('select').select2({
-                        width: '100%'
-                    })
-                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                    elems.forEach(function (html) {
-                        var switchery = new Switchery(html);
-                        window.rSwitches[$(html).attr("id")] = switchery;
-                        if (($(html).attr("id") != "reencode_on_edit") && ($(html).attr("id") != "reprocess_tmdb")) {
-                            window.rSwitches[$(html).attr("id")].disable();
-                        }
-                    });
-                    $('#server_tree').jstree({
-                        'core': {
-                            'check_callback': function (op, node, parent, position, more) {
-                                switch (op) {
-                                    case 'move_node':
-                                        if (node.id == "source") {
-                                            return false;
-                                        }
-                                        return true;
-                                }
-                            },
-                            'data': <?= json_encode($rServerTree) ?>
-                        },
-                        "plugins": ["dnd"]
-                    });
-                    $("#stream_form").submit(function (e) {
-                        $("#server_tree_data").val(JSON.stringify($('#server_tree').jstree(true).get_json('#', {
-                            flat: true
-                        })));
-                        rPass = false;
-                        $.each($('#server_tree').jstree(true).get_json('#', {
-                            flat: true
-                        }), function (k, v) {
-                            if (v.parent == "source") {
-                                rPass = true;
-                            }
-                        });
-                        if ((rPass == false) && ($("#c_server_tree").is(":checked"))) {
-                            e.preventDefault();
-                            $.toast("<?= $_["select_at_least_one_server"] ?>");
-                        }
-                        $("#streams").val(JSON.stringify(window.rSelected));
-                        if (window.rSelected.length == 0) {
-                            e.preventDefault();
-                            $.toast("<?= $_["select_at_least_one_episode"] ?>");
-                        }
-                    });
-                    $("input[type=checkbox].activate").change(function () {
-                        if ($(this).is(":checked")) {
-                            if ($(this).data("type") == "switch") {
-                                window.rSwitches[$(this).data("name")].enable();
-                            } else {
-                                $("#" + $(this).data("name")).prop("disabled", false);
-                                if ($(this).data("name") == "days_to_restart") {
-                                    $("#time_to_restart").prop("disabled", false);
-                                }
-                            }
-                        } else {
-                            if ($(this).data("type") == "switch") {
-                                window.rSwitches[$(this).data("name")].disable();
-                            } else {
-                                $("#" + $(this).data("name")).prop("disabled", true);
-                                if ($(this).data("name") == "days_to_restart") {
-                                    $("#time_to_restart").prop("disabled", true);
-                                }
-                            }
-                        }
-                    });
-                    $(".clockpicker").clockpicker();
-                    $(document).keypress(function (event) {
-                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                    });
-                    $("#probesize_ondemand").inputFilter(function (value) {
-                        return /^\d*$/.test(value);
-                    });
-                    $("#delay_minutes").inputFilter(function (value) {
-                        return /^\d*$/.test(value);
-                    });
-                    $("#tv_archive_duration").inputFilter(function (value) {
-                        return /^\d*$/.test(value);
-                    });
-                    $("form").attr('autocomplete', 'off');
-                    rTable = $("#datatable-mass").DataTable({
-                        language: {
-                            paginate: {
-                                previous: "<i class='mdi mdi-chevron-left'>",
-                                next: "<i class='mdi mdi-chevron-right'>"
-                            }
-                        },
-                        drawCallback: function () {
-                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                        },
-                        processing: true,
-                        serverSide: true,
-                        ajax: {
-                            url: "./table_search.php",
-                            "data": function (d) {
-                                d.id = "episode_list",
-                                    d.series = getSeries(),
-                                    d.filter = getFilter()
-                            }
-                        },
-                        columnDefs: [{
-                            "className": "dt-center",
-                            "targets": [0, 3]
-                        }],
-                        "rowCallback": function (row, data) {
-                            if ($.inArray(data[0], window.rSelected) !== -1) {
-                                $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                            }
-                        },
-                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
-                    });
-                    $('#stream_search').keyup(function () {
-                        rTable.search($(this).val()).draw();
-                    })
-                    $('#show_entries').change(function () {
-                        rTable.page.len($(this).val()).draw();
-                    })
-                    $('#series_id').change(function () {
-                        rTable.ajax.reload(null, false);
-                    })
-                    $('#filter').change(function () {
-                        rTable.ajax.reload(null, false);
-                    })
-                    $("#datatable-mass").selectable({
-                        filter: 'tr',
-                        selected: function (event, ui) {
-                            if ($(ui.selected).hasClass('selectedfilter')) {
-                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                window.rSelected.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSelected), 1);
-                            } else {
-                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                window.rSelected.push($(ui.selected).find("td:eq(0)").html());
-                            }
-                            $("#selected_count").html(" - " + window.rSelected.length + " selected")
-                        }
-                    });
-                });
-            </script>
-            </body>
+                            return true;
+                    }
+                },
+                'data': <?= json_encode($rServerTree) ?>
+            },
+            "plugins": ["dnd"]
+        });
+        $("#stream_form").submit(function (e) {
+            $("#server_tree_data").val(JSON.stringify($('#server_tree').jstree(true).get_json('#', {
+                flat: true
+            })));
+            rPass = false;
+            $.each($('#server_tree').jstree(true).get_json('#', {
+                flat: true
+            }), function (k, v) {
+                if (v.parent == "source") {
+                    rPass = true;
+                }
+            });
+            if ((rPass == false) && ($("#c_server_tree").is(":checked"))) {
+                e.preventDefault();
+                $.toast("<?= $_["select_at_least_one_server"] ?>");
+            }
+            $("#streams").val(JSON.stringify(window.rSelected));
+            if (window.rSelected.length == 0) {
+                e.preventDefault();
+                $.toast("<?= $_["select_at_least_one_episode"] ?>");
+            }
+        });
+        $("input[type=checkbox].activate").change(function () {
+            if ($(this).is(":checked")) {
+                if ($(this).data("type") == "switch") {
+                    window.rSwitches[$(this).data("name")].enable();
+                } else {
+                    $("#" + $(this).data("name")).prop("disabled", false);
+                    if ($(this).data("name") == "days_to_restart") {
+                        $("#time_to_restart").prop("disabled", false);
+                    }
+                }
+            } else {
+                if ($(this).data("type") == "switch") {
+                    window.rSwitches[$(this).data("name")].disable();
+                } else {
+                    $("#" + $(this).data("name")).prop("disabled", true);
+                    if ($(this).data("name") == "days_to_restart") {
+                        $("#time_to_restart").prop("disabled", true);
+                    }
+                }
+            }
+        });
+        $(".clockpicker").clockpicker();
+        $(document).keypress(function (event) {
+            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+        });
+        $("#probesize_ondemand").inputFilter(function (value) {
+            return /^\d*$/.test(value);
+        });
+        $("#delay_minutes").inputFilter(function (value) {
+            return /^\d*$/.test(value);
+        });
+        $("#tv_archive_duration").inputFilter(function (value) {
+            return /^\d*$/.test(value);
+        });
+        $("form").attr('autocomplete', 'off');
+        rTable = $("#datatable-mass").DataTable({
+            language: {
+                paginate: {
+                    previous: "<i class='mdi mdi-chevron-left'>",
+                    next: "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            drawCallback: function () {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+            },
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "./table_search.php",
+                "data": function (d) {
+                    d.id = "episode_list",
+                        d.series = getSeries(),
+                        d.filter = getFilter()
+                }
+            },
+            columnDefs: [{
+                "className": "dt-center",
+                "targets": [0, 3]
+            }],
+            "rowCallback": function (row, data) {
+                if ($.inArray(data[0], window.rSelected) !== -1) {
+                    $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                }
+            },
+            pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
+        });
+        $('#stream_search').keyup(function () {
+            rTable.search($(this).val()).draw();
+        })
+        $('#show_entries').change(function () {
+            rTable.page.len($(this).val()).draw();
+        })
+        $('#series_id').change(function () {
+            rTable.ajax.reload(null, false);
+        })
+        $('#filter').change(function () {
+            rTable.ajax.reload(null, false);
+        })
+        $("#datatable-mass").selectable({
+            filter: 'tr',
+            selected: function (event, ui) {
+                if ($(ui.selected).hasClass('selectedfilter')) {
+                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                    window.rSelected.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSelected), 1);
+                } else {
+                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                    window.rSelected.push($(ui.selected).find("td:eq(0)").html());
+                }
+                $("#selected_count").html(" - " + window.rSelected.length + " selected")
+            }
+        });
+    });
+</script>
+</body>
 
-            </html>
+</html>

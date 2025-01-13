@@ -57,19 +57,10 @@ if (isset(ipTV_lib::$request["id"])) {
     }
 }
 
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
-if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content boxed-layout">
-            <div class="container-fluid">
-<?php } else { ?>
-                <div class="wrapper boxed-layout">
-                    <div class="container-fluid">
-<?php } ?>
+include "header.php";
+?>
+<div class="wrapper boxed-layout">
+    <div class="container-fluid">
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -82,10 +73,10 @@ if ($rSettings["sidebar"]) { ?>
                                     </ol>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rISPArr)) {
-                                                            echo $_["edit"];
-                                                       } else {
-                                                           echo $_["block"];
-                                                       } ?> <?= $_["isp"] ?></h4>
+                                    echo $_["edit"];
+                                } else {
+                                    echo $_["block"];
+                                } ?> <?= $_["isp"] ?></h4>
                             </div>
                         </div>
                     </div>
@@ -93,27 +84,27 @@ if ($rSettings["sidebar"]) { ?>
                     <div class="row">
                         <div class="col-xl-12">
                             <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["isp_operation_was_completed_successfully"] ?>
-                                </div>
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <?= $_["isp_operation_was_completed_successfully"] ?>
+                                    </div>
                             <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["generic_fail"] ?>
-                                </div>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <?= $_["generic_fail"] ?>
+                                    </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./isp.php<?php if (isset(ipTV_lib::$request["id"])) {
-                                                                echo "?id=" . ipTV_lib::$request["id"];
-                                                           } ?>" method="POST" id="isp_form" data-parsley-validate="">
+                                        echo "?id=" . ipTV_lib::$request["id"];
+                                    } ?>" method="POST" id="isp_form" data-parsley-validate="">
                                         <?php if (isset($rISPArr)) { ?>
-                                            <input type="hidden" name="edit" value="<?= $rISPArr["id"] ?>" />
+                                                <input type="hidden" name="edit" value="<?= $rISPArr["id"] ?>" />
                                         <?php } ?>
                                         <div id="basicwizard">
                                             <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
@@ -132,8 +123,8 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <label class="col-md-4 col-form-label" for="isp"><?= $_["isp_name"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control" id="isp" name="isp" value="<?php if (isset($rISPArr)) {
-                                                                                                                                            echo htmlspecialchars($rISPArr["isp"]);
-                                                                                                                                       } ?>" required data-parsley-trigger="change">
+                                                                        echo htmlspecialchars($rISPArr["isp"]);
+                                                                    } ?>" required data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -143,7 +134,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                         if ($rISPArr["blocked"] == 1) {
                                                                             echo "checked ";
                                                                         }
-                                                                                                                       } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -151,10 +142,10 @@ if ($rSettings["sidebar"]) { ?>
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
                                                             <input name="submit_isp" type="submit" class="btn btn-primary" value="<?php if (isset($rISPArr)) {
-                                                                                                                                        echo $_["edit"];
-                                                                                                                                  } else {
-                                                                                                                                      echo $_["block"];
-                                                                                                                                  } ?>" />
+                                                                echo $_["edit"];
+                                                            } else {
+                                                                echo $_["block"];
+                                                            } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -169,9 +160,6 @@ if ($rSettings["sidebar"]) { ?>
                     </div> <!-- end container -->
                 </div>
                 <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
                 <!-- Footer Start -->
                 <footer class="footer">
                     <div class="container-fluid">

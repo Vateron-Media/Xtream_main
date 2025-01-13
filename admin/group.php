@@ -176,19 +176,11 @@ if (isset(ipTV_lib::$request["id"])) {
     exit;
 }
 
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
-if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content boxed-layout-ext">
-            <div class="container-fluid">
-<?php } else { ?>
+include "header.php";
+?>
+
                 <div class="wrapper boxed-layout-ext">
                     <div class="container-fluid">
-<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -203,9 +195,9 @@ if ($rSettings["sidebar"]) { ?>
                                 </div>
                                 <h4 class="page-title"><?php if (isset($rGroup)) {
                                     echo $_["edit_group"];
-                                                       } else {
-                                                           echo $_["add_group"];
-                                                       } ?></h4>
+                                } else {
+                                    echo $_["add_group"];
+                                } ?></h4>
                             </div>
                         </div>
                     </div>
@@ -220,18 +212,18 @@ if ($rSettings["sidebar"]) { ?>
                                     <?= $_["group_success"] ?>
                                 </div>
                             <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                     <?= $_["generic_fail"] ?>
-                                    </div>
+                                </div>
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
                                     <form action="./group.php<?php if (isset(ipTV_lib::$request["id"])) {
                                         echo "?id=" . ipTV_lib::$request["id"];
-                                                             } ?>" method="POST" id="group_form"
+                                    } ?>" method="POST" id="group_form"
                                         data-parsley-validate="">
                                         <?php if (isset($rGroup)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rGroup["group_id"] ?>" />
@@ -275,11 +267,10 @@ if ($rSettings["sidebar"]) { ?>
                                                                     for="group_name"><?= $_["group_name"] ?></label>
                                                                 <div class="col-md-8">
                                                                     <input type="text" class="form-control"
-                                                                        id="group_name" name="group_name"
-                                                                        value="<?php if (isset($rGroup)) {
+                                                                        id="group_name" name="group_name" value="<?php if (isset($rGroup)) {
                                                                             echo htmlspecialchars($rGroup["group_name"]);
-                                                                               } ?>"
-                                                                        required data-parsley-trigger="change">
+                                                                        } ?>" required
+                                                                        data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -308,7 +299,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if (!$rGroup["can_delete"]) {
                                                                                 echo "disabled ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -321,7 +312,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rGroup["is_banned"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -330,12 +321,11 @@ if ($rSettings["sidebar"]) { ?>
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="list-inline-item float-right">
                                                             <input name="submit_group" type="submit"
-                                                                class="btn btn-primary"
-                                                                value="<?php if (isset($rGroup)) {
+                                                                class="btn btn-primary" value="<?php if (isset($rGroup)) {
                                                                     echo $_["edit"];
-                                                                       } else {
-                                                                           echo $_["add"];
-                                                                       } ?>" />
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -351,13 +341,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input type="text" class="form-control"
                                                                         id="total_allowed_gen_trials"
-                                                                        name="total_allowed_gen_trials"
-                                                                        value="<?php if (isset($rGroup)) {
+                                                                        name="total_allowed_gen_trials" value="<?php if (isset($rGroup)) {
                                                                             echo intval($rGroup["total_allowed_gen_trials"]);
-                                                                               } else {
-                                                                                   echo "0";
-                                                                               } ?>"
-                                                                        required data-parsley-trigger="change">
+                                                                        } else {
+                                                                            echo "0";
+                                                                        } ?>" required
+                                                                        data-parsley-trigger="change">
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
                                                                     for="total_allowed_gen_in"><?= $_["allowed_trials_in"] ?></label>
@@ -371,8 +360,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if ($rGroup["total_allowed_gen_in"] == strtolower($rOption)) {
                                                                                     echo "selected ";
                                                                                 }
-                                                                                    } ?>value="<?= strtolower($rOption) ?>">
-                                                                                <?= $rOption ?></option>
+                                                                            } ?>value="<?= strtolower($rOption) ?>">
+                                                                                <?= $rOption ?>
+                                                                            </option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -386,7 +376,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rGroup["create_sub_resellers"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                                                  } ?>data-plugin="switchery"
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -394,13 +384,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input type="text" class="form-control"
                                                                         id="create_sub_resellers_price"
-                                                                        name="create_sub_resellers_price"
-                                                                        value="<?php if (isset($rGroup)) {
+                                                                        name="create_sub_resellers_price" value="<?php if (isset($rGroup)) {
                                                                             echo htmlspecialchars($rGroup["create_sub_resellers_price"]);
-                                                                               } else {
-                                                                                   echo "0";
-                                                                               } ?>"
-                                                                        required data-parsley-trigger="change">
+                                                                        } else {
+                                                                            echo "0";
+                                                                        } ?>" required
+                                                                        data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -412,7 +401,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rGroup["allow_change_pass"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                                               } ?>data-plugin="switchery"
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -423,7 +412,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rGroup["allow_download"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -436,7 +425,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rGroup["reset_stb_data"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -448,7 +437,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rGroup["reseller_client_connection_logs"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery"
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -461,7 +450,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rGroup["delete_users"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -469,13 +458,12 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input type="text" class="form-control"
                                                                         id="minimum_trial_credits"
-                                                                        name="minimum_trial_credits"
-                                                                        value="<?php if (isset($rGroup)) {
+                                                                        name="minimum_trial_credits" value="<?php if (isset($rGroup)) {
                                                                             echo intval($rGroup["minimum_trial_credits"]);
-                                                                               } else {
-                                                                                   echo "0";
-                                                                               } ?>"
-                                                                        required data-parsley-trigger="change">
+                                                                        } else {
+                                                                            echo "0";
+                                                                        } ?>" required
+                                                                        data-parsley-trigger="change">
                                                                 </div>
                                                             </div>
 
@@ -489,7 +477,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rGroup["reseller_can_select_bouquets"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery"
+                                                                        } ?>data-plugin="switchery"
                                                                         class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                                 <label class="col-md-4 col-form-label"
@@ -500,7 +488,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                             if ($rGroup["allow_import"]) {
                                                                                 echo "checked ";
                                                                             }
-                                                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                                         data-color="#039cfd" />
                                                                 </div>
                                                             </div>
@@ -510,12 +498,11 @@ if ($rSettings["sidebar"]) { ?>
                                                     <ul class="list-inline wizard mb-0">
                                                         <li class="next list-inline-item float-right">
                                                             <input name="submit_group" type="submit"
-                                                                class="btn btn-primary"
-                                                                value="<?php if (isset($rGroup)) {
+                                                                class="btn btn-primary" value="<?php if (isset($rGroup)) {
                                                                     echo $_["edit"];
-                                                                       } else {
-                                                                           echo $_["add"];
-                                                                       } ?>" />
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -542,13 +529,14 @@ if ($rSettings["sidebar"]) { ?>
                                                                                 if (in_array($rPermission[0], json_decode($rGroup["allowed_pages"], true))) {
                                                                                     echo " class='selected selectedfilter ui-selected'";
                                                                                 }
-                                                                               } ?>>
+                                                                            } ?>>
                                                                                 <td style="display:none;">
-                                                                                    <?= $rPermission[0] ?></td>
+                                                                                    <?= $rPermission[0] ?>
+                                                                                </td>
                                                                                 <td><?= $rPermission[1] ?></td>
                                                                                 <td><?= $rPermission[2] ?></td>
                                                                                 </tr>
-                                                                        <?php } ?>
+                                                                            <?php } ?>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -563,12 +551,11 @@ if ($rSettings["sidebar"]) { ?>
                                                         </li>
                                                         <li class="next list-inline-item float-right">
                                                             <input name="submit_group" type="submit"
-                                                                class="btn btn-primary"
-                                                                value="<?php if (isset($rGroup)) {
+                                                                class="btn btn-primary" value="<?php if (isset($rGroup)) {
                                                                     echo $_["edit"];
-                                                                       } else {
-                                                                           echo $_["add"];
-                                                                       } ?>" />
+                                                                } else {
+                                                                    echo $_["add"];
+                                                                } ?>" />
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -583,9 +570,6 @@ if ($rSettings["sidebar"]) { ?>
                 </div> <!-- end container -->
             </div>
             <!-- end wrapper -->
-            <?php if ($rSettings["sidebar"]) {
-                echo "</div>";
-            } ?>
             <!-- Footer Start -->
             <footer class="footer">
                 <div class="container-fluid">

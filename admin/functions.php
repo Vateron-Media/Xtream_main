@@ -9,7 +9,6 @@ if (isset($_SESSION['hash'])) {
     $rUserInfo = getRegisteredUserHash($_SESSION['hash']);
     $rSettings["dark_mode"] = $rUserInfo["dark_mode"];
     $rSettings["expanded_sidebar"] = $rUserInfo["expanded_sidebar"];
-    $rSettings["sidebar"] = $rUserInfo["sidebar"];
     $rPermissions = getPermissions($rUserInfo['member_group_id']);
     if ($rPermissions["is_admin"]) {
         $rPermissions["is_reseller"] = 0;

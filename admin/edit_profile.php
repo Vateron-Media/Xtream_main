@@ -13,11 +13,6 @@ if (isset(ipTV_lib::$request["submit_profile"])) {
     if ((strlen(ipTV_lib::$request["reseller_dns"]) > 0) && (!filter_var("http://" . ipTV_lib::$request["reseller_dns"], FILTER_VALIDATE_URL))) {
         $_STATUS = 3;
     }
-    if (isset(ipTV_lib::$request["sidebar"])) {
-        $rSidebar = true;
-    } else {
-        $rSidebar = false;
-    }
     if (isset(ipTV_lib::$request["dark_mode"])) {
         $rDarkMode = true;
     } else {
@@ -61,29 +56,19 @@ if (isset(ipTV_lib::$request["submit_profile"])) {
             $portadmin = $rSettings["port_admin"];
         }
         ipTV_lib::setSettings(["port_admin" => $portadmin]);
-        $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $rPassword . "', `email` = '" . $rEmail . "', `reseller_dns` = '" . $rDNS . "', `default_lang` = '" . $bob . "', `dark_mode` = " . intval($rDarkMode) . ", `sidebar` = " . intval($rSidebar) . ", `expanded_sidebar` = " . intval($rExpanded) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+        $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $rPassword . "', `email` = '" . $rEmail . "', `reseller_dns` = '" . $rDNS . "', `default_lang` = '" . $bob . "', `dark_mode` = " . intval($rDarkMode) . ", `expanded_sidebar` = " . intval($rExpanded) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
         $rUserInfo = getRegisteredUser($rUserInfo["id"]);
         $rSettings["dark_mode"] = $rUserInfo["dark_mode"];
         $rSettings["expanded_sidebar"] = $rUserInfo["expanded_sidebar"];
-        $rSettings["sidebar"] = $rUserInfo["sidebar"];
         $_STATUS = 0;
     }
 }
 
 
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
-if ($rSettings["sidebar"]) { ?>
-        <div class="content-page">
-            <div class="content boxed-layout">
-                <div class="container-fluid">
-<?php } else { ?>
+include "header.php";
+?>
                     <div class="wrapper boxed-layout">
                         <div class="container-fluid">
-<?php } ?>
                     <!-- start page title -->
                     <div class="row">
                         <div class="col-12">
@@ -176,8 +161,9 @@ if ($rSettings["sidebar"]) { ?>
                                                                         <div class="col-md-8">
                                                                             <select type="default_lang" name="default_lang" id="default_lang" class="form-control" data-toggle="select2">
                                                                                 <?php foreach ($nabillangues as $rKey => $rLanguage) { ?>
-                                                                                        <option<?php if ($rUserInfo["default_lang"] == $rKey) {
-                                                                                            echo " selected";
+                                                                                        <option 
+                                                                                        <?php if ($rUserInfo["default_lang"] == $rKey) {
+                                                                                            echo "selected";
                                                                                         } ?> value="<?= $rKey ?>"><?= $rLanguage ?></option>
                                                                                 <?php } ?>
                                                                             </select>
@@ -185,17 +171,11 @@ if ($rSettings["sidebar"]) { ?>
                                                                     </div>
                                                             <?php } ?>
                                                             <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="sidebar"><?= $_["sidebar_nav"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input name="sidebar" id="sidebar" type="checkbox" <?php if ($rUserInfo["sidebar"] == 1) {
-                                                                        echo "checked ";
-                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
-                                                                </div>
                                                                 <label class="col-md-4 col-form-label" for="expanded_sidebar"><?= $_["expanded_sidebar"] ?></label>
                                                                 <div class="col-md-2">
                                                                     <input name="expanded_sidebar" id="expanded_sidebar" type="checkbox" <?php if ($rUserInfo["expanded_sidebar"] == 1) {
                                                                         echo "checked ";
-                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                                                                                         } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row mb-4">
@@ -203,7 +183,7 @@ if ($rSettings["sidebar"]) { ?>
                                                                 <div class="col-md-2">
                                                                     <input name="dark_mode" id="dark_mode" type="checkbox" <?php if ($rUserInfo["dark_mode"] == 1) {
                                                                         echo "checked ";
-                                                                    } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                                                                                           } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                                 </div>
                                                             </div>
                                                         </div> <!-- end col -->
@@ -225,9 +205,6 @@ if ($rSettings["sidebar"]) { ?>
                     </div> <!-- end container -->
                 </div>
                 <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
                 <!-- Footer Start -->
                 <footer class="footer">
                     <div class="container-fluid">

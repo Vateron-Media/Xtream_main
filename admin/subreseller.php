@@ -97,286 +97,303 @@ if (isset(ipTV_lib::$request["id"])) {
         exit;
     }
 }
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
-if ($rSettings["sidebar"]) { ?>
-        <div class="content-page">
-            <div class="content boxed-layout">
-                <div class="container-fluid">
-<?php } else { ?>
-                    <div class="wrapper boxed-layout">
-                        <div class="container-fluid">
-<?php } ?>
-                    <!-- start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box">
-                                <div class="page-title-right">
-                                    <ol class="breadcrumb m-0">
-                                        <a href="./reg_users.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i> <?= $_["back_to_subresellers"] ?></li>
-                                        </a>
-                                    </ol>
-                                </div>
-                                <h4 class="page-title"><?php if (isset($rUser)) {
-                                    echo $_["edit"];
-                                                       } else {
-                                                           echo $_["add"];
-                                                       } ?> <?= $_["subreseller"] ?></h4>
-                            </div>
-                        </div>
+include "header.php";
+?>
+<div class="wrapper boxed-layout">
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <a href="./reg_users.php">
+                                <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                    <?= $_["back_to_subresellers"] ?></li>
+                            </a>
+                        </ol>
                     </div>
-                    <!-- end page title -->
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <?= $_["subreseller_operation"] ?>
-                                    </div>
-                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        <?= $_["please_ensure_you"] ?>
-                                        </div>
-                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
-                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                        <?= $_["generic_fail"] ?>
-                                            </div>
-                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
-                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                        <?= $_["you_don't_have_enough"] ?>
-                                                </div>
-                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
-                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                        <?= $_["this_username_has_already"] ?>
-                                                    </div>
-                            <?php } elseif ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
-                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                        <?= $_["your_group_has_not_been"] ?>
-                                                        </div>
-                            <?php } ?>
-                            <div class="card">
-                                <div class="card-body">
-                                    <form action="./subreseller.php<?php if (isset(ipTV_lib::$request["id"])) {
-                                        echo "?id=" . ipTV_lib::$request["id"];
-                                                                   } ?>" method="POST" id="user_form" data-parsley-validate="">
-                                        <?php if (isset(ipTV_lib::$request["id"])) { ?>
-                                                <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
-                                        <?php } ?>
-                                        <div id="basicwizard">
-                                            <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
-                                                <li class="nav-item">
-                                                    <a href="#user-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                                        <i class="mdi mdi-account-card-details-outline mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
-                                                    </a>
-                                                </li>
-                                                <?php if (!isset(ipTV_lib::$request["id"])) { ?>
-                                                        <li class="nav-item">
-                                                            <a href="#review-purchase" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                                                <i class="mdi mdi-book-open-variant mr-1"></i>
-                                                                <span class="d-none d-sm-inline"><?= $_["review_purchase"] ?></span>
-                                                            </a>
-                                                        </li>
-                                                <?php } ?>
-                                            </ul>
-                                            <div class="tab-content b-0 mb-0 pt-0">
-                                                <div class="tab-pane" id="user-details">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="username"><?= $_["username"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <input <?php if (isset(ipTV_lib::$request["id"])) {
-                                                                        echo "disabled ";
-                                                                           } ?>type="text" class="form-control" id="username" name="username" value="<?php if (isset($rUser)) {
-                                                                  echo htmlspecialchars($rUser["username"]);
-                                                                           } ?>" required data-parsley-trigger="change">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="password"><?php if (isset(ipTV_lib::$request["id"])) {
-                                                                    ?><?= $_["change"] ?> <?php
-                                                                                                                      } ?><?= $_["password"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="password" name="password" <?php if (!isset($rUser)) {
-                                                                        echo 'value="' . generateString(10) . '" required data-parsley-trigger="change"';
-                                                                                                                                          } else {
-                                                                                                                                              echo 'value=""';
-                                                                                                                                          } ?> required data-parsley-trigger="change">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="email"><?= $_["email_address"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="email" name="email" value="<?php if (isset($rUser)) {
-                                                                        echo htmlspecialchars($rUser["email"]);
-                                                                                                                                           } ?>" required data-parsley-trigger="change">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="reseller_dns"><?= $_["reseller_dns"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <input type="text" class="form-control" id="reseller_dns" name="reseller_dns" value="<?php if (isset($rUser)) {
-                                                                        echo htmlspecialchars($rUser["reseller_dns"]);
-                                                                                                                                                         } ?>">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="notes"><?= $_["notes"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <textarea id="notes" name="notes" class="form-control" rows="3" placeholder=""><?php if (isset($rUser)) {
-                                                                        echo htmlspecialchars($rUser["notes"]);
-                                                                                                                                                   } ?></textarea>
-                                                                </div>
-                                                            </div>
-                                                        </div> <!-- end col -->
-                                                    </div> <!-- end row -->
-                                                    <ul class="list-inline wizard mb-0">
-                                                        <li class="next list-inline-item float-right">
-                                                            <?php if (!isset(ipTV_lib::$request["id"])) { ?>
-                                                                    <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["next"] ?></a>
-                                                            <?php } else { ?>
-                                                                    <input name="submit_user" type="submit" class="btn btn-primary" value="<?= $_["edit"] ?>" />
-                                                            <?php } ?>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <?php if (!isset(ipTV_lib::$request["id"])) { ?>
-                                                        <div class="tab-pane" id="review-purchase">
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <?php if ($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"] < 0) { ?>
-                                                                            <div class="alert alert-danger" role="alert" id="no-credits">
-                                                                                <i class="mdi mdi-block-helper mr-2"></i> <?= $_["you_do_not_have_enough_credits"] ?>
-                                                                            </div>
-                                                                    <?php } ?>
-                                                                    <div class="form-group row mb-4">
-                                                                        <table class="table" id="credits-cost">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th class="text-center"><?= $_["total_credits"] ?></th>
-                                                                                    <th class="text-center"><?= $_["purchase_cost"] ?></th>
-                                                                                    <th class="text-center"><?= $_["remaining_credits"] ?></th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="text-center"><?= number_format($rUserInfo["credits"], 2) ?></td>
-                                                                                    <td class="text-center" id="cost_credits"><?= number_format($rPermissions["create_sub_resellers_price"], 2) ?></td>
-                                                                                    <td class="text-center" id="remaining_credits"><?= number_format($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"], 2) ?></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div> <!-- end col -->
-                                                            </div> <!-- end row -->
-                                                            <ul class="list-inline wizard mb-0">
-                                                                <li class="previous list-inline-item">
-                                                                    <a href="javascript: void(0);" class="btn btn-secondary"><?= $_["prev"] ?></a>
-                                                                </li>
-                                                                <li class="next list-inline-item float-right">
-                                                                    <input <?php if ($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"] < 0) {
-                                                                        echo "disabled ";
-                                                                           } ?>name="submit_user" type="submit" class="btn btn-primary purchase" value="<?= $_["purchase"] ?>" />
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                <?php } ?>
-                                            </div> <!-- tab-content -->
-                                        </div> <!-- end #basicwizard-->
-                                    </form>
-
-                                </div> <!-- end card-body -->
-                            </div> <!-- end card-->
-                        </div> <!-- end col -->
-                    </div>
-                    </div> <!-- end container -->
+                    <h4 class="page-title"><?php if (isset($rUser)) {
+                        echo $_["edit"];
+                    } else {
+                        echo $_["add"];
+                    } ?> <?= $_["subreseller"] ?></h4>
                 </div>
-                <!-- end wrapper -->
-                <?php if ($rSettings["sidebar"]) {
-                    echo "</div>";
-                } ?>
-                <!-- Footer Start -->
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                        </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        <div class="row">
+            <div class="col-xl-12">
+                <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["subreseller_operation"] ?>
                     </div>
-                </footer>
-                <!-- end Footer -->
+                <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["please_ensure_you"] ?>
+                    </div>
+                <?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["generic_fail"] ?>
+                    </div>
+                <?php } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["you_don't_have_enough"] ?>
+                    </div>
+                <?php } elseif ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["this_username_has_already"] ?>
+                    </div>
+                <?php } elseif ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["your_group_has_not_been"] ?>
+                    </div>
+                <?php } ?>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="./subreseller.php<?php if (isset(ipTV_lib::$request["id"])) {
+                            echo "?id=" . ipTV_lib::$request["id"];
+                        } ?>" method="POST" id="user_form" data-parsley-validate="">
+                            <?php if (isset(ipTV_lib::$request["id"])) { ?>
+                                <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
+                            <?php } ?>
+                            <div id="basicwizard">
+                                <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
+                                    <li class="nav-item">
+                                        <a href="#user-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                            <i class="mdi mdi-account-card-details-outline mr-1"></i>
+                                            <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
+                                        </a>
+                                    </li>
+                                    <?php if (!isset(ipTV_lib::$request["id"])) { ?>
+                                        <li class="nav-item">
+                                            <a href="#review-purchase" data-toggle="tab"
+                                                class="nav-link rounded-0 pt-2 pb-2">
+                                                <i class="mdi mdi-book-open-variant mr-1"></i>
+                                                <span class="d-none d-sm-inline"><?= $_["review_purchase"] ?></span>
+                                            </a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                                <div class="tab-content b-0 mb-0 pt-0">
+                                    <div class="tab-pane" id="user-details">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group row mb-4">
+                                                    <label class="col-md-4 col-form-label"
+                                                        for="username"><?= $_["username"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <input <?php if (isset(ipTV_lib::$request["id"])) {
+                                                            echo "disabled ";
+                                                        } ?>type="text" class="form-control"
+                                                            id="username" name="username" value="<?php if (isset($rUser)) {
+                                                                echo htmlspecialchars($rUser["username"]);
+                                                            } ?>" required data-parsley-trigger="change">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <label class="col-md-4 col-form-label" for="password"><?php if (isset(ipTV_lib::$request["id"])) {
+                                                        ?><?= $_["change"] ?>
+                                                            <?php
+                                                    } ?><?= $_["password"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="form-control" id="password"
+                                                            name="password" <?php if (!isset($rUser)) {
+                                                                echo 'value="' . generateString(10) . '" required data-parsley-trigger="change"';
+                                                            } else {
+                                                                echo 'value=""';
+                                                            } ?> required data-parsley-trigger="change">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <label class="col-md-4 col-form-label"
+                                                        for="email"><?= $_["email_address"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="form-control" id="email" name="email"
+                                                            value="<?php if (isset($rUser)) {
+                                                                echo htmlspecialchars($rUser["email"]);
+                                                            } ?>" required data-parsley-trigger="change">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <label class="col-md-4 col-form-label"
+                                                        for="reseller_dns"><?= $_["reseller_dns"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="form-control" id="reseller_dns"
+                                                            name="reseller_dns" value="<?php if (isset($rUser)) {
+                                                                echo htmlspecialchars($rUser["reseller_dns"]);
+                                                            } ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <label class="col-md-4 col-form-label"
+                                                        for="notes"><?= $_["notes"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <textarea id="notes" name="notes" class="form-control" rows="3"
+                                                            placeholder=""><?php if (isset($rUser)) {
+                                                                echo htmlspecialchars($rUser["notes"]);
+                                                            } ?></textarea>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col -->
+                                        </div> <!-- end row -->
+                                        <ul class="list-inline wizard mb-0">
+                                            <li class="next list-inline-item float-right">
+                                                <?php if (!isset(ipTV_lib::$request["id"])) { ?>
+                                                    <a href="javascript: void(0);"
+                                                        class="btn btn-secondary"><?= $_["next"] ?></a>
+                                                <?php } else { ?>
+                                                    <input name="submit_user" type="submit" class="btn btn-primary"
+                                                        value="<?= $_["edit"] ?>" />
+                                                <?php } ?>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <?php if (!isset(ipTV_lib::$request["id"])) { ?>
+                                        <div class="tab-pane" id="review-purchase">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <?php if ($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"] < 0) { ?>
+                                                        <div class="alert alert-danger" role="alert" id="no-credits">
+                                                            <i class="mdi mdi-block-helper mr-2"></i>
+                                                            <?= $_["you_do_not_have_enough_credits"] ?>
+                                                        </div>
+                                                    <?php } ?>
+                                                    <div class="form-group row mb-4">
+                                                        <table class="table" id="credits-cost">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="text-center">
+                                                                        <?= $_["total_credits"] ?>
+                                                                    </th>
+                                                                    <th class="text-center">
+                                                                        <?= $_["purchase_cost"] ?>
+                                                                    </th>
+                                                                    <th class="text-center">
+                                                                        <?= $_["remaining_credits"] ?>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <?= number_format($rUserInfo["credits"], 2) ?>
+                                                                    </td>
+                                                                    <td class="text-center" id="cost_credits">
+                                                                        <?= number_format($rPermissions["create_sub_resellers_price"], 2) ?>
+                                                                    </td>
+                                                                    <td class="text-center" id="remaining_credits">
+                                                                        <?= number_format($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"], 2) ?>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div> <!-- end col -->
+                                            </div> <!-- end row -->
+                                            <ul class="list-inline wizard mb-0">
+                                                <li class="previous list-inline-item">
+                                                    <a href="javascript: void(0);"
+                                                        class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                                </li>
+                                                <li class="next list-inline-item float-right">
+                                                    <input <?php if ($rUserInfo["credits"] - $rPermissions["create_sub_resellers_price"] < 0) {
+                                                        echo "disabled ";
+                                                    } ?>name="submit_user" type="submit"
+                                                        class="btn btn-primary purchase" value="<?= $_["purchase"] ?>" />
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    <?php } ?>
+                                </div> <!-- tab-content -->
+                            </div> <!-- end #basicwizard-->
+                        </form>
 
-                <script src="assets/js/vendor.min.js"></script>
-                <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-                <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-                <script src="assets/libs/switchery/switchery.min.js"></script>
-                <script src="assets/libs/select2/select2.min.js"></script>
-                <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-                <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-                <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-                <script src="assets/libs/moment/moment.min.js"></script>
-                <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-                <script src="assets/js/pages/jquery.number.min.js"></script>
-                <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-                <script src="assets/libs/treeview/jstree.min.js"></script>
-                <script src="assets/js/pages/treeview.init.js"></script>
-                <script src="assets/js/pages/form-wizard.init.js"></script>
-                <script src="assets/libs/parsleyjs/parsley.min.js"></script>
-                <script src="assets/js/app.min.js"></script>
+                    </div> <!-- end card-body -->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+    </div> <!-- end container -->
+</div>
+<!-- end wrapper -->
+<!-- Footer Start -->
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+        </div>
+    </div>
+</footer>
+<!-- end Footer -->
 
-                <script>
-                    (function($) {
-                        $.fn.inputFilter = function(inputFilter) {
-                            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
-                                if (inputFilter(this.value)) {
-                                    this.oldValue = this.value;
-                                    this.oldSelectionStart = this.selectionStart;
-                                    this.oldSelectionEnd = this.selectionEnd;
-                                } else if (this.hasOwnProperty("oldValue")) {
-                                    this.value = this.oldValue;
-                                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                                }
-                            });
-                        };
-                    }(jQuery));
+<script src="assets/js/vendor.min.js"></script>
+<script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+<script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+<script src="assets/libs/switchery/switchery.min.js"></script>
+<script src="assets/libs/select2/select2.min.js"></script>
+<script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+<script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+<script src="assets/libs/moment/moment.min.js"></script>
+<script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+<script src="assets/js/pages/jquery.number.min.js"></script>
+<script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+<script src="assets/libs/treeview/jstree.min.js"></script>
+<script src="assets/js/pages/treeview.init.js"></script>
+<script src="assets/js/pages/form-wizard.init.js"></script>
+<script src="assets/libs/parsleyjs/parsley.min.js"></script>
+<script src="assets/js/app.min.js"></script>
 
-                    $(document).ready(function() {
-                        $('select.select2').select2({
-                            width: '100%'
-                        })
-                        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                        elems.forEach(function(html) {
-                            var switchery = new Switchery(html);
-                        });
+<script>
+    (function ($) {
+        $.fn.inputFilter = function (inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                if (inputFilter(this.value)) {
+                    this.oldValue = this.value;
+                    this.oldSelectionStart = this.selectionStart;
+                    this.oldSelectionEnd = this.selectionEnd;
+                } else if (this.hasOwnProperty("oldValue")) {
+                    this.value = this.oldValue;
+                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                }
+            });
+        };
+    }(jQuery));
 
-                        $(window).keypress(function(event) {
-                            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                        });
+    $(document).ready(function () {
+        $('select.select2').select2({
+            width: '100%'
+        })
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+        elems.forEach(function (html) {
+            var switchery = new Switchery(html);
+        });
 
-                        $("form").attr('autocomplete', 'off');
-                    });
-                </script>
-                </body>
+        $(window).keypress(function (event) {
+            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+        });
 
-                </html>
+        $("form").attr('autocomplete', 'off');
+    });
+</script>
+</body>
+
+</html>

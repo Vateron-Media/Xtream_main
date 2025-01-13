@@ -5,19 +5,10 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "manage_events"))) {
     exit;
 }
 
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
-if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content">
-            <div class="container-fluid">
-            <?php } else { ?>
+include "header.php";
+?>
                 <div class="wrapper">
                     <div class="container-fluid">
-                    <?php } ?>
 
                     <!-- start page title -->
                     <div class="row">
@@ -55,9 +46,6 @@ if ($rSettings["sidebar"]) { ?>
                 </div> <!-- end container -->
             </div>
             <!-- end wrapper -->
-            <?php if ($rSettings["sidebar"]) {
-                echo "</div>";
-            } ?>
             <!-- Footer Start -->
             <footer class="footer">
                 <div class="container-fluid">

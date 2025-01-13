@@ -97,798 +97,759 @@ if (isset(ipTV_lib::$request["submit_user"])) {
     $_STATUS = 0;
 }
 
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
-if ($rSettings["sidebar"]) { ?>
-    <div class="content-page">
-        <div class="content boxed-layout-ext">
-            <div class="container-fluid">
-            <?php } else { ?>
-                <div class="wrapper boxed-layout-ext">
-                    <div class="container-fluid">
-                    <?php } ?>
-                    <!-- start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box">
-                                <div class="page-title-right">
-                                    <ol class="breadcrumb m-0">
-                                        <a href="./users.php">
-                                            <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
-                                                <?= $_["back_to_users"] ?></li>
-                                        </a>
-                                    </ol>
-                                </div>
-                                <h4 class="page-title"><?= $_["mass_edit_users"] ?> <small id="selected_count"></small>
-                                </h4>
-                            </div>
-                        </div>
+include "header.php";
+?>
+
+<div class="wrapper boxed-layout-ext">
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <a href="./users.php">
+                                <li class="breadcrumb-item"><i class="mdi mdi-backspace"></i>
+                                    <?= $_["back_to_users"] ?></li>
+                            </a>
+                        </ol>
                     </div>
-                    <!-- end page title -->
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["mass_edit_of_users"] ?>
-                                </div>
-                            <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <?= $_["there_was_an_error"] ?>
-                                </div>
-                            <?php } ?>
-                            <div class="card">
-                                <div class="card-body">
-                                    <form action="./user_mass.php" method="POST" id="user_form">
-                                        <input type="hidden" name="users_selected" id="users_selected" value="" />
-                                        <input type="hidden" name="bouquets_selected" id="bouquets_selected" value="" />
-                                        <div id="basicwizard">
-                                            <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
-                                                <li class="nav-item">
-                                                    <a href="#user-selection" data-toggle="tab"
-                                                        class="nav-link rounded-0 pt-2 pb-2">
-                                                        <i class="mdi mdi-account-group mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["user"] ?></span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#user-details" data-toggle="tab"
-                                                        class="nav-link rounded-0 pt-2 pb-2">
-                                                        <i class="mdi mdi-account-card-details-outline mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#bouquets" data-toggle="tab"
-                                                        class="nav-link rounded-0 pt-2 pb-2">
-                                                        <i class="mdi mdi-flower-tulip mr-1"></i>
-                                                        <span class="d-none d-sm-inline"><?= $_["bouquets"] ?></span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                            <div class="tab-content b-0 mb-0 pt-0">
-                                                <div class="tab-pane" id="user-selection">
-                                                    <div class="row">
-                                                        <div class="col-md-3 col-6">
-                                                            <input type="text" class="form-control" id="user_search"
-                                                                value="" placeholder="<?= $_["search_users"] ?>">
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <select id="reseller_search" class="form-control"
-                                                                data-toggle="select2">
-                                                                <option value="" selected><?= $_["all_resellers"] ?>
+                    <h4 class="page-title"><?= $_["mass_edit_users"] ?> <small id="selected_count"></small>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        <div class="row">
+            <div class="col-xl-12">
+                <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["mass_edit_of_users"] ?>
+                    </div>
+                <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <?= $_["there_was_an_error"] ?>
+                    </div>
+                <?php } ?>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="./user_mass.php" method="POST" id="user_form">
+                            <input type="hidden" name="users_selected" id="users_selected" value="" />
+                            <input type="hidden" name="bouquets_selected" id="bouquets_selected" value="" />
+                            <div id="basicwizard">
+                                <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
+                                    <li class="nav-item">
+                                        <a href="#user-selection" data-toggle="tab"
+                                            class="nav-link rounded-0 pt-2 pb-2">
+                                            <i class="mdi mdi-account-group mr-1"></i>
+                                            <span class="d-none d-sm-inline"><?= $_["user"] ?></span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#user-details" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                            <i class="mdi mdi-account-card-details-outline mr-1"></i>
+                                            <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#bouquets" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                            <i class="mdi mdi-flower-tulip mr-1"></i>
+                                            <span class="d-none d-sm-inline"><?= $_["bouquets"] ?></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content b-0 mb-0 pt-0">
+                                    <div class="tab-pane" id="user-selection">
+                                        <div class="row">
+                                            <div class="col-md-3 col-6">
+                                                <input type="text" class="form-control" id="user_search" value=""
+                                                    placeholder="<?= $_["search_users"] ?>">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select id="reseller_search" class="form-control" data-toggle="select2">
+                                                    <option value="" selected><?= $_["all_resellers"] ?>
+                                                    </option>
+                                                    <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
+                                                        <option value="<?= $rRegisteredUser["id"] ?>">
+                                                            <?= $rRegisteredUser["username"] ?>
+                                                        </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <select id="filter" class="form-control" data-toggle="select2">
+                                                    <option value="" selected><?= $_["no_filter"] ?>
+                                                    </option>
+                                                    <option value="1"><?= $_["active"] ?></option>
+                                                    <option value="2"><?= $_["disabled"] ?></option>
+                                                    <option value="3"><?= $_["banned"] ?></option>
+                                                    <option value="4"><?= $_["expired"] ?></option>
+                                                    <option value="5"><?= $_["trial"] ?></option>
+                                                    <option value="6"><?= $_["mag_device"] ?></option>
+                                                    <option value="7"><?= $_["enigma_device"] ?></option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2 col-8">
+                                                <select id="show_entries" class="form-control" data-toggle="select2">
+                                                    <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
+                                                        <option<?php if ($rSettings["default_entries"] == $rShow) {
+                                                            echo " selected";
+                                                        } ?> value="<?= $rShow ?>">
+                                                            <?= $rShow ?></option>
+                                                        <?php } ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1 col-2">
+                                                <button type="button" class="btn btn-info waves-effect waves-light"
+                                                    onClick="toggleUsers()">
+                                                    <i class="mdi mdi-selection"></i>
+                                                </button>
+                                            </div>
+                                            <table id="datatable-mass" class="table table-hover table-borderless mb-0">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th class="text-center"><?= $_["id"] ?></th>
+                                                        <th><?= $_["username"] ?></th>
+                                                        <th></th>
+                                                        <th><?= $_["reseller"] ?></th>
+                                                        <th class="text-center"><?= $_["status"] ?></th>
+                                                        <th class="text-center"><?= $_["online"] ?></th>
+                                                        <th class="text-center"><?= $_["trial"] ?></th>
+                                                        <th class="text-center"><?= $_["expiration"] ?></th>
+                                                        <th></th>
+                                                        <th class="text-center"><?= $_["conns"] ?></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="user-details">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p class="sub-header">
+                                                    <?= $_["to_mass_edit_any_of_the_below_options"] ?>
+                                                </p>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="member_id"
+                                                            name="c_member_id">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="member_id"><?= $_["owner"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <select disabled name="member_id" id="member_id"
+                                                            class="form-control select2" data-toggle="select2">
+                                                            <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
+                                                                <option value="<?= $rRegisteredUser["id"] ?>">
+                                                                    <?= $rRegisteredUser["username"] ?>
                                                                 </option>
-                                                                <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
-                                                                    <option value="<?= $rRegisteredUser["id"] ?>">
-                                                                        <?= $rRegisteredUser["username"] ?>
-                                                                    </option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <select id="filter" class="form-control"
-                                                                data-toggle="select2">
-                                                                <option value="" selected><?= $_["no_filter"] ?>
-                                                                </option>
-                                                                <option value="1"><?= $_["active"] ?></option>
-                                                                <option value="2"><?= $_["disabled"] ?></option>
-                                                                <option value="3"><?= $_["banned"] ?></option>
-                                                                <option value="4"><?= $_["expired"] ?></option>
-                                                                <option value="5"><?= $_["trial"] ?></option>
-                                                                <option value="6"><?= $_["mag_device"] ?></option>
-                                                                <option value="7"><?= $_["enigma_device"] ?></option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-2 col-8">
-                                                            <select id="show_entries" class="form-control"
-                                                                data-toggle="select2">
-                                                                <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
-                                                                    <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                                        echo " selected";
-                                                                    } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
-                                                                    <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-1 col-2">
-                                                            <button type="button"
-                                                                class="btn btn-info waves-effect waves-light"
-                                                                onClick="toggleUsers()">
-                                                                <i class="mdi mdi-selection"></i>
-                                                            </button>
-                                                        </div>
-                                                        <table id="datatable-mass"
-                                                            class="table table-hover table-borderless mb-0">
-                                                            <thead class="bg-light">
-                                                                <tr>
-                                                                    <th class="text-center"><?= $_["id"] ?></th>
-                                                                    <th><?= $_["username"] ?></th>
-                                                                    <th></th>
-                                                                    <th><?= $_["reseller"] ?></th>
-                                                                    <th class="text-center"><?= $_["status"] ?></th>
-                                                                    <th class="text-center"><?= $_["online"] ?></th>
-                                                                    <th class="text-center"><?= $_["trial"] ?></th>
-                                                                    <th class="text-center"><?= $_["expiration"] ?></th>
-                                                                    <th></th>
-                                                                    <th class="text-center"><?= $_["conns"] ?></th>
-                                                                    <th></th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody></tbody>
-                                                        </table>
+                                                            <?php } ?>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="tab-pane" id="user-details">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <p class="sub-header">
-                                                                <?= $_["to_mass_edit_any_of_the_below_options"] ?>
-                                                            </p>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="member_id" name="c_member_id">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="member_id"><?= $_["owner"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <select disabled name="member_id" id="member_id"
-                                                                        class="form-control select2"
-                                                                        data-toggle="select2">
-                                                                        <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
-                                                                            <option value="<?= $rRegisteredUser["id"] ?>">
-                                                                                <?= $rRegisteredUser["username"] ?>
-                                                                            </option>
-                                                                        <?php } ?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="max_connections"
-                                                                        name="c_max_connections">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="max_connections"><?= $_["max_connections"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled type="text" class="form-control"
-                                                                        id="max_connections" name="max_connections"
-                                                                        value="1">
-                                                                </div>
-                                                                <label class="col-md-2 col-form-label"
-                                                                    for="exp_date"><?= $_["expiry_date"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled type="text" disabled
-                                                                        class="form-control text-center date"
-                                                                        id="exp_date" name="exp_date" value=""
-                                                                        data-toggle="date-picker"
-                                                                        data-single-date-picker="true">
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="custom-control custom-checkbox mt-1">
-                                                                        <input disabled type="checkbox"
-                                                                            class="custom-control-input" id="no_expire"
-                                                                            name="no_expire">
-                                                                        <label class="custom-control-label"
-                                                                            for="no_expire"><?= $_["never"] ?></label>
-                                                                    </div>
-                                                                </div>
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="exp_date" name="c_exp_date">
-                                                                    <label></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="admin_notes" name="c_admin_notes">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="admin_notes"><?= $_["admin_notes"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <textarea disabled id="admin_notes"
-                                                                        name="admin_notes" class="form-control" rows="3"
-                                                                        placeholder=""></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="reseller_notes"
-                                                                        name="c_reseller_notes">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="reseller_notes"><?= $_["reseller_notes"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <textarea disabled id="reseller_notes"
-                                                                        name="reseller_notes" class="form-control"
-                                                                        rows="3" placeholder=""></textarea>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="force_server_id"
-                                                                        name="c_force_server_id">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="force_server_id"><?= $_["forced_connection"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <select disabled name="force_server_id"
-                                                                        id="force_server_id"
-                                                                        class="form-control select2"
-                                                                        data-toggle="select2">
-                                                                        <option selected value="0"><?= $_["disabled"] ?>
-                                                                        </option>
-                                                                        <?php foreach ($rServers as $rServer) { ?>
-                                                                            <option value="<?= $rServer["id"] ?>">
-                                                                                <?= $rServer["server_name"] ?>
-                                                                            </option>
-                                                                        <?php } ?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="is_stalker" data-type="switch"
-                                                                        name="c_is_stalker">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="is_stalker"><?= $_["ministra_portal"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled name="is_stalker" id="is_stalker"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="is_restreamer"><?= $_["restreamer"] ?>></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled name="is_restreamer"
-                                                                        id="is_restreamer" type="checkbox"
-                                                                        data-plugin="switchery" class="js-switch"
-                                                                        data-color="#039cfd" />
-                                                                </div>
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="is_restreamer" data-type="switch"
-                                                                        name="c_is_restreamer">
-                                                                    <label></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="is_e2" data-type="switch"
-                                                                        name="c_is_e2">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="is_e2"><?= $_["enigma_device"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled name="is_e2" id="is_e2"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="is_mag"><?= $_["mag_device"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled name="is_mag" id="is_mag"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="is_mag" data-type="switch"
-                                                                        name="c_is_mag">
-                                                                    <label></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="lock_device" data-type="switch"
-                                                                        name="c_lock_device">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="lock_device"><?= $_["mag_stb_lock"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled name="lock_device" id="lock_device"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <label class="col-md-5 col-form-label"
-                                                                    for="reset_stb_lock"><?= $_["reset_stb_lock"] ?></label>
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" name="reset_stb_lock">
-                                                                    <label></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="is_trial" data-type="switch"
-                                                                        name="c_is_trial">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="is_trial"><?= $_["trial_account"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input disabled name="is_trial" id="is_trial"
-                                                                        type="checkbox" data-plugin="switchery"
-                                                                        class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                                <label class="col-md-2 col-form-label"
-                                                                    for="access_output"><?= $_["access_output"] ?></label>
-                                                                <div class="col-md-3">
-                                                                    <?php foreach (getOutputs() as $rOutput) { ?>
-                                                                        <div class="checkbox form-check-inline">
-                                                                            <input disabled class="output" data-size="large"
-                                                                                type="checkbox"
-                                                                                id="access_output_<?= $rOutput["access_output_id"] ?>"
-                                                                                name="access_output[]"
-                                                                                value="<?= $rOutput["access_output_id"] ?>"
-                                                                                checked>
-                                                                            <label
-                                                                                for="access_output_<?= $rOutput["access_output_id"] ?>">
-                                                                                <?= $rOutput["output_name"] ?> </label>
-                                                                        </div>
-                                                                    <?php } ?>
-                                                                </div>
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="access_output" data-type="output"
-                                                                        name="c_access_output">
-                                                                    <label></label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group row mb-4">
-                                                                <div
-                                                                    class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
-                                                                    <input type="checkbox" class="activate"
-                                                                        data-name="forced_country"
-                                                                        name="c_forced_country">
-                                                                    <label></label>
-                                                                </div>
-                                                                <label class="col-md-3 col-form-label"
-                                                                    for="forced_country"><?= $_["forced_country"] ?></label>
-                                                                <div class="col-md-8">
-                                                                    <select disabled name="forced_country"
-                                                                        id="forced_country" class="form-control select2"
-                                                                        data-toggle="select2">
-                                                                        <?php foreach ($rCountries as $rCountry) { ?>
-                                                                            <option value="<?= $rCountry["id"] ?>">
-                                                                                <?= $rCountry["name"] ?>
-                                                                            </option>
-                                                                        <?php } ?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div> <!-- end col -->
-                                                    </div> <!-- end row -->
-                                                    <ul class="list-inline wizard mb-0">
-                                                        <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);"
-                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
-                                                        </li>
-                                                        <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);"
-                                                                class="btn btn-secondary"><?= $_["next"] ?></a>
-                                                        </li>
-                                                    </ul>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="max_connections" name="c_max_connections">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="max_connections"><?= $_["max_connections"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input disabled type="text" class="form-control"
+                                                            id="max_connections" name="max_connections" value="1">
+                                                    </div>
+                                                    <label class="col-md-2 col-form-label"
+                                                        for="exp_date"><?= $_["expiry_date"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input disabled type="text" disabled
+                                                            class="form-control text-center date" id="exp_date"
+                                                            name="exp_date" value="" data-toggle="date-picker"
+                                                            data-single-date-picker="true">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="custom-control custom-checkbox mt-1">
+                                                            <input disabled type="checkbox" class="custom-control-input"
+                                                                id="no_expire" name="no_expire">
+                                                            <label class="custom-control-label"
+                                                                for="no_expire"><?= $_["never"] ?></label>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="exp_date"
+                                                            name="c_exp_date">
+                                                        <label></label>
+                                                    </div>
                                                 </div>
-                                                <div class="tab-pane" id="bouquets">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-group row mb-4">
-                                                                <table id="datatable-bouquets"
-                                                                    class="table table-borderless mb-0">
-                                                                    <thead class="bg-light">
-                                                                        <tr>
-                                                                            <th class="text-center"><?= $_["id"] ?></th>
-                                                                            <th><?= $_["bouquet_name"] ?></th>
-                                                                            <th class="text-center"><?= $_["streams"] ?>
-                                                                            </th>
-                                                                            <th class="text-center"><?= $_["series"] ?>
-                                                                            </th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <?php foreach (getBouquets() as $rBouquet) { ?>
-                                                                            <tr>
-                                                                                <td class="text-center">
-                                                                                    <?= $rBouquet["id"] ?>
-                                                                                </td>
-                                                                                <td><?= $rBouquet["bouquet_name"] ?></td>
-                                                                                <td class="text-center">
-                                                                                    <?= count(json_decode($rBouquet["bouquet_channels"], true)) ?>
-                                                                                </td>
-                                                                                <td class="text-center">
-                                                                                    <?= count(json_decode($rBouquet["bouquet_series"], true)) ?>
-                                                                                </td>
-                                                                            </tr>
-                                                                        <?php } ?>
-                                                                    </tbody>
-                                                                </table>
-                                                                <div class="custom-control col-md-12 custom-checkbox text-center"
-                                                                    style="margin-top:20px;">
-                                                                    <input type="checkbox" class="custom-control-input"
-                                                                        id="c_bouquets" data-name="bouquets"
-                                                                        data-type="bouquet" name="c_bouquets">
-                                                                    <label class="custom-control-label"
-                                                                        for="c_bouquets"><?= $_["tick_this_box_to_apply"] ?></label>
-                                                                </div>
-                                                            </div>
-                                                        </div> <!-- end col -->
-                                                    </div> <!-- end row -->
-                                                    <ul class="list-inline wizard mb-0">
-                                                        <li class="previous list-inline-item">
-                                                            <a href="javascript: void(0);"
-                                                                class="btn btn-secondary"><?= $_["prev"] ?></a>
-                                                        </li>
-                                                        <li class="next list-inline-item float-right">
-                                                            <a href="javascript: void(0);" onClick="toggleBouquets()"
-                                                                class="btn btn-info"><?= $_["toggle_bouquets"] ?></a>
-                                                            <input name="submit_user" type="submit"
-                                                                class="btn btn-primary"
-                                                                value="<?= $_["mass_edit"] ?>" />
-                                                        </li>
-                                                    </ul>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="admin_notes"
+                                                            name="c_admin_notes">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="admin_notes"><?= $_["admin_notes"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <textarea disabled id="admin_notes" name="admin_notes"
+                                                            class="form-control" rows="3" placeholder=""></textarea>
+                                                    </div>
                                                 </div>
-                                            </div> <!-- tab-content -->
-                                        </div> <!-- end #basicwizard-->
-                                    </form>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="reseller_notes" name="c_reseller_notes">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="reseller_notes"><?= $_["reseller_notes"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <textarea disabled id="reseller_notes" name="reseller_notes"
+                                                            class="form-control" rows="3" placeholder=""></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="force_server_id" name="c_force_server_id">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="force_server_id"><?= $_["forced_connection"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <select disabled name="force_server_id" id="force_server_id"
+                                                            class="form-control select2" data-toggle="select2">
+                                                            <option selected value="0"><?= $_["disabled"] ?>
+                                                            </option>
+                                                            <?php foreach ($rServers as $rServer) { ?>
+                                                                <option value="<?= $rServer["id"] ?>">
+                                                                    <?= $rServer["server_name"] ?>
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="is_stalker"
+                                                            data-type="switch" name="c_is_stalker">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="is_stalker"><?= $_["ministra_portal"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input disabled name="is_stalker" id="is_stalker"
+                                                            type="checkbox" data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="is_restreamer"><?= $_["restreamer"] ?>></label>
+                                                    <div class="col-md-2">
+                                                        <input disabled name="is_restreamer" id="is_restreamer"
+                                                            type="checkbox" data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="is_restreamer" data-type="switch"
+                                                            name="c_is_restreamer">
+                                                        <label></label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="is_e2"
+                                                            data-type="switch" name="c_is_e2">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="is_e2"><?= $_["enigma_device"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input disabled name="is_e2" id="is_e2" type="checkbox"
+                                                            data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="is_mag"><?= $_["mag_device"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input disabled name="is_mag" id="is_mag" type="checkbox"
+                                                            data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="is_mag"
+                                                            data-type="switch" name="c_is_mag">
+                                                        <label></label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="lock_device"
+                                                            data-type="switch" name="c_lock_device">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="lock_device"><?= $_["mag_stb_lock"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input disabled name="lock_device" id="lock_device"
+                                                            type="checkbox" data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <label class="col-md-5 col-form-label"
+                                                        for="reset_stb_lock"><?= $_["reset_stb_lock"] ?></label>
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" name="reset_stb_lock">
+                                                        <label></label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate" data-name="is_trial"
+                                                            data-type="switch" name="c_is_trial">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="is_trial"><?= $_["trial_account"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input disabled name="is_trial" id="is_trial" type="checkbox"
+                                                            data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                    <label class="col-md-2 col-form-label"
+                                                        for="access_output"><?= $_["access_output"] ?></label>
+                                                    <div class="col-md-3">
+                                                        <?php foreach (getOutputs() as $rOutput) { ?>
+                                                            <div class="checkbox form-check-inline">
+                                                                <input disabled class="output" data-size="large"
+                                                                    type="checkbox"
+                                                                    id="access_output_<?= $rOutput["access_output_id"] ?>"
+                                                                    name="access_output[]"
+                                                                    value="<?= $rOutput["access_output_id"] ?>" checked>
+                                                                <label
+                                                                    for="access_output_<?= $rOutput["access_output_id"] ?>">
+                                                                    <?= $rOutput["output_name"] ?> </label>
+                                                            </div>
+                                                        <?php } ?>
+                                                    </div>
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="access_output" data-type="output"
+                                                            name="c_access_output">
+                                                        <label></label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <div
+                                                        class="checkbox checkbox-single col-md-1 checkbox-offset checkbox-primary">
+                                                        <input type="checkbox" class="activate"
+                                                            data-name="forced_country" name="c_forced_country">
+                                                        <label></label>
+                                                    </div>
+                                                    <label class="col-md-3 col-form-label"
+                                                        for="forced_country"><?= $_["forced_country"] ?></label>
+                                                    <div class="col-md-8">
+                                                        <select disabled name="forced_country" id="forced_country"
+                                                            class="form-control select2" data-toggle="select2">
+                                                            <?php foreach ($rCountries as $rCountry) { ?>
+                                                                <option value="<?= $rCountry["id"] ?>">
+                                                                    <?= $rCountry["name"] ?>
+                                                                </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col -->
+                                        </div> <!-- end row -->
+                                        <ul class="list-inline wizard mb-0">
+                                            <li class="previous list-inline-item">
+                                                <a href="javascript: void(0);"
+                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                            </li>
+                                            <li class="next list-inline-item float-right">
+                                                <a href="javascript: void(0);"
+                                                    class="btn btn-secondary"><?= $_["next"] ?></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" id="bouquets">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group row mb-4">
+                                                    <table id="datatable-bouquets" class="table table-borderless mb-0">
+                                                        <thead class="bg-light">
+                                                            <tr>
+                                                                <th class="text-center"><?= $_["id"] ?></th>
+                                                                <th><?= $_["bouquet_name"] ?></th>
+                                                                <th class="text-center"><?= $_["streams"] ?>
+                                                                </th>
+                                                                <th class="text-center"><?= $_["series"] ?>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <?= $rBouquet["id"] ?>
+                                                                    </td>
+                                                                    <td><?= $rBouquet["bouquet_name"] ?></td>
+                                                                    <td class="text-center">
+                                                                        <?= count(json_decode($rBouquet["bouquet_channels"], true)) ?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <?= count(json_decode($rBouquet["bouquet_series"], true)) ?>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php } ?>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="custom-control col-md-12 custom-checkbox text-center"
+                                                        style="margin-top:20px;">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="c_bouquets" data-name="bouquets" data-type="bouquet"
+                                                            name="c_bouquets">
+                                                        <label class="custom-control-label"
+                                                            for="c_bouquets"><?= $_["tick_this_box_to_apply"] ?></label>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col -->
+                                        </div> <!-- end row -->
+                                        <ul class="list-inline wizard mb-0">
+                                            <li class="previous list-inline-item">
+                                                <a href="javascript: void(0);"
+                                                    class="btn btn-secondary"><?= $_["prev"] ?></a>
+                                            </li>
+                                            <li class="next list-inline-item float-right">
+                                                <a href="javascript: void(0);" onClick="toggleBouquets()"
+                                                    class="btn btn-info"><?= $_["toggle_bouquets"] ?></a>
+                                                <input name="submit_user" type="submit" class="btn btn-primary"
+                                                    value="<?= $_["mass_edit"] ?>" />
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> <!-- tab-content -->
+                            </div> <!-- end #basicwizard-->
+                        </form>
 
-                                </div> <!-- end card-body -->
-                            </div> <!-- end card-->
-                        </div> <!-- end col -->
-                    </div>
-                </div> <!-- end container -->
-            </div>
-            <!-- end wrapper -->
-            <?php if ($rSettings["sidebar"]) {
-                echo "</div>";
-            } ?>
+                    </div> <!-- end card-body -->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+    </div> <!-- end container -->
+</div>
+<!-- end wrapper -->
 
-            <!-- Footer Start -->
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
-                    </div>
-                </div>
-            </footer>
-            <!-- end Footer -->
+<!-- Footer Start -->
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+        </div>
+    </div>
+</footer>
+<!-- end Footer -->
 
-            <script src="assets/js/vendor.min.js"></script>
-            <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
-            <script src="assets/libs/jquery-ui/jquery-ui.min.js"></script>
-            <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
-            <script src="assets/libs/switchery/switchery.min.js"></script>
-            <script src="assets/libs/select2/select2.min.js"></script>
-            <script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-            <script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-            <script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
-            <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
-            <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
-            <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
-            <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
-            <script src="assets/libs/datatables/buttons.html5.min.js"></script>
-            <script src="assets/libs/datatables/buttons.flash.min.js"></script>
-            <script src="assets/libs/datatables/buttons.print.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
-            <script src="assets/libs/datatables/dataTables.select.min.js"></script>
-            <script src="assets/libs/moment/moment.min.js"></script>
-            <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
-            <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
-            <script src="assets/libs/treeview/jstree.min.js"></script>
-            <script src="assets/js/pages/treeview.init.js"></script>
-            <script src="assets/js/pages/form-wizard.init.js"></script>
-            <script src="assets/js/app.min.js"></script>
+<script src="assets/js/vendor.min.js"></script>
+<script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+<script src="assets/libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
+<script src="assets/libs/switchery/switchery.min.js"></script>
+<script src="assets/libs/select2/select2.min.js"></script>
+<script src="assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<script src="assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+<script src="assets/libs/clockpicker/bootstrap-clockpicker.min.js"></script>
+<script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+<script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+<script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+<script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+<script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+<script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+<script src="assets/libs/datatables/buttons.html5.min.js"></script>
+<script src="assets/libs/datatables/buttons.flash.min.js"></script>
+<script src="assets/libs/datatables/buttons.print.min.js"></script>
+<script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+<script src="assets/libs/datatables/dataTables.select.min.js"></script>
+<script src="assets/libs/moment/moment.min.js"></script>
+<script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+<script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+<script src="assets/libs/treeview/jstree.min.js"></script>
+<script src="assets/js/pages/treeview.init.js"></script>
+<script src="assets/js/pages/form-wizard.init.js"></script>
+<script src="assets/js/app.min.js"></script>
 
-            <script>
-                var rSwitches = [];
-                var rSelected = [];
-                var rBouquets = [];
+<script>
+    var rSwitches = [];
+    var rSelected = [];
+    var rBouquets = [];
 
-                function getReseller() {
-                    return $("#reseller_search").val();
+    function getReseller() {
+        return $("#reseller_search").val();
+    }
+
+    function getFilter() {
+        return $("#filter").val();
+    }
+
+    function toggleUsers() {
+        $("#datatable-mass tr").each(function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                if ($(this).find("td:eq(0)").html()) {
+                    window.rSelected.splice($.inArray($(this).find("td:eq(0)").html(), window.rSelected), 1);
                 }
-
-                function getFilter() {
-                    return $("#filter").val();
+            } else {
+                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                if ($(this).find("td:eq(0)").html()) {
+                    window.rSelected.push($(this).find("td:eq(0)").html());
                 }
+            }
+        });
+        $("#selected_count").html(" - " + window.rSelected.length + " selected")
+    }
 
-                function toggleUsers() {
-                    $("#datatable-mass tr").each(function () {
-                        if ($(this).hasClass('selected')) {
-                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                            if ($(this).find("td:eq(0)").html()) {
-                                window.rSelected.splice($.inArray($(this).find("td:eq(0)").html(), window.rSelected), 1);
-                            }
-                        } else {
-                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                            if ($(this).find("td:eq(0)").html()) {
-                                window.rSelected.push($(this).find("td:eq(0)").html());
-                            }
-                        }
-                    });
-                    $("#selected_count").html(" - " + window.rSelected.length + " selected")
+    function toggleBouquets() {
+        $("#datatable-bouquets tr").each(function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                if ($(this).find("td:eq(0)").html()) {
+                    window.rBouquets.splice($.inArray($(this).find("td:eq(0)").html(), window.rBouquets), 1);
                 }
-
-                function toggleBouquets() {
-                    $("#datatable-bouquets tr").each(function () {
-                        if ($(this).hasClass('selected')) {
-                            $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                            if ($(this).find("td:eq(0)").html()) {
-                                window.rBouquets.splice($.inArray($(this).find("td:eq(0)").html(), window.rBouquets), 1);
-                            }
-                        } else {
-                            $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                            if ($(this).find("td:eq(0)").html()) {
-                                window.rBouquets.push($(this).find("td:eq(0)").html());
-                            }
-                        }
-                        if (!$("#c_bouquets").is(":checked")) {
-                            $("#c_bouquets").prop('checked', true);
-                        }
-                    });
+            } else {
+                $(this).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                if ($(this).find("td:eq(0)").html()) {
+                    window.rBouquets.push($(this).find("td:eq(0)").html());
                 }
-                (function ($) {
-                    $.fn.inputFilter = function (inputFilter) {
-                        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
-                            if (inputFilter(this.value)) {
-                                this.oldValue = this.value;
-                                this.oldSelectionStart = this.selectionStart;
-                                this.oldSelectionEnd = this.selectionEnd;
-                            } else if (this.hasOwnProperty("oldValue")) {
-                                this.value = this.oldValue;
-                                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                            }
-                        });
-                    };
-                }(jQuery));
-                $(document).ready(function () {
-                    $('select').select2({
-                        width: '100%'
-                    })
-                    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                    elems.forEach(function (html) {
-                        var switchery = new Switchery(html);
-                        window.rSwitches[$(html).attr("id")] = switchery;
+            }
+            if (!$("#c_bouquets").is(":checked")) {
+                $("#c_bouquets").prop('checked', true);
+            }
+        });
+    }
+    (function ($) {
+        $.fn.inputFilter = function (inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                if (inputFilter(this.value)) {
+                    this.oldValue = this.value;
+                    this.oldSelectionStart = this.selectionStart;
+                    this.oldSelectionEnd = this.selectionEnd;
+                } else if (this.hasOwnProperty("oldValue")) {
+                    this.value = this.oldValue;
+                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                }
+            });
+        };
+    }(jQuery));
+    $(document).ready(function () {
+        $('select').select2({
+            width: '100%'
+        })
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+        elems.forEach(function (html) {
+            var switchery = new Switchery(html);
+            window.rSwitches[$(html).attr("id")] = switchery;
+        });
+        $('#exp_date').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minDate: new Date(),
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+        $("#no_expire").change(function () {
+            if ($(this).prop("checked")) {
+                $("#exp_date").prop("disabled", true);
+            } else {
+                $("#exp_date").removeAttr("disabled");
+            }
+        });
+        $("#user_form").submit(function (e) {
+            var rBouquets = [];
+            $("#datatable-bouquets tr.selected").each(function () {
+                rBouquets.push($(this).find("td:eq(0)").html());
+            });
+            $("#bouquets_selected").val(JSON.stringify(rBouquets));
+            $("#users_selected").val(JSON.stringify(window.rSelected));
+            if (window.rSelected.length == 0) {
+                e.preventDefault();
+                $.toast("<?= $_["select_at_least_one_user_to_edit"] ?>");
+            }
+        });
+        $("input[type=checkbox].activate").change(function () {
+            if ($(this).is(":checked")) {
+                if ($(this).data("type") == "switch") {
+                    window.rSwitches[$(this).data("name")].enable();
+                } else if ($(this).data("type") == "output") {
+                    $(".output").each(function () {
+                        $(this).prop("disabled", false);
                     });
-                    $('#exp_date').daterangepicker({
-                        singleDatePicker: true,
-                        showDropdowns: true,
-                        minDate: new Date(),
-                        locale: {
-                            format: 'YYYY-MM-DD'
+                } else if ($(this).data("type") == "bouquet") {
+                    $(".bouquet-checkbox").each(function () {
+                        $(this).prop("disabled", false);
+                    });
+                } else {
+                    if ($(this).data("name") == "exp_date") {
+                        $("#no_expire").prop("disabled", false);
+                        if (!$("#no_expire").is(":checked")) {
+                            $("#exp_date").prop("disabled", false);
                         }
+                    } else {
+                        $("#" + $(this).data("name")).prop("disabled", false);
+                    }
+                }
+            } else {
+                if ($(this).data("type") == "switch") {
+                    window.rSwitches[$(this).data("name")].disable();
+                } else if ($(this).data("type") == "output") {
+                    $(".output").each(function () {
+                        $(this).prop("disabled", true);
                     });
-                    $("#no_expire").change(function () {
-                        if ($(this).prop("checked")) {
+                } else if ($(this).data("type") == "bouquet") {
+                    $(".bouquet-checkbox").each(function () {
+                        $(this).prop("disabled", true);
+                    });
+                } else {
+                    if ($(this).data("name") == "exp_date") {
+                        $("#no_expire").prop("disabled", true);
+                        if (!$("#no_expire").is(":checked")) {
                             $("#exp_date").prop("disabled", true);
-                        } else {
-                            $("#exp_date").removeAttr("disabled");
                         }
-                    });
-                    $("#user_form").submit(function (e) {
-                        var rBouquets = [];
-                        $("#datatable-bouquets tr.selected").each(function () {
-                            rBouquets.push($(this).find("td:eq(0)").html());
-                        });
-                        $("#bouquets_selected").val(JSON.stringify(rBouquets));
-                        $("#users_selected").val(JSON.stringify(window.rSelected));
-                        if (window.rSelected.length == 0) {
-                            e.preventDefault();
-                            $.toast("<?= $_["select_at_least_one_user_to_edit"] ?>");
-                        }
-                    });
-                    $("input[type=checkbox].activate").change(function () {
-                        if ($(this).is(":checked")) {
-                            if ($(this).data("type") == "switch") {
-                                window.rSwitches[$(this).data("name")].enable();
-                            } else if ($(this).data("type") == "output") {
-                                $(".output").each(function () {
-                                    $(this).prop("disabled", false);
-                                });
-                            } else if ($(this).data("type") == "bouquet") {
-                                $(".bouquet-checkbox").each(function () {
-                                    $(this).prop("disabled", false);
-                                });
-                            } else {
-                                if ($(this).data("name") == "exp_date") {
-                                    $("#no_expire").prop("disabled", false);
-                                    if (!$("#no_expire").is(":checked")) {
-                                        $("#exp_date").prop("disabled", false);
-                                    }
-                                } else {
-                                    $("#" + $(this).data("name")).prop("disabled", false);
-                                }
-                            }
-                        } else {
-                            if ($(this).data("type") == "switch") {
-                                window.rSwitches[$(this).data("name")].disable();
-                            } else if ($(this).data("type") == "output") {
-                                $(".output").each(function () {
-                                    $(this).prop("disabled", true);
-                                });
-                            } else if ($(this).data("type") == "bouquet") {
-                                $(".bouquet-checkbox").each(function () {
-                                    $(this).prop("disabled", true);
-                                });
-                            } else {
-                                if ($(this).data("name") == "exp_date") {
-                                    $("#no_expire").prop("disabled", true);
-                                    if (!$("#no_expire").is(":checked")) {
-                                        $("#exp_date").prop("disabled", true);
-                                    }
-                                } else {
-                                    $("#" + $(this).data("name")).prop("disabled", true);
-                                }
-                            }
-                        }
-                    });
-                    $(".clockpicker").clockpicker();
-                    $(window).keypress(function (event) {
-                        if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
-                    });
-                    $("#probesize_ondemand").inputFilter(function (value) {
-                        return /^\d*$/.test(value);
-                    });
-                    $("#delay_minutes").inputFilter(function (value) {
-                        return /^\d*$/.test(value);
-                    });
-                    $("#tv_archive_duration").inputFilter(function (value) {
-                        return /^\d*$/.test(value);
-                    });
-                    $("form").attr('autocomplete', 'off');
-                    rTable = $("#datatable-mass").DataTable({
-                        language: {
-                            paginate: {
-                                previous: "<i class='mdi mdi-chevron-left'>",
-                                next: "<i class='mdi mdi-chevron-right'>"
-                            }
-                        },
-                        drawCallback: function () {
-                            $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
-                        },
-                        processing: true,
-                        serverSide: true,
-                        ajax: {
-                            url: "./table_search.php",
-                            "data": function (d) {
-                                d.id = "users",
-                                    d.filter = getFilter(),
-                                    d.reseller = getReseller(),
-                                    d.showall = true
-                            }
-                        },
-                        columnDefs: [{
-                            "className": "dt-center",
-                            "targets": [0, 4, 6, 7, 9]
-                        },
-                        {
-                            "visible": false,
-                            "targets": [2, 5, 8, 10, 11]
-                        }
-                        ],
-                        "rowCallback": function (row, data) {
-                            if ($.inArray(data[0], window.rSelected) !== -1) {
-                                $(row).addClass("selected");
-                            }
-                        },
-                        pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
-                    });
-                    bTable = $("#datatable-bouquets").DataTable({
-                        columnDefs: [{
-                            "className": "dt-center",
-                            "targets": [0, 2, 3]
-                        }],
-                        "rowCallback": function (row, data) {
-                            if ($.inArray(data[0], window.rBouquets) !== -1) {
-                                $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                            }
-                        },
-                        paging: false,
-                        bInfo: false,
-                        searching: false
-                    });
-                    $('#user_search').keyup(function () {
-                        rTable.search($(this).val()).draw();
-                    })
-                    $('#show_entries').change(function () {
-                        rTable.page.len($(this).val()).draw();
-                    })
-                    $('#reseller_search').change(function () {
-                        rTable.ajax.reload(null, false);
-                    })
-                    $('#filter').change(function () {
-                        rTable.ajax.reload(null, false);
-                    })
-                    $("#datatable-mass").selectable({
-                        filter: 'tr',
-                        selected: function (event, ui) {
-                            if ($(ui.selected).hasClass('selectedfilter')) {
-                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                window.rSelected.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSelected), 1);
-                            } else {
-                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                window.rSelected.push($(ui.selected).find("td:eq(0)").html());
-                            }
-                            $("#selected_count").html(" - " + window.rSelected.length + " selected")
-                        }
-                    });
-                    $("#datatable-bouquets").selectable({
-                        filter: 'tr',
-                        selected: function (event, ui) {
-                            if ($(ui.selected).hasClass('selectedfilter')) {
-                                $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
-                                window.rBouquets.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rBouquets), 1);
-                            } else {
-                                $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
-                                window.rBouquets.push($(ui.selected).find("td:eq(0)").html());
-                            }
-                            if (!$("#c_bouquets").is(":checked")) {
-                                $("#c_bouquets").prop('checked', true);
-                            }
-                        }
-                    });
-                });
-            </script>
-            </body>
+                    } else {
+                        $("#" + $(this).data("name")).prop("disabled", true);
+                    }
+                }
+            }
+        });
+        $(".clockpicker").clockpicker();
+        $(window).keypress(function (event) {
+            if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+        });
+        $("#probesize_ondemand").inputFilter(function (value) {
+            return /^\d*$/.test(value);
+        });
+        $("#delay_minutes").inputFilter(function (value) {
+            return /^\d*$/.test(value);
+        });
+        $("#tv_archive_duration").inputFilter(function (value) {
+            return /^\d*$/.test(value);
+        });
+        $("form").attr('autocomplete', 'off');
+        rTable = $("#datatable-mass").DataTable({
+            language: {
+                paginate: {
+                    previous: "<i class='mdi mdi-chevron-left'>",
+                    next: "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            drawCallback: function () {
+                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+            },
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "./table_search.php",
+                "data": function (d) {
+                    d.id = "users",
+                        d.filter = getFilter(),
+                        d.reseller = getReseller(),
+                        d.showall = true
+                }
+            },
+            columnDefs: [{
+                "className": "dt-center",
+                "targets": [0, 4, 6, 7, 9]
+            },
+            {
+                "visible": false,
+                "targets": [2, 5, 8, 10, 11]
+            }
+            ],
+            "rowCallback": function (row, data) {
+                if ($.inArray(data[0], window.rSelected) !== -1) {
+                    $(row).addClass("selected");
+                }
+            },
+            pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
+        });
+        bTable = $("#datatable-bouquets").DataTable({
+            columnDefs: [{
+                "className": "dt-center",
+                "targets": [0, 2, 3]
+            }],
+            "rowCallback": function (row, data) {
+                if ($.inArray(data[0], window.rBouquets) !== -1) {
+                    $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                }
+            },
+            paging: false,
+            bInfo: false,
+            searching: false
+        });
+        $('#user_search').keyup(function () {
+            rTable.search($(this).val()).draw();
+        })
+        $('#show_entries').change(function () {
+            rTable.page.len($(this).val()).draw();
+        })
+        $('#reseller_search').change(function () {
+            rTable.ajax.reload(null, false);
+        })
+        $('#filter').change(function () {
+            rTable.ajax.reload(null, false);
+        })
+        $("#datatable-mass").selectable({
+            filter: 'tr',
+            selected: function (event, ui) {
+                if ($(ui.selected).hasClass('selectedfilter')) {
+                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                    window.rSelected.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSelected), 1);
+                } else {
+                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                    window.rSelected.push($(ui.selected).find("td:eq(0)").html());
+                }
+                $("#selected_count").html(" - " + window.rSelected.length + " selected")
+            }
+        });
+        $("#datatable-bouquets").selectable({
+            filter: 'tr',
+            selected: function (event, ui) {
+                if ($(ui.selected).hasClass('selectedfilter')) {
+                    $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
+                    window.rBouquets.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rBouquets), 1);
+                } else {
+                    $(ui.selected).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
+                    window.rBouquets.push($(ui.selected).find("td:eq(0)").html());
+                }
+                if (!$("#c_bouquets").is(":checked")) {
+                    $("#c_bouquets").prop('checked', true);
+                }
+            }
+        });
+    });
+</script>
+</body>
 
-            </html>
+</html>

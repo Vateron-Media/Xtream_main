@@ -23,11 +23,7 @@ if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "da
 
 $rSettings = getSettings(); // Update
 
-if ($rSettings["sidebar"]) {
-    include "header_sidebar.php";
-} else {
-    include "header.php";
-}
+include "header.php";
 
 
 ?>
@@ -138,9 +134,6 @@ if ($rSettings["sidebar"]) {
     </div>
 </div>
 <!-- end wrapper -->
-<?php if ($rSettings["sidebar"]) {
-    echo "</div>";
-} ?>
 <!-- Footer Start -->
 <footer class="footer">
     <div class="container-fluid">
