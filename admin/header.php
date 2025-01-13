@@ -84,19 +84,6 @@
                             </a>
                         </li>
                     <?php } ?>
-                    <?php if ($rPermissions["is_reseller"]) {
-                        echo "A panel for resellers will be created separately" ?>
-                        <!-- <li class="notification-list">
-                            <a class="nav-link text-white waves-effect" href="#" role="button">
-                                <i class="fe-dollar-sign noti-icon text-warning"></i>
-                                <?php if (floor($rUserInfo["credits"]) == $rUserInfo["credits"]) {
-                                    echo number_format($rUserInfo["credits"], 0);
-                                } else {
-                                    echo number_format($rUserInfo["credits"], 2);
-                                } ?>
-                            </a>
-                        </li> -->
-                    <?php } ?>
                     <?php if ($rPermissions["is_admin"]) {
                         if ((hasPermissions("adv", "settings")) or (hasPermissions("adv", "database")) or (hasPermissions("adv", "block_ips")) or (hasPermissions("adv", "block_isps")) or (hasPermissions("adv", "block_uas")) or (hasPermissions("adv", "categories")) or (hasPermissions("adv", "channel_order")) or (hasPermissions("adv", "epg")) or (hasPermissions("adv", "folder_watch")) or (hasPermissions("adv", "mng_groups")) or (hasPermissions("adv", "mass_delete")) or (hasPermissions("adv", "mng_packages")) or (hasPermissions("adv", "process_monitor")) or (hasPermissions("adv", "rtmp")) or (hasPermissions("adv", "subresellers")) or (hasPermissions("adv", "tprofiles"))) { ?>
                             <li class="dropdown notification-list">
@@ -172,209 +159,138 @@
                                 href="./<?php if ($rPermissions["is_admin"]) { ?>dashboard<?php } else { ?>reseller<?php } ?>"><i
                                     class="mdi mdi-view-dashboard-outline mdi-18px text-purple"></i><?= $_["dashboard"] ?></a>
                         </li>
-                        <?php if (($rPermissions["is_reseller"]) && ($rPermissions["reseller_client_connection_logs"])) {
-                            echo "A panel for resellers will be created separately" ?>
-                            <!-- <li class="has-submenu">
-                                <a href="#"><i
-                                        class="mdi mdi-information-outline mdi-18px text-danger"></i><?= $_["logs"] ?>
+                        <?php
+                        if ((hasPermissions("adv", "servers")) or (hasPermissions("adv", "add_server"))) { ?>
+                            <li class="has-submenu">
+                                <a href="#"><i class="mdi mdi-server-network mdi-18px text-warning"></i>
+                                    <?= $_['servers']; ?>
+                                    <div class="arrow-down">
+                                    </div>
+                                </a>
+                                <ul class="submenu">
+                                    <?php if (hasPermissions('adv', 'add_server')): ?>
+                                        <li>
+                                            <a href="./server">
+                                                <i class="mdi mdi-upload-network-outline"></i> <?= $_["add_existing_lb"] ?></a>
+                                        </li>
+                                        <li><a href="./server_install">
+                                                <i class="mdi mdi-plus-network-outline"></i>
+                                                <?= $_["install_load_balancer"] ?></a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if (hasPermissions('adv', 'servers')): ?>
+                                        <li>
+                                            <a href="./servers">
+                                                <i class="mdi mdi-server-network"></i> <?= $_['manage_servers']; ?></a>
+                                        </li>
+                                        <li>
+                                            <a href="./smonitor">
+                                                <i class="mdi mdi-chart-line-variant"></i> <?= $_['server_monitor']; ?></a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </li>
+                        <?php }
+                        if (hasPermissions('adv', 'add_user') || (hasPermissions("adv", "add_reguser")) || hasPermissions('adv', 'users') || (hasPermissions("adv", "mng_regusers")) || hasPermissions('adv', 'add_mag') || hasPermissions('adv', 'manage_mag') || hasPermissions('adv', 'add_e2') || hasPermissions('adv', 'manage_e2')) { ?>
+                            <li class="has-submenu">
+                                <a href="#"> <i class="mdi mdi-monitor mdi-18px text-pink"></i> <?= $_["users"] ?>
                                     <div class="arrow-down"></div>
                                 </a>
                                 <ul class="submenu">
-                                    <li><a href="./live_connections"><span
-                                                class="mdi mdi-account-network-outline mdi-18px"></span>
-                                            <?= $_["live_connections"] ?></a></li>
-                                    <li><a href="./user_activity"><span class="mdi mdi-file-document-outline mdi-18px">
-                                                <?= $_["activity_logs"] ?></a></li>
-                                </ul>
-                            </li> -->
-                        <?php }
-                        if ($rPermissions["is_admin"]) {
-                            if ((hasPermissions("adv", "servers")) or (hasPermissions("adv", "add_server"))) { ?>
-                                <li class="has-submenu">
-                                    <a href="#"><i class="mdi mdi-server-network mdi-18px text-warning"></i>
-                                        <?= $_['servers']; ?>
-                                        <div class="arrow-down">
-                                        </div>
-                                    </a>
-                                    <ul class="submenu">
-                                        <?php if (hasPermissions('adv', 'add_server')): ?>
-                                            <li>
-                                                <a href="./server">
-                                                    <i class="mdi mdi-upload-network-outline"></i> <?= $_["add_existing_lb"] ?></a>
-                                            </li>
-                                            <li><a href="./server_install">
-                                                    <i class="mdi mdi-plus-network-outline"></i>
-                                                    <?= $_["install_load_balancer"] ?></a>
-                                            </li>
-                                        <?php endif; ?>
-                                        <?php if (hasPermissions('adv', 'servers')): ?>
-                                            <li>
-                                                <a href="./servers">
-                                                    <i class="mdi mdi-server-network"></i> <?= $_['manage_servers']; ?></a>
-                                            </li>
-                                            <li>
-                                                <a href="./smonitor">
-                                                    <i class="mdi mdi-chart-line-variant"></i> <?= $_['server_monitor']; ?></a>
-                                            </li>
-                                        <?php endif; ?>
-                                    </ul>
-                                </li>
-                            <?php }
-                            if (hasPermissions('adv', 'add_user') || (hasPermissions("adv", "add_reguser")) || hasPermissions('adv', 'users') || (hasPermissions("adv", "mng_regusers")) || hasPermissions('adv', 'add_mag') || hasPermissions('adv', 'manage_mag') || hasPermissions('adv', 'add_e2') || hasPermissions('adv', 'manage_e2')) { ?>
-                                <li class="has-submenu">
-                                    <a href="#"> <i class="mdi mdi-monitor mdi-18px text-pink"></i> <?= $_["users"] ?>
-                                        <div class="arrow-down"></div>
-                                    </a>
-                                    <ul class="submenu">
-                                        <?php if (hasPermissions('adv', 'add_user') || hasPermissions('adv', 'users')): ?>
-                                            <li class="has-submenu">
-                                                <a href="#"><i class="mdi mdi-account-multiple"></i> <?= $_["users"] ?>
-                                                    <div class="arrow-down"></div>
-                                                </a>
-                                                <ul class="submenu">
-                                                    <?php if (hasPermissions('adv', 'add_user')): ?>
-                                                        <li><a href="./user"><i class="mdi mdi-account-plus-outline "></i>
-                                                                <?= $_["add_user"] ?></a>
-                                                        </li>
-                                                    <?php endif; ?>
-                                                    <?php if (hasPermissions('adv', 'users')): ?>
-                                                        <li><a href="./users"><i class="mdi mdi-account-multiple-outline "></i>
-                                                                <?= $_["manage_users"] ?></a>
-                                                        </li>
-                                                    <?php endif; ?>
-                                                    <?php if (hasPermissions('adv', 'mass_edit_users')): ?>
-                                                        <li><a href="./user_mass"><i class="mdi mdi-account-edit"></i>
-                                                                <?= $_["mass_edit_users"] ?></a></li>
-                                                    <?php endif; ?>
-                                                </ul>
-                                            </li>
-                                        <?php endif; ?>
-                                        <?php if (hasPermissions('adv', 'add_mag') || hasPermissions('adv', 'manage_mag')): ?>
-                                            <li class="has-submenu">
-                                                <a href="#"><i class="mdi mdi-cellphone-link"></i> <?= $_['mag_devices']; ?>
-                                                    <div class="arrow-down"></div>
-                                                </a>
-                                                <ul class="submenu">
-                                                    <?php if (hasPermissions('adv', 'add_mag')): ?>
-                                                        <li><a href="./user?mag"><i class="mdi mdi-account-plus-outline"> </i>
-                                                                <?= $_['add_mag']; ?></a></li>
-                                                        <!--<li><a href="./mag"><?= $_["link_mag"] ?></a></li>-->
-                                                    <?php endif; ?>
-                                                    <?php if (hasPermissions('adv', 'manage_mag')): ?>
-                                                        <li><a href="./mags"><i class="mdi mdi-account-multiple-outline "> </i>
-                                                                <?= $_['manage_mag_devices']; ?></a></li>
-                                                    <?php endif; ?>
+                                    <?php if (hasPermissions('adv', 'add_user') || hasPermissions('adv', 'users')): ?>
+                                        <li class="has-submenu">
+                                            <a href="#"><i class="mdi mdi-account-multiple"></i> <?= $_["users"] ?>
+                                                <div class="arrow-down"></div>
+                                            </a>
+                                            <ul class="submenu">
+                                                <?php if (hasPermissions('adv', 'add_user')): ?>
+                                                    <li><a href="./user"><i class="mdi mdi-account-plus-outline "></i>
+                                                            <?= $_["add_user"] ?></a>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if (hasPermissions('adv', 'users')): ?>
+                                                    <li><a href="./users"><i class="mdi mdi-account-multiple-outline "></i>
+                                                            <?= $_["manage_users"] ?></a>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if (hasPermissions('adv', 'mass_edit_users')): ?>
+                                                    <li><a href="./user_mass"><i class="mdi mdi-account-edit"></i>
+                                                            <?= $_["mass_edit_users"] ?></a></li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if (hasPermissions('adv', 'add_mag') || hasPermissions('adv', 'manage_mag')): ?>
+                                        <li class="has-submenu">
+                                            <a href="#"><i class="mdi mdi-cellphone-link"></i> <?= $_['mag_devices']; ?>
+                                                <div class="arrow-down"></div>
+                                            </a>
+                                            <ul class="submenu">
+                                                <?php if (hasPermissions('adv', 'add_mag')): ?>
+                                                    <li><a href="./user?mag"><i class="mdi mdi-account-plus-outline"> </i>
+                                                            <?= $_['add_mag']; ?></a></li>
+                                                    <!--<li><a href="./mag"><?= $_["link_mag"] ?></a></li>-->
+                                                <?php endif; ?>
+                                                <?php if (hasPermissions('adv', 'manage_mag')): ?>
+                                                    <li><a href="./mags"><i class="mdi mdi-account-multiple-outline "> </i>
+                                                            <?= $_['manage_mag_devices']; ?></a></li>
+                                                <?php endif; ?>
 
-                                                    <?php if (hasPermissions('adv', 'add_mag')): ?>
-                                                        <li><a href="./mag"><i class="mdi mdi-account-switch"> </i>
-                                                                <?= $_['link_mag']; ?></a></li>
-                                                    <?php endif; ?>
-                                                    <!-- <?php if (hasPermissions('adv', 'mass_edit_mags')): ?>
+                                                <?php if (hasPermissions('adv', 'add_mag')): ?>
+                                                    <li><a href="./mag"><i class="mdi mdi-account-switch"> </i>
+                                                            <?= $_['link_mag']; ?></a></li>
+                                                <?php endif; ?>
+                                                <!-- <?php if (hasPermissions('adv', 'mass_edit_mags')): ?>
                                                         <li><a href="mag_mass">Mass Edit Mags</a></li>
                                                     <?php endif; ?> -->
-                                                </ul>
-                                            </li>
-                                        <?php endif; ?>
-                                        <?php if (hasPermissions('adv', 'add_e2') || hasPermissions('adv', 'manage_e2')): ?>
-                                            <li class="has-submenu">
-                                                <a href="#"><i class="mdi mdi-cellphone-link"></i> <?= $_['enigma_devices']; ?>
-                                                    <div class="arrow-down"></div>
-                                                </a>
-                                                <ul class="submenu">
-                                                    <?php if (hasPermissions('adv', 'add_e2')): ?>
-                                                        <li><a href="./user?e2"><i class="mdi mdi-account-plus-outline"></i>
-                                                                <?= $_['add_enigma']; ?></a></li>
-                                                    <?php endif; ?>
-                                                    <?php if (hasPermissions('adv', 'manage_e2')): ?>
-                                                        <li><a href="./enigmas"><i class="mdi mdi-account-multiple-outline"></i>
-                                                                <?= $_['manage_enigma_devices']; ?></a></li>
-                                                    <?php endif; ?>
-                                                    <?php if (hasPermissions('adv', 'add_e2')): ?>
-                                                        <li><a href="./enigma"><i class="mdi mdi-account-switch"></i>
-                                                                <?= $_['link_enigma']; ?></a></li>
-                                                    <?php endif; ?>
-                                                    <!-- <?php if (hasPermissions('adv', 'mass_edit_enigmas')): ?>
+                                            </ul>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if (hasPermissions('adv', 'add_e2') || hasPermissions('adv', 'manage_e2')): ?>
+                                        <li class="has-submenu">
+                                            <a href="#"><i class="mdi mdi-cellphone-link"></i> <?= $_['enigma_devices']; ?>
+                                                <div class="arrow-down"></div>
+                                            </a>
+                                            <ul class="submenu">
+                                                <?php if (hasPermissions('adv', 'add_e2')): ?>
+                                                    <li><a href="./user?e2"><i class="mdi mdi-account-plus-outline"></i>
+                                                            <?= $_['add_enigma']; ?></a></li>
+                                                <?php endif; ?>
+                                                <?php if (hasPermissions('adv', 'manage_e2')): ?>
+                                                    <li><a href="./enigmas"><i class="mdi mdi-account-multiple-outline"></i>
+                                                            <?= $_['manage_enigma_devices']; ?></a></li>
+                                                <?php endif; ?>
+                                                <?php if (hasPermissions('adv', 'add_e2')): ?>
+                                                    <li><a href="./enigma"><i class="mdi mdi-account-switch"></i>
+                                                            <?= $_['link_enigma']; ?></a></li>
+                                                <?php endif; ?>
+                                                <!-- <?php if (hasPermissions('adv', 'mass_edit_enigmas')): ?>
                                                         <li><a href="enigma_mass">Mass Edit Enigmas</a></li>
                                                     <?php endif; ?> -->
-                                                </ul>
-                                            </li>
-                                        <?php endif; ?>
-                                        <?php if (hasPermissions('adv', 'add_reguser') || hasPermissions('adv', 'mng_regusers')): ?>
-                                            <li class="has-submenu">
-                                                <a href="#"><i class="mdi mdi-account-network-outline"></i> Reseller <div
-                                                        class="arrow-down"></div></a>
-                                                <ul class="submenu">
-                                                    <?php if (hasPermissions('adv', 'add_reguser')): ?>
-                                                        <li><a href="./reg_user"><i class="mdi mdi-account-multiple-plus-outline"></i>
-                                                                <?= $_["add_registered_user"] ?></a></li>
-                                                    <?php endif; ?>
-                                                    <?php if (hasPermissions('adv', 'mng_regusers')): ?>
-                                                        <li><a href="./reg_users"><i class="mdi mdi-account-multiple-outline"></i>
-                                                                <?= $_["manage_registered_users"] ?></a></li>
-                                                    <?php endif; ?>
-                                                    <!-- <?php if (hasPermissions('adv', 'mass_edit_users')): ?>
+                                            </ul>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if (hasPermissions('adv', 'add_reguser') || hasPermissions('adv', 'mng_regusers')): ?>
+                                        <li class="has-submenu">
+                                            <a href="#"><i class="mdi mdi-account-network-outline"></i> Reseller <div
+                                                    class="arrow-down"></div></a>
+                                            <ul class="submenu">
+                                                <?php if (hasPermissions('adv', 'add_reguser')): ?>
+                                                    <li><a href="./reg_user"><i class="mdi mdi-account-multiple-plus-outline"></i>
+                                                            <?= $_["add_registered_user"] ?></a></li>
+                                                <?php endif; ?>
+                                                <?php if (hasPermissions('adv', 'mng_regusers')): ?>
+                                                    <li><a href="./reg_users"><i class="mdi mdi-account-multiple-outline"></i>
+                                                            <?= $_["manage_registered_users"] ?></a></li>
+                                                <?php endif; ?>
+                                                <!-- <?php if (hasPermissions('adv', 'mass_edit_users')): ?>
                                                         <li><a href="./reg_user_mass">Mass Edit Resellers</a></li>
                                                     <?php endif; ?> -->
-                                                </ul>
-                                            </li>
-                                        <?php endif; ?>
-                                    </ul>
-                                </li>
-                            <?php }
-                        } else {
-                            echo "A panel for resellers will be created separately" ?>
-
-                            <!-- <li class="has-submenu">
-                                <a href="#"> <i class="mdi mdi-account-outline mdi-18px text-pink"></i><?= $_["users"] ?>
-                                    <div class="arrow-down"></div>
-                                </a>
-                                <ul class="submenu">
-                                    <?php if ((!$rSettings["disable_trial"]) && ($rPermissions["total_allowed_gen_trials"] > 0) && ($rUserInfo["credits"] >= $rPermissions["minimum_trial_credits"])) { ?>
-                                        <li><a href="./user_reseller?trial"><span
-                                                    class="mdi mdi-account-plus-outline mdi-18px"></span>
-                                                <?= $_["generate_trial"] ?></a></li>
-                                    <?php } ?>
-                                    <div class="separator"></div>
-                                    <li><a href="./user_reseller"><span
-                                                class="mdi mdi-account-plus-outline mdi-18px"></span>
-                                            <?= $_["add_user"] ?></a></li>
-                                    <li><a href="./users"><span class="mdi mdi-account-multiple-outline mdi-18px">
-                                                <?= $_["manage_users"] ?></a></li>
-                                    <div class="separator"></div>
-                                    <li><a href="./user_reseller?mag"><span
-                                                class="mdi mdi-account-plus-outline mdi-18px"></span>
-                                            <?= $_["add_mag"] ?></a></li>
-                                    <li><a href="./mags"><span class="mdi mdi-account-multiple-outline mdi-18px">
-                                                <?= $_["manage_mag_devices"] ?></a></li>
-                                    <div class="separator"></div>
-                                    <li><a href="./user_reseller?e2"><span
-                                                class="mdi mdi-account-plus-outline mdi-18px"></span>
-                                            <?= $_["add_enigma"] ?></a></li>
-                                    <li><a href="./enigmas"><span class="mdi mdi-account-multiple-outline mdi-18px">
-                                                <?= $_["manage_enigma_devices"] ?></a></li>
+                                            </ul>
+                                        </li>
+                                    <?php endif; ?>
                                 </ul>
-                            </li> -->
-                        <?php }
-                        if (($rPermissions["is_reseller"]) && ($rPermissions["create_sub_resellers"])) {
-                            echo "A panel for resellers will be created separately" ?>
-                            <!-- <li class="has-submenu">
-                                <a href="#"> <i
-                                        class="mdi mdi-account-multiple-outline mdi-18px text-primary"></i><?= $_["reg_users"] ?>
-                                    <div class="arrow-down"></div>
-                                </a>
-                                <ul class="submenu">
-                                    <?php if ($rPermissions["is_admin"]) { ?>
-                                        <li><a href="./reg_user"><span class="mdi mdi-account-multiple-plus-outline mdi-18px">
-                                                    <?= $_["add_subreseller"] ?></a></li>
-                                    <?php } else { ?>
-                                        <li><a href="./subreseller"><span
-                                                    class="mdi mdi-account-multiple-plus-outline mdi-18px">
-                                                    <?= $_["add_subreseller"] ?></a></li>
-                                    <?php } ?>
-                                    <li><a href="./reg_users"><span class="mdi mdi-account-multiple-outline mdi-18px">
-                                                <?= $_["manage_subresellers"] ?></a></li>
-                                </ul>
-                            </li> -->
+                            </li>
                         <?php }
                         if ($rPermissions["is_admin"]) {
                             if (hasPermissions('adv', 'add_stream') || hasPermissions('adv', 'create_channel') || hasPermissions('adv', 'import_streams') || hasPermissions('adv', 'mass_edit_streams') || hasPermissions('adv', 'streams') || hasPermissions('adv', 'add_movie') || hasPermissions('adv', 'import_movies') || hasPermissions('adv', 'movies') || hasPermissions('adv', 'series') || hasPermissions('adv', 'episodes') || hasPermissions('adv', 'add_series') || hasPermissions('adv', 'radio') || hasPermissions('adv', 'add_radio')) { ?>
@@ -515,28 +431,6 @@
                                 </li>
                             <?php }
                         }
-                        if (($rPermissions["is_reseller"]) && ($rPermissions["reset_stb_data"])) {
-                            echo "A panel for resellers will be created separately" ?>
-                            <!-- <li class="has-submenu">
-                                <a href="#"> <i
-                                        class="mdi mdi-play-circle-outline mdi-18px text-info"></i><?= $_["content"] ?>
-                                    <div class="arrow-down"></div>
-                                </a>
-                                <ul class="submenu">
-                                    <li><a href="./streams"><?= $_["streams"] ?></a></li>
-                                    <li><a href="./movies"><?= $_["movies"] ?></a></li>
-                                    <li><a href="./series"><?= $_["series"] ?></a></li>
-                                    <li><a href="./episodes"><?= $_["episodes"] ?></a></li>
-                                    <li><a href="./radios"><?= $_["stations"] ?></a></li>
-                                </ul>
-                            </li> -->
-                        <?php }
-
-
-
-
-
-
                         if (hasPermissions('adv', 'streams') || hasPermissions('adv', 'episodes') || hasPermissions('adv', 'series') || hasPermissions('adv', 'categories') || hasPermissions('adv', 'epg') || hasPermissions('adv', 'mng_groups') || hasPermissions('adv', 'mng_packages') || hasPermissions('adv', 'tprofiles') || hasPermissions('adv', 'folder_watch') || hasPermissions('adv', 'add_code') || hasPermissions('adv', 'block_asns') || hasPermissions('adv', 'block_ips') || hasPermissions('adv', 'block_isps') || hasPermissions('adv', 'block_uas') || hasPermissions('adv', 'rtmp') || hasPermissions('adv', 'channel_order') || hasPermissions('adv', 'fingerprint') || hasPermissions('adv', 'mass_delete') || hasPermissions('adv', 'stream_tools') || hasPermissions('adv', 'mass_edit_enigmas') || hasPermissions('adv', 'mass_edit_lines') || hasPermissions('adv', 'mass_edit_mags') || hasPermissions('adv', 'mass_sedits_vod') || hasPermissions('adv', 'mass_sedits') || hasPermissions('adv', 'mass_edit_radio') || hasPermissions('adv', 'mass_edit_streams') || hasPermissions('adv', 'mass_edit_users') || hasPermissions('adv', 'connection_logs') || hasPermissions('adv', 'client_request_log') || hasPermissions('adv', 'login_logs') || hasPermissions('adv', 'panel_logs') || hasPermissions('adv', 'credits_log') || hasPermissions('adv', 'live_connections') || hasPermissions('adv', 'manage_events') || hasPermissions('adv', 'reg_userlog') || hasPermissions('adv', 'stream_errors') || hasPermissions('adv', 'folder_watch') || hasPermissions('adv', 'quick_tools') || hasPermissions('adv', 'manage_tickets')): ?>
                             <li class="has-submenu">
                                 <a href="#"> <i class="fas fa-wrench text-danger"></i><?= $_['management']; ?>
@@ -681,48 +575,6 @@
                                 </ul>
                             </li>
                         <?php endif;
-
-
-
-
-
-                        if ($rPermissions["is_reseller"]) {
-                            echo "A panel for resellers will be created separately" ?>
-                            <!-- <li class="has-submenu">
-                                <a href="#"> <i class="mdi mdi-email-outline mdi-18px text-warning"></i><?= $_["support"] ?>
-                                    <div class="arrow-down"></div>
-                                </a>
-                                <ul class="submenu">
-                                    <li><a href="./ticket"><span class="mdi mdi-message-text-outline mdi-18px">
-                                                <?= $_["create_ticket"] ?></a></li>
-                                    <li><a href="./tickets"><span class="mdi mdi-message-settings-variant mdi-18px">
-                                                <?= $_["manage_tickets"] ?></a></li>
-                                    <?php if ($rPermissions["allow_import"]) { ?>
-                                        <li><a href="./resellersmarters"><span
-                                                    class="mdi mdi-message-settings-variant mdi-18px"> Reseller API Key</a>
-                                        </li>
-                                    <?php } ?>
-                                </ul>
-                            </li>
-                            <li class="has-submenu">
-                                <a href="#"> <i class="mdi mdi-apps mdi-18px text-success"></i>Apps Iptv <div
-                                        class="arrow-down"></div></a>
-                                <ul class="submenu">
-                                    <li><a href="./duplexplay"><span class="mdi mdi-account-star mdi-18px"> DUPLEX
-                                                IPTV</a></li>
-                                    <li><a href="./netiptv"><span class="mdi mdi-account-star mdi-18px"> NET
-                                                IPTV</a></li>
-                                    <li><a href="./siptv"><span class="mdi mdi-account-star mdi-18px"> SMART
-                                                IPTV</a></li>
-                                    <li><a href="./siptvextreme"><span class="mdi mdi-account-star mdi-18px"> IPTV
-                                                EXTREME</a></li>
-                                    <li><a href="./nanomid"><span class="mdi mdi-account-star mdi-18px"> NANOMID</a>
-                                    </li>
-                                    <li><a href="./ss-iptv"><span class="mdi mdi-account-star mdi-18px"> SS IPTV</a>
-                                    </li>
-                                </ul>
-                            </li> -->
-                        <?php }
                         if (($rPermissions["is_admin"]) && (hasPermissions("adv", "manage_tickets"))) { ?>
                             <li class="has-submenu">
                                 <a href="#"> <i class="mdi mdi-apps mdi-18px text-success"></i>Apps Iptv <div
@@ -742,13 +594,6 @@
                                     </li>
                                 </ul>
                             </li>
-                        <?php }
-                        if (($rPermissions["is_reseller"]) && ($rSettings["active_mannuals"])) {
-                            echo "A panel for resellers will be created separately" ?>
-                            <!-- <li>
-                                <a href="./reseller_mannuals"> <i
-                                        class="mdi mdi-book-open-page-variant mdi-18px text-info"></i><?= $_["mannuals"] ?></a>
-                            </li> -->
                         <?php } ?>
                     </ul>
                     <!-- End navigation menu -->
