@@ -1,4 +1,6 @@
 .switchery {
+    left: 50%;
+    transform: translate(-50%);
     background-color: #fff;
     border: 1px solid #dfdfdf;
     border-radius: 20px;
@@ -7,7 +9,7 @@
     height: 30px;
     position: relative;
     vertical-align: middle;
-    width: 50px;
+    width: 75px;
     -moz-user-select: none;
     -khtml-user-select: none;
     -webkit-user-select: none;

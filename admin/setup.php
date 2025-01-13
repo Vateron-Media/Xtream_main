@@ -119,7 +119,12 @@ if (!isset(ipTV_lib::$request['update'])) {
     if (!($rFirstRun || checkPermissions())) {
         goHome();
     }
+
+    $_TITLE = 'Database Migration';
+    $_SETUP = true;
     ?>
+
+
 
     <!DOCTYPE html>
     <html lang="en">

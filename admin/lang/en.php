@@ -1454,6 +1454,7 @@ $_ = array(
   "debug_show_errors" => "Enable debug panel logging",
   "security" => "Security",
   "backup_settings" => "Backup Settings",
+  "management" => "Management",
 
   //Cache
   "cache_cron_redis_settings" => "Cache & Redis Settings",

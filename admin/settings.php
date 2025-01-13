@@ -354,19 +354,6 @@ include "header.php";
                                                                 class="js-switch" data-color="#039cfd" />
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
-                                                            for="dashboard_stats_frequency"><?= $_["stats_frequency"] ?>
-                                                            <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["stats_interval"] ?>"
-                                                                class="mdi mdi-information"></i></label>
-                                                        <div class="col-md-2">
-                                                            <input type="text" class="form-control"
-                                                                id="dashboard_stats_frequency"
-                                                                name="dashboard_stats_frequency"
-                                                                value="<?= htmlspecialchars($rSettings["dashboard_stats_frequency"]) ?>">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
                                                             for="dashboard_world_map_activity">Dashboard World
                                                             Map Activity <i data-toggle="tooltip" data-placement="top"
                                                                 title=""
@@ -378,6 +365,19 @@ include "header.php";
                                                                     echo "checked ";
                                                                 } ?>data-plugin="switchery" class="js-switch"
                                                                 data-color="#039cfd" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                    <label class="col-md-4 col-form-label"
+                                                            for="dashboard_stats_frequency"><?= $_["stats_frequency"] ?>
+                                                            <i data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="<?= $_["stats_interval"] ?>"
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" class="form-control"
+                                                                id="dashboard_stats_frequency"
+                                                                name="dashboard_stats_frequency"
+                                                                value="<?= htmlspecialchars($rSettings["dashboard_stats_frequency"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
                                                             for="dashboard_world_map_live">Dashboard World Map

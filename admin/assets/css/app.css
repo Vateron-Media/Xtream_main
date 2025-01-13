@@ -17,7 +17,7 @@ body {
 }
 
 .wrapper {
-    padding: 110px 12px 0 12px
+    padding: 130px 12px 0 12px
 }
 
 #topnav {
@@ -52,7 +52,8 @@ body {
     width: .4em
 }
 
-#topnav .navbar-toggle {
+#topnav .navbar-toggle,
+#topnav .search-toggle {
     border: 0;
     position: relative;
     padding: 0;
@@ -104,10 +105,6 @@ body {
     transform: rotate(-45deg)
 }
 
-#topnav .has-submenu.active>a {
-    color: #fff
-}
-
 @media (min-width:768px) {
     #topnav .has-submenu.active>a:before {
         content: "";
@@ -148,12 +145,12 @@ body {
 .navigation-menu>li>a {
     display: block;
     color: rgba(255, 255, 255, .7);
-    font-size: 13px;
+    font-size: 15px;
     font-family: "Work Sans", sans-serif;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
     line-height: 20px;
-    padding: 10px;
+    padding: 20px;
     position: relative
 }
 
@@ -184,18 +181,6 @@ body {
         padding-left: 0
     }
 
-    .navigation-menu>li.last-elements .submenu {
-        left: auto;
-        right: 0
-    }
-
-    .navigation-menu>li.last-elements .submenu>li.has-submenu .submenu {
-        left: auto;
-        right: 100%;
-        margin-left: 0;
-        margin-right: 10px
-    }
-
     .navigation-menu>li>ul>li.has-submenu:active>a,
     .navigation-menu>li>ul>li.has-submenu:hover>a {
         color: #5089de
@@ -213,7 +198,6 @@ body {
         visibility: hidden;
         opacity: 0;
         margin-top: 10px;
-        border-radius: 4px;
         -webkit-transition: all .2s ease;
         transition: all .2s ease;
         background-color: #fff;
@@ -233,7 +217,7 @@ body {
 
     .navigation-menu>li .submenu li a {
         display: block;
-        padding: 3px 10px 0px 10px;
+        padding: 9px 25px;
         clear: both;
         white-space: nowrap;
         color: #414d5f
@@ -281,7 +265,8 @@ body {
         vertical-align: top
     }
 
-    .navbar-toggle {
+    .navbar-toggle,
+    .search-toggle {
         display: none !important
     }
 
@@ -302,11 +287,6 @@ body {
         opacity: 1;
         margin-left: 10px;
         margin-right: 0
-    }
-
-    .navigation-menu>li.has-submenu.last-elements>.submenu:before {
-        right: 11px;
-        left: auto
     }
 }
 
@@ -539,16 +519,25 @@ body {
     padding-left: 12px
 }
 
-.navbar-custom {
+.navbar-overlay {
+    width: 100%;
+    position: fixed;
     background-size: cover;
     background-position: center;
-    background-image: url(../images/bg.png);
-    padding: 0 10px 0 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    z-index: 99;
+}
+
+.navbar-custom {
+    width: 100%;
+    padding: 0 0 0 0;
     position: fixed;
     left: 0;
     right: 0;
     height: 70px;
-    z-index: 100
+    z-index: 100;
 }
 
 .navbar-custom .topnav-menu>li {
@@ -567,10 +556,6 @@ body {
 
 .navbar-custom .dropdown.show .nav-link {
     background-color: rgba(65, 77, 95, .05)
-}
-
-.navbar-custom .dropdown-menu {
-    border-radius: 0 0 .25rem .25rem
 }
 
 .navbar-custom .app-search {
@@ -599,7 +584,6 @@ body {
     background-color: #f1f5f7;
     -webkit-box-shadow: none;
     box-shadow: none;
-    border-radius: 30px 0 0 30px
 }
 
 .navbar-custom .app-search .input-group-append {
@@ -611,7 +595,6 @@ body {
     background-color: #f1f5f7;
     border-color: transparent;
     color: #6c757d;
-    border-radius: 0 30px 30px 0;
     -webkit-box-shadow: none !important;
     box-shadow: none !important
 }
@@ -710,7 +693,6 @@ body {
     line-height: 36px;
     text-align: center;
     margin-right: 10px;
-    border-radius: 50%;
     color: #fff
 }
 
@@ -808,7 +790,7 @@ body {
     font-size: 1.25rem;
     margin: 0;
     line-height: 75px;
-    color: #CDCDCD
+    color: #323a46
 }
 
 .page-title-box .page-title-right {
@@ -832,7 +814,7 @@ body {
 
 .footer {
     bottom: 0;
-    padding: 10px 5px 5px;
+    padding: 19px 15px 20px;
     position: absolute;
     right: 0;
     color: #fff;
@@ -897,7 +879,6 @@ body {
     line-height: 27px;
     color: #fff;
     text-align: center;
-    border-radius: 50%;
     margin-top: -4px
 }
 
@@ -925,7 +906,6 @@ body {
     width: 24px;
     background-color: #fff;
     line-height: 24px;
-    border-radius: 50%;
     -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175)
 }
@@ -1046,7 +1026,6 @@ body {
     margin: 0 0 10px -12px;
     display: inline-block;
     border: 2px solid #fff;
-    border-radius: 50%
 }
 
 .font-weight-medium {
@@ -1089,7 +1068,6 @@ body {
     line-height: calc(2rem - 4px);
     display: block;
     border: 2px solid #adb5bd;
-    border-radius: 50%;
     color: #adb5bd
 }
 
@@ -1193,7 +1171,7 @@ body {
 }
 
 .cta-box {
-    background-image: url(../images/bg-pattern-2.png);
+    background-image: url(../images/pattern.png);
     background-size: cover
 }
 
@@ -1225,7 +1203,6 @@ body {
     float: left;
     height: 12px;
     width: 12px;
-    border-radius: 50%;
     background-color: #fff;
     color: #414d5f;
     margin-top: 3px;
@@ -1250,7 +1227,6 @@ body {
     -o-transition: .3s ease-in-out;
     -webkit-transition: .3s ease-in-out;
     background-color: #fff;
-    border-radius: 3px;
     border: 2px solid #98a6ad;
     content: "";
     display: inline-block;
@@ -1312,10 +1288,6 @@ body {
 .checkbox input[type=checkbox]:disabled+label::before {
     background-color: #f1f5f7;
     cursor: not-allowed
-}
-
-.checkbox.checkbox-circle label::before {
-    border-radius: 50%
 }
 
 .checkbox.checkbox-inline {
@@ -1443,7 +1415,6 @@ body {
     -o-transition: border .5s ease-in-out;
     -webkit-transition: border .5s ease-in-out;
     background-color: #fff;
-    border-radius: 50%;
     border: 2px solid #98a6ad;
     content: "";
     display: inline-block;
@@ -1464,7 +1435,6 @@ body {
     -webkit-transform: scale(0, 0);
     -webkit-transition: -webkit-transform .1s cubic-bezier(.8, -.33, .2, 1.33);
     background-color: #6c757d;
-    border-radius: 50%;
     content: " ";
     display: inline-block;
     height: 10px;
@@ -1663,12 +1633,10 @@ body {
 
 .ribbon-box .ribbon.float-left {
     margin-left: -30px;
-    border-radius: 0 3px 3px 0
 }
 
 .ribbon-box .ribbon.float-right {
     margin-right: -30px;
-    border-radius: 3px 0 0 3px
 }
 
 .ribbon-box .ribbon.float-right:before {
@@ -2007,7 +1975,6 @@ body {
 
 .spinner,
 .spinner:after {
-    border-radius: 50%;
     width: 40px;
     height: 40px
 }
@@ -2051,7 +2018,6 @@ body {
 
 .waves-effect .waves-ripple {
     position: absolute;
-    border-radius: 50%;
     width: 100px;
     height: 100px;
     margin-top: -50px;
@@ -2116,7 +2082,6 @@ body {
 
 .waves-button {
     padding: .85em 1.1em;
-    border-radius: .2em
 }
 
 .waves-button-input {
@@ -2125,7 +2090,6 @@ body {
 }
 
 .waves-input-wrapper {
-    border-radius: .2em;
     vertical-align: bottom
 }
 
@@ -2145,7 +2109,6 @@ body {
     width: 2.5em;
     height: 2.5em;
     line-height: 2.5em;
-    border-radius: 50%
 }
 
 .waves-float {
@@ -2233,7 +2196,6 @@ body {
     text-align: center;
     line-height: 20px;
     background-color: #f1f5f7;
-    border-radius: 50%;
     margin: 5px;
     font-family: "Work Sans", sans-serif;
     font-size: 12px
@@ -2246,7 +2208,6 @@ body {
     text-transform: capitalize;
     -webkit-box-shadow: none;
     box-shadow: none;
-    border-radius: 3px;
     margin: 0 3px;
     padding: 6px 12px;
     height: auto
@@ -2282,7 +2243,6 @@ body {
 }
 
 .fc-event {
-    border-radius: 2px;
     border: none;
     cursor: move;
     font-size: .8125rem;
@@ -2367,7 +2327,6 @@ body {
     height: 32px;
     width: 32px;
     background-color: #414d5f;
-    border-radius: 50%;
     text-align: center;
     line-height: 32px
 }
@@ -2375,7 +2334,6 @@ body {
 .jq-toast-loader {
     height: 3px;
     top: 0;
-    border-radius: 0
 }
 
 .jq-icon-primary {
@@ -2403,9 +2361,9 @@ body {
 }
 
 .jq-icon-warning {
-    background-color: #f8cc6b;
+    background-color: #c62828;
     color: #fff;
-    border-color: #f8cc6b
+    border-color: #c62828
 }
 
 .jq-icon-danger {
@@ -2549,14 +2507,13 @@ body {
     padding: 8px 16px;
     height: auto;
     font-weight: 500;
-    border-radius: 3px
 }
 
 .dd-list .dd-item .dd-handle:hover {
     color: #5089de
 }
 
-.dd-list .dd-item button {
+.dd-list .dd-item .sml-button {
     padding-top: 0px !important;
     height: 18px;
     font-size: 12px;
@@ -2720,7 +2677,6 @@ body {
 
 div.hopscotch-bubble {
     border: 3px solid #5089de;
-    border-radius: 5px
 }
 
 div.hopscotch-bubble .hopscotch-next,
@@ -2738,7 +2694,6 @@ div.hopscotch-bubble .hopscotch-prev {
 div.hopscotch-bubble .hopscotch-bubble-number {
     background: #f0643b;
     padding: 0;
-    border-radius: 50%
 }
 
 div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow-border {
@@ -2903,7 +2858,6 @@ div.dt-button-info {
     color: #fff;
     -webkit-box-shadow: none;
     box-shadow: none;
-    border-radius: 3px;
     text-align: center;
     z-index: 21
 }
@@ -2974,7 +2928,6 @@ div.dt-button-info h2 {
 
 .responsive-table-plugin .checkbox-row label::before {
     background-color: #fff;
-    border-radius: 3px;
     border: 1px solid #ced4da;
     content: "";
     display: inline-block;
@@ -3168,7 +3121,6 @@ div.dt-button-info h2 {
 .gmaps-panaroma {
     height: 300px;
     background: #f1f5f7;
-    border-radius: 3px
 }
 
 .gmaps-overlay {
@@ -3178,7 +3130,6 @@ div.dt-button-info h2 {
     font-size: 16px;
     line-height: 40px;
     background: #5089de;
-    border-radius: 4px;
     padding: 10px 20px
 }
 
@@ -3229,7 +3180,6 @@ div.dt-button-info h2 {
     position: absolute;
     background-color: #5089de;
     opacity: .95;
-    border-radius: 3px;
     padding: 2px 10px;
     z-index: 1000;
     max-width: 200px;
@@ -3244,7 +3194,6 @@ div.dt-button-info h2 {
     display: inline-block;
     text-align: center;
     vertical-align: middle;
-    border-radius: 2px;
     font-weight: 500;
     cursor: pointer;
     background-color: #5089de;
@@ -3272,7 +3221,6 @@ div.dt-button-info h2 {
     height: 38px;
     font-size: .8125rem;
     border-color: #ced4da;
-    border-radius: .2rem
 }
 
 .nice-select.open,
@@ -3286,16 +3234,9 @@ div.dt-button-info h2 {
     line-height: 30px
 }
 
-.selectepg-container .select2-selection--single {
-    border: 1px solid #ced4da;
-    height: 33px;
-    outline: 0;
-
-}
-
 .select2-container .select2-selection--single {
     border: 1px solid #ced4da;
-    height: 32px;
+    height: 38px;
     outline: 0
 }
 
@@ -3371,7 +3312,6 @@ div.dt-button-info h2 {
     background-color: #5089de;
     border: none;
     color: #fff;
-    border-radius: 3px;
     padding: 0 7px;
     margin-top: 7px
 }
@@ -3422,7 +3362,7 @@ div.dt-button-info h2 {
 
 .parsley-errors-list>li {
     list-style: none;
-    color: #ff0000;
+    color: #f0643b;
     margin-top: 5px;
     padding-left: 20px;
     position: relative
@@ -3437,11 +3377,11 @@ div.dt-button-info h2 {
 }
 
 .parsley-error {
-    border-color: #ff0000
+    border-color: #f0643b
 }
 
 .parsley-success {
-    border-color: #23b323
+    border-color: #23b397
 }
 
 .datepicker {
@@ -3452,7 +3392,6 @@ div.dt-button-info h2 {
 .datepicker th {
     width: 30px;
     height: 30px;
-    border-radius: 50%
 }
 
 .datepicker table tr td .active.disabled:hover[disabled],
@@ -3615,15 +3554,6 @@ div.dt-button-info h2 {
     border-top: 1px solid #e7eef1
 }
 
-.daterangepicker select.ampmselect,
-.daterangepicker select.hourselect,
-.daterangepicker select.minuteselect,
-.daterangepicker select.secondselect {
-    background: #fff;
-    border: 1px solid #fff;
-    color: #fff
-}
-
 .daterangepicker.show-ranges .drp-calendar.left {
     border-left: 1px solid #e7eef1
 }
@@ -3663,7 +3593,6 @@ div.dt-button-info h2 {
 
 .note-editable {
     border: 1px solid #ced4da;
-    border-radius: .2rem;
     padding: .45rem .9rem
 }
 
@@ -3686,7 +3615,6 @@ div.dt-button-info h2 {
 
 .ql-bubble {
     border: 1px solid #ced4da;
-    border-radius: .2rem
 }
 
 .ql-toolbar {
@@ -3700,7 +3628,6 @@ div.dt-button-info h2 {
 .dropzone {
     border: 2px dashed rgba(65, 77, 95, .3);
     background: #fff;
-    border-radius: 6px
 }
 
 .flotTip {
@@ -3709,7 +3636,6 @@ div.dt-button-info h2 {
     z-index: 100;
     color: #fff;
     opacity: 1;
-    border-radius: 3px
 }
 
 .legend tr {
@@ -3725,10 +3651,6 @@ div.dt-button-info h2 {
     font-weight: 500;
     color: #98a6ad;
     text-transform: uppercase
-}
-
-.legendColorBox div div {
-    border-radius: 50%
 }
 
 @media (max-width:767.98px) {
@@ -3749,7 +3671,6 @@ div.dt-button-info h2 {
 .morris-hover.morris-default-style {
     font-size: 12px;
     text-align: center;
-    border-radius: 5px;
     padding: 10px 12px;
     background: #414d5f;
     color: #fff;
@@ -3889,7 +3810,6 @@ div.dt-button-info h2 {
     opacity: 0;
     min-width: 10px;
     padding: 2px 10px;
-    border-radius: 3px;
     background: #414d5f;
     color: #fff;
     text-align: center;
@@ -3912,7 +3832,6 @@ div.dt-button-info h2 {
     -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
     padding: 5px 10px !important;
-    border-radius: 3px;
     border-color: #414d5f !important
 }
 
@@ -3925,8 +3844,8 @@ div.dt-button-info h2 {
 }
 
 [data-plugin=knob] {
-    font-family: Segoe UI, sans-serif !important;
-    font-weight: 500 !important
+    font-family: Poppins, sans-serif !important;
+    font-weight: 600 !important
 }
 
 .apex-charts {
@@ -4005,15 +3924,12 @@ div.dt-button-info h2 {
     line-height: 50px;
     margin-right: 12px;
     color: rgba(65, 77, 95, .7);
-    border-radius: 3px;
     display: inline-block;
     -webkit-transition: all .2s;
     transition: all .2s
 }
 
 .icons-list-demo .col-md-4 {
-    border-radius: 3px;
-    -moz-border-radius: 3px;
     background-clip: padding-box;
     margin-bottom: 10px
 }
@@ -4021,10 +3937,6 @@ div.dt-button-info h2 {
 .icons-list-demo .col-md-4:hover,
 .icons-list-demo .col-md-4:hover i {
     color: #5089de
-}
-
-.switchery {
-    margin-top: 7px
 }
 
 .scrollspy-example {
@@ -4052,29 +3964,14 @@ body.authentication-bg {
 }
 
 .auth-title {
-    #background-color: #2577b13b;
-    padding: 8px 2.25rem;
+    background-color: #f7fafb;
+    border-top: 1px solid #ecf2f4;
+    border-bottom: 1px solid #ecf2f4;
+    padding: 12px 2.25rem;
+    margin: 0 -2.25rem 30px;
     text-transform: uppercase;
-    font-weight: 400;
-    text-align: center;
-    color: #fff;
-    border-radius: 15px;
-
-}
-
-.auth-titlelogin {
-    #background-color: #2577b13b;
-    padding: 8px 2.25rem;
-    text-transform: uppercase;
-    font-weight: 400;
-    text-align: center;
-    color: #fff;
-    border-radius: 15px;
-
-}
-
-body.authentication-bg-pattern {
-    background-image: url(../images/bg1.png)
+    font-weight: 700;
+    text-align: center
 }
 
 .logout-icon {
@@ -4218,7 +4115,6 @@ body.authentication-bg-pattern {
 .timeline .timeline-album img {
     height: 36px;
     width: auto;
-    border-radius: 3px
 }
 
 @media (min-width:768px) {
@@ -4233,7 +4129,6 @@ body.authentication-bg-pattern {
 
     .timeline .timeline-icon {
         background: #5089de;
-        border-radius: 50%;
         display: block;
         height: 20px;
         left: -54px;
@@ -4357,7 +4252,6 @@ body.authentication-bg-pattern {
     left: -7px;
     width: 12px;
     height: 12px;
-    border-radius: 50%;
     background: #fff;
     border: 2px solid #5089de
 }
@@ -4385,7 +4279,6 @@ body.authentication-bg-pattern {
     width: 30px;
     color: #f0643b;
     text-align: center;
-    border-radius: 50%;
     float: left;
     font-weight: 700;
     line-height: 30px;
@@ -4406,7 +4299,6 @@ body.authentication-bg-pattern {
 .card-pricing {
     position: relative;
     border: 2px solid transparent;
-    border-radius: 10px
 }
 
 .card-pricing .card-pricing-plan-name {
@@ -4420,7 +4312,6 @@ body.authentication-bg-pattern {
     display: inline-block;
     width: 60px;
     line-height: 62px;
-    border-radius: 50%
 }
 
 .card-pricing .card-pricing-price {
@@ -4548,7 +4439,6 @@ body.authentication-bg-pattern {
 
 .message-list li .col-mail-1 .dot {
     border: 4px solid transparent;
-    border-radius: 100px;
     margin: 22px 26px 0;
     height: 0;
     width: 0;
@@ -4632,7 +4522,6 @@ body.authentication-bg-pattern {
     display: inline-block;
     -webkit-box-shadow: inset 0 0 0 2px #ced4da;
     box-shadow: inset 0 0 0 2px #ced4da;
-    border-radius: 3px
 }
 
 .message-list .checkbox-wrapper-mail input {
@@ -4743,11 +4632,11 @@ body.authentication-bg-pattern {
     width: 100% !important;
 }
 
-#datatable-streams_wrapper {
+#datatable-stream_wrapper {
     width: 100% !important;
 }
 
-#datatable-vod_wrapper {
+#datatable-movies_wrapper {
     width: 100% !important;
 }
 
@@ -4763,11 +4652,11 @@ body.authentication-bg-pattern {
     width: 100% !important;
 }
 
-#datatable-streams_filter {
+#datatable-stream_filter {
     display: none;
 }
 
-#datatable-vod_filter {
+#datatable-movies_filter {
     display: none;
 }
 
@@ -4845,6 +4734,10 @@ body.authentication-bg-pattern {
     color: #6c757d !important;
 }
 
+.dataTable tr.selected a {
+    color: #fff !important;
+}
+
 #datatable-activity_length,
 #datatable-activity_filter {
     display: none;
@@ -4905,7 +4798,15 @@ body.authentication-bg-pattern {
 #datatable-md4_length,
 #datatable-md4_filter,
 #datatable-md5_length,
-#datatable-md5_filter {
+#datatable-md5_filter,
+#datatable-md6_length,
+#datatable-md6_filter,
+#datatable-md7_length,
+#datatable-md7_filter,
+#datatable-md8_length,
+#datatable-md8_filter,
+#datatable-md9_length,
+#datatable-md9_filter {
     display: none;
 }
 
@@ -4913,7 +4814,11 @@ body.authentication-bg-pattern {
 #datatable-md2_wrapper,
 #datatable-md3_wrapper,
 #datatable-md4_wrapper,
-#datatable-md5_wrapper {
+#datatable-md5_wrapper,
+#datatable-md6_wrapper,
+#datatable-md7_wrapper,
+#datatable-md8_wrapper,
+#datatable-md9_wrapper {
     margin-top: 10px;
     width: 100% !important;
 }
@@ -4922,7 +4827,11 @@ body.authentication-bg-pattern {
 #datatable-md2,
 #datatable-md3,
 #datatable-md4,
-#datatable-md5 {
+#datatable-md5,
+#datatable-md6,
+#datatable-md7,
+#datatable-md8,
+#datatable-md9 {
     width: 100% !important;
 }
 
@@ -4936,4 +4845,13 @@ table.dataTable tbody>tr>.reordered {
     overflow-x: hidden;
     text-overflow: ellipsis;
     max-width: 200px;
+}
+
+.card-body {
+    overflow-x: auto;
+}
+
+.input-view textarea,
+.input-view input {
+    background: #f5f5f5 !important;
 }

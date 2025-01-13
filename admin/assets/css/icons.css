@@ -14660,7 +14660,6 @@ File: Icons Css File
   }
 }
 
-/*# sourceMappingURL=materialdesignicons.css.map */
 @font-face {
   font-family: "feather";
   src: url("../fonts/feather.eot?t=1525787366991");
@@ -16799,7 +16798,6 @@ File: Icons Css File
 
 .fa-border {
   border: solid 0.08em #eee;
-  border-radius: .1em;
   padding: .2em .25em .15em;
 }
 
@@ -22498,7 +22496,6 @@ readers do not read off random characters that represent icons */
 .la-border {
   padding: .2em .25em .15em;
   border: solid 0.08em #eeeeee;
-  border-radius: .1em;
 }
 
 .pull-right {
