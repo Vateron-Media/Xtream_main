@@ -43,203 +43,171 @@ include "header.php";
 			<!-- end page title -->
 			<div class="tab-content">
 				<div class="tab-pane show active" id="server-home">
-					<div class="row">
-						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "live_connections")) { ?>
-								<a href="./live_connections.php">
-								<?php } ?>
-								<div class="card-box active-connections bg-primary">
-									<div class="row">
-										<div class="col-6">
-											<?php if ($rSettings["dark_mode"]) { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-box avatar-title font-22 text-white"></i>
+					<div class="row mb-4">
+						<div class="col-md-4">
+							<?php if (hasPermissions('adv', 'live_connections')): ?>
+								<a href="./live_connections">
+								<?php endif; ?>
+								<div
+									class="card cta-box <?php echo $rUserInfo['theme'] != 0 ? '' : 'bg-purple'; ?> text-white">
+									<div class="card-body active-connections">
+										<div class="media align-items-center">
+											<div class="col-3">
+												<div class="avatar-sm bg-light">
+													<i
+														class="fe-zap avatar-title font-22 <?php echo $rUserInfo['theme'] == 1 ? 'text-white' : 'text-purple'; ?>"></i>
 												</div>
-											<?php } else { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-box avatar-title font-22 text-white"></i>
+											</div>
+											<div class="col-9">
+												<div class="text-right">
+													<h3 class="text-white my-1"><span data-plugin="counterup"
+															class="entry">0</span></h3>
+													<p class="text-white mb-1 text-truncate"><?= $_["open_connections"] ?>
+													</p>
 												</div>
-											<?php } ?>
-										</div>
-										<div class="col-6">
-											<div class="text-right">
-												<h3 class="text-white my-1"><span data-plugin="counterup"
-														class="entry">0</span></h3>
-												<p class="text-white mb-1 text-truncate">
-													<?= $_["open_connections"] ?>
-												</p>
 											</div>
 										</div>
 									</div>
-								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "live_connections")) { ?>
+								</div>
+								<?php if (hasPermissions('adv', 'live_connections')): ?>
 								</a>
-							<?php } ?>
-						</div> <!-- end col -->
+							<?php endif; ?>
+						</div>
 
-						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "live_connections")) { ?>
-								<a href="./live_connections.php">
-								<?php } ?>
-								<div class="card-box online-users bg-success">
-									<div class="row">
-										<div class="col-6">
-											<?php if ($rSettings["dark_mode"]) { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-users avatar-title font-22 text-white"></i>
+						<div class="col-md-4">
+							<?php if (hasPermissions('adv', 'live_connections')): ?>
+								<a href="./live_connections">
+								<?php endif; ?>
+
+								<div
+									class="card cta-box <?php echo $rUserInfo['theme'] != 0 ? '' : 'bg-success'; ?> text-white">
+									<div class="card-body online-users">
+										<div class="media align-items-center">
+											<div class="col-3">
+												<div class="avatar-sm bg-light">
+													<i
+														class="fe-users avatar-title font-22 <?php echo $rUserInfo['theme'] == 1 ? 'text-white' : 'text-success'; ?>"></i>
 												</div>
-											<?php } else { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-users avatar-title font-22 text-white"></i>
+											</div>
+											<div class="col-9">
+												<div class="text-right">
+													<h3 class="text-white my-1"><span data-plugin="counterup"
+															class="entry">0</span></h3>
+													<p class="text-white mb-1 text-truncate"><?= $_["online_users"] ?></p>
 												</div>
-											<?php } ?>
-										</div>
-										<div class="col-6">
-											<div class="text-right">
-												<h3 class="text-white my-1"><span data-plugin="counterup"
-														class="entry">0</span></h3>
-												<p class="text-white mb-1 text-truncate">
-													<?= $_["online_users"] ?>
-												</p>
 											</div>
 										</div>
 									</div>
-								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "live_connections")) { ?>
-								</a>
-							<?php } ?>
-						</div> <!-- end col -->
+								</div>
 
-						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "live_connections")) { ?>
-								<a href="./live_connections.php">
-								<?php } ?>
-								<div class="card-box input-flow bg-pink">
-									<div class="row">
-										<div class="col-6">
-											<?php if ($rSettings["dark_mode"]) { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-download avatar-title font-22 text-white"></i>
+								<?php if (hasPermissions('adv', 'live_connections')): ?>
+								</a>
+							<?php endif; ?>
+						</div>
+						<div class="col-md-4">
+							<?php if (hasPermissions('adv', 'streams')): ?>
+								<a href="./streams?filter=1">
+								<?php endif; ?>
+
+								<div
+									class="card cta-box <?php echo $rUserInfo['theme'] == 0 ? 'bg-info' : ''; ?> text-white">
+									<div class="card-body active-streams">
+										<div class="media align-items-center">
+											<div class="col-3">
+												<div class="avatar-sm bg-light">
+													<i
+														class="fe-play avatar-title font-22 <?php echo $rUserInfo['theme'] == 1 ? 'text-white' : 'text-info'; ?>"></i>
 												</div>
-											<?php } else { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-download avatar-title font-22 text-white"></i>
+											</div>
+											<div class="col-9">
+												<div class="text-right">
+													<h3 class="text-white my-1"><span data-plugin="counterup"
+															class="entry">0</span></h3>
+													<p class="text-white mb-1 text-truncate">Live Streams</p>
 												</div>
-											<?php } ?>
-										</div>
-										<div class="col-6">
-											<div class="text-right">
-												<h3 class="text-white my-1"><span data-plugin="counterup"
-														class="entry">0</span><small> Mbps</small></h3>
-												<p class="text-white mb-1 text-white"><?= $_["total_input"] ?>
-												</p>
 											</div>
 										</div>
 									</div>
-								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "live_connections")) { ?>
-								</a>
-							<?php } ?>
-						</div> <!-- end col -->
+								</div>
 
-						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "live_connections")) { ?>
-								<a href="./live_connections.php">
-								<?php } ?>
-								<div class="card-box output-flow bg-info">
-									<div class="row">
-										<div class="col-6">
-											<?php if ($rSettings["dark_mode"]) { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-upload avatar-title font-22 text-white"></i>
+								<?php if (hasPermissions('adv', 'streams')): ?>
+								</a>
+							<?php endif; ?>
+						</div>
+						<div class="col-md-4">
+							<?php if (hasPermissions('adv', 'streams')): ?>
+								<a href="./streams?filter=2">
+								<?php endif; ?>
+
+								<div
+									class="card cta-box <?php echo $rUserInfo['theme'] == 0 ? 'bg-pink' : ''; ?> text-white">
+									<div class="card-body offline-streams">
+										<div class="media align-items-center">
+											<div class="col-3">
+												<div class="avatar-sm bg-light">
+													<i
+														class="fe-alert-triangle avatar-title font-22 <?php echo $rUserInfo['theme'] == 1 ? 'text-white' : 'text-pink'; ?>"></i>
 												</div>
-											<?php } else { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-upload avatar-title font-22 text-white"></i>
+											</div>
+											<div class="col-9">
+												<div class="text-right">
+													<h3 class="text-white my-1"><span data-plugin="counterup"
+															class="entry">0</span></h3>
+													<p class="text-white mb-1 text-truncate"><?= $_["offline_streams"] ?>
+													</p>
 												</div>
-											<?php } ?>
-										</div>
-										<div class="col-6">
-											<div class="text-right">
-												<h3 class="text-white my-1"><span data-plugin="counterup"
-														class="entry">0</span><small> Mbps</small></h3>
-												<p class="text-white mb-1 text-white"><?= $_["total_output"] ?>
-												</p>
 											</div>
 										</div>
 									</div>
-								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "live_connections")) { ?>
-								</a>
-							<?php } ?>
-						</div> <!-- end col -->
+								</div>
 
-						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "streams")) { ?>
-								<a href="./streams.php?filter=1">
-								<?php } ?>
-								<div class="card-box active-streams bg-warning">
-									<div class="row">
-										<div class="col-6">
-											<?php if ($rSettings["dark_mode"]) { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-video avatar-title font-22 text-white"></i>
-												</div>
-											<?php } else { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-video avatar-title font-22 text-white"></i>
-												</div>
-											<?php } ?>
+								<?php if (hasPermissions('adv', 'streams')): ?>
+								</a>
+							<?php endif; ?>
+						</div>
+						<div class="col-md-4">
+							<div
+								class="card cta-box <?php echo $rUserInfo['theme'] == 0 ? 'bg-primary' : ''; ?> text-white">
+								<div class="card-body output-flow">
+									<div class="media align-items-center">
+										<div class="col-3">
+											<div class="avatar-sm bg-light">
+												<i
+													class="fe-trending-up avatar-title font-22 <?php echo $rUserInfo['theme'] == 1 ? 'text-white' : 'text-primary'; ?>"></i>
+											</div>
 										</div>
-										<div class="col-6">
+										<div class="col-9">
 											<div class="text-right">
 												<h3 class="text-white my-1"><span data-plugin="counterup"
-														class="entry">0</span></h3>
-												<p class="text-white mb-1 text-truncate">
-													<?= $_["online_streams"] ?>
-												</p>
+														class="entry">0</span> <small>Mbps</small></h3>
+												<p class="text-white mb-1 text-truncate">Network Output</p>
 											</div>
 										</div>
 									</div>
-								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "streams")) { ?>
-								</a>
-							<?php } ?>
-						</div> <!-- end col -->
-
-						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "streams")) { ?>
-								<a href="./streams.php?filter=2">
-								<?php } ?>
-								<div class="card-box offline-streams bg-danger">
-									<div class="row">
-										<div class="col-6">
-											<?php if ($rSettings["dark_mode"]) { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-video-off avatar-title font-22 text-white"></i>
-												</div>
-											<?php } else { ?>
-												<div class="avatar-md rounded">
-													<i class="fe-video-off avatar-title font-22 text-white"></i>
-												</div>
-											<?php } ?>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="card cta-box <?php echo $rUserInfo['theme'] == 0 ? 'bg-danger' : ''; ?> text-white">
+								<div class="card-body input-flow">
+									<div class="media align-items-center">
+										<div class="col-3">
+											<div class="avatar-sm bg-light">
+												<i
+													class="fe-trending-down avatar-title font-22 <?php echo $rUserInfo['theme'] == 1 ? 'text-white' : 'text-danger'; ?>"></i>
+											</div>
 										</div>
-										<div class="col-6">
+										<div class="col-9">
 											<div class="text-right">
 												<h3 class="text-white my-1"><span data-plugin="counterup"
-														class="entry">0</span></h3>
-												<p class="text-white mb-1 text-white">
-													<?= $_["offline_streams"] ?>
-												</p>
+														class="entry">0</span> <small>Mbps</small></h3>
+												<p class="text-white mb-1 text-truncate">Network Input</p>
 											</div>
 										</div>
 									</div>
-								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "streams")) { ?>
-								</a>
-							<?php } ?>
-						</div> <!-- end col -->
-
+								</div>
+							</div>
+						</div>
 						<?php if (($rSettings["save_closed_connection"]) && ($rSettings["dashboard_stats"])) { ?>
 							<div class="col-xl-12">
 								<!-- Portlet card -->
@@ -982,7 +950,6 @@ include "header.php";
 								}
 							});
 							<?php if (($rSettings["save_closed_connection"]) && ($rSettings["dashboard_stats"])) { ?>
-
 								function setPeriod(rPeriod) {
 									if ((window.rDates[rPeriod][0]) && (window.rDates[rPeriod][1])) {
 										window.rOptions["xaxis"]["min"] = window.rDates[rPeriod][0] * 1000;
