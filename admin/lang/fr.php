@@ -1173,8 +1173,6 @@ $_ = array(
   "longer duration" => "La durée danalyse dun flux, plus longue, augmentera la précision de léchantillon. 5 000 000 de microsecondes = 5s",
   "probe_size" => "Taille de la sonde",
   "probed_in_bytes" => "Quantité de données à sonder en octets",
-  "persistent_connections" => "Connexions persistantes",
-  "enable_PHP_persistent_connections" => "Activer les connexions persistantes de PHP",
   "random_rtmp_ip" => "Adresse IP RTMP aléatoire",
   "use_random_ip_for_rmtp" => "Utilisez des IP aléatoires pour le RMTP",
   "stream_start_delay" => "Retard de démarrage du flux",

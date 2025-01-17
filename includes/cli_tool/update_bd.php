@@ -74,7 +74,7 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('change_own_la
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('active_mannuals', '1')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('reseller_can_isplock', '1')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('reseller_reset_isplock', '1')");
-$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('watch_pid', '102634')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('watch_pid', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('tmdb_pid', '')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('stats_pid', '')");
 $ipTV_db->query("DELETE FROM `settings` WHERE `name`='userpanel_mainpage'");

@@ -1173,8 +1173,6 @@ $_ = array(
 	"longer duration" => "Cuanto más tiempo se analice un arroyo, mayor será la precisión de la muestra. 5.000.000 de microsegundos = 5s.",
 	"probe_size" => "Tamaño de la sonda",
 	"probed_in_bytes" => "Cantidad de datos a sondear en bytes.",
-	"persistent_connections" => "Conexiones persistentes",
-	"enable_PHP_persistent_connections" => "Habilitar las conexiones persistentes de PHP.",
 	"random_rtmp_ip" => "IP RTMP aleatorio",
 	"use_random_ip_for_rmtp" => "Usar IP aleatorio para RMTP.",
 	"stream_start_delay" => "Retraso en el inicio del flujo",

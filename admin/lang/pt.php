@@ -1173,8 +1173,6 @@ $_ = array(
 	"longer duration" => "Quanto tempo para analisar um fluxo, maior duração irá aumentar a precisão da amostra. 5.000.000 microssegundos = 5s.",
 	"probe_size" => "Tamanho da Sonda",
 	"probed_in_bytes" => "Quantidade de dados a serem sondados em bytes.",
-	"persistent_connections" => "Conexões Persistentes",
-	"enable_PHP_persistent_connections" => "Habilitar conexões persistentes de PHP.",
 	"random_rtmp_ip" => "IP RTMP aleatório",
 	"use_random_ip_for_rmtp" => "Use IP aleatório para RMTP.",
 	"stream_start_delay" => "Atraso no arranque do fluxo",

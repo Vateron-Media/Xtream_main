@@ -264,6 +264,7 @@ class ipTV_lib {
         if (array_key_exists("bouquet_name", $output)) {
             $output["bouquet_name"] = str_replace(" ", "_", $output["bouquet_name"]);
         }
+        $output["watchdog"] = json_decode($output["watchdog_data"], true);
         $output["api_ips"] = explode(",", $output["api_ips"]);
         self::setCache('settings', $output);
         return $output;

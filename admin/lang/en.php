@@ -1173,8 +1173,6 @@ $_ = array(
   "longer duration" => "How long to analyse a stream, longer duration will increase sample accuracy. 5,000,000 microseconds = 5s.",
   "probe_size" => "Probe Size",
   "probed_in_bytes" => "Amount of data to be probed in bytes.",
-  "persistent_connections" => "Persistent Connections",
-  "enable_PHP_persistent_connections" => "Enable PHP persistent connections.",
   "random_rtmp_ip" => "Random RTMP IP",
   "use_random_ip_for_rmtp" => "Use random IP for RMTP.",
   "stream_start_delay" => "Stream Start Delay",
