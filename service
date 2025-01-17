@@ -43,24 +43,26 @@ start() {
 stop() {
   pids=$(pgrep -u xtreamcodes nginx | wc -l)
   if [ "$pids" -eq 0 ]; then
-    log "XC_VM is not running"
+    log 'XC_VM is not running'
     return 1
   fi
-  log "Stopping XC_VM..."
-  sudo pkill -u xtreamcodes nginx
-  sudo pkill -u xtreamcodes nginx_rtmp
+  log 'Stopping XC_VM...'
+  sudo killall -u xtreamcodes
   sleep 1
+  sudo killall -u xtreamcodes
+  sleep 1
+  sudo killall -u xtreamcodes
 }
 
 restart() {
-  stop
+  ps -U xtreamcodes | egrep -v "ffmpeg|PID" | awk '{print $1}' | xargs kill -9
   start
 }
 
 reload() {
   pids=$(pgrep -u xtreamcodes nginx | wc -l)
   if [ "$pids" -eq 0 ]; then
-    log "XC_VM is not running"
+    log 'XC_VM is not running'
     return 1
   fi
   log "Reloading XC_VM..."
