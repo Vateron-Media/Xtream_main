@@ -6,8 +6,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
         ipTV_lib::checkCron($unique_id);
-        shell_exec("sudo kill -9 `ps -ef | grep 'XC_VMSignals' | grep -v grep | awk '{print \$2}'`;");
-        cli_set_process_title('XC_VMSignals');
+        shell_exec("sudo kill -9 `ps -ef | grep 'XC_VM[Signals]' | grep -v grep | awk '{print \$2}'`;");
+        cli_set_process_title('XC_VM[Signals]');
         file_put_contents(CONFIG_PATH . 'signals.last', time());
         $rSaveIPTables = false;
         loadCron();
@@ -192,6 +192,10 @@ function loadCron() {
                 // case 'disable_ministra':
                 //     $rCheck['mag'] = false;
                 //     break;
+                case 'switch_php74':
+                case 'switch_php80':
+                    $rCheck['php'] = false;
+                    break;
                 case 'set_services':
                     $rCheck['services'] = false;
                     break;
@@ -373,6 +377,26 @@ function loadCron() {
                         //     shell_exec('sudo rm ' . MAIN_DIR . 'www/c');
                         //     shell_exec('sudo rm ' . MAIN_DIR . 'www/portal.php');
                         //     break;
+                        case 'switch_php74':
+                            echo 'Switching to PHP 7.4' . "\n";
+                            if (!file_exists(PHP_BIN . '_7.4')) {
+                            } else {
+                                shell_exec('sudo ln -sfn ' . PHP_BIN . '_7.4 ' . PHP_BIN);
+                                shell_exec('sudo ln -sfn ' . BIN_PATH . 'php/sbin/php-fpm_7.4 ' . BIN_PATH . 'php/sbin/php-fpm');
+                                shell_exec('sudo chown -R xui:xui ' . BIN_PATH . 'php');
+                                shell_exec('sudo service xuione restart');
+                            }
+                            break;
+                        case 'switch_php80':
+                            echo 'Switching to PHP 8.0' . "\n";
+                            if (!file_exists(PHP_BIN . '_8.0')) {
+                            } else {
+                                shell_exec('sudo ln -sfn ' . PHP_BIN . '_8.0 ' . PHP_BIN);
+                                shell_exec('sudo ln -sfn ' . BIN_PATH . 'php/sbin/php-fpm_8.0 ' . BIN_PATH . 'php/sbin/php-fpm');
+                                shell_exec('sudo chown -R xui:xui ' . BIN_PATH . 'php');
+                                shell_exec('sudo service xuione restart');
+                            }
+                            break;
                         case 'set_services':
                             echo 'Setting PHP Services' . "\n";
                             $rServices = intval($rData['count']);
