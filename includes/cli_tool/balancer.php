@@ -149,7 +149,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     sendfile($rConn, TMP_PATH . 'config_' . $rServerID, CONFIG_PATH . 'config.ini');
                     echo 'Installing service' . "\n";
                     runCommand($rConn, 'sudo rm /etc/systemd/system/xtreamcodes.service');
-                    $rSystemd = '[Unit]' . "\n" . 'SourcePath=/home/xtreamcodes/service' . "\n" . 'Description=XC_VM Service' . "\n" . 'After=network.target' . "\n" . 'StartLimitIntervalSec=0' . "\n\n" . '[Service]' . "\n" . 'Type=simple' . "\n" . 'User=root' . "\n" . 'Restart=always' . "\n" . 'RestartSec=1' . "\n" . 'ExecStart=/bin/bash /home/xtreamcodes/service start' . "\n" . 'ExecRestart=/bin/bash /home/xtreamcodes/service restart' . "\n" . 'ExecStop=/bin/bash /home/xtreamcodes/service stop' . "\n\n" . '[Install]' . "\n" . 'WantedBy=multi-user.target';
+                    $rSystemd = '[Unit]' . "\n" . 'SourcePath=/home/xtreamcodes/service' . "\n" . 'Description=XC_VM Service' . "\n" . 'After=network.target' . "\n" . 'StartLimitIntervalSec=0' . "\n\n" . '[Service]' . "\n" . 'Type=simple' . "\n" . 'User=root' . "\n" . 'Restart=always' . "\n" . 'RestartSec=1' . "\n" . 'ExecStart=/bin/bash /home/xtreamcodes/service start' . "\n" . 'ExecReload=/bin/bash /home/xtreamcodes/service restart' . "\n" . 'ExecStop=/bin/bash /home/xtreamcodes/service stop' . "\n\n" . '[Install]' . "\n" . 'WantedBy=multi-user.target';
                     file_put_contents(TMP_PATH . 'systemd_' . $rServerID, $rSystemd);
                     sendfile($rConn, TMP_PATH . 'systemd_' . $rServerID, '/etc/systemd/system/xtreamcodes.service');
                     runCommand($rConn, 'sudo chmod +x /etc/systemd/system/xtreamcodes.service');
