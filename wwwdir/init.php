@@ -7,7 +7,6 @@ require_once INCLUDES_PATH . 'pdo.php';
 require_once INCLUDES_PATH . 'streaming.php';
 require_once INCLUDES_PATH . 'stream.php';
 require_once INCLUDES_PATH . 'servers.php';
-require_once IPTV_ROOT_PATH . 'langs/English.php';
 
 if (!function_exists('getallheaders')) {
     function getallheaders() {

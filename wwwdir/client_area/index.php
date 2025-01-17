@@ -13,7 +13,7 @@ if (!(!empty($_SESSION["client_loggedin"]) && $_SESSION["client_loggedin"] === t
         header("Location: live.php");
         die;
     }
-    $A311af351a57a1d9580a9fe53b473019 = "<div id=\"wrong_user_information\">*** " . $_LANG["wrong_info_client"] . " ***</div>";
+    $A311af351a57a1d9580a9fe53b473019 = "<div id=\"wrong_user_information\">*** wrong_info_client ***</div>";
     Edca3ffe9250f93804ca6930c52ae31e:
     if (empty($_GET["action"])) {
         goto Ebb02f8298a9003b768842c44f9d2a97;
