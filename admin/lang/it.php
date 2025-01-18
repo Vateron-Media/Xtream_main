@@ -786,7 +786,6 @@ $_ = array(
 	"edit_movies" => "Modificare Film",
 	"edit_package" => "Modificare Pacchetto",
 	"enigma_only" => "Solo Enigma2",
-	"expanded_sidebar" => "Barra Laterale Espansa",
 	"filter_files" => "File Filtro",
 	"folder" => "Cartella",
 	"friday" => "Venerdì",

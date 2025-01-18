@@ -786,7 +786,6 @@ $_ = array(
   "edit_movies" => "Edit Movies",
   "edit_package" => "Edit Package",
   "enigma_only" => "Enigma Only",
-  "expanded_sidebar" => "Expanded Sidebar",
   "filter_files" => "Filter Files",
   "folder" => "Folder",
   "friday" => "Friday",

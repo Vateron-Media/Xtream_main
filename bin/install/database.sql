@@ -839,8 +839,6 @@ CREATE TABLE IF NOT EXISTS `reg_users` (
   `override_packages` text COLLATE utf8_unicode_ci,
   `google_2fa_sec` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `dark_mode` int(1) NOT NULL DEFAULT '0',
-  `sidebar` int(1) NOT NULL DEFAULT '0',
-  `expanded_sidebar` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `member_group_id` (`member_group_id`),
   KEY `username` (`username`),

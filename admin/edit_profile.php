@@ -18,11 +18,6 @@ if (isset(ipTV_lib::$request["submit_profile"])) {
     } else {
         $rDarkMode = false;
     }
-    if (isset(ipTV_lib::$request["expanded_sidebar"])) {
-        $rExpanded = true;
-    } else {
-        $rExpanded = false;
-    }
     if (!isset($_STATUS)) {
         if ((strlen(ipTV_lib::$request["password"]) > 0) && (($rSettings["change_own_password"]) or ($rPermissions["is_admin"]))) {
             $rPassword = cryptPassword(ipTV_lib::$request["password"]);
@@ -56,10 +51,9 @@ if (isset(ipTV_lib::$request["submit_profile"])) {
             $portadmin = $rSettings["port_admin"];
         }
         ipTV_lib::setSettings(["port_admin" => $portadmin]);
-        $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $rPassword . "', `email` = '" . $rEmail . "', `reseller_dns` = '" . $rDNS . "', `default_lang` = '" . $bob . "', `dark_mode` = " . intval($rDarkMode) . ", `expanded_sidebar` = " . intval($rExpanded) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+        $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $rPassword . "', `email` = '" . $rEmail . "', `reseller_dns` = '" . $rDNS . "', `default_lang` = '" . $bob . "', `dark_mode` = " . intval($rDarkMode) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
         $rUserInfo = getRegisteredUser($rUserInfo["id"]);
         $rSettings["dark_mode"] = $rUserInfo["dark_mode"];
-        $rSettings["expanded_sidebar"] = $rUserInfo["expanded_sidebar"];
         $_STATUS = 0;
     }
 }
@@ -170,14 +164,6 @@ include "header.php";
                                                                         </div>
                                                                     </div>
                                                             <?php } ?>
-                                                            <div class="form-group row mb-4">
-                                                                <label class="col-md-4 col-form-label" for="expanded_sidebar"><?= $_["expanded_sidebar"] ?></label>
-                                                                <div class="col-md-2">
-                                                                    <input name="expanded_sidebar" id="expanded_sidebar" type="checkbox" <?php if ($rUserInfo["expanded_sidebar"] == 1) {
-                                                                        echo "checked ";
-                                                                                                                                         } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
-                                                                </div>
-                                                            </div>
                                                             <div class="form-group row mb-4">
                                                                 <label class="col-md-4 col-form-label" for="dark_mode"><?= $_["dark_mode"] ?></label>
                                                                 <div class="col-md-2">

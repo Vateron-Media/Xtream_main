@@ -786,7 +786,6 @@ $_ = array(
   "edit_movies" => "Modifier les films",
   "edit_package" => "Modifier le package",
   "enigma_only" => "Enigma uniquement",
-  "expanded_sidebar" => "Agrandir lencadré",
   "filter_files" => "Filtrer les fichiers",
   "folder" => "Folder",
   "friday" => "vendredi",
