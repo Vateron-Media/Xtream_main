@@ -77,7 +77,6 @@ define('CONFIG_PATH', MAIN_DIR . 'config/');
 define('CLI_PATH', INCLUDES_PATH . 'cli_tool/');
 // -------------------
 
-
 // BINARIES FILE
 define('PHP_BIN', '/home/xtreamcodes/bin/php/bin/php');
 define('YOUTUBE_PATH', BIN_PATH . 'yt-dlp');
@@ -230,15 +229,7 @@ function log_error($rErrNo, $rMessage, $rFile, $rLine, $rContext = null) {
 }
 
 function log_exception($e) {
-    // panellog(
-    //     'exception',
-    //     $e->getMessage(),
-    //     getExceptionTraceAsString($e),
-    //     $e->getLine()
-    // );
-
-
-    panellog('exception', $e->getMessage(), $e->getTraceAsString(), $e->getLine());
+    panellog('exception', $e->getMessage(), "File: " . $e->getFile() . "\nTrace: " . $e->getTraceAsString(), $e->getLine());
 }
 
 function log_fatal() {

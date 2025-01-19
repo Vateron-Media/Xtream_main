@@ -111,7 +111,8 @@ $magLangs = array(
         "vclub_purchased" => "Purchased",
         "vclub_rent_expires_in" => "rent expires in",
         "cut_off_msg" => "Your STB is blocked.<br/> Call the provider.",
-        "month_arr" => array("JANUARY",
+        "month_arr" => array(
+            "JANUARY",
             "FEBRUARY",
             "MARCH",
             "APRIL",
@@ -122,14 +123,17 @@ $magLangs = array(
             "SEPTEMBER",
             "OCTOBER",
             "NOVEMBER",
-            "DECEMBER"),
-        "week_arr" => array("SUNDAY",
+            "DECEMBER"
+        ),
+        "week_arr" => array(
+            "SUNDAY",
             "MONDAY",
             "TUESDAY",
             "WEDNESDAY",
             "THURSDAY",
             "FRIDAY",
-            "SATURDAY"),
+            "SATURDAY"
+        ),
         "year" => '',
         "records_title" => "RECORDS",
         "ears_back" => "<br>B<br>A<br>C<br>K<br>",
@@ -210,7 +214,9 @@ $magLangs = array(
         "epg_director" => "Director",
         "epg_actors" => "Stars",
         "epg_desc" => "Description",
-        "search_box_languages" => array("en"),
+        "search_box_languages" => array(
+            "en"
+        ),
         "date_format" => "{0}, {2} {1}, {3}",
         "time_format" => "{0}:{1}",
         "timezone_label" => "Timezone",
@@ -456,4 +462,7 @@ $magLangs = array(
         "outdated_firmware" => "Firmware of your STB is outdated.<br>Please update it.",
         "LOGOUT" => "LOGOUT",
         "confirm_logout_title" => "Confirm",
-        "confirm_logout" => "Do you really want to log out?"));
+        "confirm_logout" => "Do you really want to log out?"
+    )
+);
+
