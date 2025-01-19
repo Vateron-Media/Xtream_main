@@ -29,7 +29,7 @@
   - http://ip:25500
 
 * MAG or Stalker Portal
-  - http://ip:25461/stalker_portal/c/index.html
+  - http://ip:25461/stalker_portal/c/
 
 * File IPTV list
   - http://ip:25461/get.php?username=test&password=test&type=m3u_plus&output=hls&key=live

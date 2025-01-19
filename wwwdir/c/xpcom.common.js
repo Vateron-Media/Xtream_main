@@ -23,6 +23,7 @@ function common_xpcom() {
     this.allowed_stb_types = [];
 
 
+    // DEBUG
     // this.debug_mac = '00:1A:80:34:60:58';
     // this.debug_serial_number = '062014N054515';
     // this.debug_type = 'MAG424';
@@ -1110,6 +1111,7 @@ function common_xpcom() {
                 this.set_cookie('debug_key', _GET['debug_key']);
             }
 
+            // DEBUG
             // this.mac = this.debug_mac;
             // this.serial_number = this.debug_serial_number;
             // this.type = this.debug_type;
