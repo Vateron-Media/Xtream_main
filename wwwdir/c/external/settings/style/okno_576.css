@@ -531,12 +531,17 @@ a {
 }
 
 
+
 .nsl {
     margin-top: 130px;
 }
 
 .nsl1 {
     margin-top: 70px;
+}
+
+.nsl2 {
+    margin-top: 40px;
 }
 
 .nsp1 {
@@ -569,7 +574,7 @@ a {
 }
 
 .upd {
-    margin-top: 50;
+    margin-top: 50px;
 }
 
 #update_prbar {

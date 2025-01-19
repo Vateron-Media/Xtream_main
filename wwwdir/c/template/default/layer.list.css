@@ -4,7 +4,7 @@
 }
 
 .bold {
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 .uppercase {
@@ -233,7 +233,8 @@
     font-size: 22px;
     color: #002864;
     text-shadow: #fff 0 1px 0;
-    margin-top: 8px;
+    margin-top: 10px;
+    margin-left: 6px;
     margin-right: 25px;
     white-space: pre;
     overflow: hidden;
@@ -271,7 +272,7 @@
     text-shadow: #fff 0 1px 0;
     float: left;
     margin: 13px 0 0 8px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 .footer_btn {
@@ -372,7 +373,7 @@
     text-shadow: #fff 0 1px 0;
     float: left;
     margin: 13px 0 0 8px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 .color_button_bar span sup {
@@ -423,12 +424,16 @@
     float: left;
     width: 600px;
     font-size: 25px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     color: #fff;
     text-shadow: #000 0 1px 0;
     white-space: pre;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.time_format_12h {
+    width: 590px;
 }
 
 .pos_bar {
@@ -589,7 +594,7 @@
     position: absolute;
     top: 72px;
     left: 75px;
-    font: 45px trebuchet ms, Arial, Helvetica, sans-serif;
+    font: 45px "Myriad Pro", Helvetica, sans-serif;
     text-align: center;
     color: #048;
     width: 150px;
@@ -618,7 +623,7 @@
 
 .ears_left div {
     margin-left: 20px;
-    font: 18px Arial, Helvetica, sans-serif;
+    font: 18px "Myriad Pro", Helvetica, sans-serif;
     color: #fff;
 }
 
@@ -639,7 +644,7 @@
 
 .ears_right div {
     margin-left: 7px;
-    font: 18px Arial, Helvetica, sans-serif;
+    font: 18px "Myriad Pro", Helvetica, sans-serif;
     color: #fff;
     text-align: center;
     width: 14px;
@@ -674,7 +679,7 @@
     background: url("i/aspect_bg.png") left;
     height: 31px;
     padding: 10px 0 0 25px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     float: left;
 }
 
@@ -711,7 +716,7 @@
     color: #fff;
     text-shadow: #555 -1px -1px 2px;
     font-size: 28px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     margin: 4px 8px 0 8px;
     line-height: 28px;
 }
@@ -736,7 +741,7 @@
     background: url("i/aspect_bg.png") left;
     height: 31px;
     padding: 10px 0 0 25px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     float: left;
 }
 

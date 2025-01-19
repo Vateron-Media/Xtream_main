@@ -97,6 +97,7 @@
 
             this.play_btn.hide();
             this.pause_btn.show();
+            main_menu.visible_widget = this;
         },
 
         hide: function () {
@@ -104,6 +105,10 @@
             this.dom_obj.hide();
             this.widget_on = this.on = false;
             window.clearInterval(this.seek_bar_interval);
+
+            if (main_menu.visible_widget === this) {
+                main_menu.visible_widget = undefined;
+            }
         },
 
         bind: function () {

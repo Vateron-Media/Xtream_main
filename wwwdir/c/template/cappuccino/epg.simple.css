@@ -78,7 +78,7 @@
 
 #epg_simple .blue_row_bg[active="active"] .name_block {
     color: #fff;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 #epg_simple .week {
@@ -102,7 +102,7 @@
 #epg_simple .week li[active="active"] {
     background-position: 0 -1px;
     color: #fff;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 #epg_simple .week li[rel="close"] {
@@ -131,7 +131,7 @@
 #epg_simple .program_info .time,
 #epg_simple .full_program_info .time {
     color: #FFE8C7;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 #epg_simple .full_program_info {

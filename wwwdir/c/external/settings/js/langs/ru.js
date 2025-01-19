@@ -166,6 +166,9 @@ var lang = {
     "Country:": "Страна:",
     "City:": "Город:",
     "Time zone:": "Часовой пояс:",
+    "Time format:": "Формат времени:",
+    "12 hour": "12-часовой",
+    "24 hour": "24-часовой",
     "IGMP version:": "Версия IGMP:",
     "UPnP client enabled:": "Запускать UPnP клиент:",
     "Multicast proxy enabled:": "Использовать мультикаст прокси:",
@@ -179,6 +182,7 @@ var lang = {
     "Error": "Ошибка",
     "Testing": "Тестирование",
     "Waiting": "Ожидание",
+    "Not available": "Недоступно",
 
     "Local TimeShift": "Локальный TimeShift",
     "Enable TimeShift:": "Включить:",

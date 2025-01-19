@@ -27,7 +27,7 @@ a {
 
 .header_text {
     position: absolute;
-    margin-top: 15px;
+    margin-top: 7px;
     max-width: 1000px;
     overflow: hidden;
     white-space: nowrap;
@@ -40,7 +40,7 @@ a {
 
 .header_icon {
     position: absolute;
-    margin-top: 10px;
+    margin-top: 5px;
     right: 70px;
     height: 68px;
     width: 68px;

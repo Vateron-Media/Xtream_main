@@ -22,10 +22,10 @@
 .vclub_info_box {
     position: absolute;
     width: 254px;
-    height: 102px;
+    height: 100px;
     top: 70px;
     left: 418px;
-    line-height: 18px;
+    line-height: 20px;
     color: #fff;
     font-size: 16px;
     overflow: hidden;

@@ -138,25 +138,32 @@
                 case 4:
                     mid = 5;
                     var d = document.getElementById('tt31');
-                    var speedtest = new Speedtest(parent.prof.test_download_url);
-                    speedtest.onSuccess(function (speed) {
-                        d.innerHTML = speed;
-                    });
-                    speedtest.onCheck(function (result) {
-                        if (result.state == 2) {
-                            d.innerHTML = parent.t('Testing');
-                        } else if (result.state == 4 || result.state == 5) {
-                            d.innerHTML = parent.t('Error');
-                        } else if (result.state == 1) {
-                            d.innerHTML = parent.t('Waiting');
-                        }
-                    });
+
+                    if (parent.prof.test_download_url) {
+                        var speedtest = new Speedtest(parent.prof.test_download_url);
+                        speedtest.onSuccess(function (speed) {
+                            d.innerHTML = speed;
+                        });
+                        speedtest.onCheck(function (result) {
+                            if (result.state == 2) {
+                                d.innerHTML = parent.t('Testing');
+                            } else if (result.state == 4 || result.state == 5) {
+                                d.innerHTML = parent.t('Error');
+                            } else if (result.state == 1) {
+                                d.innerHTML = parent.t('Waiting');
+                            }
+                        });
+                    }
+
                     menuT = [['text', 'LAN:', parent.stb.GetLanLinkStatus() ? parent.t("UP") : parent.t("Down")], ['text', 'WLAN:', parent.stb.GetWifiLinkStatus() ? parent.t("UP") : parent.t("Down")], ['text', parent.t('Speed test') + ':', '']];
                     for (i = 0; i < menuT.length; i++) {
                         document.getElementById('tt' + (i + 1)).innerHTML = menuT[i][1];
                         document.getElementById('tt' + (i + 1) + '1').innerHTML = menuT[i][2];
                     }
-                    speedtest.start();
+                    speedtest && speedtest.start();
+                    if (!parent.prof.test_download_url) {
+                        d.innerHTML = parent.t('Not available');
+                    }
                     break;
                 case 5:
                     mid = 11;
@@ -268,7 +275,6 @@
                 }
             }
         }
-
         function replPressKey(e) {
             ec = e.keyCode;
             if (ec) {
@@ -331,8 +337,7 @@
                 <td colspan="2" align="center"><span id="t11" class="item_name"></span></td>
             </tr>
             <td colspan="2"><span id="t2" class="list_head"></span>
-                <div style="height:2px; background:#FFF; width:100%; margin:5px 0;"></div>
-                <span id="t21"></span>
+                <div style="height:2px; background:#FFF; width:100%; margin:5px 0;"></div><span id="t21"></span>
             </td>
             </tr>
             <tr>

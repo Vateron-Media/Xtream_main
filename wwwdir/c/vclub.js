@@ -601,7 +601,7 @@
             if (item.screenshot_uri) {
                 this.screenshot_box.innerHTML = '<img src="' + item.screenshot_uri + '">';
             } else {
-                this.screenshot_box.innerHTML = '';
+                this.screenshot_box.innerHTML = '<span></span>';
             }
         };
 
@@ -653,14 +653,15 @@
             }
             window.clearTimeout(this.row_callback_timer);
 
-            var self = this;
+            if (this.cur_view !== 'wide') {
+                var self = this;
+                this.row_callback_timer = window.setTimeout(function () {
 
-            this.row_callback_timer = window.setTimeout(function () {
+                    self.fill_short_info(item);
 
-                self.fill_short_info(item);
-
-            },
-                this.row_callback_timeout);
+                },
+                    this.row_callback_timeout);
+            }
         };
 
         this.set_middle_container = function () {
@@ -784,13 +785,21 @@
 
         this.full_info_switch = function () {
             _debug('full_info_switch');
+            var self = this;
 
             if (this.info && this.info.on) {
                 this.on = true;
                 this.info.hide();
             } else {
                 this.on = false;
-                this.info.show(this.current_movie);
+                if (this.current_movie.lock) {
+                    this.password_input.callback = function () {
+                        self.info.show(self.current_movie);
+                    };
+                    this.password_input.show();
+                } else {
+                    this.info.show(this.current_movie);
+                }
             }
         };
 
@@ -840,6 +849,11 @@
 
             if (data.length === 0 && this.history.length == 1) {
                 this.enable_color_buttons();
+            }
+
+            if (data.length == 1 && (data[0].is_file || (data[0].is_movie && data[0].has_files == '0'))) {
+                this.check_for_pass(true);
+                return;
             }
         };
 
@@ -1246,7 +1260,9 @@
 
                                                 stb.player.prev_layer = self;
 
-                                                stb.key_lock = true;
+                                                if (!connection_problem.on) {
+                                                    stb.key_lock = true;
+                                                }
 
                                                 stb.player.need_show_info = 0;
 
@@ -1270,7 +1286,9 @@
 
                                 stb.player.prev_layer = self;
 
-                                stb.key_lock = true;
+                                if (!connection_problem.on) {
+                                    stb.key_lock = true;
+                                }
 
                                 stb.player.need_show_info = 0;
 

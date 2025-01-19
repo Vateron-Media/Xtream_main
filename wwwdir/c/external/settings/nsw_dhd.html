@@ -7,7 +7,9 @@
         read = new Object();
         var pread = ["wifi_int_dns"];
         read = JSON.parse(parent.stb.GetEnv('{"varList":["wifi_int_dns"]}'));
-        var menuT = [['dn', parent.t('DNS1:')]];
+        var menuT = [
+            ['dn', parent.t('DNS1:')]
+        ];
         var mid = menuT.length + 2;
 
         function onLoad() {
@@ -27,10 +29,12 @@
             parent.wfl = false;
             var t1 = document.getElementById("i1").value + '.' + document.getElementById("i12").value + '.' + document.getElementById("i13").value + '.' + document.getElementById("i14").value;
             parent.wset += '"wifi_int_ip":""';
-            if (t1 != "0.0.0.0" && t1 != read.result.wifi_int_dns) if (cIP(t1)) {
-                parent.wset += ',"wifi_int_dns":"' + t1 + '"';
-            } else erm += menuT[0][1];
-            if (erm != "") parent.erMes(parent.t('No correct') + '<br />' + erm, "i" + iid); else {
+            if (t1 != "0.0.0.0" && t1 != read.result.wifi_int_dns)
+                if (cIP(t1)) {
+                    parent.wset += ',"wifi_int_dns":"' + t1 + '"';
+                } else erm += menuT[0][1];
+            if (erm != "") parent.erMes(parent.t('No correct') + '<br />' + erm, "i" + iid);
+            else {
                 parent.nextMenu('nsw_dhcp.html');
             }
         }
@@ -41,15 +45,14 @@
                     ni += a;
                     if (ni < 1) ni = 1;
                     if (ni > 4) ni = 4;
-                    if (ni != 1) document.getElementById('i' + iid + ni).focus(); else document.getElementById('i' + iid).focus();
+                    if (ni != 1) document.getElementById('i' + iid + ni).focus();
+                    else document.getElementById('i' + iid).focus();
                     break;
-            }
-            else if (iid + a <= mid && iid + a >= mid - 1) {
+            } else if (iid + a <= mid && iid + a >= mid - 1) {
                 iid += a;
                 document.getElementById('i' + iid).focus();
             }
         }
-
     </script>
     <script language="JavaScript" src="js/pres.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -59,14 +62,17 @@
         <table class="nsl" width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr>
                 <td align="right"><span id="t1"></span></td>
-                <td class="ds"><input type="text" maxlength="3" class="ds" id="i1" onfocus="this.select(true)" /><span
-                        class="ds">.</span><input type="text" maxlength="3" class="ds" id="i12"
-                        onfocus="this.select(true)" /><span class="ds">.</span><input type="text" maxlength="3"
-                        class="ds" id="i13" onfocus="this.select(true)" /><span class="ds">.</span><input type="text"
-                        maxlength="3" class="ds" id="i14" onfocus="this.select(true)" /></td>
+                <td class="ds">
+                    <input type="text" maxlength="3" class="ds" id="i1" onfocus="this.select(true)" /><span
+                        class="ds">.</span>
+                    <input type="text" maxlength="3" class="ds" id="i12" onfocus="this.select(true)" /><span
+                        class="ds">.</span>
+                    <input type="text" maxlength="3" class="ds" id="i13" onfocus="this.select(true)" /><span
+                        class="ds">.</span>
+                    <input type="text" maxlength="3" class="ds" id="i14" onfocus="this.select(true)" />
+                </td>
             </tr>
         </table>
-
     </div>
     <div id="footer">
         <input id="i3" type="button" value=""

@@ -9,7 +9,6 @@
         read = { 'result': { '1': '', '2': '', '3': '' } };
         var menuT = [['input', parent.t('New password:')], ['input', parent.t('Confirm password:')]];
         var mid = menuT.length + 2;
-
         function onLoad() {
             sload();
             init();
@@ -49,7 +48,6 @@
                 parent.erMes(parent.t('Error filling in forms'), "i" + iid);
             }
         }
-
         function change(a) {
             if (iid > mid - 2) if (iid + a <= mid && iid + a >= mid - 1) {
                 iid += a;

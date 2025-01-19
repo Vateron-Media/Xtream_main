@@ -11,21 +11,21 @@
             onLoadScript();
 
             function finishLoad() {
-                console.log('Loading finish');
+                //console.log('Loading finish');
                 if (filesloaded === filestoload) {
-                    console.log('Load callback');
+                    //console.log('Load callback');
                     callback();
                 }
             }
 
             function onLoadScript() {
                 if (i < scripts.length) {
-                    console.log('Loading script ' + scripts[i]);
+                    //console.log('Loading script ' + scripts[i]);
                     var script = document.createElement('script');
                     script.type = 'text/javascript';
                     script.src = scripts[i];
                     script.onload = function () {
-                        console.log('Loaded script ' + scripts[i]);
+                        //console.log('Loaded script ' + scripts[i]);
                         filesloaded++;  // (This means increment, i.e. add one)
                         i++;
                         onLoadScript();
@@ -294,7 +294,7 @@
                     }
 
                     _debug('hide() - trying on player.prev_layer');
-                    stb.player.prev_layer && stb.player.prev_layer.hide && stb.player.prev_layer.hide(true);
+                    stb.player.prev_layer && stb.player.prev_layer.hide && stb.player.prev_layer.hide('vclub' !== stb.cur_place);
 
                     if (stb.player.on) {
                         stb.player.stop();

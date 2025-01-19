@@ -24,7 +24,6 @@ function ListLayer() {
     this.cur_row = 0;
     this.prev_row = 0;
     this.cur_page = 1;
-    this.prev_page = 1;
     this.data_items = [];
     this.map = [];
     this.loading = false;
@@ -98,7 +97,6 @@ ListLayer.prototype.reset = function () {
 
     this.cur_row = 0;
     this.cur_page = 1;
-    this.prev_page = 1;
     this.page_dir = 1;
     this.total_pages = 0;
 
@@ -240,7 +238,6 @@ ListLayer.prototype.load_data = function () {
     this.set_total_items(-1);
 
     this.load_params['p'] = this.cur_page;
-    this.load_params['prev_p'] = this.prev_page;
 
     this.loading = true;
 
@@ -435,7 +432,7 @@ ListLayer.prototype.set_active_row = function (num) {
                         this.handling_block(this.data_items[num][this.row_blocks[j]], this.active_row, this.row_blocks[j]);
                     }
                 }
-                if (this.shift_row_callback && (this.cur_view == 'middle' || this.cur_view == 'short')) {
+                if (this.shift_row_callback && (this.cur_view == 'middle' || this.cur_view == 'short' || stb.cur_place === 'vclub')) {
                     this.shift_row_callback.call(this, this.data_items[num]);
                 }
             } else {
@@ -489,7 +486,6 @@ ListLayer.prototype.shift_row = function (dir) {
 ListLayer.prototype.shift_page = function (dir) {
 
     this.page_dir = dir;
-    this.prev_page = this.cur_page;
 
     if (dir > 0) {
         if (this.cur_page < this.total_pages) {

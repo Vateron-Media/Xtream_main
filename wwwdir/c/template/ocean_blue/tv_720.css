@@ -47,6 +47,11 @@
     /*width: 209px;*/
 }
 
+#tv .wide_container .name_block {
+    width: auto;
+    margin-right: 655px;
+}
+
 #tv .active_name_block {
     /*font-size: 22px;
     color: #002864;
@@ -63,7 +68,7 @@
 
 #tv .short_container .active_name_block {
     width: auto;
-    margin-top: 6px;
+    margin-top: 10px;
     float: none;
 }
 

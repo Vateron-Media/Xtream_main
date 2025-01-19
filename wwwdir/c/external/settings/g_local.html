@@ -7,12 +7,16 @@
         var icF = false;
         var model = parent.stb.RDir("Model");
         var read = JSON.parse(parent.stb.GetEnv('{"varList":["timezone_conf"]}'));
-        var pread = ["language", "country", "city", "timezone", "units"];
+
+        parent.load({ "type": "stb", "action": "get_settings_profile" }, function (prof) { });
+
+        var pread = ["language", "country", "city", "timezone", "clock_format", "units"];
         var menuT = [
             ['select', parent.t('Language:')],
             ['select', parent.t('Country:')],
             ['select', parent.t('City:')],
             ['select', parent.t('Time zone:')],
+            ['select', parent.t('Time format:'), '12h', parent.t('12 hour'), '24h', parent.t('24 hour')],
             ['select', parent.t('Units:'), 'metric', parent.t('Metric'), 'imperial', parent.t('Imperial')]
         ];
         var mid = menuT.length + 2;
@@ -53,10 +57,12 @@
 
         function changeTime(timezone) {
             var dl = document.getElementById("i4");
-            if (timezone != '') for (i = 0; i < dl.length; i++) {
-                if (timezone == dl[i].value) {
-                    dl[i].selected = true;
-                    break;
+            if (timezone != '') {
+                for (i = 0; i < dl.length; i++) {
+                    if (timezone == dl[i].value) {
+                        dl[i].selected = true;
+                        break;
+                    }
                 }
             }
         }
@@ -111,18 +117,25 @@
                     dl.innerHTML = options;
                     dl.getElementsByTagName("option")[base_select != -1 ? base_select : select].selected = true;
                 });
+
             window.setTimeout(function () {
                 sload();
                 init();
                 parent.cont.focus();
                 document.getElementById("i1").focus();
-                document.getElementById("i6").value = parent.t('OK');
-                document.getElementById("i7").value = parent.t('Cancel');
+                document.getElementById("i7").value = parent.t('OK');
+                document.getElementById("i8").value = parent.t('Cancel');
                 menuT[2][0] = 'ic';
 
                 for (var i = 0; i < document.getElementById("i5").options.length; i++) {
-                    if (parent.prof.units == document.getElementById("i5").options[i].value) {
+                    if (parent.prof.clock_format == document.getElementById("i5").options[i].value) {
                         document.getElementById("i5").selectedIndex = i;
+                    }
+                }
+
+                for (var i = 0; i < document.getElementById("i6").options.length; i++) {
+                    if (parent.prof.units == document.getElementById("i6").options[i].value) {
+                        document.getElementById("i6").selectedIndex = i;
                     }
                 }
             }, 100);
@@ -133,41 +146,67 @@
             //parent.stb.Debug('key='+ec);
             if (!block) switch (ec) {
                 case 9:
-                case 116:
+                case 116: {
                     e.preventDefault();
                     break;
-                case 27:
+                }
+                case 27: {
                     parent.wifi_ssid.length = 0;
                     back();
                     break;
-                case 13:
+                }
+                case 13: {
                     fc = true;
-                    if (iid <= mid - 2) if (menuT[iid - 1][0] == 'ic') {
-                        icCheck();
-                        e.preventDefault();
+                    if (iid <= mid - 2) {
+                        if (menuT[iid - 1][0] == 'ic') {
+                            icCheck();
+                            e.preventDefault();
+                        }
                     }
                     break;
-                case 40:
-                    if (iid <= mid) perehod_set(+1);
+                }
+                case 40: {
+                    if (iid <= mid) {
+                        perehod_set(+1);
+                    }
                     fc = true;
                     e.preventDefault();
-                    if (fln) ni = 1;
+                    if (fln) {
+                        ni = 1;
+                    }
                     break;
-                case 38:
-                    if (iid <= mid) perehod_set(-1);
+                }
+                case 38: {
+                    if (iid <= mid) {
+                        perehod_set(-1);
+                    }
                     fc = true;
                     e.preventDefault();
-                    if (fln) ni = 1;
+                    if (fln) {
+                        ni = 1;
+                    }
                     break;
-                case 37:
+                }
+                case 37: {
                     change(-1);
-                    if (fln && iid <= mid - 2) if (menuT[iid - 1][0] == 'dn') e.preventDefault();
+                    if (fln && iid <= mid - 2) {
+                        if (menuT[iid - 1][0] == 'dn') {
+                            e.preventDefault();
+                        }
+                    }
                     break;
-                case 39:
+                }
+                case 39: {
                     change(1);
-                    if (fln && iid <= mid - 2) if (menuT[iid - 1][0] == 'dn') e.preventDefault();
+                    if (fln && iid <= mid - 2) {
+                        if (menuT[iid - 1][0] == 'dn') {
+                            e.preventDefault();
+                        }
+                    }
                     break;
-                case 85: // power button
+                }
+                case 85: {// power button
+
                     var power_off = parent.stb.GetStandByStatus();
                     if (power_off) {
                         power_off = false;
@@ -177,44 +216,59 @@
                         parent.stb.StandBy(1);
                     }
                     break;
-            }
-            else switch (ec) {
-                case 9:
-                case 116:
-                    e.preventDefault();
-                    break;
-                case 27:
-                    icCheck();
-                    e.preventDefault();
-                    break;//exit
-                case 13:
-                    if (goInd >= 0) icCheck(goCity[goInd].value); else icCheck();
-                    maxIn = 0;
-                    index = 0;
-                    goInd = -1;
-                    break;//ok
-                case 40:
-                    cityGo(1);
-                    e.preventDefault();
-                    break;//niz
-                case 38:
-                    cityGo(-1);
-                    e.preventDefault();
-                    break;//vverh
-                case 37:
-                    break;//levo
-                case 39:
-                    break;//pravo
-                case 85: // power button
-                    power_off = parent.stb.GetStandByStatus();
-                    if (power_off) {
-                        power_off = false;
-                        parent.stb.StandBy(0);
-                    } else {
-                        power_off = true;
-                        parent.stb.StandBy(1);
+                }
+            } else {
+                switch (ec) {
+                    case 9:
+                    case 116: {
+                        e.preventDefault();
+                        break;
                     }
-                    break;
+                    case 27: {
+                        icCheck();
+                        e.preventDefault();
+                        break;//exit
+                    }
+                    case 13: {
+                        if (goInd >= 0) {
+                            icCheck(goCity[goInd].value);
+                        } else {
+                            icCheck();
+                        }
+                        maxIn = 0;
+                        index = 0;
+                        goInd = -1;
+                        break;//ok
+                    }
+                    case 40: {
+                        cityGo(1);
+                        e.preventDefault();
+                        break;//niz
+                    }
+                    case 38: {
+                        cityGo(-1);
+                        e.preventDefault();
+                        break;//vverh
+                    }
+                    case 37: {
+                        break;//levo
+                    }
+                    case 39: {
+                        break;//pravo
+                    }
+                    case 85: {
+                        // power button
+                        power_off = parent.stb.GetStandByStatus();
+                        if (power_off) {
+                            power_off = false;
+                            parent.stb.StandBy(0);
+                        } else {
+                            power_off = true;
+                            parent.stb.StandBy(1);
+                        }
+                        break;
+                    }
+                }
             }
         }
 
@@ -228,15 +282,15 @@
                 block = true;
                 document.getElementById('i' + iid).addEventListener('input', function () {
                     eval('searchCity()')
-                })
+                });
             } else {
                 var d = document.getElementById('i' + iid);
                 d.setAttribute('readonly', 0);
                 d.focus();
                 block = false;
                 if (check) {
-                    parent.stb.Debug(check)
-                    for (var i = 0; i <= maxIn; i++) if (City[i].value == check) {
+                    parent.stb.Debug(check);
+                    for (var i = 0; i <= maxIn; i++)if (City[i].value == check) {
                         index = i;
                         break;
                     }
@@ -289,7 +343,9 @@
         function cityGo(a) {
             parent.stb.Debug(goInd);
             if (goInd >= 0) {
-                if (goInd <= goMax) document.getElementsByClassName('line_act')[0].className = 'line';
+                if (goInd <= goMax) {
+                    document.getElementsByClassName('line_act')[0].className = 'line';
+                }
                 parent.stb.Debug(document.getElementById('list_array').innerHTML);
                 goInd += a;
                 parent.stb.Debug(goInd);
@@ -305,32 +361,44 @@
         }
 
         function submit() {
-            var wr = '{';
+            var wr = {};
             var pr = false;
             var la = document.getElementById('i1').value;
             var tm = document.getElementById('i4').value;
-            var units = document.getElementById('i5').value;
+            var cf = document.getElementById('i5').value;
+            var units = document.getElementById('i6').value;
             var conf = JSON.parse(parent.stb.GetEnv('{"varList":["language","timezone_conf_int"]}'));
             if (conf.result.language != la.substr(0, 2)) {
-                wr += '"language":"' + la.substr(0, 2) + '"';
-                pr = true;
+                wr['language'] = la.substr(0, 2);
             }
+
             if (conf.result.timezone_conf_int != "") {
-                wr += (pr ? ',' : '') + '"timezone_conf_int":""';
+                wr['timezone_conf_int'] = '';
             }
+
+            if (!parent.prof.clock_format || parent.prof.clock_format != cf) {
+                wr['clock_format'] = cf;
+            }
+
+            console.log(JSON.stringify(wr));
+
             parent.stb.ExecAction('timezone ' + tm);
-            if (wr != '{') {
-                wr += '}';
-                parent.stb.SetEnv(wr);
+            if (Object.keys(wr).length) {
+                parent.stb.SetEnv(JSON.stringify(wr));
             }
             parent.load({
                 "type": "stb",
                 "action": "set_locale",
                 "locale": la,
                 "city": numberC,
-                "units": units
+                "units": units,
+                "clock_format": cf
             }, function (result) {
-                if (!result) parent.erMes(parent.t('Saving error'), "i" + iid); else parent.rebut = true;
+                if (!result) {
+                    parent.erMes(parent.t('Saving error'), "i" + iid);
+                } else {
+                    parent.rebut = true;
+                }
                 back();
                 parent.stb.SendEventToPortal(JSON.stringify({ "type": "settings", "refresh_weather": true }));
             });
@@ -345,27 +413,30 @@
             } else {
                 var d = document.getElementById('i' + iid);
                 switch (iid) {
-                    case 2:
+                    case 2: {
                         loadCity(d[d.selectedIndex + a >= 0 ? (d.selectedIndex + a < d.length ? d.selectedIndex + a : d.length - 1) : 0].value);
                         break;
-                    case 3:
+                    }
+                    case 3: {
                         index = parseInt(index) + a;
                         if (index > maxIn) index = maxIn; else if (index < 0) index = 0;
                         d.value = City[index].label;
                         changeTime(City[index].timezone);
                         numberC = City[index].value;
                         break;
+                    }
                 }
             }
         }
     </script>
     <script language="JavaScript" src="js/pres.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
 
 <body onload="onLoad()" onkeydown="pressKeyH(event);">
     <div id="blueback">
         <div id="list_array"></div>
-        <table class="nsl1" width="100%" border="0" cellpadding="0" cellspacing="0">
+        <table class="nsl2" width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr>
                 <td align="right"><span id="t1"></span></td>
                 <td width="50%">
@@ -394,12 +465,18 @@
                     <div class="sub_select"><select id="i5"></select></div>
                 </td>
             </tr>
+            <tr>
+                <td align="right"><span id="t6"></span>
+                <td>
+                    <div class="sub_select"><select id="i6"></select></div>
+                </td>
+            </tr>
         </table>
 
     </div>
     <div id="footer">
-        <input id="i7" type="button" value="" onClick="back();" />
-        <input id="i6" type="button" value="" onClick="submit();" />
+        <input id="i8" type="button" value="" onClick="back();" />
+        <input id="i7" type="button" value="" onClick="submit();" />
     </div>
 </body>
 

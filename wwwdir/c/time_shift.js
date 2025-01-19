@@ -112,12 +112,19 @@
             return media_len
         },
 
+        // Fix issue #33139.
+        get_live_pause_time_pos: function () {
+            var stream_pause_time = this.cur_media_item.live_date || new Date();
+
+            return stream_pause_time.getHours() * 3600 + stream_pause_time.getMinutes() * 60 + stream_pause_time.getSeconds();
+        },
+
         get_pos_time: function () {
             _debug('time_shift.get_pos_time');
 
             _debug('stb.player.cur_media_item.cmd', stb.player.cur_media_item.cmd);
 
-            if (/([^\/]*)\.mp[g,4]/.exec(stb.player.cur_media_item.cmd) || this.cur_media_item['wowza_dvr'] == 1 || this.cur_media_item['flussonic_dvr'] == 1 && (this.cur_media_item['onestream_dvr'] != 1) || this.cur_media_item['nimble_dvr'] == 1) {
+            if (/([^\/]*)\.mp[g,4]/.exec(stb.player.cur_media_item.cmd) || this.cur_media_item['wowza_dvr'] == 1 || this.cur_media_item['flussonic_dvr'] == 1 || this.cur_media_item['nimble_dvr'] == 1) {
 
                 _debug('stb.player.play_initiated', stb.player.play_initiated);
 
@@ -137,43 +144,23 @@
                     _debug('current_pos_time 2', current_pos_time);
                 }
 
-                /*}else if (this.cur_media_item['wowza_dvr'] == 1){
-    
-                    var cur_time = new Date();
-                    var media_len = stb.GetMediaLen();
-                    var cur_pos_time = stb.GetPosTime();
-                    _debug('media_len', media_len);
-                    _debug('cur_pos_time', cur_pos_time);
-    
-                    cur_time.setSeconds(cur_time.getSeconds() - media_len + cur_pos_time);
-    
-                    pos_time = cur_time.getHours() * 3600 + cur_time.getMinutes() * 60 + cur_time.getSeconds();
-    
-                    _debug('pos_time', pos_time);
-    
-                    return pos_time;*/
-
             } else {
                 var now = new Date();
                 current_pos_time = now.getMinutes() * 60 + now.getSeconds();
                 _debug('current_pos_time 3', current_pos_time);
-
             }
 
             //var current_pos_time = stb.GetPosTime();
 
             _debug('current_pos_time', current_pos_time);
 
-            if (this.cur_media_item['onestream_dvr'] == 1) {
-                cur_file_date = this._get_flussonic_playlist_start_date_by_url(this.cur_media_item.cmd);
-            } else if (this.cur_media_item['wowza_dvr'] == 1) {
+            if (this.cur_media_item['wowza_dvr'] == 1) {
                 var cur_file_date = this._get_wowza_playlist_start_date_by_url(this.cur_media_item.cmd);
             } else if (this.cur_media_item['flussonic_dvr'] == 1) {
                 cur_file_date = this._get_flussonic_playlist_start_date_by_url(this.cur_media_item.cmd);
             } else if (this.cur_media_item['nimble_dvr'] == 1) {
                 cur_file_date = this._get_nimble_playlist_start_date_by_url(this.cur_media_item.cmd);
-            }
-            else {
+            } else {
                 cur_file_date = this._get_file_date_by_url(this.cur_media_item.cmd);
             }
 
@@ -386,8 +373,7 @@
             return cur_date;
         },
 
-        get_url_by_pos: function (pos, timeArr) {
-
+        get_url_by_pos: function (pos) {
             _debug('time_shift.get_url_by_pos', pos);
 
             //var cur_file_date = this._get_file_date_by_url(this.cur_media_item.cmd);
@@ -410,36 +396,7 @@
 
             _debug('position', position);
 
-            if (this.cur_media_item['onestream_dvr'] == 1) {
-                //here we fetch timestamp from request
-                var matchBOtimeRegex = "\\d{10}";
-                var matchedTime = this.cur_media_item.cmd.match(matchBOtimeRegex)
-                var requestTime = matchedTime[0];
-
-                var date = new Date();
-
-                if (!empty(requestTime)) {
-                    date = new Date(Math.floor(requestTime * 1000));
-                }
-
-                var time = timeArr
-
-                var myDate = time.split(":");
-                date.setHours(myDate[0]);
-                date.setMinutes(myDate[1]);
-                date.setSeconds(myDate[2]);
-                var mytime = Math.floor(date.getTime() / 1000).toString()
-
-                new_playlist_start = mytime;
-
-                _debug('new_playlist_start', new_playlist_start);
-
-                if (this.cur_media_item.cmd.indexOf('/mpegts') != -1) {
-                    url = this.cur_media_item.cmd.replace(/\/(\d{10})\//, '/' + new_playlist_start + '/');
-                } else {
-                    url = this.cur_media_item.cmd.replace(/-(\d{10})-/, '-' + new_playlist_start + '-');
-                }
-            } else if (stb.player.cur_tv_item['wowza_dvr'] == 1) {
+            if (stb.player.cur_tv_item['wowza_dvr'] == 1) {
 
                 var new_playlist_start = this.get_wowza_playlist_start(cur_file_date);
 
@@ -569,7 +526,7 @@
 
             if (stb.player.cur_tv_item['wowza_dvr'] == 1) {
                 var cur_file_date = this._get_wowza_playlist_start_date_by_url(stb.player.cur_media_item.cmd);
-            } else if (stb.player.cur_tv_item['flussonic_dvr'] == 1 && (stb.player.cur_tv_item['onestream_dvr'] != 1)) {
+            } else if (stb.player.cur_tv_item['flussonic_dvr'] == 1) {
                 cur_file_date = this._get_flussonic_playlist_start_date_by_url(stb.player.cur_media_item.cmd);
             } else if (stb.player.cur_tv_item['nimble_dvr'] == 1) {
                 cur_file_date = this._get_nimble_playlist_start_date_by_url(stb.player.cur_media_item.cmd);
@@ -590,7 +547,7 @@
 
                 var url = this.cur_media_item.cmd.replace(/wowzadvrplayliststart=(\d+)/, 'wowzadvrplayliststart=' + new_playlist_start).replace(/position:(\d*)/, '').trim();
 
-            } else if (stb.player.cur_tv_item['flussonic_dvr'] == 1 && (stb.player.cur_tv_item['onestream_dvr'] != 1)) {
+            } else if (stb.player.cur_tv_item['flussonic_dvr'] == 1) {
 
                 new_playlist_start = this.get_flussonic_playlist_start(next_file_date);
 

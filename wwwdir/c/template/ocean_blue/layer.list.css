@@ -4,7 +4,7 @@
 }
 
 .bold {
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 .uppercase {
@@ -75,7 +75,7 @@
     color: #fff;
     font-size: 20px;
     text-shadow: #0f385a 1px 2px 0;
-    margin: 1px 0 0 3px;
+    margin: 4px 0 0 4px;
     padding-left: 3px;
     white-space: pre;
     overflow: hidden;
@@ -233,10 +233,10 @@
 .active_name_block,
 .active_title_block {
     font-size: 22px;
-    /*font-weight: bold;*/
+    /*font-family: "Myriad Pro Bold";*/
     color: #002864;
     /*text-shadow: #fff 0 1px 0;*/
-    margin: 6px 25px 0 2px;
+    margin: 10px 25px 0 4px;
     white-space: pre;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -274,7 +274,7 @@
     text-shadow: #fff 0 1px 0;
     float: left;
     margin: 13px 0 0 8px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 .footer_btn {
@@ -318,7 +318,7 @@
     white-space: pre;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-family: "Roboto", sans-serif;
+    font-family: "Myriad Pro", sans-serif;
     font-size: 24px;
     color: #fff;
 }
@@ -376,7 +376,7 @@
     text-shadow: rgba(0, 50, 80, 0.5) 1px 2px 0;
     float: left;
     margin: 13px 0 0 8px;
-    /*font-weight: bold;*/
+    /*font-family: "Myriad Pro Bold";*/
 }
 
 .color_button_bar span sup {
@@ -427,12 +427,16 @@
     float: left;
     width: 600px;
     font-size: 25px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     color: #fff;
     text-shadow: #000 0 1px 0;
     white-space: pre;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.time_format_12h {
+    width: 590px;
 }
 
 .pos_bar {
@@ -593,7 +597,7 @@
     position: absolute;
     top: 72px;
     left: 75px;
-    font: 45px trebuchet ms, Arial, Helvetica, sans-serif;
+    font: 45px "Myriad Pro", Helvetica, sans-serif;
     text-align: center;
     color: #048;
     width: 150px;
@@ -622,7 +626,7 @@
 
 .ears_left div {
     margin-left: 13px;
-    font: 18px Arial, Helvetica, sans-serif;
+    font: 18px "Myriad Pro", Helvetica, sans-serif;
     color: #fff;
 }
 
@@ -643,7 +647,7 @@
 
 .ears_right div {
     margin-left: 14px;
-    font: 18px Arial, Helvetica, sans-serif;
+    font: 18px "Myriad Pro", Helvetica, sans-serif;
     color: #fff;
     text-align: center;
     width: 14px;
@@ -678,7 +682,7 @@
     background: url("i/aspect_bg.png") left;
     height: 35px;
     padding: 6px 0 0 25px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     float: left;
 }
 
@@ -715,7 +719,7 @@
     color: #fff;
     text-shadow: #555 -1px -1px 2px;
     font-size: 28px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     margin: 2px 8px 2px 8px;
     line-height: 28px;
 }
@@ -740,7 +744,7 @@
     background: url("i/aspect_bg.png") left;
     height: 36px;
     padding: 5px 0 0 25px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     float: left;
 }
 

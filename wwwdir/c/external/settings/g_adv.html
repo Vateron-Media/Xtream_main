@@ -52,7 +52,6 @@
 
         });
         var step;
-
         function onLoad() {
             sload();
             switch (screen.height) {
@@ -134,15 +133,15 @@
                         "type": "stb",
                         "action": "set_playback_buffer",
                         "playback_buffer_bytes": by,
-                        "playback_buffer_size": gr
+                         "playback_buffer_size": gr
                     }, function (result) {
                         if (!result) {
                             erm += parent.t('Saving error');
                             parent.erMes(erm, "i" + iid);
                         } else {
                             parent.load({
-                                "type": "stb",
-                                "action": "set_plasma_saving",
+                                "type": "stb", 
+                                "action": "set_plasma_saving", 
                                 "plasma_saving": plasma
                             }, function (result) {
                                 if (!result) {

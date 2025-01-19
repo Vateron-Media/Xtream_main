@@ -209,7 +209,7 @@
 
                 if (this.cur_view == 'short') {
                     stb.SetTopWin(1);
-                    stb.SetViewport(this.preview_pos.xsize, this.preview_pos.ysize, this.preview_pos.x, this.preview_pos.y);
+                    this.recalculate_preview_mode();
 
                     _debug('stb.player.on', stb.player.on);
                     _debug('stb.player.is_tv', stb.player.is_tv);
@@ -464,15 +464,8 @@
             }).bind(key.BACK, this);
 
 
-            if (typeof (stb.profile['shift_page_ch_key']) != 'undefined' && stb.profile['shift_page_ch_key']) {
-                this.shift_page.bind(key.CHANNEL_PREV, this, 1);
-                this.shift_page.bind(key.CHANNEL_NEXT, this, -1);
-            } else {
-                this.shift_row.bind(key.CHANNEL_PREV, this, -1);
-                this.shift_row.bind(key.CHANNEL_NEXT, this, 1);
-            }
-
-
+            this.shift_row.bind(key.CHANNEL_PREV, this, -1);
+            this.shift_row.bind(key.CHANNEL_NEXT, this, 1);
 
             this.add_to_censored_check.bind(key.APP, this);
         };
@@ -753,7 +746,7 @@
             try {
                 _debug('this.preview_pos', this.preview_pos);
                 stb.SetTopWin(1);
-                stb.SetViewport(this.preview_pos.xsize, this.preview_pos.ysize, this.preview_pos.x, this.preview_pos.y);
+                this.recalculate_preview_mode();
             } catch (e) {
                 _debug(e);
             }
@@ -1715,6 +1708,7 @@
         };
 
         this.progress_bar = {
+            // Progress Bar for TV preview
 
             load: 0,
 
@@ -1833,6 +1827,40 @@
             _debug('tv.stop_tv_plasma_saving_count');
 
             window.clearTimeout(this.make_fillscreen_to);
+        };
+
+        this.post_loading_handle = function () {
+            _debug('tv.post_loading_handle');
+
+            var currOffset;
+            var offsets = tv.map.map(function (currVal, index, arr) {
+                return arr[index]['top'];
+            });
+
+            // find duplicates
+            while (offsets.length) {
+                currOffset = offsets.splice(0, 1)[0];
+                if (offsets.indexOf(currOffset) !== -1) {
+                    break;
+                }
+            }
+
+            if (typeof (offsets) !== 'undefined' && offsets.length) {
+                // var offsets_timer = window.setTimeout(function () {
+                module.tv.map.map(function (currVal, index, mapArr) {
+                    var offset;
+                    var item = currVal.row;
+
+                    if (index > 0) {
+                        offset = mapArr[index - 1].row.clientHeight + mapArr[index - 1].row.offsetTop;
+                        item.moveY(offset);
+                    }
+
+                    currVal['top'] = item.offsetTop;
+                });
+                //     window.clearTimeout(offsets_timer);
+                // }, 200);
+            }
         }
     }
 
@@ -1874,23 +1902,6 @@
     tv.init_color_buttons(color_buttons_map);
 
     var sort_menu_map = [
-        {
-            "label": word['tv_sort_default'],
-            "cmd": function () {
-
-                this.parent.load_params.fav = false;
-                stb.user.fav_itv_on = 0;
-                stb.player.set_fav_status();
-                this.parent.load_params.sortby = 'default';
-                this.parent.load_params.hd = 0;
-                if (!stb.profile['tv_quality_filter']) {
-                    this.parent.color_buttons.get('blue').disable();
-                } else {
-                    this.parent.fav_menu && this.parent.fav_menu.disable_by_name("fav_manage");
-                }
-                stb.player.channels = stb.player.channels.sortBy('default');
-            }
-        },
         {
             "label": word['tv_by_number'],
             "cmd": function () {
@@ -2077,39 +2088,6 @@
 
     if (tv.filter_menu.hasOwnProperty('dependency')) {
         tv.filter_menu.dependency = [tv.view_menu, tv.sort_menu, tv.fav_menu];
-    }
-
-    tv.tmp_offsets = new Array;
-    tv.tmp_offsets = tv.map.map(function (currVal, index, arr) {
-        return arr[index]['top'];
-        /*console.log(arr[index]['top']);
-        arr[index].row.moveY(82);
-        arr[index]['top'] = 82;
-        return 1;*/
-    });
-    var currOffset;
-
-    while (tv.tmp_offsets.length) {
-        currOffset = tv.tmp_offsets.splice(0, 1)[0];
-        if (tv.tmp_offsets.indexOf(currOffset) !== -1) {
-            break;
-        }
-    }
-
-    if (typeof (tv.tmp_offsets) !== 'undefined' && tv.tmp_offsets.length) {
-        var offsets_timer = window.setTimeout(function () {
-            module.tv.map.map(function (currVal, index, mapArr) {
-                var item = currVal.row, offset;
-                item.show();
-                if (index > 0) {
-                    offset = mapArr[index - 1].row.clientHeight + mapArr[index - 1].row.offsetTop;
-                    item.moveY(offset);
-                }
-
-                currVal['top'] = item.offsetTop;
-            });
-            window.clearTimeout(offsets_timer);
-        }, 200);
     }
 
     tv.set_short_container();

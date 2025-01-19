@@ -132,7 +132,7 @@
 #epg_simple .program_info .time,
 #epg_simple .full_program_info .time {
     color: #cfeafe;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 #epg_simple .full_program_info {

@@ -28,10 +28,9 @@ function player() {
     this.cur_tv_item;
     this.last_not_locked_tv_item;
     this.need_show_info = 0;
+
     this.ch_aspect = {};
     this.ch_aspect_idx = 0;
-
-    this.temp_pos = null;
 
     this.atrack_types = {
         1: 'MP2',
@@ -106,7 +105,6 @@ function player() {
     this.init_show_info();
     this.init_quick_ch_switch();
     this.volume.init();
-
 
     this.time_shift_indication.init();
     this.progress_bar.init();
@@ -1024,6 +1022,7 @@ player.prototype.init_play_or_download_dialog = function () {
 
 player.prototype.event_callback = function (event, params) {
     _debug('event: ', event);
+    _debug('params: ', params);
 
     event = parseInt(event);
 
@@ -1227,7 +1226,6 @@ player.prototype.event_callback = function (event, params) {
                             _debug('diff', diff);
 
                             ///if (cur_piece_pos_time(cur_piece_pos_time - stb.GetPosTime()) > 60 ){
-                            //update the new url and play it
                             if (diff <= 10 && diff >= -10) {
                                 var new_url = module.time_shift.get_next_part();
 
@@ -1243,7 +1241,7 @@ player.prototype.event_callback = function (event, params) {
                                 this.cur_media_item = module.time_shift.stored_media_item;
                                 this.cur_tv_item = this.cur_media_item;
                                 this.active_time_shift = false;
-                                this.play_last(); //
+                                this.play_last(); // 
                                 return;
 
                             }
@@ -1344,9 +1342,9 @@ player.prototype.event_callback = function (event, params) {
                     this.get_pids();
                 }
 
-                this.triggerCustomEventListener('event_2', this.cur_media_item);
+                // this.triggerCustomEventListener('event_2', this.cur_media_item);
                 //if (this.is_tv){
-                if (stb.user['enable_buffering_indication'] && this.cur_media_item.cmd.indexOf('rtp ') != 0) {
+                if (stb.user['enable_buffering_indication'] && this.cur_media_item.cmd.indexOf('rtp ') !== 0) {
                     this.progress_bar.start();
                 }
                 //}
@@ -1355,16 +1353,15 @@ player.prototype.event_callback = function (event, params) {
             }
         case 4: // Playback started
             {
-
                 _debug('case 4: // Playback started');
 
                 this.event1_counter = 0;
                 this.event5_counter = 0;
 
-                this.triggerCustomEventListener('event_4', this.cur_media_item);
-                if (stb.user['enable_buffering_indication'] && this.cur_media_item.cmd.indexOf('rtp ') != 0) {
-                    this.progress_bar.stop();
-                }
+                //this.triggerCustomEventListener('event_4', this.cur_media_item);
+                // if (stb.user['enable_buffering_indication'] && this.cur_media_item.cmd.indexOf('rtp ') != 0){
+                //     this.progress_bar.stop();
+                // }
 
                 if (this.cur_media_item.hasOwnProperty('ad_tracking')) {
 
@@ -1396,7 +1393,6 @@ player.prototype.event_callback = function (event, params) {
                 if (this.is_tv && this.cur_tv_item && this.cur_tv_item.ready_to_timeshift && module.time_shift_local && module.time_shift_local.enabled) {
 
                     if (stb.profile.ts_delay !== 'on_pause') {
-
                         this.enable_local_timeshift = window.setTimeout(function () {
                             module.time_shift_local.enable_mode();
                         }, stb.profile.ts_delay * 1000);
@@ -1404,6 +1400,8 @@ player.prototype.event_callback = function (event, params) {
                 }
 
                 if (this.active_local_time_shift && module.time_shift_local) {
+
+                    this.time_shift_indication.show();
 
                 } else if (this.active_time_shift && module.time_shift) {
 
@@ -1783,10 +1781,8 @@ player.prototype.event_callback = function (event, params) {
                 module.pvr_local.remove_all_with_errors();
                 break;
             }
-        case 32: // HDMI on
-            {
 
-            }
+        case 32: // HDMI on
         case 33: // HDMI off
             {
 
@@ -1796,7 +1792,9 @@ player.prototype.event_callback = function (event, params) {
                 }
 
                 var multiplier = 1000, corrupted_event = false;
-                if (['MAG256', 'MAG257', 'MAG322', 'MAG323', 'MAG424', 'IM4412'].indexOf(stb.type.toUpperCase()) != -1) {
+
+                // the multiplier is set empirically
+                if (['MAG256', 'MAG257', 'MAG322', 'MAG323', 'MAG349', 'MAG424', 'IM4412', 'MAG520', 'MAG522', 'MAG522V2', 'MAG524', 'MAG526', 'MAG528', 'MAG540'].indexOf(stb.type.toUpperCase()) != -1) {
                     multiplier = 100;
                 } else if (['MAG420', 'IM4411'].indexOf(stb.type.toUpperCase()) != -1) {
                     multiplier = 300;
@@ -1804,7 +1802,9 @@ player.prototype.event_callback = function (event, params) {
 
                 _debug('stb.power_off', stb.power_off);
 
-                if (['MAG256', 'MAG257', 'MAG322', 'MAG323'].indexOf(stb.type.toUpperCase()) != -1) {
+                // the STB list is according to issues #17166, #26035
+                // some STB handle HDMI on/off events at firmware
+                if (['MAG256', 'MAG257', 'MAG322', 'MAG323', 'MAG324', 'MAG349', 'MAG420', 'MAG424', 'MAG520', 'MAG522', 'MAG522V2', 'MAG524', 'MAG526', 'MAG528', 'MAG540'].indexOf(stb.type.toUpperCase()) != -1) {
                     if (stb.power_off && event == 33) {
                         _debug('ignore event');
                         break;
@@ -1876,6 +1876,7 @@ player.prototype.event_callback = function (event, params) {
                             }
                         }
 
+                        // #15266, #23439,
                         module && module.tv && module.tv.recalculate_preview_mode();
 
                     }, hdmi_reaction_timeout);
@@ -2270,19 +2271,19 @@ player.prototype.volume = new function () {
 };
 
 /*player.prototype.seek_bar = new function(){
-
+    
     this.seek_bar_dom_obj = $('seek_bar');
-
+    
     this.show = function(){
         this.seek_bar_dom_obj.show();
     };
-
+    
     this.hide = function(){
         this.seek_bar_dom_obj.hide();
     };
-
+    
     this.set_pos = function(){
-
+        
     }
 };*/
 
@@ -2350,6 +2351,8 @@ player.prototype.play_last_radio = function () {
     this.play(this.cur_media_item);
 };
 
+// .init_first_channel() contains logic of selecting channel for startup first play
+// and save it to this.cur_tv_item or empty object for empty channels list
 player.prototype.init_first_channel = function () {
     _debug('player.init_first_channel');
 
@@ -2367,13 +2370,14 @@ player.prototype.init_first_channel = function () {
         this[var_channel_idx] = this[var_channel_list].getIdxById(stb.user.last_itv_id) || 0;
         channel = this[var_channel_list][this[var_channel_idx]];
 
-        var tempChannelGenreId = "";
-
-        if (typeof (channel) != 'undefined') {
-            tempChannelGenreId = channel.tv_genre_id;
+        // fix #31389
+        // sometime the channel list is empty due to tariff or module.tv is not initialized yet
+        if (typeof channel === 'undefined' || typeof module.tv === 'undefined') {
+            this.cur_media_item = this.cur_tv_item = this.last_not_locked_tv_item = {};
+            return;
         }
 
-        var channel_genre_key = module.tv.genres.getIdxByVal('id', tempChannelGenreId),
+        var channel_genre_key = module.tv.genres.getIdxByVal('id', channel.tv_genre_id),
             channel_genre = module.tv.genres[channel_genre_key];
 
         if ((channel && (channel.lock == '1' || channel.censored == '1')) || (channel_genre && channel_genre.censored == 1)) {
@@ -2670,9 +2674,6 @@ player.prototype.create_link = function (type, uri, series_number, forced_storag
             "type": type,
             "action": "create_link",
             "cmd": uri,
-
-
-
             "series": series_number,
             "forced_storage": forced_storage,
             "disable_ad": disable_ad || false,
@@ -3024,10 +3025,20 @@ player.prototype.pause_switch = function () {
             module.time_shift.set_media_item(this.cur_tv_item);
             module.time_shift.get_link_for_channel();
 
+            _debug('enter in timeshift mode');
+
+            // actualy it will depends on how long it was on pause
+            // if less then 5 sec it will continue with live stream
+            // look at disable_pause() method
+
             this.active_time_shift = true;
+
+            // setup for .set_pos_and_play() on key.PAUSE press
+            this.new_pos_time = module.time_shift.get_live_pause_time_pos()
+
         } else if (this.is_tv && parseInt(this.cur_media_item.allow_local_timeshift, 10) && module.time_shift_local && module.time_shift_local.enabled && !this.prev_layer.on) {
 
-            _debug('enter in timeshift mode');
+            _debug('enter in local timeshift mode');
 
             module.time_shift_local.enable_mode();
 
@@ -3051,7 +3062,10 @@ player.prototype.pause_switch = function () {
 
         try {
             stb.Pause();
-        } catch (e) { }
+        } catch (e) {
+            _debug(e);
+        }
+
         this.pause.on = true;
         this.pause.dom_obj.show();
 
@@ -3210,11 +3224,12 @@ player.prototype.init_show_info = function () {
     this.info.dom_obj.hide();
 };
 
-player.prototype.show_info = function (item, direct_call) {
+player.prototype.show_info = function (item, direct_call, skip_button_pos) {
     _debug('show_info');
 
     item = item || this.cur_media_item;
     direct_call = direct_call || false;
+    skip_button_pos = skip_button_pos || false;
 
     if (this.info.on) {
         window.clearTimeout(this.info.hide_timeout);
@@ -3266,7 +3281,7 @@ player.prototype.show_info = function (item, direct_call) {
     if (osd_title_match) {
         title = decodeURIComponent(osd_title_match[1].replace(/\+/g, '%20'));
     }
-    //here we display the name of the channel (mtv)
+
     this.info.title.innerHTML = title;
 
     _debug('this.is_tv', this.is_tv);
@@ -3359,18 +3374,18 @@ player.prototype.show_info = function (item, direct_call) {
 
             if (this.info.video_container.isHidden()) {
                 this.info.video_container.show();
-                // time = document.getElementsByClassName('custom_container')
-                // this.info.title.innerHTML =  this.info.video_container.innerHTML()
             }
 
-            if (this.last_state == 4) {
-                if (this.cur_media_item['onestream_dvr'] != 1) {
+            // for HLS player last state may be 2
+            if (this.last_state == 4 ||
+                (this.last_state == 2 && stbPlayerManager.list && stbPlayerManager.list.length && stbPlayerManager.list[0].state >= 2)) {
+                if (!skip_button_pos) {
                     this.set_pos_button_to_cur_time();
                 }
-
             }
         }
 
+        // channel logo
         if (item.logo && stb.profile['show_tv_channel_logo']) {
             this.info.logo.innerHTML = '<img ' + (this.active_time_shift || this.active_local_time_shift ? 'class="timeshift_mode"' : '') + ' src="' + item.logo + '">';
         } else {
@@ -3407,6 +3422,10 @@ player.prototype.show_info = function (item, direct_call) {
         if (stb.profile.clock_format && stb.profile.clock_format == '12h' && !this.info.title.haveClass('time_format_12h')) {
             this.info.title.addClass('time_format_12h');
         }
+
+        // clear .move_pos() timer on FFWD (issue #27734)
+        window.clearTimeout(this.info.hide_timeout);
+
         this.info.hide_timeout = window.setTimeout(function () {
             self.info.dom_obj.hide();
             self.info.on = false;
@@ -3856,7 +3875,6 @@ player.prototype.time_shift_indication = {
     on: false,
 
     init: function () {
-
         _debug('time_shift_indication.init');
 
         this.time_shift_info_container = create_block_element('time_shift_info_container');
@@ -3870,7 +3888,6 @@ player.prototype.time_shift_indication = {
     },
 
     show: function () {
-
         _debug('time_shift_indication.show');
         this.time_shift_info_container.show();
         this.on = true;
@@ -4354,11 +4371,14 @@ player.prototype.bind = function () {
                 this.pause.on = true;
             }
 
-            module.time_shift.set_media_item(this.cur_tv_item);
-            module.time_shift.get_link_for_channel();
+            // fix for issue #33195
+            if (!this.active_time_shift) {
+                module.time_shift.set_media_item(this.cur_tv_item);
+                module.time_shift.get_link_for_channel();
+            }
             this.is_tv = false;
             this.active_time_shift = true;
-            this.cur_pos_time = module.time_shift.get_pos_time();
+            this.cur_pos_time = module.time_shift.get_live_pause_time_pos();
             this.cur_media_length = module.time_shift.get_cur_media_length();
             _debug('this.cur_media_length', this.cur_media_length);
             _debug('this.cur_pos_time', this.cur_pos_time);
@@ -4366,7 +4386,7 @@ player.prototype.bind = function () {
             module.time_shift.pos_to_cur_program_begin();
 
             if (!this.info.on) {
-                this.show_info();
+                this.show_info(null, false, true);
             }
 
             window.clearTimeout(this.info.hide_timeout);
@@ -4613,7 +4633,6 @@ player.prototype.get_file_type = function (item) {
 };
 
 player.prototype.set_pos_button_to_cur_time = function () {
-
     _debug('player.set_pos_button_to_cur_time');
 
     try {
@@ -4659,7 +4678,7 @@ player.prototype.set_pos_button_to_cur_time = function () {
         }
 
         _debug('this.cur_pos_time', this.cur_pos_time);
-        //here we set the button position time
+
         this.set_pos_button(this.cur_pos_time);
     } catch (e) {
         _debug(e);
@@ -4672,7 +4691,7 @@ player.prototype.set_pos_button = function (to_time) {
     //this.new_pos_time = to_time;
 
     /*if (this.new_pos_time < 0){
-        if (this.active_time_shift){
+        if (this.active_time_shift){ 
             this.cur_media_length = 86400;
             //this.cur_pos_time = 86400 + to_time;
             //
@@ -4802,14 +4821,14 @@ player.prototype.set_pos_and_play = function (reset, do_not_hide_info) {
 
     _debug('this.info.on', this.info.on);
 
+    window.clearTimeout(this.info.hide_timeout);
+    this.info.hide_timeout = null;
+
     if (!this.info.on) {
         return;
     }
 
-    window.clearTimeout(this.info.hide_timeout);
-
     try {
-
         if (!reset) {
 
             if (this.active_time_shift && module.time_shift) {
@@ -4822,28 +4841,26 @@ player.prototype.set_pos_and_play = function (reset, do_not_hide_info) {
 
                     this.info.hide_timeout = window.setTimeout(function () {
                         self.set_pos_and_play();
-
                     }, 500);
 
                     _debug('return set_pos_and_play');
                     return;
                 }
 
-                var regex = /\d{2}:\d{2}:\d{2}/;
-                var match = this.info.video_container.innerText.match(regex);
-                var timeStr = match[0];
+                // goto live stream
+                // 10s = 2 chunks (1 chunk may be not enough for video with multiple audio tracks)
+                if (
+                    this.diff_pos === 0 &&
+                    ((new Date() - module.time_shift.cur_media_item.live_date) / 1000 < 10)
+                ) {
+                    this.active_time_shift = false;
+                    this.is_tv = true;
+                    this.play_last();
 
-
-                if (this.cur_media_item['onestream_dvr'] == 1) {
-                    var myDate = timeStr.split(":");
-                    var hours_to_sec = parseInt(myDate[0]) * 60 * 60;
-                    var min_to_sec = parseInt(myDate[1]) * 60;
-
-                    this.temp_pos = hours_to_sec + min_to_sec + parseInt(myDate[2]);
-
+                    return;
                 }
 
-                var new_url = module.time_shift.get_url_by_pos(this.new_pos_time, timeStr);
+                var new_url = module.time_shift.get_url_by_pos(this.new_pos_time);
                 _debug('new_url', new_url);
 
                 module.time_shift.update_media_item(new_url);
@@ -4914,15 +4931,16 @@ player.prototype.set_pos_and_play = function (reset, do_not_hide_info) {
     this.diff_pos = 0;
     this.next_step = 0;
 };
-//when we click the btn for backwards we call this fnc
+
 player.prototype.move_pos = function (dir) {
-    //dir  which represents the direction in which to move the player position (either forward or backward).
     _debug('player.move_pos', dir);
 
     _debug('this.info.on', this.info.on);
     _debug('this.is_tv', this.is_tv);
 
     this.reset_pos_by_numbers();
+
+    var skip_button_pos;
 
     if (this.is_tv && this.prev_layer.on) {
         return;
@@ -4934,19 +4952,25 @@ player.prototype.move_pos = function (dir) {
     ) {
         return;
     }
-    //if timeshift is enabled
+
+    // start time-shift mode
     if (this.is_tv && parseInt(this.cur_media_item.enable_tv_archive, 10) && module.time_shift && !this.prev_layer.on) {
 
         if (dir > 0) {
             return;
         }
 
-        module.time_shift.set_media_item(this.cur_tv_item);
-        module.time_shift.get_link_for_channel();
+        // fix for issue #33195
+        if (!this.active_time_shift) {
+            module.time_shift.set_media_item(this.cur_tv_item);
+            module.time_shift.get_link_for_channel();
+        }
         this.is_tv = false;
         this.active_time_shift = true;
-        this.cur_pos_time = module.time_shift.get_pos_time();
+        this.cur_pos_time = module.time_shift.get_live_pause_time_pos();
         this.cur_media_length = module.time_shift.get_cur_media_length();
+        skip_button_pos = true;
+
         _debug('this.cur_media_length', this.cur_media_length);
         _debug('this.cur_pos_time', this.cur_pos_time);
     } else if (this.is_tv && parseInt(this.cur_media_item.allow_local_timeshift, 10) && module.time_shift_local && module.time_shift_local.enabled && !this.prev_layer.on) {
@@ -4957,24 +4981,16 @@ player.prototype.move_pos = function (dir) {
         this.active_local_time_shift = true;
         this.cur_pos_time = stb.GetPosTime();
         this.cur_media_length = stb.GetMediaLen();
+        skip_button_pos = true;
     }
 
-    if (this.cur_media_item['onestream_dvr'] == 1) {
-        if (this.temp_pos) {
-            this.time_shift_indication.show(this.temp_pos);
-            this.cur_pos_time = this.temp_pos
-        }
-    }
+    // _debug('this.last_state', this.last_state);
+    // _debug('stbPlayer.state', stbPlayerManager.list[0].state);
 
-    window.clearTimeout(this.info.hide_timeout);
-
-    var self = this;
-
-    this.info.hide_timeout = window.setTimeout(function () {
-        //THIS SHIT IS
-        // var time = Math.floor(Date.now() / 1000)  - 60;
-        self.set_pos_and_play();
-    }, 4000);
+    // fix issue #27734
+    // here, before pause, is place to catch stbPlayer.state == 2 and
+    // media length check is added for pause state (stbPlayer.state == 3)
+    var allow_player_slider_move = stbPlayerManager.list[0].state >= 2 && this.cur_media_length >= 0;
 
     if (!this.pause.on) {
 
@@ -4991,20 +5007,45 @@ player.prototype.move_pos = function (dir) {
     }
 
     if (!this.info.on) {
-        this.show_info();
+        this.show_info(null, false, skip_button_pos);
     }
 
+    // cancel previous timer and info.show() auto hide
+    window.clearTimeout(this.info.hide_timeout);
+
+    var self = this;
+
+    this.info.hide_timeout = window.setTimeout(function () {
+        self.set_pos_and_play();
+    }, 4000);
+
+
     var media_len = stb.GetMediaLen();
+    var currPosTime = stb.GetPosTime();
 
     _debug('media_len', media_len);
     _debug('this.last_state', this.last_state);
     _debug('this.active_time_shift', this.active_time_shift);
 
-    if ((media_len <= 0 || this.last_state != 4) && !this.active_time_shift) {
+    // fix for #31034
+    if (!this.active_time_shift) {
+        var cannotMovePos = media_len <= 0 ||
+            this.last_state === 5 ||
+            (this.last_state === 1 && dir > 0) ||
+            (currPosTime === media_len && dir > 0) ||
+            (currPosTime <= 0 && dir < 0);
+
+        if (cannotMovePos) {
+            return;
+        }
+    }
+
+    // fix issues #27734, #1051, #1088
+    if (!allow_player_slider_move && (media_len <= 0 || this.last_state != 4) && !this.active_time_shift) {
         return;
     }
 
-    if (this.prev_move_pos_dir != dir) {
+    if (this.prev_move_pos_dir !== dir) {
         this.pos_step = 10;
         this.next_step = 0;
     } else {
@@ -5055,7 +5096,6 @@ player.prototype.move_pos = function (dir) {
 
     try {
         this.set_pos_button(new_pos_time);
-        this.temp_pos = null
     } catch (e) {
         _debug(e);
     }
@@ -5401,7 +5441,6 @@ player.prototype.change_tv_channel_aspect = function () {
 };
 
 player.prototype.init_aspect_info = function () {
-
     _debug('player.init_aspect_info');
 
     this.aspect_info_container = create_block_element('aspect_info_container');
@@ -6069,12 +6108,16 @@ var playback_limit = {
     }
 };
 
+// Progress Bar for fullscreen
 player.prototype.progress_bar = {
-
     load: 0,
+    update_timer_timeout: 100, // 300
+    attempts_number: 3,
+    update_timer: {},
+    updateCounter: 0,
 
     init: function () {
-        _debug('progressBar.init');
+        _debug('player.progressBar.init');
 
         this.dom_obj = create_block_element('playback_progress_block');
         this.progress = create_block_element('playback_progress', this.dom_obj);
@@ -6082,72 +6125,74 @@ player.prototype.progress_bar = {
     },
 
     start: function () {
-        _debug('progressBar.start');
+        _debug('player.progressBar.start');
+        _debug('player.progressBar.update_timer_timeout', this.update_timer_timeout);
 
         this.dom_obj.show();
-
-        var self = this;
 
         window.clearInterval(this.update_timer);
         window.clearTimeout(this.stop_timer);
         window.clearTimeout(this.hide_timeout);
 
-        this.update_timer = window.setInterval(function () {
-            self.update();
-        }, 300);
+        this.updateCounter = 0;
+
+        var self = this;
+        this.update_timer = window.setInterval(
+            function () {
+                self.update();
+            },
+            this.update_timer_timeout
+        );
     },
 
-    update: function (load) {
-        _debug('progressBar.update', load);
+    isFull: function () {
+        return this.load >= 100;
+    },
 
-        if (!load) {
-            load = stb.GetBufferLoad();
-        }
+    update: function () {
+        _debug('player.progressBar.update updateCounter', ++this.updateCounter);
 
-        _debug('load 1', load);
-
-        if (this.load > load) {
-            load = 100;
-        }
-
-        _debug('load 2', load);
+        load = stb.GetBufferLoad();
+        _debug('load stb.GetBufferLoad()', load);
 
         this.set_progress(load);
 
-        if (load == 100) {
-            //var self = this;
-            window.clearTimeout(this.stop_timer);
-            window.clearInterval(this.update_timer);
-            //this.stop_timer = window.setTimeout(function(){self.stop()}, 300);
+        if (this.isFull()) {
+            this.stop();
+            return;
+        }
+
+        if (0 === load && this.updateCounter > this.attempts_number) {
+            _debug('no buffering info - exit');
             this.stop();
         }
     },
 
     set_progress: function (load) {
-        _debug('set_progress', load);
+        _debug('player.progressBar.set_progress', load);
 
         this.load = load;
 
         var max = this.dom_obj.offsetWidth - 4;
-
         var width = max / 100 * load;
 
         this.progress.style.width = width + 'px';
     },
 
     stop: function () {
-        _debug('progressBar.stop');
+        _debug('player.progressBar.stop');
 
-        //this.dom_obj.hide();
-
-        this.set_progress(100);
         var self = this;
         window.clearTimeout(this.hide_timeout);
-        this.hide_timeout = window.setTimeout(function () { self.dom_obj.hide(); self.progress.style.width = 0; }, 300);
+        this.hide_timeout = window.setTimeout(
+            function () {
+                self.dom_obj.hide();
+                self.progress.style.width = 0;
+            },
+            this.update_timer_timeout
+        );
 
         window.clearInterval(this.update_timer);
-        this.load = 0;
-        //this.progress.style.width = 0;
     }
 };
 

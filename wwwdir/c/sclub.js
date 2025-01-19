@@ -56,7 +56,10 @@
         this.init = function () {
             this.superclass.init.call(this);
             this.init_info();
-            this.download_exist = new ModalForm({ title: get_word("alert_form_title"), text: get_word("identical_download_exist") });
+            this.download_exist = new ModalForm({
+                title: get_word("alert_form_title"),
+                text: get_word("identical_download_exist")
+            });
             this.download_exist.getButtonsBlockDomObj().style.textAlign = "center";
             this.download_exist.getTextDomObj().style.textAlign = "center";
             this.download_exist.enableOnExitClose();
@@ -73,7 +76,10 @@
             ));
 
 
-            this.rent_confirm = new ModalForm({ "title": get_word('confirm_form_title'), "text": get_word('rent_movie_text') });
+            this.rent_confirm = new ModalForm({
+                "title": get_word('confirm_form_title'),
+                "text": get_word('rent_movie_text')
+            });
             this.rent_confirm.getTextDomObj().style.textAlign = "center";
             this.rent_confirm.enableOnExitClose();
             this.rent_confirm.addCustomEventListener('show', function () {
@@ -107,14 +113,20 @@
                 }
             ));
 
-            this.parent_password_promt = new ModalForm({ "title": get_word('parent_password_title'), "parent": main_menu });
+            this.parent_password_promt = new ModalForm({
+                "title": get_word('parent_password_title'),
+                "parent": main_menu
+            });
             this.parent_password_promt.enableOnExitClose();
 
             this.parent_password_promt.addItem(new ModalFormInput({
                 "label": get_word('password_label'),
                 "name": "parent_password",
                 "type": "password",
-                "onchange": function () { _debug('change'); scope.parent_password_promt.resetStatus() }
+                "onchange": function () {
+                    _debug('change');
+                    scope.parent_password_promt.resetStatus()
+                }
             }));
 
             this.parent_password_promt.addItem(new ModalFormButton(
@@ -137,7 +149,10 @@
                 }
             ));
 
-            this.price_confirm = new ModalForm({ "title": get_word('confirm_form_title'), "text": get_word('rent_movie_price_text') });
+            this.price_confirm = new ModalForm({
+                "title": get_word('confirm_form_title'),
+                "text": get_word('rent_movie_price_text')
+            });
             this.price_confirm.getTextDomObj().style.textAlign = "center";
             this.price_confirm.enableOnExitClose();
             this.price_confirm.addCustomEventListener('show', function () {
@@ -187,7 +202,10 @@
             ));
 
 
-            this.complete_confirm = new ModalForm({ "title": get_word('notice_form_title'), "text": get_word('service_subscribe_success') });
+            this.complete_confirm = new ModalForm({
+                "title": get_word('notice_form_title'),
+                "text": get_word('service_subscribe_success')
+            });
             this.complete_confirm.enableOnExitClose();
             this.complete_confirm.getTextDomObj().style.textAlign = "center";
             this.complete_confirm.addCustomEventListener('show', function () {
@@ -498,7 +516,10 @@
                 try {
                     if (scope.on && (search_str.length >= 3 || search_str.length == 0)) {
                         scope.load_params.search = search_str;
-                        scope.update_header_path([{ "alias": "search", "item": search_str.length >= 3 ? '"' + search_str + '"' : '' }]);
+                        scope.update_header_path([{
+                            "alias": "search",
+                            "item": search_str.length >= 3 ? '"' + search_str + '"' : ''
+                        }]);
                         scope.load_data();
                         scope.reset();
                     }
@@ -868,7 +889,10 @@
             });
 
             if (this.data_items[this.cur_row].is_movie) {
-                this.update_header_path([{ "alias": "movie", "item": this.data_items[this.cur_row].name }, { "alias": "sortby", "item": '' }, { "alias": "genre", "item": '' }, { "alias": "search", "item": '' }]);
+                this.update_header_path([{
+                    "alias": "movie",
+                    "item": this.data_items[this.cur_row].name
+                }, { "alias": "sortby", "item": '' }, { "alias": "genre", "item": '' }, { "alias": "search", "item": '' }]);
                 this.load_params['movie_id'] = this.data_items[this.cur_row].id;
             } else if (this.data_items[this.cur_row].is_season) {
                 this.update_header_path([{ "alias": "season", "item": this.data_items[this.cur_row].name }]);
@@ -1569,25 +1593,39 @@
     sclub.sidebar.bind();
 
     var sort_menu = [
-        { "label": word['vclub_by_addtime'], "cmd": function () { this.parent.load_params.fav = false; this.parent.load_params.sortby = 'added'; this.parent.load_params.hd = false; this.parent.load_params.not_ended = false } },
-        { "label": word['vclub_by_title'], "cmd": function () { this.parent.load_params.fav = false; this.parent.load_params.sortby = 'name'; this.parent.load_params.hd = false; this.parent.load_params.not_ended = false } },
-        { "label": word['vclub_top'], "cmd": function () { this.parent.load_params.fav = false; this.parent.load_params.sortby = 'top'; this.parent.load_params.hd = false; this.parent.load_params.not_ended = false } },
-        { "label": word['vclub_only_hd'], "cmd": function () { this.parent.load_params.sortby = 'added'; this.parent.load_params.fav = false; this.parent.load_params.hd = true; this.parent.load_params.not_ended = false } },
-        { "label": word['vclub_only_favorite'], "cmd": function () { this.parent.load_params.sortby = 'name'; this.parent.load_params.fav = true; this.parent.load_params.hd = false; this.parent.load_params.not_ended = false } },
-        { "label": word['vclub_not_ended'], "cmd": function () { this.parent.load_params.sortby = 'last_ended'; this.parent.load_params.fav = false; this.parent.load_params.hd = false; this.parent.load_params.not_ended = true } }
+        {
+            "label": word['vclub_by_addtime'], "cmd": function () {
+                this.parent.load_params.fav = false;
+                this.parent.load_params.sortby = 'added';
+                this.parent.load_params.hd = false;
+                this.parent.load_params.not_ended = false
+            }
+        },
+        {
+            "label": word['vclub_by_title'], "cmd": function () {
+                this.parent.load_params.fav = false;
+                this.parent.load_params.sortby = 'name';
+                this.parent.load_params.hd = false;
+                this.parent.load_params.not_ended = false
+            }
+        },
+        {
+            "label": word['vclub_top'], "cmd": function () {
+                this.parent.load_params.fav = false;
+                this.parent.load_params.sortby = 'top';
+                this.parent.load_params.hd = false;
+                this.parent.load_params.not_ended = false
+            }
+        },
+        {
+            "label": word['vclub_only_favorite'], "cmd": function () {
+                this.parent.load_params.sortby = 'name';
+                this.parent.load_params.fav = true;
+                this.parent.load_params.hd = false;
+                this.parent.load_params.not_ended = false
+            }
+        }
     ];
-
-    if (stb.profile['kinopoisk_rating']) {
-
-        var rating_item = { "label": get_word('vclub_by_rating'), "cmd": function () { this.parent.load_params.fav = false; this.parent.load_params.sortby = 'rating'; this.parent.load_params.hd = false; this.parent.load_params.not_ended = false } };
-
-        sort_menu.splice(1, 0, rating_item);
-    }
-
-    if (stb.profile['show_purchased_filter']) {
-        var purchased_item = { "label": get_word('vclub_only_purchased'), "cmd": function () { this.parent.load_params.fav = false; this.parent.load_params.sortby = 'purchased'; this.parent.load_params.hd = false; this.parent.load_params.not_ended = false } };
-        sort_menu.push(purchased_item);
-    }
 
     sclub.init_sort_menu(
         sort_menu,
@@ -1601,8 +1639,16 @@
 
     sclub.init_view_menu(
         [
-            { "label": word['vclub_list_w_info'], "cmd": function () { this.parent.set_middle_container() } },
-            { "label": word['vclub_list'], "cmd": function () { this.parent.set_wide_container() } }
+            {
+                "label": word['vclub_list_w_info'], "cmd": function () {
+                    this.parent.set_middle_container()
+                }
+            },
+            {
+                "label": word['vclub_list'], "cmd": function () {
+                    this.parent.set_wide_container()
+                }
+            }
             //{"label" : word['vclub_list_w_info'], "cmd" : function(){this.parent.set_middle_container()}}
         ],
         {
@@ -1615,8 +1661,16 @@
 
     sclub.init_other_menu(
         [
-            { "label": word['vclub_search_box'], "cmd": function () { this.parent.search_box_switcher() } },
-            { "label": word['vclub_query_box'], "cmd": function () { this.parent.sidebar_switcher() } }
+            {
+                "label": word['vclub_search_box'], "cmd": function () {
+                    this.parent.search_box_switcher()
+                }
+            },
+            {
+                "label": word['vclub_query_box'], "cmd": function () {
+                    this.parent.sidebar_switcher()
+                }
+            }
         ],
         {
             "offset_x": 520,
@@ -1655,7 +1709,6 @@
 
             for (var i = 0; i < categories.length; i++) {
                 map.push(
-
                     {
                         "title": categories[i].title,
                         "cmd": (function (category) {
@@ -1690,7 +1743,6 @@
 
                         })(categories[i])
                     }
-
                 );
             }
 

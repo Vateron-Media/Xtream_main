@@ -4,7 +4,7 @@
 }
 
 .bold {
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 .uppercase {
@@ -102,6 +102,7 @@
     text-align: center;
     white-space: pre;
     overflow: hidden;
+    padding-top: 3px;
 }
 
 .wide_container {}
@@ -144,6 +145,7 @@
     left: 56px;
     background: url("i_720/mb_table_act01.png") no-repeat;
     padding: 5px 0 0 13px;
+    margin-top: 0.2em;
 }
 
 .wide_container .moved_active_row_bg {
@@ -173,6 +175,7 @@
     left: 56px;
     background: url("i_720/mb_table_act04.png") no-repeat;
     padding: 5px 0 0 13px;
+    margin-top: 0.2em;
 }
 
 .short_container .active_row_bg {
@@ -182,6 +185,7 @@
     left: 56px;
     background: url("i_720/mb_table_act03.png") no-repeat;
     padding: 5px 0 0 13px;
+    margin-top: 0.2em;
 }
 
 .active_hd_block {
@@ -258,7 +262,7 @@
     text-align: center;
     white-space: pre;
     overflow: hidden;
-    padding-top: 2px;
+    padding-top: 4px;
 }
 
 
@@ -268,7 +272,7 @@
     text-shadow: #fff 0 1px 0;
     float: left;
     margin: 13px 0 0 8px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 .footer_btn {
@@ -365,7 +369,7 @@
     text-shadow: #fff 0 1px 0;
     float: left;
     margin: 14px 0 0 8px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
 }
 
 .color_button_bar span sup {
@@ -410,12 +414,16 @@
     float: left;
     width: 1110px;
     font-size: 30px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     color: #fff;
     text-shadow: #000 0 1px 0;
     white-space: pre;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.time_format_12h {
+    width: 1100px;
 }
 
 .pos_bar {
@@ -576,7 +584,7 @@
     position: absolute;
     top: 72px;
     left: 75px;
-    font: 45px trebuchet ms, Arial, Helvetica, sans-serif;
+    font: 45px "Myriad Pro", sans-serif;
     text-align: center;
     color: #048;
     width: 150px;
@@ -605,7 +613,7 @@
 
 .ears_left div {
     margin-left: 35px;
-    font: 22px Arial, Helvetica, sans-serif;
+    font: 22px "Myriad Pro", Helvetica, sans-serif;
     color: #fff;
 }
 
@@ -626,7 +634,7 @@
 
 .ears_right div {
     margin-left: 11px;
-    font: 22px Arial, Helvetica, sans-serif;
+    font: 22px "Myriad Pro", Helvetica, sans-serif;
     color: #fff;
     text-align: center;
     width: 14px;
@@ -661,7 +669,7 @@
     background: url("i_720/aspect_bg.png") left;
     height: 31px;
     padding: 10px 0 0 25px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     float: left;
 }
 
@@ -698,7 +706,7 @@
     color: #fff;
     text-shadow: #555 -1px -1px 2px;
     font-size: 28px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     margin: 4px 8px 0 8px;
     line-height: 28px;
 }
@@ -723,7 +731,7 @@
     background: url("i_720/aspect_bg.png") left;
     height: 31px;
     padding: 10px 0 0 25px;
-    font-weight: bold;
+    font-family: "Myriad Pro Bold";
     float: left;
 }
 

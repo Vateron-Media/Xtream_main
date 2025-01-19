@@ -9,7 +9,22 @@ header('Pragma: no-cache');
 @header('Content-type: text/javascript');
 
 $rPageItems = 14;
+$REQUESTLOGER = 0;
 
+
+function requestLoger($output) {
+    global $REQUESTLOGER;
+    if ($REQUESTLOGER) {
+        $data = array(
+            'request' => ipTV_lib::$request,
+            'response' => $output,
+        );
+        $log = date('Y-m-d H:i:s') . ' ' . print_r($data, true);
+        file_put_contents(__DIR__ . '/log.txt', $log . PHP_EOL, FILE_APPEND);
+    }
+
+    exit($output);
+}
 
 $rReqType = (!empty($_REQUEST['type']) ? $_REQUEST['type'] : null);
 $rReqAction = (!empty($_REQUEST['action']) ? $_REQUEST['action'] : null);
@@ -19,25 +34,25 @@ if ($rReqType && $rReqAction) {
         case 'stb':
             switch ($rReqAction) {
                 case 'get_ad':
-                    exit(json_encode(array('js' => array())));
+                    requestLoger(json_encode(array('js' => array())));
 
                 case 'get_storages':
-                    exit(json_encode(array('js' => array())));
+                    requestLoger(json_encode(array('js' => array())));
 
                 case 'log':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'get_countries':
-                    exit(json_encode(array('js' => array())));
+                    requestLoger(json_encode(array('js' => array())));
 
                 case 'get_timezones':
-                    exit(json_encode(array('js' => array())));
+                    requestLoger(json_encode(array('js' => array())));
 
                 case 'get_cities':
-                    exit(json_encode(array('js' => array())));
+                    requestLoger(json_encode(array('js' => array())));
 
                 case 'search_cities':
-                    exit(json_encode(array('js' => array())));
+                    requestLoger(json_encode(array('js' => array())));
             }
 
             break;
@@ -45,60 +60,60 @@ if ($rReqType && $rReqAction) {
         case 'remote_pvr':
             switch ($rReqAction) {
                 case 'start_record_on_stb':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'stop_record_on_stb':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'get_active_recordings':
-                    exit(json_encode(array('js' => array())));
+                    requestLoger(json_encode(array('js' => array())));
             }
 
             break;
 
         case 'media_favorites':
-            exit(json_encode(array('js' => '')));
+            requestLoger(json_encode(array('js' => '')));
 
         case 'tvreminder':
-            exit(json_encode(array('js' => array())));
+            requestLoger(json_encode(array('js' => array())));
 
         case 'series':
         case 'vod':
             switch ($rReqAction) {
                 case 'set_not_ended':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'del_link':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'log':
-                    exit(json_encode(array('js' => 1)));
+                    requestLoger(json_encode(array('js' => 1)));
             }
 
             break;
 
         case 'downloads':
-            exit(json_encode(array('js' => true)));
+            requestLoger(json_encode(array('js' => true)));
 
         case 'weatherco':
-            exit(json_encode(array('js' => false)));
+            requestLoger(json_encode(array('js' => false)));
 
         case 'course':
-            exit(json_encode(array('js' => true)));
+            requestLoger(json_encode(array('js' => true)));
 
         case 'account_info':
             switch ($rReqAction) {
                 case 'get_terms_info':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'get_payment_info':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'get_demo_video_parts':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'get_agreement_info':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
             }
 
             break;
@@ -106,13 +121,13 @@ if ($rReqType && $rReqAction) {
         case 'tv_archive':
             switch ($rReqAction) {
                 case 'set_played_timeshift':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'set_played':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
 
                 case 'update_played_timeshift_end_time':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
             }
 
             break;
@@ -120,10 +135,10 @@ if ($rReqType && $rReqAction) {
         case 'itv':
             switch ($rReqAction) {
                 case 'set_fav_status':
-                    exit(json_encode(array('js' => array())));
+                    requestLoger(json_encode(array('js' => array())));
 
                 case 'set_played':
-                    exit(json_encode(array('js' => true)));
+                    requestLoger(json_encode(array('js' => true)));
             }
 
             break;
@@ -160,7 +175,7 @@ if ($rReqType == 'stb' && $rReqAction == 'handshake') {
         $rDevice = array();
     }
 
-    exit(json_encode(array('js' => array('token' => $rVerifyToken))));
+    requestLoger(json_encode(array('js' => array('token' => $rVerifyToken))));
 }
 if (empty($rDevice['locale']) && !empty($_COOKIE['locale'])) {
     $rDevice['locale'] = $_COOKIE['locale'];
@@ -281,7 +296,7 @@ $rAuthenticated = ($rDevice['authenticated'] ?: false);
 
 
 $rMagData = array();
-$rProfile = array('id' => $rDevice['mag_id'], 'name' => $rDevice['mag_id'], 'sname' => '', 'pass' => '', 'use_embedded_settings' => '', 'parent_password' => '0000', 'bright' => '200', 'contrast' => '127', 'saturation' => '127', 'video_out' => '', 'volume' => '70', 'playback_buffer_bytes' => '0', 'playback_buffer_size' => '0', 'audio_out' => '1', 'mac' => $rMAC, 'ip' => '127.0.0.1', 'ls' => '', 'version' => '', 'lang' => '', 'locale' => $rDevice['locale'], 'city_id' => '0', 'hd' => '1', 'main_notify' => '1', 'fav_itv_on' => '0', 'now_playing_start' => '2018-02-18 17:33:43', 'now_playing_type' => '1', 'now_playing_content' => 'Test channel', 'additional_services_on' => '1', 'time_last_play_tv' => '0000-00-00 00:00:00', 'time_last_play_video' => '0000-00-00 00:00:00', 'operator_id' => '0', 'storage_name' => '', 'hd_content' => '0', 'image_version' => 'undefined', 'last_change_status' => '0000-00-00 00:00:00', 'last_start' => '2018-02-18 17:33:38', 'last_active' => '2018-02-18 17:33:43', 'keep_alive' => '2018-02-18 17:33:43', 'screensaver_delay' => '10', 'phone' => '', 'fname' => '', 'login' => '', 'password' => '', 'stb_type' => '', 'num_banks' => '0', 'tariff_plan_id' => '0', 'comment' => null, 'now_playing_link_id' => '0', 'now_playing_streamer_id' => '0', 'just_started' => '1', 'last_watchdog' => '2018-02-18 17:33:39', 'created' => '2018-02-18 14:40:12', 'plasma_saving' => '0', 'ts_enabled' => '0', 'ts_enable_icon' => '1', 'ts_path' => '', 'ts_max_length' => '3600', 'ts_buffer_use' => 'cyclic', 'ts_action_on_exit' => 'no_save', 'ts_delay' => 'on_pause', 'video_clock' => 'Off', 'verified' => '0', 'hdmi_event_reaction' => 1, 'pri_audio_lang' => '', 'sec_audio_lang' => '', 'pri_subtitle_lang' => '', 'sec_subtitle_lang' => '', 'subtitle_color' => '16777215', 'subtitle_size' => '20', 'show_after_loading' => '', 'play_in_preview_by_ok' => null, 'hw_version' => 'undefined', 'openweathermap_city_id' => '0', 'theme' => '', 'settings_password' => '0000', 'expire_billing_date' => '0000-00-00 00:00:00', 'reseller_id' => null, 'account_balance' => '', 'client_type' => 'STB', 'hw_version_2' => '62', 'blocked' => '0', 'units' => 'metric', 'tariff_expired_date' => null, 'tariff_id_instead_expired' => null, 'activation_code_auto_issue' => '1', 'last_itv_id' => 0, 'updated' => array('id' => '1', 'uid' => '1', 'anec' => '0', 'vclub' => '0'), 'rtsp_type' => '4', 'rtsp_flags' => '0', 'stb_lang' => 'en', 'display_menu_after_loading' => '', 'record_max_length' => 180, 'web_proxy_host' => '', 'web_proxy_port' => '', 'web_proxy_user' => '', 'web_proxy_pass' => '', 'web_proxy_exclude_list' => '', 'demo_video_url' => '', 'tv_quality' => 'high', 'tv_quality_filter' => '', 'is_moderator' => false, 'timeslot_ratio' => 0.33333333333333, 'timeslot' => 40, 'kinopoisk_rating' => '1', 'enable_tariff_plans' => '', 'strict_stb_type_check' => '', 'cas_type' => 0, 'cas_params' => null, 'cas_web_params' => null, 'cas_additional_params' => array(), 'cas_hw_descrambling' => 0, 'cas_ini_file' => '', 'logarithm_volume_control' => '', 'allow_subscription_from_stb' => '1', 'deny_720p_gmode_on_mag200' => '1', 'enable_arrow_keys_setpos' => '1', 'show_purchased_filter' => '', 'timezone_diff' => 0, 'enable_connection_problem_indication' => '1', 'invert_channel_switch_direction' => '', 'play_in_preview_only_by_ok' => false, 'enable_stream_error_logging' => '', 'always_enabled_subtitles' => (ipTV_lib::$settings['always_enabled_subtitles'] == 1 ? '1' : ''), 'enable_service_button' => '', 'enable_setting_access_by_pass' => '', 'tv_archive_continued' => '', 'plasma_saving_timeout' => '600', 'show_tv_only_hd_filter_option' => '', 'tv_playback_retry_limit' => '0', 'fading_tv_retry_timeout' => '1', 'epg_update_time_range' => 0.6, 'store_auth_data_on_stb' => false, 'account_page_by_password' => '', 'tester' => false, 'enable_stream_losses_logging' => '', 'external_payment_page_url' => '', 'max_local_recordings' => '10', 'tv_channel_default_aspect' => 'fit', 'default_led_level' => '10', 'standby_led_level' => '90', 'show_version_in_main_menu' => '1', 'disable_youtube_for_mag200' => '1', 'auth_access' => false, 'epg_data_block_period_for_stb' => '5', 'standby_on_hdmi_off' => '1', 'force_ch_link_check' => '', 'stb_ntp_server' => 'pool.ntp.org', 'overwrite_stb_ntp_server' => '', 'hide_tv_genres_in_fullscreen' => null, 'advert' => null);
+$rProfile = array('id' => $rDevice['mag_id'], 'name' => $rDevice['mag_id'], 'sname' => '', 'pass' => '', 'use_embedded_settings' => '', 'parent_password' => '0000', 'bright' => '200', 'contrast' => '127', 'saturation' => '127', 'video_out' => '', 'volume' => '70', 'playback_buffer_bytes' => '0', 'playback_buffer_size' => '0', 'audio_out' => '1', 'mac' => $rMAC, 'ip' => '127.0.0.1', 'ls' => '', 'version' => '', 'lang' => '', 'locale' => $rDevice['locale'], 'city_id' => '0', 'hd' => '1', 'main_notify' => '1', 'fav_itv_on' => '0', 'now_playing_start' => '2018-02-18 17:33:43', 'now_playing_type' => '1', 'now_playing_content' => 'Test channel', 'additional_services_on' => '1', 'time_last_play_tv' => '0000-00-00 00:00:00', 'time_last_play_video' => '0000-00-00 00:00:00', 'operator_id' => '0', 'storage_name' => '', 'hd_content' => '0', 'image_version' => 'undefined', 'last_change_status' => '0000-00-00 00:00:00', 'last_start' => '2018-02-18 17:33:38', 'last_active' => '2018-02-18 17:33:43', 'keep_alive' => '2018-02-18 17:33:43', 'screensaver_delay' => '10', 'phone' => '', 'fname' => '', 'login' => '', 'password' => '', 'stb_type' => '', 'num_banks' => '0', 'tariff_plan_id' => '0', 'comment' => null, 'now_playing_link_id' => '0', 'now_playing_streamer_id' => '0', 'just_started' => '1', 'last_watchdog' => '2018-02-18 17:33:39', 'created' => '2018-02-18 14:40:12', 'plasma_saving' => '0', 'ts_enabled' => '0', 'ts_enable_icon' => '1', 'ts_path' => '', 'ts_max_length' => '3600', 'ts_buffer_use' => 'cyclic', 'ts_action_on_exit' => 'no_save', 'ts_delay' => 'on_pause', 'video_clock' => 'Off', 'verified' => '0', 'hdmi_event_reaction' => 1, 'pri_audio_lang' => '', 'sec_audio_lang' => '', 'pri_subtitle_lang' => '', 'sec_subtitle_lang' => '', 'subtitle_color' => '16777215', 'subtitle_size' => '20', 'show_after_loading' => '', 'play_in_preview_by_ok' => null, 'hw_version' => 'undefined', 'openweathermap_city_id' => '0', 'theme' => '', 'settings_password' => '0000', 'expire_billing_date' => '0000-00-00 00:00:00', 'reseller_id' => null, 'account_balance' => '', 'client_type' => 'STB', 'hw_version_2' => '62', 'blocked' => '0', 'units' => 'metric', 'tariff_expired_date' => null, 'tariff_id_instead_expired' => null, 'activation_code_auto_issue' => '1', 'last_itv_id' => 0, 'updated' => array('id' => '1', 'uid' => '1', 'anec' => '0', 'vclub' => '0'), 'rtsp_type' => '4', 'rtsp_flags' => '0', 'stb_lang' => 'en', 'display_menu_after_loading' => '', 'record_max_length' => 180, 'web_proxy_host' => '', 'web_proxy_port' => '', 'web_proxy_user' => '', 'web_proxy_pass' => '', 'web_proxy_exclude_list' => '', 'demo_video_url' => '', 'tv_quality' => 'high', 'tv_quality_filter' => '', 'is_moderator' => false, 'timeslot_ratio' => 0.33333333333333, 'timeslot' => 40, 'kinopoisk_rating' => '1', 'enable_tariff_plans' => '', 'cas_type' => 0, 'cas_params' => null, 'cas_web_params' => null, 'cas_additional_params' => array(), 'cas_hw_descrambling' => 0, 'cas_ini_file' => '', 'logarithm_volume_control' => '', 'allow_subscription_from_stb' => '1', 'deny_720p_gmode_on_mag200' => '1', 'enable_arrow_keys_setpos' => '1', 'show_purchased_filter' => '', 'timezone_diff' => 0, 'enable_connection_problem_indication' => '1', 'invert_channel_switch_direction' => '', 'play_in_preview_only_by_ok' => false, 'enable_stream_error_logging' => '', 'always_enabled_subtitles' => (ipTV_lib::$settings['always_enabled_subtitles'] == 1 ? '1' : ''), 'enable_service_button' => '', 'enable_setting_access_by_pass' => '', 'tv_archive_continued' => '', 'plasma_saving_timeout' => '600', 'show_tv_only_hd_filter_option' => '', 'tv_playback_retry_limit' => '0', 'fading_tv_retry_timeout' => '1', 'epg_update_time_range' => 0.6, 'store_auth_data_on_stb' => false, 'account_page_by_password' => '', 'tester' => false, 'enable_stream_losses_logging' => '', 'external_payment_page_url' => '', 'max_local_recordings' => '10', 'tv_channel_default_aspect' => 'fit', 'default_led_level' => '10', 'standby_led_level' => '90', 'show_version_in_main_menu' => '1', 'disable_youtube_for_mag200' => '1', 'auth_access' => false, 'epg_data_block_period_for_stb' => '5', 'standby_on_hdmi_off' => '1', 'force_ch_link_check' => '', 'stb_ntp_server' => 'pool.ntp.org', 'overwrite_stb_ntp_server' => '', 'hide_tv_genres_in_fullscreen' => null, 'advert' => null);
 $rLocales['get_locales']['English'] = 'en_GB.utf8';
 $rMagData['get_years'] = array('js' => array(array('id' => '*', 'title' => '*')));
 
@@ -307,7 +322,6 @@ switch ($rReqType) {
                 $rTotal['test_download_url'] = (empty(ipTV_lib::$settings['test_download_url']) ? '' : ipTV_lib::$settings['test_download_url']);
                 $rTotal['default_timezone'] = ipTV_lib::$settings['default_timezone'];
                 $rTotal['default_locale'] = $rDevice['locale'];
-                $rTotal['allowed_stb_types'] = ipTV_lib::$settings['allowed_stb_types'];
                 $rTotal['allowed_stb_types_for_local_recording'] = ipTV_lib::$settings['allowed_stb_types'];
                 $rTotal['storages'] = array();
                 $rTotal['tv_channel_default_aspect'] = (empty(ipTV_lib::$settings['tv_channel_default_aspect']) ? 'fit' : ipTV_lib::$settings['tv_channel_default_aspect']);
@@ -322,24 +336,29 @@ switch ($rReqType) {
                 $rTotal['enable_connection_problem_indication'] = !empty(ipTV_lib::$settings['enable_connection_problem_indication']);
                 $rTotal['hls_fast_start'] = '1';
                 $rTotal['check_ssl_certificate'] = 0;
-                $rTotal['enable_buffering_indication'] = 1;
+                $rTotal['enable_buffering_indication'] = 0;
                 $rTotal['watchdog_timeout'] = mt_rand(80, 120);
 
                 if (empty($rTotal['aspect']) && ipTV_lib::$Servers[SERVER_ID]['server_protocol'] == 'https') {
                     $rTotal['aspect'] = '16';
                 }
 
-                exit(json_encode(array('js' => $rTotal), JSON_PARTIAL_OUTPUT_ON_ERROR));
+                requestLoger(json_encode(array('js' => $rTotal), JSON_PARTIAL_OUTPUT_ON_ERROR));
 
             case 'get_localization':
-                exit(json_encode(array('js' => $magLangs[$rDevice['locale']])));
+                requestLoger(json_encode(array('js' => $magLangs[$rDevice['locale']])));
             case 'log':
-                exit(json_encode(array('js' => true)));
+                requestLoger(json_encode(array('js' => true)));
 
             case 'get_modules':
-                $rModules = array('all_modules' => array('media_browser', 'vclub', 'tv', 'sclub', 'radio', 'dvb', 'tv_archive', 'time_shift', 'time_shift_local', 'epg.reminder', 'epg.recorder', 'epg', 'epg.simple', 'downloads_dialog', 'downloads', 'records', 'pvr_local', 'settings.parent', 'settings.localization', 'settings.update', 'settings.playback', 'settings.common', 'settings.network_status', 'settings', 'account', 'internet', 'logout', 'account_menu'), 'switchable_modules' => array('sclub', 'vlub'), 'disabled_modules' => array('records', 'downloads', 'settings.update', 'settings.common', 'pvr_local', 'media_browser'), 'restricted_modules' => array(), 'template' => $rTheme, 'launcher_url' => '', 'launcher_profile_url' => '');
+                // $rModules = array('all_modules' => array('media_browser', 'vclub', 'tv', 'sclub', 'radio', 'dvb', 'tv_archive', 'time_shift', 'time_shift_local', 'epg.reminder', 'epg.recorder', 'epg', 'epg.simple', 'downloads_dialog', 'downloads', 'records', 'pvr_local', 'settings.parent', 'settings.localization', 'settings.update', 'settings.playback', 'settings.common', 'settings.network_status', 'settings', 'account', 'internet', 'logout', 'account_menu'), 'switchable_modules' => array('sclub', 'vlub'), 'disabled_modules' => array('records', 'downloads', 'settings.update', 'settings.common', 'pvr_local', 'media_browser'), 'restricted_modules' => array(), 'template' => $rTheme, 'launcher_url' => '', 'launcher_profile_url' => '');
+                $rModules = array('all_modules' => array('media_browser', 'vclub', 'tv', 'radio', 'dvb', 'tv_archive', 'time_shift', 'time_shift_local', 'epg.reminder', 'epg.recorder', 'epg', 'epg.simple', 'downloads_dialog', 'downloads', 'records', 'pvr_local', 'settings.parent', 'settings.localization', 'settings.update', 'settings.playback', 'settings.common', 'settings.network_status', 'settings', 'account', 'internet', 'logout', 'account_menu'), 'switchable_modules' => array('sclub', 'vlub'), 'disabled_modules' => array('records', 'downloads', 'settings.update', 'settings.common', 'pvr_local', 'media_browser'), 'restricted_modules' => array(), 'template' => $rTheme, 'launcher_url' => '', 'launcher_profile_url' => '');
 
-                exit(json_encode(array('js' => $rModules)));
+
+                requestLoger(json_encode(array('js' => $rModules)));
+
+            case 'get_types_list':
+                requestLoger(json_encode(array('js' => array('allowed_stb_types' => ipTV_lib::$settings['allowed_stb_types'], 'strict_stb_type_check' => ''))));
         }
 
         break;
@@ -354,9 +373,9 @@ switch ($rReqType) {
                     switch ($rReqAction) {
                         case 'get_tv_aspects':
                             if (!empty($rDevice['aspect'])) {
-                                exit($rDevice['aspect']);
+                                requestLoger($rDevice['aspect']);
                             }
-                            exit(json_encode($rDevice['aspect']));
+                            requestLoger(json_encode($rDevice['aspect']));
 
                         case 'set_volume':
                             $rVolume = ipTV_lib::$request['vol'];
@@ -369,13 +388,13 @@ switch ($rReqType) {
                             $ipTV_db->query('UPDATE `mag_devices` SET `volume` = ? WHERE `mag_id` = ?', $rVolume, $rDevice['mag_id']);
                             updatecache();
 
-                            exit(json_encode(array('data' => true)));
+                            requestLoger(json_encode(array('data' => true)));
 
                         case 'get_preload_images':
                             $rMode = (is_numeric($rGMode) ? 'i_' . $rGMode : 'i');
                             $rImages = array('template/' . $rTheme . '/' . $rMode . '/alert_triangle.png', 'template/' . $rTheme . '/' . $rMode . '/archive.png', 'template/' . $rTheme . '/' . $rMode . '/archive_white.png', 'template/' . $rTheme . '/' . $rMode . '/bg.png', 'template/' . $rTheme . '/' . $rMode . '/bg2.png', 'template/' . $rTheme . '/' . $rMode . '/ears_arrow_l.png', 'template/' . $rTheme . '/' . $rMode . '/ears_arrow_r.png', 'template/' . $rTheme . '/' . $rMode . '/hd.png', 'template/' . $rTheme . '/' . $rMode . '/hd_white.png', 'template/' . $rTheme . '/' . $rMode . '/mb_prev_bg.png', 'template/' . $rTheme . '/' . $rMode . '/mm_hor_surround.png', 'template/' . $rTheme . '/' . $rMode . '/mm_ico_account.png', 'template/' . $rTheme . '/' . $rMode . '/mm_ico_default.png', 'template/' . $rTheme . '/' . $rMode . '/mm_ico_internet.png', 'template/' . $rTheme . '/' . $rMode . '/mm_ico_mb.png', 'template/' . $rTheme . '/' . $rMode . '/mm_ico_radio.png', 'template/' . $rTheme . '/' . $rMode . '/mm_ico_setting.png', 'template/' . $rTheme . '/' . $rMode . '/mm_ico_tv.png', 'template/' . $rTheme . '/' . $rMode . '/mm_ico_video.png', 'template/' . $rTheme . '/' . $rMode . '/mm_ico_youtube.png', 'template/' . $rTheme . '/' . $rMode . '/left_white.png', 'template/' . $rTheme . '/' . $rMode . '/logo.png', 'template/' . $rTheme . '/' . $rMode . '/play.png', 'template/' . $rTheme . '/' . $rMode . '/play_white.png', 'template/' . $rTheme . '/' . $rMode . '/rec.png', 'template/' . $rTheme . '/' . $rMode . '/rec_white.png', 'template/' . $rTheme . '/' . $rMode . '/right_white.png', 'template/' . $rTheme . '/' . $rMode . '/star.png', 'template/' . $rTheme . '/' . $rMode . '/star_white.png', 'template/' . $rTheme . '/' . $rMode . '/tv_prev_bg.png', 'template/' . $rTheme . '/' . $rMode . '/volume_bar.png', 'template/' . $rTheme . '/' . $rMode . '/volume_bg.png', 'template/' . $rTheme . '/' . $rMode . '/volume_off.png');
 
-                            exit(json_encode(array('js' => $rImages)));
+                            requestLoger(json_encode(array('js' => $rImages)));
 
                         case 'get_settings_profile':
                             $ipTV_db->query('SELECT * FROM `mag_devices` WHERE `mag_id` = ?', $rDevice['mag_id']);
@@ -408,7 +427,7 @@ switch ($rReqType) {
                                 $rSettings['js']['pri_subtitle_lang'] = $rSettings['js']['sec_subtitle_lang'];
                             }
 
-                            exit(json_encode($rSettings));
+                            requestLoger(json_encode($rSettings));
 
                         case 'get_locales':
                             $ipTV_db->query('SELECT `locale` FROM `mag_devices` WHERE `mag_id` = ?', $rDevice['mag_id']);
@@ -420,7 +439,7 @@ switch ($rReqType) {
                                 $rOutput[] = array('label' => $country, 'value' => $code, 'selected' => $rSelected);
                             }
 
-                            exit(json_encode(array('js' => $rOutput)));
+                            requestLoger(json_encode(array('js' => $rOutput)));
 
 
                         case 'set_aspect':
@@ -440,10 +459,10 @@ switch ($rReqType) {
 
                             updatecache();
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'set_stream_error':
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'set_screensaver_delay':
                             if (!empty($_SERVER['HTTP_COOKIE'])) {
@@ -453,7 +472,7 @@ switch ($rReqType) {
                                 updatecache();
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'set_playback_buffer':
                             if (!empty($_SERVER['HTTP_COOKIE'])) {
@@ -465,7 +484,7 @@ switch ($rReqType) {
                                 updatecache();
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'set_plasma_saving':
                             $rPlasmaSaving = intval(ipTV_lib::$request['plasma_saving']);
@@ -473,7 +492,7 @@ switch ($rReqType) {
                             $ipTV_db->query('UPDATE `mag_devices` SET `plasma_saving` = ? WHERE `mag_id` = ?', $rPlasmaSaving, $rDevice['mag_id']);
                             updatecache();
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'set_parent_password':
                             if (isset(ipTV_lib::$request['parent_password']) && isset(ipTV_lib::$request['pass']) && isset(ipTV_lib::$request['repeat_pass']) && ipTV_lib::$request['pass'] == ipTV_lib::$request['repeat_pass']) {
@@ -481,10 +500,10 @@ switch ($rReqType) {
                                 $ipTV_db->query('UPDATE `mag_devices` SET `parent_password` = ? WHERE `mag_id` = ?', ipTV_lib::$request['pass'], $rDevice['mag_id']);
                                 updatecache();
 
-                                exit(json_encode(array('js' => true)));
+                                requestLoger(json_encode(array('js' => true)));
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'set_locale':
                             if (!empty(ipTV_lib::$request['locale'])) {
@@ -493,7 +512,7 @@ switch ($rReqType) {
                                 updatecache();
                             }
 
-                            exit(json_encode(array('js' => array())));
+                            requestLoger(json_encode(array('js' => array())));
 
                         case 'set_hdmi_reaction':
                             if (!empty($_SERVER['HTTP_COOKIE']) || isset(ipTV_lib::$request['data'])) {
@@ -503,7 +522,7 @@ switch ($rReqType) {
                                 updatecache();
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
                     }
 
                     break;
@@ -530,7 +549,7 @@ switch ($rReqType) {
                                 }
                             }
 
-                            exit(json_encode(array('js' => $rData), JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode(array('js' => $rData), JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'confirm_event':
                             if (empty(ipTV_lib::$request['event_active_id'])) {
@@ -540,7 +559,7 @@ switch ($rReqType) {
                             $rActiveID = ipTV_lib::$request['event_active_id'];
                             $ipTV_db->query('UPDATE `mag_events` SET `status` = 1 WHERE `id` = ?', $rActiveID);
 
-                            exit(json_encode(array('js' => array('data' => 'ok'))));
+                            requestLoger(json_encode(array('js' => array('data' => 'ok'))));
                     }
 
                     break;
@@ -561,7 +580,7 @@ switch ($rReqType) {
                                 }
                             }
 
-                            exit(json_encode($rOutput));
+                            requestLoger(json_encode($rOutput));
                     }
 
                     break;
@@ -585,7 +604,7 @@ switch ($rReqType) {
                                 $rURL = $rPlayer . $rStreamValue;
                             }
 
-                            exit(json_encode(array('js' => array('id' => $rStreamID, 'cmd' => $rURL), 'streamer_id' => 0, 'link_id' => 0, 'load' => 0, 'error' => '')));
+                            requestLoger(json_encode(array('js' => array('id' => $rStreamID, 'cmd' => $rURL), 'streamer_id' => 0, 'link_id' => 0, 'load' => 0, 'error' => '')));
 
                         case 'set_claim':
                             if (!empty(ipTV_lib::$request['id']) || !empty(ipTV_lib::$request['real_type'])) {
@@ -595,7 +614,7 @@ switch ($rReqType) {
                                 $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(?, ?, ?, ?)', $rID, $rDevice['mag_id'], $rRealType, $rDate);
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'set_fav':
                             $rChannels = (empty(ipTV_lib::$request['fav_ch']) ? '' : ipTV_lib::$request['fav_ch']);
@@ -604,15 +623,15 @@ switch ($rReqType) {
                             $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
                             updatecache();
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'get_fav_ids':
-                            exit(json_encode(array('js' => $rDevice['fav_channels']['live'])));
+                            requestLoger(json_encode(array('js' => $rDevice['fav_channels']['live'])));
 
                         case 'get_all_channels':
                             $rGenre = (empty(ipTV_lib::$request['genre']) || !is_numeric(ipTV_lib::$request['genre']) ? null : intval(ipTV_lib::$request['genre']));
 
-                            exit(getStreams($rGenre, true));
+                            requestLoger(getStreams($rGenre, true));
 
                         case 'get_ordered_list':
                             $rFav = (!empty(ipTV_lib::$request['fav']) ? 1 : null);
@@ -620,15 +639,15 @@ switch ($rReqType) {
                             $rGenre = (empty(ipTV_lib::$request['genre']) || !is_numeric(ipTV_lib::$request['genre']) ? null : intval(ipTV_lib::$request['genre']));
                             $rSearch = (!empty(ipTV_lib::$request['search']) ? ipTV_lib::$request['search'] : null);
 
-                            exit(getStreams($rGenre, false, $rFav, $rSortBy, $rSearch));
+                            requestLoger(getStreams($rGenre, false, $rFav, $rSortBy, $rSearch));
 
                         case 'get_all_fav_channels':
                             $rGenre = (empty(ipTV_lib::$request['genre']) || !is_numeric(ipTV_lib::$request['genre']) ? null : intval(ipTV_lib::$request['genre']));
 
-                            exit(getStreams($rGenre, true, 1));
+                            requestLoger(getStreams($rGenre, true, 1));
 
                         case 'get_epg_info':
-                            exit(json_encode(array('js' => array('data' => array())), JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode(array('js' => array('data' => array())), JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'get_short_epg':
                             if (!empty(ipTV_lib::$request['ch_id'])) {
@@ -688,7 +707,7 @@ switch ($rReqType) {
                                 }
                             }
 
-                            exit(json_encode($rEPG, JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode($rEPG, JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'set_last_id':
                             $rChannelID = intval(ipTV_lib::$request['id']);
@@ -699,7 +718,7 @@ switch ($rReqType) {
                                 updatecache();
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'get_genres':
                             $rOutput = array();
@@ -715,7 +734,7 @@ switch ($rReqType) {
                                 }
                             }
 
-                            exit(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
                     }
 
                     break;
@@ -741,7 +760,7 @@ switch ($rReqType) {
                                 updatecache();
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'del_fav':
                             if (!empty(ipTV_lib::$request['video_id'])) {
@@ -757,7 +776,7 @@ switch ($rReqType) {
                                 updatecache();
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'get_categories':
                             $rOutput = array();
@@ -773,7 +792,7 @@ switch ($rReqType) {
                                 }
                             }
 
-                            exit(json_encode($rOutput));
+                            requestLoger(json_encode($rOutput));
 
                         case 'get_genres_by_category_alias':
                             $rOutput = array();
@@ -785,10 +804,10 @@ switch ($rReqType) {
                                 }
                             }
 
-                            exit(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'get_years':
-                            exit(json_encode($rMagData['get_years']));
+                            requestLoger(json_encode($rMagData['get_years']));
 
                         case 'get_ordered_list':
                             $rCategory = (!empty(ipTV_lib::$request['category']) && is_numeric(ipTV_lib::$request['category']) ? ipTV_lib::$request['category'] : null);
@@ -800,7 +819,7 @@ switch ($rReqType) {
                             $rPicking['genre'] = (!empty(ipTV_lib::$request['genre']) ? ipTV_lib::$request['genre'] : '*');
                             $rPicking['years'] = (!empty(ipTV_lib::$request['years']) ? ipTV_lib::$request['years'] : '*');
 
-                            exit(getMovies($rCategory, $rFav, $rSortBy, $rSearch, $rPicking));
+                            requestLoger(getMovies($rCategory, $rFav, $rSortBy, $rSearch, $rPicking));
 
                         case 'create_link':
                             $rCommand = ipTV_lib::$request['cmd'];
@@ -851,10 +870,10 @@ switch ($rReqType) {
 
                             $rOutput = array('js' => array('id' => $rCommand['stream_id'], 'cmd' => $rPlayer . $rURL, 'load' => '', 'subtitles' => array(), 'error' => $rError));
 
-                            exit(json_encode($rOutput));
+                            requestLoger(json_encode($rOutput));
 
                         case 'get_abc':
-                            exit(json_encode($rMagData['get_abc']));
+                            requestLoger(json_encode($rMagData['get_abc']));
                     }
 
                     break;
@@ -869,7 +888,7 @@ switch ($rReqType) {
                                 $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(?, ?, ?, ?)', $rID, $rDevice['mag_id'], $rRealType, $rDate);
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'set_fav':
                             if (!empty(ipTV_lib::$request['video_id'])) {
@@ -883,7 +902,7 @@ switch ($rReqType) {
                                 updatecache();
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'del_fav':
                             if (!empty(ipTV_lib::$request['video_id'])) {
@@ -900,7 +919,7 @@ switch ($rReqType) {
                                 updatecache();
                             }
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'get_categories':
                             $rOutput = array();
@@ -916,7 +935,7 @@ switch ($rReqType) {
                                 }
                             }
 
-                            exit(json_encode($rOutput));
+                            requestLoger(json_encode($rOutput));
 
                         case 'get_genres_by_category_alias':
                             $rOutput = array();
@@ -928,10 +947,10 @@ switch ($rReqType) {
                                 }
                             }
 
-                            exit(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'get_years':
-                            exit(json_encode($rMagData['get_years']));
+                            requestLoger(json_encode($rMagData['get_years']));
 
                         case 'get_ordered_list':
                             $rCategory = (!empty(ipTV_lib::$request['category']) && is_numeric(ipTV_lib::$request['category']) ? ipTV_lib::$request['category'] : null);
@@ -944,10 +963,10 @@ switch ($rReqType) {
                             $rPicking['genre'] = (!empty(ipTV_lib::$request['genre']) ? ipTV_lib::$request['genre'] : '*');
                             $rPicking['years'] = (!empty(ipTV_lib::$request['years']) ? ipTV_lib::$request['years'] : '*');
 
-                            exit(getSeries($rMovieID, $rCategory, $rFav, $rSortBy, $rSearch, $rPicking));
+                            requestLoger(getSeries($rMovieID, $rCategory, $rFav, $rSortBy, $rSearch, $rPicking));
 
                         case 'get_abc':
-                            exit(json_encode($rMagData['get_abc']));
+                            requestLoger(json_encode($rMagData['get_abc']));
                     }
 
                     break;
@@ -960,7 +979,7 @@ switch ($rReqType) {
                                 $rExpiry = date('F j, Y, g:i a', $rDevice['exp_date']);
                             }
 
-                            exit(json_encode(array('js' => array('mac' => $rMAC, 'phone' => $rExpiry, 'message' => htmlspecialchars_decode(str_replace("\n", '<br/>', ipTV_lib::$settings['mag_message']))))));
+                            requestLoger(json_encode(array('js' => array('mac' => $rMAC, 'phone' => $rExpiry, 'message' => htmlspecialchars_decode(str_replace("\n", '<br/>', ipTV_lib::$settings['mag_message']))))));
                     }
                     break;
 
@@ -970,10 +989,10 @@ switch ($rReqType) {
                             $rFav = (!empty(ipTV_lib::$request['fav']) ? 1 : null);
                             $rSortBy = (!empty(ipTV_lib::$request['sortby']) ? ipTV_lib::$request['sortby'] : 'added');
 
-                            exit(getStations(null, $rFav, $rSortBy));
+                            requestLoger(getStations(null, $rFav, $rSortBy));
 
                         case 'get_all_fav_radio':
-                            exit(getStations(null, 1, null));
+                            requestLoger(getStations(null, 1, null));
 
                         case 'set_fav':
                             $f3f9f9fa3c58c22b = (empty(ipTV_lib::$request['fav_radio']) ? '' : ipTV_lib::$request['fav_radio']);
@@ -982,10 +1001,10 @@ switch ($rReqType) {
                             $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
                             updatecache();
 
-                            exit(json_encode(array('js' => true)));
+                            requestLoger(json_encode(array('js' => true)));
 
                         case 'get_fav_ids':
-                            exit(json_encode(array('js' => $rDevice['fav_channels']['radio_streams'])));
+                            requestLoger(json_encode(array('js' => $rDevice['fav_channels']['radio_streams'])));
                     }
 
                     break;
@@ -1012,11 +1031,11 @@ switch ($rReqType) {
                                         $rURL .= '&ext=.ts';
                                     }
 
-                                    exit(json_encode(array('js' => $rPlayer . $rURL)));
+                                    requestLoger(json_encode(array('js' => $rPlayer . $rURL)));
                                 }
                             }
 
-                            exit(json_encode(array('js' => false)));
+                            requestLoger(json_encode(array('js' => false)));
 
                         case 'create_link':
                             $rCommand = (empty(ipTV_lib::$request['cmd']) ? '' : ipTV_lib::$request['cmd']);
@@ -1039,7 +1058,7 @@ switch ($rReqType) {
 
                             $rOutput['js'] = array('id' => 0, 'cmd' => $rPlayer . $rURL, 'storage_id' => '', 'load' => 0, 'error' => '', 'download_cmd' => $rURL, 'to_file' => '');
 
-                            exit(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'get_link_for_channel':
                             $rOutput = array();
@@ -1050,7 +1069,7 @@ switch ($rReqType) {
                             $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken . ((ipTV_lib::$settings['mag_keep_extension'] ? '?ext=.ts' : '')) . ' position:' . (intval(date('i')) * 60 + intval(date('s'))) . ' media_len:' . (intval(date('H')) * 3600 + intval(date('i')) * 60 + intval(date('s')));
                             $rOutput['js'] = array('id' => 0, 'cmd' => $rPlayer . $rURL, 'storage_id' => '', 'load' => 0, 'error' => '');
 
-                            exit(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
                     }
 
                     break;
@@ -1072,10 +1091,10 @@ switch ($rReqType) {
                                 $i++;
                             }
 
-                            exit(json_encode($rEPGWeek));
+                            requestLoger(json_encode($rEPGWeek));
 
                         case 'get_data_table':
-                            exit(json_encode(array('js' => array()), JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode(array('js' => array()), JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'get_simple_data_table':
                             if (empty(ipTV_lib::$request['ch_id']) || empty(ipTV_lib::$request['date'])) {
@@ -1189,7 +1208,7 @@ switch ($rReqType) {
                             $rOutput['js']['max_page_items'] = $rPageItems;
                             $rOutput['js']['data'] = $rData;
 
-                            exit(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'get_all_program_for_ch':
                             $rOutput = array();
@@ -1227,7 +1246,7 @@ switch ($rReqType) {
                                 }
                             }
 
-                            exit(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
+                            requestLoger(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
                     }
 
                     break;

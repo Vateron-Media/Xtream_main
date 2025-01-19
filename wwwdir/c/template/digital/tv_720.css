@@ -38,12 +38,18 @@
     font-size: 26px;
     /*text-shadow: #122946 0 -1px 0;*/
     /*margin: 4px 0 0 3px;*/
+    margin-top: 0;
     padding-left: 3px;
     white-space: pre;
     overflow: hidden;
     text-overflow: ellipsis;
     /*float: left;*/
     /*width: 209px;*/
+}
+
+#tv .wide_container .name_block {
+    width: auto;
+    margin-right: 655px;
 }
 
 #tv .active_name_block {

@@ -1,0 +1,21 @@
+@font-face {
+    font-family: "Myriad Pro";
+    src: url('fonts/MyriadPro-Regular.otf');
+}
+
+@font-face {
+    font-family: "Myriad Pro Cond";
+    src: url('fonts/MyriadPro-Cond.otf');
+}
+
+@font-face {
+    font-family: "Myriad Pro Bold";
+    src: url('fonts/MyriadPro-Bold.otf');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Myriad Pro Bold Cond";
+    src: url('fonts/MyriadPro-BoldCond.otf');
+    font-weight: bold;
+}

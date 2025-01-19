@@ -34,6 +34,7 @@ a {
     width: 1000px;
     position: absolute;
     top: 0px;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(1, rgba(37, 83, 155, 1)), color-stop(0, rgba(35, 78, 146, 0.3)));
     z-index: 100;
 }
 
@@ -42,6 +43,7 @@ a {
     width: 1000px;
     position: absolute;
     bottom: 0px;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(1, rgba(21, 48, 90, 0.3)), color-stop(0, rgba(19, 44, 83, 1)));
     z-index: 100;
 }
 
@@ -69,7 +71,7 @@ a {
     font-size: 42px;
     line-height: 66px;
     font-weight: bold;
-    color: #000;
+    color: #247;
 }
 
 .menu_icon {
@@ -532,6 +534,10 @@ a {
     margin-top: 100px;
 }
 
+.nsl2 {
+    margin-top: 60px;
+}
+
 .nsp1 {
     margin-top: 120px;
 }
@@ -562,7 +568,7 @@ a {
 }
 
 .upd {
-    margin-top: 70;
+    margin-top: 70px;
 }
 
 #update_prbar {

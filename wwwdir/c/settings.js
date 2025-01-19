@@ -34,7 +34,7 @@
             stb.notice.show(get_word('settings_unavailable'));
         } else {
             _debug('stb.profile.enable_setting_access_by_pass', stb.profile.enable_setting_access_by_pass);
-            var url = window.location.protocol + "//" + stb.portal_ip + "/" + stb.portal_path + "/external/settings/index.html?ajax_loader=" + stb.ajax_loader;
+            var url = window.location.protocol + "//" + stb.portal_ip + "/" + stb.portal_path + "/c/external/settings/index.html?ajax_loader=" + stb.ajax_loader;
             url += '&language=' + stb.stb_lang;
             url += '&token=' + stb.access_token;
             url += '&pri_audio_lang=' + stb.user['pri_audio_lang'];
