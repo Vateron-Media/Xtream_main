@@ -2,7 +2,6 @@ name: "Security Issue"
 description: "Report a security vulnerability in the project."
 title: "[SECURITY] Brief description of the issue"
 labels: ["security", "bug"]
-assignees: []
 
 body:
   - type: markdown
@@ -18,7 +17,6 @@ body:
       label: "Describe the Vulnerability"
       description: "Provide a clear and concise description of the vulnerability."
       placeholder: "What is the issue? How can it be exploited?"
-      value: ""
     validations:
       required: true
   - type: textarea
@@ -30,7 +28,6 @@ body:
         1. Go to...
         2. Click on...
         3. Observe...
-      value: ""
     validations:
       required: true
   - type: textarea
@@ -39,7 +36,6 @@ body:
       label: "Expected Behavior"
       description: "Describe what should happen if the vulnerability did not exist."
       placeholder: "What should have happened instead?"
-      value: ""
     validations:
       required: true
   - type: textarea
@@ -48,7 +44,6 @@ body:
       label: "Impact"
       description: "Describe the potential impact of this vulnerability (e.g., data loss, unauthorized access)."
       placeholder: "What is the potential damage caused by this vulnerability?"
-      value: ""
     validations:
       required: true
   - type: textarea
@@ -57,7 +52,6 @@ body:
       label: "Additional Information"
       description: "Include any other relevant information, such as affected versions or related issues."
       placeholder: "Version numbers, configurations, or related vulnerabilities."
-      value: ""
   - type: checkboxes
     id: confidentiality
     attributes:
