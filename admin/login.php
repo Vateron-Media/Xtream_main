@@ -129,15 +129,7 @@ if (!isset($_STATUS)) {
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-8 col-lg-6 col-xl-5">
-					<?php if (file_exists("./.update")) { ?>
-						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
-							role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-									aria-hidden="true">&times;</span></button>
-							<?= $_["login_message_1"] ?>
-						</div>
-					<?php }
-					if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
+					<?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
 						<div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show"
 							role="alert">
 							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span

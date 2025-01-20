@@ -60,14 +60,6 @@ $rTimeZones = array("Africa/Abidjan" => "Africa/Abidjan [GMT  00:00]", "Africa/A
 
 $nabilos = getRegisteredUserHash($_SESSION['hash']);
 
-if (file_exists("/home/xtreamcodes/admin/.update")) {
-    unlink("/home/xtreamcodes/admin/.update");
-    if (!file_exists("/home/xtreamcodes/admin/.update")) {
-        // Update Categories
-        updateTMDbCategories();
-    }
-}
-
 function getRegisteredUser($rID) {
     global $ipTV_db_admin;
     $ipTV_db_admin->query("SELECT * FROM `reg_users` WHERE `id` = " . intval($rID) . ";");
