@@ -22,13 +22,15 @@ class API {
 		switch (debug_backtrace()[1]['function']) {
 			case 'installServer':
 				return !empty($rData['ssh_port']) && !empty($rData['root_password']);
+			case 'processServer':
+				return !empty($rData['server_name']) && !empty($rData['server_ip']);
 		}
 
 		return true;
 	}
 	public static function installServer($rData) {
-		if (self::checkMinimumRequirements($rData)) {
-			if (hasPermissions('adv', 'add_server')) {
+		if (hasPermissions('adv', 'add_server')) {
+			if (self::checkMinimumRequirements($rData)) {
 				if (isset($rData['update_sysctl'])) {
 					$rUpdateSysctl = 1;
 				} else {
@@ -78,8 +80,85 @@ class API {
 				}
 				return array('status' => STATUS_INVALID_IP, 'data' => $rData);
 			}
+			return array('status' => STATUS_INVALID_INPUT, 'data' => $rData);
+		}
+		exit();
+	}
+
+	public static function processServer($rData) {
+		if (!hasPermissions('adv', 'edit_server')) {
 			exit();
 		}
-		return array('status' => STATUS_INVALID_INPUT, 'data' => $rData);
+
+		if (!self::checkMinimumRequirements($rData)) {
+			return ['status' => STATUS_INVALID_INPUT, 'data' => $rData];
+		}
+
+		$rServer = getStreamingServersByID($rData['edit']);
+		if (!$rServer) {
+			return ['status' => STATUS_INVALID_INPUT, 'data' => $rData];
+		}
+
+		$rArray = verifyPostTable('streaming_servers', $rData, true);
+		$rArray['http_broadcast_port'] = $rData['http_broadcast_port'];
+		$rArray['https_broadcast_port'] = $rData['https_broadcast_port'];
+
+		foreach (['http_broadcast_port', 'https_broadcast_port'] as $key) {
+			unset($rData[$key]);
+		}
+
+		foreach (['enable_gzip', 'enable_geoip', 'timeshift_only', 'enable_isp', 'enabled', 'enable_proxy'] as $rKey) {
+			$rArray[$rKey] = isset($rData[$rKey]) ? 1 : 0;
+		}
+
+		if ($rServer['is_main']) {
+			$rArray['enabled'] = 1;
+		}
+
+		$rArray['geoip_countries'] = isset($rData['geoip_countries']) ? $rData['geoip_countries'] : [];
+		if (isset($rData['isp_names'])) {
+			$rArray['isp_names'] = array();
+
+			foreach ($rData['isp_names'] as $rISP) {
+				$rArray['isp_names'][] = strtolower(trim(preg_replace('/[^A-Za-z0-9 ]/', '', $rISP)));
+			}
+		} else {
+			$rArray['isp_names'] = array();
+		}
+
+		if (strlen($rData['server_ip']) > 0 && filter_var($rData['server_ip'], FILTER_VALIDATE_IP)) {
+			if (strlen($rData['private_ip']) <= 0 || filter_var($rData['private_ip'], FILTER_VALIDATE_IP)) {
+				$rArray['total_services'] = $rData['total_services'];
+				$rPrepare = prepareArray($rArray);
+				$rPrepare['data'][] = $rData['edit'];
+				$rQuery = 'UPDATE `streaming_servers` SET ' . $rPrepare['update'] . ' WHERE `id` = ?;';
+
+				if (self::$ipTV_db->query($rQuery, ...$rPrepare['data'])) {
+					$rInsertID = $rData['edit'];
+
+					changePort($rInsertID, 0, $rArray['http_broadcast_port'], false);
+					changePort($rInsertID, 1, $rArray['https_broadcast_port'], false);
+					changePort($rInsertID, 2, $rArray['rtmp_port'], false);
+					setServices($rInsertID, intval($rArray['total_services']), true);
+
+					if (!empty($rArray['sysctl'])) {
+						setSysctl($rInsertID, $rArray['sysctl']);
+					}
+
+					if (file_exists(CACHE_TMP_PATH . 'servers')) {
+						unlink(CACHE_TMP_PATH . 'servers');
+					}
+
+					return ['status' => STATUS_SUCCESS, 'data' => ['insert_id' => $rInsertID]];
+				} else {
+					return ['status' => STATUS_FAILURE, 'data' => $rData];
+				}
+			} else {
+				return ['status' => STATUS_INVALID_IP, 'data' => $rData];
+			}
+		} else {
+			return ['status' => STATUS_INVALID_IP, 'data' => $rData];
+		}
 	}
+
 }

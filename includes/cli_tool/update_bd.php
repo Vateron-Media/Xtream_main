@@ -16,13 +16,21 @@ $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `requests_per_second
 $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `connections` INT(16) NULL DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `users` INT(16) NULL DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `server_type` int(1) DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enabled` int(16) DEFAULT '1';");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_proxy` tinyint(4) DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_proxy` int(11) DEFAULT '0';");
 
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER http_broadcast_port SET DEFAULT 25461;");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER https_broadcast_port SET DEFAULT 25463;");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER total_clients SET DEFAULT 250;");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER network_interface SET DEFAULT 'auto';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER rtmp_port SET DEFAULT 25462;");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER network_guaranteed_speed SET DEFAULT 1000;");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `http_broadcast_port` SET DEFAULT 25461;");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `https_broadcast_port` SET DEFAULT 25463;");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `total_clients` SET DEFAULT 250;");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `network_interface` SET DEFAULT 'auto';");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `rtmp_port` SET DEFAULT 25462;");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `network_guaranteed_speed` SET DEFAULT 1000;");
+
+$ipTV_db->query("ALTER TABLE streaming_servers DROP COLUMN system_os;");
+$ipTV_db->query("ALTER TABLE streaming_servers DROP COLUMN http_isp_port;");
+
+$ipTV_db->query("ALTER TABLE `streaming_servers` CHANGE `vpn_ip` `private_ip` varchar(255) COLLATE utf8_unicode_ci NOT NULL;");
 
 $ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `fps_restart` tinyint(1) DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `vframes_server_id` int(11) DEFAULT '0';");

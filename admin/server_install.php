@@ -228,35 +228,6 @@ include "header.php";
         }
         $(rName).css("display", "none");
     }
-
-    function closeEditModal() {
-        $('.modal').modal('hide');
-        if ($("#datatable-users").length) {
-            $("#datatable-users").DataTable().ajax.reload(null, false);
-        }
-        if ($("#datatable-streampage").length) {
-            $("#datatable-streampage").DataTable().ajax.reload(null, false);
-        }
-    }
-
-    function showError(rText) {
-        $.toast({
-            text: rText,
-            icon: 'warning',
-            loader: true,
-            loaderBg: '#c62828',
-            hideAfter: 8000
-        })
-    }
-
-    function showSuccess(rText) {
-        $.toast({
-            text: rText,
-            icon: 'success',
-            loader: true,
-            hideAfter: 5000
-        })
-    }
 </script>
 </body>
 
