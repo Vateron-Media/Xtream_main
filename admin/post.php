@@ -88,6 +88,35 @@ if (1 < $rICount) {
                 }
             }
         }
+
+        function showError(rText) {
+            $.toast({
+                text: rText,
+                icon: 'warning',
+                loader: true,
+                loaderBg: '#c62828',
+                hideAfter: 8000
+            })
+        }
+
+        function showSuccess(rText) {
+            $.toast({
+                text: rText,
+                icon: 'success',
+                loader: true,
+                hideAfter: 5000
+            })
+        }
+
+        function closeEditModal() {
+            $('.modal').modal('hide');
+            if ($("#datatable-users").length) {
+                $("#datatable-users").DataTable().ajax.reload(null, false);
+            }
+            if ($("#datatable-streampage").length) {
+                $("#datatable-streampage").DataTable().ajax.reload(null, false);
+            }
+        }
     </script>
 
     <?php
@@ -126,9 +155,18 @@ if (1 < $rICount) {
                 }
                 echo json_encode(array('result' => false, 'data' => $rReturn['data'], 'status' => $rReturn['status']));
                 exit();
+            case 'server':
+                $rData['server_type'] = 0;
+                $rReturn = API::processServer($rData);
+                if ($rReturn['status'] == STATUS_SUCCESS) {
+                    echo json_encode(array('result' => true, 'location' => 'server?id=' . intval($rReturn['data']['insert_id']) . '&status=' . intval($rReturn['status']), 'status' => $rReturn['status']));
+                    exit();
+                }
+                echo json_encode(array('result' => false, 'data' => $rReturn['data'], 'status' => $rReturn['status']));
+                exit();
+
         }
-    } else {
-        echo json_encode(array('result' => false));
-        exit();
     }
+    echo json_encode(array('result' => false));
+    exit();
 }

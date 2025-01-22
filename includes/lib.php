@@ -355,8 +355,8 @@ class ipTV_lib {
         $servers = array();
         $server_status = array(1, 3);
         foreach (self::$ipTV_db->get_rows() as $row) {
-            if (!empty($row["vpn_ip"]) && inet_pton($row["vpn_ip"]) !== false) {
-                $url = $row["vpn_ip"];
+            if (!empty($row["private_ip"]) && inet_pton($row["private_ip"]) !== false) {
+                $url = $row["private_ip"];
             } elseif (!empty($row["domain_name"])) {
                 $url = str_replace(array("http://", "/", "https://"), '', $row["domain_name"]);
             } else {

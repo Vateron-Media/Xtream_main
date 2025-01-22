@@ -40,6 +40,10 @@ if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos[
     include "/home/xtreamcodes/admin/lang/en.php";
 }
 
+if (isset(ipTV_lib::$request['status'])) {
+    $_STATUS = intval(ipTV_lib::$request['status']);
+}
+
 if (getPageName() != 'setup') {
     $ipTV_db_admin->query('SELECT COUNT(`id`) AS `count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` WHERE `member_groups`.`is_admin` = 1;');
 

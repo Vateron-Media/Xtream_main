@@ -2044,10 +2044,10 @@ include "header.php";
                                                         </td>
                                                     </tr>
                                                 <?php }
-                                                if (strlen($rServers[$_INFO["server_id"]]["vpn_ip"]) > 0) { ?>
+                                                if (strlen($rServers[$_INFO["server_id"]]["private_ip"]) > 0) { ?>
                                                     <tr>
                                                         <td><?= $_["server_vpn"] ?></td>
-                                                        <td><?= $rServers[$_INFO["server_id"]]["vpn_ip"] ?></td>
+                                                        <td><?= $rServers[$_INFO["server_id"]]["private_ip"] ?></td>
                                                     </tr>
                                                 <?php }
                                                 if (strlen($rServers[$_INFO["server_id"]]["domain_name"]) > 0) { ?>
