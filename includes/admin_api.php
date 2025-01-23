@@ -107,7 +107,7 @@ class API {
 			unset($rData[$key]);
 		}
 
-		foreach (['enable_gzip', 'enable_geoip', 'timeshift_only', 'enable_isp', 'enabled', 'enable_proxy'] as $rKey) {
+		foreach (['enable_gzip', 'enable_geoip', 'timeshift_only', 'enable_https', 'enable_isp', 'enabled', 'enable_proxy'] as $rKey) {
 			$rArray[$rKey] = isset($rData[$rKey]) ? 1 : 0;
 		}
 
