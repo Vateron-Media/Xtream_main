@@ -226,9 +226,9 @@ function getIP() {
     return null;
 }
 
-function changePort($rServerID, $rType, $rPorts, $rReload = false) {
+function changePort($rServerID, $rType, $rPort, $rReload = false) {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', $rServerID, time(), json_encode(array('action' => 'set_port', 'type' => intval($rType), 'ports' => $rPorts, 'reload' => $rReload)));
+    $ipTV_db_admin->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', $rServerID, time(), json_encode(array('action' => 'set_port', 'type' => intval($rType), 'port' => $rPort, 'reload' => $rReload)));
 }
 
 function setServices($rServerID, $rNumServices, $rReload = true) {

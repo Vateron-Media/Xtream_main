@@ -19,6 +19,7 @@ $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `server_type` int(1)
 $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enabled` int(16) DEFAULT '1';");
 $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_proxy` tinyint(4) DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_proxy` int(11) DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_https` tinyint(4) DEFAULT '0';");
 
 $ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `http_broadcast_port` SET DEFAULT 25461;");
 $ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `https_broadcast_port` SET DEFAULT 25463;");

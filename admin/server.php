@@ -189,6 +189,18 @@ include "header.php";
                                                             data-color="#039cfd" />
                                                     </div>
                                                 </div>
+                                                <div class="form-group row mb-4">
+                                                    <label class="col-md-4 col-form-label" for="enable_https">Enable
+                                                        HTTPS <i
+                                                            title="Allow SSL connections to this server. Ensure the certificate is valid for the domains beforehand. Reseller DNS would probably fail under these circumstances as they would not have a valid certificate."
+                                                            class="tooltip text-secondary far fa-circle"></i></label>
+                                                    <div class="col-md-2">
+                                                        <input name="enable_https" id="enable_https" type="checkbox"
+                                                            <?php if ($rServerArr['enable_https'] == 1) echo 'checked'; ?>
+                                                            data-plugin="switchery" class="js-switch"
+                                                            data-color="#039cfd" />
+                                                    </div>
+                                                </div>
                                             </div> <!-- end col -->
                                         </div> <!-- end row -->
                                         <ul class="list-inline wizard mb-0">
