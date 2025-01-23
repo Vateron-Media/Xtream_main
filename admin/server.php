@@ -196,7 +196,8 @@ include "header.php";
                                                             class="tooltip text-secondary far fa-circle"></i></label>
                                                     <div class="col-md-2">
                                                         <input name="enable_https" id="enable_https" type="checkbox"
-                                                            <?php if ($rServerArr['enable_https'] == 1) echo 'checked'; ?>
+                                                            <?php if ($rServerArr['enable_https'] == 1)
+                                                                echo 'checked'; ?>
                                                             data-plugin="switchery" class="js-switch"
                                                             data-color="#039cfd" />
                                                     </div>
@@ -606,6 +607,9 @@ include "header.php";
         $("#network_guaranteed_speed").inputFilter(function (value) {
             return /^\d*$/.test(value);
         });
+        $("#limit_requests").inputFilter(function (value) { return /^\d*$/.test(value); });
+        $("#limit_burst").inputFilter(function(value) { return /^\d*$/.test(value); });
+
         $("form").attr('autocomplete', 'off');
         $("form").submit(function (e) {
             e.preventDefault();
