@@ -39,18 +39,6 @@ if (isset(ipTV_lib::$request["submit_profile"])) {
         } else {
             $bob = $rUserInfo["default_lang"];
         }
-        if (isset(ipTV_lib::$request['port_admin']) && $rPermissions["is_admin"] && ipTV_lib::$request['port_admin'] != $rSettings["port_admin"]) {
-            $portadmin = ipTV_lib::$request["port_admin"];
-            exec("sed -i 's/listen " . $rSettings["port_admin"] . "/listen " . intval(ipTV_lib::$request["port_admin"]) . "/g' /home/xtreamcodes/bin/nginx/conf/nginx.conf");
-            if ($rSettings["is_ufw"] == 1) {
-                exec("sudo ufw allow " . intval(ipTV_lib::$request["port_admin"]) . " && sudo ufw delete allow " . $rSettings["port_admin"] . "");
-            }
-            exec("sudo /home/xtreamcodes/bin/nginx/sbin/nginx -s reload");
-            sleep(1);
-        } else {
-            $portadmin = $rSettings["port_admin"];
-        }
-        ipTV_lib::setSettings(["port_admin" => $portadmin]);
         $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $rPassword . "', `email` = '" . $rEmail . "', `reseller_dns` = '" . $rDNS . "', `default_lang` = '" . $bob . "', `dark_mode` = " . intval($rDarkMode) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
         $rUserInfo = getRegisteredUser($rUserInfo["id"]);
         $rSettings["dark_mode"] = $rUserInfo["dark_mode"];
