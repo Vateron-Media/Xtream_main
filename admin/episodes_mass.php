@@ -479,11 +479,7 @@ include "header.php";
 </footer>
 <!-- end Footer -->
 
-<?php if ($rSettings["premiumui"]) {
-    include 'footer.php';
-} else { ?>
-    <script src="assets/js/vendor.min.js"></script>
-<?php } ?>
+<script src="assets/js/vendor.min.js"></script>
 <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
 <script src="assets/libs/jquery-ui/jquery-ui.min.js"></script>
 <script src="assets/libs/jquery-nice-select/jquery.nice-select.min.js"></script>
