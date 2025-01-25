@@ -20,7 +20,6 @@ if (isset(ipTV_lib::$request["geolite2"])) {
 $rGeoLite2Latest = getGithubReleases("Vateron-Media/Xtream_Update")['latest_release'];
 $rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true)["geolite2_version"];
 $rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")['latest_release'], 1);
-$rInfosUpdate = array();
 
 if (isset(ipTV_lib::$request["panel_version"])) {
     $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . json_encode(array('action' => 'update')) . "`;");
@@ -30,7 +29,7 @@ if (isset(ipTV_lib::$request["panel_version"])) {
 
 if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rArray = getSettings();
-    foreach (array("reseller_reset_isplock", "reseller_can_isplock", "active_mannuals", "change_own_lang", "reseller_restrictions", "change_own_password", "change_own_email", "change_own_dns", "change_usernames", "dashboard_world_map_activity", "dashboard_world_map_live", "dashboard_stats", "dark_mode_login", "local_api", "auto_refresh", "download_images", "alternate_scandir", "ip_logout", "reseller_mag_events", "recaptcha_enable", "disable_trial", "mag_disable_ssl", "disable_mag_token", "ignore_invalid_users", "block_streaming_servers", "block_proxies", "detect_restream_block_user", "allow_cdn_access", "restrict_same_ip", "ip_subnet_match", "kill_rogue_ffmpeg", "ignore_keyframes", "ffmpeg_warnings", "ondemand_balance_equal", "on_demand_failure_exit", "on_demand_instant_off", "restrict_playlists", "encrypt_playlist_restreamer", "encrypt_playlist", "encrypt_hls", "disable_ts_allow_restream", "disable_ts", "disable_hls", "disable_hls_allow_restream", "disallow_empty_user_agents", "monitor_connection_status", "show_all_category_mag", "show_not_on_air_video", "show_banned_video", "show_expired_video", "rtmp_random", "use_buffer", "audio_restart_loss", "save_closed_connection", "client_logs_save", "case_sensitive_line", "county_override_1st", "disallow_2nd_ip_con", "use_mdomain_in_lists", "show_isps", "enable_isp_lock", "block_svp", "mag_security", "always_enabled_subtitles", "enable_connection_problem_indication", "show_tv_channel_logo", "show_channel_logo_in_preview", "stb_change_pass", "enable_debug_stalker", "priority_backup", "debug_show_errors") as $rSetting) {
+    foreach (array("active_mannuals", "allow_cdn_access", "always_enabled_subtitles", "audio_restart_loss", "block_proxies", "block_streaming_servers", "block_svp", "case_sensitive_line", "change_own_dns", "change_own_email", "change_own_lang", "change_own_password", "change_usernames", "client_logs_save", "cloudflare", "county_override_1st", "dashboard_stats", "dashboard_world_map_activity", "dashboard_world_map_live", "debug_show_errors", "detect_restream_block_user", "disable_hls", "disable_hls_allow_restream", "disable_mag_token", "disable_ministra", "disable_trial", "disable_ts", "disable_ts_allow_restream", "disallow_2nd_ip_con", "disallow_empty_user_agents", "download_images", "enable_connection_problem_indication", "enable_debug_stalker", "enable_isp_lock", "encrypt_hls", "encrypt_playlist", "encrypt_playlist_restreamer", "ffmpeg_warnings", "ignore_invalid_users", "ignore_keyframes", "ip_logout", "ip_subnet_match", "kill_rogue_ffmpeg", "mag_disable_ssl", "mag_keep_extension", "mag_legacy_redirect", "mag_security", "monitor_connection_status", "on_demand_failure_exit", "on_demand_instant_off", "ondemand_balance_equal", "playlist_from_mysql", "priority_backup", "recaptcha_enable", "reseller_can_isplock", "reseller_mag_events", "reseller_reset_isplock", "reseller_restrictions", "restart_php_fpm", "restream_deny_unauthorised", "restrict_playlists", "restrict_same_ip", "rtmp_random", "save_closed_connection", "save_restart_logs", "show_all_category_mag", "show_banned_video", "show_channel_logo_in_preview", "show_expired_video", "show_isps", "show_not_on_air_video", "show_tv_channel_logo", "stb_change_pass", "stream_logs_save", "use_buffer", "use_mdomain_in_lists", ) as $rSetting) {
         if (isset(ipTV_lib::$request[$rSetting])) {
             $rArray[$rSetting] = 1;
             unset(ipTV_lib::$request[$rSetting]);
@@ -58,7 +57,6 @@ if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "se
 }
 
 $rSettings = getSettings(); // Update
-
 include "header.php";
 ?>
 
@@ -83,35 +81,40 @@ include "header.php";
                             </button>
                             <?= $_["settings_sucessfully_updated"] ?>
                         </div>
-                    <?php } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
+                        <?php
+                    } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <?= $_["there_was_an_error_saving_settings"] ?>
                         </div>
-                    <?php } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+                        <?php
+                    } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <?= $_["failed_to_update_GeoLite2"] ?>
                         </div>
-                    <?php } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
+                        <?php
+                    } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <?= $_["geoLite2_has_been_updated"] ?>
                         </div>
-                    <?php } elseif ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
+                        <?php
+                    } elseif ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             Failed to update Panel! Please try again.
                         </div>
-                    <?php } elseif ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
+                        <?php
+                    } elseif ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -119,14 +122,16 @@ include "header.php";
                             XC_VM is currently waiting to be updated... Your server will become
                             unavailable once the process begins.
                         </div>
-                    <?php } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
+                        <?php
+                    } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <?= $_["there_was_an_error_saving_settings"] ?>
                         </div>
-                    <?php } ?>
+                        <?php
+                    } ?>
                     <?php if (version_compare($rGeoLite2Latest, $rGeoLite2Curent ? $rGeoLite2Curent : "0.0.0")) { ?>
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -136,16 +141,20 @@ include "header.php";
                             <?= $_["is_available"] ?>
                             <a href="./settings.php?geolite2"><?= $_["click_here_to_update"] ?></a>
                         </div>
-                    <?php } ?>
+                        <?php
+                    } ?>
                     <?php if (version_compare($rUpdatePanel, getScriptVer())) { ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            A new version (<?= $rUpdatePanel ?>) <?= $_["is_available"] ?> <a
+                            A new version (
+                            <?= $rUpdatePanel
+                                ?>) <?= $_["is_available"] ?> <a
                                 href="./settings.php?panel_version"><?= $_["click_here_to_update"] ?></a>
                         </div>
-                    <?php } ?>
+                        <?php
+                    } ?>
                     <div class="card">
                         <div class="card-body">
                             <div class="bg-soft-light border-light border">
@@ -197,10 +206,9 @@ include "header.php";
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="#xui" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                                <i class="mdi mdi-settings mr-1"></i>
-                                                <span class="d-none d-sm-inline"><?= $_["xtream_ui"] ?></span>
-                                            </a>
+                                            <a href="#api" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2"> <i
+                                                    class="mdi mdi-code-tags mr-1"></i>
+                                                <span class="d-none d-sm-inline">API</span></a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="#reseller" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
@@ -220,22 +228,22 @@ include "header.php";
                                                 <span class="d-none d-sm-inline"><?= $_["mag"] ?></span>
                                             </a>
                                         </li>
-                                    <?php }
+                                        <li class="nav-item">
+                                            <a href="#logs" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2"> <i
+                                                    class="mdi mdi-file-document-outline mr-1"></i><span
+                                                    class="d-none d-sm-inline">Logs</span></a>
+                                        </li>
+                                        <?php
+                                    }
                                     if (hasPermissions("adv", "database")) { ?>
-                                        <!-- <li class="nav-item">
-                                                        <a href="#infos" data-toggle="tab"
-                                                            class="nav-link rounded-0 pt-2 pb-2">
-                                                            <i class="fas fa-info mr-1"></i>
-                                                            <span class="d-none d-sm-inline">Infos</span>
-                                                        </a>
-                                                    </li> -->
                                         <li class="nav-item">
                                             <a href="#database" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                                 <i class="mdi mdi-database mr-1"></i>
                                                 <span class="d-none d-sm-inline"><?= $_["database"] ?></span>
                                             </a>
                                         </li>
-                                    <?php } ?>
+                                        <?php
+                                    } ?>
                                 </ul>
                                 <div class="tab-content b-0 mb-0 pt-0">
                                     <?php if (hasPermissions("adv", "settings")) { ?>
@@ -258,8 +266,8 @@ include "header.php";
                                                         <label class="col-md-4 col-form-label"
                                                             for="logo_url"><?= $_["logo_url"] ?></label>
                                                         <div class="col-md-8">
-                                                            <input type="text" class="form-control" id="logo_url"
-                                                                name="logo_url"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="logo_url" name="logo_url"
                                                                 value="<?= htmlspecialchars($rSettings["logo_url"]) ?>">
                                                         </div>
                                                     </div>
@@ -267,8 +275,8 @@ include "header.php";
                                                         <label class="col-md-4 col-form-label"
                                                             for="logo_url_sidebar"><?= $_["logo_url_sidebar"] ?></label>
                                                         <div class="col-md-8">
-                                                            <input type="text" class="form-control" id="logo_url_sidebar"
-                                                                name="logo_url_sidebar"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="logo_url_sidebar" name="logo_url_sidebar"
                                                                 value="<?= htmlspecialchars($rSettings["logo_url_sidebar"]) ?>">
                                                         </div>
                                                     </div>
@@ -277,15 +285,17 @@ include "header.php";
                                                             for="default_timezone"><?= $_["timezone"] ?></label>
                                                         <div class="col-md-8">
                                                             <select name="default_timezone" id="default_timezone"
-                                                                class="form-control" data-toggle="select2">
+                                                                class="form-control text-center" data-toggle="select2">
                                                                 <?php
                                                                 foreach ($rTimeZones as $rValue => $rText) { ?>
                                                                     <option <?php if ($rSettings["default_timezone"] == $rValue) {
                                                                         echo "selected ";
                                                                     } ?>value="<?= $rValue ?>">
-                                                                        <?= $rText ?>
+                                                                        <?= $rText
+                                                                            ?>
                                                                     </option>
-                                                                <?php } ?>
+                                                                    <?php
+                                                                } ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -312,15 +322,6 @@ include "header.php";
                                                     </div>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
-                                                            for="live_streaming_pass"><?= $_["live_streaming_pass"] ?></label>
-                                                        <div class="col-md-8">
-                                                            <input type="text" class="form-control" id="live_streaming_pass"
-                                                                name="live_streaming_pass"
-                                                                value="<?= htmlspecialchars($rSettings["live_streaming_pass"]) ?>">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
                                                             for="default_entries"><?= $_["default_entries_show"] ?>
                                                             <i data-toggle="tooltip" data-placement="top" title=""
                                                                 data-original-title="<?= $_["default_entries_for_users"] ?>"
@@ -332,9 +333,22 @@ include "header.php";
                                                                     <option<?php if ($rSettings["default_entries"] == $rShow) {
                                                                         echo " selected";
                                                                     } ?> value="<?= $rShow ?>">
-                                                                        <?= $rShow ?></option>
-                                                                    <?php } ?>
+                                                                        <?= $rShow
+                                                                            ?>
+                                                                        </option>
+                                                                        <?php
+                                                                } ?>
                                                             </select>
+                                                        </div>
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="pass_length"><?= $_["minimum_pass_length"] ?>
+                                                            <i data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="<?= $_["set_this_enforce_password"] ?>"
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="pass_length" name="pass_length"
+                                                                value="<?= htmlspecialchars($rSettings["pass_length"]) ?: 0 ?>">
                                                         </div>
                                                     </div>
                                                     </br>
@@ -359,7 +373,7 @@ include "header.php";
                                                                 data-original-title="<?= $_["stats_interval"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control"
+                                                            <input type="text" class="form-control text-center"
                                                                 id="dashboard_stats_frequency"
                                                                 name="dashboard_stats_frequency"
                                                                 value="<?= htmlspecialchars($rSettings["dashboard_stats_frequency"]) ?>">
@@ -534,8 +548,8 @@ include "header.php";
                                                         data-original-title="<?= $_["desc_disallow_2nd_ip_max"] ?>"
                                                         class="mdi mdi-information"></i></label>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" id="disallow_2nd_ip_max"
-                                                        name="disallow_2nd_ip_max"
+                                                    <input type="text" class="form-control text-center"
+                                                        id="disallow_2nd_ip_max" name="disallow_2nd_ip_max"
                                                         value="<?= htmlspecialchars($rSettings["disallow_2nd_ip_max"]) ?: 0 ?>">
                                                 </div>
                                             </div>
@@ -543,6 +557,18 @@ include "header.php";
                                             <h5 class="card-title mb-4">On-Demand Settings(not working)</h5>
                                             </br>
                                             <div class="form-group row mb-4">
+                                                <label class="col-md-4 col-form-label"
+                                                    for="restream_deny_unauthorised">XC_VM
+                                                    Detect - Deny <i data-toggle="tooltip" data-placement="top" title=""
+                                                        data-original-title="Deny connections from non-restreamers who are trying to use XC_VM to restream."
+                                                        class="mdi mdi-information"></i>
+                                                </label>
+                                                <div class="col-md-2"><input name="restream_deny_unauthorised"
+                                                        id="restream_deny_unauthorised" type="checkbox" <?php
+                                                        if ($rSettings["restream_deny_unauthorised"] == 1) {
+                                                            echo ' checked ';
+                                                        } ?> data-plugin="switchery" class="js-switch" data-color="#039cfd" />
+                                                </div>
                                                 <label class="col-md-4 col-form-label"
                                                     for="detect_restream_block_user"><?= $_["detect_restream_block_user"] ?>
                                                     <i data-toggle="tooltip" data-placement="top" title=""
@@ -589,10 +615,39 @@ include "header.php";
                                                         data-original-title="<?= $_["enter_to_disable_flood_detection"] ?>"
                                                         class="mdi mdi-information"></i></label>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" id="flood_limit"
+                                                    <input type="text" class="form-control text-center" id="flood_limit"
                                                         name="flood_limit"
                                                         value="<?= htmlspecialchars($rSettings["flood_limit"]) ?>">
                                                 </div>
+                                                <label class="col-md-4 col-form-label" for="flood_seconds">Per
+                                                    Seconds <i data-toggle="tooltip" data-placement="top" title=""
+                                                        data-original-title="Number of seconds between requests."
+                                                        class="mdi mdi-information"></i></label>
+                                                <div class="col-md-2"><input type="text" class="form-control text-center"
+                                                        id="flood_seconds" name="flood_seconds"
+                                                        value="<?= htmlspecialchars($rSettings["flood_seconds"]) ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-4">
+                                                <label class="col-md-4 col-form-label" for="auth_flood_limit">Auth
+                                                    Flood Limit <i ttitle=""
+                                                        data-original-title="Number of attempts before connections are slowed down. Enter 0 to disable authorised flood detection.<br/><br/>This is separate to the normal Flood Limit as it only affects legitimate clients with valid credentials. As an example you can set this up so that after 30 connections in 10 seconds, the requests for the next 10 seconds will sleep for 1 second first to slow them down."
+                                                        class="mdi mdi-information"></i></label>
+                                                <div class="col-md-2"><input type="text" class="form-control text-center"
+                                                        id="auth_flood_limit" name="auth_flood_limit"
+                                                        value="<?= htmlspecialchars($rSettings["auth_flood_limit"]) ?>">
+                                                </div>
+                                                <label class="col-md-4 col-form-label" for="auth_flood_seconds">Auth
+                                                    Flood Seconds <i data-toggle="tooltip" data-placement="top" title=""
+                                                        data-original-title="Number of seconds to calculate number of requests for."
+                                                        class="mdi mdi-information"></i></label>
+                                                <div class="col-md-2">
+                                                    <input type="text" class="form-control text-center"
+                                                        id="auth_flood_seconds" name="auth_flood_seconds"
+                                                        value="<?= htmlspecialchars($rSettings["auth_flood_seconds"]) ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-4">
                                                 <label class="col-md-4 col-form-label"
                                                     for="flood_ips_exclude"><?= $_["flood_ip_exclude"] ?>
                                                     <i data-toggle="tooltip" data-placement="top" title=""
@@ -605,15 +660,41 @@ include "header.php";
                                                 </div>
                                             </div>
                                             <div class="form-group row mb-4">
+                                                <label class="col-md-4 col-form-label" for="bruteforce_mac_attempts">Detect
+                                                    MAC Bruteforce <i data-toggle="tooltip" data-placement="top" title=""
+                                                        data-original-title="Automatically detect and block IP addresses trying to bruteforce MAG / Enigma devices. Enter 0 attempts to disable."
+                                                        class="mdi mdi-information"></i></label>
+                                                <div class="col-md-2"><input type="text" class="form-control text-center"
+                                                        id="bruteforce_mac_attempts" name="bruteforce_mac_attempts"
+                                                        value="<?= htmlspecialchars($rSettings["bruteforce_mac_attempts"]) ?: 0 ?>">
+                                                </div><label class="col-md-4 col-form-label"
+                                                    for="bruteforce_username_attempts">Detect Username Bruteforce <i
+                                                        data-toggle="tooltip" data-placement="top" title=""
+                                                        data-original-title="Automatically detect and block IP addresses trying to bruteforce lines. Enter 0 attempts to disable."
+                                                        class="mdi mdi-information"></i></label>
+                                                <div class="col-md-2"><input type="text" class="form-control text-center"
+                                                        id="bruteforce_username_attempts"
+                                                        name="bruteforce_username_attempts"
+                                                        value="<?= htmlspecialchars($rSettings["bruteforce_username_attempts"]) ?: 0 ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-4">
+                                                <label class="col-md-4 col-form-label" for="bruteforce_frequency">Bruteforce
+                                                    Frequency <i data-toggle="tooltip" data-placement="top" title=""
+                                                        data-original-title="Time between attempts for MAC and Username bruteforce. X attempts per X seconds."
+                                                        class="mdi mdi-information"></i></label>
+                                                <div class="col-md-2"><input type="text" class="form-control text-center"
+                                                        id="bruteforce_frequency" name="bruteforce_frequency"
+                                                        value="<?= htmlspecialchars($rSettings["bruteforce_frequency"]) ?: 0 ?>">
+                                                </div>
                                                 <label class="col-md-4 col-form-label"
-                                                    for="login_flood"><?= $_["maximum_login_attempts"] ?>
-                                                    <i data-toggle="tooltip" data-placement="top" title=""
+                                                    for="login_flood"><?= $_["maximum_login_attempts"] ?> <i
+                                                        data-toggle="tooltip" data-placement="top" title=""
                                                         data-original-title="<?= $_["how_many_login_attempts"] ?>"
                                                         class="mdi mdi-information"></i></label>
-                                                <div class="col-md-2">
-                                                    <input type="text" class="form-control" id="login_flood"
-                                                        name="login_flood"
-                                                        value="<?= htmlspecialchars($rSettings["login_flood"]) ?>">
+                                                <div class="col-md-2"><input type="text" class="form-control text-center"
+                                                        id="login_flood" name="login_flood"
+                                                        value="<?= htmlspecialchars($rSettings["login_flood"]) ?: 0 ?> ">
                                                 </div>
                                             </div>
                                             <ul class="list-inline wizard mb-0">
@@ -623,15 +704,18 @@ include "header.php";
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div class="tab-pane" id="xui">
+                                        <div class="tab-pane" id="api">
                                             <div class="row">
                                                 <div class="col-12">
+                                                    </br>
+                                                    <h5 class="card-title mb-4">Preferences</h5>
+                                                    </br>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
                                                             for="tmdb_api_key"><?= $_["tmdb_api_key"] ?></label>
                                                         <div class="col-md-8">
-                                                            <input type="text" class="form-control" id="tmdb_api_key"
-                                                                name="tmdb_api_key"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="tmdb_api_key" name="tmdb_api_key"
                                                                 value="<?= htmlspecialchars($rSettings["tmdb_api_key"]) ?>">
                                                         </div>
                                                     </div>
@@ -643,86 +727,17 @@ include "header.php";
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-8">
                                                             <select name="tmdb_language" id="tmdb_language"
-                                                                class="form-control" data-toggle="select2">
+                                                                class="form-control text-center" data-toggle="select2">
                                                                 <?php foreach ($rTMDBLanguages as $rKey => $rLanguage) { ?>
                                                                     <option<?php if ($rSettings["tmdb_language"] == $rKey) {
                                                                         echo " selected";
                                                                     } ?> value="<?= $rKey ?>">
-                                                                        <?= $rLanguage ?></option>
-                                                                    <?php } ?>
+                                                                        <?= $rLanguage
+                                                                            ?>
+                                                                        </option>
+                                                                        <?php
+                                                                } ?>
                                                             </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="release_parser"><?= $_["release_parser"] ?> <i
-                                                                data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["select_which_parser"] ?>"
-                                                                class="mdi mdi-information"></i></label>
-                                                        <div class="col-md-8">
-                                                            <select name="release_parser" id="release_parser"
-                                                                class="form-control" data-toggle="select2">
-                                                                <?php foreach (array("python" => "Python Based (slower, more accurate)", "php" => "PHP Based (faster, less accurate)") as $rKey => $rParser) { ?>
-                                                                    <option<?php if ($rSettings["release_parser"] == $rKey) {
-                                                                        echo " selected";
-                                                                    } ?> value="<?= $rKey ?>">
-                                                                        <?= $rParser ?></option>
-                                                                    <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="pass_length"><?= $_["minimum_pass_length"] ?>
-                                                            <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["set_this_enforce_password"] ?>"
-                                                                class="mdi mdi-information"></i></label>
-                                                        <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="pass_length"
-                                                                name="pass_length"
-                                                                value="<?= htmlspecialchars($rSettings["pass_length"]) ?: 0 ?>">
-                                                        </div>
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="api_container"><?= $_["api_container"] ?>
-                                                            <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["desc_api_container"] ?>"
-                                                                class="mdi mdi-information"></i></label>
-                                                        <div class="col-md-2">
-                                                            <select name="api_container" id="api_container"
-                                                                class="form-control" data-toggle="select2">
-                                                                <?php
-                                                                foreach (array("ts" => "MPEG-TS", "m3u8" => "HLS") as $rValue => $rText) { ?>
-                                                                    <option <?php if ($rSettings["api_container"] == $rValue) {
-                                                                        echo "selected ";
-                                                                    } ?>value="<?= $rValue ?>">
-                                                                        <?= $rText ?>
-                                                                    </option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="local_api"><?= $_["local_api"] ?> <i data-toggle="tooltip"
-                                                                data-placement="top" title=""
-                                                                data-original-title="<?= $_["select_this_option"] ?>"
-                                                                class="mdi mdi-information"></i></label>
-                                                        <div class="col-md-2">
-                                                            <input name="local_api" id="local_api" type="checkbox" <?php if ($rSettings["local_api"] == 1) {
-                                                                echo "checked ";
-                                                            } ?>data-plugin="switchery" class="js-switch"
-                                                                data-color="#039cfd" />
-                                                        </div>
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="dark_mode_login"><?= $_["dark_mode_login"] ?></label>
-                                                        <div class="col-md-2">
-                                                            <input name="dark_mode_login" id="dark_mode_login"
-                                                                type="checkbox" <?php if ($rSettings["dark_mode_login"] == 1) {
-                                                                    echo "checked ";
-                                                                } ?>data-plugin="switchery"
-                                                                class="js-switch" data-color="#039cfd" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group row mb-4">
@@ -738,43 +753,99 @@ include "header.php";
                                                                 } ?>data-plugin="switchery"
                                                                 class="js-switch" data-color="#039cfd" />
                                                         </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
-                                                            for="auto_refresh"><?= $_["auto-refresh_by_default"] ?>
+                                                            for="api_container"><?= $_["api_container"] ?>
                                                             <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["auto_refresh_pages_by_deault"] ?>"
+                                                                data-original-title="<?= $_["desc_api_container"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input name="auto_refresh" id="auto_refresh" type="checkbox"
-                                                                <?php if ($rSettings["auto_refresh"] == 1) {
-                                                                    echo "checked ";
-                                                                } ?>data-plugin="switchery" class="js-switch"
+                                                            <select name="api_container" id="api_container"
+                                                                class="form-control text-center" data-toggle="select2">
+                                                                <?php
+                                                                foreach (array("ts" => "MPEG-TS", "m3u8" => "HLS") as $rValue => $rText) { ?>
+                                                                    <option <?php if ($rSettings["api_container"] == $rValue) {
+                                                                        echo "selected ";
+                                                                    } ?>value="<?= $rValue ?>">
+                                                                        <?= $rText
+                                                                            ?>
+                                                                    </option>
+                                                                    <?php
+                                                                } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label" for="cache_playlists">Cache
+                                                            Playlists for <i data-toggle="tooltip" data-placement="top"
+                                                                title=""
+                                                                data-original-title="If this value is more than 0, playlists downloaded by clients will be cached to file for that many seconds. This can use a lot of disk space if you have a lot of clients, however will save a lot of resources in execution time."
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="cache_playlists" name="cache_playlists"
+                                                                value="<?= intval($rSettings[" cache_playlists "]) ?>">
+                                                        </div>
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="playlist_from_mysql">Grab Playlists from MySQL <i
+                                                                data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="Enable this to read streams from MySQL instead of from the local cache. This may be faster when you have a significant amount of streams."
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input name="playlist_from_mysql" id="playlist_from_mysql"
+                                                                type="checkbox" <?php if ($rSettings["playlist_from_mysql"] == 1) {
+                                                                    echo ' checked ';
+                                                                } ?> data-plugin="switchery" class="js-switch"
                                                                 data-color="#039cfd" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
-                                                            for="alternate_scandir"><?= $_["alternate_scandir_method"] ?>
-                                                            (Cloud) <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["use_an_alternate_method"] ?>"
+                                                            for="release_parser"><?= $_["release_parser"] ?> <i
+                                                                data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="<?= $_["select_which_parser"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input name="alternate_scandir" id="alternate_scandir"
-                                                                type="checkbox" <?php if ($rSettings["alternate_scandir"] == 1) {
-                                                                    echo "checked ";
-                                                                } ?>data-plugin="switchery" class="js-switch"
+                                                            <select name="release_parser" id="release_parser"
+                                                                class="form-control text-center" data-toggle="select2">
+                                                                <?php foreach (array("python" => "Python Based (slower, more accurate)", "php" => "PHP Based (faster, less accurate)") as $rKey => $rParser) { ?>
+                                                                    <option<?php if ($rSettings["release_parser"] == $rKey) {
+                                                                        echo " selected";
+                                                                    } ?> value="<?= $rKey ?>">
+                                                                        <?= $rParser
+                                                                            ?>
+                                                                        </option>
+                                                                        <?php
+                                                                } ?>
+                                                            </select>
+                                                        </div>
+                                                        <label class="col-md-4 col-form-label" for="cloudflare">Enable
+                                                            Cloudflare <i data-toggle="tooltip" data-placement="top"
+                                                                title=""
+                                                                data-original-title="Allow Cloudflare IP's to connect to your service and relay the true client IP to XC_VM."
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input name="cloudflare" id="cloudflare" type="checkbox" <?php if ($rSettings["cloudflare"] == 1) {
+                                                                echo ' checked ';
+                                                            } ?>
+                                                                data-plugin="switchery" class="js-switch"
                                                                 data-color="#039cfd" />
                                                         </div>
                                                     </div>
+                                                    </br>
+                                                    <h5 class="card-title mb-4">API Services</h5>
+                                                    </br>
                                                     <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="allowed_ips_admin"><?= $_["admin_streaming_ips"] ?>
-                                                            <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["allowed_ip_to_access"] ?>"
+                                                        <label class="col-md-4 col-form-label" for="allowed_ips_admin">Admin
+                                                            Streaming IP's <i data-toggle="tooltip" data-placement="top"
+                                                                title=""
+                                                                data-original-title="Allowed IP's to access streaming using the Live Streaming Pass. Separate each IP with a comma."
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-8">
                                                             <input type="text" class="form-control" id="allowed_ips_admin"
                                                                 name="allowed_ips_admin"
-                                                                value="<?= htmlspecialchars($rSettings["allowed_ips_admin"]) ?>">
+                                                                value="<?= htmlspecialchars($rSettings[" allowed_ips_admin "]) ?>">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row mb-4">
@@ -790,29 +861,41 @@ include "header.php";
                                                         </div>
                                                     </div>
                                                     <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="save_closed_connection"><?= $_["save_connection_logs"] ?>
-                                                            <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["save_closed_connection_database"] ?>"
+                                                        <label class="col-md-4 col-form-label" for="api_ips">API Password <i
+                                                                title=""
+                                                                data-original-title="Password required to access the XC_VM Admin API. Leave blank to use IP whitelist only."
                                                                 class="mdi mdi-information"></i></label>
-                                                        <div class="col-md-2">
-                                                            <input name="save_closed_connection" id="save_closed_connection"
-                                                                type="checkbox" <?php if ($rSettings["save_closed_connection"] == 1) {
-                                                                    echo "checked ";
-                                                                } ?>data-plugin="switchery" class="js-switch"
-                                                                data-color="#039cfd" />
+                                                        <div class="col-md-8">
+                                                            <input type="password" class="form-control" id="api_pass"
+                                                                name="api_pass"
+                                                                value="<?= htmlspecialchars($rSettings["api_pass"]) ?>">
                                                         </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
-                                                            for="client_logs_save"><?= $_["save_client_logs"] ?>
+                                                            for="disable_ministra">Disable Ministra API (not working)
                                                             <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["save_client_logs_to_database"] ?>"
+                                                                data-original-title="Enable to stop MAG devices from connecting."
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input name="client_logs_save" id="client_logs_save"
-                                                                type="checkbox" <?php if ($rSettings["client_logs_save"] == 1) {
-                                                                    echo "checked ";
-                                                                } ?>data-plugin="switchery"
+                                                            <input name="disable_ministra" id="disable_ministra"
+                                                                type="checkbox" <?php
+                                                                if ($rSettings["disable_ministra"] == 1) {
+                                                                    echo ' checked ';
+                                                                } ?> data-plugin="switchery"
                                                                 class="js-switch" data-color="#039cfd" />
+                                                        </div>
+                                                    </div>
+                                                    </br>
+                                                    <h5 class="card-title mb-4">Ministra</h5>
+                                                    </br>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="live_streaming_pass"><?= $_["live_streaming_pass"] ?>
+                                                        </label>
+                                                        <div class="col-md-8"><input type="text" readonly
+                                                                class="form-control" id="live_streaming_pass"
+                                                                value="<?= htmlspecialchars($rSettings["live_streaming_pass"]) ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -831,8 +914,8 @@ include "header.php";
                                                         <label class="col-md-4 col-form-label"
                                                             for="copyrights_text"><?= $_["copyrights_text"] ?></label>
                                                         <div class="col-md-8">
-                                                            <input type="text" class="form-control" id="copyrights_text"
-                                                                name="copyrights_text"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="copyrights_text" name="copyrights_text"
                                                                 value="<?= htmlspecialchars($rSettings["copyrights_text"]) ?>">
                                                         </div>
                                                     </div>
@@ -992,12 +1075,9 @@ include "header.php";
                                         <div class="tab-pane" id="streaming">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    </br>
-                                                    <h5 class="card-title mb-4">Preferences</h5>
-                                                    </br>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
-                                                            for="enable_isp_lock"><?= $_["enable_isp_lock1"] ?>
+                                                            for="enable_isp_lock"><?= $_["enable_isp_lock"] ?>
                                                             <i data-toggle="tooltip" data-placement="top" title=""
                                                                 data-original-title="<?= $_["enable_isp_lock_msg"] ?>"
                                                                 class="mdi mdi-information"></i></label>
@@ -1128,8 +1208,8 @@ include "header.php";
                                                                 data-original-title="Specify the bitrate here in kbps. Enter number only. 2000 kB/s = 2 MB/s."
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="vod_bitrate_plus"
-                                                                name="vod_bitrate_plus"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="vod_bitrate_plus" name="vod_bitrate_plus"
                                                                 value="<?= htmlspecialchars($rSettings["vod_bitrate_plus"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
@@ -1138,8 +1218,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_vod_limit_perc"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="vod_limit_perc"
-                                                                name="vod_limit_perc"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="vod_limit_perc" name="vod_limit_perc"
                                                                 value="<?= htmlspecialchars($rSettings["vod_limit_perc"]) ?>">
                                                         </div>
                                                     </div>
@@ -1150,7 +1230,7 @@ include "header.php";
                                                                 data-original-title="<?= $_["automatically_kick_users"] ?> "
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control"
+                                                            <input type="text" class="form-control text-center"
                                                                 id="user_auto_kick_hours" name="user_auto_kick_hours"
                                                                 value="<?= htmlspecialchars($rSettings["user_auto_kick_hours"]) ?>">
                                                         </div>
@@ -1226,8 +1306,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["how_much_data_will_be_sent_to_the_client_1"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="client_prebuffer"
-                                                                name="client_prebuffer"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="client_prebuffer" name="client_prebuffer"
                                                                 value="<?= htmlspecialchars($rSettings["client_prebuffer"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
@@ -1236,7 +1316,7 @@ include "header.php";
                                                                 data-original-title="<?= $_["how_much_data_will_be_sent_to_the_client_2"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control"
+                                                            <input type="text" class="form-control text-center"
                                                                 id="restreamer_prebuffer" name="restreamer_prebuffer"
                                                                 value="<?= htmlspecialchars($rSettings["restreamer_prebuffer"]) ?>">
                                                         </div>
@@ -1248,8 +1328,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_split_by"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <select name="split_by" id="split_by" class="form-control"
-                                                                data-toggle="select2">
+                                                            <select name="split_by" id="split_by"
+                                                                class="form-control text-center" data-toggle="select2">
                                                                 <option<?php if ($rSettings["split_by"] == "conn") {
                                                                     echo " selected";
                                                                 } ?> value="conn">
@@ -1270,7 +1350,7 @@ include "header.php";
                                                             for="channel_number_type"><?= $_["channel_sorting_type"] ?></label>
                                                         <div class="col-md-2">
                                                             <select name="channel_number_type" id="channel_number_type"
-                                                                class="form-control" data-toggle="select2">
+                                                                class="form-control text-center" data-toggle="select2">
                                                                 <option<?php if ($rSettings["channel_number_type"] == "bouquet") {
                                                                     echo " selected";
                                                                 } ?> value="bouquet">
@@ -1313,7 +1393,7 @@ include "header.php";
                                                                 data-original-title="<?= $_["interval_at_which_to_check"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control"
+                                                            <input type="text" class="form-control text-center"
                                                                 id="online_capacity_interval"
                                                                 name="online_capacity_interval"
                                                                 value="<?= htmlspecialchars($rSettings["online_capacity_interval"]) ?>">
@@ -1332,6 +1412,17 @@ include "header.php";
                                                         </div>
                                                     </div>
                                                     <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="restart_php_fpm">Auto-Restart Crashed PHP-FPM <i
+                                                                data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="Run a cron that restarts PHP-FPM if it crashes and errors are found."
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2"><input name="restart_php_fpm"
+                                                                id="restart_php_fpm" type="checkbox" <?php if ($rSettings["restart_php_fpm"] == 1) {
+                                                                    echo ' checked ';
+                                                                } ?>
+                                                                data-plugin="switchery" class="js-switch"
+                                                                data-color="#039cfd" /></div>
                                                         <label class="col-md-4 col-form-label"
                                                             for="kill_rogue_ffmpeg"><?= $_["kill_rogue_ffmpeg"] ?>
                                                             <i data-toggle="tooltip" data-placement="top" title=""
@@ -1352,8 +1443,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_create_expiration"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="create_expiration"
-                                                                name="create_expiration"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="create_expiration" name="create_expiration"
                                                                 value="<?= htmlspecialchars($rSettings["create_expiration"]) ?>">
                                                         </div>
                                                     </div>
@@ -1364,8 +1455,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_read_buffer_size"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="read_buffer_size"
-                                                                name="read_buffer_size"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="read_buffer_size" name="read_buffer_size"
                                                                 value="<?= htmlspecialchars($rSettings["read_buffer_size"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
@@ -1374,8 +1465,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_stop_failures"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="stop_failures"
-                                                                name="stop_failures"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="stop_failures" name="stop_failures"
                                                                 value="<?= htmlspecialchars($rSettings["stop_failures"]) ?>">
                                                         </div>
                                                     </div>
@@ -1430,8 +1521,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_on_demand_wait_time"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="on_demand_wait_time"
-                                                                name="on_demand_wait_time"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="on_demand_wait_time" name="on_demand_wait_time"
                                                                 value="<?= htmlspecialchars($rSettings["on_demand_wait_time"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
@@ -1448,6 +1539,43 @@ include "header.php";
                                                         </div>
                                                     </div>
                                                     </br>
+                                                    <h5 class="card-title mb-4">Encoding Queue Settings</h5>
+                                                    </br>
+                                                    <div class="form-group row mb-4"><label class="col-md-4 col-form-label"
+                                                            for="max_encode_movies">Max
+                                                            Movie Encodes <i data-toggle="tooltip" data-placement="top"
+                                                                title=""
+                                                                data-original-title="Maximum number of movies to encode at once, per server. If all of your content is symlinked, you can set this to a higher number, otherwise set it to how many encodes your servers can realistically perform at once without overloading."
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2"><input type="text"
+                                                                class="form-control text-center" id="max_encode_movies"
+                                                                name="max_encode_movies"
+                                                                value="<?= htmlspecialchars($rSettings["max_encode_movies"]) ?>">
+                                                        </div>
+                                                        <label class="col-md-4 col-form-label" for="max_encode_cc">Max
+                                                            Channel Encodes <i data-toggle="tooltip" data-placement="top"
+                                                                title=""
+                                                                data-original-title="Maximum number of created channels to encode at once, per server. It's best to set this to 1 unless you're symlinking all created channels."
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2"><input type="text"
+                                                                class="form-control text-center" id="max_encode_cc"
+                                                                name="max_encode_cc"
+                                                                value="<?= htmlspecialchars($rSettings["max_encode_cc"]) ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4"><label class="col-md-4 col-form-label"
+                                                            for="queue_loop">Queue
+                                                            Loop
+                                                            Timer <i data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="How long to wait between queue checks. If you're symlinking content you should set this to 1 second."
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2"><input type="text"
+                                                                class="form-control text-center" id="queue_loop"
+                                                                name="queue_loop"
+                                                                value="<?= htmlspecialchars($rSettings["queue_loop"]) ?>">
+                                                        </div>
+                                                    </div>
+                                                    </br>
                                                     <h5 class="card-title mb-4">Segment Settings</h5>
                                                     </br>
                                                     <div class="form-group row mb-4">
@@ -1457,8 +1585,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_seg_time"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="seg_time"
-                                                                name="seg_time"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="seg_time" name="seg_time"
                                                                 value="<?= htmlspecialchars($rSettings["seg_time"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
@@ -1467,8 +1595,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_seg_list_size"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="seg_list_size"
-                                                                name="seg_list_size"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="seg_list_size" name="seg_list_size"
                                                                 value="<?= htmlspecialchars($rSettings["seg_list_size"]) ?>">
                                                         </div>
                                                     </div>
@@ -1479,7 +1607,7 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_seg_delete_threshold"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control"
+                                                            <input type="text" class="form-control text-center"
                                                                 id="seg_delete_threshold" name="seg_delete_threshold"
                                                                 value="<?= htmlspecialchars($rSettings["seg_delete_threshold"]) ?>">
                                                         </div>
@@ -1489,8 +1617,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_segment_wait_time"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="segment_wait_time"
-                                                                name="segment_wait_time"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="segment_wait_time" name="segment_wait_time"
                                                                 value="<?= htmlspecialchars($rSettings["segment_wait_time"]) ?>">
                                                         </div>
                                                     </div>
@@ -1501,8 +1629,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["longer duration"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="stream_max_analyze"
-                                                                name="stream_max_analyze"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="stream_max_analyze" name="stream_max_analyze"
                                                                 value="<?= htmlspecialchars($rSettings["stream_max_analyze"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
@@ -1511,8 +1639,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["probed_in_bytes"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="probesize"
-                                                                name="probesize"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="probesize" name="probesize"
                                                                 value="<?= htmlspecialchars($rSettings["probesize"]) ?>">
                                                         </div>
                                                     </div>
@@ -1524,7 +1652,7 @@ include "header.php";
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
                                                             <select name="segment_type" id="segment_type"
-                                                                class="form-control" data-toggle="select2">
+                                                                class="form-control text-center" data-toggle="select2">
                                                                 <option<?php if ($rSettings["segment_type"] == "0") {
                                                                     echo " selected";
                                                                 } ?> value="0">-f hls</option>
@@ -1597,8 +1725,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_probe_extra_wait"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="probe_extra_wait"
-                                                                name="probe_extra_wait"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="probe_extra_wait" name="probe_extra_wait"
                                                                 value="<?= htmlspecialchars($rSettings["probe_extra_wait"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
@@ -1607,8 +1735,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_stream_fail_sleep"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="stream_fail_sleep"
-                                                                name="stream_fail_sleep"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="stream_fail_sleep" name="stream_fail_sleep"
                                                                 value="<?= htmlspecialchars($rSettings["stream_fail_sleep"]) ?>">
                                                         </div>
                                                     </div>
@@ -1619,8 +1747,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["desc_fps_delay"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="fps_delay"
-                                                                name="fps_delay"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="fps_delay" name="fps_delay"
                                                                 value="<?= htmlspecialchars($rSettings["fps_delay"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
@@ -1630,7 +1758,7 @@ include "header.php";
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
                                                             <select name="fps_check_type" id="fps_check_type"
-                                                                class="form-control" data-toggle="select2">
+                                                                class="form-control text-center" data-toggle="select2">
                                                                 <option<?php if ($rSettings["fps_check_type"] == "0") {
                                                                     echo " selected";
                                                                 } ?> value="0">
@@ -1659,7 +1787,7 @@ include "header.php";
                                                                 data-color="#039cfd" />
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control"
+                                                            <input type="text" class="form-control text-center"
                                                                 id="not_on_air_video_path" name="not_on_air_video_path"
                                                                 value="<?= htmlspecialchars($rSettings["not_on_air_video_path"]) ?>">
                                                         </div>
@@ -1678,8 +1806,8 @@ include "header.php";
                                                                 data-color="#039cfd" />
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" id="banned_video_path"
-                                                                name="banned_video_path"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="banned_video_path" name="banned_video_path"
                                                                 value="<?= htmlspecialchars($rSettings["banned_video_path"]) ?>">
                                                         </div>
                                                     </div>
@@ -1697,8 +1825,8 @@ include "header.php";
                                                                 data-color="#039cfd" />
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <input type="text" class="form-control" id="expired_video_path"
-                                                                name="expired_video_path"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="expired_video_path" name="expired_video_path"
                                                                 value="<?= htmlspecialchars($rSettings["expired_video_path"]) ?>">
                                                         </div>
                                                     </div>
@@ -1710,15 +1838,18 @@ include "header.php";
                                                     </br>
                                                     <div class="col-md-12">
                                                         <select name="allow_countries[]" id="allow_countries"
-                                                            class="form-control select2-multiple" data-toggle="select2"
-                                                            multiple="multiple" data-placeholder="<?= $_["choose"] ?>...">
+                                                            class="form-control text-center select2-multiple"
+                                                            data-toggle="select2" multiple="multiple"
+                                                            data-placeholder="<?= $_["choose"] ?>...">
                                                             <?php foreach ($rGeoCountries as $rValue => $rText) { ?>
                                                                 <option <?php if (in_array($rValue, json_decode($rSettings["allow_countries"], true))) {
                                                                     echo "selected ";
                                                                 } ?>value="<?= $rValue ?>">
-                                                                    <?= $rText ?>
+                                                                    <?= $rText
+                                                                        ?>
                                                                 </option>
-                                                            <?php } ?>
+                                                                <?php
+                                                            } ?>
                                                         </select>
                                                     </div>
                                                     </br>
@@ -1731,8 +1862,8 @@ include "header.php";
                                                                 data-original-title="<?= $_["before_starting_stream"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="stream_start_delay"
-                                                                name="stream_start_delay"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="stream_start_delay" name="stream_start_delay"
                                                                 value="<?= htmlspecialchars($rSettings["stream_start_delay"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label" for="vod_limit_at">VOD
@@ -1741,8 +1872,8 @@ include "header.php";
                                                                 data-original-title="Specify the percentage. Enter number only. Enter 0 to disable."
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="vod_limit_at"
-                                                                name="vod_limit_at"
+                                                            <input type="text" class="form-control text-center"
+                                                                id="vod_limit_at" name="vod_limit_at"
                                                                 value="<?= htmlspecialchars($rSettings["vod_limit_at"]) ?>">
                                                         </div>
                                                     </div>
@@ -1775,16 +1906,21 @@ include "header.php";
                                                                 data-color="#039cfd" />
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
-                                                            for="mag_security"><?= $_["mag_security"] ?> <i
-                                                                data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["enable_additional_mag"] ?>"
-                                                                class="mdi mdi-information"></i></label>
+                                                            for="mag_container"><?= $_["default_container"] ?></label>
                                                         <div class="col-md-2">
-                                                            <input name="mag_security" id="mag_security" type="checkbox"
-                                                                <?php if ($rSettings["mag_security"] == 1) {
-                                                                    echo "checked ";
-                                                                } ?>data-plugin="switchery" class="js-switch"
-                                                                data-color="#039cfd" />
+                                                            <select name="mag_container" id="mag_container"
+                                                                class="form-control text-center" data-toggle="select2">
+                                                                <?php
+                                                                foreach (array("ts" => "TS", "m3u8" => "M3U8") as $rValue => $rText) { ?>
+                                                                    <option <?php if ($rSettings["mag_container"] == $rValue) {
+                                                                        echo "selected ";
+                                                                    } ?>value="<?= $rValue ?>">
+                                                                        <?= $rText
+                                                                            ?>
+                                                                    </option>
+                                                                    <?php
+                                                                } ?>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="form-group row mb-4">
@@ -1833,6 +1969,113 @@ include "header.php";
                                                     </div>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
+                                                            for="playback_limit"><?= $_["playback_limit"] ?></label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="playback_limit" name="playback_limit"
+                                                                value="<?= htmlspecialchars($rSettings["playback_limit"]) ?>">
+                                                        </div>
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="tv_channel_default_aspect">Default Aspect Ratio <i
+                                                                title="Set the default aspect ratio of streams. Fit being the recommended option."
+                                                                class="tooltip text-secondary far fa-circle"></i>
+                                                        </label>
+                                                        <div class="col-md-2"><select name="tv_channel_default_aspect"
+                                                                id="tv_channel_default_aspect" class="form-control"
+                                                                data-toggle="select2">
+                                                                <?php
+                                                                foreach (["fit", "big", "opt", "exp", "cmb"] as $rValue) {
+                                                                    echo '<option ';
+                                                                    if ($rSettings["tv_channel_default_aspect"] == $rValue) {
+                                                                        echo 'selected ';
+                                                                    }
+                                                                    ?> value="
+                                                                    <?= $rValue
+                                                                        ?>">
+                                                                    <?= $rValue
+                                                                        ?>
+                                                                    </option>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="stalker_theme"><?= $_["default_theme"] ?></label>
+                                                        <div class="col-md-2">
+                                                            <select name="stalker_theme" id="stalker_theme"
+                                                                class="form-control text-center" data-toggle="select2">
+                                                                <?php
+                                                                foreach (array("default" => "Default", "digital" => "Digital", "emerald" => "Emerald", "cappucino" => "Cappucino", "ocean_blue" => "Ocean Blue") as $rValue => $rText) { ?>
+                                                                    <option <?php if ($rSettings["stalker_theme"] == $rValue) {
+                                                                        echo "selected ";
+                                                                    } ?>value="<?= $rValue ?>">
+                                                                        <?= $rText
+                                                                            ?>
+                                                                    </option>
+                                                                    <?php
+                                                                } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="mag_legacy_redirect">Legacy
+                                                            URL Redirect <i
+                                                                title="Redirect /c to Ministra folder using symlinks. This will allow legacy devices to access the Ministra portal using the old address, however it isn 't recommended for security purposes. Root access is required so this will action within the next minute during the cron run."
+                                                                class="tooltip text-secondary far fa-circle"></i></label>
+                                                        <div class="col-md-2"><input name="mag_legacy_redirect"
+                                                                id="mag_legacy_redirect" type="checkbox" <?php
+                                                                if ($rSettings["mag_legacy_redirect"] == 1) {
+                                                                    echo ' checked ';
+                                                                }
+                                                                ?> data-plugin="switchery" class="js-switch"
+                                                                data-color="#039cfd" />
+                                                        </div>
+                                                        <label class="col-md-4 col-form-label" for="mag_keep_extension">Keep
+                                                            URL Extension <i
+                                                                title="Keep extension of live streams, timeshift and VOD. Some older devices can't determine it for themselves and use the extension to select the playback method."
+                                                                class="tooltip text-secondary far fa-circle"></i></label>
+                                                        <div class="col-md-2"><input name="mag_keep_extension"
+                                                                id="mag_keep_extension" type="checkbox" <?php
+                                                                if ($rSettings["mag_keep_extension"] == 1) {
+                                                                    echo ' checked ';
+                                                                }
+                                                                ?> data-plugin="switchery" class="js-switch"
+                                                                data-color="#039cfd" /></div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label" for="mag_disable_ssl">Disable
+                                                            SSL <i
+                                                                title="Force MAG 's to use non-SSL URL's, you should think about removing support for old MAG devices that don 't support newer SSL protocols rather than disabling this."
+                                                                class="tooltip text-secondary far fa-circle"></i>
+                                                        </label>
+                                                        <div class="col-md-2"><input name="mag_disable_ssl"
+                                                                id="mag_disable_ssl" type="checkbox" <?php
+                                                                if ($rSettings["mag_disable_ssl"] == 1) {
+                                                                    echo ' checked ';
+                                                                }
+                                                                ?>
+                                                                data-plugin="switchery" class="js-switch"
+                                                                data-color="#039cfd" />
+                                                        </div>
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="disable_mag_token"><?= $_["disable_mag_token"] ?>
+                                                            <i data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="<?= $_["desc_disable_mag_token"] ?>"
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input name="disable_mag_token" id="disable_mag_token"
+                                                                type="checkbox" <?php if ($rSettings["disable_mag_token"] == 1) {
+                                                                    echo "checked ";
+                                                                } ?>data-plugin="switchery" class="js-switch"
+                                                                data-color="#039cfd" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label"
                                                             for="stb_change_pass"><?= $_["allow_stb_pass_change"] ?></label>
                                                         <div class="col-md-2">
                                                             <input name="stb_change_pass" id="stb_change_pass"
@@ -1853,68 +2096,13 @@ include "header.php";
                                                     </div>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
-                                                            for="mag_container"><?= $_["default_container"] ?></label>
-                                                        <div class="col-md-2">
-                                                            <select name="mag_container" id="mag_container"
-                                                                class="form-control" data-toggle="select2">
-                                                                <?php
-                                                                foreach (array("ts" => "TS", "m3u8" => "M3U8") as $rValue => $rText) { ?>
-                                                                    <option <?php if ($rSettings["mag_container"] == $rValue) {
-                                                                        echo "selected ";
-                                                                    } ?>value="<?= $rValue ?>">
-                                                                        <?= $rText ?>
-                                                                    </option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="stalker_theme"><?= $_["default_theme"] ?></label>
-                                                        <div class="col-md-2">
-                                                            <select name="stalker_theme" id="stalker_theme"
-                                                                class="form-control" data-toggle="select2">
-                                                                <?php
-                                                                foreach (array("default" => "Default", "digital" => "Digital", "emerald" => "Emerald", "cappucino" => "Cappucino", "ocean_blue" => "Ocean Blue") as $rValue => $rText) { ?>
-                                                                    <option <?php if ($rSettings["stalker_theme"] == $rValue) {
-                                                                        echo "selected ";
-                                                                    } ?>value="<?= $rValue ?>">
-                                                                        <?= $rText ?>
-                                                                    </option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="record_max_length"><?= $_["record_max_length"] ?></label>
-                                                        <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="record_max_length"
-                                                                name="record_max_length"
-                                                                value="<?= htmlspecialchars($rSettings["record_max_length"]) ?>">
-                                                        </div>
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="max_local_recordings"><?= $_["max_local_recordings"] ?></label>
-                                                        <div class="col-md-2">
-                                                            <input type="text" class="form-control"
-                                                                id="max_local_recordings" name="max_local_recordings"
-                                                                value="<?= htmlspecialchars($rSettings["max_local_recordings"]) ?>">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row mb-4">
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="playback_limit"><?= $_["playback_limit"] ?></label>
-                                                        <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="playback_limit"
-                                                                name="playback_limit"
-                                                                value="<?= htmlspecialchars($rSettings["playback_limit"]) ?>">
-                                                        </div>
-                                                        <label class="col-md-4 col-form-label"
-                                                            for="disable_mag_token"><?= $_["disable_mag_token"] ?>
-                                                            <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["desc_disable_mag_token"] ?>"
+                                                            for="mag_security"><?= $_["mag_security"] ?> <i
+                                                                data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="<?= $_["enable_additional_mag"] ?>"
                                                                 class="mdi mdi-information"></i></label>
                                                         <div class="col-md-2">
-                                                            <input name="disable_mag_token" id="disable_mag_token"
-                                                                type="checkbox" <?php if ($rSettings["disable_mag_token"] == 1) {
+                                                            <input name="mag_security" id="mag_security" type="checkbox"
+                                                                <?php if ($rSettings["mag_security"] == 1) {
                                                                     echo "checked ";
                                                                 } ?>data-plugin="switchery" class="js-switch"
                                                                 data-color="#039cfd" />
@@ -1922,14 +2110,18 @@ include "header.php";
                                                     </div>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
-                                                            for="mag_disable_ssl"><?= $_["mag_disable_ssl"] ?>
-                                                            <i data-toggle="tooltip" data-placement="top" title=""
-                                                                data-original-title="<?= $_["desc_mag_disable_ssl"] ?>"
-                                                                class="mdi mdi-information"></i></label>
+                                                            for="record_max_length"><?= $_["record_max_length"] ?></label>
                                                         <div class="col-md-2">
-                                                            <input type="text" class="form-control" id="mag_disable_ssl"
-                                                                name="mag_disable_ssl"
-                                                                value="<?= htmlspecialchars($rSettings["mag_disable_ssl"]) ?>">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="record_max_length" name="record_max_length"
+                                                                value="<?= htmlspecialchars($rSettings["record_max_length"]) ?>">
+                                                        </div>
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="max_local_recordings"><?= $_["max_local_recordings"] ?></label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="max_local_recordings" name="max_local_recordings"
+                                                                value="<?= htmlspecialchars($rSettings["max_local_recordings"]) ?>">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row mb-4">
@@ -1937,16 +2129,18 @@ include "header.php";
                                                             for="allowed_stb_types"><?= $_["allowed_stb_types"] ?></label>
                                                         <div class="col-md-8">
                                                             <select name="allowed_stb_types[]" id="allowed_stb_types"
-                                                                class="form-control select2-multiple" data-toggle="select2"
-                                                                multiple="multiple"
+                                                                class="form-control text-center select2-multiple"
+                                                                data-toggle="select2" multiple="multiple"
                                                                 data-placeholder="<?= $_["choose"] ?>...">
                                                                 <?php foreach ($rMAGs as $rMAG) { ?>
                                                                     <option <?php if (in_array($rMAG, json_decode($rSettings["allowed_stb_types"], true))) {
                                                                         echo "selected ";
                                                                     } ?>value="<?= $rMAG ?>">
-                                                                        <?= $rMAG ?>
+                                                                        <?= $rMAG
+                                                                            ?>
                                                                     </option>
-                                                                <?php } ?>
+                                                                    <?php
+                                                                } ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1956,17 +2150,43 @@ include "header.php";
                                                         <div class="col-md-8">
                                                             <select name="allowed_stb_types_for_local_recording[]"
                                                                 id="allowed_stb_types_for_local_recording"
-                                                                class="form-control select2-multiple" data-toggle="select2"
-                                                                multiple="multiple"
+                                                                class="form-control text-center select2-multiple"
+                                                                data-toggle="select2" multiple="multiple"
                                                                 data-placeholder="<?= $_["choose"] ?>...">
                                                                 <?php foreach ($rMAGs as $rMAG) { ?>
                                                                     <option <?php if (in_array($rMAG, json_decode($rSettings["allowed_stb_types_for_local_recording"], true))) {
                                                                         echo "selected ";
                                                                     } ?>value="<?= $rMAG ?>">
-                                                                        <?= $rMAG ?>
+                                                                        <?= $rMAG
+                                                                            ?>
                                                                     </option>
-                                                                <?php } ?>
+                                                                    <?php
+                                                                } ?>
                                                             </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="test_download_url">Speedtest URL <i
+                                                                title="URL to a file to download during speedtest on MAG devices."
+                                                                class="tooltip text-secondary far fa-circle"></i>
+                                                        </label>
+                                                        <div class="col-md-8"><input type="text" class="form-control"
+                                                                id="test_download_url" name="test_download_url"
+                                                                value="<?= htmlspecialchars($rSettings["test_download_url"]) ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label" for="mag_message">Information
+                                                            Message <i
+                                                                title="Message to display when a user selects Information in My Account tab. Text entered should be in HTML format, although newlines will be converted to <br/>."
+                                                                class="tooltip text-secondary far fa-circle"></i>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            <textarea rows="6" class="form-control" id="mag_message"
+                                                                name="mag_message">
+                                                                                                                                                                                                                            <?= htmlspecialchars(str_replace(["&lt;", "&gt;"], ["
+																		<", ">"], $rSettings["mag_message"])) ?> </textarea>
                                                         </div>
                                                     </div>
                                                 </div> <!-- end col -->
@@ -1978,41 +2198,183 @@ include "header.php";
                                                 </li>
                                             </ul>
                                         </div>
-                                    <?php }
+                                        <div class="tab-pane" id="logs">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    </br>
+                                                    <h5 class="card-title mb-4">Preferences</h5>
+                                                    </br>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="save_closed_connection"><?= $_["save_connection_logs"] ?>
+                                                            <i data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="<?= $_["save_closed_connection_database"] ?>"
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input name="save_closed_connection" id="save_closed_connection"
+                                                                type="checkbox" <?php if ($rSettings["save_closed_connection"] == 1) {
+                                                                    echo "checked ";
+                                                                } ?>data-plugin="switchery" class="js-switch"
+                                                                data-color="#039cfd" />
+                                                        </div>
+                                                        <label class="col-md-3 col-form-label" for="keep_activity">Keep Logs
+                                                            For</label>
+                                                        <div class="col-md-3"><select name="keep_activity"
+                                                                id="keep_activity" class="form-control"
+                                                                data-toggle="select2">
+                                                                <?php
+                                                                foreach (["Forever", 3600 => "1 Hour", 21600 => "6 Hours", 43200 => "12 Hours", 86400 => "1 Day", 259200 => "3 Days", 604800 => "7 Days", 1209600 => "14 Days", 16934400 => "28 Days", 15552000 => "180 Days", 31536000 => "365 Days",] as $rValue => $rText) {
+                                                                    echo '<option ';
+
+                                                                    if ($rSettings["keep_activity"] == $rValue) {
+                                                                        echo 'selected ';
+                                                                    }
+
+                                                                    ?> value="
+                                                                    <?= $rValue
+                                                                        ?>">
+                                                                    <?= $rText
+                                                                        ?>
+                                                                    </option>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label" for="client_logs_save">
+                                                            <?= $_["save_client_logs"] ?>
+                                                            <i data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="<?= $_["save_client_logs_to_database"] ?>"
+                                                                class="mdi mdi-information"></i>
+                                                        </label>
+                                                        <div class="col-md-2">
+                                                            <input name="client_logs_save" id="client_logs_save"
+                                                                type="checkbox" <?php if ($rSettings["client_logs_save"] == 1) {
+                                                                    echo "checked ";
+                                                                } ?>data-plugin="switchery"
+                                                                class="js-switch" data-color="#039cfd" />
+                                                        </div>
+                                                        <label class="col-md-3 col-form-label" for="keep_client">Keep Logs
+                                                            For</label>
+                                                        <div class="col-md-3">
+                                                            <select name="keep_client" id="keep_client" class="form-control"
+                                                                data-toggle="select2">
+                                                                <?php
+                                                                foreach (["Forever", 3600 => "1 Hour", 21600 => "6 Hours", 43200 => "12 Hours", 86400 => "1 Day", 259200 => "3 Days", 604800 => "7 Days", 1209600 => "14 Days", 16934400 => "28 Days", 15552000 => "180 Days", 31536000 => "365 Days",] as $rValue => $rText) {
+                                                                    echo '
+																		<option ';
+
+                                                                    if ($rSettings["keep_client"] == $rValue) {
+                                                                        echo 'selected ';
+                                                                    }
+
+                                                                    ?> value="
+                                                                    <?= $rValue
+                                                                        ?>">
+                                                                    <?= $rText
+                                                                        ?>
+                                                                    </option>
+                                                                    <?php
+                                                                } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label" for="stream_logs_save">Stream
+                                                            Error Logs <i
+                                                                title="Activity logs are saved when an active connection is closed. This is useful information to keep and should be kept for as long as possible, however can build up if you have high throughput."
+                                                                class="tooltip text-secondary far fa-circle"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input name="stream_logs_save" id="stream_logs_save"
+                                                                type="checkbox" <?php
+                                                                if ($rSettings["stream_logs_save"] == 1) {
+                                                                    echo ' checked ';
+                                                                }
+                                                                ?> data-plugin="switchery"
+                                                                class="js-switch" data-color="#039cfd" />
+                                                        </div>
+                                                        <label class="col-md-3 col-form-label" for="keep_errors">Keep Logs
+                                                            For</label>
+                                                        <div class="col-md-3">
+                                                            <select name="keep_errors" id="keep_errors" class="form-control"
+                                                                data-toggle="select2">
+                                                                <?php
+                                                                foreach (["Forever", 3600 => "1 Hour", 21600 => "6 Hours", 43200 => "12 Hours", 86400 => "1 Day", 259200 => "3 Days", 604800 => "7 Days", 1209600 => "14 Days", 16934400 => "28 Days", 15552000 => "180 Days", 31536000 => "365 Days",] as $rValue => $rText) {
+                                                                    echo '
+																		<option ';
+
+                                                                    if ($rSettings["keep_errors"] == $rValue) {
+                                                                        echo 'selected ';
+                                                                    }
+                                                                    ?> value="
+                                                                    <?= $rValue
+                                                                        ?>">
+                                                                    <?= $rText
+                                                                        ?>
+                                                                    </option>
+                                                                    <?php
+                                                                } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="save_restart_logs">Stream
+                                                            Restart Logs <i
+                                                                title="Activity logs are saved when an active connection is closed. This is useful information to keep and should be kept for as long as possible, however can build up if you have high throughput."
+                                                                class="tooltip text-secondary far fa-circle"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input name="save_restart_logs" id="save_restart_logs"
+                                                                type="checkbox" <?php if ($rSettings["save_restart_logs"] == 1) {
+                                                                    echo ' checked ';
+                                                                } ?> data-plugin="switchery" class="js-switch"
+                                                                data-color="#039cfd" />
+                                                        </div>
+                                                        <label class="col-md-3 col-form-label" for="keep_restarts">Keep
+                                                            Logs For</label>
+                                                        <div class="col-md-3"><select name="keep_restarts"
+                                                                id="keep_restarts" class="form-control"
+                                                                data-toggle="select2">
+                                                                <?php
+                                                                foreach (["Forever", 3600 => "1 Hour", 21600 => "6 Hours", 43200 => "12 Hours", 86400 => "1 Day", 259200 => "3 Days", 604800 => "7 Days", 1209600 => "14 Days", 16934400 => "28 Days", 15552000 => "180 Days", 31536000 => "365 Days",] as $rValue => $rText) {
+                                                                    echo '<option ';
+
+                                                                    if ($rSettings["keep_restarts"] == $rValue) {
+                                                                        echo 'selected ';
+                                                                    }
+                                                                    ?> value="
+                                                                    <?= $rValue; ?>">
+                                                                    <?= $rText
+                                                                        ?>
+                                                                    </option>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <ul class="list-inline wizard mb-0">
+                                                <li class="list-inline-item float-right">
+                                                    <input name="submit_settings" type="submit" class="btn btn-primary"
+                                                        value="<?= $_["save_changes"] ?>" />
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <?php
+                                    }
                                     if (hasPermissions("adv", "database")) { ?>
-                                        <!-- <div class="tab-pane" id="infos">
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div class="card">
-                                                                    <div class="card-body">
-                                                                        <div class="bg-soft-light border-light border">
-                                                                            <div class="row">
-                                                                                <div class="col-md-12">
-                                                                                    <p
-                                                                                        class="text-muted mb-0 mt-3 text-left">
-                                                                                        </small><b><a
-                                                                                                class="text-dark"><?= $rInfosUpdate["title"][0] ?></a></b>
-                                                                                    </p>
-                                                                                    <h5 class="font-weight-normal mb-3">
-                                                                                        <span><?= $rInfosUpdate["infos"][0] ?><sup
-                                                                                                class="font-13">
-                                                                                                <?= $rInfosUpdate["infos"][1] ?></sup></span>
-                                                                                    </h5>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> 
-                                                    </div>-->
                                         <div class="tab-pane" id="database">
                                             <div class="row">
                                                 <iframe width="100%" height="650px" src="./database.php"
                                                     style="overflow-x:hidden;border:0px;"></iframe>
                                             </div> <!-- end row -->
                                         </div>
-                                    <?php } ?>
+                                        <?php
+                                    } ?>
                                 </div> <!-- tab-content -->
                             </div> <!-- end #basicwizard-->
                         </div> <!-- end card-body -->
@@ -2022,41 +2384,57 @@ include "header.php";
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="modalLabel"><?= $_["domain_list"] ?></h4>
+                                    <h4 class="modal-title" id="modalLabel">
+                                        <?= $_["domain_list"] ?>
+                                    </h4>
                                     <button type="button" class="close" data-dismiss="modal"
                                         aria-hidden="true">×</button>
                                 </div>
                                 <div class="modal-body">
-                                    <p class="sub-header"><?= $_["ensure_the_following_domains"] ?></p>
+                                    <p class="sub-header">
+                                        <?= $_["ensure_the_following_domains"] ?>
+                                    </p>
                                     <div class="table-responsive">
                                         <table class="table mb-0">
                                             <thead>
                                                 <tr>
-                                                    <th><?= $_["type_reseller"] ?></th>
-                                                    <th><?= $_["domaine_name"] ?></th>
+                                                    <th>
+                                                        <?= $_["type_reseller"] ?>
+                                                    </th>
+                                                    <th>
+                                                        <?= $_["domaine_name"] ?>
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php if (strlen($rServers[$_INFO["server_id"]]["server_ip"]) > 0) { ?>
                                                     <tr>
-                                                        <td><?= $_["server_ip"] ?></td>
-                                                        <td><?= $rServers[$_INFO["server_id"]]["server_ip"] ?>
+                                                        <td>
+                                                            <?= $_["server_ip"] ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= $rServers[$_INFO["server_id"]]["server_ip"] ?>
                                                         </td>
                                                     </tr>
-                                                <?php }
+                                                    <?php
+                                                }
                                                 if (strlen($rServers[$_INFO["server_id"]]["private_ip"]) > 0) { ?>
                                                     <tr>
                                                         <td><?= $_["server_vpn"] ?></td>
                                                         <td><?= $rServers[$_INFO["server_id"]]["private_ip"] ?></td>
                                                     </tr>
-                                                <?php }
+                                                    <?php
+                                                }
                                                 if (strlen($rServers[$_INFO["server_id"]]["domain_name"]) > 0) { ?>
                                                     <tr>
-                                                        <td><?= $_["server_domain"] ?></td>
+                                                        <td>
+                                                            <?= $_["server_domain"] ?>
+                                                        </td>
                                                         <td><?= $rServers[$_INFO["server_id"]]["domain_name"] ?>
                                                         </td>
                                                     </tr>
-                                                <?php }
+                                                    <?php
+                                                }
                                                 $ipTV_db_admin->query("SELECT `username`, `reseller_dns` FROM `reg_users` WHERE `reseller_dns` <> '' AND `verified` = 1 ORDER BY `username` ASC;");
                                                 if ($ipTV_db_admin->num_rows() > 0) {
                                                     foreach ($ipTV_db_admin->get_rows() as $row) { ?>
@@ -2064,7 +2442,8 @@ include "header.php";
                                                             <td><?= $row["username"] ?></td>
                                                             <td><?= $row["reseller_dns"] ?></td>
                                                         </tr>
-                                                    <?php }
+                                                        <?php
+                                                    }
                                                 } ?>
                                             </tbody>
                                         </table>

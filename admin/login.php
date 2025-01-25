@@ -110,13 +110,8 @@ if (!isset($_STATUS)) {
 	<link rel="shortcut icon" href="assets/images/favicon.ico">
 	<!-- App css -->
 	<link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
-	<?php if ($rSettings["dark_mode_login"]) { ?>
-		<link href="assets/css/bootstrap.dark.css" rel="stylesheet" type="text/css" />
-		<link href="assets/css/app.dark.css" rel="stylesheet" type="text/css" />
-	<?php } else { ?>
-		<link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
-		<link href="assets/css/app.css" rel="stylesheet" type="text/css" />
-	<?php } ?>
+	<link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="assets/css/app.css" rel="stylesheet" type="text/css" />
 	<style>
 		.g-recaptcha {
 			display: inline-block;
@@ -182,11 +177,7 @@ if (!isset($_STATUS)) {
 					<div class="card-login">
 						<div class="card-body p-4">
 							<div class="text-center w-auto m-autologin">
-								<?php if ($rSettings["dark_mode_login"]) { ?>
-									<span><img src="<?= $rSettings["logo_url"] ?>" width="100px" alt=""></span>
-								<?php } else { ?>
-									<span><img src="<?= $rSettings["logo_url"] ?>" width="100px" alt=""></span>
-								<?php } ?>
+								<span><img src="<?= $rSettings["logo_url"] ?>" width="100px" alt=""></span>
 								<p class="text-muted mb-4 mt-3"></p>
 							</div>
 							<h5 class="auth-title"><?= $_["admin_reseller_interface"] ?></h5>

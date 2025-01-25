@@ -1056,7 +1056,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 (95, 'enable_debug_stalker', '0'),
 (96, 'online_capacity_interval', '10'),
 (97, 'always_enabled_subtitles', '0'),
-(98, 'test_download_url', ''),
+(98, 'test_download_url', 'https://proof.ovh.net/files/100Mb.dat'),
 (105, 'api_pass', ''),
 (106, 'message_of_day', 'Welcome to Xtream Codes Reborn'),
 (109, 'enable_isp_lock', '0'),
@@ -1154,11 +1154,7 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 (223,'default_entries','10'),
 (224,'reseller_mag_events','0'),
 (225,'ip_logout','0'),
-(226,'alternate_scandir','0'),
 (227,'download_images','0'),
-(228,'auto_refresh','1'),
-(229,'local_api','0'),
-(230,'dark_mode_login','0'),
 (231,'dashboard_stats','0'),
 (232,'dashboard_world_map_live','0'),
 (233,'dashboard_world_map_activity','0'),
@@ -1173,7 +1169,20 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 (242,'reseller_reset_isplock','0'),
 (243,'watch_pid','0'),
 (244,'tmdb_pid',''),
-(245,'stats_pid','');
+(245,'stats_pid',''),
+(246,'auth_flood_limit','30'),
+(247,'restream_deny_unauthorised','1'),
+(248,'auth_flood_seconds','10'),
+(249,'last_backup','0'),
+(250,'mag_keep_extension','1'),
+(251,'mag_legacy_redirect','0'),
+(252,'mag_message','You can switch between the modern and legacy themes by using the <span class="label">Green</span> and <span class="label">Yellow</span> buttons on your remote control. Doing so will restart your device.'),
+(253,'keep_client','0'),
+(254,'keep_activity','0'),
+(255,'stream_logs_save','1'),
+(256,'keep_errors','0'),
+(257,'save_restart_logs','1'),
+(258,'keep_restarts','0');
 
 -- --------------------------------------------------------
 

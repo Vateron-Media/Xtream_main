@@ -66,11 +66,7 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('tmdb_language
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('default_entries', '10')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('reseller_mag_events', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('ip_logout', '0')");
-$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('alternate_scandir', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('download_images', '0')");
-$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('auto_refresh', '1')");
-$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('local_api', '0')");
-$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('dark_mode_login', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('dashboard_stats', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('dashboard_world_map_live', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('dashboard_world_map_activity', '0')");
@@ -86,6 +82,20 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('reseller_rese
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('watch_pid', '0')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('tmdb_pid', '')");
 $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('stats_pid', '')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('auth_flood_limit', '30')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('restream_deny_unauthorised', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('auth_flood_seconds', '10')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('last_backup', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('mag_keep_extension', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('mag_legacy_redirect', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('mag_message', 'You can switch between the modern and legacy themes by using the <span class=\"label\">Green</span> and <span class=\"label\">Yellow</span> buttons on your remote control. Doing so will restart your device.')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('keep_client', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('keep_activity', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('stream_logs_save', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('keep_errors', '0')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('save_restart_logs', '1')");
+$ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('keep_restarts', '0')");
+
 $ipTV_db->query("DELETE FROM `settings` WHERE `name`='userpanel_mainpage'");
 $ipTV_db->query("DELETE FROM `settings` WHERE `name`='page_mannuals'");
 
