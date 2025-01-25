@@ -1482,22 +1482,24 @@ function updateGeoLite2() {
     return false;
 }
 
-function APIRequest($rData) {
-    global $rSettings, $rServers, $_INFO;
-    ini_set('default_socket_timeout', 5);
-    if ($rSettings["local_api"]) {
-        $rAPI = "http://127.0.0.1:" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "/admin/api.php";
-    } else {
-        $rAPI = "http://" . $rServers[$_INFO["server_id"]]["server_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"] . "/admin/api.php";
+function APIRequest($rData, $rTimeout = 5) {
+    ini_set('default_socket_timeout', $rTimeout);
+    $rAPI = 'http://127.0.0.1:' . intval(ipTV_lib::$Servers[SERVER_ID]['http_broadcast_port']) . '/admin/api';
+
+    if (!empty(ipTV_lib::$settings['api_pass'])) {
+        $rData['api_pass'] = ipTV_lib::$settings['api_pass'];
     }
+
     $rPost = http_build_query($rData);
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $rAPI);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $rPost);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $rData = curl_exec($ch);
-    return $rData;
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $rTimeout);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $rTimeout);
+
+    return curl_exec($ch);
 }
 
 function SystemAPIRequest($rServerID, $rData) {
@@ -1652,50 +1654,17 @@ function listDir($rServerID, $rDirectory, $rAllowed = null) {
             }
         }
     } else {
-        if ($rSettings["alternate_scandir"]) {
-            $rFilename = MAIN_DIR . 'tmp/ls_' . substr(md5(microtime() . rand(0, 9999)), 0, 20) . '.log';
-            $rCommand = "ls -cm -f --group-directories-first --indicator-style=slash \"" . escapeshellcmd($rDirectory) . "\" >> " . $rFilename;
-            sexec($rServerID, $rCommand);
-            $rData = "";
-            $rI = 2;
-            while (strlen($rData) == 0) {
-                $rData = SystemAPIRequest($rServerID, array('action' => 'getFile', 'filename' => $rFilename));
-                $rI--;
-                if (($rI == 0) or (strlen($rData) > 0)) {
-                    break;
-                }
-                sleep(1);
-            }
-            if (strlen($rData) > 0) {
-                $rFiles = explode(",", $rData);
-                sort($rFiles);
-                foreach ($rFiles as $rFile) {
-                    $rFile = trim($rFile);
-                    if (substr($rFile, -1) == "/") {
-                        if ((substr($rFile, 0, -1) <> "..") && (substr($rFile, 0, -1) <> ".")) {
-                            $rReturn["dirs"][] = substr($rFile, 0, -1);
-                        }
-                    } else {
-                        $rExt = strtolower(pathinfo($rFile)["extension"]);
-                        if (((is_array($rAllowed)) && (in_array($rExt, $rAllowed))) or (!$rAllowed)) {
-                            $rReturn["files"][] = $rFile;
-                        }
-                    }
-                }
-            }
-        } else {
-            $rData = SystemAPIRequest($rServerID, array('action' => 'viewDir', 'dir' => $rDirectory));
-            $rDocument = new DOMDocument();
-            $rDocument->loadHTML($rData);
-            $rFiles = $rDocument->getElementsByTagName('li');
-            foreach ($rFiles as $rFile) {
-                if (stripos($rFile->getAttribute('class'), "directory") !== false) {
-                    $rReturn["dirs"][] = $rFile->nodeValue;
-                } elseif (stripos($rFile->getAttribute('class'), "file") !== false) {
-                    $rExt = strtolower(pathinfo($rFile->nodeValue)["extension"]);
-                    if (((is_array($rAllowed)) && (in_array($rExt, $rAllowed))) or (!$rAllowed)) {
-                        $rReturn["files"][] = $rFile->nodeValue;
-                    }
+        $rData = SystemAPIRequest($rServerID, array('action' => 'viewDir', 'dir' => $rDirectory));
+        $rDocument = new DOMDocument();
+        $rDocument->loadHTML($rData);
+        $rFiles = $rDocument->getElementsByTagName('li');
+        foreach ($rFiles as $rFile) {
+            if (stripos($rFile->getAttribute('class'), "directory") !== false) {
+                $rReturn["dirs"][] = $rFile->nodeValue;
+            } elseif (stripos($rFile->getAttribute('class'), "file") !== false) {
+                $rExt = strtolower(pathinfo($rFile->nodeValue)["extension"]);
+                if (((is_array($rAllowed)) && (in_array($rExt, $rAllowed))) or (!$rAllowed)) {
+                    $rReturn["files"][] = $rFile->nodeValue;
                 }
             }
         }
