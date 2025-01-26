@@ -1637,21 +1637,21 @@ CREATE TABLE IF NOT EXISTS `tmdb_async` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transcoding_profiles`
+-- Table structure for table `profiles`
 --
 
-CREATE TABLE IF NOT EXISTS `transcoding_profiles` (
+CREATE TABLE IF NOT EXISTS `profiles` (
   `profile_id` int(11) NOT NULL AUTO_INCREMENT,
-  `profile_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `profile_options` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `profile_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `profile_options` mediumtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`profile_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `transcoding_profiles`
+-- Dumping data for table `profiles`
 --
 
-INSERT INTO `transcoding_profiles` (`profile_id`, `profile_name`, `profile_options`) VALUES
+INSERT INTO `profiles` (`profile_id`, `profile_name`, `profile_options`) VALUES
 (1, 'Standard H264 AAC', '{\"-vcodec\":\"h264\",\"-acodec\":\"aac\"}');
 
 -- --------------------------------------------------------

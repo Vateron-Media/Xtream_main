@@ -581,7 +581,7 @@ function getStreamArguments() {
 function getTranscodeProfiles() {
     global $ipTV_db_admin;
     $return = array();
-    $ipTV_db_admin->query("SELECT * FROM `transcoding_profiles` ORDER BY `profile_id` ASC;");
+    $ipTV_db_admin->query("SELECT * FROM `profiles` ORDER BY `profile_id` ASC;");
     if ($ipTV_db_admin->num_rows() > 0) {
         foreach ($ipTV_db_admin->get_rows() as $row) {
             $return[] = $row;
@@ -949,7 +949,7 @@ function getPackage($rID) {
 
 function getTranscodeProfile($rID) {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query("SELECT * FROM `transcoding_profiles` WHERE `profile_id` = " . intval($rID) . ";");
+    $ipTV_db_admin->query("SELECT * FROM `profiles` WHERE `profile_id` = " . intval($rID) . ";");
     if ($ipTV_db_admin->num_rows() == 1) {
         return $ipTV_db_admin->get_row();
     }

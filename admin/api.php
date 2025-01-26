@@ -346,7 +346,7 @@ if (isset(ipTV_lib::$request["action"])) {
             $rProfileID = intval(ipTV_lib::$request["profile_id"]);
             $rSub = ipTV_lib::$request["sub"];
             if ($rSub == "delete") {
-                $ipTV_db_admin->query("DELETE FROM `transcoding_profiles` WHERE `profile_id` = " . intval($rProfileID) . ";");
+                $ipTV_db_admin->query("DELETE FROM `profiles` WHERE `profile_id` = " . intval($rProfileID) . ";");
                 echo json_encode(array("result" => true));
                 exit;
             } else {

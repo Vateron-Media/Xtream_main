@@ -11,7 +11,7 @@ class ipTV_stream {
      * @return int Returns 1 if the stream is successfully transcoded and built, 2 if there are no PIDs for the channel, or 2 if there are no differences in stream sources.
      */
     static function transcodeBuild($streamID) {
-        self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `transcoding_profiles` t3 ON t1.transcode_profile_id = t3.profile_id WHERE t1.`id` = ?', $streamID);
+        self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `profiles` t3 ON t1.transcode_profile_id = t3.profile_id WHERE t1.`id` = ?', $streamID);
         $stream = self::$ipTV_db->get_row();
         $stream['cchannel_rsources'] = json_decode($stream['cchannel_rsources'], true);
         $stream['stream_source'] = json_decode($stream['stream_source'], true);
@@ -112,7 +112,7 @@ class ipTV_stream {
     }
     public static function startMovie($streamID) {
         $stream = array();
-        self::$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 0 LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = ?', $streamID);
+        self::$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 0 LEFT JOIN `profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = ?', $streamID);
         if (self::$ipTV_db->num_rows() > 0) {
             $stream['stream_info'] = self::$ipTV_db->get_row();
             $target_container = json_decode($stream['stream_info']['target_container'], true);
@@ -241,7 +241,7 @@ class ipTV_stream {
         ipTV_lib::unlinkFile(STREAMS_PATH . $streamID . '_.pid');
 
         $stream = array();
-        self::$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 1 LEFT JOIN `transcoding_profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = ?', $streamID);
+        self::$ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type AND t2.live = 1 LEFT JOIN `profiles` t4 ON t1.transcode_profile_id = t4.profile_id WHERE t1.direct_source = 0 AND t1.id = ?', $streamID);
         if (self::$ipTV_db->num_rows() <= 0) {
             return false;
         }

@@ -82,7 +82,7 @@ if (isset(ipTV_lib::$request["submit_profile"])) {
         $rCols = "profile_id," . $rCols;
         $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
     }
-    $rQuery = "REPLACE INTO `transcoding_profiles`(" . $rCols . ") VALUES(" . $rValues . ");";
+    $rQuery = "REPLACE INTO `profiles`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
         if (isset(ipTV_lib::$request["edit"])) {
             $rInsertID = intval(ipTV_lib::$request["edit"]);

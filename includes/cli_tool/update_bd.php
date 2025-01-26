@@ -7,6 +7,7 @@ $ipTV_db->query("CREATE TABLE IF NOT EXISTS `queue` (`id` int(11) NOT NULL AUTO_
 $ipTV_db->query("CREATE TABLE IF NOT EXISTS `rtmp_ips` (`id` int(11) NOT NULL AUTO_INCREMENT, `ip` varchar(255) DEFAULT NULL, `password` varchar(128) DEFAULT NULL, `notes` mediumtext, `push` tinyint(1) DEFAULT NULL, `pull` tinyint(1) DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `ip` (`ip`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
 
 $ipTV_db->query("RENAME TABLE `streaming_servers` TO `servers`;");
+$ipTV_db->query("RENAME TABLE `transcoding_profiles` TO `profiles`;");
 
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `sysctl` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL");
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `video_devices` mediumtext COLLATE utf8_unicode_ci");

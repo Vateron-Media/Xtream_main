@@ -18,7 +18,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
 
 function loadCron() {
     global $ipTV_db;
-    $ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `transcoding_profiles` t2 ON t2.profile_id = t1.transcode_profile_id WHERE t1.type = 3');
+    $ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `profiles` t2 ON t2.profile_id = t1.transcode_profile_id WHERE t1.type = 3');
     if (0 < $ipTV_db->num_rows()) {
         $streams = $ipTV_db->get_rows();
         foreach ($streams as $stream) {
