@@ -39,7 +39,7 @@ function loadCron() {
     }
     $rUpdateQuery = rtrim($rUpdateQuery, ',');
     if (!empty($rUpdateQuery)) {
-        $ipTV_db->query('INSERT INTO `users`(`id`,`last_ip`,`last_activity`,`last_activity_array`) VALUES ' . $rUpdateQuery . ' ON DUPLICATE KEY UPDATE `id`=VALUES(`id`), `last_ip`=VALUES(`last_ip`), `last_activity`=VALUES(`last_activity`), `last_activity_array`=VALUES(`last_activity_array`);');
+        $ipTV_db->query('INSERT INTO `lines`(`id`,`last_ip`,`last_activity`,`last_activity_array`) VALUES ' . $rUpdateQuery . ' ON DUPLICATE KEY UPDATE `id`=VALUES(`id`), `last_ip`=VALUES(`last_ip`), `last_activity`=VALUES(`last_activity`), `last_activity_array`=VALUES(`last_activity_array`);');
     }
 }
 function parseLog($rFile) {

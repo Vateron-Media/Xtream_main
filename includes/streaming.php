@@ -277,13 +277,13 @@ class ipTV_streaming {
             }
         } else {
             if (empty($password) && empty($userID) && strlen($username) == 32) {
-                self::$ipTV_db->query('SELECT * FROM `users` WHERE `is_mag` = 0 AND `is_e2` = 0 AND `access_token` = ? AND LENGTH(`access_token`) = 32', $username);
+                self::$ipTV_db->query('SELECT * FROM `lines` WHERE `is_mag` = 0 AND `is_e2` = 0 AND `access_token` = ? AND LENGTH(`access_token`) = 32', $username);
             } else {
                 if (!empty($username) && !empty($password)) {
-                    self::$ipTV_db->query('SELECT `users`.*, `mag_devices`.`token` AS `mag_token` FROM `users` LEFT JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` WHERE `username` = ? AND `password` = ? LIMIT 1', $username, $password);
+                    self::$ipTV_db->query('SELECT `lines`.*, `mag_devices`.`token` AS `mag_token` FROM `lines` LEFT JOIN `mag_devices` ON `mag_devices`.`user_id` = `lines`.`id` WHERE `username` = ? AND `password` = ? LIMIT 1', $username, $password);
                 } else {
                     if (!empty($userID)) {
-                        self::$ipTV_db->query('SELECT `users`.*, `mag_devices`.`token` AS `mag_token` FROM `users` LEFT JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` WHERE `id` = ?', $userID);
+                        self::$ipTV_db->query('SELECT `lines`.*, `mag_devices`.`token` AS `mag_token` FROM `lines` LEFT JOIN `mag_devices` ON `mag_devices`.`user_id` = `lines`.`id` WHERE `id` = ?', $userID);
                     } else {
                         return false;
                     }
@@ -301,7 +301,7 @@ class ipTV_streaming {
             if (ipTV_lib::$cached) {
                 ipTV_lib::setSignal('forced_country/' . $userInfo['id'], $userInfo['forced_country']);
             } else {
-                self::$ipTV_db->query('UPDATE `users` SET `forced_country` = ? WHERE `id` = ?', $userInfo['forced_country'], $userInfo['id']);
+                self::$ipTV_db->query('UPDATE `lines` SET `forced_country` = ? WHERE `id` = ?', $userInfo['forced_country'], $userInfo['id']);
             }
         }
         $userInfo['bouquet'] = json_decode($userInfo['bouquet'], true);
@@ -355,7 +355,7 @@ class ipTV_streaming {
                 if (ipTV_lib::$cached) {
                     ipTV_lib::setSignal('isp/' . $userInfo['id'], json_encode(array($userInfo['con_isp_name'], $userInfo['isp_asn'])));
                 } else {
-                    self::$ipTV_db->query('UPDATE `users` SET `isp_desc` = ?, `as_number` = ? WHERE `id` = ?', $userInfo['con_isp_name'], $userInfo['isp_asn'], $userInfo['id']);
+                    self::$ipTV_db->query('UPDATE `lines` SET `isp_desc` = ?, `as_number` = ? WHERE `id` = ?', $userInfo['con_isp_name'], $userInfo['isp_asn'], $userInfo['id']);
                 }
             }
         }
@@ -1307,7 +1307,7 @@ class ipTV_streaming {
             if (count($rWhere) > 0) {
                 $rExtra = 'WHERE ' . implode(' AND ', $rWhere);
             }
-            $rQuery = 'SELECT t2.*,t3.*,t5.bitrate,t1.*,t1.uuid AS `uuid` FROM `lines_live` t1 LEFT JOIN `users` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_servers` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id ' . $rExtra . ' ORDER BY t1.activity_id ASC';
+            $rQuery = 'SELECT t2.*,t3.*,t5.bitrate,t1.*,t1.uuid AS `uuid` FROM `lines_live` t1 LEFT JOIN `lines` t2 ON t2.id = t1.user_id LEFT JOIN `streams` t3 ON t3.id = t1.stream_id LEFT JOIN `streams_servers` t5 ON t5.stream_id = t1.stream_id AND t5.server_id = t1.server_id ' . $rExtra . ' ORDER BY t1.activity_id ASC';
             self::$ipTV_db->query($rQuery);
             return self::$ipTV_db->get_rows(true, 'user_id', false);
         }

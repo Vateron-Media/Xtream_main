@@ -17,7 +17,7 @@ if (isset(ipTV_lib::$request["submit_e2"])) {
                     exit;
                 }
                 $rCurE2 = getEnigma(ipTV_lib::$request["edit"]);
-                $ipTV_db_admin->query("DELETE FROM `users` WHERE `id` = " . intval($rCurE2["user_id"]) . ";"); // Delete existing user.
+                $ipTV_db_admin->query("DELETE FROM `lines` WHERE `id` = " . intval($rCurE2["user_id"]) . ";"); // Delete existing user.
                 $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rCurE2["user_id"]) . ";");
             } elseif (!hasPermissions("adv", "add_e2")) {
                 exit;
@@ -39,7 +39,7 @@ if (isset(ipTV_lib::$request["submit_e2"])) {
                     $rValues .= '\'' . $rValue . '\'';
                 }
             }
-            $rQuery = "INSERT INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
+            $rQuery = "INSERT INTO `lines`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
                 $rNewID = $ipTV_db_admin->last_insert_id();
                 $rArray = array("user_id" => $rNewID, "mac" => ipTV_lib::$request["mac"]);
@@ -122,8 +122,8 @@ include "header.php";
                 <div class="card">
                     <div class="card-body">
                         <form action="./enigma.php<?php if (isset($rEditID)) {
-                            echo "?id=" . $rEditID;
-                        } ?>" method="POST" id="enigma_form" data-parsley-validate="">
+                                                        echo "?id=" . $rEditID;
+                                                    } ?>" method="POST" id="enigma_form" data-parsley-validate="">
                             <?php if (isset($rE2Arr)) { ?>
                                 <input type="hidden" name="edit" value="<?= $rEditID ?>" />
                             <?php } ?>
@@ -150,8 +150,8 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" id="mac" name="mac"
                                                             value="<?php if (isset($rE2Arr)) {
-                                                                echo htmlspecialchars($rE2Arr["mac"]);
-                                                            } ?>" required data-parsley-trigger="change">
+                                                                        echo htmlspecialchars($rE2Arr["mac"]);
+                                                                    } ?>" required data-parsley-trigger="change">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
@@ -174,10 +174,10 @@ include "header.php";
                                         <ul class="list-inline wizard mb-0">
                                             <li class="next list-inline-item float-right">
                                                 <input name="submit_e2" type="submit" class="btn btn-primary" value="<?php if (isset($rE2Arr)) {
-                                                    echo $_["edit"];
-                                                } else {
-                                                    echo $_["add"];
-                                                } ?>" />
+                                                                                                                            echo $_["edit"];
+                                                                                                                        } else {
+                                                                                                                            echo $_["add"];
+                                                                                                                        } ?>" />
                                             </li>
                                         </ul>
                                     </div>
@@ -220,19 +220,19 @@ include "header.php";
 <script src="assets/js/app.min.js"></script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#paired_user').select2({
             ajax: {
                 url: './api.php',
                 dataType: 'json',
-                data: function (params) {
+                data: function(params) {
                     return {
                         search: params.term,
                         action: 'userlist',
                         page: params.page
                     };
                 },
-                processResults: function (data, params) {
+                processResults: function(data, params) {
                     params.page = params.page || 1;
                     return {
                         results: data.items,
@@ -247,7 +247,7 @@ include "header.php";
             placeholder: '<?= $_["search_user"] ?>'
         });
 
-        $(document).keypress(function (event) {
+        $(document).keypress(function(event) {
             if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
         });
 

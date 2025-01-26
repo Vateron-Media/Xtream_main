@@ -97,7 +97,7 @@ if (!isset(ipTV_lib::$request['update'])) {
 
         // $rCount = array('reg_users' => array('Users & Resellers', 0), 'users' => array('Lines - Standard, MAG & Enigma2 Devices', 0), 'enigma2_devices' => array('Device Info - Engima2', 0), 'mag_devices' => array('Device Info - MAG', 0), 'user_output' => array('Line Output - HLS, MPEG-TS & RTMP', 0), 'streaming_servers' => array('Servers - Load Balancers', 0), 'series' => array('TV Series', 0), 'series_episodes' => array('TV Episodes', 0), 'streams' => array('Streams - Live, Radio, Created & VOD', 0), 'streams_sys' => array('Stream Servers', 0), 'streams_options' => array('Stream Options', 0), 'stream_categories' => array('Stream Categories', 0), 'bouquets' => array('Bouquets', 0), 'member_groups' => array('Member Groups', 0), 'packages' => array('Reseller Packages', 0), 'rtmp_ips' => array("RTMP IP's", 0), 'epg' => array('EPG Providers ', 0), 'blocked_ips' => array('Blocked IP Addresses', 0), 'blocked_user_agents' => array('Blocked User-Agents', 0), 'isp_addon' => array("Blocked ISP's", 0), 'tickets' => array('Tickets', 0), 'tickets_replies' => array('Ticket Replies', 0), 'watch_folders' => array('Watch Folders', 0), 'members' => array('Users & Resellers', 0), 'epg_sources' => array('EPG Providers', 0), 'blocked_isps' => array("Blocked ISP's", 0), 'categories' => array('Stream Categories', 0), 'groups' => array('Member Groups', 0), 'servers' => array('Servers - Load Balancers', 0), 'stream_servers' => array('Stream Servers', 0));
 
-        $rCount = array('streaming_servers' => array('Servers - Load Balancers', 0),'servers' => array('Servers - Load Balancers', 0));
+        $rCount = array('users' => array('Lines - Standard, MAG & Enigma2 Devices', 0), 'streaming_servers' => array('Servers - Load Balancers', 0), 'servers' => array('Servers - Load Balancers', 0));
 
         foreach (array_keys($rCount) as $rTable) {
             try {
@@ -121,7 +121,7 @@ if (!isset(ipTV_lib::$request['update'])) {
     if (!($rFirstRun || checkPermissions())) {
         goHome();
     }
-    ?>
+?>
 
     <!DOCTYPE html>
     <html lang="en">
@@ -165,11 +165,11 @@ if (!isset(ipTV_lib::$request['update'])) {
                     <div class="logo-box">
                         <a href="#" class="logo text-center">
                             <span class="logo-lg">
-                                <img src="<?php $rSettings["logo_url"] ? print ($rSettings["logo_url"]) : print ("/assets/images/logo.png") ?>"
+                                <img src="<?php $rSettings["logo_url"] ? print($rSettings["logo_url"]) : print("/assets/images/logo.png") ?>"
                                     alt="" height="26">
                             </span>
                             <span class="logo-sm">
-                                <img src="<?php $rSettings["logo_url_sidebar"] ? print ($rSettings["logo_url_sidebar"]) : print ("/assets/images/logo-sm.png") ?>"
+                                <img src="<?php $rSettings["logo_url_sidebar"] ? print($rSettings["logo_url_sidebar"]) : print("/assets/images/logo-sm.png") ?>"
                                     alt="" height="28">
                             </span>
                         </a>
@@ -181,9 +181,9 @@ if (!isset(ipTV_lib::$request['update'])) {
         </header>
         <!-- End Navigation Bar-->
         <div class="wrapper boxed-layout" <?php if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
-        } else {
-            ?> style="display: none;" <?php
-        } ?>>
+                                            } else {
+                                            ?> style="display: none;" <?php
+                                                                    } ?>>
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
@@ -211,7 +211,7 @@ if (!isset(ipTV_lib::$request['update'])) {
                                         </ul>
                                     </div>
                                 </div>
-                            <?php } else {
+                                <?php } else {
                                 if (isset(ipTV_lib::$request['new']) && $rFirstRun) { ?>
                                     <form action="./setup.php" method="POST" data-parsley-validate="">
                                         <div class="row">
@@ -329,7 +329,7 @@ if (!isset(ipTV_lib::$request['update'])) {
                                                                             </div>
                                                                         </td>
                                                                     </tr>
-                                                                <?php }
+                                                            <?php }
                                                             } ?>
                                                         </tbody>
                                                     </table>
@@ -355,7 +355,7 @@ if (!isset(ipTV_lib::$request['update'])) {
                                             </div>
                                         </div>
                                     </form>
-                                <?php }
+                            <?php }
                             } ?>
                         </div>
                     </div>
@@ -374,7 +374,7 @@ if (!isset(ipTV_lib::$request['update'])) {
     </body>
 
     </html>
-    <?php
+<?php
 } else {
     if (file_exists(TMP_PATH . '.migration.log')) {
         $rLog = file_get_contents(TMP_PATH . '.migration.log');
@@ -384,16 +384,14 @@ if (!isset(ipTV_lib::$request['update'])) {
             $rStatus = 1;
         }
 
-        if ($rStatus != 2) {
-        } else {
+        if ($rStatus == 2) {
             unlink(TMP_PATH . '.migration.options');
             unlink(TMP_PATH . '.migration.status');
             unlink(TMP_PATH . '.migration.pid');
             unlink(TMP_PATH . '.migration.log');
         }
 
-        echo json_encode(array('result' => true, 'status' => $rStatus, 'data' =>
-            $rLog));
+        echo json_encode(array('result' => true, 'status' => $rStatus, 'data' => $rLog));
     } else {
         echo json_encode(array('result' => false));
     }

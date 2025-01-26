@@ -64,7 +64,7 @@ if (isset(ipTV_lib::$request["submit_user"])) {
             }
             if (count($rQueries) > 0) {
                 $rQueryString = join(",", $rQueries);
-                $rQuery = "UPDATE `users` SET " . $rQueryString . " WHERE `id` = " . intval($rUser) . ";";
+                $rQuery = "UPDATE `lines` SET " . $rQueryString . " WHERE `id` = " . intval($rUser) . ";";
                 $ipTV_db_admin->query($rQuery);
             }
             if (isset(ipTV_lib::$request["c_access_output"])) {
@@ -199,8 +199,8 @@ include "header.php";
                                                 <select id="show_entries" class="form-control" data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                            echo " selected";
-                                                        } ?> value="<?= $rShow ?>">
+                                                                    echo " selected";
+                                                                } ?> value="<?= $rShow ?>">
                                                             <?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
@@ -614,7 +614,7 @@ include "header.php";
     }
 
     function toggleUsers() {
-        $("#datatable-mass tr").each(function () {
+        $("#datatable-mass tr").each(function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                 if ($(this).find("td:eq(0)").html()) {
@@ -631,7 +631,7 @@ include "header.php";
     }
 
     function toggleBouquets() {
-        $("#datatable-bouquets tr").each(function () {
+        $("#datatable-bouquets tr").each(function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                 if ($(this).find("td:eq(0)").html()) {
@@ -648,9 +648,9 @@ include "header.php";
             }
         });
     }
-    (function ($) {
-        $.fn.inputFilter = function (inputFilter) {
-            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+    (function($) {
+        $.fn.inputFilter = function(inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
                 if (inputFilter(this.value)) {
                     this.oldValue = this.value;
                     this.oldSelectionStart = this.selectionStart;
@@ -662,12 +662,12 @@ include "header.php";
             });
         };
     }(jQuery));
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('select').select2({
             width: '100%'
         })
         var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-        elems.forEach(function (html) {
+        elems.forEach(function(html) {
             var switchery = new Switchery(html);
             window.rSwitches[$(html).attr("id")] = switchery;
         });
@@ -679,16 +679,16 @@ include "header.php";
                 format: 'YYYY-MM-DD'
             }
         });
-        $("#no_expire").change(function () {
+        $("#no_expire").change(function() {
             if ($(this).prop("checked")) {
                 $("#exp_date").prop("disabled", true);
             } else {
                 $("#exp_date").removeAttr("disabled");
             }
         });
-        $("#user_form").submit(function (e) {
+        $("#user_form").submit(function(e) {
             var rBouquets = [];
-            $("#datatable-bouquets tr.selected").each(function () {
+            $("#datatable-bouquets tr.selected").each(function() {
                 rBouquets.push($(this).find("td:eq(0)").html());
             });
             $("#bouquets_selected").val(JSON.stringify(rBouquets));
@@ -698,16 +698,16 @@ include "header.php";
                 $.toast("<?= $_["select_at_least_one_user_to_edit"] ?>");
             }
         });
-        $("input[type=checkbox].activate").change(function () {
+        $("input[type=checkbox].activate").change(function() {
             if ($(this).is(":checked")) {
                 if ($(this).data("type") == "switch") {
                     window.rSwitches[$(this).data("name")].enable();
                 } else if ($(this).data("type") == "output") {
-                    $(".output").each(function () {
+                    $(".output").each(function() {
                         $(this).prop("disabled", false);
                     });
                 } else if ($(this).data("type") == "bouquet") {
-                    $(".bouquet-checkbox").each(function () {
+                    $(".bouquet-checkbox").each(function() {
                         $(this).prop("disabled", false);
                     });
                 } else {
@@ -724,11 +724,11 @@ include "header.php";
                 if ($(this).data("type") == "switch") {
                     window.rSwitches[$(this).data("name")].disable();
                 } else if ($(this).data("type") == "output") {
-                    $(".output").each(function () {
+                    $(".output").each(function() {
                         $(this).prop("disabled", true);
                     });
                 } else if ($(this).data("type") == "bouquet") {
-                    $(".bouquet-checkbox").each(function () {
+                    $(".bouquet-checkbox").each(function() {
                         $(this).prop("disabled", true);
                     });
                 } else {
@@ -744,16 +744,16 @@ include "header.php";
             }
         });
         $(".clockpicker").clockpicker();
-        $(window).keypress(function (event) {
+        $(window).keypress(function(event) {
             if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
         });
-        $("#probesize_ondemand").inputFilter(function (value) {
+        $("#probesize_ondemand").inputFilter(function(value) {
             return /^\d*$/.test(value);
         });
-        $("#delay_minutes").inputFilter(function (value) {
+        $("#delay_minutes").inputFilter(function(value) {
             return /^\d*$/.test(value);
         });
-        $("#tv_archive_duration").inputFilter(function (value) {
+        $("#tv_archive_duration").inputFilter(function(value) {
             return /^\d*$/.test(value);
         });
         $("form").attr('autocomplete', 'off');
@@ -764,14 +764,14 @@ include "header.php";
                     next: "<i class='mdi mdi-chevron-right'>"
                 }
             },
-            drawCallback: function () {
+            drawCallback: function() {
                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
             },
             processing: true,
             serverSide: true,
             ajax: {
                 url: "./table_search.php",
-                "data": function (d) {
+                "data": function(d) {
                     d.id = "users",
                         d.filter = getFilter(),
                         d.reseller = getReseller(),
@@ -779,15 +779,15 @@ include "header.php";
                 }
             },
             columnDefs: [{
-                "className": "dt-center",
-                "targets": [0, 4, 6, 7, 9]
-            },
-            {
-                "visible": false,
-                "targets": [2, 5, 8, 10, 11]
-            }
+                    "className": "dt-center",
+                    "targets": [0, 4, 6, 7, 9]
+                },
+                {
+                    "visible": false,
+                    "targets": [2, 5, 8, 10, 11]
+                }
             ],
-            "rowCallback": function (row, data) {
+            "rowCallback": function(row, data) {
                 if ($.inArray(data[0], window.rSelected) !== -1) {
                     $(row).addClass("selected");
                 }
@@ -799,7 +799,7 @@ include "header.php";
                 "className": "dt-center",
                 "targets": [0, 2, 3]
             }],
-            "rowCallback": function (row, data) {
+            "rowCallback": function(row, data) {
                 if ($.inArray(data[0], window.rBouquets) !== -1) {
                     $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
                 }
@@ -808,21 +808,21 @@ include "header.php";
             bInfo: false,
             searching: false
         });
-        $('#user_search').keyup(function () {
+        $('#user_search').keyup(function() {
             rTable.search($(this).val()).draw();
         })
-        $('#show_entries').change(function () {
+        $('#show_entries').change(function() {
             rTable.page.len($(this).val()).draw();
         })
-        $('#reseller_search').change(function () {
+        $('#reseller_search').change(function() {
             rTable.ajax.reload(null, false);
         })
-        $('#filter').change(function () {
+        $('#filter').change(function() {
             rTable.ajax.reload(null, false);
         })
         $("#datatable-mass").selectable({
             filter: 'tr',
-            selected: function (event, ui) {
+            selected: function(event, ui) {
                 if ($(ui.selected).hasClass('selectedfilter')) {
                     $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                     window.rSelected.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSelected), 1);
@@ -835,7 +835,7 @@ include "header.php";
         });
         $("#datatable-bouquets").selectable({
             filter: 'tr',
-            selected: function (event, ui) {
+            selected: function(event, ui) {
                 if ($(ui.selected).hasClass('selectedfilter')) {
                     $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                     window.rBouquets.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rBouquets), 1);

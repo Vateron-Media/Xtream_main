@@ -35,7 +35,7 @@ if (isset(ipTV_lib::$request["submit_movies"])) {
 if (isset(ipTV_lib::$request["submit_users"])) {
     $rUsers = json_decode(ipTV_lib::$request["users"], true);
     foreach ($rUsers as $rUser) {
-        $ipTV_db_admin->query("DELETE FROM `users` WHERE `id` = " . intval($rUser) . ";");
+        $ipTV_db_admin->query("DELETE FROM `lines` WHERE `id` = " . intval($rUser) . ";");
         $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
         $ipTV_db_admin->query("DELETE FROM `enigma2_devices` WHERE `user_id` = " . intval($rUser) . ";");
         $ipTV_db_admin->query("DELETE FROM `mag_devices` WHERE `user_id` = " . intval($rUser) . ";");
@@ -190,8 +190,8 @@ include "header.php";
                                                     </option>
                                                     <?php foreach ($rCategories as $rCategory) { ?>
                                                         <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
-                                                              echo " selected";
-                                                          } ?>><?= $rCategory["category_name"] ?>
+                                                                                                    echo " selected";
+                                                                                                } ?>><?= $rCategory["category_name"] ?>
                                                         </option>
                                                     <?php } ?>
                                                 </select>
@@ -202,8 +202,8 @@ include "header.php";
                                                 <select id="show_entries" class="form-control" data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                            echo " selected";
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                    echo " selected";
+                                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -247,8 +247,8 @@ include "header.php";
                                                     </option>
                                                     <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
                                                         <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
-                                                              echo " selected";
-                                                          } ?>><?= $rCategory["category_name"] ?>
+                                                                                                    echo " selected";
+                                                                                                } ?>><?= $rCategory["category_name"] ?>
                                                         </option>
                                                     <?php } ?>
                                                 </select>
@@ -270,8 +270,8 @@ include "header.php";
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                            echo " selected";
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                    echo " selected";
+                                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -317,8 +317,8 @@ include "header.php";
                                                     <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                     <?php foreach (getCategories_admin("series") as $rCategory) { ?>
                                                         <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
-                                                              echo " selected";
-                                                          } ?>><?= $rCategory["category_name"] ?>
+                                                                                                    echo " selected";
+                                                                                                } ?>><?= $rCategory["category_name"] ?>
                                                         </option>
                                                     <?php } ?>
                                                 </select>
@@ -328,8 +328,8 @@ include "header.php";
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                            echo " selected";
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                    echo " selected";
+                                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -392,8 +392,8 @@ include "header.php";
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                            echo " selected";
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                    echo " selected";
+                                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -460,8 +460,8 @@ include "header.php";
                                                     data-toggle="select2">
                                                     <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                         <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                            echo " selected";
-                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                                    echo " selected";
+                                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                         <?php } ?>
                                                 </select>
                                             </div>
@@ -585,7 +585,7 @@ include "header.php";
     }
 
     function toggleStreams() {
-        $("#datatable-md1 tr").each(function () {
+        $("#datatable-md1 tr").each(function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                 if ($(this).find("td:eq(0)").html()) {
@@ -601,7 +601,7 @@ include "header.php";
     }
 
     function toggleMovies() {
-        $("#datatable-md2 tr").each(function () {
+        $("#datatable-md2 tr").each(function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                 if ($(this).find("td:eq(0)").html()) {
@@ -617,7 +617,7 @@ include "header.php";
     }
 
     function toggleSeries() {
-        $("#datatable-md4 tr").each(function () {
+        $("#datatable-md4 tr").each(function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                 if ($(this).find("td:eq(0)").html()) {
@@ -633,7 +633,7 @@ include "header.php";
     }
 
     function toggleEpisodes() {
-        $("#datatable-md5 tr").each(function () {
+        $("#datatable-md5 tr").each(function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                 if ($(this).find("td:eq(0)").html()) {
@@ -649,7 +649,7 @@ include "header.php";
     }
 
     function toggleUsers() {
-        $("#datatable-md3 tr").each(function () {
+        $("#datatable-md3 tr").each(function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                 if ($(this).find("td:eq(0)").html()) {
@@ -663,9 +663,9 @@ include "header.php";
             }
         });
     }
-    (function ($) {
-        $.fn.inputFilter = function (inputFilter) {
-            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+    (function($) {
+        $.fn.inputFilter = function(inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
                 if (inputFilter(this.value)) {
                     this.oldValue = this.value;
                     this.oldSelectionStart = this.selectionStart;
@@ -677,46 +677,46 @@ include "header.php";
             });
         };
     }(jQuery));
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('select').select2({
             width: '100%'
         })
-        $("#stream_form").submit(function (e) {
+        $("#stream_form").submit(function(e) {
             $("#streams").val(JSON.stringify(window.rStreams));
             if (window.rStreams.length == 0) {
                 e.preventDefault();
                 $.toast("<?= $_["mass_delete_message_6"] ?>");
             }
         });
-        $("#movie_form").submit(function (e) {
+        $("#movie_form").submit(function(e) {
             $("#movies").val(JSON.stringify(window.rMovies));
             if (window.rMovies.length == 0) {
                 e.preventDefault();
                 $.toast("<?= $_["mass_delete_message_7"] ?>");
             }
         });
-        $("#series_form").submit(function (e) {
+        $("#series_form").submit(function(e) {
             $("#series").val(JSON.stringify(window.rSeries));
             if (window.rSeries.length == 0) {
                 e.preventDefault();
                 $.toast("<?= $_["mass_delete_message_8"] ?>");
             }
         });
-        $("#episodes_form").submit(function (e) {
+        $("#episodes_form").submit(function(e) {
             $("#episodes").val(JSON.stringify(window.rEpisodes));
             if (window.rEpisodes.length == 0) {
                 e.preventDefault();
                 $.toast("<?= $_["mass_delete_message_9"] ?>");
             }
         });
-        $("#user_form").submit(function (e) {
+        $("#user_form").submit(function(e) {
             $("#users").val(JSON.stringify(window.rUsers));
             if (window.rUsers.length == 0) {
                 e.preventDefault();
                 $.toast("<?= $_["mass_delete_message_10"] ?>");
             }
         });
-        $(document).keypress(function (event) {
+        $(document).keypress(function(event) {
             if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
         });
         $("form").attr('autocomplete', 'off');
@@ -727,14 +727,14 @@ include "header.php";
                     next: "<i class='mdi mdi-chevron-right'>"
                 }
             },
-            drawCallback: function () {
+            drawCallback: function() {
                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
             },
             processing: true,
             serverSide: true,
             ajax: {
                 url: "./table_search.php",
-                "data": function (d) {
+                "data": function(d) {
                     d.id = "stream_list",
                         d.category = getStreamCategory(),
                         d.include_channels = true
@@ -744,20 +744,20 @@ include "header.php";
                 "className": "dt-center",
                 "targets": [0]
             }],
-            "rowCallback": function (row, data) {
+            "rowCallback": function(row, data) {
                 if ($.inArray(data[0], window.rStreams) !== -1) {
                     $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
                 }
             },
             pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
         });
-        $('#stream_search').keyup(function () {
+        $('#stream_search').keyup(function() {
             sTable.search($(this).val()).draw();
         })
-        $('#show_entries').change(function () {
+        $('#show_entries').change(function() {
             sTable.page.len($(this).val()).draw();
         })
-        $('#stream_category_search').change(function () {
+        $('#stream_category_search').change(function() {
             sTable.ajax.reload(null, false);
         })
         rTable = $("#datatable-md2").DataTable({
@@ -767,14 +767,14 @@ include "header.php";
                     next: "<i class='mdi mdi-chevron-right'>"
                 }
             },
-            drawCallback: function () {
+            drawCallback: function() {
                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
             },
             processing: true,
             serverSide: true,
             ajax: {
                 url: "./table_search.php",
-                "data": function (d) {
+                "data": function(d) {
                     d.id = "movie_list",
                         d.category = getMovieCategory(),
                         d.filter = getMovieFilter()
@@ -784,23 +784,23 @@ include "header.php";
                 "className": "dt-center",
                 "targets": [0, 3]
             }],
-            "rowCallback": function (row, data) {
+            "rowCallback": function(row, data) {
                 if ($.inArray(data[0], window.rMovies) !== -1) {
                     $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
                 }
             },
             pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
         });
-        $('#movie_search').keyup(function () {
+        $('#movie_search').keyup(function() {
             rTable.search($(this).val()).draw();
         })
-        $('#movie_show_entries').change(function () {
+        $('#movie_show_entries').change(function() {
             rTable.page.len($(this).val()).draw();
         })
-        $('#movie_category_search').change(function () {
+        $('#movie_category_search').change(function() {
             rTable.ajax.reload(null, false);
         })
-        $('#movie_filter').change(function () {
+        $('#movie_filter').change(function() {
             rTable.ajax.reload(null, false);
         })
         gTable = $("#datatable-md4").DataTable({
@@ -810,14 +810,14 @@ include "header.php";
                     next: "<i class='mdi mdi-chevron-right'>"
                 }
             },
-            drawCallback: function () {
+            drawCallback: function() {
                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
             },
             processing: true,
             serverSide: true,
             ajax: {
                 url: "./table_search.php",
-                "data": function (d) {
+                "data": function(d) {
                     d.id = "series_list",
                         d.category = getSeriesCategory()
                 }
@@ -826,20 +826,20 @@ include "header.php";
                 "className": "dt-center",
                 "targets": [0]
             }],
-            "rowCallback": function (row, data) {
+            "rowCallback": function(row, data) {
                 if ($.inArray(data[0], window.rSeries) !== -1) {
                     $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
                 }
             },
             pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
         });
-        $('#series_search').keyup(function () {
+        $('#series_search').keyup(function() {
             gTable.search($(this).val()).draw();
         })
-        $('#series_show_entries').change(function () {
+        $('#series_show_entries').change(function() {
             gTable.page.len($(this).val()).draw();
         })
-        $('#series_category_search').change(function () {
+        $('#series_category_search').change(function() {
             gTable.ajax.reload(null, false);
         })
         eTable = $("#datatable-md5").DataTable({
@@ -849,14 +849,14 @@ include "header.php";
                     next: "<i class='mdi mdi-chevron-right'>"
                 }
             },
-            drawCallback: function () {
+            drawCallback: function() {
                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
             },
             processing: true,
             serverSide: true,
             ajax: {
                 url: "./table_search.php",
-                "data": function (d) {
+                "data": function(d) {
                     d.id = "episode_list",
                         d.series = getEpisodeSeries(),
                         d.filter = getEpisodeFilter()
@@ -866,23 +866,23 @@ include "header.php";
                 "className": "dt-center",
                 "targets": [0, 3]
             }],
-            "rowCallback": function (row, data) {
+            "rowCallback": function(row, data) {
                 if ($.inArray(data[0], window.rSeries) !== -1) {
                     $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
                 }
             },
             pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
         });
-        $('#episode_search').keyup(function () {
+        $('#episode_search').keyup(function() {
             eTable.search($(this).val()).draw();
         })
-        $('#episode_show_entries').change(function () {
+        $('#episode_show_entries').change(function() {
             eTable.page.len($(this).val()).draw();
         })
-        $('#episode_series').change(function () {
+        $('#episode_series').change(function() {
             eTable.ajax.reload(null, false);
         })
-        $('#episode_filter').change(function () {
+        $('#episode_filter').change(function() {
             eTable.ajax.reload(null, false);
         })
         uTable = $("#datatable-md3").DataTable({
@@ -892,14 +892,14 @@ include "header.php";
                     next: "<i class='mdi mdi-chevron-right'>"
                 }
             },
-            drawCallback: function () {
+            drawCallback: function() {
                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
             },
             processing: true,
             serverSide: true,
             ajax: {
                 url: "./table_search.php",
-                "data": function (d) {
+                "data": function(d) {
                     d.id = "users",
                         d.filter = getUserFilter(),
                         d.reseller = getReseller(),
@@ -907,36 +907,36 @@ include "header.php";
                 }
             },
             columnDefs: [{
-                "className": "dt-center",
-                "targets": [0, 4, 6, 7, 9]
-            },
-            {
-                "visible": false,
-                "targets": [2, 5, 8, 10, 11]
-            }
+                    "className": "dt-center",
+                    "targets": [0, 4, 6, 7, 9]
+                },
+                {
+                    "visible": false,
+                    "targets": [2, 5, 8, 10, 11]
+                }
             ],
-            "rowCallback": function (row, data) {
+            "rowCallback": function(row, data) {
                 if ($.inArray(data[0], window.rUsers) !== -1) {
                     $(row).addClass('selectedfilter').addClass('ui-selected').addClass("selected");
                 }
             },
             pageLength: <?= $rSettings["default_entries"] ?: 10 ?>
         });
-        $('#user_search').keyup(function () {
+        $('#user_search').keyup(function() {
             uTable.search($(this).val()).draw();
         })
-        $('#user_show_entries').change(function () {
+        $('#user_show_entries').change(function() {
             uTable.page.len($(this).val()).draw();
         })
-        $('#reseller_search').change(function () {
+        $('#reseller_search').change(function() {
             uTable.ajax.reload(null, false);
         })
-        $('#user_filter').change(function () {
+        $('#user_filter').change(function() {
             uTable.ajax.reload(null, false);
         })
         $("#datatable-md1").selectable({
             filter: 'tr',
-            selected: function (event, ui) {
+            selected: function(event, ui) {
                 if ($(ui.selected).hasClass('selectedfilter')) {
                     $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                     window.rStreams.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rStreams), 1);
@@ -948,7 +948,7 @@ include "header.php";
         });
         $("#datatable-md2").selectable({
             filter: 'tr',
-            selected: function (event, ui) {
+            selected: function(event, ui) {
                 if ($(ui.selected).hasClass('selectedfilter')) {
                     $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                     window.rMovies.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rMovies), 1);
@@ -960,7 +960,7 @@ include "header.php";
         });
         $("#datatable-md4").selectable({
             filter: 'tr',
-            selected: function (event, ui) {
+            selected: function(event, ui) {
                 if ($(ui.selected).hasClass('selectedfilter')) {
                     $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                     window.rSeries.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rSeries), 1);
@@ -972,7 +972,7 @@ include "header.php";
         });
         $("#datatable-md5").selectable({
             filter: 'tr',
-            selected: function (event, ui) {
+            selected: function(event, ui) {
                 if ($(ui.selected).hasClass('selectedfilter')) {
                     $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                     window.rEpisodes.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rEpisodes), 1);
@@ -984,7 +984,7 @@ include "header.php";
         });
         $("#datatable-md3").selectable({
             filter: 'tr',
-            selected: function (event, ui) {
+            selected: function(event, ui) {
                 if ($(ui.selected).hasClass('selectedfilter')) {
                     $(ui.selected).removeClass('selectedfilter').removeClass('ui-selected').removeClass("selected");
                     window.rUsers.splice($.inArray($(ui.selected).find("td:eq(0)").html(), window.rUsers), 1);

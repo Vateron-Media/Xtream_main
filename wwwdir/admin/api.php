@@ -109,7 +109,7 @@ switch ($action) {
                     $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
                     $user_data['is_mag'] = 1;
                     $query = GetColumnNames($user_data);
-                    if ($ipTV_db->query("UPDATE `users` SET {$query} WHERE id = ( SELECT user_id FROM mag_devices WHERE `mac` = ? )", base64_encode(strtoupper($mac)))) {
+                    if ($ipTV_db->query("UPDATE `lines` SET {$query} WHERE id = ( SELECT user_id FROM mag_devices WHERE `mac` = ? )", base64_encode(strtoupper($mac)))) {
                         if ($ipTV_db->affected_rows() > 0) {
                             echo json_encode(array('result' => true));
                             $ipTV_db->query('INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` ) VALUES( ?, ?, ?, ?, ? )', "SYSTEM API[{$user_ip}]", $mac, '-', time(), '[API->Edit MAG Device]');
@@ -148,7 +148,7 @@ switch ($action) {
                     }
                     if (!searchQuery('mag_devices', 'mac', $mac)) {
                         $query = queryParse($user_data);
-                        if ($ipTV_db->simple_query("INSERT INTO `users` {$query}")) {
+                        if ($ipTV_db->simple_query("INSERT INTO `lines` {$query}")) {
                             if ($ipTV_db->affected_rows() > 0) {
                                 $user_id = $ipTV_db->last_insert_id();
                                 foreach ($output_formats_types as $type) {
@@ -193,10 +193,10 @@ switch ($action) {
                     $username = ipTV_lib::$request['username'];
                     $password = ipTV_lib::$request['password'];
                     $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
-                    $ipTV_db->query('SELECT * FROM `users` WHERE `username` = ? and `password` = ?', $username, $password);
+                    $ipTV_db->query('SELECT * FROM `lines` WHERE `username` = ? and `password` = ?', $username, $password);
                     if ($ipTV_db->num_rows() > 0) {
                         $query = GetColumnNames($user_data);
-                        if ($ipTV_db->query("UPDATE `users` SET {$query} WHERE `username` = ? and `password` = ?", $username, $password)) {
+                        if ($ipTV_db->query("UPDATE `lines` SET {$query} WHERE `username` = ? and `password` = ?", $username, $password)) {
                             echo json_encode(array('result' => true));
                             $ipTV_db->query('INSERT INTO `reg_userlog` ( `owner`, `username`, `password`, `date`, `type` )VALUES( ?, ?, ?, ?, ? )', "SYSTEM API[{$user_ip}]", $username, $password, time(), '[API->Edit Line]');
                         } else {
@@ -232,10 +232,10 @@ switch ($action) {
                 if (array_key_exists('output_formats', $user_data)) {
                     unset($user_data['output_formats']);
                 }
-                $ipTV_db->query('SELECT id FROM `users` WHERE `username` = ? AND `password` = ? LIMIT 1', $user_data['username'], $user_data['password']);
+                $ipTV_db->query('SELECT id FROM `lines` WHERE `username` = ? AND `password` = ? LIMIT 1', $user_data['username'], $user_data['password']);
                 if ($ipTV_db->num_rows() == 0) {
                     $query = queryParse($user_data);
-                    if ($ipTV_db->simple_query("INSERT INTO `users` {$query}")) {
+                    if ($ipTV_db->simple_query("INSERT INTO `lines` {$query}")) {
                         if ($ipTV_db->affected_rows() > 0) {
                             $user_id = $ipTV_db->last_insert_id();
                             foreach ($output_formats_types as $type) {
