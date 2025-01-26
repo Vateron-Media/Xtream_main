@@ -40,6 +40,22 @@ INSERT INTO `access_output` (`access_output_id`, `output_name`, `output_key`, `o
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `access_codes`
+--
+
+CREATE TABLE IF NOT EXISTS `access_codes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` tinyint(4) DEFAULT '0',
+  `enabled` tinyint(4) DEFAULT '0',
+  `groups` mediumtext COLLATE utf8_unicode_ci,
+  `whitelist` mediumtext COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `blocked_ips`
 --
 
