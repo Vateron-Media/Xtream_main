@@ -30,7 +30,7 @@ function loadcli() {
             fclose($rOutput);
 
             echo 'Run python update.py' . "\n";
-            $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 5 WHERE `id` = ?;', SERVER_ID);
+            $ipTV_db->query('UPDATE `servers` SET `status` = 5 WHERE `id` = ?;', SERVER_ID);
             $rCommand = 'sudo /usr/bin/python3 ' . MAIN_DIR . 'update.py > /dev/null 2>&1 &';
             shell_exec($rCommand);
             exit(1);
@@ -43,7 +43,7 @@ function loadcli() {
                     }
                 }
             }
-            $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 1, `script_version` = ? WHERE `id` = ?;', SCRIPT_VERSION, SERVER_ID);
+            $ipTV_db->query('UPDATE `servers` SET `status` = 1, `script_version` = ? WHERE `id` = ?;', SCRIPT_VERSION, SERVER_ID);
 
             // // remove old script
             // if (!ipTV_lib::$Servers[SERVER_ID]['is_main']) {

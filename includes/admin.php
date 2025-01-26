@@ -141,9 +141,9 @@ function getStreamingServers($rActive = false) {
     global $ipTV_db_admin, $rPermissions;
     $return = array();
     if ($rActive) {
-        $ipTV_db_admin->query("SELECT * FROM `streaming_servers` WHERE `status` = 1 ORDER BY `id` ASC;");
+        $ipTV_db_admin->query("SELECT * FROM `servers` WHERE `status` = 1 ORDER BY `id` ASC;");
     } else {
-        $ipTV_db_admin->query("SELECT * FROM `streaming_servers` ORDER BY `id` ASC;");
+        $ipTV_db_admin->query("SELECT * FROM `servers` ORDER BY `id` ASC;");
     }
     if ($ipTV_db_admin->num_rows() > 0) {
         foreach ($ipTV_db_admin->get_rows() as $row) {
@@ -188,7 +188,7 @@ function getProtocol() {
 
 function getScriptVer() {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query("SELECT `script_version` FROM `streaming_servers` WHERE `is_main` = '1'");
+    $ipTV_db_admin->query("SELECT `script_version` FROM `servers` WHERE `is_main` = '1'");
     $version = $ipTV_db_admin->get_row()["script_version"];
     return $version;
 }
@@ -503,7 +503,7 @@ function getPanelLogs() {
 
 function getStreamingServersByID($rID) {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query("SELECT * FROM `streaming_servers` WHERE `id` = ?;", $rID);
+    $ipTV_db_admin->query("SELECT * FROM `servers` WHERE `id` = ?;", $rID);
     if ($ipTV_db_admin->num_rows() > 0) {
         return $ipTV_db_admin->get_row();
     }

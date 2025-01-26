@@ -537,7 +537,7 @@ if (isset(ipTV_lib::$request["action"])) {
             $rSub = ipTV_lib::$request["sub"];
             if ($rSub == "delete") {
                 if ($rServers[ipTV_lib::$request["server_id"]]["can_delete"] == 1) {
-                    $ipTV_db_admin->query("DELETE FROM `streaming_servers` WHERE `id` = " . intval($rServerID) . ";");
+                    $ipTV_db_admin->query("DELETE FROM `servers` WHERE `id` = " . intval($rServerID) . ";");
                     $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `server_id` = " . intval($rServerID) . ";");
                     // drop user mysql
                     $ipTV_db_admin->query("DROP USER 'lb_" . ipTV_lib::$request["server_id"] . "'@'" . $rServers[ipTV_lib::$request["server_id"]]["server_ip"] . "';");

@@ -28,7 +28,7 @@ if (isset($_SESSION['hash'])) {
             $rServerError = true;
         }
         if (($rServer["status"] == 3) && ($rServer["last_check_ago"] > 0)) {
-            $ipTV_db_admin->query("UPDATE `streaming_servers` SET `status` = 1 WHERE `id` = " . intval($rServer["id"]) . ";");
+            $ipTV_db_admin->query("UPDATE `servers` SET `status` = 1 WHERE `id` = " . intval($rServer["id"]) . ";");
             $rServers[intval($rServer["id"])]["status"] = 1;
         }
     }

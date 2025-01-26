@@ -164,8 +164,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 		}
 
 		if (!$rFirstRun && $rServers[SERVER_ID]['is_main']) {
-			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 0 WHERE `id` <> ?;', SERVER_ID);
-			$ipTV_db->query('UPDATE `streaming_servers` SET `is_main` = 1 WHERE `id` = ?;', SERVER_ID);
+			$ipTV_db->query('UPDATE `servers` SET `is_main` = 0 WHERE `id` <> ?;', SERVER_ID);
+			$ipTV_db->query('UPDATE `servers` SET `is_main` = 1 WHERE `id` = ?;', SERVER_ID);
 
 			if (stripos(ipTV_lib::$settings['server_name'], 'xtream') !== false || stripos(ipTV_lib::$settings['server_name'], 'zapx') !== false || stripos(ipTV_lib::$settings['server_name'], 'streamcreed') !== false) {
 				ipTV_lib::setSettings(["server_name" => "XC_VM"]);
@@ -208,7 +208,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			}
 		}
 
-		$ipTV_db->query('UPDATE `streaming_servers` SET `script_version` = ? WHERE `id` = ?;', SCRIPT_VERSION, SERVER_ID);
+		$ipTV_db->query('UPDATE `servers` SET `script_version` = ? WHERE `id` = ?;', SCRIPT_VERSION, SERVER_ID);
 	} else {
 		exit(0);
 	}
@@ -234,7 +234,7 @@ function isrunning() {
 
 function ServerInfo() {
 	global $ipTV_db;
-	$ipTV_db->query('SELECT * FROM `streaming_servers`');
+	$ipTV_db->query('SELECT * FROM `servers`');
 	$rServers = array();
 	$rOnlineStatus = array(1);
 

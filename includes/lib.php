@@ -351,7 +351,7 @@ class ipTV_lib {
         if (empty($_SERVER["REQUEST_SCHEME"])) {
             $_SERVER["REQUEST_SCHEME"] = "http";
         }
-        self::$ipTV_db->query("SELECT * FROM `streaming_servers`");
+        self::$ipTV_db->query("SELECT * FROM `servers`");
         $servers = array();
         $server_status = array(1, 3);
         foreach (self::$ipTV_db->get_rows() as $row) {
