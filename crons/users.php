@@ -162,7 +162,7 @@ function loadCron() {
         $rRestreamerArray = $rMaxConnectionsArray = array();
         $rUserIDs = ipTV_lib::confirmIDs(array_keys($rUsers));
         if (count($rUserIDs) > 0) {
-            $ipTV_db->query('SELECT `id`, `max_connections`, `is_restreamer` FROM `users` WHERE `id` IN (' . implode(',', $rUserIDs) . ');');
+            $ipTV_db->query('SELECT `id`, `max_connections`, `is_restreamer` FROM `lines` WHERE `id` IN (' . implode(',', $rUserIDs) . ');');
             foreach ($ipTV_db->get_rows() as $rRow) {
                 $rMaxConnectionsArray[$rRow['id']] = $rRow['max_connections'];
                 $rRestreamerArray[$rRow['id']] = $rRow['is_restreamer'];

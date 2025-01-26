@@ -129,7 +129,7 @@ if (isset(ipTV_lib::$request["submit_user"])) {
     $rArray["username"] = ipTV_lib::$request["username"];
     $rArray["password"] = ipTV_lib::$request["password"];
     if (!isset($rUser)) {
-        $ipTV_db_admin->query("SELECT `id` FROM `users` WHERE `username` = '" . $rArray["username"] . "';");
+        $ipTV_db_admin->query("SELECT `id` FROM `lines` WHERE `username` = '" . $rArray["username"] . "';");
         if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 6; // Username in use.
         }
@@ -212,7 +212,7 @@ if (isset(ipTV_lib::$request["submit_user"])) {
             $_STATUS = 5; // Not allowed to generate normal users!
         } else {
             // Checks completed, run,
-            $rQuery = "REPLACE INTO `users`(" . $rCols . ") VALUES(" . $rValues . ");";
+            $rQuery = "REPLACE INTO `lines`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
                 if (isset($rUser)) {
                     $rInsertID = intval($rUser["id"]);
@@ -311,12 +311,12 @@ include "header.php";
                         </ol>
                     </div>
                     <h4 class="page-title"><?php if (isset($rUser)) {
-                        echo $_["edit"];
-                    } else {
-                        echo $_["add"];
-                    } ?> <?php if (isset(ipTV_lib::$request["trial"])) {
-                          echo $_["trial"];
-                      } ?><?= $_["user"] ?></h4>
+                                                echo $_["edit"];
+                                            } else {
+                                                echo $_["add"];
+                                            } ?> <?php if (isset(ipTV_lib::$request["trial"])) {
+                                                        echo $_["trial"];
+                                                    } ?><?= $_["user"] ?></h4>
                 </div>
             </div>
         </div>
@@ -330,7 +330,7 @@ include "header.php";
                         </button>
                         <?= $_["you_have_used_your_allowance"] ?>
                     </div>
-                <?php }
+                    <?php }
                 if (isset($_STATUS)) {
                     if ($_STATUS == 0) { ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -408,8 +408,8 @@ include "header.php";
                 <div class="card">
                     <div class="card-body">
                         <form action="./user_reseller.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
-                        } ?>" method="POST" id="user_form">
+                                                                echo "?id=" . ipTV_lib::$request["id"];
+                                                            } ?>" method="POST" id="user_form">
                             <?php if (isset($rUser)) { ?>
                                 <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
                             <?php }
@@ -449,12 +449,12 @@ include "header.php";
                                                         for="username"><?= $_["username"] ?></label>
                                                     <div class="col-md-8">
                                                         <input<?php if ((!$rPermissions["allow_change_pass"]) && (!$rSettings["change_usernames"])) {
-                                                            echo $_[" disabled"];
-                                                        } ?> type="text" class="form-control" id="username"
+                                                                    echo $_[" disabled"];
+                                                                } ?> type="text" class="form-control" id="username"
                                                             name="username"
                                                             placeholder="<?= $_["auto_generate_if_blank"] ?>" value="<?php if (isset($rUser)) {
-                                                                  echo htmlspecialchars($rUser["username"]);
-                                                              } ?>">
+                                                                                                                            echo htmlspecialchars($rUser["username"]);
+                                                                                                                        } ?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4" id="pass">
@@ -462,12 +462,12 @@ include "header.php";
                                                         for="password"><?= $_["password"] ?></label>
                                                     <div class="col-md-8">
                                                         <input<?php if (!$rPermissions["allow_change_pass"]) {
-                                                            echo " disabled";
-                                                        } ?> type="text" class="form-control"
+                                                                    echo " disabled";
+                                                                } ?> type="text" class="form-control"
                                                             id="password" name="password"
                                                             placeholder="<?= $_["auto_generate_if_blank"] ?>" value="<?php if (isset($rUser)) {
-                                                                  echo htmlspecialchars($rUser["password"]);
-                                                              } ?>">
+                                                                                                                            echo htmlspecialchars($rUser["password"]);
+                                                                                                                        } ?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
@@ -478,12 +478,12 @@ include "header.php";
                                                             class="form-control select2" data-toggle="select2">
                                                             <?php foreach ($rRegisteredUsers as $rRegisteredUser) { ?>
                                                                 <option <?php if (isset($rUser)) {
-                                                                    if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
-                                                                        echo "selected ";
-                                                                    }
-                                                                } elseif ($rUserInfo["id"] == $rRegisteredUser["id"]) {
-                                                                    echo "selected ";
-                                                                } ?>value="<?= $rRegisteredUser["id"] ?>">
+                                                                            if (intval($rUser["member_id"]) == intval($rRegisteredUser["id"])) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } elseif ($rUserInfo["id"] == $rRegisteredUser["id"]) {
+                                                                            echo "selected ";
+                                                                        } ?>value="<?= $rRegisteredUser["id"] ?>">
                                                                     <?= $rRegisteredUser["username"] ?>
                                                                 </option>
                                                             <?php } ?>
@@ -492,22 +492,22 @@ include "header.php";
                                                 </div>
                                                 <div class="form-group row mb-4">
                                                     <label class="col-md-4 col-form-label" for="package"><?php if (isset($rUser)) {
-                                                        echo "Extend ";
-                                                    } ?><?= $_["package"] ?></label>
+                                                                                                                echo "Extend ";
+                                                                                                            } ?><?= $_["package"] ?></label>
                                                     <div class="col-md-8">
                                                         <select name="package" id="package" class="form-control select2"
                                                             data-toggle="select2">
                                                             <?php if (isset($rUser)) { ?>
                                                                 <option value=""><?= $_["no_changes"] ?>
                                                                 </option>
-                                                            <?php }
+                                                                <?php }
                                                             foreach (getPackages() as $rPackage) {
                                                                 if (in_array($rUserInfo["member_group_id"], json_decode($rPackage["groups"], true))) {
                                                                     if ((($rPackage["is_trial"]) && ((isset(ipTV_lib::$request["trial"])) or (isset(ipTV_lib::$request["trial"])))) or (($rPackage["is_official"]) && ((!isset(ipTV_lib::$request["trial"])) and (!isset(ipTV_lib::$request["trial"]))))) { ?>
                                                                         <option value="<?= $rPackage["id"] ?>">
                                                                             <?= $rPackage["package_name"] ?>
                                                                         </option>
-                                                                    <?php }
+                                                            <?php }
                                                                 }
                                                             } ?>
                                                         </select>
@@ -519,10 +519,10 @@ include "header.php";
                                                     <div class="col-md-2">
                                                         <input disabled type="text" class="form-control"
                                                             id="max_connections" name="max_connections" value="<?php if (isset($rUser)) {
-                                                                echo htmlspecialchars($rUser["max_connections"]);
-                                                            } else {
-                                                                echo "1";
-                                                            } ?>">
+                                                                                                                    echo htmlspecialchars($rUser["max_connections"]);
+                                                                                                                } else {
+                                                                                                                    echo "1";
+                                                                                                                } ?>">
                                                     </div>
                                                     <label class="col-md-4 col-form-label"
                                                         for="exp_date"><?= $_["expiry"] ?> <i data-toggle="tooltip"
@@ -533,12 +533,12 @@ include "header.php";
                                                         <input type="text" disabled
                                                             class="form-control text-center date" id="exp_date"
                                                             name="exp_date" value="<?php if (isset($rUser)) {
-                                                                if (!is_null($rUser["exp_date"])) {
-                                                                    echo date("Y-m-d", $rUser["exp_date"]);
-                                                                } else {
-                                                                    echo "\" disabled=\"disabled";
-                                                                }
-                                                            } ?>" data-toggle="date-picker"
+                                                                                        if (!is_null($rUser["exp_date"])) {
+                                                                                            echo date("Y-m-d", $rUser["exp_date"]);
+                                                                                        } else {
+                                                                                            echo "\" disabled=\"disabled";
+                                                                                        }
+                                                                                    } ?>" data-toggle="date-picker"
                                                             data-single-date-picker="true">
                                                     </div>
                                                 </div>
@@ -550,15 +550,15 @@ include "header.php";
                                                             class="mdi mdi-information"></i></label>
                                                     <div class="col-md-2">
                                                         <input<?php if (isset($rUser)) {
-                                                            echo " disabled";
-                                                        } ?>
+                                                                    echo " disabled";
+                                                                } ?>
                                                             name="is_mag" id="is_mag" type="checkbox" <?php if (isset($rUser)) {
-                                                                if ($rUser["is_mag"] == 1) {
-                                                                    echo "checked ";
-                                                                }
-                                                            } elseif (isset(ipTV_lib::$request["mag"])) {
-                                                                echo "checked ";
-                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                                                            if ($rUser["is_mag"] == 1) {
+                                                                                                                echo "checked ";
+                                                                                                            }
+                                                                                                        } elseif (isset(ipTV_lib::$request["mag"])) {
+                                                                                                            echo "checked ";
+                                                                                                        } ?>data-plugin="switchery" class="js-switch"
                                                             data-color="#039cfd" />
                                                     </div>
                                                     <label class="col-md-4 col-form-label"
@@ -568,15 +568,15 @@ include "header.php";
                                                             class="mdi mdi-information"></i></label>
                                                     <div class="col-md-2">
                                                         <input<?php if (isset($rUser)) {
-                                                            echo " disabled";
-                                                        } ?>
+                                                                    echo " disabled";
+                                                                } ?>
                                                             name="is_e2" id="is_e2" type="checkbox" <?php if (isset($rUser)) {
-                                                                if ($rUser["is_e2"] == 1) {
-                                                                    echo "checked ";
-                                                                }
-                                                            } elseif (isset(ipTV_lib::$request["e2"])) {
-                                                                echo "checked ";
-                                                            } ?>data-plugin="switchery" class="js-switch"
+                                                                                                        if ($rUser["is_e2"] == 1) {
+                                                                                                            echo "checked ";
+                                                                                                        }
+                                                                                                    } elseif (isset(ipTV_lib::$request["e2"])) {
+                                                                                                        echo "checked ";
+                                                                                                    } ?>data-plugin="switchery" class="js-switch"
                                                             data-color="#039cfd" />
                                                     </div>
                                                 </div>
@@ -587,8 +587,8 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" id="mac_address_mag"
                                                             name="mac_address_mag" value="<?php if (isset($rUser)) {
-                                                                echo htmlspecialchars($rUser["mac_address_mag"]);
-                                                            } ?>">
+                                                                                                echo htmlspecialchars($rUser["mac_address_mag"]);
+                                                                                            } ?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4" style="display:none" id="mac_entry_e2">
@@ -597,8 +597,8 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" id="mac_address_e2"
                                                             name="mac_address_e2" value="<?php if (isset($rUser)) {
-                                                                echo htmlspecialchars($rUser["mac_address_e2"]);
-                                                            } ?>">
+                                                                                                echo htmlspecialchars($rUser["mac_address_e2"]);
+                                                                                            } ?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
@@ -607,8 +607,8 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <textarea id="reseller_notes" name="reseller_notes"
                                                             class="form-control" rows="3" placeholder=""><?php if (isset($rUser)) {
-                                                                echo htmlspecialchars($rUser["reseller_notes"]);
-                                                            } ?></textarea>
+                                                                                                                echo htmlspecialchars($rUser["reseller_notes"]);
+                                                                                                            } ?></textarea>
                                                     </div>
                                                 </div>
                                             </div> <!-- end col -->
@@ -649,7 +649,7 @@ include "header.php";
                                                                 <?php if (isset($rUser)) {
                                                                     foreach (json_decode($rUser["allowed_ips"], true) as $rIP) { ?>
                                                                         <option value="<?= $rIP ?>"><?= $rIP ?></option>
-                                                                    <?php }
+                                                                <?php }
                                                                 } ?>
                                                             </select>
                                                         </div>
@@ -678,7 +678,7 @@ include "header.php";
                                                                 <?php if (isset($rUser)) {
                                                                     foreach (json_decode($rUser["allowed_ua"], true) as $rUA) { ?>
                                                                         <option value="<?= $rUA ?>"><?= $rUA ?></option>
-                                                                    <?php }
+                                                                <?php }
                                                                 } ?>
                                                             </select>
                                                         </div>
@@ -810,9 +810,9 @@ include "header.php";
 <script>
     var swObjs = {};
 
-    (function ($) {
-        $.fn.inputFilter = function (inputFilter) {
-            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+    (function($) {
+        $.fn.inputFilter = function(inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
                 if (inputFilter(this.value)) {
                     this.oldValue = this.value;
                     this.oldSelectionStart = this.selectionStart;
@@ -870,7 +870,7 @@ include "header.php";
         }
     }
 
-    $("#package").change(function () {
+    $("#package").change(function() {
         getPackage();
     });
 
@@ -880,44 +880,44 @@ include "header.php";
         rTable.draw();
         if ($("#package").val().length > 0) {
             $.getJSON("./api.php?action=get_package<?php if (isset(ipTV_lib::$request["trial"])) {
-                echo "_trial";
-            } ?>&package_id=" + $("#package").val() <?php if (isset($rUser)) {
-                 echo " + \"&user_id=" . $rUser["id"] . "\"";
-             } ?>, function (rData) {
-                    if (rData.result === true) {
-                        $("#max_connections").val(rData.data.max_connections);
-                        $("#cost_credits").html($.number(rData.data.cost_credits, 2));
-                        $("#remaining_credits").html($.number(<?= $rUserInfo["credits"] ?> - rData.data.cost_credits, 2));
-                        $("#exp_date").val(rData.data.exp_date);
-                        if (<?= $rUserInfo["credits"] ?> - rData.data.cost_credits < 0) {
-                            $("#credits-cost").hide();
-                            $("#no-credits").show()
-                            $(".purchase").prop('disabled', true);
-                        } else {
-                            $("#credits-cost").show();
-                            $("#no-credits").hide()
-                            $(".purchase").prop('disabled', false);
-                        }
-                        <?php if (!$canGenerateTrials) { ?>
-                            // No trials left!
-                            $(".purchase").prop('disabled', true);
-                        <?php }
-                        if (!isset($rUser)) { ?>
-                            if (rData.data.can_gen_mag == 0) {
-                                window.swObjs["is_mag"].disable();
-                                $("#mac_entry_mag").hide();
-                            }
-                            if (rData.data.can_gen_e2 == 0) {
-                                window.swObjs["is_e2"].disable();
-                                $("#mac_entry_e2").hide();
-                            }
-                        <?php } ?>
-                        $(rData.bouquets).each(function (rIndex) {
-                            rTable.row.add([rData.bouquets[rIndex].id, rData.bouquets[rIndex].bouquet_name, rData.bouquets[rIndex].bouquet_channels.length, rData.bouquets[rIndex].bouquet_series.length]);
-                        });
+                                                        echo "_trial";
+                                                    } ?>&package_id=" + $("#package").val() <?php if (isset($rUser)) {
+                                                                                                echo " + \"&user_id=" . $rUser["id"] . "\"";
+                                                                                            } ?>, function(rData) {
+                if (rData.result === true) {
+                    $("#max_connections").val(rData.data.max_connections);
+                    $("#cost_credits").html($.number(rData.data.cost_credits, 2));
+                    $("#remaining_credits").html($.number(<?= $rUserInfo["credits"] ?> - rData.data.cost_credits, 2));
+                    $("#exp_date").val(rData.data.exp_date);
+                    if (<?= $rUserInfo["credits"] ?> - rData.data.cost_credits < 0) {
+                        $("#credits-cost").hide();
+                        $("#no-credits").show()
+                        $(".purchase").prop('disabled', true);
+                    } else {
+                        $("#credits-cost").show();
+                        $("#no-credits").hide()
+                        $(".purchase").prop('disabled', false);
                     }
-                    rTable.draw();
-                });
+                    <?php if (!$canGenerateTrials) { ?>
+                        // No trials left!
+                        $(".purchase").prop('disabled', true);
+                    <?php }
+                    if (!isset($rUser)) { ?>
+                        if (rData.data.can_gen_mag == 0) {
+                            window.swObjs["is_mag"].disable();
+                            $("#mac_entry_mag").hide();
+                        }
+                        if (rData.data.can_gen_e2 == 0) {
+                            window.swObjs["is_e2"].disable();
+                            $("#mac_entry_e2").hide();
+                        }
+                    <?php } ?>
+                    $(rData.bouquets).each(function(rIndex) {
+                        rTable.row.add([rData.bouquets[rIndex].id, rData.bouquets[rIndex].bouquet_name, rData.bouquets[rIndex].bouquet_channels.length, rData.bouquets[rIndex].bouquet_series.length]);
+                    });
+                }
+                rTable.draw();
+            });
         } else {
             $("#max_connections").val(<?= $rUser["max_connections"] ?>);
             $("#cost_credits").html(0);
@@ -925,22 +925,22 @@ include "header.php";
             $("#exp_date").val('<?= date("Y-m-d", $rUser["exp_date"]) ?>');
             <?php if (!$canGenerateTrials) { ?>
                 $(".purchase").prop('disabled', true);
-            <?php }
+                <?php }
             foreach (json_decode($rUser["bouquet"], true) as $rBouquetID) {
                 $rBouquetData = getBouquet($rBouquetID);
                 if (strlen($rBouquetID) > 0) { ?>
                     rTable.row.add([<?= $rBouquetID ?>, '<?= $rBouquetData["bouquet_name"] ?>', <?= count(json_decode($rBouquetData["bouquet_channels"], true)) ?>, <?= count(json_decode($rBouquetData["bouquet_series"], true)) ?>]);
-                <?php }
+            <?php }
             } ?>
             rTable.draw();
         }
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('select.select2').select2({
             width: '100%'
         })
-        $(".js-switch").each(function (index, element) {
+        $(".js-switch").each(function(index, element) {
             var init = new Switchery(element);
             window.swObjs[element.id] = init;
         });
@@ -953,7 +953,7 @@ include "header.php";
             }
         });
 
-        $("#no_expire").change(function () {
+        $("#no_expire").change(function() {
             if ($(this).prop("checked")) {
                 $("#exp_date").prop("disabled", true);
             } else {
@@ -961,7 +961,7 @@ include "header.php";
             }
         });
 
-        $(".js-switch").on("change", function () {
+        $(".js-switch").on("change", function() {
             evaluateForm();
         });
 
@@ -972,7 +972,7 @@ include "header.php";
                     next: "<i class='mdi mdi-chevron-right'>"
                 }
             },
-            drawCallback: function () {
+            drawCallback: function() {
                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
             },
             columnDefs: [{
@@ -984,15 +984,15 @@ include "header.php";
             searching: false,
             paging: false
         });
-        $("#user_form").submit(function (e) {
+        $("#user_form").submit(function(e) {
             $("#allowed_ua option").prop('selected', true);
             $("#allowed_ips option").prop('selected', true);
         });
 
-        $(window).keypress(function (event) {
+        $(window).keypress(function(event) {
             if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
         });
-        $("#add_ip").click(function () {
+        $("#add_ip").click(function() {
             if (($("#ip_field").val().length > 0) && (isValidIP($("#ip_field").val()))) {
                 var o = new Option($("#ip_field").val(), $("#ip_field").val());
                 $("#allowed_ips").append(o);
@@ -1001,10 +1001,10 @@ include "header.php";
                 $.toast("<?= $_["please_enter_a_valid_ip_address"] ?>");
             }
         });
-        $("#remove_ip").click(function () {
+        $("#remove_ip").click(function() {
             $('#allowed_ips option:selected').remove();
         });
-        $("#add_ua").click(function () {
+        $("#add_ua").click(function() {
             if ($("#ua_field").val().length > 0) {
                 var o = new Option($("#ua_field").val(), $("#ua_field").val());
                 $("#allowed_ua").append(o);
@@ -1013,10 +1013,10 @@ include "header.php";
                 $.toast("<?= $_["please_enter_a_user_agent"] ?>");
             }
         });
-        $("#remove_ua").click(function () {
+        $("#remove_ua").click(function() {
             $('#allowed_ua option:selected').remove();
         });
-        $("#max_connections").inputFilter(function (value) {
+        $("#max_connections").inputFilter(function(value) {
             return /^\d*$/.test(value);
         });
         $("form").attr('autocomplete', 'off');

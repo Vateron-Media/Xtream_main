@@ -105,7 +105,7 @@ function cryptPassword($password, $salt = "xtreamcodes", $rounds = 20000) {
 
 function getUser($rID) {
     global $ipTV_db_admin;
-    $ipTV_db_admin->query("SELECT * FROM `users` WHERE `id` = " . intval($rID) . ";");
+    $ipTV_db_admin->query("SELECT * FROM `lines` WHERE `id` = " . intval($rID) . ";");
     if ($ipTV_db_admin->num_rows() == 1) {
         return $ipTV_db_admin->get_row();
     }
@@ -819,7 +819,7 @@ function getOutputs($rUser = null) {
     global $ipTV_db_admin;
     $return = array();
     if ($rUser) {
-        $ipTV_db_admin->query("SELECT `allowed_outputs` FROM `users` WHERE `id` = " . intval($rUser) . ";");
+        $ipTV_db_admin->query("SELECT `allowed_outputs` FROM `lines` WHERE `id` = " . intval($rUser) . ";");
     } else {
         $ipTV_db_admin->query("SELECT * FROM `access_output` ORDER BY `access_output_id` ASC;");
     }
@@ -838,7 +838,7 @@ function getOutputs($rUser = null) {
 function getUserBouquets() {
     global $ipTV_db_admin;
     $return = array();
-    $ipTV_db_admin->query("SELECT `id`, `bouquet` FROM `users` ORDER BY `id` ASC;");
+    $ipTV_db_admin->query("SELECT `id`, `bouquet` FROM `lines` ORDER BY `id` ASC;");
     if ($ipTV_db_admin->num_rows() > 0) {
         foreach ($ipTV_db_admin->get_rows() as $row) {
             $return[intval($row["id"])] = $row;
@@ -1009,7 +1009,7 @@ function getMag($rID) {
     $ipTV_db_admin->query("SELECT * FROM `mag_devices` WHERE `mag_id` = " . intval($rID) . ";");
     if ($ipTV_db_admin->num_rows() == 1) {
         $row = $ipTV_db_admin->get_row();
-        $ipTV_db_admin->query("SELECT `pair_id` FROM `users` WHERE `id` = " . intval($row["user_id"]) . ";");
+        $ipTV_db_admin->query("SELECT `pair_id` FROM `lines` WHERE `id` = " . intval($row["user_id"]) . ";");
         if ($ipTV_db_admin->num_rows() == 1) {
             $magrow = $ipTV_db_admin->get_row();
             $row["paired_user"] = $magrow["pair_id"];
@@ -1025,7 +1025,7 @@ function getEnigma($rID) {
     $ipTV_db_admin->query("SELECT * FROM `enigma2_devices` WHERE `device_id` = " . intval($rID) . ";");
     if ($ipTV_db_admin->num_rows() == 1) {
         $row = $ipTV_db_admin->get_row();
-        $ipTV_db_admin->query("SELECT `pair_id` FROM `users` WHERE `id` = " . intval($row["user_id"]) . ";");
+        $ipTV_db_admin->query("SELECT `pair_id` FROM `lines` WHERE `id` = " . intval($row["user_id"]) . ";");
         if ($ipTV_db_admin->num_rows() == 1) {
             $e2row = $ipTV_db_admin->get_row();
             $row["paired_user"] = $e2row["pair_id"];
@@ -1080,7 +1080,7 @@ function getExpiring($rID) {
     global $ipTV_db_admin;
     $rAvailableMembers = array_keys(getRegisteredUsers($rID));
     $return = array();
-    $ipTV_db_admin->query("SELECT `id`, `member_id`, `username`, `password`, `exp_date` FROM `users` WHERE `member_id` IN (" . join(",", $rAvailableMembers) . ") AND `exp_date` >= UNIX_TIMESTAMP() ORDER BY `exp_date` ASC LIMIT 100;");
+    $ipTV_db_admin->query("SELECT `id`, `member_id`, `username`, `password`, `exp_date` FROM `lines` WHERE `member_id` IN (" . join(",", $rAvailableMembers) . ") AND `exp_date` >= UNIX_TIMESTAMP() ORDER BY `exp_date` ASC LIMIT 100;");
     if ($ipTV_db_admin->num_rows() > 0) {
         foreach ($ipTV_db_admin->get_rows() as $row) {
             $return[] = $row;
@@ -1135,7 +1135,7 @@ function checkTrials() {
         } else {
             $rTime = time() - (intval($rTotal) * 3600 * 24);
         }
-        $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `users` WHERE `member_id` = " . intval($rUserInfo["id"]) . " AND `created_at` >= " . $rTime . " AND `is_trial` = 1;");
+        $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `lines` WHERE `member_id` = " . intval($rUserInfo["id"]) . " AND `created_at` >= " . $rTime . " AND `is_trial` = 1;");
         return $ipTV_db_admin->get_row()["count"] < $rTotal;
     }
     return false;
@@ -1774,9 +1774,9 @@ is_restreamer < 1;");
 function getSecurityCenter() {
     global $ipTV_db_admin;
     $return = array();
-    $ipTV_db_admin->query("SELECT Distinct users.id, users.username, SUBSTR(`streams`.`stream_display_name`, 1, 30) stream_display_name, users.max_connections, (SELECT count(*) FROM `lines_live` WHERE `lines_live`.`stream_id` = `streams`.`id`) AS `active_connections`, (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) AS `total_active_connections` FROM lines_live
+    $ipTV_db_admin->query("SELECT Distinct users.id, users.username, SUBSTR(`streams`.`stream_display_name`, 1, 30) stream_display_name, users.max_connections, (SELECT count(*) FROM `lines_live` WHERE `lines_live`.`stream_id` = `streams`.`id`) AS `active_connections`, (SELECT count(*) FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id`) AS `total_active_connections` FROM lines_live
 INNER JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id`
-LEFT JOIN users ON user_id = users.id WHERE (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) > `users`.`max_connections`
+LEFT JOIN users ON user_id = users.id WHERE (SELECT count(*) FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id`) > `lines`.`max_connections`
 AND
 is_restreamer < 1;");
     if ($ipTV_db_admin->num_rows() > 0) {

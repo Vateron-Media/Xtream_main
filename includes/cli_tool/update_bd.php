@@ -7,6 +7,7 @@ $ipTV_db->query("CREATE TABLE IF NOT EXISTS `queue` (`id` int(11) NOT NULL AUTO_
 $ipTV_db->query("CREATE TABLE IF NOT EXISTS `rtmp_ips` (`id` int(11) NOT NULL AUTO_INCREMENT, `ip` varchar(255) DEFAULT NULL, `password` varchar(128) DEFAULT NULL, `notes` mediumtext, `push` tinyint(1) DEFAULT NULL, `pull` tinyint(1) DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `ip` (`ip`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
 
 $ipTV_db->query("RENAME TABLE `streaming_servers` TO `servers`;");
+$ipTV_db->query("RENAME TABLE `users` TO `lines`;");
 
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `sysctl` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL");
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `video_devices` mediumtext COLLATE utf8_unicode_ci");
@@ -16,7 +17,7 @@ $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `limit_requests` INT(11) NULL 
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `enable_gzip` TINYINT(1) NULL DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `requests_per_second` INT(11) NULL DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `connections` INT(16) NULL DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `users` INT(16) NULL DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `lines` INT(16) NULL DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `server_type` int(1) DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `enabled` int(16) DEFAULT '1';");
 $ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `enable_proxy` tinyint(4) DEFAULT '0';");

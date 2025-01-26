@@ -27,7 +27,7 @@ if ($rType == "users") {
     }
     $rAvailableMembers = array_keys(getRegisteredUsers($rUserInfo["id"]));
     $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`users`.`id`", "`users`.`username`", "`users`.`password`", "`reg_users`.`username`", "`users`.`enabled`", "`active_connections`", "`users`.`is_trial`", "`users`.`exp_date`", "`users`.`max_connections`", "`users`.`max_connections`", "`users`.`isp_desc`", "`lines_live`.`user_ip`", false);
+    $rOrder = array("`lines`.`id`", "`lines`.`username`", "`lines`.`password`", "`reg_users`.`username`", "`lines`.`enabled`", "`active_connections`", "`lines`.`is_trial`", "`lines`.`exp_date`", "`lines`.`max_connections`", "`lines`.`max_connections`", "`lines`.`isp_desc`", "`lines_live`.`user_ip`", false);
     if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
         $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
@@ -36,38 +36,38 @@ if ($rType == "users") {
     $rWhere = array();
     if (isset(ipTV_lib::$request["showall"])) {
         if ($rPermissions["is_reseller"]) {
-            $rWhere[] = "`users`.`member_id` IN (" . join(",", $rAvailableMembers) . ")";
+            $rWhere[] = "`lines`.`member_id` IN (" . join(",", $rAvailableMembers) . ")";
         }
     } else {
         if ($rPermissions["is_admin"]) {
-            $rWhere[] = "`users`.`is_mag` = 0 AND `users`.`is_e2` = 0";
+            $rWhere[] = "`lines`.`is_mag` = 0 AND `lines`.`is_e2` = 0";
         } else {
-            $rWhere[] = "`users`.`is_mag` = 0 AND `users`.`is_e2` = 0 AND `users`.`member_id` IN (" . join(",", $rAvailableMembers) . ")";
+            $rWhere[] = "`lines`.`is_mag` = 0 AND `lines`.`is_e2` = 0 AND `lines`.`member_id` IN (" . join(",", $rAvailableMembers) . ")";
         }
     }
     if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
         $rSearch = ipTV_lib::$request["search"]["value"];
-        $rWhere[] = "(`users`.`username` LIKE '%{$rSearch}%' OR `users`.`password` LIKE '%{$rSearch}%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`exp_date`) LIKE '%{$rSearch}%' OR `users`.`max_connections` LIKE '%{$rSearch}%' OR `users`.`reseller_notes` LIKE '%{$rSearch}%' OR `users`.`admin_notes` LIKE '%{$rSearch}%')";
+        $rWhere[] = "(`lines`.`username` LIKE '%{$rSearch}%' OR `lines`.`password` LIKE '%{$rSearch}%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`exp_date`) LIKE '%{$rSearch}%' OR `lines`.`max_connections` LIKE '%{$rSearch}%' OR `lines`.`reseller_notes` LIKE '%{$rSearch}%' OR `lines`.`admin_notes` LIKE '%{$rSearch}%')";
     }
     if (strlen(ipTV_lib::$request["filter"]) > 0) {
         if (ipTV_lib::$request["filter"] == 1) {
-            $rWhere[] = "(`users`.`admin_enabled` = 1 AND `users`.`enabled` = 1 AND (`users`.`exp_date` IS NULL OR `users`.`exp_date` > UNIX_TIMESTAMP()))";
+            $rWhere[] = "(`lines`.`admin_enabled` = 1 AND `lines`.`enabled` = 1 AND (`lines`.`exp_date` IS NULL OR `lines`.`exp_date` > UNIX_TIMESTAMP()))";
         } elseif (ipTV_lib::$request["filter"] == 2) {
-            $rWhere[] = "`users`.`enabled` = 0";
+            $rWhere[] = "`lines`.`enabled` = 0";
         } elseif (ipTV_lib::$request["filter"] == 3) {
-            $rWhere[] = "`users`.`admin_enabled` = 0";
+            $rWhere[] = "`lines`.`admin_enabled` = 0";
         } elseif (ipTV_lib::$request["filter"] == 4) {
-            $rWhere[] = "(`users`.`exp_date` IS NOT NULL AND `users`.`exp_date` <= UNIX_TIMESTAMP())";
+            $rWhere[] = "(`lines`.`exp_date` IS NOT NULL AND `lines`.`exp_date` <= UNIX_TIMESTAMP())";
         } elseif (ipTV_lib::$request["filter"] == 5) {
-            $rWhere[] = "`users`.`is_trial` = 1";
+            $rWhere[] = "`lines`.`is_trial` = 1";
         } elseif (ipTV_lib::$request["filter"] == 6) {
-            $rWhere[] = "`users`.`is_mag` = 1";
+            $rWhere[] = "`lines`.`is_mag` = 1";
         } elseif (ipTV_lib::$request["filter"] == 7) {
-            $rWhere[] = "`users`.`is_e2` = 1";
+            $rWhere[] = "`lines`.`is_e2` = 1";
         }
     }
     if (strlen(ipTV_lib::$request["reseller"]) > 0) {
-        $rWhere[] = "`users`.`member_id` = " . intval(ipTV_lib::$request["reseller"]);
+        $rWhere[] = "`lines`.`member_id` = " . intval(ipTV_lib::$request["reseller"]);
     }
     if (count($rWhere) > 0) {
         $rWhereString = "WHERE " . join(" AND ", $rWhere);
@@ -78,7 +78,7 @@ if ($rType == "users") {
         $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
-    $rCountQuery = "SELECT COUNT(`users`.`id`) AS `count` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(`lines`.`id`) AS `count` FROM `lines` LEFT JOIN `reg_users` ON `reg_users`.`id` = `lines`.`member_id` {$rWhereString};";
     $ipTV_db_admin->query($rCountQuery);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
@@ -87,7 +87,7 @@ if ($rType == "users") {
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `users`.`id`, `users`.`member_id`, `users`.`username`, `users`.`password`, `users`.`exp_date`, `users`.`admin_enabled`, `users`.`enabled`, `users`.`isp_desc`, `users`.`is_isplock`, `users`.`admin_notes`, `users`.`reseller_notes`, `users`.`max_connections`,  `users`.`is_trial`, `reg_users`.`username` AS `owner_name`, (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) AS `active_connections`, (SELECT user_ip FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id` LIMIT 1) AS `user_ip`, (SELECT MAX(`date_start`) FROM `user_activity` WHERE `users`.`id` = `user_activity`.`user_id`) AS `last_active` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `lines`.`id`, `lines`.`member_id`, `lines`.`username`, `lines`.`password`, `lines`.`exp_date`, `lines`.`admin_enabled`, `lines`.`enabled`, `lines`.`isp_desc`, `lines`.`is_isplock`, `lines`.`admin_notes`, `lines`.`reseller_notes`, `lines`.`max_connections`,  `lines`.`is_trial`, `reg_users`.`username` AS `owner_name`, (SELECT count(*) FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id`) AS `active_connections`, (SELECT user_ip FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id` LIMIT 1) AS `user_ip`, (SELECT MAX(`date_start`) FROM `user_activity` WHERE `lines`.`id` = `user_activity`.`user_id`) AS `last_active` FROM `lines` LEFT JOIN `reg_users` ON `reg_users`.`id` = `lines`.`member_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
@@ -248,7 +248,7 @@ if ($rType == "users") {
         exit;
     }
     $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`users`.`id`", "`users`.`username`", "`mag_devices`.`mac`", "`reg_users`.`username`", "`users`.`enabled`", "`active_connections`", "`users`.`is_trial`", "`users`.`exp_date`", "`users`.`isp_desc`", "`lines_live`.`user_ip`", false);
+    $rOrder = array("`lines`.`id`", "`lines`.`username`", "`mag_devices`.`mac`", "`reg_users`.`username`", "`lines`.`enabled`", "`active_connections`", "`lines`.`is_trial`", "`lines`.`exp_date`", "`lines`.`isp_desc`", "`lines_live`.`user_ip`", false);
     if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
         $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
@@ -256,28 +256,28 @@ if ($rType == "users") {
     }
     $rWhere = array();
     if ($rPermissions["is_reseller"]) {
-        $rWhere[] = "`users`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
+        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
     if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
         $rSearch = ipTV_lib::$request["search"]["value"];
-        $rWhere[] = "(`users`.`username` LIKE '%{$rSearch}%' OR from_base64(`mag_devices`.`mac`) LIKE '%" . strtoupper($rSearch) . "%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`exp_date`) LIKE '%{$rSearch}%' OR `users`.`reseller_notes` LIKE '%{$rSearch}%' OR `users`.`admin_notes` LIKE '%{$rSearch}%')";
+        $rWhere[] = "(`lines`.`username` LIKE '%{$rSearch}%' OR from_base64(`mag_devices`.`mac`) LIKE '%" . strtoupper($rSearch) . "%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`exp_date`) LIKE '%{$rSearch}%' OR `lines`.`reseller_notes` LIKE '%{$rSearch}%' OR `lines`.`admin_notes` LIKE '%{$rSearch}%')";
     }
     if (strlen(ipTV_lib::$request["filter"]) > 0) {
         if (ipTV_lib::$request["filter"] == 1) {
-            $rWhere[] = "(`users`.`admin_enabled` = 1 AND `users`.`enabled` = 1 AND (`users`.`exp_date` IS NULL OR `users`.`exp_date` > UNIX_TIMESTAMP()))";
+            $rWhere[] = "(`lines`.`admin_enabled` = 1 AND `lines`.`enabled` = 1 AND (`lines`.`exp_date` IS NULL OR `lines`.`exp_date` > UNIX_TIMESTAMP()))";
         } elseif (ipTV_lib::$request["filter"] == 2) {
-            $rWhere[] = "`users`.`enabled` = 0";
+            $rWhere[] = "`lines`.`enabled` = 0";
         } elseif (ipTV_lib::$request["filter"] == 3) {
-            $rWhere[] = "`users`.`admin_enabled` = 0";
+            $rWhere[] = "`lines`.`admin_enabled` = 0";
         } elseif (ipTV_lib::$request["filter"] == 4) {
-            $rWhere[] = "(`users`.`exp_date` IS NOT NULL AND `users`.`exp_date` <= UNIX_TIMESTAMP())";
+            $rWhere[] = "(`lines`.`exp_date` IS NOT NULL AND `lines`.`exp_date` <= UNIX_TIMESTAMP())";
         } elseif (ipTV_lib::$request["filter"] == 5) {
-            $rWhere[] = "`users`.`is_trial` = 1";
+            $rWhere[] = "`lines`.`is_trial` = 1";
         }
     }
     if ($rPermissions["is_admin"]) {
         if (strlen(ipTV_lib::$request["reseller"]) > 0) {
-            $rWhere[] = "`users`.`member_id` = " . intval(ipTV_lib::$request["reseller"]);
+            $rWhere[] = "`lines`.`member_id` = " . intval(ipTV_lib::$request["reseller"]);
         }
     }
     if (count($rWhere) > 0) {
@@ -289,7 +289,7 @@ if ($rType == "users") {
         $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
-    $rCountQuery = "SELECT COUNT(`users`.`id`) AS `count` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(`lines`.`id`) AS `count` FROM `lines` LEFT JOIN `reg_users` ON `reg_users`.`id` = `lines`.`member_id` INNER JOIN `mag_devices` ON `mag_devices`.`user_id` = `lines`.`id` {$rWhereString};";
     $ipTV_db_admin->query($rCountQuery);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
@@ -298,7 +298,7 @@ if ($rType == "users") {
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `users`.`id`, `users`.`username`, `mag_devices`.`mac`, `mag_devices`.`mag_id`, `users`.`exp_date`, `users`.`admin_enabled`, `users`.`enabled`, `users`.`isp_desc`, `users`.`is_isplock`, `users`.`admin_notes`, `users`.`reseller_notes`, `users`.`max_connections`,  `users`.`is_trial`, `reg_users`.`username` AS `owner_name`, (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) AS `active_connections`, (SELECT user_ip FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id` LIMIT 1) AS `user_ip` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `mag_devices` ON `mag_devices`.`user_id` = `users`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `lines`.`id`, `lines`.`username`, `mag_devices`.`mac`, `mag_devices`.`mag_id`, `lines`.`exp_date`, `lines`.`admin_enabled`, `lines`.`enabled`, `lines`.`isp_desc`, `lines`.`is_isplock`, `lines`.`admin_notes`, `lines`.`reseller_notes`, `lines`.`max_connections`,  `lines`.`is_trial`, `reg_users`.`username` AS `owner_name`, (SELECT count(*) FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id`) AS `active_connections`, (SELECT user_ip FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id` LIMIT 1) AS `user_ip` FROM `lines` LEFT JOIN `reg_users` ON `reg_users`.`id` = `lines`.`member_id` INNER JOIN `mag_devices` ON `mag_devices`.`user_id` = `lines`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
@@ -462,7 +462,7 @@ if ($rType == "users") {
         exit;
     }
     $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`users`.`id`", "`users`.`username`", "`enigma2_devices`.`mac`", "`reg_users`.`username`", "`users`.`enabled`", "`active_connections`", "`users`.`is_trial`", "`users`.`exp_date`", "`users`.`isp_desc`", "`lines_live`.`user_ip`", false);
+    $rOrder = array("`lines`.`id`", "`lines`.`username`", "`enigma2_devices`.`mac`", "`reg_users`.`username`", "`lines`.`enabled`", "`active_connections`", "`lines`.`is_trial`", "`lines`.`exp_date`", "`lines`.`isp_desc`", "`lines_live`.`user_ip`", false);
     if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
         $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
@@ -470,28 +470,28 @@ if ($rType == "users") {
     }
     $rWhere = array();
     if ($rPermissions["is_reseller"]) {
-        $rWhere[] = "`users`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
+        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
     if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
         $rSearch = ipTV_lib::$request["search"]["value"];
-        $rWhere[] = "(`users`.`username` LIKE '%{$rSearch}%' OR `enigma2_devices`.`mac` LIKE '%{$rSearch}%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`exp_date`) LIKE '%{$rSearch}%' OR `users`.`reseller_notes` LIKE '%{$rSearch}%' OR `users`.`admin_notes` LIKE '%{$rSearch}%')";
+        $rWhere[] = "(`lines`.`username` LIKE '%{$rSearch}%' OR `enigma2_devices`.`mac` LIKE '%{$rSearch}%' OR `reg_users`.`username` LIKE '%{$rSearch}%' OR from_unixtime(`exp_date`) LIKE '%{$rSearch}%' OR `lines`.`reseller_notes` LIKE '%{$rSearch}%' OR `lines`.`admin_notes` LIKE '%{$rSearch}%')";
     }
     if (strlen(ipTV_lib::$request["filter"]) > 0) {
         if (ipTV_lib::$request["filter"] == 1) {
-            $rWhere[] = "(`users`.`admin_enabled` = 1 AND `users`.`enabled` = 1 AND (`users`.`exp_date` IS NULL OR `users`.`exp_date` > UNIX_TIMESTAMP()))";
+            $rWhere[] = "(`lines`.`admin_enabled` = 1 AND `lines`.`enabled` = 1 AND (`lines`.`exp_date` IS NULL OR `lines`.`exp_date` > UNIX_TIMESTAMP()))";
         } elseif (ipTV_lib::$request["filter"] == 2) {
-            $rWhere[] = "`users`.`enabled` = 0";
+            $rWhere[] = "`lines`.`enabled` = 0";
         } elseif (ipTV_lib::$request["filter"] == 3) {
-            $rWhere[] = "`users`.`admin_enabled` = 0";
+            $rWhere[] = "`lines`.`admin_enabled` = 0";
         } elseif (ipTV_lib::$request["filter"] == 4) {
-            $rWhere[] = "(`users`.`exp_date` IS NOT NULL AND `users`.`exp_date` <= UNIX_TIMESTAMP())";
+            $rWhere[] = "(`lines`.`exp_date` IS NOT NULL AND `lines`.`exp_date` <= UNIX_TIMESTAMP())";
         } elseif (ipTV_lib::$request["filter"] == 5) {
-            $rWhere[] = "`users`.`is_trial` = 1";
+            $rWhere[] = "`lines`.`is_trial` = 1";
         }
     }
     if ($rPermissions["is_admin"]) {
         if (strlen(ipTV_lib::$request["reseller"]) > 0) {
-            $rWhere[] = "`users`.`member_id` = " . intval(ipTV_lib::$request["reseller"]);
+            $rWhere[] = "`lines`.`member_id` = " . intval(ipTV_lib::$request["reseller"]);
         }
     }
     if (count($rWhere) > 0) {
@@ -503,7 +503,7 @@ if ($rType == "users") {
         $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
-    $rCountQuery = "SELECT COUNT(`users`.`id`) AS `count` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `enigma2_devices` ON `enigma2_devices`.`user_id` = `users`.`id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(`lines`.`id`) AS `count` FROM `lines` LEFT JOIN `reg_users` ON `reg_users`.`id` = `lines`.`member_id` INNER JOIN `enigma2_devices` ON `enigma2_devices`.`user_id` = `lines`.`id` {$rWhereString};";
     $ipTV_db_admin->query($rCountQuery);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
@@ -512,7 +512,7 @@ if ($rType == "users") {
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `users`.`id`, `users`.`username`, `enigma2_devices`.`mac`, `users`.`exp_date`, `users`.`admin_enabled`, `users`.`enabled`, `users`.`isp_desc`, `users`.`is_isplock`, `users`.`admin_notes`, `users`.`reseller_notes`, `users`.`max_connections`,  `users`.`is_trial`, `reg_users`.`username` AS `owner_name`, (SELECT count(*) FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id`) AS `active_connections`, (SELECT user_ip FROM `lines_live` WHERE `users`.`id` = `lines_live`.`user_id` LIMIT 1) AS `user_ip` FROM `users` LEFT JOIN `reg_users` ON `reg_users`.`id` = `users`.`member_id` INNER JOIN `enigma2_devices` ON `enigma2_devices`.`user_id` = `users`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `lines`.`id`, `lines`.`username`, `enigma2_devices`.`mac`, `lines`.`exp_date`, `lines`.`admin_enabled`, `lines`.`enabled`, `lines`.`isp_desc`, `lines`.`is_isplock`, `lines`.`admin_notes`, `lines`.`reseller_notes`, `lines`.`max_connections`,  `lines`.`is_trial`, `reg_users`.`username` AS `owner_name`, (SELECT count(*) FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id`) AS `active_connections`, (SELECT user_ip FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id` LIMIT 1) AS `user_ip` FROM `lines` LEFT JOIN `reg_users` ON `reg_users`.`id` = `lines`.`member_id` INNER JOIN `enigma2_devices` ON `enigma2_devices`.`user_id` = `lines`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
@@ -711,7 +711,7 @@ if ($rType == "users") {
     } else {
         $rWhereString = "";
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `servers` ON `serversrvers`.`server_id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `servers` ON `servers`.`id` = `streams_servers`.`server_id` {$rWhereString};";
     $ipTV_db_admin->query($rCountQuery);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
@@ -1369,7 +1369,7 @@ if ($rType == "users") {
         exit;
     }
     $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`user_activity`.`activity_id`", "`users`.`username`", "`streams`.`stream_display_name`", "`servers`.`server_name`", "`user_activity`.`date_start`", "`user_activity`.`date_end`", "`user_activity`.`user_ip`", "`user_activity`.`geoip_country_code`");
+    $rOrder = array("`user_activity`.`activity_id`", "`lines`.`username`", "`streams`.`stream_display_name`", "`servers`.`server_name`", "`user_activity`.`date_start`", "`user_activity`.`date_end`", "`user_activity`.`user_ip`", "`user_activity`.`geoip_country_code`");
     if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
         $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
@@ -1377,11 +1377,11 @@ if ($rType == "users") {
     }
     $rWhere = array();
     if ($rPermissions["is_reseller"]) {
-        $rWhere[] = "`users`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
+        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
     if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
         $rSearch = ipTV_lib::$request["search"]["value"];
-        $rWhere[] = "(`user_activity`.`user_agent` LIKE '%{$rSearch}%' OR `user_activity`.`user_agent` LIKE '%{$rSearch}%' OR `user_activity`.`user_ip` LIKE '%{$rSearch}%' OR `user_activity`.`container` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`user_activity`.`date_start`) LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`user_activity`.`date_end`) LIKE '%{$rSearch}%' OR `user_activity`.`geoip_country_code` LIKE '%{$rSearch}%' OR `users`.`username` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `servers`.`server_name` LIKE '%{$rSearch}%')";
+        $rWhere[] = "(`user_activity`.`user_agent` LIKE '%{$rSearch}%' OR `user_activity`.`user_agent` LIKE '%{$rSearch}%' OR `user_activity`.`user_ip` LIKE '%{$rSearch}%' OR `user_activity`.`container` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`user_activity`.`date_start`) LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`user_activity`.`date_end`) LIKE '%{$rSearch}%' OR `user_activity`.`geoip_country_code` LIKE '%{$rSearch}%' OR `lines`.`username` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `servers`.`server_name` LIKE '%{$rSearch}%')";
     }
     if (strlen(ipTV_lib::$request["range"]) > 0) {
         $rStartTime = substr(ipTV_lib::$request["range"], 0, 10);
@@ -1408,7 +1408,7 @@ if ($rType == "users") {
         $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `user_activity` LEFT JOIN `users` ON `user_activity`.`user_id` = `users`.`id` LEFT JOIN `streams` ON `user_activity`.`stream_id` = `streams`.`id` LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `user_activity` LEFT JOIN `lines` ON `user_activity`.`user_id` = `lines`.`id` LEFT JOIN `streams` ON `user_activity`.`stream_id` = `streams`.`id` LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereString};";
     $ipTV_db_admin->query($rCountQuery);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
@@ -1417,8 +1417,8 @@ if ($rType == "users") {
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT SUBSTR(FROM_BASE64(mac), 1, 18) mag, `users`.`is_restreamer`, SUBSTR(`user_activity`.`isp`, 1, 47) isp, `user_activity`.`activity_id`, `user_activity`.`user_id`, `user_activity`.`stream_id`, `user_activity`.`server_id`, SUBSTR(`user_activity`.`user_agent`, 1, 22) user_agent, `user_activity`.`user_ip`, `user_activity`.`date_start`, `user_activity`.`date_end`, `user_activity`.`container`, `user_activity`.`geoip_country_code`, SUBSTR(`users`.`username`, 1, 18) username, SUBSTR(`streams`.`stream_display_name`, 1, 25) stream_display_name, `streams`.`type`, SUBSTR(`servers`.`server_name`, 1, 18) server_name, (`user_activity`.`date_end` - `user_activity`.`date_start`) total_time FROM `user_activity`
-INNER JOIN `users` ON `user_activity`.`user_id` = `users`.`id`
+        $rQuery = "SELECT SUBSTR(FROM_BASE64(mac), 1, 18) mag, `lines`.`is_restreamer`, SUBSTR(`user_activity`.`isp`, 1, 47) isp, `user_activity`.`activity_id`, `user_activity`.`user_id`, `user_activity`.`stream_id`, `user_activity`.`server_id`, SUBSTR(`user_activity`.`user_agent`, 1, 22) user_agent, `user_activity`.`user_ip`, `user_activity`.`date_start`, `user_activity`.`date_end`, `user_activity`.`container`, `user_activity`.`geoip_country_code`, SUBSTR(`lines`.`username`, 1, 18) username, SUBSTR(`streams`.`stream_display_name`, 1, 25) stream_display_name, `streams`.`type`, SUBSTR(`servers`.`server_name`, 1, 18) server_name, (`user_activity`.`date_end` - `user_activity`.`date_start`) total_time FROM `user_activity`
+INNER JOIN `lines` ON `user_activity`.`user_id` = `lines`.`id`
 LEFT JOIN `mag_devices` ON `user_activity`.`user_id` = `mag_devices`.`user_id`
 LEFT JOIN `streams` ON `user_activity`.`stream_id` = `streams`.`id`
 LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
@@ -1431,16 +1431,14 @@ LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereStri
                         if ($rRow["mag"] == null) {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                         } else {
-                            $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
-                            ;
+                            $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";;
                         }
                     }
                 } else {
                     if ($rRow["mag"] == null) {
                         $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                     } else {
-                        $rUsername = "<a href='./user_reseller_edit.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
-                        ;
+                        $rUsername = "<a href='./user_reseller_edit.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";;
                     }
                 }
                 $rChannel = $rRow["stream_display_name"];
@@ -1483,7 +1481,7 @@ LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereStri
         exit;
     }
     $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`lines_live`.`activity_id`", "`lines_live`.`divergence`", "`users`.`username`", "`streams`.`stream_display_name`", "`servers`.`server_name`", "`lines_live`.`date_start`", "`lines_live`.`user_ip`", "`lines_live`.`geoip_country_code`", "`lines_live`.`isp`", false);
+    $rOrder = array("`lines_live`.`activity_id`", "`lines_live`.`divergence`", "`lines`.`username`", "`streams`.`stream_display_name`", "`servers`.`server_name`", "`lines_live`.`date_start`", "`lines_live`.`user_ip`", "`lines_live`.`geoip_country_code`", "`lines_live`.`isp`", false);
     if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
         $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
@@ -1491,11 +1489,11 @@ LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereStri
     }
     $rWhere = array();
     if ($rPermissions["is_reseller"]) {
-        $rWhere[] = "`users`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
+        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
     if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
         $rSearch = ipTV_lib::$request["search"]["value"];
-        $rWhere[] = "(`lines_live`.`user_agent` LIKE '%{$rSearch}%' OR `lines_live`.`user_agent` LIKE '%{$rSearch}%' OR `lines_live`.`user_ip` LIKE '%{$rSearch}%' OR `lines_live`.`container` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`lines_live`.`date_start`) LIKE '%{$rSearch}%' OR `lines_live`.`geoip_country_code` LIKE '%{$rSearch}%' OR `users`.`username` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `servers`.`server_name` LIKE '%{$rSearch}%')";
+        $rWhere[] = "(`lines_live`.`user_agent` LIKE '%{$rSearch}%' OR `lines_live`.`user_agent` LIKE '%{$rSearch}%' OR `lines_live`.`user_ip` LIKE '%{$rSearch}%' OR `lines_live`.`container` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`lines_live`.`date_start`) LIKE '%{$rSearch}%' OR `lines_live`.`geoip_country_code` LIKE '%{$rSearch}%' OR `lines`.`username` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `servers`.`server_name` LIKE '%{$rSearch}%')";
     }
     if (strlen(ipTV_lib::$request["server_id"]) > 0) {
         $rWhere[] = "`lines_live`.`server_id` = " . intval(ipTV_lib::$request["server_id"]);
@@ -1515,7 +1513,7 @@ LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereStri
         $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `lines_live` LEFT JOIN `users` ON `lines_live`.`user_id` = `users`.`id` LEFT JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id` LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `lines_live` LEFT JOIN `lines` ON `lines_live`.`user_id` = `lines`.`id` LEFT JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id` LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString};";
     $ipTV_db_admin->query($rCountQuery);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
@@ -1524,8 +1522,8 @@ LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereStri
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT FROM_BASE64(mac) mag, SUBSTR(`lines_live`.`isp`, 1, 47) isp, `lines_live`.`activity_id`, `lines_live`.`divergence`, `lines_live`.`user_id`, `lines_live`.`stream_id`, `lines_live`.`server_id`, SUBSTR(`lines_live`.`user_agent`, 1, 35) user_agent, `lines_live`.`user_ip`, `lines_live`.`container`, `lines_live`.`pid`, `lines_live`.`date_start`, `lines_live`.`geoip_country_code`, `users`.`username`, SUBSTR(`streams`.`stream_display_name`, 1, 30) stream_display_name, `streams`.`type`, SUBSTR(`servers`.`server_name`, 1, 25) server_name FROM `lines_live`
-INNER JOIN `users` ON `lines_live`.`user_id` = `users`.`id`
+        $rQuery = "SELECT FROM_BASE64(mac) mag, SUBSTR(`lines_live`.`isp`, 1, 47) isp, `lines_live`.`activity_id`, `lines_live`.`divergence`, `lines_live`.`user_id`, `lines_live`.`stream_id`, `lines_live`.`server_id`, SUBSTR(`lines_live`.`user_agent`, 1, 35) user_agent, `lines_live`.`user_ip`, `lines_live`.`container`, `lines_live`.`pid`, `lines_live`.`date_start`, `lines_live`.`geoip_country_code`, `lines`.`username`, SUBSTR(`streams`.`stream_display_name`, 1, 30) stream_display_name, `streams`.`type`, SUBSTR(`servers`.`server_name`, 1, 25) server_name FROM `lines_live`
+INNER JOIN `lines` ON `lines_live`.`user_id` = `lines`.`id`
 LEFT JOIN `mag_devices` ON `lines_live`.`user_id` = `mag_devices`.`user_id`
 LEFT JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id`
 LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
@@ -1534,8 +1532,7 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 if ($rRow['divergence'] <= 50) {
-                    $rDivergence = '<button type="button" class="btn btn-outline-success btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
-                    ;
+                    $rDivergence = '<button type="button" class="btn btn-outline-success btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';;
                 } elseif ($rRow['divergence'] <= 80) {
                     $rDivergence = '<button type="button" class="btn btn-outline-warning btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
                 } else {
@@ -1546,16 +1543,14 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
                         if ($rRow["mag"] == null) {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                         } else {
-                            $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
-                            ;
+                            $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";;
                         }
                     }
                 } else {
                     if ($rRow["mag"] == null) {
                         $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                     } else {
-                        $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";
-                        ;
+                        $rUsername = "<a href='./user_reseller.php?id=" . $rRow["user_id"] . "'>" . $rRow["mag"] . "</a>";;
                     }
                 }
                 $rChannel = $rRow["stream_display_name"];
@@ -1954,7 +1949,7 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
         exit;
     }
     $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`user_activity`.`user_id`", "`users`.`username`", "`ip_count`", false);
+    $rOrder = array("`user_activity`.`user_id`", "`lines`.`username`", "`ip_count`", false);
     if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
         $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
@@ -1963,14 +1958,14 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     $rWhere = array("`date_start` >= (UNIX_TIMESTAMP()-" . intval(ipTV_lib::$request["range"]) . ")");
     if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
         $rSearch = ipTV_lib::$request["search"]["value"];
-        $rWhere[] = "(`users`.`username` LIKE '%{$rSearch}%' OR `user_activity`.`user_id` LIKE '%{$rSearch}%' OR `user_activity`.`user_ip` LIKE '%{$rSearch}%')";
+        $rWhere[] = "(`lines`.`username` LIKE '%{$rSearch}%' OR `user_activity`.`user_id` LIKE '%{$rSearch}%' OR `user_activity`.`user_ip` LIKE '%{$rSearch}%')";
     }
     $rWhereString = "WHERE " . join(" AND ", $rWhere);
     if ($rOrder[$rOrderRow]) {
         $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
-    $rCountQuery = "SELECT COUNT(DISTINCT(`user_activity`.`user_id`)) AS `count` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(DISTINCT(`user_activity`.`user_id`)) AS `count` FROM `user_activity` LEFT JOIN `lines` ON `lines`.`id` = `user_activity`.`user_id` {$rWhereString};";
     $ipTV_db_admin->query($rCountQuery);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
@@ -1979,7 +1974,7 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `users`.`username` FROM `user_activity` LEFT JOIN `users` ON `users`.`id` = `user_activity`.`user_id` {$rWhereString} GROUP BY `user_activity`.`user_id` {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `user_activity`.`user_id`, COUNT(DISTINCT(`user_activity`.`user_ip`)) AS `ip_count`, `lines`.`username` FROM `user_activity` LEFT JOIN `lines` ON `lines`.`id` = `user_activity`.`user_id` {$rWhereString} GROUP BY `user_activity`.`user_id` {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
@@ -1996,7 +1991,7 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
         exit;
     }
     $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`client_logs`.`id`", "`users`.`username`", "`streams`.`stream_display_name`", "`client_logs`,`client_status`", "`client_logs`.`extra_data`", "`client_logs`.`ip`", "`client_logs`.`date`");
+    $rOrder = array("`client_logs`.`id`", "`lines`.`username`", "`streams`.`stream_display_name`", "`client_logs`,`client_status`", "`client_logs`.`extra_data`", "`client_logs`.`ip`", "`client_logs`.`date`");
     if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
         $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
     } else {
@@ -2005,7 +2000,7 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     $rWhere = array();
     if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
         $rSearch = ipTV_lib::$request["search"]["value"];
-        $rWhere[] = "(`client_logs`.`client_status` LIKE '%{$rSearch}%' OR `client_logs`.`query_string` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`date`) LIKE '%{$rSearch}%' OR `client_logs`.`extra_data` LIKE '%{$rSearch}%' OR `client_logs`.`ip` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `users`.`username` LIKE '%{$rSearch}%')";
+        $rWhere[] = "(`client_logs`.`client_status` LIKE '%{$rSearch}%' OR `client_logs`.`query_string` LIKE '%{$rSearch}%' OR FROM_UNIXTIME(`date`) LIKE '%{$rSearch}%' OR `client_logs`.`extra_data` LIKE '%{$rSearch}%' OR `client_logs`.`ip` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `lines`.`username` LIKE '%{$rSearch}%')";
     }
     if (strlen(ipTV_lib::$request["range"]) > 0) {
         $rStartTime = substr(ipTV_lib::$request["range"], 0, 10);
@@ -2032,7 +2027,7 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
         $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
         $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `client_logs` LEFT JOIN `streams` ON `streams`.`id` = `client_logs`.`stream_id` LEFT JOIN `users` ON `users`.`id` = `client_logs`.`user_id` {$rWhereString};";
+    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `client_logs` LEFT JOIN `streams` ON `streams`.`id` = `client_logs`.`stream_id` LEFT JOIN `lines` ON `lines`.`id` = `client_logs`.`user_id` {$rWhereString};";
     $ipTV_db_admin->query($rCountQuery);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
@@ -2041,7 +2036,7 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `client_logs`.`id`, `client_logs`.`user_id`, `client_logs`.`stream_id`, `streams`.`stream_display_name`, `users`.`username`, `client_logs`.`client_status`, `client_logs`.`query_string`, `client_logs`.`user_agent`, `client_logs`.`ip`, FROM_UNIXTIME(`client_logs`.`date`) AS `date` FROM `client_logs` LEFT JOIN `streams` ON `streams`.`id` = `client_logs`.`stream_id` LEFT JOIN `users` ON `users`.`id` = `client_logs`.`user_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `client_logs`.`id`, `client_logs`.`user_id`, `client_logs`.`stream_id`, `streams`.`stream_display_name`, `lines`.`username`, `client_logs`.`client_status`, `client_logs`.`query_string`, `client_logs`.`user_agent`, `client_logs`.`ip`, FROM_UNIXTIME(`client_logs`.`date`) AS `date` FROM `client_logs` LEFT JOIN `streams` ON `streams`.`id` = `client_logs`.`stream_id` LEFT JOIN `lines` ON `lines`.`id` = `client_logs`.`user_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
@@ -2281,7 +2276,7 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `reg_users`.`id`, `reg_users`.`status`, `reg_users`.`notes`, `reg_users`.`credits`, `reg_users`.`username`, `reg_users`.`email`, `reg_users`.`ip`, FROM_UNIXTIME(`reg_users`.`date_registered`) AS `date_registered`, FROM_UNIXTIME(`reg_users`.`last_login`) AS `last_login`, `r`.`username` as `owner_username`, `member_groups`.`group_name`, `reg_users`.`verified`, `reg_users`.`status`, (SELECT COUNT(`id`) FROM `users` WHERE `member_id` = `reg_users`.`id`) AS `user_count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` LEFT JOIN `reg_users` AS `r` on `r`.`id` = `reg_users`.`owner_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `reg_users`.`id`, `reg_users`.`status`, `reg_users`.`notes`, `reg_users`.`credits`, `reg_users`.`username`, `reg_users`.`email`, `reg_users`.`ip`, FROM_UNIXTIME(`reg_users`.`date_registered`) AS `date_registered`, FROM_UNIXTIME(`reg_users`.`last_login`) AS `last_login`, `r`.`username` as `owner_username`, `member_groups`.`group_name`, `reg_users`.`verified`, `reg_users`.`status`, (SELECT COUNT(`id`) FROM `lines` WHERE `member_id` = `reg_users`.`id`) AS `user_count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` LEFT JOIN `reg_users` AS `r` on `r`.`id` = `reg_users`.`owner_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {

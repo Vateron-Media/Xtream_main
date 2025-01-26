@@ -1657,10 +1657,10 @@ INSERT INTO `transcoding_profiles` (`profile_id`, `profile_name`, `profile_optio
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `lines`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE IF NOT EXISTS `lines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) DEFAULT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
