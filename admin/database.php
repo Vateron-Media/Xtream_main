@@ -192,7 +192,7 @@ function do_sql($q) {
         $is_shts = 1;
         $q = "select TABLE_NAME as Name,Engine,Version,Row_format,TABLE_ROWS as `Rows`,Avg_row_length,Data_length,Max_data_length,Index_length,TABLE_COMMENT as Comment
 from information_schema.TABLES where TABLE_TYPE IN ('BASE TABLE','VIEW')
-and TABLE_SCHEMA=" . dbq($DB['db']);
+and TABLE_SCHEMA=" . dbq($DB['db']) . "ORDER BY TABLE_NAME ASC";
     }
 
     if (!do_multi_sql($q)) {
