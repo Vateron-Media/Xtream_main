@@ -202,11 +202,11 @@ function loadCron() {
         }
         // if ($rCheck['mag']) {
         //     if (ipTV_lib::$settings['mag_legacy_redirect']) {
-        //         if (!file_exists(MAIN_DIR . 'www/c')) {
+        //         if (!file_exists(MAIN_DIR . 'wwwdir/c')) {
         //             array_unshift($rRows, array('custom_data' => json_encode(array('action' => 'enable_ministra'))));
         //         }
         //     } else {
-        //         if (file_exists(MAIN_DIR . 'www/c')) {
+        //         if (file_exists(MAIN_DIR . 'wwwdir/c')) {
         //             array_unshift($rRows, array('custom_data' => json_encode(array('action' => 'disable_ministra'))));
         //         }
         //     }

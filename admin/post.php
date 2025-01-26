@@ -150,7 +150,15 @@ if (1 < $rICount) {
                 $rReturn = API::installServer($rData);
                 if ($rReturn['status'] == STATUS_SUCCESS) {
                     // echo json_encode(array('result' => true, 'location' => 'server_view?id=' . intval($rReturn['data']['insert_id']) . '&status=' . intval($rReturn['status']), 'status' => $rReturn['status']));
-                    echo json_encode(array('result' => true, 'location' => 'servers.php', 'status' => $rReturn['status']));
+                    echo json_encode(array('result' => true, 'location' => 'servers', 'status' => $rReturn['status']));
+                    exit();
+                }
+                echo json_encode(array('result' => false, 'data' => $rReturn['data'], 'status' => $rReturn['status']));
+                exit();
+            case 'settings':
+                $rReturn = API::editSettings($rData);
+                if ($rReturn['status'] == STATUS_SUCCESS) {
+                    echo json_encode(array('result' => true, 'location' => 'settings?status=' . intval($rReturn['status']), 'status' => $rReturn['status']));
                     exit();
                 }
                 echo json_encode(array('result' => false, 'data' => $rReturn['data'], 'status' => $rReturn['status']));
