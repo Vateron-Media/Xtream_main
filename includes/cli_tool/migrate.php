@@ -3,7 +3,7 @@ require str_replace('\\', '/', dirname($argv[0])) . '/../../includes/admin.php';
 set_time_limit(0);
 ini_set('memory_limit', -1);
 if ($argc) {
-    $rTableList = array('reg_users', 'users', 'enigma2_devices', 'mag_devices', 'user_output', 'servers', 'series', 'series_episodes', 'streams', 'streams_sys', 'streams_options', 'stream_categories', 'bouquets', 'member_groups', 'packages', 'rtmp_ips', 'epg', 'blocked_ips', 'blocked_user_agents', 'isp_addon', 'tickets', 'tickets_replies', 'transcoding_profiles', 'watch_folders', 'categories', 'epg_sources', 'members', 'blocked_isps', 'groups', 'servers', 'stream_servers');
+    $rTableList = array('reg_users', 'users', 'enigma2_devices', 'mag_devices', 'user_output', 'streaming_servers', 'series', 'series_episodes', 'streams', 'streams_sys', 'streams_options', 'stream_categories', 'bouquets', 'member_groups', 'packages', 'rtmp_ips', 'epg', 'blocked_ips', 'blocked_user_agents', 'isp_addon', 'tickets', 'tickets_replies', 'transcoding_profiles', 'watch_folders', 'categories', 'epg_sources', 'members', 'blocked_isps', 'groups', 'servers', 'stream_servers');
     $rMigrateOptions = (json_decode(file_get_contents(TMP_PATH . '.migration.options'), true) ?: array());
     if (count($rMigrateOptions) == 0) {
         $rMigrateOptions = $rTableList;
@@ -566,9 +566,9 @@ if ($argc) {
             //             }
             //         }
             //     }
-            //     if (!in_array('servers', $rMigrateOptions)) {
+            //     if (!in_array('streaming_servers', $rMigrateOptions)) {
             //     } else {
-            //         $odb->query('SELECT * FROM `servers`;');
+            //         $odb->query('SELECT * FROM `streaming_servers`;');
             //         $rResults = $odb->get_rows();
             //         if (0 >= count($rResults)) {
             //         } else {
