@@ -1206,10 +1206,10 @@ CREATE TABLE IF NOT EXISTS `signals` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `streaming_servers`
+-- Table structure for table `servers`
 --
 
-CREATE TABLE IF NOT EXISTS `streaming_servers` (
+CREATE TABLE IF NOT EXISTS `servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `server_name` varchar(255) NOT NULL,
   `domain_name` varchar(255) NOT NULL,
@@ -1270,10 +1270,10 @@ CREATE TABLE IF NOT EXISTS `streaming_servers` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `streaming_servers`
+-- Dumping data for table `servers`
 --
 
-INSERT INTO `streaming_servers` (`id`, `server_type`, `server_name`, `domain_name`, `server_ip`, `private_ip`, `ssh_password`, `ssh_port`, `http_broadcast_port`, `total_clients`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`, `time_offset`, `script_version`, `is_main`, `php_pids`, `remote_status`, `last_status`, `interfaces`, `ping`, `video_devices`, `sysctl`, `audio_devices`, `gpu_info`, `limit_requests`, `enable_gzip`, `requests_per_second`, `connections`, `users`,`enabled`,`enable_proxy`,`limit_burst`,`enable_https`) VALUES
+INSERT INTO `servers` (`id`, `server_type`, `server_name`, `domain_name`, `server_ip`, `private_ip`, `ssh_password`, `ssh_port`, `http_broadcast_port`, `total_clients`, `network_interface`, `latency`, `status`, `enable_geoip`, `geoip_countries`, `last_check_ago`, `can_delete`, `server_hardware`, `total_services`, `persistent_connections`, `rtmp_port`, `geoip_type`, `isp_names`, `isp_type`, `enable_isp`, `http_ports_add`, `network_guaranteed_speed`, `https_broadcast_port`, `https_ports_add`, `whitelist_ips`, `watchdog_data`, `timeshift_only`, `time_offset`, `script_version`, `is_main`, `php_pids`, `remote_status`, `last_status`, `interfaces`, `ping`, `video_devices`, `sysctl`, `audio_devices`, `gpu_info`, `limit_requests`, `enable_gzip`, `requests_per_second`, `connections`, `users`,`enabled`,`enable_proxy`,`limit_burst`,`enable_https`) VALUES
 (1, 0, 'Main Server', '', '127.0.0.1', '', NULL, NULL, 25461, 1000, '', 0, 1, 0, '[]', 0, 0, '', 3, 0, 25462, 'low_priority', '[]', 'low_priority', 0, '', 0, 25463, '', '', '', 0, 0, 'NULL', 1, '', 1, 1, '', 0, NULL, '', NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, 0);
 
 -- --------------------------------------------------------

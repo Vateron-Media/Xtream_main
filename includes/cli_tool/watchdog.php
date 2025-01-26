@@ -51,9 +51,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     $rConnections = $ipTV_db->get_row()['count'];
                     $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 AND `server_id` = ? GROUP BY `user_id`;', SERVER_ID);
                     $rUsers = $ipTV_db->num_rows();
-                    $rResult = $ipTV_db->query('UPDATE `streaming_servers` SET `watchdog_data` = ?, `last_check_ago` = UNIX_TIMESTAMP(), `requests_per_second` = ?, `php_pids` = ?, `connections` = ?, `users` = ? WHERE `id` = ?;', json_encode($rStats, JSON_PARTIAL_OUTPUT_ON_ERROR), $rRequestsPerSecond, json_encode($rPHPPIDs), $rConnections, $rUsers, SERVER_ID);
+                    $rResult = $ipTV_db->query('UPDATE `servers` SET `watchdog_data` = ?, `last_check_ago` = UNIX_TIMESTAMP(), `requests_per_second` = ?, `php_pids` = ?, `connections` = ?, `users` = ? WHERE `id` = ?;', json_encode($rStats, JSON_PARTIAL_OUTPUT_ON_ERROR), $rRequestsPerSecond, json_encode($rPHPPIDs), $rConnections, $rUsers, SERVER_ID);
                 } else {
-                    $rResult = $ipTV_db->query('UPDATE `streaming_servers` SET `watchdog_data` = ?, `last_check_ago` = UNIX_TIMESTAMP(), `requests_per_second` = ?, `php_pids` = ? WHERE `id` = ?;', json_encode($rStats, JSON_PARTIAL_OUTPUT_ON_ERROR), $rRequestsPerSecond, json_encode($rPHPPIDs), SERVER_ID);
+                    $rResult = $ipTV_db->query('UPDATE `servers` SET `watchdog_data` = ?, `last_check_ago` = UNIX_TIMESTAMP(), `requests_per_second` = ?, `php_pids` = ? WHERE `id` = ?;', json_encode($rStats, JSON_PARTIAL_OUTPUT_ON_ERROR), $rRequestsPerSecond, json_encode($rPHPPIDs), SERVER_ID);
                 }
                 if ($rResult) {
                     if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
@@ -70,7 +70,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                             $i = 0;
                             foreach (array_keys(ipTV_lib::$Servers) as $rServerID) {
                                 if (ipTV_lib::$Servers[$rServerID]['server_online']) {
-                                    $ipTV_db->query('UPDATE `streaming_servers` SET `connections` = ?, `users` = ? WHERE `id` = ?;', $rResults[$i * 2], count(array_unique(array_values($rResults[$i * 2 + 1]))), $rServerID);
+                                    $ipTV_db->query('UPDATE `servers` SET `connections` = ?, `users` = ? WHERE `id` = ?;', $rResults[$i * 2], count(array_unique(array_values($rResults[$i * 2 + 1]))), $rServerID);
                                     $rTotalUsers = array_merge(array_values($rResults[$i * 2 + 1]), $rTotalUsers);
                                     $i++;
                                 }

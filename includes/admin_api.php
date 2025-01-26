@@ -53,7 +53,7 @@ class API {
 				// 	return array('status' => STATUS_SUCCESS, 'data' => array('insert_id' => $rServer['id']));
 				// }
 				$rData['can_delete'] = 1;
-				$rArray = verifyPostTable('streaming_servers', $rData);
+				$rArray = verifyPostTable('servers', $rData);
 				$rArray['status'] = 3;
 				unset($rArray['id']);
 
@@ -62,7 +62,7 @@ class API {
 
 					$rPrepare = prepareArray($rArray);
 
-					$rQuery = 'INSERT INTO `streaming_servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
+					$rQuery = 'INSERT INTO `servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
 
 					if (self::$ipTV_db->query($rQuery, ...$rPrepare['data'])) {
 						$rInsertID = self::$ipTV_db->last_insert_id();
@@ -99,7 +99,7 @@ class API {
 			return ['status' => STATUS_INVALID_INPUT, 'data' => $rData];
 		}
 
-		$rArray = verifyPostTable('streaming_servers', $rData, true);
+		$rArray = verifyPostTable('servers', $rData, true);
 		$rArray['http_broadcast_port'] = $rData['http_broadcast_port'];
 		$rArray['https_broadcast_port'] = $rData['https_broadcast_port'];
 
@@ -131,7 +131,7 @@ class API {
 				$rArray['total_services'] = $rData['total_services'];
 				$rPrepare = prepareArray($rArray);
 				$rPrepare['data'][] = $rData['edit'];
-				$rQuery = 'UPDATE `streaming_servers` SET ' . $rPrepare['update'] . ' WHERE `id` = ?;';
+				$rQuery = 'UPDATE `servers` SET ' . $rPrepare['update'] . ' WHERE `id` = ?;';
 
 				if (self::$ipTV_db->query($rQuery, ...$rPrepare['data'])) {
 					$rInsertID = $rData['edit'];
@@ -199,7 +199,7 @@ class API {
 				if (isset($rArray[$rKey])) {
 					$rArray[$rKey] = $rValue;
 				}
-			} 
+			}
 
 			if (ipTV_lib::setSettings($rArray)) {
 				clearSettingsCache();

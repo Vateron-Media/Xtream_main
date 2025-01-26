@@ -70,7 +70,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 $rPackages = array('cpufrequtils');
                 $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $lastVersion . '/' . $rFiles['lb_update'];
             } else {
-                $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
+                $ipTV_db->query('UPDATE `servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
                 echo 'Invalid type specified!' . "\n";
                 exit();
             }
@@ -112,7 +112,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     runCommand($rConn, 'sudo tar -zxvf "/tmp/sub_xui.tar.gz" -C "' . MAIN_DIR . '"');
                     runCommand($rConn, 'sudo rm -f "/tmp/sub_xui.tar.gz"');
                     if (!file_exists(MAIN_DIR . 'status')) {
-                        $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
+                        $ipTV_db->query('UPDATE `servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
                         echo 'Failed to extract files! Exiting' . "\n";
                         exit();
                     }
@@ -233,18 +233,18 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     }
 
                     if ($rType == 1) {
-                        $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 1, `http_broadcast_port` = ?, `https_broadcast_port` = ?, `total_services` = ? WHERE `id` = ?;', $rHTTPPort, $rHTTPSPort, $rServices, $rServerID);
+                        $ipTV_db->query('UPDATE `servers` SET `status` = 1, `http_broadcast_port` = ?, `https_broadcast_port` = ?, `total_services` = ? WHERE `id` = ?;', $rHTTPPort, $rHTTPSPort, $rServices, $rServerID);
                     } else {
-                        $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 1 WHERE `id` = ?;', $rServerID);
+                        $ipTV_db->query('UPDATE `servers` SET `status` = 1 WHERE `id` = ?;', $rServerID);
                     }
                     unlink($rInstallDir . $rServerID . '.json');
                 } else {
-                    $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
+                    $ipTV_db->query('UPDATE `servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
                     echo 'Failed to authenticate using credentials. Exiting' . "\n";
                     exit();
                 }
             } else {
-                $ipTV_db->query('UPDATE `streaming_servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
+                $ipTV_db->query('UPDATE `servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
                 echo 'Failed to connect to server. Exiting' . "\n";
                 exit();
             }

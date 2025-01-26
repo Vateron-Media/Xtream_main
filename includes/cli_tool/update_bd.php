@@ -6,32 +6,34 @@ $ipTV_db->query("CREATE TABLE IF NOT EXISTS `servers_stats` (`id` int(11) NOT NU
 $ipTV_db->query("CREATE TABLE IF NOT EXISTS `queue` (`id` int(11) NOT NULL AUTO_INCREMENT, `type` varchar(32) DEFAULT NULL, `server_id` int(11) DEFAULT NULL, `stream_id` int(11) DEFAULT NULL, `pid` int(11) DEFAULT NULL, `added` int(11) DEFAULT NULL, PRIMARY KEY (`id`) USING BTREE) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 $ipTV_db->query("CREATE TABLE IF NOT EXISTS `rtmp_ips` (`id` int(11) NOT NULL AUTO_INCREMENT, `ip` varchar(255) DEFAULT NULL, `password` varchar(128) DEFAULT NULL, `notes` mediumtext, `push` tinyint(1) DEFAULT NULL, `pull` tinyint(1) DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `ip` (`ip`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
 
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `sysctl` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `video_devices` mediumtext COLLATE utf8_unicode_ci");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `audio_devices` mediumtext COLLATE utf8_unicode_ci");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `gpu_info` mediumtext COLLATE utf8_unicode_ci");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `limit_requests` INT(11) NULL DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_gzip` TINYINT(1) NULL DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `requests_per_second` INT(11) NULL DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `connections` INT(16) NULL DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `users` INT(16) NULL DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `server_type` int(1) DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enabled` int(16) DEFAULT '1';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_proxy` tinyint(4) DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_proxy` int(11) DEFAULT '0';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ADD COLUMN `enable_https` tinyint(4) DEFAULT '0';");
+$ipTV_db->query("RENAME TABLE `streaming_servers` TO `servers`;");
 
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `http_broadcast_port` SET DEFAULT 25461;");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `https_broadcast_port` SET DEFAULT 25463;");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `total_clients` SET DEFAULT 250;");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `network_interface` SET DEFAULT 'auto';");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `rtmp_port` SET DEFAULT 25462;");
-$ipTV_db->query("ALTER TABLE `streaming_servers` ALTER `network_guaranteed_speed` SET DEFAULT 1000;");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `sysctl` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `video_devices` mediumtext COLLATE utf8_unicode_ci");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `audio_devices` mediumtext COLLATE utf8_unicode_ci");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `gpu_info` mediumtext COLLATE utf8_unicode_ci");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `limit_requests` INT(11) NULL DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `enable_gzip` TINYINT(1) NULL DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `requests_per_second` INT(11) NULL DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `connections` INT(16) NULL DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `users` INT(16) NULL DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `server_type` int(1) DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `enabled` int(16) DEFAULT '1';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `enable_proxy` tinyint(4) DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `enable_proxy` int(11) DEFAULT '0';");
+$ipTV_db->query("ALTER TABLE `servers` ADD COLUMN `enable_https` tinyint(4) DEFAULT '0';");
 
-$ipTV_db->query("ALTER TABLE streaming_servers DROP COLUMN system_os;");
-$ipTV_db->query("ALTER TABLE streaming_servers DROP COLUMN http_isp_port;");
+$ipTV_db->query("ALTER TABLE `servers` ALTER `http_broadcast_port` SET DEFAULT 25461;");
+$ipTV_db->query("ALTER TABLE `servers` ALTER `https_broadcast_port` SET DEFAULT 25463;");
+$ipTV_db->query("ALTER TABLE `servers` ALTER `total_clients` SET DEFAULT 250;");
+$ipTV_db->query("ALTER TABLE `servers` ALTER `network_interface` SET DEFAULT 'auto';");
+$ipTV_db->query("ALTER TABLE `servers` ALTER `rtmp_port` SET DEFAULT 25462;");
+$ipTV_db->query("ALTER TABLE `servers` ALTER `network_guaranteed_speed` SET DEFAULT 1000;");
 
-$ipTV_db->query("ALTER TABLE `streaming_servers` CHANGE `vpn_ip` `private_ip` varchar(255) COLLATE utf8_unicode_ci NOT NULL;");
+$ipTV_db->query("ALTER TABLE servers DROP COLUMN system_os;");
+$ipTV_db->query("ALTER TABLE servers DROP COLUMN http_isp_port;");
+
+$ipTV_db->query("ALTER TABLE `servers` CHANGE `vpn_ip` `private_ip` varchar(255) COLLATE utf8_unicode_ci NOT NULL;");
 
 $ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `fps_restart` tinyint(1) DEFAULT '0';");
 $ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `vframes_server_id` int(11) DEFAULT '0';");
