@@ -7,6 +7,9 @@ define('STATUS_FAILURE', 0);
 define('STATUS_SUCCESS', 1);
 define('STATUS_INVALID_IP', 9);
 define('STATUS_INVALID_INPUT', 34);
+define('STATUS_FAILURE_GEOLITE', 49);
+define('STATUS_SUCCESS_GEOLITE', 50);
+define('STATUS_SUCCESS_UPDATE', 51);
 
 $_INFO = array();
 $rTimeout = 60;             // Seconds Timeout for Functions & Requests
@@ -1850,4 +1853,8 @@ function getURL() {
     } else {
         return "http://" . $rServers[$_INFO["server_id"]]["server_ip"] . ":" . $rServers[$_INFO["server_id"]]["http_broadcast_port"];
     }
+}
+
+function clearSettingsCache() {
+    unlink(CACHE_TMP_PATH . 'settings');
 }

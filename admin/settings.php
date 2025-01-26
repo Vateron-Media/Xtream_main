@@ -10,9 +10,9 @@ if ((!hasPermissions("adv", "settings")) && (!hasPermissions("adv", "database"))
 
 if (isset(ipTV_lib::$request["geolite2"])) {
     if (updateGeoLite2()) {
-        $_STATUS = 3;
+        $_STATUS = STATUS_SUCCESS_GEOLITE;
     } else {
-        $_STATUS = 2;
+        $_STATUS = STATUS_FAILURE_GEOLITE;
     }
 }
 
@@ -24,36 +24,7 @@ $rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")['latest
 if (isset(ipTV_lib::$request["panel_version"])) {
     $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . json_encode(array('action' => 'update')) . "`;");
     $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . $_INFO["server_id"] . "', '" . time() . "', '" . json_encode(array('action' => 'update')) . "');");
-    $_STATUS = 5;
-}
-
-if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "settings"))) {
-    $rArray = getSettings();
-    foreach (array("active_mannuals", "allow_cdn_access", "always_enabled_subtitles", "audio_restart_loss", "block_proxies", "block_streaming_servers", "block_svp", "case_sensitive_line", "change_own_dns", "change_own_email", "change_own_lang", "change_own_password", "change_usernames", "client_logs_save", "cloudflare", "county_override_1st", "dashboard_stats", "dashboard_world_map_activity", "dashboard_world_map_live", "debug_show_errors", "detect_restream_block_user", "disable_hls", "disable_hls_allow_restream", "disable_mag_token", "disable_ministra", "disable_trial", "disable_ts", "disable_ts_allow_restream", "disallow_2nd_ip_con", "disallow_empty_user_agents", "download_images", "enable_connection_problem_indication", "enable_debug_stalker", "enable_isp_lock", "encrypt_hls", "encrypt_playlist", "encrypt_playlist_restreamer", "ffmpeg_warnings", "ignore_invalid_users", "ignore_keyframes", "ip_logout", "ip_subnet_match", "kill_rogue_ffmpeg", "mag_disable_ssl", "mag_keep_extension", "mag_legacy_redirect", "mag_security", "monitor_connection_status", "on_demand_failure_exit", "on_demand_instant_off", "ondemand_balance_equal", "playlist_from_mysql", "priority_backup", "recaptcha_enable", "reseller_can_isplock", "reseller_mag_events", "reseller_reset_isplock", "reseller_restrictions", "restart_php_fpm", "restream_deny_unauthorised", "restrict_playlists", "restrict_same_ip", "rtmp_random", "save_closed_connection", "save_restart_logs", "show_all_category_mag", "show_banned_video", "show_channel_logo_in_preview", "show_expired_video", "show_isps", "show_not_on_air_video", "show_tv_channel_logo", "stb_change_pass", "stream_logs_save", "use_buffer", "use_mdomain_in_lists", ) as $rSetting) {
-        if (isset(ipTV_lib::$request[$rSetting])) {
-            $rArray[$rSetting] = 1;
-            unset(ipTV_lib::$request[$rSetting]);
-        } else {
-            $rArray[$rSetting] = 0;
-        }
-    }
-    if (!isset(ipTV_lib::$request["allowed_stb_types_for_local_recording"])) {
-        $rArray["allowed_stb_types_for_local_recording"] = array();
-    }
-    if (!isset(ipTV_lib::$request["allowed_stb_types"])) {
-        $rArray["allowed_stb_types"] = array();
-    }
-
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
-        if (isset($rArray[$rKey])) {
-            $rArray[$rKey] = $rValue;
-        }
-    }
-    if (ipTV_lib::setSettings($rArray)) {
-        $_STATUS = 0;
-    } else {
-        $_STATUS = 1;
-    }
+    $_STATUS = STATUS_SUCCESS_UPDATE;
 }
 
 $rSettings = getSettings(); // Update
@@ -62,7 +33,7 @@ include "header.php";
 
 <div class="wrapper boxed-layout-ext">
     <div class="container-fluid">
-        <form action="./settings.php" method="POST" id="category_form">
+        <form action="#" method="POST" id="category_form">
             <!-- start page title -->
             <div class="row">
                 <div class="col-12">
@@ -74,7 +45,7 @@ include "header.php";
             <!-- end page title -->
             <div class="row">
                 <div class="col-xl-12">
-                    <?php if ((isset($_STATUS)) && ($_STATUS == 0)) { ?>
+                    <?php if ((isset($_STATUS)) && ($_STATUS == STATUS_SUCCESS)) { ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -82,15 +53,7 @@ include "header.php";
                             <?= $_["settings_sucessfully_updated"] ?>
                         </div>
                         <?php
-                    } elseif ((isset($_STATUS)) && ($_STATUS == 1)) { ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <?= $_["there_was_an_error_saving_settings"] ?>
-                        </div>
-                        <?php
-                    } elseif ((isset($_STATUS)) && ($_STATUS == 2)) { ?>
+                    } elseif ((isset($_STATUS)) && ($_STATUS == STATUS_FAILURE_GEOLITE)) { ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -98,7 +61,7 @@ include "header.php";
                             <?= $_["failed_to_update_GeoLite2"] ?>
                         </div>
                         <?php
-                    } elseif ((isset($_STATUS)) && ($_STATUS == 3)) { ?>
+                    } elseif ((isset($_STATUS)) && ($_STATUS == STATUS_SUCCESS_GEOLITE)) { ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -106,29 +69,13 @@ include "header.php";
                             <?= $_["geoLite2_has_been_updated"] ?>
                         </div>
                         <?php
-                    } elseif ((isset($_STATUS)) && ($_STATUS == 4)) { ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            Failed to update Panel! Please try again.
-                        </div>
-                        <?php
-                    } elseif ((isset($_STATUS)) && ($_STATUS == 5)) { ?>
+                    } elseif ((isset($_STATUS)) && ($_STATUS == STATUS_SUCCESS_UPDATE)) { ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             XC_VM is currently waiting to be updated... Your server will become
                             unavailable once the process begins.
-                        </div>
-                        <?php
-                    } elseif ((isset($_STATUS)) && ($_STATUS > 0)) { ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <?= $_["there_was_an_error_saving_settings"] ?>
                         </div>
                         <?php
                     } ?>
@@ -1989,11 +1936,8 @@ include "header.php";
                                                                     if ($rSettings["tv_channel_default_aspect"] == $rValue) {
                                                                         echo 'selected ';
                                                                     }
-                                                                    ?> value="
-                                                                    <?= $rValue
-                                                                        ?>">
-                                                                    <?= $rValue
-                                                                        ?>
+                                                                    ?>
+                                                                    value="<?= $rValue ?>"><?= $rValue ?>
                                                                     </option>
                                                                     <?php
                                                                 }
@@ -2023,7 +1967,7 @@ include "header.php";
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
                                                             for="mag_legacy_redirect">Legacy
-                                                            URL Redirect <i
+                                                            URL Redirect (not working)<i
                                                                 title="Redirect /c to Ministra folder using symlinks. This will allow legacy devices to access the Ministra portal using the old address, however it isn 't recommended for security purposes. Root access is required so this will action within the next minute during the cron run."
                                                                 class="tooltip text-secondary far fa-circle"></i></label>
                                                         <div class="col-md-2"><input name="mag_legacy_redirect"
@@ -2184,9 +2128,7 @@ include "header.php";
                                                         </label>
                                                         <div class="col-md-8">
                                                             <textarea rows="6" class="form-control" id="mag_message"
-                                                                name="mag_message">
-                                                                                                                                                                                                                            <?= htmlspecialchars(str_replace(["&lt;", "&gt;"], ["
-																		<", ">"], $rSettings["mag_message"])) ?> </textarea>
+                                                                name="mag_message"><?= htmlspecialchars(str_replace(["&lt;", "&gt;"], ["<", ">"], $rSettings["mag_message"])) ?> </textarea>
                                                         </div>
                                                     </div>
                                                 </div> <!-- end col -->
@@ -2230,11 +2172,7 @@ include "header.php";
                                                                         echo 'selected ';
                                                                     }
 
-                                                                    ?> value="
-                                                                    <?= $rValue
-                                                                        ?>">
-                                                                    <?= $rText
-                                                                        ?>
+                                                                    ?> value="<?= $rValue ?>"><?= $rText ?>
                                                                     </option>
                                                                     <?php
                                                                 }
@@ -2269,12 +2207,8 @@ include "header.php";
                                                                     if ($rSettings["keep_client"] == $rValue) {
                                                                         echo 'selected ';
                                                                     }
-
-                                                                    ?> value="
-                                                                    <?= $rValue
-                                                                        ?>">
-                                                                    <?= $rText
-                                                                        ?>
+                                                                    ?>
+                                                                    value="<?= $rValue ?>"><?= $rText ?>
                                                                     </option>
                                                                     <?php
                                                                 } ?>
@@ -2308,11 +2242,8 @@ include "header.php";
                                                                     if ($rSettings["keep_errors"] == $rValue) {
                                                                         echo 'selected ';
                                                                     }
-                                                                    ?> value="
-                                                                    <?= $rValue
-                                                                        ?>">
-                                                                    <?= $rText
-                                                                        ?>
+                                                                    ?>
+                                                                    value="<?= $rValue ?>"><?= $rText ?>
                                                                     </option>
                                                                     <?php
                                                                 } ?>
@@ -2344,10 +2275,8 @@ include "header.php";
                                                                     if ($rSettings["keep_restarts"] == $rValue) {
                                                                         echo 'selected ';
                                                                     }
-                                                                    ?> value="
-                                                                    <?= $rValue; ?>">
-                                                                    <?= $rText
-                                                                        ?>
+                                                                    ?>
+                                                                    value="<?= $rValue; ?>"><?= $rText ?>
                                                                     </option>
                                                                     <?php
                                                                 }
@@ -2493,6 +2422,8 @@ include "header.php";
 <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
 <script src="assets/libs/datatables/dataTables.select.min.js"></script>
 <script src="assets/js/app.min.js"></script>
+<?php include 'post.php'; ?>
+
 
 <script>
     (function ($) {
@@ -2521,8 +2452,6 @@ include "header.php";
         $(window).keypress(function (event) {
             if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
         });
-
-        $("form").attr('autocomplete', 'off');
         $("#flood_limit").inputFilter(function (value) {
             return /^\d*$/.test(value);
         });
@@ -2540,6 +2469,12 @@ include "header.php";
         });
         $("#restreamer_prebuffer").inputFilter(function (value) {
             return /^\d*$/.test(value);
+        });
+        $("form").attr('autocomplete', 'off');
+        $("form").submit(function (e) {
+            e.preventDefault();
+            $(':input[type="submit"]').prop('disabled', true);
+            submitForm(window.rCurrentPage, new FormData($("form")[0]));
         });
     });
 </script>

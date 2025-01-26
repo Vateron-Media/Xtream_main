@@ -160,5 +160,56 @@ class API {
 			return ['status' => STATUS_INVALID_IP, 'data' => $rData];
 		}
 	}
+	public static function editSettings($rData) {
+		if (self::checkMinimumRequirements($rData)) {
+			$rArray = getSettings();
+
+			foreach (array("active_mannuals", "allow_cdn_access", "always_enabled_subtitles", "audio_restart_loss", "block_proxies", "block_streaming_servers", "block_svp", "case_sensitive_line", "change_own_dns", "change_own_email", "change_own_lang", "change_own_password", "change_usernames", "client_logs_save", "cloudflare", "county_override_1st", "dashboard_stats", "dashboard_world_map_activity", "dashboard_world_map_live", "debug_show_errors", "detect_restream_block_user", "disable_hls", "disable_hls_allow_restream", "disable_mag_token", "disable_ministra", "disable_trial", "disable_ts", "disable_ts_allow_restream", "disallow_2nd_ip_con", "disallow_empty_user_agents", "download_images", "enable_connection_problem_indication", "enable_debug_stalker", "enable_isp_lock", "encrypt_hls", "encrypt_playlist", "encrypt_playlist_restreamer", "ffmpeg_warnings", "ignore_invalid_users", "ignore_keyframes", "ip_logout", "ip_subnet_match", "kill_rogue_ffmpeg", "mag_disable_ssl", "mag_keep_extension", "mag_legacy_redirect", "mag_security", "monitor_connection_status", "on_demand_failure_exit", "on_demand_instant_off", "ondemand_balance_equal", "playlist_from_mysql", "priority_backup", "recaptcha_enable", "reseller_can_isplock", "reseller_mag_events", "reseller_reset_isplock", "reseller_restrictions", "restart_php_fpm", "restream_deny_unauthorised", "restrict_playlists", "restrict_same_ip", "rtmp_random", "save_closed_connection", "save_restart_logs", "show_all_category_mag", "show_banned_video", "show_channel_logo_in_preview", "show_expired_video", "show_isps", "show_not_on_air_video", "show_tv_channel_logo", "stb_change_pass", "stream_logs_save", "use_buffer", "use_mdomain_in_lists", ) as $rSetting) {
+				if (isset($rData[$rSetting])) {
+					$rArray[$rSetting] = 1;
+					unset($rData[$rSetting]);
+				} else {
+					$rArray[$rSetting] = 0;
+				}
+			}
+
+			if (!isset($rData['allowed_stb_types_for_local_recording'])) {
+				$rArray['allowed_stb_types_for_local_recording'] = array();
+			}
+
+			if (!isset($rData['allowed_stb_types'])) {
+				$rArray['allowed_stb_types'] = array();
+			}
+
+			if (!isset($rData['allow_countries'])) {
+				$rArray['allow_countries'] = array('ALL');
+			}
+
+			// if ($rArray['mag_legacy_redirect']) {
+			// 	if (!file_exists(MAIN_DIR . 'wwwdir/c/')) {
+			// 		self::$db->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', SERVER_ID, time(), json_encode(array('action' => 'enable_ministra')));
+			// 	}
+			// } else {
+			// 	if (file_exists(MAIN_DIR . 'wwwdir/c/')) {
+			// 		self::$db->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', SERVER_ID, time(), json_encode(array('action' => 'disable_ministra')));
+			// 	}
+			// }
+
+			foreach ($rData as $rKey => $rValue) {
+				if (isset($rArray[$rKey])) {
+					$rArray[$rKey] = $rValue;
+				}
+			} 
+
+			if (ipTV_lib::setSettings($rArray)) {
+				clearSettingsCache();
+				return array('status' => STATUS_SUCCESS);
+			} else {
+				return array('status' => STATUS_FAILURE);
+			}
+		} else {
+			return array('status' => STATUS_INVALID_INPUT, 'data' => $rData);
+		}
+	}
 
 }
