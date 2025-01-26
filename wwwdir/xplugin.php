@@ -60,7 +60,7 @@ if (!empty($page)) {
                 $type = ipTV_lib::$request['t'];
                 switch ($type) {
                     case 'screen':
-                        move_uploaded_file($_FILES['f']['tmp_name'], ENIGMA2_PLUGIN_DIR . $device_info['device_id'] . '_screen_' . time() . '_' . uniqid() . '.jpg');
+                        move_uploaded_file($_FILES['f']['tmp_name'], ENIGMA2_IMAGES_PATH . $device_info['device_id'] . '_screen_' . time() . '_' . uniqid() . '.jpg');
                         break;
                 }
             }

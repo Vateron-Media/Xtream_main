@@ -61,8 +61,8 @@ if (!defined('MAIN_DIR')) {
 define('IPTV_ROOT_PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');
 define('INCLUDES_PATH', MAIN_DIR . 'includes/');
 define('IPTV_TEMPLATES_PATH', IPTV_ROOT_PATH . 'templates/');
-define('MOVIES_IMAGES', MAIN_DIR . 'wwwdir/images/');
-define('ENIGMA2_PLUGIN_DIR', MOVIES_IMAGES . 'enigma2/');
+define('IMAGES_PATH', MAIN_DIR . 'wwwdir/images/');
+define('ENIGMA2_IMAGES_PATH', IMAGES_PATH . 'enigma2/');
 define('CRON_PATH', MAIN_DIR . 'crons/');
 define('ASYNC_DIR', MAIN_DIR . 'async_incs/');
 define('IPTV_CLIENT_AREA', MAIN_DIR . 'wwwdir/client_area/');
@@ -108,7 +108,7 @@ define('CIDR_TMP_PATH', TMP_PATH . 'cidr/');
 
 // CACHE FOLDERS
 define('STREAMS_TMP_PATH', CACHE_TMP_PATH . 'streams/');
-define('USER_TMP_PATH', CACHE_TMP_PATH . 'users/');
+define('USER_TMP_PATH', CACHE_TMP_PATH . 'lines/');
 define('SERIES_TMP_PATH', CACHE_TMP_PATH . 'series/');
 // -------------------
 
@@ -245,9 +245,12 @@ function panelLog($rType, $rMessage, $rExtra = '', $rLine = 0) {
     if (!is_dir(LOGS_TMP_PATH)) {
         mkdir(LOGS_TMP_PATH, 0775, true);
     }
-    $data = ['type' => $rType,
-        'message' => $rMessage, 'extra' => $rExtra,
-        'line' => $rLine, 'time' => time()
+    $data = [
+        'type' => $rType,
+        'message' => $rMessage,
+        'extra' => $rExtra,
+        'line' => $rLine,
+        'time' => time()
     ];
     // Write log
     file_put_contents($logFile, base64_encode(json_encode($data)) . "\n", FILE_APPEND);

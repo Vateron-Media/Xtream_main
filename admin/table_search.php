@@ -885,7 +885,7 @@ if ($rType == "users") {
                     $rEPG = '<i class="text-danger far fa-circle"></i>';
                 }
                 if (strlen($rRow["stream_icon"]) > 0) {
-                    $rIcon = "<img src='./resize.php?max=32&url=" . $rRow["stream_icon"] . "' />";
+                    $rIcon = "<img loading='lazy' src='./resize?maxw=96&maxh=32&url=" . $rRow["stream_icon"] . "' />";
                 } else {
                     $rIcon = "";
                 }
