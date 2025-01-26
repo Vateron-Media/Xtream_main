@@ -3,7 +3,7 @@ require str_replace('\\', '/', dirname($argv[0])) . '/../../includes/admin.php';
 set_time_limit(0);
 ini_set('memory_limit', -1);
 if ($argc) {
-    $rTableList = array('reg_users', 'users', 'enigma2_devices', 'mag_devices', 'user_output', 'streaming_servers', 'series', 'series_episodes', 'streams', 'streams_sys', 'streams_options', 'stream_categories', 'bouquets', 'member_groups', 'packages', 'rtmp_ips', 'epg', 'blocked_ips', 'blocked_user_agents', 'isp_addon', 'tickets', 'tickets_replies', 'transcoding_profiles', 'watch_folders', 'categories', 'epg_sources', 'members', 'blocked_isps', 'groups', 'servers', 'stream_servers');
+    $rTableList = array('reg_users', 'users', 'enigma2_devices', 'mag_devices', 'user_output', 'streaming_servers', 'series', 'series_episodes', 'streams', 'streams_sys', 'streams_options', 'stream_categories', 'bouquets', 'member_groups', 'packages', 'rtmp_ips', 'epg', 'blocked_ips', 'blocked_user_agents', 'isp_addon', 'tickets', 'tickets_replies', 'watch_folders', 'categories', 'epg_sources', 'members', 'blocked_isps', 'groups', 'servers', 'stream_servers');
     $rMigrateOptions = (json_decode(file_get_contents(TMP_PATH . '.migration.options'), true) ?: array());
     if (count($rMigrateOptions) == 0) {
         $rMigrateOptions = $rTableList;
@@ -566,76 +566,72 @@ if ($argc) {
             //             }
             //         }
             //     }
-            //     if (!in_array('streaming_servers', $rMigrateOptions)) {
-            //     } else {
-            //         $odb->query('SELECT * FROM `streaming_servers`;');
-            //         $rResults = $odb->get_rows();
-            //         if (0 >= count($rResults)) {
-            //         } else {
-            //             $rMain = false;
-            //             $ipTV_db_admin->query('TRUNCATE `servers`;');
-            //             echo 'Moving ' . number_format(count($rResults), 0) . ' servers.' . "\n";
-            //             foreach ($rResults as $rResult) {
-            //                 try {
-            //                     $rResult['server_type'] = 0;
-            //                     $rResult['parent_id'] = null;
-            //                     $rResult['http_broadcast_port'] = 80;
-            //                     $rResult['https_broadcast_port'] = 443;
-            //                     $rResult['rtmp_port'] = 8880;
-            //                     $rResult['total_services'] = 4;
-            //                     $rResult['http_ports_add'] = null;
-            //                     $rResult['https_ports_add'] = null;
-            //                     if ($rResult['can_delete'] == 0 && !$rMain) {
-            //                         $rResult['is_main'] = 1;
-            //                         $rMain = true;
-            //                     } else {
-            //                         $rResult['is_main'] = 0;
-            //                     }
-            //                     $rResult = verifyPostTable('servers', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
-            //                     $rQuery = 'INSERT INTO `servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
-            //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
-            //                 } catch (Exception $e) {
-            //                     echo 'Error: ' . $e . "\n";
-            //                 }
-            //             }
-            //         }
-            //     }
-            //     if (!in_array('servers', $rMigrateOptions)) {
-            //     } else {
-            //         $odb->query('SELECT * FROM `servers` ORDER BY `id` ASC;');
-            //         $rResults = $odb->get_rows();
-            //         if (0 >= count($rResults)) {
-            //         } else {
-            //             $rMain = false;
-            //             $ipTV_db_admin->query('TRUNCATE `servers`;');
-            //             echo 'Moving ' . number_format(count($rResults), 0) . ' servers.' . "\n";
-            //             foreach ($rResults as $rResult) {
-            //                 try {
-            //                     $rResult['server_type'] = 0;
-            //                     $rResult['parent_id'] = null;
-            //                     $rResult['http_broadcast_port'] = 80;
-            //                     $rResult['https_broadcast_port'] = 443;
-            //                     $rResult['rtmp_port'] = 8880;
-            //                     $rResult['total_services'] = 4;
-            //                     $rResult['http_ports_add'] = null;
-            //                     $rResult['https_ports_add'] = null;
-            //                     if (!$rMain) {
-            //                         $rResult['is_main'] = 1;
-            //                         $rMain = true;
-            //                     } else {
-            //                         $rResult['is_main'] = 0;
-            //                     }
-            //                     $rResult = verifyPostTable('servers', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
-            //                     $rQuery = 'INSERT INTO `servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
-            //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
-            //                 } catch (Exception $e) {
-            //                     echo 'Error: ' . $e . "\n";
-            //                 }
-            //             }
-            //         }
-            //     }
+                if (in_array('streaming_servers', $rMigrateOptions)) {
+                    $odb->query('SELECT * FROM `streaming_servers`;');
+                    $rResults = $odb->get_rows();
+                    if (count($rResults)) {
+                        $rMain = false;
+                        $ipTV_db_admin->query('TRUNCATE `servers`;');
+                        echo 'Moving ' . number_format(count($rResults), 0) . ' servers.' . "\n";
+                        foreach ($rResults as $rResult) {
+                            try {
+                                $rResult['server_type'] = 0;
+                                // $rResult['parent_id'] = null;
+                                $rResult['http_broadcast_port'] = 25461;
+                                $rResult['https_broadcast_port'] = 25463;
+                                $rResult['rtmp_port'] = 25462;
+                                $rResult['total_services'] = 4;
+                                $rResult['http_ports_add'] = null;
+                                $rResult['https_ports_add'] = null;
+                                if ($rResult['can_delete'] == 0 && !$rMain) {
+                                    $rResult['is_main'] = 1;
+                                    $rMain = true;
+                                } else {
+                                    $rResult['is_main'] = 0;
+                                }
+                                $rResult = verifyPostTable('servers', $rResult);
+                                $rPrepare = prepareArray($rResult);
+                                $rQuery = 'INSERT INTO `servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
+                                $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
+                            } catch (Exception $e) {
+                                echo 'Error: ' . $e . "\n";
+                            }
+                        }
+                    }
+                }
+                if (in_array('servers', $rMigrateOptions)) {
+                    $odb->query('SELECT * FROM `servers` ORDER BY `id` ASC;');
+                    $rResults = $odb->get_rows();
+                    if (count($rResults)>0) {
+                        $rMain = false;
+                        $ipTV_db_admin->query('TRUNCATE `servers`;');
+                        echo 'Moving ' . number_format(count($rResults), 0) . ' servers.' . "\n";
+                        foreach ($rResults as $rResult) {
+                            try {
+                                $rResult['server_type'] = 0;
+                                // $rResult['parent_id'] = null;
+                                $rResult['http_broadcast_port'] = 25461;
+                                $rResult['https_broadcast_port'] = 25463;
+                                $rResult['rtmp_port'] = 25462;
+                                $rResult['total_services'] = 4;
+                                $rResult['http_ports_add'] = null;
+                                $rResult['https_ports_add'] = null;
+                                if (!$rMain) {
+                                    $rResult['is_main'] = 1;
+                                    $rMain = true;
+                                } else {
+                                    $rResult['is_main'] = 0;
+                                }
+                                $rResult = verifyPostTable('servers', $rResult);
+                                $rPrepare = prepareArray($rResult);
+                                $rQuery = 'INSERT INTO `servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
+                                $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
+                            } catch (Exception $e) {
+                                echo 'Error: ' . $e . "\n";
+                            }
+                        }
+                    }
+                }
             //     $rCreatedOptions = array();
             //     if (!in_array('streams', $rMigrateOptions)) {
             //     } else {
@@ -882,26 +878,6 @@ if ($argc) {
             //             }
             //         }
             //     }
-            //     if (!in_array('transcoding_profiles', $rMigrateOptions)) {
-            //     } else {
-            //         $odb->query('SELECT * FROM `transcoding_profiles`;');
-            //         $rResults = $odb->get_rows();
-            //         if (0 >= count($rResults)) {
-            //         } else {
-            //             $ipTV_db_admin->query('TRUNCATE `profiles`;');
-            //             echo 'Generating ' . number_format(count($rResults), 0) . ' transcoding profiles.' . "\n";
-            //             foreach ($rResults as $rResult) {
-            //                 try {
-            //                     $rResult = verifyPostTable('profiles', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
-            //                     $rQuery = 'INSERT INTO `profiles`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
-            //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
-            //                 } catch (Exception $e) {
-            //                     echo 'Error: ' . $e . "\n";
-            //                 }
-            //             }
-            //         }
-            //     }
             //     $rOutput = array();
             //     if (!in_array('user_output', $rMigrateOptions)) {
             //     } else {
@@ -928,8 +904,7 @@ if ($argc) {
             //             }
             //         }
             //     }
-            //     if (!in_array('watch_folders', $rMigrateOptions)) {
-            //     } else {
+            //     if (in_array('watch_folders', $rMigrateOptions)) {
             //         $odb->query("SHOW TABLES LIKE 'watch_folders';");
             //         if (0 >= $odb->num_rows()) {
             //         } else {
@@ -959,29 +934,26 @@ if ($argc) {
             //     } catch (Exception $e) {
             //         echo 'Error: ' . $e . "\n";
             //     }
-            //     try {
-            //         $odb->query("SHOW TABLES LIKE 'admin_settings';");
-            //         if (0 >= $odb->num_rows()) {
-            //         } else {
-            //             $rAdminSettings = array();
-            //             $odb->query('SELECT * FROM `admin_settings`;');
-            //             foreach ($odb->get_rows() as $rRow) {
-            //                 $rAdminSettings[$rRow['type']] = $rRow['value'];
-            //             }
-            //             if (!(0 < strlen($rAdminSettings['recaptcha_v2_secret_key']) && 0 < strlen($rAdminSettings['recaptcha_v2_site_key']))) {
-            //             } else {
-            //                 $ipTV_db_admin->query('UPDATE `settings` SET `recaptcha_v2_secret_key` = ?, `recaptcha_v2_site_key` = ?;', $rAdminSettings['recaptcha_v2_secret_key'], $rAdminSettings['recaptcha_v2_site_key']);
-            //             }
-            //         }
-            //     } catch (Exception $e) {
-            //         echo 'Error: ' . $e . "\n";
-            //     }
-            //     echo "\n" . 'Migration has been completed!' . "\n\n" . 'Your settings have been reset to the XC_VM default, please take some time to review the settings page and make the desired changes.' . "\n";
-            //     file_put_contents(TMP_PATH . '.migration.status', 2);
-            //     if (!is_object($odb)) {
-            //     } else {
-            //         $odb->close_mysql();
-            //     }
+                try {
+                    $odb->query("SHOW TABLES LIKE 'admin_settings';");
+                    if ($odb->num_rows()>0) {
+                        $rAdminSettings = array();
+                        $odb->query('SELECT * FROM `admin_settings`;');
+                        foreach ($odb->get_rows() as $rRow) {
+                            $rAdminSettings[$rRow['type']] = $rRow['value'];
+                        }
+                        if (0 < strlen($rAdminSettings['recaptcha_v2_secret_key']) && 0 < strlen($rAdminSettings['recaptcha_v2_site_key'])) {
+                            $ipTV_db_admin->query('UPDATE `settings` SET `recaptcha_v2_secret_key` = ?, `recaptcha_v2_site_key` = ?;', $rAdminSettings['recaptcha_v2_secret_key'], $rAdminSettings['recaptcha_v2_site_key']);
+                        }
+                    }
+                } catch (Exception $e) {
+                    echo 'Error: ' . $e . "\n";
+                }
+                echo "\n" . 'Migration has been completed!' . "\n\n" . 'Your settings have been reset to the XC_VM default, please take some time to review the settings page and make the desired changes.' . "\n";
+                file_put_contents(TMP_PATH . '.migration.status', 2);
+                if (is_object($odb)) {
+                    $odb->close_mysql();
+                }
         } else {
             echo "\n" . "Couldn't find anything to migrate in the `xc_migrate` database. Please ensure you restore your backup to that database specifically." . "\n\n";
             exit();
