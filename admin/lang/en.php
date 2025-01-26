@@ -1234,7 +1234,6 @@ $_ = array(
   "domain_list" => "Domain List",
   "type_reseller" => "Type/Reseller",
   "domaine_name" => "Domain Name",
-  "latency" => "Latency",
   "server_vpn" => "Server VPN",
   "server_domain" => "Server Domain",
   "where" => "WHERE",

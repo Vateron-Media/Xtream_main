@@ -1232,7 +1232,6 @@ $_ = array(
 	"domain_list" => "Elenco domini",
 	"type_reseller" => "Tipo/Rivenditore",
 	"domaine_name" => "Nome a dominio",
-	"latency" => "Latency",
 	"server_vpn" => "Server VPN",
 	"server_domain" => "Server Domain",
 	"where" => "DOVE",

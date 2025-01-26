@@ -52,7 +52,6 @@ include "header.php";
                                     <th class="text-center"><?= $_["id"] ?></th>
                                     <th class="text-center"><?= $_["server_name"] ?> </th>
                                     <th class="text-center"><?= $_["status"] ?></th>
-                                    <th class="text-center"><?= $_["latency"] ?></th>
                                     <th class="text-center"><?= $_["domaine_name"] ?> </th>
                                     <th class="text-center"><?= $_["server_ip"] ?> </th>
                                     <th class="text-center"><?= $_["client_slots"] ?></th>
@@ -81,12 +80,6 @@ include "header.php";
                                     if (!is_array($rWatchDog)) {
                                         $rWatchDog = array("total_mem_used_percent" => "N/A ", "cpu_avg" => "N/A ");
                                     }
-                                    $rLatency = $rServer["latency"] * 1000;
-                                    if ($rLatency > 0) {
-                                        $rLatency = $rLatency . " ms";
-                                    } else {
-                                        $rLatency = "--";
-                                    }
                                     ?>
                                     <tr id="server-<?= $rServer["id"] ?>">
                                         <td class="text-center"><?= $rServer["id"] ?></td>
@@ -101,7 +94,6 @@ include "header.php";
                                                     echo "btn-outline-danger";
                                                 } ?> mdi mdi-<?= array(0 => "alarm-light-outline", 1 => "check-network", 2 => "alarm-light-outline", 3 => "creation")[$rServer["status"]] ?>"></i>
                                         </td>
-                                        <td class="text-center"><?= $rLatency ?></td>
                                         <td class="text-center"><?= $rServer["domain_name"] ?></td>
                                         <td class="text-center"><?= $rServer["server_ip"] ?></td>
                                         <?php if (hasPermissions("adv", "live_connections")) { ?>
