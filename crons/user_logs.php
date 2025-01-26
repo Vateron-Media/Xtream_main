@@ -36,7 +36,7 @@ function parseLogs($logFile) {
         if (!empty($line)) {
             $line = json_decode(base64_decode($line), true);
             $line = array_map(array($ipTV_db, 'escape'), $line);
-            $Query .= '(\'' . $line['stream_id'] . '\',\'' . $line['user_id'] . '\',\'' . $line['action'] . '\',\'' . $line['query_string'] . '\',\'' . $line['user_agent'] . '\',\'' . $line['user_ip'] . '\',\'' . $line['extra_data'] . '\',\'' . $line['time'] . '\'),';
+            $Query .= '(' . $line['stream_id'] . ',' . $line['user_id'] . ',' . $line['action'] . ',' . $line['query_string'] . ',' . $line['user_agent'] . ',' . $line['user_ip'] . ',' . $line['extra_data'] . ',' . $line['time'] . '),';
             break;
         }
     }
