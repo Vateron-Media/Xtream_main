@@ -21,7 +21,7 @@ if (isset(ipTV_lib::$request["bouquet_order_array"])) {
         foreach ($rUsers as $rUser) {
             $rBouquet = json_decode($rUser["bouquet"], true);
             $rBouquet = sortArrayByArray($rBouquet, $rOrder);
-            $ipTV_db_admin->query("UPDATE `users` SET `bouquet` = '[" . join(",", $rBouquet) . "]' WHERE `id` = " . intval($rUser["id"]) . ";");
+            $ipTV_db_admin->query("UPDATE `lines` SET `bouquet` = '[" . join(",", $rBouquet) . "]' WHERE `id` = " . intval($rUser["id"]) . ";");
         }
         $rPackages = getPackages();
         foreach ($rPackages as $rPackage) {

@@ -129,7 +129,7 @@ if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "se
                                                         <?php
                                                         $ipTV_db_admin->query("SELECT `time` FROM `crontab` WHERE `filename` = 'cache_engine.php';");
                                                         list($rMinute, $rHour, $rDayOfMonth, $rMonth, $rDayOfWeek) = explode(' ', $ipTV_db_admin->get_row()['time']);
-                                                        $ipTV_db_admin->query('SELECT `id` FROM `users`;');
+                                                        $ipTV_db_admin->query('SELECT `id` FROM `lines`;');
                                                         $rUserCount = $ipTV_db_admin->num_rows();
                                                         $ipTV_db_admin->query('SELECT `id` FROM `streams`;');
                                                         $rStreamCount = $ipTV_db_admin->num_rows();
