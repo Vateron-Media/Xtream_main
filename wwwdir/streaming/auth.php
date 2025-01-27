@@ -322,21 +322,21 @@ if ($rExtension) {
 
         if (!in_array($rType, array('thumb', 'subtitle'))) {
             if (!($rUserInfo['is_restreamer'] || in_array($IP, ipTV_lib::$allowedIPs))) {
-                // if ((ipTV_lib::$settings['block_streaming_servers'] || ipTV_lib::$settings['block_proxies'])) {
-                //     $rCIDR = ipTV_streaming::matchCIDR($rUserInfo['isp_asn'], $IP);
+                if ((ipTV_lib::$settings['block_streaming_servers'] || ipTV_lib::$settings['block_proxies'])) {
+                    $rCIDR = ipTV_streaming::matchCIDR($rUserInfo['isp_asn'], $IP);
 
-                //     if ($rCIDR) {
-                //         if ((ipTV_lib::$settings['block_streaming_servers'] && $rCIDR[3]) && !$rCIDR[4]) {
-                //             ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'HOSTING_DETECT', $IP, json_encode(array('user_agent' => $rUserAgent, 'isp' => $rUserInfo['con_isp_name'], 'asn' => $rUserInfo['isp_asn'])), true);
-                //             generateError('HOSTING_DETECT');
-                //         }
+                    if ($rCIDR) {
+                        if ((ipTV_lib::$settings['block_streaming_servers'] && $rCIDR[3]) && !$rCIDR[4]) {
+                            ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'HOSTING_DETECT', $IP, json_encode(array('user_agent' => $rUserAgent, 'isp' => $rUserInfo['con_isp_name'], 'asn' => $rUserInfo['isp_asn'])), true);
+                            generateError('HOSTING_DETECT');
+                        }
 
-                //         if ((ipTV_lib::$settings['block_proxies'] && $rCIDR[4])) {
-                //             ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'PROXY_DETECT', $IP, json_encode(array('user_agent' => $rUserAgent, 'isp' => $rUserInfo['con_isp_name'], 'asn' => $rUserInfo['isp_asn'])), true);
-                //             generateError('PROXY_DETECT');
-                //         }
-                //     }
-                // }
+                        if ((ipTV_lib::$settings['block_proxies'] && $rCIDR[4])) {
+                            ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'PROXY_DETECT', $IP, json_encode(array('user_agent' => $rUserAgent, 'isp' => $rUserInfo['con_isp_name'], 'asn' => $rUserInfo['isp_asn'])), true);
+                            generateError('PROXY_DETECT');
+                        }
+                    }
+                }
 
                 if ($rRestreamDetect) {
                     if (ipTV_lib::$settings['detect_restream_block_user']) {

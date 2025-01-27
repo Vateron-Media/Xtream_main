@@ -331,20 +331,12 @@ class ipTV_streaming {
         if (ipTV_lib::$settings['show_isps'] == 1 || !empty($IP)) {
             $ISPLock = self::getISP($IP);
             if (is_array($ISPLock)) {
-                if (!empty($ISPLock["isp_info"]["description"])) {
-                    $userInfo["con_isp_name"] = $ISPLock["isp_info"]["description"];
+                if (!empty($ISPLock['isp'])) {
+                    $userInfo['con_isp_name'] = $ISPLock['isp'];
+                    $userInfo['isp_asn'] = $ISPLock['autonomous_system_number'];
+                    $userInfo['isp_violate'] = self::checkISP($userInfo['con_isp_name']);
                     if (ipTV_lib::$settings['block_svp'] == 1) {
-                        $IspIsBlocked = self::checkIspIsBlocked($userInfo["con_isp_name"]);
-                        if ($userInfo["is_restreamer"] == 0 && ipTV_lib::$settings["block_svp"] == 1 && !empty($ISPLock["isp_info"]["is_server"])) {
-                            $userInfo["isp_is_server"] = $ISPLock["isp_info"]["is_server"];
-                        }
-                        if ($userInfo["isp_is_server"] == 1) {
-                            $userInfo["con_isp_type"] = $ISPLock["isp_info"]["type"];
-                        }
-                        if ($IspIsBlocked !== false) {
-                            $userInfo["isp_is_server"] = $IspIsBlocked == 1 ? 1 : 0;
-                            $userInfo["con_isp_type"] = $userInfo["isp_is_server"] == 1 ? "Custom" : null;
-                        }
+                        $userInfo['isp_is_server'] = intval(self::checkServer($userInfo['isp_asn']));
                     }
                 }
             }
@@ -1238,7 +1230,22 @@ class ipTV_streaming {
         }
         return $bitrate > 0 ? $bitrate : false;
     }
-    public static function getISP($user_ip) {
+    public static function getISP($rIP) {
+        if (!empty($rIP)) {
+            if (!file_exists(CONS_TMP_PATH . md5($rIP) . '_isp')) {
+                $rGeoIP = new MaxMind\Db\Reader(GEOIP2ISP_FILENAME);
+                $rResponse = $rGeoIP->get($rIP);
+                $rGeoIP->close();
+                if ($rResponse) {
+                    file_put_contents(CONS_TMP_PATH . md5($rIP) . '_isp', json_encode($rResponse));
+                }
+                return $rResponse;
+            }
+            return json_decode(file_get_contents(CONS_TMP_PATH . md5($rIP) . '_isp'), true);
+        }
+        return false;
+    }
+    public static function getISP_reserv($user_ip) {
         if (!empty($user_ip)) {
             if (file_exists(CONS_TMP_PATH . md5($user_ip) . '_isp')) {
                 return igbinary_unserialize(file_get_contents(CONS_TMP_PATH . md5($user_ip) . '_isp'));
@@ -1248,6 +1255,9 @@ class ipTV_streaming {
 
                 if (strlen($rData["demoInfo"]["isp"]) > 0) {
                     $json = array(
+                        "isp" => $rData["demoInfo"]["asName"],
+                        "autonomous_system_number" => $rData["demoInfo"]["asNumber"],
+
                         "isp_info" => array(
                             "as_number" => $rData["demoInfo"]["asNumber"],
                             "description" => $rData["demoInfo"]["isp"],
@@ -1255,7 +1265,7 @@ class ipTV_streaming {
                             "ip" => $rData["demoInfo"]["ipAddress"],
                             "country_code" => $rData["demoInfo"]["countryCode"],
                             "country_name" => $rData["demoInfo"]["countryName"],
-                            "is_server" => $rData["demoInfo"]["usageType"] != "consumer" ? true : false
+                            "is_server" => $rData["demoInfo"]["usageType"] != "consumer" ? true : false,
                             // note: if api is not returning correct usagetype, try another isp api source.
                         )
                     );
@@ -1263,14 +1273,6 @@ class ipTV_streaming {
                 }
             }
             return $json;
-        }
-        return false;
-    }
-    public static function checkIspIsBlocked($con_isp_name) {
-        foreach (ipTV_lib::$customISP as $isp) {
-            if (strtolower($con_isp_name) == strtolower($isp['isp'])) {
-                return $isp['blocked'];
-            }
         }
         return false;
     }
@@ -1468,5 +1470,27 @@ class ipTV_streaming {
         $rKey = 'SIGNAL#' . md5($serverID . '#' . $PID . '#' . $rRTMP);
         $rData = array('pid' => $PID, 'server_id' => $serverID, 'rtmp' => $rRTMP, 'time' => time(), 'custom_data' => $rCustomData, 'key' => $rKey);
         return ipTV_lib::$redis->multi()->sAdd('SIGNALS#' . $serverID, $rKey)->set($rKey, igbinary_serialize($rData))->exec();
+    }
+    public static function matchCIDR($rASN, $rIP) {
+        if (file_exists(CIDR_TMP_PATH . $rASN)) {
+            $rCIDRs = json_decode(file_get_contents(CIDR_TMP_PATH . $rASN), true);
+            foreach ($rCIDRs as $rCIDR => $rData) {
+                if (ip2long($rData[1]) <= ip2long($rIP) && ip2long($rIP) <= ip2long($rData[2])) {
+                    return $rData;
+                }
+            }
+        }
+    }
+    public static function checkISP($rConISP) {
+        foreach (ipTV_lib::$blockedISP as $rISP) {
+            if (strtolower($rConISP) == strtolower($rISP['isp'])) {
+                return intval($rISP['blocked']);
+            }
+        }
+        return 0;
+    }
+    public static function checkServer($rASN) {
+        // return in_array($rASN, ipTV_lib::$blockedServers);
+        return false;
     }
 }
