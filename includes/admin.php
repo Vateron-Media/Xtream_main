@@ -1751,14 +1751,14 @@ function getLeakedLines() {
     global $ipTV_db_admin;
     $return = array();
     $ipTV_db_admin->query("SELECT FROM_BASE64(mac), username, user_activity.user_id, user_activity.container, user_activity.geoip_country_code, GROUP_CONCAT(DISTINCT user_ip), GROUP_CONCAT(DISTINCT container), GROUP_CONCAT(DISTINCT geoip_country_code), is_restreamer FROM user_activity
-INNER JOIN users ON user_id = users.id AND is_mag = 1
-INNER JOIN mag_devices ON users.id = mag_devices.user_id
+INNER JOIN lines ON user_id = lines.id AND is_mag = 1
+INNER JOIN mag_devices ON lines.id = mag_devices.user_id
 WHERE 1 GROUP BY user_id HAVING COUNT(DISTINCT user_ip) > 1
 AND
 is_restreamer < 1
 UNION
 SELECT '', username, user_activity.user_id, user_activity.container, user_activity.geoip_country_code, GROUP_CONCAT(DISTINCT user_ip), GROUP_CONCAT(DISTINCT container), GROUP_CONCAT(DISTINCT geoip_country_code), is_restreamer FROM user_activity
-INNER JOIN users ON user_id = users.id AND is_mag = 0
+INNER JOIN lines ON user_id = lines.id AND is_mag = 0
 WHERE 1 GROUP BY user_id HAVING COUNT(DISTINCT user_ip) > 1
 AND
 is_restreamer < 1;");
@@ -1774,9 +1774,9 @@ is_restreamer < 1;");
 function getSecurityCenter() {
     global $ipTV_db_admin;
     $return = array();
-    $ipTV_db_admin->query("SELECT Distinct users.id, users.username, SUBSTR(`streams`.`stream_display_name`, 1, 30) stream_display_name, users.max_connections, (SELECT count(*) FROM `lines_live` WHERE `lines_live`.`stream_id` = `streams`.`id`) AS `active_connections`, (SELECT count(*) FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id`) AS `total_active_connections` FROM lines_live
+    $ipTV_db_admin->query("SELECT Distinct lines.id, lines.username, SUBSTR(`streams`.`stream_display_name`, 1, 30) stream_display_name, lines.max_connections, (SELECT count(*) FROM `lines_live` WHERE `lines_live`.`stream_id` = `streams`.`id`) AS `active_connections`, (SELECT count(*) FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id`) AS `total_active_connections` FROM lines_live
 INNER JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id`
-LEFT JOIN users ON user_id = users.id WHERE (SELECT count(*) FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id`) > `lines`.`max_connections`
+LEFT JOIN lines ON user_id = lines.id WHERE (SELECT count(*) FROM `lines_live` WHERE `lines`.`id` = `lines_live`.`user_id`) > `lines`.`max_connections`
 AND
 is_restreamer < 1;");
     if ($ipTV_db_admin->num_rows() > 0) {
