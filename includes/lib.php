@@ -471,24 +471,6 @@ class ipTV_lib {
         }
         return false;
     }
-    public static function mc_decrypt($data, $key) {
-        $data = explode("|", $data . "|");
-        $decoded = base64_decode($data[0]);
-        $iv = base64_decode($data[1]);
-        if (strlen($iv) === mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CBC)) {
-            $key = pack('H*', $key);
-            $rDecrypted = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $decoded, MCRYPT_MODE_CBC, $iv));
-            $rMAC = substr($rDecrypted, -64);
-            $rDecrypted = substr($rDecrypted, 0, -64);
-            $rCalcHMAC = hash_hmac('sha256', $rDecrypted, substr(bin2hex($key), -32));
-            if ($rCalcHMAC === $rMAC) {
-                $rDecrypted = igbinary_unserialize($rDecrypted);
-                return $rDecrypted;
-            }
-            return false;
-        }
-        return false;
-    }
     /**
      * Makes multiple cURL requests to the specified URLs and returns the results.
      *
@@ -787,5 +769,4 @@ class ipTV_lib {
 
         return $stackTrace;
     }
-
 }

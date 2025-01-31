@@ -32,9 +32,11 @@ switch ($action) {
             echo file_get_contents(VOD_PATH . $streamID . '.errors');
         }
         exit();
+
     case 'reload_epg':
         shell_exec(PHP_BIN . ' ' . CRON_PATH . 'epg.php >/dev/null 2>/dev/null &');
         break;
+        
     case 'vod':
         if (!empty(ipTV_lib::$request['stream_ids']) && !empty(ipTV_lib::$request['function'])) {
             $streamIDs = array_map('intval', ipTV_lib::$request['stream_ids']);
@@ -56,6 +58,7 @@ switch ($action) {
                     exit();
             }
         }
+
     case 'stream':
         if (!empty(ipTV_lib::$request['stream_ids']) && !empty(ipTV_lib::$request['function'])) {
             $streamIDs = array_map('intval', ipTV_lib::$request['stream_ids']);
@@ -84,27 +87,11 @@ switch ($action) {
             }
         }
         break;
+
     case 'stats':
         echo json_encode(getStats());
         exit();
-    case 'BackgroundCLI':
-        if (!empty(ipTV_lib::$request['cmds'])) {
-            $cmds = ipTV_lib::$request['cmds'];
-            $output = array();
-            foreach ($cmds as $key => $cmd) {
-                if (!is_array($cmd)) {
-                    $output[$key] = shell_exec($cmd);
-                    usleep(ipTV_lib::$settings['stream_start_delay']);
-                } else {
-                    foreach ($cmd as $k2 => $cm) {
-                        $output[$key][$k2] = shell_exec($cm);
-                        usleep(ipTV_lib::$settings['stream_start_delay']);
-                    }
-                }
-            }
-            echo json_encode($output);
-        }
-        die;
+
     case 'getDiff':
         if (!empty(ipTV_lib::$request['main_time'])) {
             $main_time = ipTV_lib::$request['main_time'];
@@ -112,6 +99,7 @@ switch ($action) {
             die;
         }
         break;
+
     case 'pidsAreRunning':
         if (empty(ipTV_lib::$request['pids']) && !is_array(ipTV_lib::$request['pids']) && empty(ipTV_lib::$request['program'])) {
             break;
@@ -130,6 +118,7 @@ switch ($action) {
         }
         echo json_encode($output);
         exit();
+
     case 'getFile':
         if (empty(ipTV_lib::$request['filename'])) {
             break;
@@ -214,25 +203,52 @@ switch ($action) {
             }
         }
         die;
-    case 'runCMD':
-        if (!empty(ipTV_lib::$request['command']) && in_array($user_ip, array("127.0.0.1", $_SERVER["SERVER_ADDR"]))) {
-            exec($_POST['command'], $outputCMD);
-            echo json_encode($outputCMD);
-            die;
-        }
-        break;
+
     case 'redirect_connection':
         if (!empty(ipTV_lib::$request['activity_id']) && !empty(ipTV_lib::$request['stream_id'])) {
             ipTV_lib::$request['type'] = 'redirect';
             file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
         }
         break;
+
     case 'signal_send':
         if (!empty(ipTV_lib::$request['message']) && !empty(ipTV_lib::$request['activity_id'])) {
             ipTV_lib::$request['type'] = 'signal';
             file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
         }
         break;
+
+    case 'free_temp':
+        exec('rm -rf ' . MAIN_DIR . 'tmp/*');
+        shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache.php');
+        echo json_encode(array('result' => true));
+        break;
+
+    case 'free_streams':
+        exec('rm ' . MAIN_DIR . 'content/streams/*');
+        echo json_encode(array('result' => true));
+        break;
+
+    case 'get_free_space':
+        exec('df -h', $rReturn);
+        echo json_encode($rReturn);
+        exit();
+
+    case 'get_pids':
+        exec('ps -e -o user,pid,%cpu,%mem,vsz,rss,tty,stat,time,etime,command', $rReturn);
+        echo json_encode($rReturn);
+        exit();
+        
+    case 'kill_pid':
+        $rPID = intval(ipTV_lib::$request['pid']);
+        if ($rPID > 0) {
+            posix_kill($rPID, 9);
+            echo json_encode(array('result' => true));
+        } else {
+            echo json_encode(array('result' => false));
+        }
+        break;
+
     default:
         exit(json_encode(array('result' => false)));
 }

@@ -2,63 +2,6 @@
 
 class ipTV_stream {
     public static $ipTV_db = null;
-    /**
-     * Transcodes and builds a stream based on the provided stream ID.
-     *
-     * This function retrieves stream data from the database, transcodes the stream using FFmpeg with specified attributes, creates a new MPEG-TS file, and updates the stream information in the database accordingly.
-     *
-     * @param int $streamID The ID of the stream to transcode and build.
-     * @return int Returns 1 if the stream is successfully transcoded and built, 2 if there are no PIDs for the channel, or 2 if there are no differences in stream sources.
-     */
-    static function transcodeBuild($streamID) {
-        self::$ipTV_db->query('SELECT * FROM `streams` t1 LEFT JOIN `transcoding_profiles` t3 ON t1.transcode_profile_id = t3.profile_id WHERE t1.`id` = ?', $streamID);
-        $stream = self::$ipTV_db->get_row();
-        $stream['cchannel_rsources'] = json_decode($stream['cchannel_rsources'], true);
-        $stream['stream_source'] = json_decode($stream['stream_source'], true);
-        $stream['pids_create_channel'] = json_decode($stream['pids_create_channel'], true);
-        $stream['transcode_attributes'] = json_decode($stream['profile_options'], true);
-
-        // Set default audio and video codecs if not present
-        if (!array_key_exists('-acodec', $stream['transcode_attributes'])) {
-            $stream['transcode_attributes']['-acodec'] = 'copy';
-        }
-        if (!array_key_exists('-vcodec', $stream['transcode_attributes'])) {
-            $stream['transcode_attributes']['-vcodec'] = 'copy';
-        }
-
-        // Construct FFmpeg command
-        $ffmpegCommand = ipTV_lib::$FFMPEG_CPU . ' -fflags +genpts -async 1 -y -nostdin -hide_banner -loglevel quiet -i "{INPUT}" ';
-        $ffmpegCommand .= implode(' ', self::parseTranscode($stream['transcode_attributes'])) . ' ';
-        $ffmpegCommand .= '-strict -2 -mpegts_flags +initial_discontinuity -f mpegts "' . CREATED_CHANNELS . $streamID . '_{INPUT_MD5}.ts" >/dev/null 2>/dev/null & jobs -p';
-
-        $result = array_diff($stream['stream_source'], $stream['cchannel_rsources']);
-        $json_string_data = '';
-
-        // Generate JSON string data for stream sources
-        foreach ($stream['stream_source'] as $source) {
-            $json_string_data .= 'file \'' . CREATED_CHANNELS . $streamID . '_' . md5($source) . '.ts\'';
-        }
-        $json_string_data = base64_encode($json_string_data);
-
-        if ((!empty($result) || $stream['stream_source'] !== $stream['cchannel_rsources'])) {
-            foreach ($result as $source) {
-                $stream['pids_create_channel'][] = ipTV_servers::RunCommandServer($stream['created_channel_location'], str_ireplace(array('{INPUT}', '{INPUT_MD5}'), array($source, md5($source)), $ffmpegCommand), 'raw')[$stream['created_channel_location']];
-            }
-            self::$ipTV_db->query('UPDATE `streams` SET pids_create_channel = ?,`cchannel_rsources` = ? WHERE `id` = ?', json_encode($stream['pids_create_channel']), json_encode($stream['stream_source']), $streamID);
-            ipTV_servers::RunCommandServer($stream['created_channel_location'], "echo {$json_string_data} | base64 --decode > \"" . CREATED_CHANNELS . $streamID . '_.list"', 'raw');
-            return 1;
-        } elseif (!empty($stream['pids_create_channel'])) {
-            foreach ($stream['pids_create_channel'] as $key => $pid) {
-                if (!ipTV_servers::PidsChannels($stream['created_channel_location'], $pid, ipTV_lib::$FFMPEG_CPU)) {
-                    unset($stream['pids_create_channel'][$key]);
-                }
-            }
-            self::$ipTV_db->query('UPDATE `streams` SET pids_create_channel = ? WHERE `id` = ?', json_encode($stream['pids_create_channel']), $streamID);
-            return empty($stream['pids_create_channel']) ? 2 : 1;
-        }
-
-        return 2;
-    }
     public static function probeStream($rSourceURL, $rFetchArguments = array(), $rPrepend = '', $rParse = true) {
         $analyseDuration = abs(intval(ipTV_lib::$settings['stream_max_analyze']));
         $probesize = abs(intval(ipTV_lib::$settings['probesize']));
@@ -756,19 +699,13 @@ class ipTV_stream {
         curl_close($ch);
         return $rReturn;
     }
+
     /**
-     * The function `checkCompatibility` checks if the audio and video codecs in the provided data are
-     * compatible with the predefined arrays of supported codecs.
+     * Checks if the given media data is compatible based on allowed audio and video codecs.
      *
-     * @param array rData is expected to be an array containing information about audio and video codecs.
-     * If  is not an array, the function attempts to decode it from JSON format. The function then
-     * checks if the audio and video codec names in the  array are compatible with the predefined
-     * lists of supported
+     * @param array|string $rData The media data containing codec information. Can be an array or a JSON-encoded string.
      *
-     * @return bool The function `checkCompatibility` is returning a boolean value based on the conditions
-     * specified in the code. It checks if the input `` contains audio and video codec names that are
-     * present in the predefined arrays `` and `` respectively. If the codec
-     * names are found and meet the conditions, it returns `true`, otherwise it returns `false`.
+     * @return bool Returns true if the media data contains supported audio and video codecs, otherwise false.
      */
     public static function checkCompatibility($rData) {
         if (!is_array($rData)) {
@@ -783,16 +720,14 @@ class ipTV_stream {
         }
         return ($rData['codecs']['audio']['codec_name'] || $rData['codecs']['video']['codec_name']) && in_array(strtolower($rData['codecs']['audio']['codec_name']), $rAudioCodecs) && in_array(strtolower($rData['codecs']['video']['codec_name']), $rVideoCodecs);
     }
+
     /**
      * Finds the nearest value in an array to a given search value.
      *
-     * This method iterates through an array and finds the element that is
-     * closest in value to the given search parameter. It works with numeric values.
+     * @param array $arr The array of numeric values to search in.
+     * @param float|int $search The target value to find the closest match for.
      *
-     * @param array $arr    The input array of numbers to search through.
-     * @param float $search The value to find the nearest match for.
-     *
-     * @return float|int|null The nearest value found in the array. Returns null if the array is empty.
+     * @return float|int|null Returns the closest value from the array, or null if the array is empty.
      */
     public static function getNearest($arr, $search) {
         $closest = null;
@@ -803,6 +738,7 @@ class ipTV_stream {
         }
         return $closest;
     }
+
     /**
      * Deletes files based on the provided sources.
      *
@@ -818,6 +754,24 @@ class ipTV_stream {
             }
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Adds a stream to the queue if it is not already present.
+     *
+     * @param int      $rStreamID  The ID of the stream to be queued.
+     * @param int|null $rServerID  The ID of the server (defaults to SERVER_ID if not provided).
+     *
+     * @return void
+     */
+    public static function queueChannel($rStreamID, $rServerID = null) {
+        if (!$rServerID) {
+            $rServerID = SERVER_ID;
+        }
+        self::$ipTV_db->query('SELECT `id` FROM `queue` WHERE `stream_id` = ? AND `server_id` = ?;', $rStreamID, $rServerID);
+        if (self::$ipTV_db->num_rows() == 0) {
+            self::$ipTV_db->query("INSERT INTO `queue`(`type`, `stream_id`, `server_id`, `added`) VALUES('channel', ?, ?, ?);", $rStreamID, $rServerID, time());
         }
     }
     public static function startLLOD($streamID, $rStreamInfo, $rStreamArguments, $rForceSource = null) {
@@ -841,6 +795,7 @@ class ipTV_stream {
         ipTV_streaming::updateStream($streamID);
         return array('main_pid' => $PID, 'stream_source' => $sources[0], 'delay_enabled' => false, 'parent_id' => 0, 'delay_start_at' => null, 'playlist' => STREAMS_PATH . $streamID . '_.m3u8', 'transcode' => false, 'offset' => 0);
     }
+
     public static function startLoopback($streamID) {
         shell_exec('rm -f ' . STREAMS_PATH . intval($streamID) . '_*.ts');
         if (file_exists(STREAMS_PATH . $streamID . '_.pid')) {
@@ -872,6 +827,7 @@ class ipTV_stream {
         }
         return false;
     }
+
     public static function detectXC($rURL) {
         $rPath = parse_url($rURL)['path'];
         $rPathSize = count(explode('/', $rPath));

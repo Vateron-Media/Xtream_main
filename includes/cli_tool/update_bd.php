@@ -102,6 +102,8 @@ $ipTV_db->query("INSERT INTO `settings` (`name`, `value`) VALUES ('keep_restarts
 $ipTV_db->query("DELETE FROM `settings` WHERE `name`='userpanel_mainpage'");
 $ipTV_db->query("DELETE FROM `settings` WHERE `name`='page_mannuals'");
 
+$ipTV_db->query("DELETE FROM `crontab` WHERE `filename`='kill_leaks.php'");
+
 $ipTV_db->query("DROP TABLE admin_settings;");
 
 $ipTV_db->query("UPDATE `crontab` SET `filename`='series.php' WHERE `filename`='vod_cc_series.php'");

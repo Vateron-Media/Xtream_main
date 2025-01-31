@@ -473,6 +473,72 @@ class ipTV_streaming {
             self::closeConnections($userInfo['id'], $userInfo['max_connections'], $IP, $userAgent);
         }
     }
+    
+    /**
+     * Retrieves active connections from Redis based on the given parameters.
+     *
+     * @param int|null  $rUserID     User ID (if specified, filters by user).
+     * @param int|null  $rServerID   Server ID (if specified, filters by server).
+     * @param int|null  $rStreamID   Stream ID (if specified, filters by stream).
+     * @param bool      $rOpenOnly   Consider only active connections (not used in the code).
+     * @param bool      $rCountOnly  If true, returns only the number of connections and unique users.
+     * @param bool      $rGroup      Group connections by unique users.
+     * @param bool      $rHLSOnly    If true, filters only HLS connections.
+     *
+     * @return array
+     * - If `$rCountOnly = true`: Returns an array `[total connections, unique users]`.
+     * - If `$rGroup = true`: Returns an array where keys are unique users and values are arrays of their connections.
+     * - Otherwise: Returns a list of all connections without grouping.
+     */
+    public static function getRedisConnections($rUserID = null, $rServerID = null, $rStreamID = null, $rOpenOnly = false, $rCountOnly = false, $rGroup = true, $rHLSOnly = false) {
+        $rReturn = ($rCountOnly ? array(0, 0) : array());
+        if (!is_object(ipTV_lib::$redis)) {
+            ipTV_lib::connectRedis();
+        }
+        $rUniqueUsers = array();
+        $rUserID = (0 < intval($rUserID) ? intval($rUserID) : null);
+        $rServerID = (0 < intval($rServerID) ? intval($rServerID) : null);
+        $rStreamID = (0 < intval($rStreamID) ? intval($rStreamID) : null);
+        if ($rUserID) {
+            $rKeys = ipTV_lib::$redis->zRangeByScore('LINE#' . $rUserID, '-inf', '+inf');
+        } else {
+            if ($rStreamID) {
+                $rKeys = ipTV_lib::$redis->zRangeByScore('STREAM#' . $rStreamID, '-inf', '+inf');
+            } else {
+                if ($rServerID) {
+                    $rKeys = ipTV_lib::$redis->zRangeByScore('SERVER#' . $rServerID, '-inf', '+inf');
+                } else {
+                    $rKeys = ipTV_lib::$redis->zRangeByScore('LIVE', '-inf', '+inf');
+                }
+            }
+        }
+        if (count($rKeys) > 0) {
+            foreach (ipTV_lib::$redis->mGet(array_unique($rKeys)) as $rRow) {
+                $rRow = igbinary_unserialize($rRow);
+                if (!($rServerID && $rServerID != $rRow['server_id']) && !($rStreamID && $rStreamID != $rRow['stream_id']) && !($rUserID && $rUserID != $rRow['user_id']) && !($rHLSOnly && $rRow['container'] == 'hls')) {
+                    $rUUID = ($rRow['user_id'] ?: $rRow['hmac_id'] . '_' . $rRow['hmac_identifier']);
+                    if ($rCountOnly) {
+                        $rReturn[0]++;
+                        $rUniqueUsers[] = $rUUID;
+                    } else {
+                        if ($rGroup) {
+                            if (!isset($rReturn[$rUUID])) {
+                                $rReturn[$rUUID] = array();
+                            }
+                            $rReturn[$rUUID][] = $rRow;
+                        } else {
+                            $rReturn[] = $rRow;
+                        }
+                    }
+                }
+            }
+        }
+        if ($rCountOnly) {
+            $rReturn[1] = count(array_unique($rUniqueUsers));
+        }
+        return $rReturn;
+    }
+
     /**
      * Closes active connections for a user when they exceed the maximum allowed limit
      *
