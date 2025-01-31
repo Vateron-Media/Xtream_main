@@ -73,6 +73,15 @@ function getRegisteredUser($rID) {
     return null;
 }
 
+function shutdown_admin() {
+    global $ipTV_db_admin;
+
+    if (is_object($ipTV_db_admin)) {
+        $ipTV_db_admin->close_mysql();
+    }
+}
+
+
 function getRegisteredUserHash($rHash) {
     global $ipTV_db_admin;
     $ipTV_db_admin->query("SELECT * FROM `reg_users` WHERE MD5(`username`) = ? LIMIT 1;", $rHash);
@@ -167,13 +176,6 @@ function generateString($strength = 10) {
     return $random_string;
 }
 
-function shutdown_admin() {
-    global $ipTV_db_admin;
-
-    if (is_object($ipTV_db_admin)) {
-        $ipTV_db_admin->close_mysql();
-    }
-}
 
 function issecure() {
     return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443;
@@ -477,16 +479,6 @@ function getSettings() {
         $return[$row["name"]] = $row["value"];
     }
     return $return;
-}
-
-function getTimezone() {
-    global $ipTV_db_admin;
-    $ipTV_db_admin->query("SELECT * FROM `settings`WHERE name='default_timezone'");
-    if ($ipTV_db_admin->num_rows() == 1) {
-        return $ipTV_db_admin->get_row()["value"];
-    } else {
-        return "Europe/London";
-    }
 }
 
 function getPanelLogs() {
@@ -1256,23 +1248,37 @@ function generateSeriesPlaylist($rSeriesNo) {
     return $rReturn;
 }
 
+/**
+ * Flushes blocked IP addresses and sends a flush signal to all servers and proxy servers.
+ *
+ * @global object $ipTV_db_admin Database connection object for executing queries.
+ * @global array $rServers Array containing server information.
+ * @global array $rProxyServers Array containing proxy server information.
+ *
+ * @return bool Returns `true` after successfully flushing the IPs.
+ */
 function flushIPs() {
-    global $ipTV_db_admin, $rServers;
-    $rCommand = "sudo /sbin/iptables -P INPUT ACCEPT && sudo /sbin/iptables -P OUTPUT ACCEPT && sudo /sbin/iptables -P FORWARD ACCEPT && sudo /sbin/iptables -F";
-    foreach ($rServers as $rServer) {
-        sexec($rServer["id"], $rCommand);
-    }
-    $ipTV_db_admin->query("DELETE FROM `blocked_ips`;");
+	global $ipTV_db_admin;
+	global $rServers;
+	global $rProxyServers;
+	$ipTV_db_admin->query('TRUNCATE `blocked_ips`;');
+	shell_exec('rm ' . FLOOD_TMP_PATH . 'block_*');
+
+	foreach ($rServers as $rServer) {
+		$ipTV_db_admin->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', $rServer['id'], time(), json_encode(array('action' => 'flush')));
+	}
+
+	foreach ($rProxyServers as $rServer) {
+		$ipTV_db_admin->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', $rServer['id'], time(), json_encode(array('action' => 'flush')));
+	}
+
+	return true;
 }
 
 function flushLogins() {
-    global $ipTV_db_admin, $rServers;
-    // foreach ($rServers as $rServer) {
-    //     sexec($rServer["id"], $rCommand);
-    // }
+    global $ipTV_db_admin;
     $ipTV_db_admin->query("DELETE FROM `login_flood`;");
 }
-
 
 function updateTMDbCategories() {
     global $ipTV_db_admin, $rSettings;
@@ -1519,43 +1525,28 @@ function SystemAPIRequest($rServerID, $rData) {
     $rData = curl_exec($ch);
     return $rData;
 }
-//network interface 1
-function multiexplode($delimiters, $data) {
-    $MakeReady = str_replace($delimiters, $delimiters[0], $data);
-    $Return = array_filter(explode($delimiters[0], $MakeReady));
-    return $Return;
-}
-//network interface 1
-function sexec($rServerID, $rCommand) {
-    global $_INFO;
-    if ($rServerID <> $_INFO["server_id"]) {
-        return SystemAPIRequest($rServerID, array("action" => "BackgroundCLI", "cmds" => array($rCommand)));
-    } else {
-        return exec($rCommand);
-    }
-}
 
-function loadnginx($rServerID) {
-    sexec($rServerID, "sudo /home/xtreamcodes/bin/nginx/sbin/nginx -s reload");
-    sexec($rServerID, "sudo /home/xtreamcodes/bin/nginx_rtmp/sbin/nginx_rtmp -s reload");
-}
-
+/**
+ * Retrieves a list of running processes (PIDs) from a remote server.
+ *
+ * @param int $rServerID The ID of the server to retrieve the process list from.
+ *
+ * @return array An array of processes, each containing:
+ *               - `user` (string): The user who owns the process.
+ *               - `pid` (int): The process ID.
+ *               - `cpu` (float): CPU usage percentage.
+ *               - `mem` (float): Memory usage percentage.
+ *               - `vsz` (int): Virtual memory size.
+ *               - `rss` (int): Resident set size (physical memory used).
+ *               - `tty` (string): Terminal associated with the process.
+ *               - `stat` (string): Process state.
+ *               - `start` (string): Start time of the process.
+ *               - `time` (string): Total CPU time used.
+ *               - `command` (string): Command that started the process.
+ */
 function getPIDs($rServerID) {
     $rReturn = array();
-    $rFilename = MAIN_DIR . 'tmp/proc_' . substr(md5(microtime() . rand(0, 9999)), 0, 20) . '.log';
-    $rCommand = "ps aux >> " . $rFilename;
-    sexec($rServerID, $rCommand);
-    $rData = "";
-    $rI = 3;
-    while (strlen($rData) == 0) {
-        $rData = SystemAPIRequest($rServerID, array('action' => 'getFile', 'filename' => $rFilename));
-        $rI--;
-        if (($rI == 0) or (strlen($rData) > 0)) {
-            break;
-        }
-        sleep(1);
-    }
-    $rProcesses = explode("\n", $rData);
+    $rProcesses = json_decode(SystemAPIRequest($rServerID, array('action' => 'get_pids')), true);
     array_shift($rProcesses);
     foreach ($rProcesses as $rProcess) {
         $rSplit = explode(" ", preg_replace('!\s+!', ' ', trim($rProcess)));
@@ -1565,29 +1556,43 @@ function getPIDs($rServerID) {
     }
     return $rReturn;
 }
+
+/**
+ * Retrieves free disk space information from a remote server.
+ *
+ * @param int $rServerID The ID of the server to check for free space.
+ *
+ * @return array An array of disk space details, where each entry contains:
+ *               - `filesystem` (string): The name of the filesystem.
+ *               - `size` (string): The total size of the filesystem.
+ *               - `used` (string): The amount of space used.
+ *               - `avail` (string): The amount of available space.
+ *               - `percentage` (string): The percentage of space used.
+ *               - `mount` (string): The mount point of the filesystem.
+ */
 function getFreeSpace($rServerID) {
     $rReturn = array();
-    $rFilename = MAIN_DIR . 'tmp/fs_' . substr(md5(microtime() . rand(0, 9999)), 0, 20) . '.log';
-    $rCommand = "df -h >> " . $rFilename;
-    sexec($rServerID, $rCommand);
-    $rData = SystemAPIRequest($rServerID, array('action' => 'getFile', 'filename' => $rFilename));
-    $rLines = explode("\n", $rData);
+    $rLines = json_decode(SystemAPIRequest($rServerID, array('action' => 'get_free_space')), true);
     array_shift($rLines);
+
     foreach ($rLines as $rLine) {
-        $rSplit = explode(" ", preg_replace('!\s+!', ' ', trim($rLine)));
-        if ((strlen($rSplit[0]) > 0) && (strpos($rSplit[5], "xtreamcodes") !== false)) {
-            $rReturn[] = array("filesystem" => $rSplit[0], "size" => $rSplit[1], "used" => $rSplit[2], "avail" => $rSplit[3], "percentage" => $rSplit[4], "mount" => join(" ", array_slice($rSplit, 5, count($rSplit) - 5)));
+        $rSplit = explode(' ', preg_replace('!\\s+!', ' ', trim($rLine)));
+        if (0 < strlen($rSplit[0]) && strpos($rSplit[5], 'xtreamcodes') !== false || $rSplit[5] == '/') {
+            $rReturn[] = array('filesystem' => $rSplit[0], 'size' => $rSplit[1], 'used' => $rSplit[2], 'avail' => $rSplit[3], 'percentage' => $rSplit[4], 'mount' => implode(' ', array_slice($rSplit, 5, count($rSplit) - 5)));
         }
     }
+
     return $rReturn;
 }
+
 function freeTemp($rServerID) {
-    sexec($rServerID, "rm " . MAIN_DIR . "tmp/*");
+    SystemAPIRequest($rServerID, array('action' => 'free_temp'));
 }
 
 function freeStreams($rServerID) {
-    sexec($rServerID, "rm " . MAIN_DIR . "streams/*");
+    SystemAPIRequest($rServerID, array('action' => 'free_streams'));
 }
+
 
 function getStreamPIDs($rServerID) {
     global $ipTV_db_admin;
@@ -1691,7 +1696,6 @@ function scanRecursive($rServerID, $rDirectory, $rAllowed = null) {
 }
 
 function getEncodeErrors($rID) {
-    global $rSettings;
     $rServers = getStreamingServers(true);
     ini_set('default_socket_timeout', 3);
     $rErrors = array();
@@ -1711,13 +1715,27 @@ function getEncodeErrors($rID) {
     return $rErrors;
 }
 
-function deleteMovieFile($rServerID, $rID) {
-    global $rServers, $rSettings;
-    ini_set('default_socket_timeout', 3);
-    $rCommand = "rm " . MAIN_DIR . "movies/" . $rID . ".*";
-    return SystemAPIRequest($rServerID, array('action' => 'BackgroundCLI', 'action' => array($rCommand)));
+/**
+ * Queue deletion signals for a VOD file across specified streaming servers
+ * 
+ * Inserts asynchronous deletion tasks into the signals table for external processing.
+ * Handles both single server ID and server ID arrays for batch operations.
+ *
+ * @param int|int[] $rServerIDs Single server ID or array of server IDs to notify
+ * @param int $rID Database ID of the VOD file to be removed
+ * @return bool Always returns true (does not verify database insertion success)
+ *
+ */
+function deleteMovieFile($rServerIDs, $rID) {
+	global $ipTV_db_admin;
+	if (!is_array($rServerIDs)) {
+		$rServerIDs = array($rServerIDs);
+	}
+	foreach ($rServerIDs as $rServerID) {
+		$ipTV_db_admin->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`, `cache`) VALUES(?, ?, ?, 1);', $rServerID, time(), json_encode(array('type' => 'delete_vod', 'id' => $rID)));
+	}
+	return true;
 }
-
 function getSeriesTrailer($rTMDBID) {
     // Not implemented in TMDB PHP API...
     global $rSettings;
@@ -1857,4 +1875,32 @@ function getURL() {
 
 function clearSettingsCache() {
     unlink(CACHE_TMP_PATH . 'settings');
+}
+
+/**
+ * Deletes a blocked IP entry from database and associated flood control file
+ * 
+ * Performs atomic removal of IP blocking record and its corresponding temp file.
+ * First verifies existence before deletion to prevent errors.
+ *
+ * @param int $rID Database ID of the blocked IP record to remove
+ * @return bool True if deletion succeeded, false if record not found
+ *
+ */
+function rdeleteBlockedIP($rID) {
+	global $ipTV_db_admin;
+	$ipTV_db_admin->query('SELECT `id`, `ip` FROM `blocked_ips` WHERE `id` = ?;', $rID);
+
+	if (0 >= $ipTV_db_admin->num_rows()) {
+		return false;
+	}
+
+	$rRow = $ipTV_db_admin->get_row();
+	$ipTV_db_admin->query('DELETE FROM `blocked_ips` WHERE `id` = ?;', $rID);
+
+	if (file_exists(FLOOD_TMP_PATH . 'block_' . $rRow['ip'])) {
+		unlink(FLOOD_TMP_PATH . 'block_' . $rRow['ip']);
+	}
+
+	return true;
 }

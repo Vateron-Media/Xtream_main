@@ -1,6 +1,35 @@
 <?php
 
 class ipTV_servers {
+    /**
+     * Checks if a process with a given PID is running on a specific server.
+     *
+     * @param int|string $rServerID The ID of the server where the process is running.
+     * @param int|null $rPID The Process ID (PID) to check.
+     * @param string $rEXE The executable name to verify against the PID.
+     *
+     * @return bool Returns true if the process is running, otherwise false.
+     */
+    public static function isPIDRunning($rServerID, $rPID, $rEXE) {
+        if (!is_null($rPID) && is_numeric($rPID) && array_key_exists($rServerID, self::$rServers)) {
+            if (!($rOutput = self::isPIDsRunning($rServerID, array($rPID), $rEXE))) {
+                return false;
+            }
+            return $rOutput[$rServerID][$rPID];
+        }
+        return false;
+    }
+    
+    /**
+     * Checks if multiple processes (PIDs) are running on one or more servers.
+     *
+     * @param int|array $serverIDS The ID(s) of the server(s) where the processes should be checked.
+     * @param array $PIDs An array of Process IDs (PIDs) to check.
+     * @param string $eXE The executable name to verify against the PIDs.
+     *
+     * @return array Returns an associative array where the keys are server IDs 
+     *               and values are arrays of running PIDs or `false` if the request failed.
+     */
     public static function isPIDsRunning($serverIDS, $PIDs, $eXE) {
         if (!is_array($serverIDS)) {
             $serverIDS = array(intval($serverIDS));
@@ -19,49 +48,7 @@ class ipTV_servers {
         }
         return $output;
     }
-    static function PidsChannels($createdChannelLocation, $pid, $ffmpeg_path) {
-        if (is_null($pid) || !is_numeric($pid) || !array_key_exists($createdChannelLocation, ipTV_lib::$Servers)) {
-            return false;
-        }
-        if ($output = self::isPIDsRunning($createdChannelLocation, array($pid), $ffmpeg_path)) {
-            return $output[$createdChannelLocation][$pid];
-        }
-        return false;
-    }
-    static function getPidFromProcessName($serverIDS, $ffmpeg_path) {
-        $command = 'ps ax | grep \'' . basename($ffmpeg_path) . '\' | awk \'{print $1}\'';
-        return self::RunCommandServer($serverIDS, $command);
-    }
-    public static function RunCommandServer($serverIDS, $cmd, $type = 'array') {
-        $output = array();
-        if (!is_array($serverIDS)) {
-            $serverIDS = array(intval($serverIDS));
-        }
-        if (empty($cmd)) {
-            foreach ($serverIDS as $server_id) {
-                $output[$server_id] = '';
-            }
-            return $output;
-        }
-        foreach ($serverIDS as $server_id) {
-            if (!($server_id == SERVER_ID)) {
-                if (!array_key_exists($server_id, ipTV_lib::$Servers)) {
-                    continue;
-                }
-                $esponse = self::serverRequest($server_id, ipTV_lib::$Servers[$server_id]['api_url_ip'] . '&action=runCMD', array('command' => $cmd));
-                if ($esponse) {
-                    $esult = json_decode($esponse, true);
-                    $output[$server_id] = $type == 'array' ? $esult : implode('', $esult);
-                } else {
-                    $output[$server_id] = false;
-                }
-            } else {
-                exec($cmd, $outputCMD);
-                $output[$server_id] = $type == 'array' ? $outputCMD : implode('', $outputCMD);
-            }
-        }
-        return $output;
-    }
+
     public static function serverRequest($serverID, $rURL, $postData = array()) {
         if (ipTV_lib::$Servers[$serverID]['server_online']) {
             $output = false;

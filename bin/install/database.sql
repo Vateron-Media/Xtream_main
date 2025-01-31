@@ -235,7 +235,6 @@ INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
 (4, 'cache.php', '* * * * *', 1),
 (5, 'epg.php', '0 0 * * *', 1),
 (6, 'errors.php', '* * * * *', 1),
-(7, 'kill_leaks.php', '* * * * *', 1),
 (8, 'user_logs.php', '* * * * *', 1),
 (9, 'pid_monitor.php', '0 * * * *', 1),
 (10, 'servers.php', '* * * * *', 1),
