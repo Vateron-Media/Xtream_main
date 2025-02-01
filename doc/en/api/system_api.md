@@ -66,7 +66,7 @@ This API provides various functionalities including viewing logs, managing video
 ---
 
 ### 5. Retrieve File
-#### **GET** `/api.php?action=getFile&`
+#### **GET** `/api.php?action=getFile`
 **Description:** Downloads a specified file.
 **Parameters:**
 | Parameter   | Type     | Required | Description |
