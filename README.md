@@ -20,29 +20,19 @@
 </a> 
 </p>
 
+## Latest release
+- [Documentation](https://github.com/Vateron-Media/Xtream_main/doc/en/main-page.md) | - [Документация](https://github.com/Vateron-Media/Xtream_main/doc/ru/main-page.md)
+
+
 # Note
 
 * You cannot use Cyrillic and special characters in the name of the source media file to be used in the panel
 
 # Stream URL
-* XC_VM
-  - http://ip:25500
-
-* MAG or Stalker Portal
-  - http://ip:25461/stalker_portal/c/
-
-* File IPTV list
-  - http://ip:25461/get.php?username=test&password=test&type=m3u_plus&output=hls&key=live
-
-
-| Parameter |description |
-| :---:   | :---: |
-| username | Username |
-| password | User password |
-| type | Type playlist |
-| output | stream type (hls or m3u) |
-| key | type of content (live, movie, radio_streams, series) |
-
+#### **XC_VM** `http://<host>:25500`
+#### **MAG or Stalker Portal** `http://<host>:25461/stalker_portal/c/`
+#### **File IPTV list** `http://<host>:25461/get.php?username=test&password=test&type=m3u_plus&output=hls&key=live`
+* See the API documentation for an explanation of parameters in a GET request
 
 # Run panel
 

@@ -117,13 +117,13 @@ This API provides various functionalities including viewing logs, managing video
 
 ---
 
-### 9. Free temp
+### 9. Clear the temporary files folder
 #### **GET** `/api.php?action=free_temp`
 **Description:** Deletes temporary files and runs a script for caching..
 
 ---
 
-### 10. Free streams
+### 10. Clear the Broadcasts folder
 #### **GET** `/api.php?action=free_streams`
 **Description:** Clears the stream folder.
 
@@ -140,7 +140,7 @@ This API provides various functionalities including viewing logs, managing video
 **Description:** Returns a list of running processes.
 
 ---
-### 13. KILL PID
+### 13. End the process by PID
 #### **GET** `/api.php?action=kill_pid`
 **Description:** Kill the process by PID.
 
