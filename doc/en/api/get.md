@@ -1,4 +1,4 @@
-# API Documentation
+# Get playlist
 
 ## File location
 ```
