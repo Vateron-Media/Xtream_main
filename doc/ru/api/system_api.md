@@ -86,9 +86,9 @@
 |dir |string |yes |Путь к каталогу.|
 **Ответ:**
 ```html
-<ul class=«jqueryFileTree» style=«display: none;»>
-  <li class=«directory collapsed»><a href=«#» rel=«/path/to/directory/»>directory_name</a></li>
-  <li class=«file ext_txt»><a href=«#» rel=«/path/to/file.txt»>file.txt</a></li>
+<ul class="jqueryFileTree" style="display: none;">
+  <li class="directory collapsed"><a href="#" rel="/path/to/directory/">directory_name</a></li>
+  <li class="file ext_txt"><a href="#" rel="/path/to/file.txt">file.txt</a></li>
 </ul>
 ```
 
@@ -106,12 +106,12 @@
 ---
 
 ### 8. Отправить сигнал
-#### **ПОЛУЧИТЬ** `/api.php?action=signal_send`
+#### **GET** `/api.php?action=signal_send`
 **Описание:** Отправляет сигнальное сообщение для выполнения действия.
 **Параметры:**
 | Параметр | Тип | Обязательный | Описание |
 |------------|----------|----------|-------------|
-|сообщение |строка |да |Предложение для отмены. |
+|message |строка |да |Предложение для отмены. |
 |activity_id |целое число |да |Идентификатор активности.|
 
 

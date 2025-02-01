@@ -26,7 +26,7 @@
 
 # Note
 
-* You cannot use Cyrillic and special characters in the name of the source media file to be used in the panel
+* When uploading or managing media files through the Xtream admin panel, you cannot use Cyrillic characters or special characters in the filenames. This applies to all video, audio, and image files that you plan to manage through the admin interface.
 
 # Stream URL
 #### **XC_VM** `http://<host>:25500`

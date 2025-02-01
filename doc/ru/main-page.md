@@ -2,5 +2,5 @@
 
 ## API
 
-- [Системный API](api/system_api.md.md)
+- [Системный API](api/system_api.md)
 - [Получить плейлист](api/get.md)
