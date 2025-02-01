@@ -2,5 +2,5 @@
 
 ## API
 
-- [System API](api/system_api.md.md)
+- [System API](api/system_api.md)
 - [Get playlist](api/get.md)

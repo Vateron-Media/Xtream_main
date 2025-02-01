@@ -39,7 +39,7 @@ GET /
 
 **Пример запроса:**
 ``sh
-curl -X GET «http://<ваш-домен>:25461/get.php?username=test&password=test&type=m3u_plus&output=hls&key=live»
+curl -X GET "http://<ваш-домен>:25461/get.php?username=test&password=test&type=m3u_plus&output=hls&key=live"
 ```
 
 **Ответ:**
