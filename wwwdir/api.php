@@ -21,21 +21,21 @@ $action = (!empty(ipTV_lib::$request['action']) ? ipTV_lib::$request['action'] :
 $rDeny = false;
 
 switch ($action) {
-    case 'view_log':
-        if (empty(ipTV_lib::$request['stream_id'])) {
-            break;
-        }
-        $streamID = intval(ipTV_lib::$request['stream_id']);
-        if (file_exists(STREAMS_PATH . $streamID . '.errors')) {
-            echo file_get_contents(STREAMS_PATH . $streamID . '.errors');
-        } elseif (file_exists(VOD_PATH . $streamID . '.errors')) {
-            echo file_get_contents(VOD_PATH . $streamID . '.errors');
-        }
-        exit();
+    // case 'view_log':
+    //     if (empty(ipTV_lib::$request['stream_id'])) {
+    //         break;
+    //     }
+    //     $streamID = intval(ipTV_lib::$request['stream_id']);
+    //     if (file_exists(STREAMS_PATH . $streamID . '.errors')) {
+    //         echo file_get_contents(STREAMS_PATH . $streamID . '.errors');
+    //     } elseif (file_exists(VOD_PATH . $streamID . '.errors')) {
+    //         echo file_get_contents(VOD_PATH . $streamID . '.errors');
+    //     }
+    //     exit();
 
-    case 'reload_epg':
-        shell_exec(PHP_BIN . ' ' . CRON_PATH . 'epg.php >/dev/null 2>/dev/null &');
-        break;
+    // case 'reload_epg':
+    //     shell_exec(PHP_BIN . ' ' . CRON_PATH . 'epg.php >/dev/null 2>/dev/null &');
+    //     break;
         
     case 'vod':
         if (!empty(ipTV_lib::$request['stream_ids']) && !empty(ipTV_lib::$request['function'])) {
