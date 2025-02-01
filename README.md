@@ -21,7 +21,7 @@
 </p>
 
 ## Latest release
-- [Documentation](https://github.com/Vateron-Media/Xtream_main/doc/en/main-page.md) | - [Документация](https://github.com/Vateron-Media/Xtream_main/doc/ru/main-page.md)
+- [Documentation](https://github.com/Vateron-Media/Xtream_main/blob/main/doc/en/main-page.md) | [Документация](https://github.com/Vateron-Media/Xtream_main/blob/main/doc/ru/main-page.md)
 
 
 # Note
