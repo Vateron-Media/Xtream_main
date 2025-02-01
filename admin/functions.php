@@ -1,8 +1,6 @@
 <?php
-include_once("/home/xtreamcodes/admin/HTMLPurifier.standalone.php");
 require_once '/home/xtreamcodes/includes/admin.php';
 
-$rPurifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
 $rTableSearch = strtolower(basename($_SERVER["SCRIPT_FILENAME"], '.php')) === "table_search";
 
 if (isset($_SESSION['hash'])) {
