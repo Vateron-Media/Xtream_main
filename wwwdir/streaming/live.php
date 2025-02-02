@@ -1,46 +1,61 @@
 <?php
 
+// Register shutdown function to handle cleanup
 register_shutdown_function("shutdown");
-set_time_limit(0);
-require_once "../init.php";
+
+set_time_limit(0); // Prevent script timeout
+require_once "../init.php"; // Initialize necessary libraries
+
+// Unset unnecessary settings for security reasons
 unset(ipTV_lib::$settings["watchdog_data"]);
 unset(ipTV_lib::$settings["server_hardware"]);
+
+// Set CORS headers to allow access from any origin
 header("Access-Control-Allow-Origin: *");
-// if (!empty(ipTV_lib::$settings["send_server_header"])) {
-//     header("Server: " . ipTV_lib::$settings["send_server_header"]);
-// }
-// if (ipTV_lib::$settings["send_protection_headers"]) {
-//     header("X-XSS-Protection: 0");
-//     header("X-Content-Type-Options: nosniff");
-// }
-// if (ipTV_lib::$settings["send_altsvc_header"]) {
-//     header("Alt-Svc: h3-29=\":" . ipTV_lib::$Servers[SERVER_ID]["https_broadcast_port"] . "\"; ma=2592000,h3-T051=\":" . ipTV_lib::$Servers[SERVER_ID]["https_broadcast_port"] . "\"; ma=2592000,h3-Q050=\":" . ipTV_lib::$Servers[SERVER_ID]["https_broadcast_port"] . "\"; ma=2592000,h3-Q046=\":" . ipTV_lib::$Servers[SERVER_ID]["https_broadcast_port"] . "\"; ma=2592000,h3-Q043=\":" . ipTV_lib::$Servers[SERVER_ID]["https_broadcast_port"] . "\"; ma=2592000,quic=\":" . ipTV_lib::$Servers[SERVER_ID]["https_broadcast_port"] . "\"; ma=2592000; v=\"46,43\"");
-// }
-// if (empty(ipTV_lib::$settings["send_unique_header_domain"]) && !filter_var(HOST, FILTER_VALIDATE_IP)) {
-//     ipTV_lib::$settings["send_unique_header_domain"] = "." . HOST;
-// }
-// if (!empty(ipTV_lib::$settings["send_unique_header"])) {
-//     $rExpires = new DateTime("+6 months", new DateTimeZone("GMT"));
-//     header("Set-Cookie: " . ipTV_lib::$settings["send_unique_header"] . "=" . generateString(11) . "; Domain=" . ipTV_lib::$settings["send_unique_header_domain"] . "; Expires=" . $rExpires->format(DATE_RFC2822) . "; Path=/; Secure; HttpOnly; SameSite=none");
-// }
+
+// Optional headers (commented out for flexibility)
+//if (ipTV_lib::$settings["send_altsvc_header"]) {
+//    $httpsPort = ipTV_lib::$Servers[SERVER_ID]["https_broadcast_port"];
+//    header("Alt-Svc: h3-29=\":$httpsPort\"; ma=2592000, h3-T051=\":$httpsPort\"; ma=2592000, h3-Q050=\":$httpsPort\"; ma=2592000, h3-Q046=\":$httpsPort\"; ma=2592000, h3-Q043=\":$httpsPort\"; ma=2592000, quic=\":$httpsPort\"; ma=2592000; v=\"46,43\"");
+//}
+
+// Set unique domain header if applicable
+//if (empty(ipTV_lib::$settings["send_unique_header_domain"]) && !filter_var(HOST, FILTER_VALIDATE_IP)) {
+//    ipTV_lib::$settings["send_unique_header_domain"] = "." . HOST;
+//}
+
+// Generate unique authentication token if enabled
+//if (!empty(ipTV_lib::$settings["send_unique_header"])) {
+//    $expiresAt = new DateTime("+6 months", new DateTimeZone("GMT"));
+//    header("Set-Cookie: " . ipTV_lib::$settings["send_unique_header"] . "=" . generateString(11) . "; Domain=" . ipTV_lib::$settings["send_unique_header_domain"] . "; Expires=" . $expiresAt->format(DATE_RFC2822) . "; Path=/; Secure; HttpOnly; SameSite=none");
+//}
+
+// Define key variables
 $rCreateExpiration = ipTV_lib::$settings["create_expiration"] ?: 5;
 $rIP = ipTV_streaming::getUserIP();
-$rUserAgent = empty($_SERVER["HTTP_USER_AGENT"]) ? "" : htmlentities(trim($_SERVER["HTTP_USER_AGENT"]));
+$rUserAgent = !empty($_SERVER["HTTP_USER_AGENT"]) ? htmlentities(trim($_SERVER["HTTP_USER_AGENT"])) : "";
 $rConSpeedFile = null;
 $rDivergence = 0;
 $closeCon = false;
 $PID = getmypid();
 $rStartTime = time();
 $rVideoCodec = null;
+
+// Validate and decrypt token data
 if (isset(ipTV_lib::$request["token"])) {
     $tokenData = json_decode(decryptData(ipTV_lib::$request["token"], ipTV_lib::$settings["live_streaming_pass"], OPENSSL_EXTRA), true);
+    
     if (!is_array($tokenData)) {
         ipTV_streaming::clientLog(0, 0, "LB_TOKEN_INVALID", $rIP);
         generateError("LB_TOKEN_INVALID");
     }
+
+        // Check token expiration
     if (isset($tokenData["expires"]) && $tokenData["expires"] < time() - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"]) {
         generateError("TOKEN_EXPIRED");
     }
+    
+    // Extract token data
     if (!isset($tokenData["video_path"])) {
         $rUsername = $tokenData["username"];
         $rPassword = $tokenData["password"];
@@ -53,6 +68,7 @@ if (isset(ipTV_lib::$request["token"])) {
         $rVideoCodec = $tokenData["video_codec"];
         $rCountryCode = $tokenData["country_code"];
     } else {
+        // Serve video file directly if path is provided
         header("Content-Type: video/mp2t");
         readfile($tokenData["video_path"]);
         exit;
@@ -60,43 +76,70 @@ if (isset(ipTV_lib::$request["token"])) {
 } else {
     generateError("NO_TOKEN_SPECIFIED");
 }
+
+// Determine the correct streaming format
 if (!isset($rExtension['ts']) && !isset($rExtension['m3u8'])) {
     $rExtension = ipTV_lib::$settings["api_container"];
 }
+
+// Disable buffering if specified
 if (ipTV_lib::$settings["use_buffer"] == 0) {
     header("X-Accel-Buffering: no");
 }
+
+// Ensure the channel is available
 if ($rChannelInfo) {
     $rServerID = $rChannelInfo["redirect_id"] ?: SERVER_ID;
-    if (file_exists(STREAMS_PATH . $streamID . "_.pid")) {
-        $rChannelInfo["pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.pid");
+
+    // Retrieve PID and monitor PID from file system
+    $streamPIDPath = STREAMS_PATH . $streamID . "_.pid";
+    $monitorPIDPath = STREAMS_PATH . $streamID . "_.monitor";
+    
+    if (file_exists($streamPIDPath)) {
+        $rChannelInfo["pid"] = (int) file_get_contents($streamPIDPath);
     }
-    if (file_exists(STREAMS_PATH . $streamID . "_.monitor")) {
-        $rChannelInfo["monitor_pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.monitor");
+    if (file_exists($monitorPIDPath)) {
+        $rChannelInfo["monitor_pid"] = (int) file_get_contents($monitorPIDPath);
     }
+    
+    // Handle on-demand streaming
     if (ipTV_lib::$settings["on_demand_instant_off"] && $rChannelInfo["on_demand"] == 1) {
         ipTV_streaming::addToQueue($streamID, $PID);
     }
+    
+    // Ensure the stream is running; otherwise, attempt to start it
     if (!ipTV_streaming::isStreamRunning($rChannelInfo["pid"], $streamID)) {
         $rChannelInfo["pid"] = null;
+        
         if ($rChannelInfo["on_demand"] == 1) {
             if (!ipTV_streaming::checkMonitorRunning($rChannelInfo["monitor_pid"], $streamID)) {
                 if (time() > $rActivityStart + $rCreateExpiration - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"]) {
                     generateError("TOKEN_EXPIRED");
                 }
+
                 ipTV_stream::startMonitor($streamID);
-                for ($rRetries = 0; !file_exists(STREAMS_PATH . (int) $streamID . "_.monitor") && $rRetries < 300; $rRetries++) {
+
+                // Wait for monitor to start
+                for ($rRetries = 0; !file_exists($monitorPIDPath) && $rRetries < 300; $rRetries++) {
                     usleep(10000);
                 }
-                $rChannelInfo["monitor_pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.monitor") ?: null;
+
+                $rChannelInfo["monitor_pid"] = file_exists($monitorPIDPath) ? (int) file_get_contents($monitorPIDPath) : null;
             }
+            
+            // If monitor fails, show an error video
             if (!$rChannelInfo["monitor_pid"]) {
                 ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
             }
-            for ($rRetries = 0; !file_exists(STREAMS_PATH . (int) $streamID . "_.pid") && $rRetries < 300; $rRetries++) {
+            
+            // Wait for stream PID file
+            for ($rRetries = 0; !file_exists($streamPIDPath) && $rRetries < 300; $rRetries++) {
                 usleep(10000);
             }
-            $rChannelInfo["pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.pid") ?: null;
+            
+            $rChannelInfo["pid"] = file_exists($streamPIDPath) ? (int) file_get_contents($streamPIDPath) : null;
+            
+            // If stream PID is missing, show an error video
             if (!$rChannelInfo["pid"]) {
                 ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
             }
@@ -104,6 +147,7 @@ if ($rChannelInfo) {
             ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
         }
     }
+    
     $rRetries = 0;
     $playlist = STREAMS_PATH . $streamID . "_.m3u8";
     if ($rExtension == "ts") {
