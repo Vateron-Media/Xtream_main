@@ -450,43 +450,60 @@ if ($rChannelInfo) {
 } else {
     ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
 }
-function shutdown() {
-    global $closeCon;
-    global $tokenData;
-    global $PID;
-    global $rChannelInfo;
-    global $streamID;
-    global $ipTV_db;
 
+function shutdown() {
+    
+    global $closeCon, $tokenData, $PID, $rChannelInfo, $streamID, $ipTV_db;
+
+    // Ensure settings are loaded (uncomment if needed)
     // ipTV_lib::getCache("settings");
-    // ipTV_lib::$settings;
+
+    // Check if connection needs to be closed
     if ($closeCon) {
+        $timeOffset = (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"];
+        $hlsLastRead = time() - $timeOffset;
+
+        // Handle Redis-based session tracking
         if (ipTV_lib::$settings["redis_handler"]) {
             if (!is_object(ipTV_lib::$redis)) {
                 ipTV_lib::connectRedis();
             }
+
+            // Fetch the connection details using the token's UUID
             $rConnection = ipTV_streaming::getConnection($tokenData["uuid"]);
             if ($rConnection && $rConnection["pid"] == $PID) {
-                $rChanges = ["hls_last_read" => time() - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"]];
+                $rChanges = ["hls_last_read" => $hlsLastRead];
                 ipTV_streaming::updateConnection($rConnection, $rChanges, "close");
             }
-        } else {
+        } 
+        // Handle MySQL-based session tracking
+        else {
             if (!is_object($ipTV_db)) {
                 $ipTV_db->db_connect();
             }
-            $ipTV_db->query("UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = ? WHERE `uuid` = ? AND `pid` = ?;", time() - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"], $tokenData["uuid"], $PID);
+            // Mark stream as ended and update last read timestamp
+            $ipTV_db->query(
+                "UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = ? WHERE `uuid` = ? AND `pid` = ?;",
+                $hlsLastRead, 
+                $tokenData["uuid"], 
+                $PID
+            );
         }
+
+        // Clean up temporary files associated with the streaming session
         ipTV_lib::unlinkFile(CONS_TMP_PATH . $tokenData["uuid"]);
         ipTV_lib::unlinkFile(CONS_TMP_PATH . $streamID . "/" . $tokenData["uuid"]);
     }
+
+    // Handle On-Demand instant shutdown (if enabled)
     if (ipTV_lib::$settings["on_demand_instant_off"] && $rChannelInfo["on_demand"] == 1) {
         ipTV_streaming::removeFromQueue($streamID, $PID);
     }
+
+    // Close database or Redis connections if they were used
     if (!ipTV_lib::$settings["redis_handler"] && is_object($ipTV_db)) {
         $ipTV_db->close_mysql();
-    } else {
-        if (ipTV_lib::$settings["redis_handler"] && is_object(ipTV_lib::$redis)) {
-            ipTV_lib::closeRedis();
-        }
+    } elseif (ipTV_lib::$settings["redis_handler"] && is_object(ipTV_lib::$redis)) {
+        ipTV_lib::closeRedis();
     }
 }
