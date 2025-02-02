@@ -150,66 +150,107 @@ if ($rChannelInfo) {
     
     $rRetries = 0;
     $playlist = STREAMS_PATH . $streamID . "_.m3u8";
-    if ($rExtension == "ts") {
-        if (!file_exists($playlist)) {
-            $rFirstTS = STREAMS_PATH . $streamID . "_0.ts";
-            $rFP = null;
-            while ($rRetries < (int) ipTV_lib::$settings["on_demand_wait_time"] * 10) {
-                if (file_exists($rFirstTS) && !$rFP) {
-                    $rFP = fopen($rFirstTS, "r");
-                }
-                if (!(ipTV_streaming::checkMonitorRunning($rChannelInfo["monitor_pid"], $streamID) && ipTV_streaming::isStreamRunning($rChannelInfo["pid"], $streamID))) {
-                    ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
-                }
-                if (!($rFP && fread($rFP, 1))) {
-                    usleep(100000);
-                    $rRetries++;
-                }
+    $maxRetries = (int) ipTV_lib::$settings["on_demand_wait_time"] * 10; // Max retries based on wait time
+    
+    // Check if streaming format is TS
+    if ($rExtension === "ts") {
+        // First TS segment file
+        $rFirstTS = STREAMS_PATH . $streamID . "_0.ts";
+        $rFP = null;
+    
+        // Wait until the TS file appears or max retries reached
+        while ($rRetries < $maxRetries) {
+            if (file_exists($rFirstTS) && !$rFP) {
+                $rFP = fopen($rFirstTS, "r");
             }
-            if ($rFP) {
-                fclose($rFP);
+    
+            // Validate that the monitor and stream are running
+            if (!ipTV_streaming::checkMonitorRunning($rChannelInfo["monitor_pid"], $streamID) || 
+                !ipTV_streaming::isStreamRunning($rChannelInfo["pid"], $streamID)) {
+                ipTV_streaming::ShowVideoServer("show_not_on_air_video", "not_on_air_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
             }
+    
+            // Check if file can be read
+            if ($rFP && fread($rFP, 1)) {
+                break; // File is readable, exit loop
+            }
+    
+            usleep(100000);
+            $rRetries++;
+        }
+    
+        if ($rFP) {
+            fclose($rFP);
         }
     } else {
-        for ($rFirstTS = STREAMS_PATH . $streamID . "_.m3u8"; !file_exists($playlist) && !file_exists($rFirstTS) && $rRetries < (int) ipTV_lib::$settings["on_demand_wait_time"] * 10; $rRetries++) {
+        // For non-TS streams (e.g., HLS), wait for playlist or first TS file
+        while (!file_exists($playlist) && !file_exists(STREAMS_PATH . $streamID . "_0.ts") && $rRetries < $maxRetries) {
             usleep(100000);
+            $rRetries++;
         }
     }
-    if ($rRetries == (int) ipTV_lib::$settings["on_demand_wait_time"] * 10) {
+    
+    // If max retries reached, terminate with an error
+    if ($rRetries >= $maxRetries) {
         generateError("WAIT_TIME_EXPIRED");
     }
-    if (!$rChannelInfo["pid"]) {
-        $rChannelInfo["pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.pid") ?: null;
+    
+    // Ensure PID is set by reading from the file system if necessary
+    if (!$rChannelInfo["pid"] && file_exists(STREAMS_PATH . $streamID . "_.pid")) {
+        $rChannelInfo["pid"] = (int) file_get_contents(STREAMS_PATH . $streamID . "_.pid");
     }
-
+    
+    // Calculate stream expiration time
     $rExecutionTime = time() - $rStartTime;
     $rExpiresAt = $rActivityStart + $rCreateExpiration + $rExecutionTime - (int) ipTV_lib::$Servers[SERVER_ID]["time_offset"];
+    
+    // Connect to the appropriate data store (Redis or MySQL)
     if (ipTV_lib::$settings["redis_handler"]) {
         ipTV_lib::connectRedis();
-    } else {
+    } elseif (is_object($ipTV_db)) {
         $ipTV_db->db_connect();
     }
-    if (ipTV_lib::$settings["disallow_2nd_ip_con"] && !$userInfo["is_restreamer"] && ($userInfo["max_connections"] < ipTV_lib::$settings["disallow_2nd_ip_max"] && 0 < $userInfo["max_connections"] || ipTV_lib::$settings["disallow_2nd_ip_max"] == 0)) {
+    
+    // Check if second IP connections are disallowed
+    if (
+        ipTV_lib::$settings["disallow_2nd_ip_con"] && 
+        !$userInfo["is_restreamer"] && 
+        ($userInfo["max_connections"] < ipTV_lib::$settings["disallow_2nd_ip_max"] && $userInfo["max_connections"] > 0 || 
+        ipTV_lib::$settings["disallow_2nd_ip_max"] == 0)
+    ) {
         $rAcceptIP = null;
+    
+        // Retrieve active connections (Redis or MySQL)
         if (ipTV_lib::$settings["redis_handler"]) {
             $rConnections = ipTV_streaming::getConnections($userInfo["id"], true);
-            if (count($rConnections) > 0) {
-                $rDate = array_column($rConnections, "date_start");
-                array_multisort($rDate, SORT_ASC, $rConnections);
+            if (!empty($rConnections)) {
+                // Sort connections by date (oldest first) and get the first user's IP
+                usort($rConnections, fn($a, $b) => $a['date_start'] <=> $b['date_start']);
                 $rAcceptIP = $rConnections[0]["user_ip"];
             }
         } else {
-            $ipTV_db->query("SELECT `user_ip` FROM `lines_live` WHERE `user_id` = ? AND `hls_end` = 0 ORDER BY `activity_id` DESC LIMIT 1;", $userInfo["id"]);
+            $query = "SELECT `user_ip` FROM `lines_live` WHERE `user_id` = ? AND `hls_end` = 0 ORDER BY `activity_id` DESC LIMIT 1;";
+            $ipTV_db->query($query, $userInfo["id"]);
+            
             if ($ipTV_db->num_rows() == 1) {
                 $rAcceptIP = $ipTV_db->get_row()["user_ip"];
             }
         }
-        $rIPMatch = ipTV_lib::$settings["ip_subnet_match"] ? implode(".", array_slice(explode(".", $rAcceptIP), 0, -1)) == implode(".", array_slice(explode(".", $rIP), 0, -1)) : $rAcceptIP == $rIP;
-        if ($rAcceptIP && !$rIPMatch) {
-            ipTV_streaming::clientLog($streamID, $userInfo["id"], "USER_ALREADY_CONNECTED", $rIP);
-            ipTV_streaming::ShowVideoServer("show_connected_video", "connected_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
+    
+        // Validate IP match based on full or subnet comparison
+        if ($rAcceptIP) {
+            $rIPMatch = ipTV_lib::$settings["ip_subnet_match"]
+                ? implode(".", array_slice(explode(".", $rAcceptIP), 0, -1)) === implode(".", array_slice(explode(".", $rIP), 0, -1))
+                : $rAcceptIP === $rIP;
+    
+            // If IP does not match, reject connection
+            if (!$rIPMatch) {
+                ipTV_streaming::clientLog($streamID, $userInfo["id"], "USER_ALREADY_CONNECTED", $rIP);
+                ipTV_streaming::ShowVideoServer("show_connected_video", "connected_video_path", $rExtension, $userInfo, $rIP, $rCountryCode, $userInfo["con_isp_name"], $rServerID);
+            }
         }
     }
+
     switch ($rExtension) {
         case "m3u8":
             if (ipTV_lib::$settings["redis_handler"]) {
