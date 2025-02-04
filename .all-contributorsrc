@@ -1,0 +1,75 @@
+{
+  "projectName": "Xtream_main",
+  "projectOwner": "Vateron-Media",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": ["CONTRIBUTORS.md"],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": false,
+  "badgeTemplate": "<a href=\"#contributors\"><img src=\"https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg\"></a>",
+  "contributorTemplate": "<a href=\"<%= contributor.profile %>\"><img src=\"<%= contributor.avatar_url %>\" width=\"<%= options.imageSize %>px;\" alt=\"\"/><br /><sub><b><%= contributor.name %></b></sub></a>",
+  "types": {
+    "code": {
+      "symbol": "💻",
+      "description": "Код",
+      "link": "https://github.com/Vateron-Media/Xtream_install/commits?author=<%= contributor.login %>"
+    },
+    "doc": {
+      "symbol": "📖",
+      "description": "Документация",
+      "link": "https://github.com/Vateron-Media/Xtream_install/commits?author=<%= contributor.login %>"
+    },
+    "translation": {
+      "symbol": "🌍",
+      "description": "Переводы",
+      "link": "https://github.com/Vateron-Media/Xtream_install/commits?author=<%= contributor.login %>"
+    },
+    "bug": {
+      "symbol": "🐛",
+      "description": "Поиск ошибок",
+      "link": "https://github.com/Vateron-Media/Xtream_install/issues?q=author%3A<%= contributor.login %>"
+    }
+  },
+  "skipCi": true,
+  "format": "markdown",
+  "contributors": [
+    {
+      "login": "mkhorin",
+      "name": "mkhorin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12345678?v=4",
+      "profile": "https://github.com/mkhorin",
+      "contributions": ["code", "bug"]
+    },
+    {
+      "login": "tech-guru",
+      "name": "tech-guru",
+      "avatar_url": "https://avatars.githubusercontent.com/u/87654321?v=4",
+      "profile": "https://github.com/tech-guru",
+      "contributions": ["doc", "code"]
+    },
+    {
+      "login": "doc-master",
+      "name": "doc-master",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11223344?v=4",
+      "profile": "https://github.com/doc-master",
+      "contributions": ["doc"]
+    },
+    {
+      "login": "linguist",
+      "name": "linguist",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44332211?v=4",
+      "profile": "https://github.com/linguist",
+      "contributions": ["translation"]
+    },
+    {
+      "login": "debugger",
+      "name": "debugger",
+      "avatar_url": "https://avatars.githubusercontent.com/u/66778899?v=4",
+      "profile": "https://github.com/debugger",
+      "contributions": ["bug"]
+    }
+  ]
+}
