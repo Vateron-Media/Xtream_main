@@ -1,24 +1,12 @@
 # XTREAM MAIN Server
-<p align="left">
-<a href="https://github.com/Vateron-Media/Xtream_main/blob/master/LICENSE" target="blank">
-<img src="https://img.shields.io/github/license/Vateron-Media/Xtream_main" alt="Xtream_main license" />
-</a>
-<a href="https://github.com/Vateron-Media/Xtream_main/fork" target="blank">
-<img src="https://img.shields.io/github/forks/Vateron-Media/Xtream_main?style=flat" alt="Xtream_main forks"/>
-</a>
-<a href="https://github.com/Vateron-Media/Xtream_main/stargazers" target="blank">
-<img src="https://img.shields.io/github/stars/Vateron-Media/Xtream_main?style=flat" alt="Xtream_main stars"/>
-</a>
-<a href="https://github.com/Vateron-Media/Xtream_main/issues" target="blank">
-<img src="https://img.shields.io/github/issues/Vateron-Media/Xtream_main" alt="Xtream_main issues"/>
-</a>
-<a href="https://github.com/Vateron-Media/Xtream_main/pulls" target="blank">
-<img src="https://img.shields.io/github/issues-pr/Vateron-Media/Xtream_main" alt="Xtream_main pull-requests"/>
-</a>
-  <a href="https://github.com/Vateron-Media/Xtream_main/releases" target="blank">
-<img src="https://img.shields.io/github/v/release/Vateron-Media/Xtream_main?label=Release%20Main&color=green" alt="Xtream_main pull-requests"/>
-</a> 
-</p>
+
+[![License](https://img.shields.io/github/license/Vateron-Media/Xtream_main)](LICENSE)
+[![Forks](https://img.shields.io/github/forks/Vateron-Media/Xtream_main?style=flat)](https://github.com/Vateron-Media/Xtream_main/fork)
+[![Stars](https://img.shields.io/github/stars/Vateron-Media/Xtream_main?style=flat)](https://github.com/Vateron-Media/Xtream_main/stargazers)
+[![Issues](https://img.shields.io/github/issues/Vateron-Media/Xtream_main)](https://github.com/Vateron-Media/Xtream_main/issues)
+[![Pull-requests](https://img.shields.io/github/issues-pr/Vateron-Media/Xtream_main)](https://github.com/Vateron-Media/Xtream_main/pulls)
+[![License](https://img.shields.io/github/v/release/Vateron-Media/Xtream_main?label=Release%20Main&color=green)](https://github.com/Vateron-Media/Xtream_main/releases)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg)](CONTRIBUTORS.md)
 
 ## Latest release
 - [Documentation](https://github.com/Vateron-Media/Xtream_main/blob/main/doc/en/main-page.md) | [Документация](https://github.com/Vateron-Media/Xtream_main/blob/main/doc/ru/main-page.md)
