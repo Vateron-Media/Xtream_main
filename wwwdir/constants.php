@@ -60,7 +60,6 @@ if (!defined('MAIN_DIR')) {
 }
 define('IPTV_ROOT_PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');
 define('INCLUDES_PATH', MAIN_DIR . 'includes/');
-define('IPTV_TEMPLATES_PATH', IPTV_ROOT_PATH . 'templates/');
 define('IMAGES_PATH', MAIN_DIR . 'wwwdir/images/');
 define('ENIGMA2_IMAGES_PATH', IMAGES_PATH . 'enigma2/');
 define('CRON_PATH', MAIN_DIR . 'crons/');
@@ -69,7 +68,6 @@ define('IPTV_CLIENT_AREA', MAIN_DIR . 'wwwdir/client_area/');
 define('BIN_PATH', MAIN_DIR . 'bin/');
 define('SIGNALS_PATH', MAIN_DIR . 'signals/');
 define('IPTV_CLIENT_AREA_TEMPLATES_PATH', IPTV_CLIENT_AREA . 'templates/');
-// define('UPDATE_PATH', MAIN_DIR . 'update/');
 define('CONFIG_PATH', MAIN_DIR . 'config/');
 // -------------------
 
