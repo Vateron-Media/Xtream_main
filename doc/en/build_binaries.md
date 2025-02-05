@@ -4,11 +4,11 @@
 📌 **All actions should be performed on the server where Xtream Codes is installed.**  
 
 ## 📖 **Table of Contents**  
-- [Preliminary Setup](#preliminary-setup)  
-- [Building NGINX](#building-nginx)  
-- [Building NGINX-RTMP](#building-nginx-rtmp)  
-- [Building PHP-FPM](#building-php-fpm)  
-- [Installing PHP Extensions](#installing-php-extensions)  
+- [Preliminary Setup](#-preliminary-setup)  
+- [Building NGINX](#-building-nginx)  
+- [Building NGINX-RTMP](#-building-nginx-rtmp)  
+- [Building PHP-FPM](#-building-php-fpm)  
+- [Installing PHP Extensions](#-installing-php-extensions)  
 
 ---
 
