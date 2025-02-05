@@ -1,2 +1,5 @@
 .vscode/
 *__pycache__/=
+.repomixignore
+repomix-output.md
+repomix.config.json

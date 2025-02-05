@@ -15,9 +15,9 @@ if __name__ == "__main__":
     os.system('sudo chown -R xtreamcodes:xtreamcodes "%s"' % baseDir)
     # os.system(f"sudo sh {baseDir}permissions.sh")
     # Transferring control further
-    os.system("sudo %s %stools/update.php post-update" % (PHPDir, baseDir))
+    os.system("sudo %s %sincludes/cli_tool/update.php post-update" % (PHPDir, baseDir))
     # start xtreamcodes
     os.system("sudo systemctl start xtreamcodes")
-    # remove update_tmp
-    # os.system(f"rm -rf {baseDir}update/")
+    # remove archive
+    os.remove(archive_file)
     sys.exit(1)
