@@ -89,10 +89,17 @@ if (!isset(ipTV_lib::$request['update'])) {
 
     if (!$rMigrating) {
         $rMigrateConnection = false;
+        $rMigrateXUI = false;
         $odb = new Database($_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['hostname'], $_INFO['port'], empty($_INFO['pconnect']) ? false : true);
 
         if ($odb->connected) {
             $rMigrateConnection = true;
+        }
+
+        $odb->query("SHOW TABLES LIKE 'access_codes';");
+
+        if ($odb->num_rows() > 0) {
+            $rMigrateXUI = true;
         }
 
         // $rCount = array('reg_users' => array('Users & Resellers', 0), 'users' => array('Lines - Standard, MAG & Enigma2 Devices', 0), 'enigma2_devices' => array('Device Info - Engima2', 0), 'mag_devices' => array('Device Info - MAG', 0), 'user_output' => array('Line Output - HLS, MPEG-TS & RTMP', 0), 'streaming_servers' => array('Servers - Load Balancers', 0), 'series' => array('TV Series', 0), 'series_episodes' => array('TV Episodes', 0), 'streams' => array('Streams - Live, Radio, Created & VOD', 0), 'streams_sys' => array('Stream Servers', 0), 'streams_options' => array('Stream Options', 0), 'stream_categories' => array('Stream Categories', 0), 'bouquets' => array('Bouquets', 0), 'member_groups' => array('Member Groups', 0), 'packages' => array('Reseller Packages', 0), 'rtmp_ips' => array("RTMP IP's", 0), 'epg' => array('EPG Providers ', 0), 'blocked_ips' => array('Blocked IP Addresses', 0), 'blocked_user_agents' => array('Blocked User-Agents', 0), 'isp_addon' => array("Blocked ISP's", 0), 'tickets' => array('Tickets', 0), 'tickets_replies' => array('Ticket Replies', 0), 'watch_folders' => array('Watch Folders', 0), 'members' => array('Users & Resellers', 0), 'epg_sources' => array('EPG Providers', 0), 'blocked_isps' => array("Blocked ISP's", 0), 'categories' => array('Stream Categories', 0), 'groups' => array('Member Groups', 0), 'servers' => array('Servers - Load Balancers', 0), 'stream_servers' => array('Stream Servers', 0));
@@ -288,11 +295,18 @@ if (!isset(ipTV_lib::$request['update'])) {
                                                         database exists, if it does not, create it.
                                                     </div>
                                                 <?php }
-                                                ?>
+                                                if ($rMigrateXUI) { ?>
+                                                    <div class="alert alert-danger mb-4" role="alert">
+                                                        The data restored to the xc_migrate database seems to contain tables attributed
+                                                        with XC_VM. You cannot migrate using this data, you need to restore it via the
+                                                        Databases section in the admin panel.
+                                                    </div>
+                                                <?php } ?>
+
                                             </div>
                                         </div>
                                         <?php
-                                        if ($rMigrateConnection && $rTotalCount > 0) { ?>
+                                        if ($rMigrateConnection && !$rMigrateXUI && $rTotalCount > 0) { ?>
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="alert alert-secondary mb-4" role="alert">
@@ -345,10 +359,9 @@ if (!isset(ipTV_lib::$request['update'])) {
                                                                     type="button">Don't Migrate</button></a>
                                                         </li>
                                                     <?php }
-                                                    if ($rMigrateConnection && $rTotalCount > 0) { ?>
+                                                    if ($rMigrateConnection && !$rMigrateXUI && $rTotalCount > 0) { ?>
                                                         <li class="list-inline-item float-right">
-                                                            <input name="migrate" type="submit" class="btn btn-primary"
-                                                                value="Migrate" />
+                                                            <input name="migrate" type="submit" class="btn btn-primary" value="Migrate" />
                                                         </li>
                                                     <?php } ?>
                                                 </ul>
@@ -371,6 +384,58 @@ if (!isset(ipTV_lib::$request['update'])) {
             </div>
         </footer>
         <!-- end Footer -->
+        <script src="assets/js/vendor.min.js"></script>
+        <script src="assets/libs/jquery-toast/jquery.toast.min.js"></script>
+        <script src="assets/libs/datatables/jquery.dataTables.min.js"></script>
+        <script src="assets/libs/datatables/dataTables.bootstrap4.js"></script>
+        <script src="assets/libs/select2/select2.min.js"></script>
+        <script src="assets/libs/datatables/dataTables.responsive.min.js"></script>
+        <script src="assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+        <script src="assets/libs/datatables/dataTables.buttons.min.js"></script>
+        <script src="assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+        <script src="assets/libs/datatables/buttons.html5.min.js"></script>
+        <script src="assets/libs/datatables/buttons.flash.min.js"></script>
+        <script src="assets/libs/datatables/buttons.print.min.js"></script>
+        <script src="assets/libs/datatables/dataTables.keyTable.min.js"></script>
+        <script src="assets/libs/datatables/dataTables.select.min.js"></script>
+        <script src="assets/libs/moment/moment.min.js"></script>
+        <script src="assets/libs/daterangepicker/daterangepicker.js"></script>
+        <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+        <script src="assets/js/pages/form-wizard.init.js"></script>
+        <script src="assets/js/app.min.js"></script>
+        <script>
+            function getMigrationStatus() {
+                $.getJSON("./setup?update=1", function(data) {
+                    if (data.result === true) {
+                        $("#migration_progress").html(data.data);
+                        if (data.status == 1) {
+                            setTimeout(getMigrationStatus, 1000);
+                        } else if (data.status == 2) {
+                            window.location.href = 'dashboard';
+                        } else if (data.status == 3) {
+                            $("#migrate_button").prop("disabled", false);
+                        }
+                    } else {
+                        $("#migration_progress").html("No progress available...");
+                        setTimeout(getMigrationStatus, 1000);
+                    }
+                    if ($("#migration_progress").length) {
+                        $("#migration_progress").scrollTop($("#migration_progress")[0].scrollHeight - $("#migration_progress").height());
+                    }
+                });
+            }
+
+            function migrateServer() {
+                window.location.href = 'setup?migrate=1';
+            }
+            $(document).ready(function() {
+                $(window).keypress(function(event) {
+                    if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
+                });
+                getMigrationStatus();
+            });
+        </script>
+
     </body>
 
     </html>
