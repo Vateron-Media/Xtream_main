@@ -23,7 +23,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
             $rSysCtl = '# XC_VM' . PHP_EOL . PHP_EOL . 'net.ipv4.tcp_congestion_control = bbr' . PHP_EOL . 'net.core.default_qdisc = fq' . PHP_EOL . 'net.ipv4.tcp_rmem = 8192 87380 134217728' . PHP_EOL . 'net.ipv4.udp_rmem_min = 16384' . PHP_EOL . 'net.core.rmem_default = 262144' . PHP_EOL . 'net.core.rmem_max = 268435456' . PHP_EOL . 'net.ipv4.tcp_wmem = 8192 65536 134217728' . PHP_EOL . 'net.ipv4.udp_wmem_min = 16384' . PHP_EOL . 'net.core.wmem_default = 262144' . PHP_EOL . 'net.core.wmem_max = 268435456' . PHP_EOL . 'net.core.somaxconn = 1000000' . PHP_EOL . 'net.core.netdev_max_backlog = 250000' . PHP_EOL . 'net.core.optmem_max = 65535' . PHP_EOL . 'net.ipv4.tcp_max_tw_buckets = 1440000' . PHP_EOL . 'net.ipv4.tcp_max_orphans = 16384' . PHP_EOL . 'net.ipv4.ip_local_port_range = 2000 65000' . PHP_EOL . 'net.ipv4.tcp_no_metrics_save = 1' . PHP_EOL . 'net.ipv4.tcp_slow_start_after_idle = 0' . PHP_EOL . 'net.ipv4.tcp_fin_timeout = 15' . PHP_EOL . 'net.ipv4.tcp_keepalive_time = 300' . PHP_EOL . 'net.ipv4.tcp_keepalive_probes = 5' . PHP_EOL . 'net.ipv4.tcp_keepalive_intvl = 15' . PHP_EOL . 'fs.file-max=20970800' . PHP_EOL . 'fs.nr_open=20970800' . PHP_EOL . 'fs.aio-max-nr=20970800' . PHP_EOL . 'net.ipv4.tcp_timestamps = 1' . PHP_EOL . 'net.ipv4.tcp_window_scaling = 1' . PHP_EOL . 'net.ipv4.tcp_mtu_probing = 1' . PHP_EOL . 'net.ipv4.route.flush = 1' . PHP_EOL . 'net.ipv6.route.flush = 1';
             $rInstallDir = BIN_PATH . 'install/';
             $rFiles = array('lb' => 'loadbalancer.tar.gz', 'lb_update' => 'loadbalancer_update.tar.gz');
-            $lastVersion = mb_substr(get_recent_stable_release("https://github.com/Vateron-Media/Xtream_sub/releases/latest"), 1);
+            $lastVersion = mb_substr(get_recent_stable_release("https://github.com/Vateron-Media/Xtream_lb/releases/latest"), 1);
 
             if ($rType == 1) {
                 $rPackages = array(
@@ -65,10 +65,10 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     'libzip5',
                     'mariadb-server'
                 );
-                $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $lastVersion . '/' . $rFiles['lb'];
+                $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_lb/releases/download/v' . $lastVersion . '/' . $rFiles['lb'];
             } elseif ($rType == 2) {
                 $rPackages = array('cpufrequtils');
-                $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_sub/releases/download/v' . $lastVersion . '/' . $rFiles['lb_update'];
+                $rInstallFiles = 'https://github.com/Vateron-Media/Xtream_lb/releases/download/v' . $lastVersion . '/' . $rFiles['lb_update'];
             } else {
                 $ipTV_db->query('UPDATE `servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
                 echo 'Invalid type specified!' . "\n";
