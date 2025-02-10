@@ -1,8 +1,9 @@
 name: Release Notifier
 
 on:
-  release:
-    types: [created, prereleased]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   notify-telegram:
@@ -21,21 +22,18 @@ jobs:
 
           AUTHOR_NAME="${{ github.actor }}"
 
-          MESSAGE="🔔 *$RELEASE_TYPE Published* 🔔
+          MESSAGE="🔔 *${RELEASE_TYPE} Published* 🔔\n\n"
+          MESSAGE+="📦 *Repository:* [${{ github.repository }}](https://github.com/${{ github.repository }})\n"
+          MESSAGE+="🏷️ *Version:* \`${{ github.ref_name }}\`\n"
+          MESSAGE+="📛 *Title:* ${{ github.event.release.name }}\n"
+          MESSAGE+="👤 *Author:* [$AUTHOR_NAME](https://github.com/$AUTHOR_NAME)\n\n"
+          MESSAGE+="📄 *Release Notes:*\n"
+          MESSAGE+="${{ github.event.release.body }}\n\n"
+          MESSAGE+="🔗 [View on GitHub](${{ github.event.release.html_url }})\n"
+          MESSAGE+="⏱️ Published at: ${{ github.event.release.published_at }}"
 
-          📦 *Repository:* [${{ github.repository }}](https://github.com/${{ github.repository }})
-          🏷️ *Version:* \`${{ github.ref_name }}\`
-          📛 *Title:* ${{ github.event.release.name }}
-          👤 *Author:* [$AUTHOR_NAME](https://github.com/$AUTHOR_NAME)
-
-          📄 *Release Notes:*
-          ${{ github.event.release.body }}
-
-          🔗 [View on GitHub](${{ github.event.release.html_url }}) 
-          ⏱️ Published at: ${{ github.event.release.published_at }}"
-
-          # Экранирование символов для MarkdownV2
-          ESCAPED_MSG=$(echo "$MESSAGE" | sed 's/[\.-]/\\&/g')
+          # Экранирование специальных символов для Telegram MarkdownV2
+          ESCAPED_MSG=$(echo "$MESSAGE" | sed -E 's/([_*\[\]()~`>#+\-=|{}.!])/\\\1/g')
 
           curl -s -X POST \
             -H "Content-Type: application/json" \
