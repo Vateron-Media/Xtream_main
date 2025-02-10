@@ -1,9 +1,8 @@
 name: Release Notifier
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [created, prereleased]
 
 jobs:
   notify-telegram:
