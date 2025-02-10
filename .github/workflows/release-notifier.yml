@@ -1,36 +1,36 @@
 name: Release Notifier
 
 on:
-  release:
-    types: [created, prereleased]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   notify-telegram:
     runs-on: ubuntu-latest
     steps:
-      - name: Send release notification
+      - name: Get Release Info
+        id: release_info
+        run: |
+          RELEASE_TAG=${GITHUB_REF#refs/tags/}
+          echo "tag_name=$RELEASE_TAG" >> $GITHUB_ENV
+          echo "release_url=https://github.com/${{ github.repository }}/releases/tag/$RELEASE_TAG" >> $GITHUB_ENV
+          echo "compare_url=https://github.com/${{ github.repository }}/compare/${{ github.event.before }}...$RELEASE_TAG" >> $GITHUB_ENV
+
+      - name: Send Release Notification to Telegram
         env:
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TOPIC_ID: ${{ secrets.TELEGRAM_TOPIC_ID }}
         run: |
-          RELEASE_TYPE="Release"
-          if [ "${{ github.event.release.prerelease }}" == "true" ]; then
-            RELEASE_TYPE="Prerelease"
-          fi
-
-          MESSAGE="🔔 *${RELEASE_TYPE} Published* 🔔\n\n"
+          MESSAGE="🔔 *New Release Published* 🔔\n\n"
           MESSAGE+="📦 *Repository:* [${{ github.repository }}](https://github.com/${{ github.repository }})\n"
-          MESSAGE+="🏷️ *Version:* \`${{ github.ref_name }}\`\n"
-          MESSAGE+="📛 *Title:* ${{ github.event.release.name }}\n"
-          MESSAGE+="📄 *Release Notes:*\n"
-          MESSAGE+="${{ github.event.release.body }}\n\n"
-          MESSAGE+="🔗 [View on GitHub](${{ github.event.release.html_url }})\n"
+          MESSAGE+="🏷️ *Version:* \`${{ env.tag_name }}\`\n"
+          MESSAGE+="📄 *Changelog:* [View Changes](${{ env.compare_url }})\n\n"
+          MESSAGE+="🔗 [View Release](${{ env.release_url }})"
 
-          # Экранирование специальных символов для Telegram MarkdownV2
-          ESCAPED_MSG=$(echo "$MESSAGE" | sed 's/[][(){}|.^$*+?~\\-]/\\&/g')
-
-          echo $ESCAPED_MSG
+          # Экранирование символов для MarkdownV2
+          ESCAPED_MSG=$(echo "$MESSAGE" | sed -E 's/([_*\[\]()~`>#+\-=|{}.!])/\\\1/g')
 
           curl -s -X POST \
             -H "Content-Type: application/json" \
