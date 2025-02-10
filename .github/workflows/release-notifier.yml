@@ -40,6 +40,6 @@ jobs:
               \"chat_id\": \"$CHAT_ID\",
               \"message_thread_id\": \"$TOPIC_ID\",
               \"text\": \"$MESSAGE\",
-              \"parse_mode\": \"MarkdownV2\"
+              \"parse_mode\": \"Markdown\"
             }" \
             "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
