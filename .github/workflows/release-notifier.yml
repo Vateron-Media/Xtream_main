@@ -23,21 +23,23 @@ jobs:
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TOPIC_ID: ${{ secrets.TELEGRAM_TOPIC_ID }}
         run: |
-          MESSAGE="🔔 *New Release Published* 🔔\n\n"
-          MESSAGE+="📦 *Repository:* [${{ github.repository }}](https://github.com/${{ github.repository }})\n"
-          MESSAGE+="🏷️ *Version:* \`${{ env.tag_name }}\`\n"
-          MESSAGE+="📄 *Changelog:* [View Changes](${{ env.compare_url }})\n\n"
-          MESSAGE+="🔗 [View Release](${{ env.release_url }})"
+          MESSAGE=$(cat <<EOF
+          🔔 *New Release Published* 🔔
 
-          # Экранирование символов для MarkdownV2
-          ESCAPED_MSG=$(echo "$MESSAGE" | sed -E 's/([_*\[\]()~`>#+\-=|{}.!])/\\\1/g')
+          📦 *Repository:* [${{ github.repository }}](https://github.com/${{ github.repository }})
+          🏷️ *Version:* \`${{ env.tag_name }}\`
+          📄 *Changelog:* [View Changes](${{ env.compare_url }})
+
+          🔗 [View Release](${{ env.release_url }})
+          EOF
+          )
 
           curl -s -X POST \
             -H "Content-Type: application/json" \
             -d "{
               \"chat_id\": \"$CHAT_ID\",
               \"message_thread_id\": \"$TOPIC_ID\",
-              \"text\": \"$ESCAPED_MSG\",
+              \"text\": \"$MESSAGE\",
               \"parse_mode\": \"MarkdownV2\"
             }" \
             "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
