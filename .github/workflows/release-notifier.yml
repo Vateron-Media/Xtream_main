@@ -12,7 +12,8 @@ jobs:
       - name: Send release notification
         env:
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID 
+          TOPIC_ID: ${{ secrets.TELEGRAM_TOPIC_ID }}
           run: |
             RELEASE_TYPE=${{ github.event.release.prerelease && 'Prerelease' || 'Release' }}
             AUTHOR_NAME="${{ github.event.release.author.login }}"
@@ -30,10 +31,15 @@ jobs:
             🔗 [View on GitHub](${{ github.event.release.html_url }}) 
             ⏱️ Published at: ${{ github.event.release.published_at }}"
           
-            # Экранирование специальных символов для MarkdownV2
+            # Shielding special characters for MarkdownV2
             ESCAPED_MSG=$(echo "$MESSAGE" | sed 's/[\.-]/\\&/g')
             
             curl -s -X POST \
               -H "Content-Type: application/json" \
-              -d "{\"chat_id\": \"$CHAT_ID\", \"text\": \"$ESCAPED_MSG\", \"parse_mode\": \"MarkdownV2\"}" \
+              -d "{
+                \"chat_id\": \"$CHAT_ID\",
+                \"message_thread_id\": \"$TOPIC_ID\",
+                \"text\": \"$MESSAGE\",
+                \"parse_mode\": \"MarkdownV2\"
+              }" \
               "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
