@@ -12,34 +12,38 @@ jobs:
       - name: Send release notification
         env:
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID 
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TOPIC_ID: ${{ secrets.TELEGRAM_TOPIC_ID }}
-          run: |
-            RELEASE_TYPE=${{ github.event.release.prerelease && 'Prerelease' || 'Release' }}
-            AUTHOR_NAME="${{ github.event.release.author.login }}"
-            
-            MESSAGE="🔔 *$RELEASE_TYPE Published* 🔔
-            
-            📦 *Repository:* [${{ github.repository }}](https://github.com/${{ github.repository }})
-            🏷️ *Version:* \`${{ github.event.release.tag_name }}\`
-            📛 *Title:* ${{ github.event.release.name }}
-            👤 *Author:* [$AUTHOR_NAME](https://github.com/$AUTHOR_NAME)
-            
-            📄 *Release Notes:*
-            ${{ github.event.release.body }}
-            
-            🔗 [View on GitHub](${{ github.event.release.html_url }}) 
-            ⏱️ Published at: ${{ github.event.release.published_at }}"
-          
-            # Shielding special characters for MarkdownV2
-            ESCAPED_MSG=$(echo "$MESSAGE" | sed 's/[\.-]/\\&/g')
-            
-            curl -s -X POST \
-              -H "Content-Type: application/json" \
-              -d "{
-                \"chat_id\": \"$CHAT_ID\",
-                \"message_thread_id\": \"$TOPIC_ID\",
-                \"text\": \"$MESSAGE\",
-                \"parse_mode\": \"MarkdownV2\"
-              }" \
-              "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+        run: |
+          RELEASE_TYPE="Release"
+          if [ "${{ github.event.release.prerelease }}" == "true" ]; then
+            RELEASE_TYPE="Prerelease"
+          fi
+
+          AUTHOR_NAME="${{ github.actor }}"
+
+          MESSAGE="🔔 *$RELEASE_TYPE Published* 🔔
+
+          📦 *Repository:* [${{ github.repository }}](https://github.com/${{ github.repository }})
+          🏷️ *Version:* \`${{ github.ref_name }}\`
+          📛 *Title:* ${{ github.event.release.name }}
+          👤 *Author:* [$AUTHOR_NAME](https://github.com/$AUTHOR_NAME)
+
+          📄 *Release Notes:*
+          ${{ github.event.release.body }}
+
+          🔗 [View on GitHub](${{ github.event.release.html_url }}) 
+          ⏱️ Published at: ${{ github.event.release.published_at }}"
+
+          # Экранирование символов для MarkdownV2
+          ESCAPED_MSG=$(echo "$MESSAGE" | sed 's/[\.-]/\\&/g')
+
+          curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"chat_id\": \"$CHAT_ID\",
+              \"message_thread_id\": \"$TOPIC_ID\",
+              \"text\": \"$ESCAPED_MSG\",
+              \"parse_mode\": \"MarkdownV2\"
+            }" \
+            "https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
