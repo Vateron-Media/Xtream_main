@@ -32,7 +32,7 @@ jobs:
           MESSAGE+="⏱️ Published at: ${{ github.event.release.published_at }}"
 
           # Экранирование специальных символов для Telegram MarkdownV2
-          ESCAPED_MSG=$(echo "$MESSAGE" | sed -r 's/([][_*\[\]()~`>#+\-=|{}.!])/\\\1/g')
+          ESCAPED_MSG=$(echo "$MESSAGE" | sed 's/[][(){}|.^$*+?~\\-]/\\&/g')
 
           curl -s -X POST \
             -H "Content-Type: application/json" \
