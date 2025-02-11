@@ -1,5 +1,4 @@
 <?php
-
 // Register shutdown function to handle cleanup
 register_shutdown_function('shutdown');
 set_time_limit(0);
@@ -14,7 +13,6 @@ if (empty(ipTV_lib::$request['password']) || ipTV_lib::$request['password'] !== 
 }
 
 unset(ipTV_lib::$request['password']); // Remove password from memory for security
-
 // Validate IP address
 if (!in_array($rIP, ipTV_lib::$allowedIPs)) {
     generateError('API_IP_NOT_ALLOWED');
@@ -25,9 +23,8 @@ header('Access-Control-Allow-Origin: *');
 
 $action = ipTV_lib::$request['action'] ?? '';
 $rDeny = false; // Reset deny flag after authentication
-
 switch ($action) {
-    
+
     case 'vod':
         if (empty(ipTV_lib::$request['stream_ids']) || empty(ipTV_lib::$request['function'])) {
             exit(json_encode(['result' => false, 'error' => 'Missing parameters']));
@@ -50,6 +47,7 @@ switch ($action) {
                 ipTV_stream::stopMovie($streamID);
             }
             usleep(50000); // Allow slight delay for execution
+
         }
 
         exit(json_encode(['result' => true]));
@@ -62,15 +60,20 @@ switch ($action) {
             switch ($function) {
                 case 'start':
                     foreach ($streamIDs as $streamID) {
-                        ipTV_stream::stopMovie($streamID);
-                        ipTV_stream::startMovie($streamID);
-                        usleep(50000);
+                        if (ipTV_stream::startMonitor($streamID, true)) {
+                            usleep(50000);
+                        } else {
+                            echo json_encode(array(
+                                'result' => false
+                            ));
+                            exit();
+                        }
                     }
                     exit(json_encode(['result' => true]));
 
                 case 'stop':
                     foreach ($streamIDs as $streamID) {
-                        ipTV_stream::stopMovie($streamID);
+                        ipTV_stream::stopStream($streamID, true);
                     }
                     exit(json_encode(['result' => true]));
             }
@@ -96,9 +99,7 @@ switch ($action) {
         $output = [];
 
         foreach ($PIDs as $rPID) {
-            $output[$rPID] = file_exists("/proc/$rPID") &&
-                             is_readable("/proc/$rPID/exe") &&
-                             strpos(basename(readlink("/proc/$rPID/exe")), basename($program)) === 0;
+            $output[$rPID] = file_exists("/proc/$rPID") && is_readable("/proc/$rPID/exe") && strpos(basename(readlink("/proc/$rPID/exe")), basename($program)) === 0;
         }
 
         exit(json_encode($output));
@@ -111,8 +112,7 @@ switch ($action) {
         $filename = ipTV_lib::$request['filename'];
         $allowedExtensions = ['log', 'tar.gz', 'gz', 'zip', 'm3u8', 'mp4', 'mkv', 'avi', 'mpg', 'flv', '3gp', 'm4v', 'wmv', 'mov', 'ts', 'srt', 'sub', 'sbv', 'jpg', 'png', 'bmp', 'jpeg', 'gif', 'tif'];
 
-        if (in_array(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), $allowedExtensions) &&
-            file_exists($filename) && is_readable($filename)) {
+        if (in_array(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), $allowedExtensions) && file_exists($filename) && is_readable($filename)) {
 
             header('Content-Type: application/octet-stream');
             $size = filesize($filename);
@@ -141,13 +141,58 @@ switch ($action) {
             $fp = fopen($filename, 'rb');
             fseek($fp, $start);
             while (!feof($fp) && ftell($fp) <= $end) {
-                echo fread($fp, 8192);
+                echo fread($fp, (intval(ipTV_lib::$settings['read_buffer_size']) ?: 8192));
             }
             fclose($fp);
             exit();
         }
 
         exit(json_encode(['result' => false, 'error' => 'Invalid file extension.']));
+
+    case 'viewDir':
+        $dir = urldecode(ipTV_lib::$request['dir']);
+        if (file_exists($dir) && is_readable($dir)) {
+            $files = array_diff(scandir($dir), ['.', '..']);
+            natcasesort($files);
+
+            if (!empty($files)) {
+                echo '<ul class="jqueryFileTree" style="display: none;">';
+                foreach ($files as $file) {
+                    $filePath = $dir . DIRECTORY_SEPARATOR . $file;
+                    if (is_dir($filePath)) {
+                        echo '<li class="directory collapsed"><a href="#" rel="' . htmlentities($filePath) . '/">' . htmlentities($file) . '</a></li>';
+                    } else {
+                        $ext = pathinfo($file, PATHINFO_EXTENSION);
+                        echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($filePath) . '">' . htmlentities($file) . '</a></li>';
+                    }
+                }
+                echo '</ul>';
+            }
+        }
+        die;
+        
+    case 'redirect_connection':
+        if (empty(ipTV_lib::$request['activity_id']) || empty(ipTV_lib::$request['stream_id']) || empty(ipTV_lib::$request['uuid'])) {
+            exit(json_encode(['result' => false, 'error' => 'Missing required parameters']));
+        }
+
+        // Set request type as redirect
+        ipTV_lib::$request['type'] = 'redirect';
+
+        // Save request data to the appropriate signals file
+        $filePath = SIGNALS_PATH . ipTV_lib::$request['uuid'];
+        if (file_put_contents($filePath, json_encode(ipTV_lib::$request)) === false) {
+            exit(json_encode(['result' => false, 'error' => 'Failed to write to signals file']));
+        }
+
+        exit(json_encode(['result' => true]));
+
+    case 'signal_send':
+        if (!empty(ipTV_lib::$request['message']) && !empty(ipTV_lib::$request['activity_id'])) {
+            ipTV_lib::$request['type'] = 'signal';
+            file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
+        }
+        break;
 
     case 'free_temp':
         exec('rm -rf ' . MAIN_DIR . 'tmp/*');
@@ -174,51 +219,6 @@ switch ($action) {
         } else {
             exit(json_encode(['result' => false]));
         }
-
-	case 'redirect_connection':
-		if (empty(ipTV_lib::$request['activity_id']) || empty(ipTV_lib::$request['stream_id']) || empty(ipTV_lib::$request['uuid'])) {
-			exit(json_encode(['result' => false, 'error' => 'Missing required parameters']));
-		}
-
-		// Set request type as redirect
-		ipTV_lib::$request['type'] = 'redirect';
-
-		// Save request data to the appropriate signals file
-		$filePath = SIGNALS_PATH . ipTV_lib::$request['uuid'];
-		if (file_put_contents($filePath, json_encode(ipTV_lib::$request)) === false) {
-			exit(json_encode(['result' => false, 'error' => 'Failed to write to signals file']));
-		}
-
-		exit(json_encode(['result' => true]));
-
-    case 'signal_send':
-        if (!empty(ipTV_lib::$request['activity_id']) && !empty(ipTV_lib::$request['stream_id'])) {
-            ipTV_lib::$request['type'] = ($action === 'redirect_connection') ? 'redirect' : 'signal';
-            file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
-        }
-        break;
-
-    case 'viewDir':
-        $dir = urldecode(ipTV_lib::$request['dir']);
-        if (file_exists($dir) && is_readable($dir)) {
-            $files = array_diff(scandir($dir), ['.', '..']);
-            natcasesort($files);
-
-            if (!empty($files)) {
-                echo '<ul class="jqueryFileTree" style="display: none;">';
-                foreach ($files as $file) {
-                    $filePath = $dir . DIRECTORY_SEPARATOR . $file;
-                    if (is_dir($filePath)) {
-                        echo '<li class="directory collapsed"><a href="#" rel="' . htmlentities($filePath) . '/">' . htmlentities($file) . '</a></li>';
-                    } else {
-                        $ext = pathinfo($file, PATHINFO_EXTENSION);
-                        echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($filePath) . '">' . htmlentities($file) . '</a></li>';
-                    }
-                }
-                echo '</ul>';
-            }
-        }
-        die;
 
     default:
         exit(json_encode(['result' => false]));
