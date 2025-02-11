@@ -1,5 +1,4 @@
 <?php
-
 require 'init.php';
 register_shutdown_function('shutdown');
 set_time_limit(0);
@@ -65,19 +64,11 @@ if (!empty($rUserInfo['allowed_ips']) && !in_array($rIP, array_map('gethostbynam
 // **Country validation**
 $rForceCountry = !empty($rUserInfo['forced_country']);
 
-if (
-    $rForceCountry && 
-    $rUserInfo['forced_country'] !== 'ALL' && 
-    $rCountryCode !== $rUserInfo['forced_country']
-) {
+if ($rForceCountry && $rUserInfo['forced_country'] !== 'ALL' && $rCountryCode !== $rUserInfo['forced_country']) {
     generateError('FORCED_COUNTRY_INVALID');
 }
 
-if (
-    !$rForceCountry && 
-    !in_array('ALL', ipTV_lib::$settings['allow_countries']) &&
-    !in_array($rCountryCode, ipTV_lib::$settings['allow_countries'])
-) {
+if (!$rForceCountry && !in_array('ALL', ipTV_lib::$settings['allow_countries']) && !in_array($rCountryCode, ipTV_lib::$settings['allow_countries'])) {
     generateError('NOT_IN_ALLOWED_COUNTRY');
 }
 
