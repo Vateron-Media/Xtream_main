@@ -35,7 +35,7 @@ Unfortunately you will have to install the panel on the server completely. It do
 - Write unit tests for PHP scripts.
 - To run tests:
   ```sh
-  /home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/bin/php/bin/phpunit-9.6.21.phar /home/xtreamcodes/tests/
+  /home/xtreamcodes/bin/php/bin/php /home/xtreamcodes/bin/php/bin/phpunit-9.6.21.phar --configuration /home/xtreamcodes/tests/phpunit.xml 
   ```
 - Ensure all tests pass before submitting PRs.
 
