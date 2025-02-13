@@ -896,83 +896,83 @@ class PEAR_PackageFile_v1 {
     function _getErrorMessage() {
         return array(
             PEAR_PACKAGEFILE_ERROR_NO_NAME =>
-                'Missing Package Name',
+            'Missing Package Name',
             PEAR_PACKAGEFILE_ERROR_NO_SUMMARY =>
-                'No summary found',
+            'No summary found',
             PEAR_PACKAGEFILE_ERROR_MULTILINE_SUMMARY =>
-                'Summary should be on one line',
+            'Summary should be on one line',
             PEAR_PACKAGEFILE_ERROR_NO_DESCRIPTION =>
-                'Missing description',
+            'Missing description',
             PEAR_PACKAGEFILE_ERROR_NO_LICENSE =>
-                'Missing license',
+            'Missing license',
             PEAR_PACKAGEFILE_ERROR_NO_VERSION =>
-                'No release version found',
+            'No release version found',
             PEAR_PACKAGEFILE_ERROR_NO_STATE =>
-                'No release state found',
+            'No release state found',
             PEAR_PACKAGEFILE_ERROR_NO_DATE =>
-                'No release date found',
+            'No release date found',
             PEAR_PACKAGEFILE_ERROR_NO_NOTES =>
-                'No release notes found',
+            'No release notes found',
             PEAR_PACKAGEFILE_ERROR_NO_LEAD =>
-                'Package must have at least one lead maintainer',
+            'Package must have at least one lead maintainer',
             PEAR_PACKAGEFILE_ERROR_NO_MAINTAINERS =>
-                'No maintainers found, at least one must be defined',
+            'No maintainers found, at least one must be defined',
             PEAR_PACKAGEFILE_ERROR_NO_MAINTHANDLE =>
-                'Maintainer %index% has no handle (user ID at channel server)',
+            'Maintainer %index% has no handle (user ID at channel server)',
             PEAR_PACKAGEFILE_ERROR_NO_MAINTROLE =>
-                'Maintainer %index% has no role',
+            'Maintainer %index% has no role',
             PEAR_PACKAGEFILE_ERROR_NO_MAINTNAME =>
-                'Maintainer %index% has no name',
+            'Maintainer %index% has no name',
             PEAR_PACKAGEFILE_ERROR_NO_MAINTEMAIL =>
-                'Maintainer %index% has no email',
+            'Maintainer %index% has no email',
             PEAR_PACKAGEFILE_ERROR_NO_DEPNAME =>
-                'Dependency %index% is not a php dependency, and has no name',
+            'Dependency %index% is not a php dependency, and has no name',
             PEAR_PACKAGEFILE_ERROR_NO_DEPREL =>
-                'Dependency %index% has no relation (rel)',
+            'Dependency %index% has no relation (rel)',
             PEAR_PACKAGEFILE_ERROR_NO_DEPTYPE =>
-                'Dependency %index% has no type',
+            'Dependency %index% has no type',
             PEAR_PACKAGEFILE_ERROR_DEPNAME_IGNORED =>
-                'PHP Dependency %index% has a name attribute of "%name%" which will be' .
+            'PHP Dependency %index% has a name attribute of "%name%" which will be' .
                 ' ignored!',
             PEAR_PACKAGEFILE_ERROR_NO_DEPVERSION =>
-                'Dependency %index% is not a rel="has" or rel="not" dependency, ' .
+            'Dependency %index% is not a rel="has" or rel="not" dependency, ' .
                 'and has no version',
             PEAR_PACKAGEFILE_ERROR_NO_DEPPHPVERSION =>
-                'Dependency %index% is a type="php" dependency, ' .
+            'Dependency %index% is a type="php" dependency, ' .
                 'and has no version',
             PEAR_PACKAGEFILE_ERROR_DEPVERSION_IGNORED =>
-                'Dependency %index% is a rel="%rel%" dependency, versioning is ignored',
+            'Dependency %index% is a rel="%rel%" dependency, versioning is ignored',
             PEAR_PACKAGEFILE_ERROR_INVALID_DEPOPTIONAL =>
-                'Dependency %index% has invalid optional value "%opt%", should be yes or no',
+            'Dependency %index% has invalid optional value "%opt%", should be yes or no',
             PEAR_PACKAGEFILE_PHP_NO_NOT =>
-                'Dependency %index%: php dependencies cannot use "not" rel, use "ne"' .
+            'Dependency %index%: php dependencies cannot use "not" rel, use "ne"' .
                 ' to exclude specific versions',
             PEAR_PACKAGEFILE_ERROR_NO_CONFNAME =>
-                'Configure Option %index% has no name',
+            'Configure Option %index% has no name',
             PEAR_PACKAGEFILE_ERROR_NO_CONFPROMPT =>
-                'Configure Option %index% has no prompt',
+            'Configure Option %index% has no prompt',
             PEAR_PACKAGEFILE_ERROR_NO_FILES =>
-                'No files in <filelist> section of package.xml',
+            'No files in <filelist> section of package.xml',
             PEAR_PACKAGEFILE_ERROR_NO_FILEROLE =>
-                'File "%file%" has no role, expecting one of "%roles%"',
+            'File "%file%" has no role, expecting one of "%roles%"',
             PEAR_PACKAGEFILE_ERROR_INVALID_FILEROLE =>
-                'File "%file%" has invalid role "%role%", expecting one of "%roles%"',
+            'File "%file%" has invalid role "%role%", expecting one of "%roles%"',
             PEAR_PACKAGEFILE_ERROR_INVALID_FILENAME =>
-                'File "%file%" cannot start with ".", cannot package or install',
+            'File "%file%" cannot start with ".", cannot package or install',
             PEAR_PACKAGEFILE_ERROR_INVALID_PHPFILE =>
-                'Parser error: invalid PHP found in file "%file%"',
+            'Parser error: invalid PHP found in file "%file%"',
             PEAR_PACKAGEFILE_ERROR_NO_PNAME_PREFIX =>
-                'in %file%: %type% "%name%" not prefixed with package name "%package%"',
+            'in %file%: %type% "%name%" not prefixed with package name "%package%"',
             PEAR_PACKAGEFILE_ERROR_INVALID_FILE =>
-                'Parser error: invalid PHP file "%file%"',
+            'Parser error: invalid PHP file "%file%"',
             PEAR_PACKAGEFILE_ERROR_CHANNELVAL =>
-                'Channel validator error: field "%field%" - %reason%',
+            'Channel validator error: field "%field%" - %reason%',
             PEAR_PACKAGEFILE_ERROR_PHP5 =>
-                'Error, PHP5 token encountered in %file%, analysis should be in PHP5',
+            'Error, PHP5 token encountered in %file%, analysis should be in PHP5',
             PEAR_PACKAGEFILE_ERROR_FILE_NOTFOUND =>
-                'File "%file%" in package.xml does not exist',
+            'File "%file%" in package.xml does not exist',
             PEAR_PACKAGEFILE_ERROR_NON_ISO_CHARS =>
-                'Package.xml contains non-ISO-8859-1 characters, and may not validate',
+            'Package.xml contains non-ISO-8859-1 characters, and may not validate',
         );
     }
 

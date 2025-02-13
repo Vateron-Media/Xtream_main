@@ -883,7 +883,7 @@ Run post-installation scripts in package <package>, if any exist.
                 if ($list = $pkg->listPostinstallScripts()) {
                     $pn = $reg->parsedPackageNameToString(array(
                         'channel' =>
-                            $param->getChannel(),
+                        $param->getChannel(),
                         'package' => $param->getPackage()
                     ), true);
                     $extrainfo[] = $pn . ' has post-install scripts:';
@@ -1252,7 +1252,7 @@ Run post-installation scripts in package <package>, if any exist.
                 if (
                     $chan->supportsREST($preferred_mirror) &&
                     (
-                            //($base2 = $chan->getBaseURL('REST1.4', $preferred_mirror)) ||
+                        //($base2 = $chan->getBaseURL('REST1.4', $preferred_mirror)) ||
                         ($base = $chan->getBaseURL('REST1.0', $preferred_mirror))
                     )
                 ) {

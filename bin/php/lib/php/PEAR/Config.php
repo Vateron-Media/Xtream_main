@@ -188,7 +188,7 @@ if (getenv('PHP_PEAR_TEMP_DIR')) {
     define(
         'PEAR_CONFIG_DEFAULT_TEMP_DIR',
         System::tmpdir() . DIRECTORY_SEPARATOR . 'pear' .
-        DIRECTORY_SEPARATOR . 'temp'
+            DIRECTORY_SEPARATOR . 'temp'
     );
 }
 
@@ -199,7 +199,7 @@ if (getenv('PHP_PEAR_CACHE_DIR')) {
     define(
         'PEAR_CONFIG_DEFAULT_CACHE_DIR',
         System::tmpdir() . DIRECTORY_SEPARATOR . 'pear' .
-        DIRECTORY_SEPARATOR . 'cache'
+            DIRECTORY_SEPARATOR . 'cache'
     );
 }
 
@@ -210,7 +210,7 @@ if (getenv('PHP_PEAR_DOWNLOAD_DIR')) {
     define(
         'PEAR_CONFIG_DEFAULT_DOWNLOAD_DIR',
         System::tmpdir() . DIRECTORY_SEPARATOR . 'pear' .
-        DIRECTORY_SEPARATOR . 'download'
+            DIRECTORY_SEPARATOR . 'download'
     );
 }
 
@@ -1194,7 +1194,7 @@ class PEAR_Config extends PEAR {
             ) {
                 return $this->raiseError(
                     'Configuration type must be one of directory, file, string, ' .
-                    'mask, set, or password'
+                        'mask, set, or password'
                 );
             }
             if (!isset($var['default'])) {
@@ -1212,8 +1212,8 @@ class PEAR_Config extends PEAR {
                         if (!defined($val)) {
                             return $this->raiseError(
                                 'Unknown constant "' . $val . '" requested in ' .
-                                'default value for configuration variable "' .
-                                $name . '"'
+                                    'default value for configuration variable "' .
+                                    $name . '"'
                             );
                         }
 
@@ -1224,8 +1224,8 @@ class PEAR_Config extends PEAR {
                     } else {
                         return $this->raiseError(
                             'Unknown request for "' . $config_var . '" value in ' .
-                            'default value for configuration variable "' .
-                            $name . '"'
+                                'default value for configuration variable "' .
+                                $name . '"'
                         );
                     }
                 }
@@ -1290,16 +1290,16 @@ class PEAR_Config extends PEAR {
 
             $type = $this->configuration_info[$key]['type'];
             switch ($type) {
-                // we base64-encode passwords so they are at least
-                // not shown in plain by accident
+                    // we base64-encode passwords so they are at least
+                    // not shown in plain by accident
                 case 'password': {
-                    $data[$key] = base64_encode($data[$key]);
-                    break;
-                }
+                        $data[$key] = base64_encode($data[$key]);
+                        break;
+                    }
                 case 'mask': {
-                    $data[$key] = octdec($data[$key]);
-                    break;
-                }
+                        $data[$key] = octdec($data[$key]);
+                        break;
+                    }
             }
         }
 
@@ -1334,13 +1334,13 @@ class PEAR_Config extends PEAR {
             $type = $this->configuration_info[$key]['type'];
             switch ($type) {
                 case 'password': {
-                    $data[$key] = base64_decode($data[$key]);
-                    break;
-                }
+                        $data[$key] = base64_decode($data[$key]);
+                        break;
+                    }
                 case 'mask': {
-                    $data[$key] = decoct($data[$key]);
-                    break;
-                }
+                        $data[$key] = decoct($data[$key]);
+                        break;
+                    }
             }
         }
 
@@ -1606,20 +1606,20 @@ class PEAR_Config extends PEAR {
                 $value = (int) $value;
                 break;
             case 'set': {
-                // If a valid_set is specified, require the value to
-                // be in the set.  If there is no valid_set, accept
-                // any value.
-                if ($valid_set) {
-                    reset($valid_set);
-                    if (
-                        (key($valid_set) === 0 && !in_array($value, $valid_set)) ||
-                        (key($valid_set) !== 0 && empty($valid_set[$value]))
-                    ) {
-                        return false;
+                    // If a valid_set is specified, require the value to
+                    // be in the set.  If there is no valid_set, accept
+                    // any value.
+                    if ($valid_set) {
+                        reset($valid_set);
+                        if (
+                            (key($valid_set) === 0 && !in_array($value, $valid_set)) ||
+                            (key($valid_set) !== 0 && empty($valid_set[$value]))
+                        ) {
+                            return false;
+                        }
                     }
+                    break;
                 }
-                break;
-            }
         }
 
         if (!$channel) {

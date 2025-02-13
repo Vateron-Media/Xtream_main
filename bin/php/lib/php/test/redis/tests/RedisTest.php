@@ -109,8 +109,12 @@ class Redis_Test extends TestSuite {
     }
 
     protected function sessionSavePath(): string {
-        return sprintf('tcp://%s:%d?%s', $this->getHost(), $this->getPort(),
-            $this->getAuthFragment());
+        return sprintf(
+            'tcp://%s:%d?%s',
+            $this->getHost(),
+            $this->getPort(),
+            $this->getAuthFragment()
+        );
     }
 
     protected function getAuthFragment() {
@@ -495,8 +499,7 @@ class Redis_Test extends TestSuite {
         $this->assertKeyEquals('val', 'key2');
 
         $value1 = bin2hex(random_bytes(rand(64, 128)));
-        $value2 = random_bytes(rand(65536, 65536 * 2));
-        ;
+        $value2 = random_bytes(rand(65536, 65536 * 2));;
 
         $this->redis->set('key2', $value1);
         $this->assertKeyEquals($value1, 'key2');
@@ -714,8 +717,10 @@ class Redis_Test extends TestSuite {
             $this->redis->set($k, $v);
         }
 
-        $this->assertEquals(array_values($kvals),
-            $this->redis->mget(array_keys($kvals)));
+        $this->assertEquals(
+            array_values($kvals),
+            $this->redis->mget(array_keys($kvals))
+        );
     }
 
     public function testExpire() {
@@ -1097,7 +1102,6 @@ class Redis_Test extends TestSuite {
         // None
         $this->redis->del('keyNotExists');
         $this->assertEquals(Redis::REDIS_NOT_FOUND, $this->redis->type('keyNotExists'));
-
     }
 
     public function testStr() {
@@ -1249,7 +1253,7 @@ class Redis_Test extends TestSuite {
         $this->assertEquals(0, $this->redis->llen('list'));    // non-existent returns 0
 
         $this->redis->set('list', 'actually not a list');
-        $this->assertFalse($this->redis->llen('list'));// not a list returns FALSE
+        $this->assertFalse($this->redis->llen('list')); // not a list returns FALSE
     }
 
     public function testlPopx() {
@@ -1497,7 +1501,6 @@ class Redis_Test extends TestSuite {
 
         $this->assertEquals(['b'], $this->redis->lRange($list1, 0, -1));
         $this->assertEquals(['a', 'c'], $this->redis->lRange($list2, 0, -1));
-
     }
 
     public function testBlmove() {
@@ -1876,10 +1879,10 @@ class Redis_Test extends TestSuite {
         $zt = $this->redis->sInter(['{set}square', '{set}seq']);    // prime squares, as array
         $this->assertEquals([], $zt);
 
-        $xyz = $this->redis->sInter('{set}odd', '{set}prime', '{set}square');// odd prime squares
+        $xyz = $this->redis->sInter('{set}odd', '{set}prime', '{set}square'); // odd prime squares
         $this->assertEquals(['1'], $xyz);
 
-        $xyz = $this->redis->sInter(['{set}odd', '{set}prime', '{set}square']);// odd prime squares, with an array as a parameter
+        $xyz = $this->redis->sInter(['{set}odd', '{set}prime', '{set}square']); // odd prime squares, with an array as a parameter
         $this->assertEquals(['1'], $xyz);
 
         $nil = $this->redis->sInter([]);
@@ -2328,7 +2331,6 @@ class Redis_Test extends TestSuite {
 
         /* CLIENT KILL -- phpredis will reconnect, so we can do this */
         $this->assertTrue($this->redis->client('kill', $address));
-
     }
 
     public function testSlowlog() {
@@ -2395,13 +2397,15 @@ class Redis_Test extends TestSuite {
                 'role'
             ];
             if (version_compare($this->version, '2.5.0') < 0) {
-                array_push($keys,
+                array_push(
+                    $keys,
                     'changes_since_last_save',
                     'bgsave_in_progress',
                     'last_save_time'
                 );
             } else {
-                array_push($keys,
+                array_push(
+                    $keys,
                     'rdb_changes_since_last_save',
                     'rdb_bgsave_in_progress',
                     'rdb_last_save_time'
@@ -2624,12 +2628,18 @@ class Redis_Test extends TestSuite {
 
         // limit
         $this->assertEquals(['val0'], $this->redis->zRangeByScore('key', 0, 3, ['limit' => [0, 1]]));
-        $this->assertEquals(['val0', 'val1'],
-            $this->redis->zRangeByScore('key', 0, 3, ['limit' => [0, 2]]));
-        $this->assertEquals(['val1', 'val2'],
-            $this->redis->zRangeByScore('key', 0, 3, ['limit' => [1, 2]]));
-        $this->assertEquals(['val0', 'val1'],
-            $this->redis->zRangeByScore('key', 0, 1, ['limit' => [0, 100]]));
+        $this->assertEquals(
+            ['val0', 'val1'],
+            $this->redis->zRangeByScore('key', 0, 3, ['limit' => [0, 2]])
+        );
+        $this->assertEquals(
+            ['val1', 'val2'],
+            $this->redis->zRangeByScore('key', 0, 3, ['limit' => [1, 2]])
+        );
+        $this->assertEquals(
+            ['val0', 'val1'],
+            $this->redis->zRangeByScore('key', 0, 1, ['limit' => [0, 100]])
+        );
 
         if ($this->minVersionCheck('6.2.0'))
             $this->assertEquals(['val0', 'val1'], $this->redis->zrange('key', 0, 1, ['byscore', 'limit' => [0, 100]]));
@@ -2641,27 +2651,43 @@ class Redis_Test extends TestSuite {
         $this->assertEquals(['val0', 'val1'], $this->redis->zRangeByScore('key', 0, 1, ['limit' => $limit]));
 
         $this->assertEquals(
-            ['val3'], $this->redis->zRevRangeByScore('key', 3, 0, ['limit' => [0, 1]])
+            ['val3'],
+            $this->redis->zRevRangeByScore('key', 3, 0, ['limit' => [0, 1]])
         );
         $this->assertEquals(
-            ['val3', 'val2'], $this->redis->zRevRangeByScore('key', 3, 0, ['limit' => [0, 2]])
+            ['val3', 'val2'],
+            $this->redis->zRevRangeByScore('key', 3, 0, ['limit' => [0, 2]])
         );
         $this->assertEquals(
-            ['val2', 'val1'], $this->redis->zRevRangeByScore('key', 3, 0, ['limit' => [1, 2]])
+            ['val2', 'val1'],
+            $this->redis->zRevRangeByScore('key', 3, 0, ['limit' => [1, 2]])
         );
         $this->assertEquals(
-            ['val1', 'val0'], $this->redis->zRevRangeByScore('key', 1, 0, ['limit' => [0, 100]])
+            ['val1', 'val0'],
+            $this->redis->zRevRangeByScore('key', 1, 0, ['limit' => [0, 100]])
         );
 
         if ($this->minVersionCheck('6.2.0')) {
-            $this->assertEquals(['val1', 'val0'],
-                $this->redis->zrange('key', 1, 0, ['byscore', 'rev', 'limit' => [0, 100]]));
-            $this->assertEquals(2, $this->redis->zrangestore('dst{key}', 'key', 1, 0,
-                ['byscore', 'rev', 'limit' => [0, 100]]));
+            $this->assertEquals(
+                ['val1', 'val0'],
+                $this->redis->zrange('key', 1, 0, ['byscore', 'rev', 'limit' => [0, 100]])
+            );
+            $this->assertEquals(2, $this->redis->zrangestore(
+                'dst{key}',
+                'key',
+                1,
+                0,
+                ['byscore', 'rev', 'limit' => [0, 100]]
+            ));
             $this->assertEquals(['val0', 'val1'], $this->redis->zRange('dst{key}', 0, -1));
 
-            $this->assertEquals(1, $this->redis->zrangestore('dst{key}', 'key', 1, 0,
-                ['byscore', 'rev', 'limit' => [0, 1]]));
+            $this->assertEquals(1, $this->redis->zrangestore(
+                'dst{key}',
+                'key',
+                1,
+                0,
+                ['byscore', 'rev', 'limit' => [0, 1]]
+            ));
             $this->assertEquals(['val1'], $this->redis->zrange('dst{key}', 0, -1));
         }
 
@@ -5423,8 +5449,11 @@ class Redis_Test extends TestSuite {
 
         // Test an empty MULTI BULK response
         $this->redis->del('{eval-key}-nolist');
-        $empty_resp = $this->redis->eval("return redis.call('lrange', '{eval-key}-nolist', 0, -1)",
-            ['{eval-key}-nolist'], 1);
+        $empty_resp = $this->redis->eval(
+            "return redis.call('lrange', '{eval-key}-nolist', 0, -1)",
+            ['{eval-key}-nolist'],
+            1
+        );
         $this->assertEquals([], $empty_resp);
 
         // Now test a nested reply
@@ -5443,7 +5472,10 @@ class Redis_Test extends TestSuite {
         ";
 
         $expected = [
-            1, 2, 3, [
+            1,
+            2,
+            3,
+            [
                 'hello, world',
                 'hello again!',
                 [],
@@ -5458,7 +5490,7 @@ class Redis_Test extends TestSuite {
         $eval_result = $this->redis->eval($nested_script, ['{eval-key}-str1', '{eval-key}-str2', '{eval-key}-zset', '{eval-key}-list'], 4);
         $this->assertTrue(
             is_array($eval_result) &&
-            count($this->array_diff_recursive($eval_result, $expected)) == 0
+                count($this->array_diff_recursive($eval_result, $expected)) == 0
         );
 
         /*
@@ -5481,7 +5513,7 @@ class Redis_Test extends TestSuite {
             foreach ($replies as $reply) {
                 $this->assertTrue(
                     is_array($reply) &&
-                    count($this->array_diff_recursive($reply, $expected)) == 0
+                        count($this->array_diff_recursive($reply, $expected)) == 0
                 );
             }
         }
@@ -5670,7 +5702,6 @@ class Redis_Test extends TestSuite {
 
         // Clear prefix
         $this->redis->setOption(Redis::OPT_PREFIX, '');
-
     }
 
     public function testReplyLiteral() {
@@ -6234,8 +6265,11 @@ class Redis_Test extends TestSuite {
                 $redis_card = $this->redis->pfcount('pf-merge-{key}');
 
                 // Merged cardinality should still be roughly 1000
-                $this->assertBetween($redis_card, count($mems) * .9,
-                    count($mems) * 1.1);
+                $this->assertBetween(
+                    $redis_card,
+                    count($mems) * .9,
+                    count($mems) * 1.1
+                );
 
                 // Clean up merge key
                 $this->redis->del('pf-merge-{key}');
@@ -6632,8 +6666,10 @@ class Redis_Test extends TestSuite {
         }
 
         /* Make sure we don't erroneously send options that don't belong to the operation */
-        $this->assertEquals(1,
-            $this->redis->xGroup('CREATECONSUMER', 's', 'mygroup', 'fake-consumer', true, 1337));
+        $this->assertEquals(
+            1,
+            $this->redis->xGroup('CREATECONSUMER', 's', 'mygroup', 'fake-consumer', true, 1337)
+        );
 
         /* Make sure we handle the case where the user doesn't send enough arguments */
         $this->redis->clearLastError();
@@ -7158,10 +7194,13 @@ class Redis_Test extends TestSuite {
         $this->assertFalse(in_array('admin', $this->redis->acl('USERS')));
 
         /* Try to log in with a bad username/password */
-        $this->assertThrowsMatch($this->redis,
+        $this->assertThrowsMatch(
+            $this->redis,
             function ($o) {
                 $o->auth(['1337haxx00r', 'lolwut']);
-            }, '/^WRONGPASS.*$/');
+            },
+            '/^WRONGPASS.*$/'
+        );
 
         /* We attempted a bad login.  We should have an ACL log entry */
         $log = $this->redis->acl('log');
@@ -7344,9 +7383,12 @@ class Redis_Test extends TestSuite {
         $this->assertTrue($runner->execBg());
 
         if (!$runner->waitForLockKey($this->redis, $this->sessionWaitSec())) {
-            $this->externalCmdFailure($runner->getCmd(), $runner->output(),
+            $this->externalCmdFailure(
+                $runner->getCmd(),
+                $runner->output(),
                 "Failed waiting for session lock key '{$runner->getSessionLockKey()}'",
-                $runner->getExitCode());
+                $runner->getExitCode()
+            );
         }
     }
 
@@ -7460,9 +7502,12 @@ class Redis_Test extends TestSuite {
 
         $this->assertTrue($runner->execBg());
         if (!$runner->waitForLockKey($this->redis, 2)) {
-            $this->externalCmdFailure($runner->getCmd(), $runner->output(),
+            $this->externalCmdFailure(
+                $runner->getCmd(),
+                $runner->output(),
                 'Failed waiting for session lock key',
-                $runner->getExitCode());
+                $runner->getExitCode()
+            );
         }
 
         $runner2 = $this->sessionRunner()
@@ -7476,9 +7521,12 @@ class Redis_Test extends TestSuite {
         $st = microtime(true);
         $ex = $runner2->execFg();
         if (stripos($ex, 'SUCCESS') !== false) {
-            $this->externalCmdFailure($runner2->getCmd(), $ex,
+            $this->externalCmdFailure(
+                $runner2->getCmd(),
+                $ex,
                 'Expected failure but lock was acquired!',
-                $runner2->getExitCode());
+                $runner2->getExitCode()
+            );
         }
         $et = microtime(true);
 
@@ -7502,9 +7550,12 @@ class Redis_Test extends TestSuite {
         $this->assertTrue($runner->execBg());
 
         if (!$runner->waitForLockKey($this->redis, 3)) {
-            $this->externalCmdFailure($runner->getCmd(), $runner->output(),
+            $this->externalCmdFailure(
+                $runner->getCmd(),
+                $runner->output(),
                 'Failed waiting for session lock key',
-                $runner->getExitCode());
+                $runner->getExitCode()
+            );
         }
 
         $st = microtime(true);
@@ -7783,4 +7834,3 @@ class Redis_Test extends TestSuite {
         $this->assertEquals(600, $this->redis->ttl($runner->getSessionKey()));
     }
 }
-?>

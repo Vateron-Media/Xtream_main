@@ -19,13 +19,13 @@
 sudo apt-get update && sudo apt-get install -y \
     build-essential libpcre3 libpcre3-dev zlib1g zlib1g-dev libssl-dev \
     libgd-dev libxml2 libxml2-dev uuid-dev libcurl4-gnutls-dev libbz2-dev \
-    libzip-dev
+    libzip-dev libssh2-1-dev autoconf
 ```
 
 ### 2️⃣ **Скачайте и распакуйте OpenSSL**  
 ```sh
-wget https://github.com/openssl/openssl/releases/download/openssl-3.3.1/openssl-3.3.1.tar.gz
-tar -xzvf openssl-3.3.1.tar.gz
+wget https://github.com/openssl/openssl/releases/download/openssl-3.4.1/openssl-3.4.1.tar.gz
+tar -xzvf openssl-3.4.1.tar.gz
 ```
 
 ---
@@ -34,9 +34,9 @@ tar -xzvf openssl-3.3.1.tar.gz
 
 ### 1️⃣ **Скачайте исходный код**  
 ```sh
-wget https://nginx.org/download/nginx-1.26.1.tar.gz
-tar -zxvf nginx-1.26.1.tar.gz
-cd nginx-1.26.1
+wget https://nginx.org/download/nginx-1.26.3.tar.gz
+tar -zxvf nginx-1.26.3.tar.gz
+cd nginx-1.26.3
 ```
 
 ### 2️⃣ **Сконфигурируйте сборку**  
@@ -71,7 +71,7 @@ cd nginx-1.26.1
     --with-file-aio \
     --with-cpu-opt=generic \
     --with-cc-opt='-static -static-libgcc -g -O2 -Wformat -Wall' \
-    --with-openssl=/root/openssl-3.3.1
+    --with-openssl=/root/openssl-3.4.1
 ```
 
 ### 3️⃣ **Соберите бинарные файлы**  
@@ -81,7 +81,12 @@ make
 
 ### 4️⃣ **Проверьте версию**  
 ```sh
-/root/nginx-1.26.1/objs/nginx -V
+/root/nginx-1.26.3/objs/nginx -V
+```
+
+### 5️⃣ **replace the file with this binary**
+```
+/home/xtreamcodes/bin/nginx/sbin/nginx
 ```
 
 ---
@@ -92,7 +97,7 @@ make
 ```sh
 wget https://github.com/arut/nginx-rtmp-module/archive/refs/tags/v1.2.2.tar.gz
 tar -xzvf v1.2.2.tar.gz
-cd nginx-1.26.1
+cd nginx-1.26.3
 ```
 
 ### 2️⃣ **Сконфигурируйте сборку**  
@@ -111,7 +116,7 @@ cd nginx-1.26.1
     --with-ipv6 \
     --with-cpu-opt=generic \
     --with-cc-opt='-static -static-libgcc -g -O2 -Wformat -Wall' \
-    --with-openssl=/root/openssl-3.3.1
+    --with-openssl=/root/openssl-3.4.1
 ```
 
 ### 3️⃣ **Соберите бинарные файлы**  
@@ -121,8 +126,12 @@ make
 
 ### 4️⃣ **Проверьте версию**  
 ```sh
-/root/nginx-1.26.1/objs/nginx -v
+/root/nginx-1.26.3/objs/nginx -v
 ```
+
+### 5️⃣ **replace the file with this binary**
+```
+/home/xtreamcodes/bin/nginx_rtmp/sbin/nginx_rtmp
 
 ---
 
@@ -135,9 +144,9 @@ sudo apt-get install libcurl4-gnutls-dev libbz2-dev libzip-dev -y
 
 ### 2️⃣ **Скачайте исходный код**  
 ```sh
-wget -O php-7.4.33.tar.gz http://php.net/get/php-7.4.33.tar.gz/from/this/mirror
-tar -xzvf php-7.4.33.tar.gz
-cd php-7.4.33
+wget https://www.php.net/distributions/php-8.4.3.tar.gz
+tar -xzvf php-8.4.3.tar.gz
+cd php-8.4.3
 ```
 
 ### 3️⃣ **Сконфигурируйте сборку**  

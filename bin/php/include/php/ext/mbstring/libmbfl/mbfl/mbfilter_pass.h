@@ -30,8 +30,8 @@
 #ifndef MBFL_MBFILTER_PASS_H
 #define MBFL_MBFILTER_PASS_H
 
-#include "mbfilter.h"
 #include "mbfl_defs.h"
+#include "mbfilter.h"
 
 MBFLAPI extern const mbfl_encoding mbfl_encoding_pass;
 MBFLAPI extern const struct mbfl_convert_vtbl vtbl_pass;

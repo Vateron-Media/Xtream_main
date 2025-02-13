@@ -484,7 +484,7 @@ class PEAR_Downloader_Package {
                                 ) . '" optional dependency "' .
                                 $this->_registry->parsedPackageNameToString(array(
                                     'package' =>
-                                        $dep['name'],
+                                    $dep['name'],
                                     'channel' => 'pear.php.net'
                                 ), true) .
                                 '" will not be automatically downloaded');
@@ -594,7 +594,7 @@ class PEAR_Downloader_Package {
                         $group[$packagetype],
                         $pname,
                         'dependency group "' .
-                        $group['attribs']['name'] . '"',
+                            $group['attribs']['name'] . '"',
                         $params
                     );
                     if (is_array($ret)) {
@@ -614,8 +614,7 @@ class PEAR_Downloader_Package {
 
         $options = $this->_downloader->getOptions();
         if (isset($dep['uri'])) {
-            return array('uri' => $dep['uri'], 'dep' => $dep);
-            ;
+            return array('uri' => $dep['uri'], 'dep' => $dep);;
         }
 
         $testdep = $dep;
@@ -795,7 +794,7 @@ class PEAR_Downloader_Package {
                                     array(
                                         'channel' => $chan,
                                         'package' =>
-                                            $dep['name']
+                                        $dep['name']
                                     ),
                                     true
                                 ) .
@@ -805,7 +804,7 @@ class PEAR_Downloader_Package {
                             array(
                                 'channel' => $chan,
                                 'package' =>
-                                    $dep['name']
+                                $dep['name']
                             ),
                             true
                         );
@@ -823,7 +822,7 @@ class PEAR_Downloader_Package {
                                     array(
                                         'channel' => $chan,
                                         'package' =>
-                                            $dep['name']
+                                        $dep['name']
                                     ),
                                     true
                                 ) .
@@ -833,7 +832,7 @@ class PEAR_Downloader_Package {
                             array(
                                 'channel' => $chan,
                                 'package' =>
-                                    $dep['name']
+                                $dep['name']
                             ),
                             true
                         );
@@ -897,7 +896,7 @@ class PEAR_Downloader_Package {
                     $dep,
                     $params,
                     isset($dep['optional']) && $dep['optional'] == 'yes' &&
-                    !isset($options['alldeps']),
+                        !isset($options['alldeps']),
                     true
                 );
                 PEAR::popErrorHandling();
@@ -1923,23 +1922,23 @@ class PEAR_Downloader_Package {
                 if (isset($info['php']) && $info['php']) {
                     $err = PEAR::raiseError(
                         'Failed to download ' .
-                        $this->_registry->parsedPackageNameToString(
-                            array(
-                                'channel' => $pname['channel'],
-                                'package' => $pname['package']
-                            ),
-                            true
-                        ) .
-                        ', latest release is version ' . $info['php']['v'] .
-                        ', but it requires PHP version "' .
-                        $info['php']['m'] . '", use "' .
-                        $this->_registry->parsedPackageNameToString(
-                            array(
-                                'channel' => $pname['channel'],
-                                'package' => $pname['package'],
-                                'version' => $info['php']['v']
-                            )
-                        ) . '" to install',
+                            $this->_registry->parsedPackageNameToString(
+                                array(
+                                    'channel' => $pname['channel'],
+                                    'package' => $pname['package']
+                                ),
+                                true
+                            ) .
+                            ', latest release is version ' . $info['php']['v'] .
+                            ', but it requires PHP version "' .
+                            $info['php']['m'] . '", use "' .
+                            $this->_registry->parsedPackageNameToString(
+                                array(
+                                    'channel' => $pname['channel'],
+                                    'package' => $pname['package'],
+                                    'version' => $info['php']['v']
+                                )
+                            ) . '" to install',
                         PEAR_DOWNLOADER_PACKAGE_PHPVERSION
                     );
                     return $err;
@@ -2003,16 +2002,16 @@ class PEAR_Downloader_Package {
                             array('channel' => $pname['channel'], 'package' => $pname['package']),
                             true
                         )
-                        . $vs .
-                        ', latest release is version ' . $info['version'] .
-                        ', stability "' . $info['info']->getState() . '", use "' .
-                        $this->_registry->parsedPackageNameToString(
-                            array(
-                                'channel' => $pname['channel'],
-                                'package' => $pname['package'],
-                                'version' => $info['version']
-                            )
-                        ) . '" to install',
+                            . $vs .
+                            ', latest release is version ' . $info['version'] .
+                            ', stability "' . $info['info']->getState() . '", use "' .
+                            $this->_registry->parsedPackageNameToString(
+                                array(
+                                    'channel' => $pname['channel'],
+                                    'package' => $pname['package'],
+                                    'version' => $info['version']
+                                )
+                            ) . '" to install',
                         PEAR_DOWNLOADER_PACKAGE_STATE
                     );
                     return $err;
@@ -2031,16 +2030,16 @@ class PEAR_Downloader_Package {
                             array('channel' => $pname['channel'], 'package' => $pname['package']),
                             true
                         )
-                        . $vs .
-                        ', latest release is version ' . $info['version'] .
-                        ', stability "' . $info['info']->getState() . '", use "' .
-                        $this->_registry->parsedPackageNameToString(
-                            array(
-                                'channel' => $pname['channel'],
-                                'package' => $pname['package'],
-                                'version' => $info['version']
-                            )
-                        ) . '" to install'
+                            . $vs .
+                            ', latest release is version ' . $info['version'] .
+                            ', stability "' . $info['info']->getState() . '", use "' .
+                            $this->_registry->parsedPackageNameToString(
+                                array(
+                                    'channel' => $pname['channel'],
+                                    'package' => $pname['package'],
+                                    'version' => $info['version']
+                                )
+                            ) . '" to install'
                     );
                     return $err;
                 }
@@ -2051,16 +2050,16 @@ class PEAR_Downloader_Package {
             $this->_downloader->log(
                 0,
                 'WARNING: "' .
-                $this->_registry->parsedPackageNameToString(
-                    array(
-                        'channel' => $info['info']->getChannel(),
-                        'package' => $info['info']->getPackage()
-                    ),
-                    true
-                ) .
-                '" is deprecated in favor of "' .
-                $this->_registry->parsedPackageNameToString($info['deprecated'], true) .
-                '"'
+                    $this->_registry->parsedPackageNameToString(
+                        array(
+                            'channel' => $info['info']->getChannel(),
+                            'package' => $info['info']->getPackage()
+                        ),
+                        true
+                    ) .
+                    '" is deprecated in favor of "' .
+                    $this->_registry->parsedPackageNameToString($info['deprecated'], true) .
+                    '"'
             );
         }
 

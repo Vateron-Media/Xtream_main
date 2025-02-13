@@ -66,11 +66,11 @@ or the state passed as the second parameter.'
             'shortcut' => 'rl',
             'options' => array(
                 'channel' =>
-                    array(
-                        'shortopt' => 'c',
-                        'doc' => 'specify a channel other than the default channel',
-                        'arg' => 'CHAN',
-                    )
+                array(
+                    'shortopt' => 'c',
+                    'doc' => 'specify a channel other than the default channel',
+                    'arg' => 'CHAN',
+                )
             ),
             'doc' => '
 Lists the packages available on the configured server along with the
@@ -82,11 +82,11 @@ latest stable release of each package.',
             'shortcut' => 'sp',
             'options' => array(
                 'channel' =>
-                    array(
-                        'shortopt' => 'c',
-                        'doc' => 'specify a channel other than the default channel',
-                        'arg' => 'CHAN',
-                    ),
+                array(
+                    'shortopt' => 'c',
+                    'doc' => 'specify a channel other than the default channel',
+                    'arg' => 'CHAN',
+                ),
                 'allchannels' => array(
                     'shortopt' => 'a',
                     'doc' => 'search packages from all known channels',
@@ -108,11 +108,11 @@ will be used to match any portion of the summary/description',
             'shortcut' => 'la',
             'options' => array(
                 'channel' =>
-                    array(
-                        'shortopt' => 'c',
-                        'doc' => 'specify a channel other than the default channel',
-                        'arg' => 'CHAN',
-                    ),
+                array(
+                    'shortopt' => 'c',
+                    'doc' => 'specify a channel other than the default channel',
+                    'arg' => 'CHAN',
+                ),
                 'channelinfo' => array(
                     'shortopt' => 'i',
                     'doc' => 'output fully channel-aware data, even on failure',

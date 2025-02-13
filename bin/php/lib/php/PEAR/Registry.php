@@ -2149,7 +2149,7 @@ class PEAR_Registry extends PEAR {
             if (!isset($param['package'])) {
                 return PEAR::raiseError(
                     'parsePackageName(): array $param ' .
-                    'must contain a valid package name in index "param"',
+                        'must contain a valid package name in index "param"',
                     'package',
                     null,
                     null,
@@ -2177,7 +2177,7 @@ class PEAR_Registry extends PEAR {
             if (!isset($components['path'])) {
                 return PEAR::raiseError(
                     'parsePackageName(): array $param ' .
-                    'must contain a valid package name in "' . $param . '"',
+                        'must contain a valid package name in "' . $param . '"',
                     'package',
                     null,
                     null,
@@ -2193,7 +2193,7 @@ class PEAR_Registry extends PEAR {
                     if ($components['path'][0] == '/') {
                         return PEAR::raiseError(
                             'parsePackageName(): this is not ' .
-                            'a package name, it begins with "/" in "' . $param . '"',
+                                'a package name, it begins with "/" in "' . $param . '"',
                             'invalid',
                             null,
                             null,
@@ -2260,7 +2260,7 @@ class PEAR_Registry extends PEAR {
                 if (count($test) != 2) {
                     return PEAR::raiseError(
                         'parsePackageName(): only one version/state ' .
-                        'delimiter "-" is allowed in "' . $saveparam . '"',
+                            'delimiter "-" is allowed in "' . $saveparam . '"',
                         'version',
                         null,
                         null,
@@ -2286,7 +2286,7 @@ class PEAR_Registry extends PEAR {
         if (!$chan) {
             return PEAR::raiseError(
                 "Exception: corrupt registry, could not " .
-                "retrieve channel " . $param['channel'] . " information",
+                    "retrieve channel " . $param['channel'] . " information",
                 'registry',
                 null,
                 null,
@@ -2300,7 +2300,7 @@ class PEAR_Registry extends PEAR {
         if (!$validate->validPackageName($param['package'], $vpackage['_content'])) {
             return PEAR::raiseError(
                 'parsePackageName(): invalid package name "' .
-                $param['package'] . '" in "' . $saveparam . '"',
+                    $param['package'] . '" in "' . $saveparam . '"',
                 'package',
                 null,
                 null,
@@ -2311,7 +2311,7 @@ class PEAR_Registry extends PEAR {
             if (!PEAR_Validate::validGroupName($param['group'])) {
                 return PEAR::raiseError(
                     'parsePackageName(): dependency group "' . $param['group'] .
-                    '" is not a valid group name in "' . $saveparam . '"',
+                        '" is not a valid group name in "' . $saveparam . '"',
                     'group',
                     null,
                     null,
@@ -2323,7 +2323,7 @@ class PEAR_Registry extends PEAR {
             if (!in_array(strtolower($param['state']), $validate->getValidStates())) {
                 return PEAR::raiseError(
                     'parsePackageName(): state "' . $param['state']
-                    . '" is not a valid state in "' . $saveparam . '"',
+                        . '" is not a valid state in "' . $saveparam . '"',
                     'state',
                     null,
                     null,
@@ -2335,7 +2335,7 @@ class PEAR_Registry extends PEAR {
             if (isset($param['state'])) {
                 return PEAR::raiseError(
                     'parsePackageName(): cannot contain both ' .
-                    'a version and a stability (state) in "' . $saveparam . '"',
+                        'a version and a stability (state) in "' . $saveparam . '"',
                     'version/state',
                     null,
                     null,

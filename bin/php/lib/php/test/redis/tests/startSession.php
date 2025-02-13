@@ -2,9 +2,18 @@
 error_reporting(E_ERROR | E_WARNING);
 
 $opt = getopt('', [
-    'handler:', 'save-path:', 'id:', 'sleep:', 'max-execution-time:',
-    'locking-enabled:', 'lock-wait-time:', 'lock-retries:', 'lock-expires:',
-    'data:', 'lifetime:', 'compression:'
+    'handler:',
+    'save-path:',
+    'id:',
+    'sleep:',
+    'max-execution-time:',
+    'locking-enabled:',
+    'lock-wait-time:',
+    'lock-retries:',
+    'lock-expires:',
+    'data:',
+    'lifetime:',
+    'compression:'
 ]);
 
 $handler = $opt['handler'] ?? NULL;

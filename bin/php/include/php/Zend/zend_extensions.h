@@ -20,14 +20,13 @@
 #ifndef ZEND_EXTENSIONS_H
 #define ZEND_EXTENSIONS_H
 
-#include "zend_build.h"
 #include "zend_compile.h"
+#include "zend_build.h"
 
 /*
 The constants below are derived from ext/opcache/ZendAccelerator.h
 
-You can use the following macro to check the extension API version for
-compatibilities:
+You can use the following macro to check the extension API version for compatibilities:
 
 #define	ZEND_EXTENSION_API_NO_5_0_X	220040412
 #define	ZEND_EXTENSION_API_NO_5_1_X	220051025
@@ -45,16 +44,14 @@ compatibilities:
 
 /* The first number is the engine version and the rest is the date (YYYYMMDD).
  * This way engine 2/3 API no. is always greater than engine 1 API no..  */
-#define ZEND_EXTENSION_API_NO 320190902
+#define ZEND_EXTENSION_API_NO	420240924
 
 typedef struct _zend_extension_version_info {
-  int zend_extension_api_no;
-  char *build_id;
+	int zend_extension_api_no;
+	const char *build_id;
 } zend_extension_version_info;
 
-#define ZEND_EXTENSION_BUILD_ID                                                \
-  "API" ZEND_TOSTR(ZEND_EXTENSION_API_NO)                                      \
-      ZEND_BUILD_TS ZEND_BUILD_DEBUG ZEND_BUILD_SYSTEM ZEND_BUILD_EXTRA
+#define ZEND_EXTENSION_BUILD_ID "API" ZEND_TOSTR(ZEND_EXTENSION_API_NO) ZEND_BUILD_TS ZEND_BUILD_DEBUG ZEND_BUILD_SYSTEM ZEND_BUILD_EXTRA
 
 typedef struct _zend_extension zend_extension;
 
@@ -78,86 +75,89 @@ typedef size_t (*op_array_persist_calc_func_t)(zend_op_array *op_array);
 typedef size_t (*op_array_persist_func_t)(zend_op_array *op_array, void *mem);
 
 struct _zend_extension {
-  char *name;
-  char *version;
-  char *author;
-  char *URL;
-  char *copyright;
+	const char *name;
+	const char *version;
+	const char *author;
+	const char *URL;
+	const char *copyright;
 
-  startup_func_t startup;
-  shutdown_func_t shutdown;
-  activate_func_t activate;
-  deactivate_func_t deactivate;
+	startup_func_t startup;
+	shutdown_func_t shutdown;
+	activate_func_t activate;
+	deactivate_func_t deactivate;
 
-  message_handler_func_t message_handler;
+	message_handler_func_t message_handler;
 
-  op_array_handler_func_t op_array_handler;
+	op_array_handler_func_t op_array_handler;
 
-  statement_handler_func_t statement_handler;
-  fcall_begin_handler_func_t fcall_begin_handler;
-  fcall_end_handler_func_t fcall_end_handler;
+	statement_handler_func_t statement_handler;
+	fcall_begin_handler_func_t fcall_begin_handler;
+	fcall_end_handler_func_t fcall_end_handler;
 
-  op_array_ctor_func_t op_array_ctor;
-  op_array_dtor_func_t op_array_dtor;
+	op_array_ctor_func_t op_array_ctor;
+	op_array_dtor_func_t op_array_dtor;
 
-  int (*api_no_check)(int api_no);
-  int (*build_id_check)(const char *build_id);
-  op_array_persist_calc_func_t op_array_persist_calc;
-  op_array_persist_func_t op_array_persist;
-  void *reserved5;
-  void *reserved6;
-  void *reserved7;
-  void *reserved8;
+	int (*api_no_check)(int api_no);
+	int (*build_id_check)(const char* build_id);
+	op_array_persist_calc_func_t op_array_persist_calc;
+	op_array_persist_func_t op_array_persist;
+	void *reserved5;
+	void *reserved6;
+	void *reserved7;
+	void *reserved8;
 
-  DL_HANDLE handle;
-  int resource_number;
+	DL_HANDLE handle;
+	int resource_number;
 };
 
 BEGIN_EXTERN_C()
 extern ZEND_API int zend_op_array_extension_handles;
 
-ZEND_API int zend_get_resource_handle(zend_extension *extension);
-ZEND_API int zend_get_op_array_extension_handle(void);
+ZEND_API int zend_get_resource_handle(const char *module_name);
+ZEND_API int zend_get_op_array_extension_handle(const char *module_name);
+ZEND_API int zend_get_op_array_extension_handles(const char *module_name, int handles);
+ZEND_API int zend_get_internal_function_extension_handle(const char *module_name);
+ZEND_API int zend_get_internal_function_extension_handles(const char *module_name, int handles);
 ZEND_API void zend_extension_dispatch_message(int message, void *arg);
 END_EXTERN_C()
 
-#define ZEND_EXTMSG_NEW_EXTENSION 1
+#define ZEND_EXTMSG_NEW_EXTENSION		1
 
-#define ZEND_EXTENSION()                                                       \
-  ZEND_EXT_API zend_extension_version_info extension_version_info = {          \
-      ZEND_EXTENSION_API_NO, ZEND_EXTENSION_BUILD_ID}
 
-#define STANDARD_ZEND_EXTENSION_PROPERTIES                                     \
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1
-#define COMPAT_ZEND_EXTENSION_PROPERTIES                                       \
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1
-#define BUILD_COMPAT_ZEND_EXTENSION_PROPERTIES                                 \
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1
+#define ZEND_EXTENSION()	\
+	ZEND_EXT_API zend_extension_version_info extension_version_info = { ZEND_EXTENSION_API_NO, ZEND_EXTENSION_BUILD_ID }
+
+#define STANDARD_ZEND_EXTENSION_PROPERTIES       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1
+#define COMPAT_ZEND_EXTENSION_PROPERTIES         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1
+#define BUILD_COMPAT_ZEND_EXTENSION_PROPERTIES   NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1
+
 
 ZEND_API extern zend_llist zend_extensions;
 ZEND_API extern uint32_t zend_extension_flags;
 
-#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_CTOR (1 << 0)
-#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_DTOR (1 << 1)
-#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_HANDLER (1 << 2)
-#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_PERSIST_CALC (1 << 3)
-#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_PERSIST (1 << 4)
+#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_CTOR         (1<<0)
+#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_DTOR         (1<<1)
+#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_HANDLER      (1<<2)
+#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_PERSIST_CALC (1<<3)
+#define ZEND_EXTENSIONS_HAVE_OP_ARRAY_PERSIST      (1<<4)
 
 void zend_extension_dtor(zend_extension *extension);
 ZEND_API void zend_append_version_info(const zend_extension *extension);
-int zend_startup_extensions_mechanism(void);
-int zend_startup_extensions(void);
+void zend_startup_extensions_mechanism(void);
+void zend_startup_extensions(void);
 void zend_shutdown_extensions(void);
 
+ZEND_API size_t zend_internal_run_time_cache_reserved_size(void);
+ZEND_API void zend_init_internal_run_time_cache(void);
+ZEND_API void zend_reset_internal_run_time_cache(void);
+
 BEGIN_EXTERN_C()
-ZEND_API int zend_load_extension(const char *path);
-ZEND_API int zend_load_extension_handle(DL_HANDLE handle, const char *path);
-ZEND_API int zend_register_extension(zend_extension *new_extension,
-                                     DL_HANDLE handle);
+ZEND_API zend_result zend_load_extension(const char *path);
+ZEND_API zend_result zend_load_extension_handle(DL_HANDLE handle, const char *path);
+ZEND_API void zend_register_extension(zend_extension *new_extension, DL_HANDLE handle);
 ZEND_API zend_extension *zend_get_extension(const char *extension_name);
 ZEND_API size_t zend_extensions_op_array_persist_calc(zend_op_array *op_array);
-ZEND_API size_t zend_extensions_op_array_persist(zend_op_array *op_array,
-                                                 void *mem);
+ZEND_API size_t zend_extensions_op_array_persist(zend_op_array *op_array, void *mem);
 END_EXTERN_C()
 
 #endif /* ZEND_EXTENSIONS_H */

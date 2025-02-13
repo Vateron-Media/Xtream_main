@@ -17,9 +17,10 @@ function getClassArray($classes) {
     }
 
     return array_unique(
-        array_map(function ($v) {
-            return strtolower($v);
-        },
+        array_map(
+            function ($v) {
+                return strtolower($v);
+            },
             $result
         )
     );
@@ -105,8 +106,11 @@ foreach ($classes as $class) {
 
             /* The various RedisArray subtests we can run */
             $test_classes = [
-                'Redis_Array_Test', 'Redis_Rehashing_Test', 'Redis_Auto_Rehashing_Test',
-                'Redis_Multi_Exec_Test', 'Redis_Distributor_Test'
+                'Redis_Array_Test',
+                'Redis_Rehashing_Test',
+                'Redis_Auto_Rehashing_Test',
+                'Redis_Multi_Exec_Test',
+                'Redis_Distributor_Test'
             ];
 
             foreach ($test_classes as $test_class) {
@@ -125,5 +129,3 @@ foreach ($classes as $class) {
 
 /* Success */
 exit(0);
-
-?>

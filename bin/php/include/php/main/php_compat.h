@@ -1,13 +1,11 @@
 /*
   +----------------------------------------------------------------------+
-  | PHP Version 7                                                        |
-  +----------------------------------------------------------------------+
   | Copyright (c) The PHP Group                                          |
   +----------------------------------------------------------------------+
   | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
   | available through the world-wide-web at the following url:           |
-  | http://www.php.net/license/3_01.txt                                  |
+  | https://www.php.net/license/3_01.txt                                 |
   | If you did not receive a copy of the PHP license and are unable to   |
   | obtain it through the world-wide-web, please send a note to          |
   | license@php.net so we can mail you a copy immediately.               |
@@ -60,21 +58,18 @@
 #define pcre2_match_context_create_8 php_pcre2_match_context_create
 #define pcre2_match_context_free_8 php_pcre2_match_context_free
 #define pcre2_match_data_create_8 php_pcre2_match_data_create
-#define pcre2_match_data_create_from_pattern_8                                 \
-  php_pcre2_match_data_create_from_pattern
+#define pcre2_match_data_create_from_pattern_8 php_pcre2_match_data_create_from_pattern
 #define pcre2_match_data_free_8 php_pcre2_match_data_free
 #define pcre2_pattern_info_8 php_pcre2_pattern_info
 #define pcre2_serialize_decode_8 php_pcre2_serialize_decode
 #define pcre2_serialize_encode_8 php_pcre2_serialize_encode
 #define pcre2_serialize_free_8 php_pcre2_serialize_free
-#define pcre2_serialize_get_number_of_codes_8                                  \
-  php_pcre2_serialize_get_number_of_codes
+#define pcre2_serialize_get_number_of_codes_8 php_pcre2_serialize_get_number_of_codes
 #define pcre2_set_bsr_8 php_pcre2_set_bsr
 #define pcre2_set_callout_8 php_pcre2_set_callout
 #define pcre2_set_character_tables_8 php_pcre2_set_character_tables
 #define pcre2_set_compile_extra_options_8 php_pcre2_set_compile_extra_options
-#define pcre2_set_compile_recursion_guard_8                                    \
-  php_pcre2_set_compile_recursion_guard
+#define pcre2_set_compile_recursion_guard_8 php_pcre2_set_compile_recursion_guard
 #define pcre2_set_depth_limit_8 php_pcre2_set_depth_limit
 #define pcre2_set_glob_escape_8 php_pcre2_set_glob_escape
 #define pcre2_set_glob_separator_8 php_pcre2_set_glob_separator
@@ -97,8 +92,7 @@
 #define pcre2_substring_nametable_scan_8 php_pcre2_substring_nametable_scan
 #define pcre2_substring_number_from_name_8 php_pcre2_substring_number_from_name
 #define pcre2_set_recursion_limit_8 php_pcre2_set_recursion_limit
-#define pcre2_set_recursion_memory_management_8                                \
-  php_pcre2_set_recursion_memory_management
+#define pcre2_set_recursion_memory_management_8 php_pcre2_set_recursion_memory_management
 #endif
 
 #define lookup php_lookup
@@ -107,8 +101,7 @@
 #define hashTableIterInit php_hashTableIterInit
 #define hashTableIterNext php_hashTableIterNext
 
-#if defined(HAVE_LIBXML) && (defined(HAVE_XML) || defined(HAVE_XMLRPC)) &&     \
-    !defined(HAVE_LIBEXPAT)
+#if defined(HAVE_LIBXML) && (defined(HAVE_XML) || defined(HAVE_XMLRPC)) && !defined(HAVE_LIBEXPAT)
 #define XML_DefaultCurrent php_XML_DefaultCurrent
 #define XML_ErrorString php_XML_ErrorString
 #define XML_ExpatVersion php_XML_ExpatVersion
@@ -158,15 +151,13 @@
 #define XML_SetEndElementHandler php_XML_SetEndElementHandler
 #define XML_SetEndNamespaceDeclHandler php_XML_SetEndNamespaceDeclHandler
 #define XML_SetEntityDeclHandler php_XML_SetEntityDeclHandler
-#define XML_SetExternalEntityRefHandlerArg                                     \
-  php_XML_SetExternalEntityRefHandlerArg
+#define XML_SetExternalEntityRefHandlerArg php_XML_SetExternalEntityRefHandlerArg
 #define XML_SetExternalEntityRefHandler php_XML_SetExternalEntityRefHandler
 #define XML_SetNamespaceDeclHandler php_XML_SetNamespaceDeclHandler
 #define XML_SetNotationDeclHandler php_XML_SetNotationDeclHandler
 #define XML_SetNotStandaloneHandler php_XML_SetNotStandaloneHandler
 #define XML_SetParamEntityParsing php_XML_SetParamEntityParsing
-#define XML_SetProcessingInstructionHandler                                    \
-  php_XML_SetProcessingInstructionHandler
+#define XML_SetProcessingInstructionHandler php_XML_SetProcessingInstructionHandler
 #define XML_SetReturnNSTriplet php_XML_SetReturnNSTriplet
 #define XML_SetStartCdataSectionHandler php_XML_SetStartCdataSectionHandler
 #define XML_SetStartDoctypeDeclHandler php_XML_SetStartDoctypeDeclHandler
@@ -279,8 +270,7 @@
 #define gdImageCreateFromWBMPCtx php_gd_gdImageCreateFromWBMPCtx
 #define gdImageCreateFromWBMPPtr php_gd_gdImageCreateFromWBMPPtr
 #define gdImageCreateFromXbm php_gd_gdImageCreateFromXbm
-#define gdImageCreatePaletteFromTrueColor                                      \
-  php_gd_gdImageCreatePaletteFromTrueColor
+#define gdImageCreatePaletteFromTrueColor php_gd_gdImageCreatePaletteFromTrueColor
 #define gdImageCreateTrueColor php_gd_gdImageCreateTrueColor
 #define gdImageDashedLine php_gd_gdImageDashedLine
 #define gdImageDestroy php_gd_gdImageDestroy

@@ -207,55 +207,55 @@ class PEAR_ChannelFile {
         return
             array(
                 PEAR_CHANNELFILE_ERROR_INVALID_VERSION =>
-                    'While parsing channel.xml, an invalid version number "%version% was passed in, expecting one of %versions%',
+                'While parsing channel.xml, an invalid version number "%version% was passed in, expecting one of %versions%',
                 PEAR_CHANNELFILE_ERROR_NO_VERSION =>
-                    'No version number found in <channel> tag',
+                'No version number found in <channel> tag',
                 PEAR_CHANNELFILE_ERROR_NO_XML_EXT =>
-                    '%error%',
+                '%error%',
                 PEAR_CHANNELFILE_ERROR_CANT_MAKE_PARSER =>
-                    'Unable to create XML parser',
+                'Unable to create XML parser',
                 PEAR_CHANNELFILE_ERROR_PARSER_ERROR =>
-                    '%error%',
+                '%error%',
                 PEAR_CHANNELFILE_ERROR_NO_NAME =>
-                    'Missing channel name',
+                'Missing channel name',
                 PEAR_CHANNELFILE_ERROR_INVALID_NAME =>
-                    'Invalid channel %tag% "%name%"',
+                'Invalid channel %tag% "%name%"',
                 PEAR_CHANNELFILE_ERROR_NO_SUMMARY =>
-                    'Missing channel summary',
+                'Missing channel summary',
                 PEAR_CHANNELFILE_ERROR_MULTILINE_SUMMARY =>
-                    'Channel summary should be on one line, but is multi-line',
+                'Channel summary should be on one line, but is multi-line',
                 PEAR_CHANNELFILE_ERROR_NO_HOST =>
-                    'Missing channel server for %type% server',
+                'Missing channel server for %type% server',
                 PEAR_CHANNELFILE_ERROR_INVALID_HOST =>
-                    'Server name "%server%" is invalid for %type% server',
+                'Server name "%server%" is invalid for %type% server',
                 PEAR_CHANNELFILE_ERROR_INVALID_MIRROR =>
-                    'Invalid mirror name "%name%", mirror type %type%',
+                'Invalid mirror name "%name%", mirror type %type%',
                 PEAR_CHANNELFILE_ERROR_INVALID_MIRRORTYPE =>
-                    'Invalid mirror type "%type%"',
+                'Invalid mirror type "%type%"',
                 PEAR_CHANNELFILE_ERROR_INVALID =>
-                    'Cannot generate xml, contents are invalid',
+                'Cannot generate xml, contents are invalid',
                 PEAR_CHANNELFILE_ERROR_EMPTY_REGEX =>
-                    'packagenameregex cannot be empty',
+                'packagenameregex cannot be empty',
                 PEAR_CHANNELFILE_ERROR_NO_FUNCTIONVERSION =>
-                    '%parent% %protocol% function has no version',
+                '%parent% %protocol% function has no version',
                 PEAR_CHANNELFILE_ERROR_NO_FUNCTIONNAME =>
-                    '%parent% %protocol% function has no name',
+                '%parent% %protocol% function has no name',
                 PEAR_CHANNELFILE_ERROR_NOBASEURLTYPE =>
-                    '%parent% rest baseurl has no type',
+                '%parent% rest baseurl has no type',
                 PEAR_CHANNELFILE_ERROR_NOVALIDATE_NAME =>
-                    'Validation package has no name in <validatepackage> tag',
+                'Validation package has no name in <validatepackage> tag',
                 PEAR_CHANNELFILE_ERROR_NOVALIDATE_VERSION =>
-                    'Validation package "%package%" has no version',
+                'Validation package "%package%" has no version',
                 PEAR_CHANNELFILE_ERROR_MIRROR_NOT_FOUND =>
-                    'Mirror "%mirror%" does not exist',
+                'Mirror "%mirror%" does not exist',
                 PEAR_CHANNELFILE_ERROR_INVALID_PORT =>
-                    'Port "%port%" must be numeric',
+                'Port "%port%" must be numeric',
                 PEAR_CHANNELFILE_ERROR_NO_STATICVERSION =>
-                    '<static> tag must contain version attribute',
+                '<static> tag must contain version attribute',
                 PEAR_CHANNELFILE_URI_CANT_MIRROR =>
-                    'The __uri pseudo-channel cannot have mirrors',
+                'The __uri pseudo-channel cannot have mirrors',
                 PEAR_CHANNELFILE_ERROR_INVALID_SSL =>
-                    '%server% has invalid ssl attribute "%ssl%" can only be yes or not present',
+                '%server% has invalid ssl attribute "%ssl%" can only be yes or not present',
             );
     }
 
@@ -1051,7 +1051,7 @@ class PEAR_ChannelFile {
                 if (!isset($this->_channelInfo['servers'])) {
                     $this->_channelInfo['servers'] = array(
                         'primary' =>
-                            array('rest' => array())
+                        array('rest' => array())
                     );
                 } elseif (!isset($this->_channelInfo['servers']['primary'])) {
                     $this->_channelInfo['servers']['primary'] = array('rest' => array());
@@ -1336,7 +1336,7 @@ class PEAR_ChannelFile {
             if (!isset($this->_channelInfo['servers'])) {
                 $this->_channelInfo['servers'] = array(
                     'primary' =>
-                        array($type => array())
+                    array($type => array())
                 );
             } elseif (!isset($this->_channelInfo['servers']['primary'])) {
                 $this->_channelInfo['servers']['primary'] = array($type => array());

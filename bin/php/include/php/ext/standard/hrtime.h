@@ -36,8 +36,8 @@
 #elif defined(__APPLE__)
 #undef PHP_HRTIME_PLATFORM_APPLE
 #define PHP_HRTIME_PLATFORM_APPLE 1
-#elif (defined(__hpux) || defined(hpux)) ||                                    \
-    ((defined(__sun__) || defined(__sun) || defined(sun)) &&                   \
+#elif (defined(__hpux) || defined(hpux)) ||                  \
+    ((defined(__sun__) || defined(__sun) || defined(sun)) && \
      (defined(__SVR4) || defined(__svr4__)))
 #undef PHP_HRTIME_PLATFORM_HPUX
 #define PHP_HRTIME_PLATFORM_HPUX 1
@@ -46,10 +46,10 @@
 #define PHP_HRTIME_PLATFORM_AIX 1
 #endif
 
-#define HRTIME_AVAILABLE                                                       \
-  (PHP_HRTIME_PLATFORM_POSIX || PHP_HRTIME_PLATFORM_WINDOWS ||                 \
-   PHP_HRTIME_PLATFORM_APPLE || PHP_HRTIME_PLATFORM_HPUX ||                    \
-   PHP_HRTIME_PLATFORM_AIX)
+#define HRTIME_AVAILABLE                                         \
+    (PHP_HRTIME_PLATFORM_POSIX || PHP_HRTIME_PLATFORM_WINDOWS || \
+     PHP_HRTIME_PLATFORM_APPLE || PHP_HRTIME_PLATFORM_HPUX ||    \
+     PHP_HRTIME_PLATFORM_AIX)
 
 BEGIN_EXTERN_C()
 

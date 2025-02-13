@@ -937,7 +937,7 @@ class PEAR_Error {
 
         if ($this->mode & PEAR_ERROR_EXCEPTION) {
             trigger_error("PEAR_ERROR_EXCEPTION is obsolete, use class PEAR_Exception for exceptions", E_USER_WARNING);
-            eval ('$e = new Exception($this->message, $this->code);throw($e);');
+            eval('$e = new Exception($this->message, $this->code);throw($e);');
         }
     }
 
@@ -1086,7 +1086,7 @@ class PEAR_Error {
             }
             return sprintf(
                 '[%s: message="%s" code=%d mode=callback ' .
-                'callback=%s prefix="%s" info="%s"]',
+                    'callback=%s prefix="%s" info="%s"]',
                 strtolower(get_class($this)),
                 $this->message,
                 $this->code,
@@ -1109,7 +1109,7 @@ class PEAR_Error {
         }
         return sprintf(
             '[%s: message="%s" code=%d mode=%s level=%s ' .
-            'prefix="%s" info="%s"]',
+                'prefix="%s" info="%s"]',
             strtolower(get_class($this)),
             $this->message,
             $this->code,

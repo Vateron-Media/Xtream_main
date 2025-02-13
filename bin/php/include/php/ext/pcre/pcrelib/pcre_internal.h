@@ -308,25 +308,25 @@ start/end of string field names are. */
 
 /* This macro checks for a newline at the given position */
 
-#define IS_NEWLINE(p)                                                          \
-  ((NLBLOCK->nltype != NLTYPE_FIXED)                                           \
-       ? ((p) < NLBLOCK->PSEND &&                                              \
-          PRIV(is_newline)((p), NLBLOCK->nltype, NLBLOCK->PSEND,               \
-                           &(NLBLOCK->nllen), utf))                            \
-       : ((p) <= NLBLOCK->PSEND - NLBLOCK->nllen &&                            \
-          UCHAR21TEST(p) == NLBLOCK->nl[0] &&                                  \
+#define IS_NEWLINE(p)                                            \
+  ((NLBLOCK->nltype != NLTYPE_FIXED)                             \
+       ? ((p) < NLBLOCK->PSEND &&                                \
+          PRIV(is_newline)((p), NLBLOCK->nltype, NLBLOCK->PSEND, \
+                           &(NLBLOCK->nllen), utf))              \
+       : ((p) <= NLBLOCK->PSEND - NLBLOCK->nllen &&              \
+          UCHAR21TEST(p) == NLBLOCK->nl[0] &&                    \
           (NLBLOCK->nllen == 1 || UCHAR21TEST(p + 1) == NLBLOCK->nl[1])))
 
 /* This macro checks for a newline immediately preceding the given position */
 
-#define WAS_NEWLINE(p)                                                         \
-  ((NLBLOCK->nltype != NLTYPE_FIXED)                                           \
-       ? ((p) > NLBLOCK->PSSTART &&                                            \
-          PRIV(was_newline)((p), NLBLOCK->nltype, NLBLOCK->PSSTART,            \
-                            &(NLBLOCK->nllen), utf))                           \
-       : ((p) >= NLBLOCK->PSSTART + NLBLOCK->nllen &&                          \
-          UCHAR21TEST(p - NLBLOCK->nllen) == NLBLOCK->nl[0] &&                 \
-          (NLBLOCK->nllen == 1 ||                                              \
+#define WAS_NEWLINE(p)                                              \
+  ((NLBLOCK->nltype != NLTYPE_FIXED)                                \
+       ? ((p) > NLBLOCK->PSSTART &&                                 \
+          PRIV(was_newline)((p), NLBLOCK->nltype, NLBLOCK->PSSTART, \
+                            &(NLBLOCK->nllen), utf))                \
+       : ((p) >= NLBLOCK->PSSTART + NLBLOCK->nllen &&               \
+          UCHAR21TEST(p - NLBLOCK->nllen) == NLBLOCK->nl[0] &&      \
+          (NLBLOCK->nllen == 1 ||                                   \
            UCHAR21TEST(p - NLBLOCK->nllen + 1) == NLBLOCK->nl[1])))
 
 /* When PCRE is compiled as a C++ library, the subject pointer can be replaced
@@ -378,17 +378,21 @@ neither (there some non-Unix environments where this is the case). */
 #ifdef HAVE_BCOPY
 #define memmove(a, b, c) bcopy(b, a, c)
 #else /* HAVE_BCOPY */
-static void *pcre_memmove(void *d, const void *s, size_t n) {
+static void *pcre_memmove(void *d, const void *s, size_t n)
+{
   size_t i;
   unsigned char *dest = (unsigned char *)d;
   const unsigned char *src = (const unsigned char *)s;
-  if (dest > src) {
+  if (dest > src)
+  {
     dest += n;
     src += n;
     for (i = 0; i < n; ++i)
       *(--dest) = *(--src);
     return (void *)dest;
-  } else {
+  }
+  else
+  {
     for (i = 0; i < n; ++i)
       *dest++ = *src++;
     return (void *)(dest - n);
@@ -424,7 +428,7 @@ is automated on Unix systems via the "configure" command. */
 
 #elif LINK_SIZE == 3
 
-#define PUT(a, n, d)                                                           \
+#define PUT(a, n, d) \
   (a[n] = (d) >> 16), (a[(n) + 1] = (d) >> 8), (a[(n) + 2] = (d) & 255)
 
 #define GET(a, n) (((a)[n] << 16) | ((a)[(n) + 1] << 8) | (a)[(n) + 2])
@@ -433,11 +437,11 @@ is automated on Unix systems via the "configure" command. */
 
 #elif LINK_SIZE == 4
 
-#define PUT(a, n, d)                                                           \
-  (a[n] = (d) >> 24), (a[(n) + 1] = (d) >> 16), (a[(n) + 2] = (d) >> 8),       \
+#define PUT(a, n, d)                                                     \
+  (a[n] = (d) >> 24), (a[(n) + 1] = (d) >> 16), (a[(n) + 2] = (d) >> 8), \
       (a[(n) + 3] = (d) & 255)
 
-#define GET(a, n)                                                              \
+#define GET(a, n) \
   (((a)[n] << 24) | ((a)[(n) + 1] << 16) | ((a)[(n) + 2] << 8) | (a)[(n) + 3])
 
 /* Keep it positive */
@@ -508,8 +512,8 @@ capturing parenthesis numbers in back references. */
 
 #define IMM2_SIZE 2
 
-#define PUT2(a, n, d)                                                          \
-  a[n] = (d) >> 8;                                                             \
+#define PUT2(a, n, d) \
+  a[n] = (d) >> 8;    \
   a[(n) + 1] = (d) & 255
 
 /* For reasons that I do not understand, the expression in this GET2 macro is
@@ -596,50 +600,57 @@ UTF support is omitted, we don't even define them. */
 /* Base macro to pick up the remaining bytes of a UTF-8 character, not
 advancing the pointer. */
 
-#define GETUTF8(c, eptr)                                                       \
-  {                                                                            \
-    if ((c & 0x20) == 0)                                                       \
-      c = ((c & 0x1f) << 6) | (eptr[1] & 0x3f);                                \
-    else if ((c & 0x10) == 0)                                                  \
-      c = ((c & 0x0f) << 12) | ((eptr[1] & 0x3f) << 6) | (eptr[2] & 0x3f);     \
-    else if ((c & 0x08) == 0)                                                  \
-      c = ((c & 0x07) << 18) | ((eptr[1] & 0x3f) << 12) |                      \
-          ((eptr[2] & 0x3f) << 6) | (eptr[3] & 0x3f);                          \
-    else if ((c & 0x04) == 0)                                                  \
-      c = ((c & 0x03) << 24) | ((eptr[1] & 0x3f) << 18) |                      \
-          ((eptr[2] & 0x3f) << 12) | ((eptr[3] & 0x3f) << 6) |                 \
-          (eptr[4] & 0x3f);                                                    \
-    else                                                                       \
-      c = ((c & 0x01) << 30) | ((eptr[1] & 0x3f) << 24) |                      \
-          ((eptr[2] & 0x3f) << 18) | ((eptr[3] & 0x3f) << 12) |                \
-          ((eptr[4] & 0x3f) << 6) | (eptr[5] & 0x3f);                          \
+#define GETUTF8(c, eptr)                                                   \
+  {                                                                        \
+    if ((c & 0x20) == 0)                                                   \
+      c = ((c & 0x1f) << 6) | (eptr[1] & 0x3f);                            \
+    else if ((c & 0x10) == 0)                                              \
+      c = ((c & 0x0f) << 12) | ((eptr[1] & 0x3f) << 6) | (eptr[2] & 0x3f); \
+    else if ((c & 0x08) == 0)                                              \
+      c = ((c & 0x07) << 18) | ((eptr[1] & 0x3f) << 12) |                  \
+          ((eptr[2] & 0x3f) << 6) | (eptr[3] & 0x3f);                      \
+    else if ((c & 0x04) == 0)                                              \
+      c = ((c & 0x03) << 24) | ((eptr[1] & 0x3f) << 18) |                  \
+          ((eptr[2] & 0x3f) << 12) | ((eptr[3] & 0x3f) << 6) |             \
+          (eptr[4] & 0x3f);                                                \
+    else                                                                   \
+      c = ((c & 0x01) << 30) | ((eptr[1] & 0x3f) << 24) |                  \
+          ((eptr[2] & 0x3f) << 18) | ((eptr[3] & 0x3f) << 12) |            \
+          ((eptr[4] & 0x3f) << 6) | (eptr[5] & 0x3f);                      \
   }
 
 /* Base macro to pick up the remaining bytes of a UTF-8 character, advancing
 the pointer. */
 
-#define GETUTF8INC(c, eptr)                                                    \
-  {                                                                            \
-    if ((c & 0x20) == 0)                                                       \
-      c = ((c & 0x1f) << 6) | (*eptr++ & 0x3f);                                \
-    else if ((c & 0x10) == 0) {                                                \
-      c = ((c & 0x0f) << 12) | ((*eptr & 0x3f) << 6) | (eptr[1] & 0x3f);       \
-      eptr += 2;                                                               \
-    } else if ((c & 0x08) == 0) {                                              \
-      c = ((c & 0x07) << 18) | ((*eptr & 0x3f) << 12) |                        \
-          ((eptr[1] & 0x3f) << 6) | (eptr[2] & 0x3f);                          \
-      eptr += 3;                                                               \
-    } else if ((c & 0x04) == 0) {                                              \
-      c = ((c & 0x03) << 24) | ((*eptr & 0x3f) << 18) |                        \
-          ((eptr[1] & 0x3f) << 12) | ((eptr[2] & 0x3f) << 6) |                 \
-          (eptr[3] & 0x3f);                                                    \
-      eptr += 4;                                                               \
-    } else {                                                                   \
-      c = ((c & 0x01) << 30) | ((*eptr & 0x3f) << 24) |                        \
-          ((eptr[1] & 0x3f) << 18) | ((eptr[2] & 0x3f) << 12) |                \
-          ((eptr[3] & 0x3f) << 6) | (eptr[4] & 0x3f);                          \
-      eptr += 5;                                                               \
-    }                                                                          \
+#define GETUTF8INC(c, eptr)                                              \
+  {                                                                      \
+    if ((c & 0x20) == 0)                                                 \
+      c = ((c & 0x1f) << 6) | (*eptr++ & 0x3f);                          \
+    else if ((c & 0x10) == 0)                                            \
+    {                                                                    \
+      c = ((c & 0x0f) << 12) | ((*eptr & 0x3f) << 6) | (eptr[1] & 0x3f); \
+      eptr += 2;                                                         \
+    }                                                                    \
+    else if ((c & 0x08) == 0)                                            \
+    {                                                                    \
+      c = ((c & 0x07) << 18) | ((*eptr & 0x3f) << 12) |                  \
+          ((eptr[1] & 0x3f) << 6) | (eptr[2] & 0x3f);                    \
+      eptr += 3;                                                         \
+    }                                                                    \
+    else if ((c & 0x04) == 0)                                            \
+    {                                                                    \
+      c = ((c & 0x03) << 24) | ((*eptr & 0x3f) << 18) |                  \
+          ((eptr[1] & 0x3f) << 12) | ((eptr[2] & 0x3f) << 6) |           \
+          (eptr[3] & 0x3f);                                              \
+      eptr += 4;                                                         \
+    }                                                                    \
+    else                                                                 \
+    {                                                                    \
+      c = ((c & 0x01) << 30) | ((*eptr & 0x3f) << 24) |                  \
+          ((eptr[1] & 0x3f) << 18) | ((eptr[2] & 0x3f) << 12) |          \
+          ((eptr[3] & 0x3f) << 6) | (eptr[4] & 0x3f);                    \
+      eptr += 5;                                                         \
+    }                                                                    \
   }
 
 #if defined COMPILE_PCRE8
@@ -670,96 +681,105 @@ of a UTF sequence. */
 /* Get the next UTF-8 character, not advancing the pointer. This is called when
 we know we are in UTF-8 mode. */
 
-#define GETCHAR(c, eptr)                                                       \
-  c = *eptr;                                                                   \
-  if (c >= 0xc0)                                                               \
+#define GETCHAR(c, eptr) \
+  c = *eptr;             \
+  if (c >= 0xc0)         \
     GETUTF8(c, eptr);
 
 /* Get the next UTF-8 character, testing for UTF-8 mode, and not advancing the
 pointer. */
 
-#define GETCHARTEST(c, eptr)                                                   \
-  c = *eptr;                                                                   \
-  if (utf && c >= 0xc0)                                                        \
+#define GETCHARTEST(c, eptr) \
+  c = *eptr;                 \
+  if (utf && c >= 0xc0)      \
     GETUTF8(c, eptr);
 
 /* Get the next UTF-8 character, advancing the pointer. This is called when we
 know we are in UTF-8 mode. */
 
-#define GETCHARINC(c, eptr)                                                    \
-  c = *eptr++;                                                                 \
-  if (c >= 0xc0)                                                               \
+#define GETCHARINC(c, eptr) \
+  c = *eptr++;              \
+  if (c >= 0xc0)            \
     GETUTF8INC(c, eptr);
 
 /* Get the next character, testing for UTF-8 mode, and advancing the pointer.
 This is called when we don't know if we are in UTF-8 mode. */
 
-#define GETCHARINCTEST(c, eptr)                                                \
-  c = *eptr++;                                                                 \
-  if (utf && c >= 0xc0)                                                        \
+#define GETCHARINCTEST(c, eptr) \
+  c = *eptr++;                  \
+  if (utf && c >= 0xc0)         \
     GETUTF8INC(c, eptr);
 
 /* Base macro to pick up the remaining bytes of a UTF-8 character, not
 advancing the pointer, incrementing the length. */
 
-#define GETUTF8LEN(c, eptr, len)                                               \
-  {                                                                            \
-    if ((c & 0x20) == 0) {                                                     \
-      c = ((c & 0x1f) << 6) | (eptr[1] & 0x3f);                                \
-      len++;                                                                   \
-    } else if ((c & 0x10) == 0) {                                              \
-      c = ((c & 0x0f) << 12) | ((eptr[1] & 0x3f) << 6) | (eptr[2] & 0x3f);     \
-      len += 2;                                                                \
-    } else if ((c & 0x08) == 0) {                                              \
-      c = ((c & 0x07) << 18) | ((eptr[1] & 0x3f) << 12) |                      \
-          ((eptr[2] & 0x3f) << 6) | (eptr[3] & 0x3f);                          \
-      len += 3;                                                                \
-    } else if ((c & 0x04) == 0) {                                              \
-      c = ((c & 0x03) << 24) | ((eptr[1] & 0x3f) << 18) |                      \
-          ((eptr[2] & 0x3f) << 12) | ((eptr[3] & 0x3f) << 6) |                 \
-          (eptr[4] & 0x3f);                                                    \
-      len += 4;                                                                \
-    } else {                                                                   \
-      c = ((c & 0x01) << 30) | ((eptr[1] & 0x3f) << 24) |                      \
-          ((eptr[2] & 0x3f) << 18) | ((eptr[3] & 0x3f) << 12) |                \
-          ((eptr[4] & 0x3f) << 6) | (eptr[5] & 0x3f);                          \
-      len += 5;                                                                \
-    }                                                                          \
+#define GETUTF8LEN(c, eptr, len)                                           \
+  {                                                                        \
+    if ((c & 0x20) == 0)                                                   \
+    {                                                                      \
+      c = ((c & 0x1f) << 6) | (eptr[1] & 0x3f);                            \
+      len++;                                                               \
+    }                                                                      \
+    else if ((c & 0x10) == 0)                                              \
+    {                                                                      \
+      c = ((c & 0x0f) << 12) | ((eptr[1] & 0x3f) << 6) | (eptr[2] & 0x3f); \
+      len += 2;                                                            \
+    }                                                                      \
+    else if ((c & 0x08) == 0)                                              \
+    {                                                                      \
+      c = ((c & 0x07) << 18) | ((eptr[1] & 0x3f) << 12) |                  \
+          ((eptr[2] & 0x3f) << 6) | (eptr[3] & 0x3f);                      \
+      len += 3;                                                            \
+    }                                                                      \
+    else if ((c & 0x04) == 0)                                              \
+    {                                                                      \
+      c = ((c & 0x03) << 24) | ((eptr[1] & 0x3f) << 18) |                  \
+          ((eptr[2] & 0x3f) << 12) | ((eptr[3] & 0x3f) << 6) |             \
+          (eptr[4] & 0x3f);                                                \
+      len += 4;                                                            \
+    }                                                                      \
+    else                                                                   \
+    {                                                                      \
+      c = ((c & 0x01) << 30) | ((eptr[1] & 0x3f) << 24) |                  \
+          ((eptr[2] & 0x3f) << 18) | ((eptr[3] & 0x3f) << 12) |            \
+          ((eptr[4] & 0x3f) << 6) | (eptr[5] & 0x3f);                      \
+      len += 5;                                                            \
+    }                                                                      \
   }
 
 /* Get the next UTF-8 character, not advancing the pointer, incrementing length
 if there are extra bytes. This is called when we know we are in UTF-8 mode. */
 
-#define GETCHARLEN(c, eptr, len)                                               \
-  c = *eptr;                                                                   \
-  if (c >= 0xc0)                                                               \
+#define GETCHARLEN(c, eptr, len) \
+  c = *eptr;                     \
+  if (c >= 0xc0)                 \
     GETUTF8LEN(c, eptr, len);
 
 /* Get the next UTF-8 character, testing for UTF-8 mode, not advancing the
 pointer, incrementing length if there are extra bytes. This is called when we
 do not know if we are in UTF-8 mode. */
 
-#define GETCHARLENTEST(c, eptr, len)                                           \
-  c = *eptr;                                                                   \
-  if (utf && c >= 0xc0)                                                        \
+#define GETCHARLENTEST(c, eptr, len) \
+  c = *eptr;                         \
+  if (utf && c >= 0xc0)              \
     GETUTF8LEN(c, eptr, len);
 
 /* If the pointer is not at the start of a character, move it back until
 it is. This is called only in UTF-8 mode - we don't put a test within the macro
 because almost all calls are already within a block of UTF-8 only code. */
 
-#define BACKCHAR(eptr)                                                         \
-  while ((*eptr & 0xc0) == 0x80)                                               \
+#define BACKCHAR(eptr)           \
+  while ((*eptr & 0xc0) == 0x80) \
   eptr--
 
 /* Same as above, just in the other direction. */
-#define FORWARDCHAR(eptr)                                                      \
-  while ((*eptr & 0xc0) == 0x80)                                               \
+#define FORWARDCHAR(eptr)        \
+  while ((*eptr & 0xc0) == 0x80) \
   eptr++
 
 /* Same as above, but it allows a fully customizable form. */
-#define ACROSSCHAR(condition, eptr, action)                                    \
-  while ((condition) && ((eptr) & 0xc0) == 0x80)                               \
+#define ACROSSCHAR(condition, eptr, action)      \
+  while ((condition) && ((eptr) & 0xc0) == 0x80) \
   action
 
 #elif defined COMPILE_PCRE16
@@ -785,72 +805,76 @@ of a UTF sequence. */
 /* Base macro to pick up the low surrogate of a UTF-16 character, not
 advancing the pointer. */
 
-#define GETUTF16(c, eptr)                                                      \
-  { c = (((c & 0x3ff) << 10) | (eptr[1] & 0x3ff)) + 0x10000; }
+#define GETUTF16(c, eptr)                                    \
+  {                                                          \
+    c = (((c & 0x3ff) << 10) | (eptr[1] & 0x3ff)) + 0x10000; \
+  }
 
 /* Get the next UTF-16 character, not advancing the pointer. This is called when
 we know we are in UTF-16 mode. */
 
-#define GETCHAR(c, eptr)                                                       \
-  c = *eptr;                                                                   \
-  if ((c & 0xfc00) == 0xd800)                                                  \
+#define GETCHAR(c, eptr)      \
+  c = *eptr;                  \
+  if ((c & 0xfc00) == 0xd800) \
     GETUTF16(c, eptr);
 
 /* Get the next UTF-16 character, testing for UTF-16 mode, and not advancing the
 pointer. */
 
-#define GETCHARTEST(c, eptr)                                                   \
-  c = *eptr;                                                                   \
-  if (utf && (c & 0xfc00) == 0xd800)                                           \
+#define GETCHARTEST(c, eptr)         \
+  c = *eptr;                         \
+  if (utf && (c & 0xfc00) == 0xd800) \
     GETUTF16(c, eptr);
 
 /* Base macro to pick up the low surrogate of a UTF-16 character, advancing
 the pointer. */
 
-#define GETUTF16INC(c, eptr)                                                   \
-  { c = (((c & 0x3ff) << 10) | (*eptr++ & 0x3ff)) + 0x10000; }
+#define GETUTF16INC(c, eptr)                                 \
+  {                                                          \
+    c = (((c & 0x3ff) << 10) | (*eptr++ & 0x3ff)) + 0x10000; \
+  }
 
 /* Get the next UTF-16 character, advancing the pointer. This is called when we
 know we are in UTF-16 mode. */
 
-#define GETCHARINC(c, eptr)                                                    \
-  c = *eptr++;                                                                 \
-  if ((c & 0xfc00) == 0xd800)                                                  \
+#define GETCHARINC(c, eptr)   \
+  c = *eptr++;                \
+  if ((c & 0xfc00) == 0xd800) \
     GETUTF16INC(c, eptr);
 
 /* Get the next character, testing for UTF-16 mode, and advancing the pointer.
 This is called when we don't know if we are in UTF-16 mode. */
 
-#define GETCHARINCTEST(c, eptr)                                                \
-  c = *eptr++;                                                                 \
-  if (utf && (c & 0xfc00) == 0xd800)                                           \
+#define GETCHARINCTEST(c, eptr)      \
+  c = *eptr++;                       \
+  if (utf && (c & 0xfc00) == 0xd800) \
     GETUTF16INC(c, eptr);
 
 /* Base macro to pick up the low surrogate of a UTF-16 character, not
 advancing the pointer, incrementing the length. */
 
-#define GETUTF16LEN(c, eptr, len)                                              \
-  {                                                                            \
-    c = (((c & 0x3ff) << 10) | (eptr[1] & 0x3ff)) + 0x10000;                   \
-    len++;                                                                     \
+#define GETUTF16LEN(c, eptr, len)                            \
+  {                                                          \
+    c = (((c & 0x3ff) << 10) | (eptr[1] & 0x3ff)) + 0x10000; \
+    len++;                                                   \
   }
 
 /* Get the next UTF-16 character, not advancing the pointer, incrementing
 length if there is a low surrogate. This is called when we know we are in
 UTF-16 mode. */
 
-#define GETCHARLEN(c, eptr, len)                                               \
-  c = *eptr;                                                                   \
-  if ((c & 0xfc00) == 0xd800)                                                  \
+#define GETCHARLEN(c, eptr, len) \
+  c = *eptr;                     \
+  if ((c & 0xfc00) == 0xd800)    \
     GETUTF16LEN(c, eptr, len);
 
 /* Get the next UTF-816character, testing for UTF-16 mode, not advancing the
 pointer, incrementing length if there is a low surrogate. This is called when
 we do not know if we are in UTF-16 mode. */
 
-#define GETCHARLENTEST(c, eptr, len)                                           \
-  c = *eptr;                                                                   \
-  if (utf && (c & 0xfc00) == 0xd800)                                           \
+#define GETCHARLENTEST(c, eptr, len) \
+  c = *eptr;                         \
+  if (utf && (c & 0xfc00) == 0xd800) \
     GETUTF16LEN(c, eptr, len);
 
 /* If the pointer is not at the start of a character, move it back until
@@ -858,18 +882,18 @@ it is. This is called only in UTF-16 mode - we don't put a test within the
 macro because almost all calls are already within a block of UTF-16 only
 code. */
 
-#define BACKCHAR(eptr)                                                         \
-  if ((*eptr & 0xfc00) == 0xdc00)                                              \
+#define BACKCHAR(eptr)            \
+  if ((*eptr & 0xfc00) == 0xdc00) \
   eptr--
 
 /* Same as above, just in the other direction. */
-#define FORWARDCHAR(eptr)                                                      \
-  if ((*eptr & 0xfc00) == 0xdc00)                                              \
+#define FORWARDCHAR(eptr)         \
+  if ((*eptr & 0xfc00) == 0xdc00) \
   eptr++
 
 /* Same as above, but it allows a fully customizable form. */
-#define ACROSSCHAR(condition, eptr, action)                                    \
-  if ((condition) && ((eptr) & 0xfc00) == 0xdc00)                              \
+#define ACROSSCHAR(condition, eptr, action)       \
+  if ((condition) && ((eptr) & 0xfc00) == 0xdc00) \
   action
 
 #elif defined COMPILE_PCRE32
@@ -919,18 +943,21 @@ macro because almost all calls are already within a block of UTF-32 only
 code.
 These are all no-ops since all UTF-32 characters fit into one pcre_uchar. */
 
-#define BACKCHAR(eptr)                                                         \
-  do {                                                                         \
+#define BACKCHAR(eptr) \
+  do                   \
+  {                    \
   } while (0)
 
 /* Same as above, just in the other direction. */
-#define FORWARDCHAR(eptr)                                                      \
-  do {                                                                         \
+#define FORWARDCHAR(eptr) \
+  do                      \
+  {                       \
   } while (0)
 
 /* Same as above, but it allows a fully customizable form. */
-#define ACROSSCHAR(condition, eptr, action)                                    \
-  do {                                                                         \
+#define ACROSSCHAR(condition, eptr, action) \
+  do                                        \
+  {                                         \
   } while (0)
 
 #else
@@ -959,54 +986,54 @@ other. NOTE: The values also appear in pcre_jit_compile.c. */
 
 #ifndef EBCDIC
 
-#define HSPACE_LIST                                                            \
-  CHAR_HT, CHAR_SPACE, CHAR_NBSP, 0x1680, 0x180e, 0x2000, 0x2001, 0x2002,      \
-      0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202f,  \
+#define HSPACE_LIST                                                           \
+  CHAR_HT, CHAR_SPACE, CHAR_NBSP, 0x1680, 0x180e, 0x2000, 0x2001, 0x2002,     \
+      0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202f, \
       0x205f, 0x3000, NOTACHAR
 
-#define HSPACE_MULTIBYTE_CASES                                                 \
-  case 0x1680: /* OGHAM SPACE MARK */                                          \
-  case 0x180e: /* MONGOLIAN VOWEL SEPARATOR */                                 \
-  case 0x2000: /* EN QUAD */                                                   \
-  case 0x2001: /* EM QUAD */                                                   \
-  case 0x2002: /* EN SPACE */                                                  \
-  case 0x2003: /* EM SPACE */                                                  \
-  case 0x2004: /* THREE-PER-EM SPACE */                                        \
-  case 0x2005: /* FOUR-PER-EM SPACE */                                         \
-  case 0x2006: /* SIX-PER-EM SPACE */                                          \
-  case 0x2007: /* FIGURE SPACE */                                              \
-  case 0x2008: /* PUNCTUATION SPACE */                                         \
-  case 0x2009: /* THIN SPACE */                                                \
-  case 0x200A: /* HAIR SPACE */                                                \
-  case 0x202f: /* NARROW NO-BREAK SPACE */                                     \
-  case 0x205f: /* MEDIUM MATHEMATICAL SPACE */                                 \
+#define HSPACE_MULTIBYTE_CASES                 \
+  case 0x1680: /* OGHAM SPACE MARK */          \
+  case 0x180e: /* MONGOLIAN VOWEL SEPARATOR */ \
+  case 0x2000: /* EN QUAD */                   \
+  case 0x2001: /* EM QUAD */                   \
+  case 0x2002: /* EN SPACE */                  \
+  case 0x2003: /* EM SPACE */                  \
+  case 0x2004: /* THREE-PER-EM SPACE */        \
+  case 0x2005: /* FOUR-PER-EM SPACE */         \
+  case 0x2006: /* SIX-PER-EM SPACE */          \
+  case 0x2007: /* FIGURE SPACE */              \
+  case 0x2008: /* PUNCTUATION SPACE */         \
+  case 0x2009: /* THIN SPACE */                \
+  case 0x200A: /* HAIR SPACE */                \
+  case 0x202f: /* NARROW NO-BREAK SPACE */     \
+  case 0x205f: /* MEDIUM MATHEMATICAL SPACE */ \
   case 0x3000  /* IDEOGRAPHIC SPACE */
 
-#define HSPACE_BYTE_CASES                                                      \
-  case CHAR_HT:                                                                \
-  case CHAR_SPACE:                                                             \
+#define HSPACE_BYTE_CASES \
+  case CHAR_HT:           \
+  case CHAR_SPACE:        \
   case CHAR_NBSP
 
-#define HSPACE_CASES                                                           \
-  HSPACE_BYTE_CASES:                                                           \
+#define HSPACE_CASES \
+  HSPACE_BYTE_CASES: \
   HSPACE_MULTIBYTE_CASES
 
-#define VSPACE_LIST                                                            \
+#define VSPACE_LIST \
   CHAR_LF, CHAR_VT, CHAR_FF, CHAR_CR, CHAR_NEL, 0x2028, 0x2029, NOTACHAR
 
-#define VSPACE_MULTIBYTE_CASES                                                 \
-  case 0x2028: /* LINE SEPARATOR */                                            \
+#define VSPACE_MULTIBYTE_CASES      \
+  case 0x2028: /* LINE SEPARATOR */ \
   case 0x2029  /* PARAGRAPH SEPARATOR */
 
-#define VSPACE_BYTE_CASES                                                      \
-  case CHAR_LF:                                                                \
-  case CHAR_VT:                                                                \
-  case CHAR_FF:                                                                \
-  case CHAR_CR:                                                                \
+#define VSPACE_BYTE_CASES \
+  case CHAR_LF:           \
+  case CHAR_VT:           \
+  case CHAR_FF:           \
+  case CHAR_CR:           \
   case CHAR_NEL
 
-#define VSPACE_CASES                                                           \
-  VSPACE_BYTE_CASES:                                                           \
+#define VSPACE_CASES \
+  VSPACE_BYTE_CASES: \
   VSPACE_MULTIBYTE_CASES
 
 /* ------ EBCDIC environments ------ */
@@ -1014,9 +1041,9 @@ other. NOTE: The values also appear in pcre_jit_compile.c. */
 #else
 #define HSPACE_LIST CHAR_HT, CHAR_SPACE, CHAR_NBSP, NOTACHAR
 
-#define HSPACE_BYTE_CASES                                                      \
-  case CHAR_HT:                                                                \
-  case CHAR_SPACE:                                                             \
+#define HSPACE_BYTE_CASES \
+  case CHAR_HT:           \
+  case CHAR_SPACE:        \
   case CHAR_NBSP
 
 #define HSPACE_CASES HSPACE_BYTE_CASES
@@ -1027,11 +1054,11 @@ other. NOTE: The values also appear in pcre_jit_compile.c. */
 #define VSPACE_LIST CHAR_VT, CHAR_FF, CHAR_CR, CHAR_LF, CHAR_NEL, NOTACHAR
 #endif
 
-#define VSPACE_BYTE_CASES                                                      \
-  case CHAR_LF:                                                                \
-  case CHAR_VT:                                                                \
-  case CHAR_FF:                                                                \
-  case CHAR_CR:                                                                \
+#define VSPACE_BYTE_CASES \
+  case CHAR_LF:           \
+  case CHAR_VT:           \
+  case CHAR_FF:           \
+  case CHAR_CR:           \
   case CHAR_NEL
 
 #define VSPACE_CASES VSPACE_BYTE_CASES
@@ -1079,37 +1106,37 @@ compatibility. */
 /* Masks for identifying the public options that are permitted at compile
 time, run time, or study time, respectively. */
 
-#define PCRE_NEWLINE_BITS                                                      \
+#define PCRE_NEWLINE_BITS \
   (PCRE_NEWLINE_CR | PCRE_NEWLINE_LF | PCRE_NEWLINE_ANY | PCRE_NEWLINE_ANYCRLF)
 
-#define PUBLIC_COMPILE_OPTIONS                                                 \
-  (PCRE_CASELESS | PCRE_EXTENDED | PCRE_ANCHORED | PCRE_MULTILINE |            \
-   PCRE_DOTALL | PCRE_DOLLAR_ENDONLY | PCRE_EXTRA | PCRE_UNGREEDY |            \
-   PCRE_UTF8 | PCRE_NO_AUTO_CAPTURE | PCRE_NO_AUTO_POSSESS |                   \
-   PCRE_NO_UTF8_CHECK | PCRE_AUTO_CALLOUT | PCRE_FIRSTLINE | PCRE_DUPNAMES |   \
-   PCRE_NEWLINE_BITS | PCRE_BSR_ANYCRLF | PCRE_BSR_UNICODE |                   \
-   PCRE_JAVASCRIPT_COMPAT | PCRE_UCP | PCRE_NO_START_OPTIMIZE |                \
+#define PUBLIC_COMPILE_OPTIONS                                               \
+  (PCRE_CASELESS | PCRE_EXTENDED | PCRE_ANCHORED | PCRE_MULTILINE |          \
+   PCRE_DOTALL | PCRE_DOLLAR_ENDONLY | PCRE_EXTRA | PCRE_UNGREEDY |          \
+   PCRE_UTF8 | PCRE_NO_AUTO_CAPTURE | PCRE_NO_AUTO_POSSESS |                 \
+   PCRE_NO_UTF8_CHECK | PCRE_AUTO_CALLOUT | PCRE_FIRSTLINE | PCRE_DUPNAMES | \
+   PCRE_NEWLINE_BITS | PCRE_BSR_ANYCRLF | PCRE_BSR_UNICODE |                 \
+   PCRE_JAVASCRIPT_COMPAT | PCRE_UCP | PCRE_NO_START_OPTIMIZE |              \
    PCRE_NEVER_UTF)
 
-#define PUBLIC_EXEC_OPTIONS                                                    \
-  (PCRE_ANCHORED | PCRE_NOTBOL | PCRE_NOTEOL | PCRE_NOTEMPTY |                 \
-   PCRE_NOTEMPTY_ATSTART | PCRE_NO_UTF8_CHECK | PCRE_PARTIAL_HARD |            \
-   PCRE_PARTIAL_SOFT | PCRE_NEWLINE_BITS | PCRE_BSR_ANYCRLF |                  \
+#define PUBLIC_EXEC_OPTIONS                                         \
+  (PCRE_ANCHORED | PCRE_NOTBOL | PCRE_NOTEOL | PCRE_NOTEMPTY |      \
+   PCRE_NOTEMPTY_ATSTART | PCRE_NO_UTF8_CHECK | PCRE_PARTIAL_HARD | \
+   PCRE_PARTIAL_SOFT | PCRE_NEWLINE_BITS | PCRE_BSR_ANYCRLF |       \
    PCRE_BSR_UNICODE | PCRE_NO_START_OPTIMIZE)
 
-#define PUBLIC_DFA_EXEC_OPTIONS                                                \
-  (PCRE_ANCHORED | PCRE_NOTBOL | PCRE_NOTEOL | PCRE_NOTEMPTY |                 \
-   PCRE_NOTEMPTY_ATSTART | PCRE_NO_UTF8_CHECK | PCRE_PARTIAL_HARD |            \
-   PCRE_PARTIAL_SOFT | PCRE_DFA_SHORTEST | PCRE_DFA_RESTART |                  \
-   PCRE_NEWLINE_BITS | PCRE_BSR_ANYCRLF | PCRE_BSR_UNICODE |                   \
+#define PUBLIC_DFA_EXEC_OPTIONS                                     \
+  (PCRE_ANCHORED | PCRE_NOTBOL | PCRE_NOTEOL | PCRE_NOTEMPTY |      \
+   PCRE_NOTEMPTY_ATSTART | PCRE_NO_UTF8_CHECK | PCRE_PARTIAL_HARD | \
+   PCRE_PARTIAL_SOFT | PCRE_DFA_SHORTEST | PCRE_DFA_RESTART |       \
+   PCRE_NEWLINE_BITS | PCRE_BSR_ANYCRLF | PCRE_BSR_UNICODE |        \
    PCRE_NO_START_OPTIMIZE)
 
-#define PUBLIC_STUDY_OPTIONS                                                   \
-  (PCRE_STUDY_JIT_COMPILE | PCRE_STUDY_JIT_PARTIAL_SOFT_COMPILE |              \
+#define PUBLIC_STUDY_OPTIONS                                      \
+  (PCRE_STUDY_JIT_COMPILE | PCRE_STUDY_JIT_PARTIAL_SOFT_COMPILE | \
    PCRE_STUDY_JIT_PARTIAL_HARD_COMPILE | PCRE_STUDY_EXTRA_NEEDED)
 
-#define PUBLIC_JIT_EXEC_OPTIONS                                                \
-  (PCRE_NO_UTF8_CHECK | PCRE_NOTBOL | PCRE_NOTEOL | PCRE_NOTEMPTY |            \
+#define PUBLIC_JIT_EXEC_OPTIONS                                     \
+  (PCRE_NO_UTF8_CHECK | PCRE_NOTBOL | PCRE_NOTEOL | PCRE_NOTEMPTY | \
    PCRE_NOTEMPTY_ATSTART | PCRE_PARTIAL_SOFT | PCRE_PARTIAL_HARD)
 
 /* Magic number to provide a small check against being handed junk. */
@@ -1716,43 +1743,43 @@ only. */
 #define STRING_xdigit STR_x STR_d STR_i STR_g STR_i STR_t
 
 #define STRING_DEFINE STR_D STR_E STR_F STR_I STR_N STR_E
-#define STRING_WEIRD_STARTWORD                                                 \
-  STR_LEFT_SQUARE_BRACKET STR_COLON STR_LESS_THAN_SIGN STR_COLON               \
+#define STRING_WEIRD_STARTWORD                                   \
+  STR_LEFT_SQUARE_BRACKET STR_COLON STR_LESS_THAN_SIGN STR_COLON \
       STR_RIGHT_SQUARE_BRACKET STR_RIGHT_SQUARE_BRACKET
-#define STRING_WEIRD_ENDWORD                                                   \
-  STR_LEFT_SQUARE_BRACKET STR_COLON STR_GREATER_THAN_SIGN STR_COLON            \
+#define STRING_WEIRD_ENDWORD                                        \
+  STR_LEFT_SQUARE_BRACKET STR_COLON STR_GREATER_THAN_SIGN STR_COLON \
       STR_RIGHT_SQUARE_BRACKET STR_RIGHT_SQUARE_BRACKET
 
 #define STRING_CR_RIGHTPAR STR_C STR_R STR_RIGHT_PARENTHESIS
 #define STRING_LF_RIGHTPAR STR_L STR_F STR_RIGHT_PARENTHESIS
 #define STRING_CRLF_RIGHTPAR STR_C STR_R STR_L STR_F STR_RIGHT_PARENTHESIS
 #define STRING_ANY_RIGHTPAR STR_A STR_N STR_Y STR_RIGHT_PARENTHESIS
-#define STRING_ANYCRLF_RIGHTPAR                                                \
+#define STRING_ANYCRLF_RIGHTPAR \
   STR_A STR_N STR_Y STR_C STR_R STR_L STR_F STR_RIGHT_PARENTHESIS
-#define STRING_BSR_ANYCRLF_RIGHTPAR                                            \
-  STR_B STR_S STR_R STR_UNDERSCORE STR_A STR_N STR_Y STR_C STR_R STR_L STR_F   \
+#define STRING_BSR_ANYCRLF_RIGHTPAR                                          \
+  STR_B STR_S STR_R STR_UNDERSCORE STR_A STR_N STR_Y STR_C STR_R STR_L STR_F \
       STR_RIGHT_PARENTHESIS
-#define STRING_BSR_UNICODE_RIGHTPAR                                            \
-  STR_B STR_S STR_R STR_UNDERSCORE STR_U STR_N STR_I STR_C STR_O STR_D STR_E   \
+#define STRING_BSR_UNICODE_RIGHTPAR                                          \
+  STR_B STR_S STR_R STR_UNDERSCORE STR_U STR_N STR_I STR_C STR_O STR_D STR_E \
       STR_RIGHT_PARENTHESIS
 #define STRING_UTF8_RIGHTPAR STR_U STR_T STR_F STR_8 STR_RIGHT_PARENTHESIS
-#define STRING_UTF16_RIGHTPAR                                                  \
+#define STRING_UTF16_RIGHTPAR \
   STR_U STR_T STR_F STR_1 STR_6 STR_RIGHT_PARENTHESIS
-#define STRING_UTF32_RIGHTPAR                                                  \
+#define STRING_UTF32_RIGHTPAR \
   STR_U STR_T STR_F STR_3 STR_2 STR_RIGHT_PARENTHESIS
 #define STRING_UTF_RIGHTPAR STR_U STR_T STR_F STR_RIGHT_PARENTHESIS
 #define STRING_UCP_RIGHTPAR STR_U STR_C STR_P STR_RIGHT_PARENTHESIS
-#define STRING_NO_AUTO_POSSESS_RIGHTPAR                                        \
-  STR_N STR_O STR_UNDERSCORE STR_A STR_U STR_T STR_O STR_UNDERSCORE STR_P      \
+#define STRING_NO_AUTO_POSSESS_RIGHTPAR                                   \
+  STR_N STR_O STR_UNDERSCORE STR_A STR_U STR_T STR_O STR_UNDERSCORE STR_P \
       STR_O STR_S STR_S STR_E STR_S STR_S STR_RIGHT_PARENTHESIS
-#define STRING_NO_START_OPT_RIGHTPAR                                           \
-  STR_N STR_O STR_UNDERSCORE STR_S STR_T STR_A STR_R STR_T STR_UNDERSCORE      \
+#define STRING_NO_START_OPT_RIGHTPAR                                      \
+  STR_N STR_O STR_UNDERSCORE STR_S STR_T STR_A STR_R STR_T STR_UNDERSCORE \
       STR_O STR_P STR_T STR_RIGHT_PARENTHESIS
-#define STRING_LIMIT_MATCH_EQ                                                  \
-  STR_L STR_I STR_M STR_I STR_T STR_UNDERSCORE STR_M STR_A STR_T STR_C STR_H   \
+#define STRING_LIMIT_MATCH_EQ                                                \
+  STR_L STR_I STR_M STR_I STR_T STR_UNDERSCORE STR_M STR_A STR_T STR_C STR_H \
       STR_EQUALS_SIGN
-#define STRING_LIMIT_RECURSION_EQ                                              \
-  STR_L STR_I STR_M STR_I STR_T STR_UNDERSCORE STR_R STR_E STR_C STR_U STR_R   \
+#define STRING_LIMIT_RECURSION_EQ                                            \
+  STR_L STR_I STR_M STR_I STR_T STR_UNDERSCORE STR_R STR_E STR_C STR_U STR_R \
       STR_S STR_I STR_O STR_N STR_EQUALS_SIGN
 
 #endif /* SUPPORT_UTF */
@@ -1844,7 +1871,8 @@ repeated. These are the types that consume characters. If any new escapes are
 put in between that don't consume a character, that code will have to change.
 */
 
-enum {
+enum
+{
   ESC_A = 1,
   ESC_G,
   ESC_K,
@@ -1905,7 +1933,8 @@ auto-possessified. */
 #define LAST_AUTOTAB_LEFT_OP OP_EXTUNI
 #define LAST_AUTOTAB_RIGHT_OP OP_DOLLM
 
-enum {
+enum
+{
   OP_END, /* 0 End of pattern */
 
   /* Values corresponding to backslashed metacharacters */
@@ -2194,90 +2223,90 @@ As things have been extended, some of these are no longer fixed lenths, but are
 minima instead. For example, the length of a single-character repeat may vary
 in UTF-8 mode. The code that uses this table must know about such things. */
 
-#define OP_LENGTHS                                                             \
-  1,                    /* End                                    */           \
-      1, 1, 1, 1, 1,    /* \A, \G, \K, \B, \b                     */           \
-      1, 1, 1, 1, 1, 1, /* \D, \d, \S, \s, \W, \w                 */           \
-      1, 1, 1,          /* Any, AllAny, Anybyte                   */           \
-      3, 3,             /* \P, \p                                 */           \
-      1, 1, 1, 1, 1,    /* \R, \H, \h, \V, \v                     */           \
-      1,                /* \X                                     */           \
-      1, 1, 1, 1, 1, 1, /* \Z, \z, $, $M ^, ^M                    */           \
-      2,                /* Char  - the minimum length             */           \
-      2,                /* Chari  - the minimum length            */           \
-      2,                /* not                                    */           \
-      2,                                                                       \
-      /* noti                                   */ /* Positive single-char     \
-                                                      repeats ** These are */                                                               \
-      2, 2, 2, 2, 2, 2, /* *, *?, +, +?, ?, ??       ** minima in */           \
-      2 + IMM2_SIZE, 2 + IMM2_SIZE, /* upto, minupto             ** mode */                                                                            \
-      2 + IMM2_SIZE,          /* exact                                  */     \
-      2, 2, 2, 2 + IMM2_SIZE, /* *+, ++, ?+, upto+                      */     \
-      2, 2, 2, 2, 2, 2,       /* *I, *?I, +I, +?I, ?I, ??I ** UTF-8     */     \
-      2 + IMM2_SIZE, 2 + IMM2_SIZE, /* upto I, minupto I */                                                                            \
-      2 + IMM2_SIZE, /* exact I                                */              \
-      2, 2, 2, 2 + IMM2_SIZE,                                                  \
-      /* *+I, ++I, ?+I, upto+I                  */ /* Negative single-char     \
-                                                      repeats - only for chars \
-                                                      < 256 */                                                                            \
-      2, 2, 2, 2, 2, 2, /* NOT *, *?, +, +?, ?, ??                */           \
-      2 + IMM2_SIZE, 2 + IMM2_SIZE, /* NOT upto, minupto */                                                                            \
-      2 + IMM2_SIZE,          /* NOT exact                              */     \
-      2, 2, 2, 2 + IMM2_SIZE, /* Possessive NOT *, +, ?, upto           */     \
-      2, 2, 2, 2, 2, 2,       /* NOT *I, *?I, +I, +?I, ?I, ??I          */     \
-      2 + IMM2_SIZE, 2 + IMM2_SIZE, /* NOT upto I, minupto I */                                                                            \
-      2 + IMM2_SIZE, /* NOT exact I                            */              \
-      2, 2, 2, 2 + IMM2_SIZE,                                                  \
-      /* Possessive NOT *I, +I, ?I, upto I      */ /* Positive type repeats */                                                                            \
-      2, 2, 2, 2, 2, 2, /* Type *, *?, +, +?, ?, ??               */           \
-      2 + IMM2_SIZE, 2 + IMM2_SIZE, /* Type upto, minupto */                                                                            \
-      2 + IMM2_SIZE, /* Type exact                             */              \
-      2, 2, 2, 2 + IMM2_SIZE,                                                  \
-      /* Possessive *+, ++, ?+, upto+           */ /* Character class & ref    \
-                                                      repeats */                                                                            \
-      1, 1, 1, 1, 1, 1, /* *, *?, +, +?, ?, ??                    */           \
-      1 + 2 * IMM2_SIZE, 1 + 2 * IMM2_SIZE, /* CRRANGE, CRMINRANGE */                                                                            \
-      1, 1, 1, 1 + 2 * IMM2_SIZE, /* Possessive *+, ++, ?+, CRPOSRANGE      */ \
-      1 + (32 / sizeof(pcre_uchar)), /* CLASS */                                                                            \
-      1 + (32 / sizeof(pcre_uchar)), /* NCLASS */                                                                            \
-      0,                         /* XCLASS - variable length               */  \
-      1 + IMM2_SIZE,             /* REF                                    */  \
-      1 + IMM2_SIZE,             /* REFI                                   */  \
-      1 + 2 * IMM2_SIZE,         /* DNREF                                  */  \
-      1 + 2 * IMM2_SIZE,         /* DNREFI                                 */  \
-      1 + LINK_SIZE,             /* RECURSE                                */  \
-      2 + 2 * LINK_SIZE,         /* CALLOUT                                */  \
-      1 + LINK_SIZE,             /* Alt                                    */  \
-      1 + LINK_SIZE,             /* Ket                                    */  \
-      1 + LINK_SIZE,             /* KetRmax                                */  \
-      1 + LINK_SIZE,             /* KetRmin                                */  \
-      1 + LINK_SIZE,             /* KetRpos                                */  \
-      1 + LINK_SIZE,             /* Reverse                                */  \
-      1 + LINK_SIZE,             /* Assert                                 */  \
-      1 + LINK_SIZE,             /* Assert not                             */  \
-      1 + LINK_SIZE,             /* Assert behind                          */  \
-      1 + LINK_SIZE,             /* Assert behind not                      */  \
-      1 + LINK_SIZE,             /* ONCE                                   */  \
-      1 + LINK_SIZE,             /* ONCE_NC                                */  \
-      1 + LINK_SIZE,             /* BRA                                    */  \
-      1 + LINK_SIZE,             /* BRAPOS                                 */  \
-      1 + LINK_SIZE + IMM2_SIZE, /* CBRA                                   */  \
-      1 + LINK_SIZE + IMM2_SIZE, /* CBRAPOS                                */  \
-      1 + LINK_SIZE,             /* COND                                   */  \
-      1 + LINK_SIZE,             /* SBRA                                   */  \
-      1 + LINK_SIZE,             /* SBRAPOS                                */  \
-      1 + LINK_SIZE + IMM2_SIZE, /* SCBRA                                  */  \
-      1 + LINK_SIZE + IMM2_SIZE, /* SCBRAPOS                               */  \
-      1 + LINK_SIZE,             /* SCOND                                  */  \
-      1 + IMM2_SIZE, 1 + 2 * IMM2_SIZE, /* CREF, DNCREF */                                                                            \
-      1 + IMM2_SIZE, 1 + 2 * IMM2_SIZE, /* RREF, DNRREF */                                                                            \
-      1,               /* DEF                                    */            \
-      1, 1, 1,         /* BRAZERO, BRAMINZERO, BRAPOSZERO        */            \
-      3, 1, 3,         /* MARK, PRUNE, PRUNE_ARG                 */            \
-      1, 3,            /* SKIP, SKIP_ARG                         */            \
-      1, 3,            /* THEN, THEN_ARG                         */            \
-      1, 1, 1, 1,      /* COMMIT, FAIL, ACCEPT, ASSERT_ACCEPT    */            \
-      1 + IMM2_SIZE, 1 /* CLOSE, SKIPZERO                        */
+#define OP_LENGTHS                                                                              \
+  1,                    /* End                                    */                            \
+      1, 1, 1, 1, 1,    /* \A, \G, \K, \B, \b                     */                            \
+      1, 1, 1, 1, 1, 1, /* \D, \d, \S, \s, \W, \w                 */                            \
+      1, 1, 1,          /* Any, AllAny, Anybyte                   */                            \
+      3, 3,             /* \P, \p                                 */                            \
+      1, 1, 1, 1, 1,    /* \R, \H, \h, \V, \v                     */                            \
+      1,                /* \X                                     */                            \
+      1, 1, 1, 1, 1, 1, /* \Z, \z, $, $M ^, ^M                    */                            \
+      2,                /* Char  - the minimum length             */                            \
+      2,                /* Chari  - the minimum length            */                            \
+      2,                /* not                                    */                            \
+      2,                                                                                        \
+      /* noti                                   */ /* Positive single-char                      \
+                                                      repeats ** These are */                   \
+      2, 2, 2, 2, 2, 2,                            /* *, *?, +, +?, ?, ??       ** minima in */ \
+      2 + IMM2_SIZE, 2 + IMM2_SIZE,                /* upto, minupto             ** mode */      \
+      2 + IMM2_SIZE,                               /* exact                                  */ \
+      2, 2, 2, 2 + IMM2_SIZE,                      /* *+, ++, ?+, upto+                      */ \
+      2, 2, 2, 2, 2, 2,                            /* *I, *?I, +I, +?I, ?I, ??I ** UTF-8     */ \
+      2 + IMM2_SIZE, 2 + IMM2_SIZE,                /* upto I, minupto I */                      \
+      2 + IMM2_SIZE,                               /* exact I                                */ \
+      2, 2, 2, 2 + IMM2_SIZE,                                                                   \
+      /* *+I, ++I, ?+I, upto+I                  */ /* Negative single-char                      \
+                                                      repeats - only for chars                  \
+                                                      < 256 */                                  \
+      2, 2, 2, 2, 2, 2,                            /* NOT *, *?, +, +?, ?, ??                */ \
+      2 + IMM2_SIZE, 2 + IMM2_SIZE,                /* NOT upto, minupto */                      \
+      2 + IMM2_SIZE,                               /* NOT exact                              */ \
+      2, 2, 2, 2 + IMM2_SIZE,                      /* Possessive NOT *, +, ?, upto           */ \
+      2, 2, 2, 2, 2, 2,                            /* NOT *I, *?I, +I, +?I, ?I, ??I          */ \
+      2 + IMM2_SIZE, 2 + IMM2_SIZE,                /* NOT upto I, minupto I */                  \
+      2 + IMM2_SIZE,                               /* NOT exact I                            */ \
+      2, 2, 2, 2 + IMM2_SIZE,                                                                   \
+      /* Possessive NOT *I, +I, ?I, upto I      */ /* Positive type repeats */                  \
+      2, 2, 2, 2, 2, 2,                            /* Type *, *?, +, +?, ?, ??               */ \
+      2 + IMM2_SIZE, 2 + IMM2_SIZE,                /* Type upto, minupto */                     \
+      2 + IMM2_SIZE,                               /* Type exact                             */ \
+      2, 2, 2, 2 + IMM2_SIZE,                                                                   \
+      /* Possessive *+, ++, ?+, upto+           */ /* Character class & ref                     \
+                                                      repeats */                                \
+      1, 1, 1, 1, 1, 1,                            /* *, *?, +, +?, ?, ??                    */ \
+      1 + 2 * IMM2_SIZE, 1 + 2 * IMM2_SIZE,        /* CRRANGE, CRMINRANGE */                    \
+      1, 1, 1, 1 + 2 * IMM2_SIZE,                  /* Possessive *+, ++, ?+, CRPOSRANGE      */ \
+      1 + (32 / sizeof(pcre_uchar)),               /* CLASS */                                  \
+      1 + (32 / sizeof(pcre_uchar)),               /* NCLASS */                                 \
+      0,                                           /* XCLASS - variable length               */ \
+      1 + IMM2_SIZE,                               /* REF                                    */ \
+      1 + IMM2_SIZE,                               /* REFI                                   */ \
+      1 + 2 * IMM2_SIZE,                           /* DNREF                                  */ \
+      1 + 2 * IMM2_SIZE,                           /* DNREFI                                 */ \
+      1 + LINK_SIZE,                               /* RECURSE                                */ \
+      2 + 2 * LINK_SIZE,                           /* CALLOUT                                */ \
+      1 + LINK_SIZE,                               /* Alt                                    */ \
+      1 + LINK_SIZE,                               /* Ket                                    */ \
+      1 + LINK_SIZE,                               /* KetRmax                                */ \
+      1 + LINK_SIZE,                               /* KetRmin                                */ \
+      1 + LINK_SIZE,                               /* KetRpos                                */ \
+      1 + LINK_SIZE,                               /* Reverse                                */ \
+      1 + LINK_SIZE,                               /* Assert                                 */ \
+      1 + LINK_SIZE,                               /* Assert not                             */ \
+      1 + LINK_SIZE,                               /* Assert behind                          */ \
+      1 + LINK_SIZE,                               /* Assert behind not                      */ \
+      1 + LINK_SIZE,                               /* ONCE                                   */ \
+      1 + LINK_SIZE,                               /* ONCE_NC                                */ \
+      1 + LINK_SIZE,                               /* BRA                                    */ \
+      1 + LINK_SIZE,                               /* BRAPOS                                 */ \
+      1 + LINK_SIZE + IMM2_SIZE,                   /* CBRA                                   */ \
+      1 + LINK_SIZE + IMM2_SIZE,                   /* CBRAPOS                                */ \
+      1 + LINK_SIZE,                               /* COND                                   */ \
+      1 + LINK_SIZE,                               /* SBRA                                   */ \
+      1 + LINK_SIZE,                               /* SBRAPOS                                */ \
+      1 + LINK_SIZE + IMM2_SIZE,                   /* SCBRA                                  */ \
+      1 + LINK_SIZE + IMM2_SIZE,                   /* SCBRAPOS                               */ \
+      1 + LINK_SIZE,                               /* SCOND                                  */ \
+      1 + IMM2_SIZE, 1 + 2 * IMM2_SIZE,            /* CREF, DNCREF */                           \
+      1 + IMM2_SIZE, 1 + 2 * IMM2_SIZE,            /* RREF, DNRREF */                           \
+      1,                                           /* DEF                                    */ \
+      1, 1, 1,                                     /* BRAZERO, BRAMINZERO, BRAPOSZERO        */ \
+      3, 1, 3,                                     /* MARK, PRUNE, PRUNE_ARG                 */ \
+      1, 3,                                        /* SKIP, SKIP_ARG                         */ \
+      1, 3,                                        /* THEN, THEN_ARG                         */ \
+      1, 1, 1, 1,                                  /* COMMIT, FAIL, ACCEPT, ASSERT_ACCEPT    */ \
+      1 + IMM2_SIZE, 1                             /* CLOSE, SKIPZERO                        */
 
 /* A magic value for OP_RREF to indicate the "any recursion" condition. */
 
@@ -2287,7 +2316,8 @@ in UTF-8 mode. The code that uses this table must know about such things. */
 easily be tracked. When a new number is added, the table called eint in
 pcreposix.c must be updated. */
 
-enum {
+enum
+{
   ERR0,
   ERR1,
   ERR2,
@@ -2381,7 +2411,8 @@ enum {
 
 /* JIT compiling modes. The function list is indexed by them. */
 
-enum {
+enum
+{
   JIT_COMPILE,
   JIT_PARTIAL_SOFT_COMPILE,
   JIT_PARTIAL_HARD_COMPILE,
@@ -2414,7 +2445,8 @@ testing the byte-flipping features. It must also be kept in step.
 *** WARNING ***
 */
 
-typedef struct real_pcre8_or_16 {
+typedef struct real_pcre8_or_16
+{
   pcre_uint32 magic_number;
   pcre_uint32 size;              /* Total that was malloced */
   pcre_uint32 options;           /* Public options */
@@ -2440,7 +2472,8 @@ typedef struct real_pcre8_or_16 {
 typedef struct real_pcre8_or_16 real_pcre;
 typedef struct real_pcre8_or_16 real_pcre16;
 
-typedef struct real_pcre32 {
+typedef struct real_pcre32
+{
   pcre_uint32 magic_number;
   pcre_uint32 size;              /* Total that was malloced */
   pcre_uint32 options;           /* Public options */
@@ -2485,7 +2518,8 @@ typedef int
 /* The format of the block used to store data from pcre_study(). The same
 remark (see NOTE above) about extending this structure applies. */
 
-typedef struct pcre_study_data {
+typedef struct pcre_study_data
+{
   pcre_uint32 size;          /* Total that was malloced */
   pcre_uint32 flags;         /* Private flags */
   pcre_uint8 start_bits[32]; /* Starting char bits */
@@ -2497,7 +2531,8 @@ compiling, so that instructions to close them can be compiled when (*ACCEPT) is
 encountered. This is also used to identify subpatterns that contain recursive
 back references to themselves, so that they can be made atomic. */
 
-typedef struct open_capitem {
+typedef struct open_capitem
+{
   struct open_capitem *next; /* Chain link */
   pcre_uint16 number;        /* Capture number */
   pcre_uint16 flag;          /* Set TRUE if recursive back ref */
@@ -2506,7 +2541,8 @@ typedef struct open_capitem {
 /* Structure for building a list of named groups during the first pass of
 compiling. */
 
-typedef struct named_group {
+typedef struct named_group
+{
   const pcre_uchar *name; /* Points to the name in the pattern */
   int length;             /* Length of the name */
   pcre_uint32 number;     /* Group number */
@@ -2515,7 +2551,8 @@ typedef struct named_group {
 /* Structure for passing "static" information around between the functions
 doing the compiling, so that they are thread-safe. */
 
-typedef struct compile_data {
+typedef struct compile_data
+{
   const pcre_uint8 *lcc;             /* Points to lower casing table */
   const pcre_uint8 *fcc;             /* Points to case-flipping table */
   const pcre_uint8 *cbits;           /* Points to character type table */
@@ -2532,39 +2569,41 @@ typedef struct compile_data {
   int name_entry_size;               /* Size of each entry */
   int named_group_list_size;         /* Number of entries in the list */
   int workspace_size;                /* Size of workspace */
-  unsigned int bracount;        /* Count of capturing parens as we compile */
-  int final_bracount;           /* Saved value after first pass */
-  int max_lookbehind;           /* Maximum lookbehind (characters) */
-  int top_backref;              /* Maximum back reference */
-  unsigned int backref_map;     /* Bitmap of low back refs */
-  unsigned int namedrefcount;   /* Number of backreferences by name */
-  int parens_depth;             /* Depth of nested parentheses */
-  int assert_depth;             /* Depth of nested assertions */
-  pcre_uint32 external_options; /* External (initial) options */
-  pcre_uint32 external_flags;   /* External flag bits to be set */
-  int req_varyopt;              /* "After variable item" flag for reqbyte */
-  BOOL had_accept;              /* (*ACCEPT) encountered */
-  BOOL had_pruneorskip;         /* (*PRUNE) or (*SKIP) encountered */
-  BOOL check_lookbehind;        /* Lookbehinds need later checking */
-  BOOL dupnames;                /* Duplicate names exist */
-  BOOL dupgroups;               /* Duplicate groups exist: (?| found */
-  BOOL iscondassert;            /* Next assert is a condition */
-  int nltype;                   /* Newline type */
-  int nllen;                    /* Newline string length */
-  pcre_uchar nl[4];             /* Newline string when fixed length */
+  unsigned int bracount;             /* Count of capturing parens as we compile */
+  int final_bracount;                /* Saved value after first pass */
+  int max_lookbehind;                /* Maximum lookbehind (characters) */
+  int top_backref;                   /* Maximum back reference */
+  unsigned int backref_map;          /* Bitmap of low back refs */
+  unsigned int namedrefcount;        /* Number of backreferences by name */
+  int parens_depth;                  /* Depth of nested parentheses */
+  int assert_depth;                  /* Depth of nested assertions */
+  pcre_uint32 external_options;      /* External (initial) options */
+  pcre_uint32 external_flags;        /* External flag bits to be set */
+  int req_varyopt;                   /* "After variable item" flag for reqbyte */
+  BOOL had_accept;                   /* (*ACCEPT) encountered */
+  BOOL had_pruneorskip;              /* (*PRUNE) or (*SKIP) encountered */
+  BOOL check_lookbehind;             /* Lookbehinds need later checking */
+  BOOL dupnames;                     /* Duplicate names exist */
+  BOOL dupgroups;                    /* Duplicate groups exist: (?| found */
+  BOOL iscondassert;                 /* Next assert is a condition */
+  int nltype;                        /* Newline type */
+  int nllen;                         /* Newline string length */
+  pcre_uchar nl[4];                  /* Newline string when fixed length */
 } compile_data;
 
 /* Structure for maintaining a chain of pointers to the currently incomplete
 branches, for testing for left recursion while compiling. */
 
-typedef struct branch_chain {
+typedef struct branch_chain
+{
   struct branch_chain *outer;
   pcre_uchar *current_branch;
 } branch_chain;
 
 /* Structure for mutual recursion detection. */
 
-typedef struct recurse_check {
+typedef struct recurse_check
+{
   struct recurse_check *prev;
   const pcre_uchar *group;
 } recurse_check;
@@ -2572,7 +2611,8 @@ typedef struct recurse_check {
 /* Structure for items in a linked list that represents an explicit recursive
 call within the pattern; used by pcre_exec(). */
 
-typedef struct recursion_info {
+typedef struct recursion_info
+{
   struct recursion_info *prevrec; /* Previous recursion record (or NULL) */
   unsigned int group_num;         /* Number of group that was called */
   int *offset_save;               /* Pointer to start of saved offsets */
@@ -2583,7 +2623,8 @@ typedef struct recursion_info {
 
 /* A similar structure for pcre_dfa_exec(). */
 
-typedef struct dfa_recursion_info {
+typedef struct dfa_recursion_info
+{
   struct dfa_recursion_info *prevrec;
   int group_num;
   PCRE_PUCHAR subject_position;
@@ -2594,7 +2635,8 @@ pointer at the start of each subpattern, so as to detect when an empty string
 has been matched by a subpattern - to break infinite loops; used by
 pcre_exec(). */
 
-typedef struct eptrblock {
+typedef struct eptrblock
+{
   struct eptrblock *epb_prev;
   PCRE_PUCHAR epb_saved_eptr;
 } eptrblock;
@@ -2602,53 +2644,54 @@ typedef struct eptrblock {
 /* Structure for passing "static" information around between the functions
 doing traditional NFA matching, so that they are thread-safe. */
 
-typedef struct match_data {
+typedef struct match_data
+{
   unsigned long int match_call_count;      /* As it says */
   unsigned long int match_limit;           /* As it says */
   unsigned long int match_limit_recursion; /* As it says */
   int *offset_vector;                      /* Offset vector */
   int offset_end;                          /* One past the end */
-  int offset_max;               /* The maximum usable for return data */
-  int nltype;                   /* Newline type */
-  int nllen;                    /* Newline string length */
-  int name_count;               /* Number of names in name table */
-  int name_entry_size;          /* Size of entry in names table */
-  unsigned int skip_arg_count;  /* For counting SKIP_ARGs */
-  unsigned int ignore_skip_arg; /* For re-run when SKIP arg name not found */
-  pcre_uchar *name_table;       /* Table of names */
-  pcre_uchar nl[4];             /* Newline string when fixed */
-  const pcre_uint8 *lcc;        /* Points to lower casing table */
-  const pcre_uint8 *fcc;        /* Points to case-flipping table */
-  const pcre_uint8 *ctypes;     /* Points to table of type maps */
-  BOOL notbol;                  /* NOTBOL flag */
-  BOOL noteol;                  /* NOTEOL flag */
-  BOOL utf;                     /* UTF-8 / UTF-16 flag */
-  BOOL jscript_compat;          /* JAVASCRIPT_COMPAT flag */
-  BOOL use_ucp;                 /* PCRE_UCP flag */
-  BOOL endonly;                 /* Dollar not before final \n */
-  BOOL notempty;                /* Empty string match not wanted */
-  BOOL notempty_atstart;        /* Empty string match at start not wanted */
-  BOOL hitend;                  /* Hit the end of the subject at some point */
-  BOOL bsr_anycrlf;             /* \R is just any CRLF, not full Unicode */
-  BOOL hasthen;                 /* Pattern contains (*THEN) */
-  const pcre_uchar *start_code; /* For use when recursing */
-  PCRE_PUCHAR start_subject;    /* Start of the subject string */
-  PCRE_PUCHAR end_subject;      /* End of the subject string */
-  PCRE_PUCHAR start_match_ptr;  /* Start of matched string */
-  PCRE_PUCHAR end_match_ptr;    /* Subject position at end match */
-  PCRE_PUCHAR start_used_ptr;   /* Earliest consulted character */
-  int partial;                  /* PARTIAL options */
-  int end_offset_top;           /* Highwater mark at end of match */
-  pcre_int32 capture_last;      /* Most recent capture number + overflow flag */
-  int start_offset;             /* The start offset value */
-  int match_function_type;      /* Set for certain special calls of MATCH() */
-  eptrblock *eptrchain;         /* Chain of eptrblocks for tail recursions */
-  int eptrn;                    /* Next free eptrblock */
-  recursion_info *recursive;    /* Linked list of recursion data */
-  void *callout_data;           /* To pass back to callouts */
-  const pcre_uchar *mark;       /* Mark pointer to pass back on success */
-  const pcre_uchar *nomatch_mark; /* Mark pointer to pass back on failure */
-  const pcre_uchar *once_target;  /* Where to back up to for atomic groups */
+  int offset_max;                          /* The maximum usable for return data */
+  int nltype;                              /* Newline type */
+  int nllen;                               /* Newline string length */
+  int name_count;                          /* Number of names in name table */
+  int name_entry_size;                     /* Size of entry in names table */
+  unsigned int skip_arg_count;             /* For counting SKIP_ARGs */
+  unsigned int ignore_skip_arg;            /* For re-run when SKIP arg name not found */
+  pcre_uchar *name_table;                  /* Table of names */
+  pcre_uchar nl[4];                        /* Newline string when fixed */
+  const pcre_uint8 *lcc;                   /* Points to lower casing table */
+  const pcre_uint8 *fcc;                   /* Points to case-flipping table */
+  const pcre_uint8 *ctypes;                /* Points to table of type maps */
+  BOOL notbol;                             /* NOTBOL flag */
+  BOOL noteol;                             /* NOTEOL flag */
+  BOOL utf;                                /* UTF-8 / UTF-16 flag */
+  BOOL jscript_compat;                     /* JAVASCRIPT_COMPAT flag */
+  BOOL use_ucp;                            /* PCRE_UCP flag */
+  BOOL endonly;                            /* Dollar not before final \n */
+  BOOL notempty;                           /* Empty string match not wanted */
+  BOOL notempty_atstart;                   /* Empty string match at start not wanted */
+  BOOL hitend;                             /* Hit the end of the subject at some point */
+  BOOL bsr_anycrlf;                        /* \R is just any CRLF, not full Unicode */
+  BOOL hasthen;                            /* Pattern contains (*THEN) */
+  const pcre_uchar *start_code;            /* For use when recursing */
+  PCRE_PUCHAR start_subject;               /* Start of the subject string */
+  PCRE_PUCHAR end_subject;                 /* End of the subject string */
+  PCRE_PUCHAR start_match_ptr;             /* Start of matched string */
+  PCRE_PUCHAR end_match_ptr;               /* Subject position at end match */
+  PCRE_PUCHAR start_used_ptr;              /* Earliest consulted character */
+  int partial;                             /* PARTIAL options */
+  int end_offset_top;                      /* Highwater mark at end of match */
+  pcre_int32 capture_last;                 /* Most recent capture number + overflow flag */
+  int start_offset;                        /* The start offset value */
+  int match_function_type;                 /* Set for certain special calls of MATCH() */
+  eptrblock *eptrchain;                    /* Chain of eptrblocks for tail recursions */
+  int eptrn;                               /* Next free eptrblock */
+  recursion_info *recursive;               /* Linked list of recursion data */
+  void *callout_data;                      /* To pass back to callouts */
+  const pcre_uchar *mark;                  /* Mark pointer to pass back on success */
+  const pcre_uchar *nomatch_mark;          /* Mark pointer to pass back on failure */
+  const pcre_uchar *once_target;           /* Where to back up to for atomic groups */
 #ifdef NO_RECURSE
   void *match_frames_base; /* For remembering malloc'd frames */
 #endif
@@ -2657,7 +2700,8 @@ typedef struct match_data {
 /* A similar structure is used for the same purpose by the DFA matching
 functions. */
 
-typedef struct dfa_match_data {
+typedef struct dfa_match_data
+{
   const pcre_uchar *start_code;     /* Start of the compiled pattern */
   const pcre_uchar *start_subject;  /* Start of the subject string */
   const pcre_uchar *end_subject;    /* End of subject string */
@@ -2738,7 +2782,8 @@ codes. Each entry used to point directly to a name, but to reduce the number of
 relocations in shared libraries, it now has an offset into a single string
 instead. */
 
-typedef struct {
+typedef struct
+{
   pcre_uint16 name_offset;
   pcre_uint16 type;
   pcre_uint16 value;
@@ -2776,7 +2821,7 @@ sense, but are not part of the PCRE public API. */
 
 #define STRCMP_UC_UC(str1, str2) strcmp((char *)(str1), (char *)(str2))
 #define STRCMP_UC_C8(str1, str2) strcmp((char *)(str1), (str2))
-#define STRNCMP_UC_UC(str1, str2, num)                                         \
+#define STRNCMP_UC_UC(str1, str2, num) \
   strncmp((char *)(str1), (char *)(str2), (num))
 #define STRNCMP_UC_C8(str1, str2, num) strncmp((char *)(str1), (str2), (num))
 #define STRLEN_UC(str) strlen((const char *)str)
@@ -2791,17 +2836,17 @@ extern int PRIV(strncmp_uc_c8)(const pcre_uchar *, const char *,
                                unsigned int num);
 extern unsigned int PRIV(strlen_uc)(const pcre_uchar *str);
 
-#define STRCMP_UC_UC(str1, str2)                                               \
-  PRIV(strcmp_uc_uc)                                                           \
+#define STRCMP_UC_UC(str1, str2) \
+  PRIV(strcmp_uc_uc)             \
   ((str1), (str2))
-#define STRCMP_UC_C8(str1, str2)                                               \
-  PRIV(strcmp_uc_c8)                                                           \
+#define STRCMP_UC_C8(str1, str2) \
+  PRIV(strcmp_uc_c8)             \
   ((str1), (str2))
-#define STRNCMP_UC_UC(str1, str2, num)                                         \
-  PRIV(strncmp_uc_uc)                                                          \
+#define STRNCMP_UC_UC(str1, str2, num) \
+  PRIV(strncmp_uc_uc)                  \
   ((str1), (str2), (num))
-#define STRNCMP_UC_C8(str1, str2, num)                                         \
-  PRIV(strncmp_uc_c8)                                                          \
+#define STRNCMP_UC_C8(str1, str2, num) \
+  PRIV(strncmp_uc_c8)                  \
   ((str1), (str2), (num))
 #define STRLEN_UC(str) PRIV(strlen_uc)(str)
 
@@ -2817,11 +2862,11 @@ extern unsigned int PRIV(strlen_uc)(const pcre_uchar *str);
 extern int PRIV(strcmp_uc_uc_utf)(const pcre_uchar *, const pcre_uchar *);
 extern int PRIV(strcmp_uc_c8_utf)(const pcre_uchar *, const char *);
 
-#define STRCMP_UC_UC_TEST(str1, str2)                                          \
-  (utf ? PRIV(strcmp_uc_uc_utf)((str1), (str2))                                \
+#define STRCMP_UC_UC_TEST(str1, str2)           \
+  (utf ? PRIV(strcmp_uc_uc_utf)((str1), (str2)) \
        : PRIV(strcmp_uc_uc)((str1), (str2)))
-#define STRCMP_UC_C8_TEST(str1, str2)                                          \
-  (utf ? PRIV(strcmp_uc_c8_utf)((str1), (str2))                                \
+#define STRCMP_UC_C8_TEST(str1, str2)           \
+  (utf ? PRIV(strcmp_uc_c8_utf)((str1), (str2)) \
        : PRIV(strcmp_uc_c8)((str1), (str2)))
 
 #endif /* COMPILE_PCRE[8|16|32] */
@@ -2844,7 +2889,8 @@ extern const char *PRIV(jit_get_target)(void);
 
 /* Unicode character database (UCD) */
 
-typedef struct {
+typedef struct
+{
   pcre_uint8 script;     /* ucp_Arabic, etc. */
   pcre_uint8 chartype;   /* ucp_Cc, etc. (general categories) */
   pcre_uint8 gbprop;     /* ucp_gbControl, etc. (grapheme break property) */
@@ -2869,14 +2915,14 @@ extern const int PRIV(ucp_typerange)[];
 /* UCD access macros */
 
 #define UCD_BLOCK_SIZE 128
-#define REAL_GET_UCD(ch)                                                       \
-  (PRIV(ucd_records) +                                                         \
-   PRIV(ucd_stage2)[PRIV(ucd_stage1)[(int)(ch) / UCD_BLOCK_SIZE] *             \
-                        UCD_BLOCK_SIZE +                                       \
+#define REAL_GET_UCD(ch)                                           \
+  (PRIV(ucd_records) +                                             \
+   PRIV(ucd_stage2)[PRIV(ucd_stage1)[(int)(ch) / UCD_BLOCK_SIZE] * \
+                        UCD_BLOCK_SIZE +                           \
                     (int)(ch) % UCD_BLOCK_SIZE])
 
 #ifdef COMPILE_PCRE32
-#define GET_UCD(ch)                                                            \
+#define GET_UCD(ch) \
   ((ch > 0x10ffff) ? PRIV(dummy_ucd_record) : REAL_GET_UCD(ch))
 #else
 #define GET_UCD(ch) REAL_GET_UCD(ch)
@@ -2887,7 +2933,7 @@ extern const int PRIV(ucp_typerange)[];
 #define UCD_CATEGORY(ch) PRIV(ucp_gentype)[UCD_CHARTYPE(ch)]
 #define UCD_GRAPHBREAK(ch) GET_UCD(ch)->gbprop
 #define UCD_CASESET(ch) GET_UCD(ch)->caseset
-#define UCD_OTHERCASE(ch)                                                      \
+#define UCD_OTHERCASE(ch) \
   ((pcre_uint32)((int)ch + (int)(GET_UCD(ch)->other_case)))
 
 #endif /* SUPPORT_UCP */

@@ -1,17 +1,17 @@
 #ifndef GDHELPERS_H
 #define GDHELPERS_H 1
 
-#include "php.h"
 #include <sys/types.h>
+#include "php.h"
 
 /* TBB: strtok_r is not universal; provide an implementation of it. */
 
 extern char *gd_strtok_r(char *s, char *sep, char **state);
 
 /* These functions wrap memory management. gdFree is
-        in gd.h, where callers can utilize it to correctly
-        free memory allocated by these functions with the
-        right version of free(). */
+	in gd.h, where callers can utilize it to correctly
+	free memory allocated by these functions with the
+	right version of free(). */
 #define gdCalloc(nmemb, size) ecalloc(nmemb, size)
 #define gdMalloc(size) emalloc(size)
 #define gdRealloc(ptr, size) erealloc(ptr, size)
@@ -22,9 +22,9 @@ extern char *gd_strtok_r(char *s, char *sep, char **state);
 #define gdPEstrdup(ptr) pestrdup(ptr, 1)
 
 /* Returns nonzero if multiplying the two quantities will
-        result in integer overflow. Also returns nonzero if
-        either quantity is negative. By Phil Knirsch based on
-        netpbm fixes by Alan Cox. */
+	result in integer overflow. Also returns nonzero if
+	either quantity is negative. By Phil Knirsch based on
+	netpbm fixes by Alan Cox. */
 
 int overflow2(int a, int b);
 

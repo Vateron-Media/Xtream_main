@@ -215,8 +215,7 @@ class Console_Getopt {
                         break;
                     } else if (isset($args[++$argIdx])) {
                         $opt_arg = $args[$argIdx];
-                        /* Else use the next argument. */
-                        ;
+                            /* Else use the next argument. */;
                         if (
                             Console_Getopt::_isShortOpt($opt_arg)
                             || Console_Getopt::_isLongOpt($opt_arg)
@@ -310,9 +309,8 @@ class Console_Getopt {
 
             if (substr($long_opt, -1) == '=') {
                 if (substr($long_opt, -2) != '==') {
-                    /* Long option requires an argument.
-                   Take the next argument if one wasn't specified. */
-                    ;
+                        /* Long option requires an argument.
+                   Take the next argument if one wasn't specified. */;
                     if (!strlen($opt_arg)) {
                         if (!isset($args[++$argIdx])) {
                             $msg = "Console_Getopt: option requires an argument --$opt";

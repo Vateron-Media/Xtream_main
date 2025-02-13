@@ -3,7 +3,8 @@
 #else
 #include <php_config.h>
 #endif
-#include <php_stdint.h>
+#include <inttypes.h>
+#include <stdint.h>
 
 #include "zend.h"
 
@@ -11,4 +12,5 @@
 #define timelib_realloc erealloc
 #define timelib_calloc ecalloc
 #define timelib_strdup estrdup
+#define timelib_strndup estrndup
 #define timelib_free efree

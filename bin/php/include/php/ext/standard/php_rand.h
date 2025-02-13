@@ -59,17 +59,17 @@
  *
  * -RL
  */
-#define RAND_RANGE_BADSCALING(__n, __min, __max, __tmax)                       \
-  (__n) = (__min) + (zend_long)((double)((double)(__max) - (__min) + 1.0) *    \
+#define RAND_RANGE_BADSCALING(__n, __min, __max, __tmax)                    \
+  (__n) = (__min) + (zend_long)((double)((double)(__max) - (__min) + 1.0) * \
                                 ((__n) / ((__tmax) + 1.0)))
 
 #ifdef PHP_WIN32
-#define GENERATE_SEED()                                                        \
-  (((zend_long)(time(0) * GetCurrentProcessId())) ^                            \
+#define GENERATE_SEED()                             \
+  (((zend_long)(time(0) * GetCurrentProcessId())) ^ \
    ((zend_long)(1000000.0 * php_combined_lcg())))
 #else
-#define GENERATE_SEED()                                                        \
-  (((zend_long)(time(0) * getpid())) ^                                         \
+#define GENERATE_SEED()                \
+  (((zend_long)(time(0) * getpid())) ^ \
    ((zend_long)(1000000.0 * php_combined_lcg())))
 #endif
 

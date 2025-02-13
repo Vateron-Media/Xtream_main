@@ -39,11 +39,11 @@ class PEAR_Command_Mirror extends PEAR_Command_Common {
             'shortcut' => 'da',
             'options' => array(
                 'channel' =>
-                    array(
-                        'shortopt' => 'c',
-                        'doc' => 'specify a channel other than the default channel',
-                        'arg' => 'CHAN',
-                    ),
+                array(
+                    'shortopt' => 'c',
+                    'doc' => 'specify a channel other than the default channel',
+                    'arg' => 'CHAN',
+                ),
             ),
             'doc' => '
 Requests a list of available packages from the default channel ({config default_channel})

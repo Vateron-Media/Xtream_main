@@ -16,6 +16,8 @@
    +----------------------------------------------------------------------+
 */
 
+/* internal header; not supposed to be installed; FIXME but unfortunately is */
+
 #ifndef ZEND_STRTOD_INT_H
 #define ZEND_STRTOD_INT_H
 
@@ -23,11 +25,11 @@
 #include <TSRM.h>
 #endif
 
-#include <ctype.h>
-#include <math.h>
-#include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <ctype.h>
+#include <stdarg.h>
+#include <math.h>
 
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
@@ -42,27 +44,7 @@
    https://wiki.php.net/rfc/remove_hex_support_in_numeric_strings */
 #define NO_HEX_FP 1
 
-#if defined(HAVE_INTTYPES_H)
 #include <inttypes.h>
-#elif defined(HAVE_STDINT_H)
-#include <stdint.h>
-#endif
-
-#ifndef HAVE_INT32_T
-#if SIZEOF_INT == 4
-typedef int int32_t;
-#elif SIZEOF_LONG == 4
-typedef long int int32_t;
-#endif
-#endif
-
-#ifndef HAVE_UINT32_T
-#if SIZEOF_INT == 4
-typedef unsigned int uint32_t;
-#elif SIZEOF_LONG == 4
-typedef unsigned long int uint32_t;
-#endif
-#endif
 
 #ifdef USE_LOCALE
 #undef USE_LOCALE
@@ -82,8 +64,7 @@ typedef unsigned long int uint32_t;
 #define IEEE_LITTLE_ENDIAN 1
 #endif
 
-#if (defined(__APPLE__) || defined(__APPLE_CC__)) &&                           \
-    (defined(__BIG_ENDIAN__) || defined(__LITTLE_ENDIAN__))
+#if (defined(__APPLE__) || defined(__APPLE_CC__)) && (defined(__BIG_ENDIAN__) || defined(__LITTLE_ENDIAN__))
 #if defined(__LITTLE_ENDIAN__)
 #undef WORDS_BIGENDIAN
 #else
@@ -123,25 +104,6 @@ typedef unsigned long int uint32_t;
 #ifndef uint32_t
 #define uint32_t unsigned __int32
 #endif
-#endif
-
-#ifdef ZTS
-#define MULTIPLE_THREADS 1
-
-#define ACQUIRE_DTOA_LOCK(x)                                                   \
-  if (0 == x) {                                                                \
-    tsrm_mutex_lock(dtoa_mutex);                                               \
-  } else if (1 == x) {                                                         \
-    tsrm_mutex_lock(pow5mult_mutex);                                           \
-  }
-
-#define FREE_DTOA_LOCK(x)                                                      \
-  if (0 == x) {                                                                \
-    tsrm_mutex_unlock(dtoa_mutex);                                             \
-  } else if (1 == x) {                                                         \
-    tsrm_mutex_unlock(pow5mult_mutex);                                         \
-  }
-
 #endif
 
 #endif /* ZEND_STRTOD_INT_H */

@@ -1,0 +1,692 @@
+[11-Jan-2025 19:14:55] NOTICE: fpm is running, pid 56254
+[11-Jan-2025 19:14:55] NOTICE: ready to handle connections
+[11-Jan-2025 19:14:55] NOTICE: fpm is running, pid 56256
+[11-Jan-2025 19:14:55] NOTICE: ready to handle connections
+[11-Jan-2025 19:14:55] NOTICE: fpm is running, pid 56258
+[11-Jan-2025 19:14:55] NOTICE: ready to handle connections
+[11-Jan-2025 20:04:34] NOTICE: Terminating ...
+[11-Jan-2025 20:04:34] NOTICE: exiting, bye-bye!
+[11-Jan-2025 20:04:34] NOTICE: Terminating ...
+[11-Jan-2025 20:04:34] NOTICE: exiting, bye-bye!
+[11-Jan-2025 20:04:34] NOTICE: Terminating ...
+[11-Jan-2025 20:04:34] NOTICE: exiting, bye-bye!
+[11-Jan-2025 20:09:55] NOTICE: fpm is running, pid 138366
+[11-Jan-2025 20:09:55] NOTICE: ready to handle connections
+[11-Jan-2025 20:09:55] NOTICE: fpm is running, pid 138368
+[11-Jan-2025 20:09:55] NOTICE: ready to handle connections
+[11-Jan-2025 20:09:55] NOTICE: fpm is running, pid 138370
+[11-Jan-2025 20:09:55] NOTICE: ready to handle connections
+[11-Jan-2025 20:17:03] NOTICE: Terminating ...
+[11-Jan-2025 20:17:03] NOTICE: exiting, bye-bye!
+[11-Jan-2025 20:17:03] NOTICE: Terminating ...
+[11-Jan-2025 20:17:03] NOTICE: exiting, bye-bye!
+[11-Jan-2025 20:17:03] NOTICE: Terminating ...
+[11-Jan-2025 20:17:03] NOTICE: exiting, bye-bye!
+[11-Jan-2025 20:17:54] NOTICE: fpm is running, pid 154417
+[11-Jan-2025 20:17:54] NOTICE: ready to handle connections
+[11-Jan-2025 20:17:54] NOTICE: fpm is running, pid 154419
+[11-Jan-2025 20:17:54] NOTICE: ready to handle connections
+[11-Jan-2025 20:17:54] NOTICE: fpm is running, pid 154421
+[11-Jan-2025 20:17:54] NOTICE: ready to handle connections
+[11-Jan-2025 21:00:26] NOTICE: Terminating ...
+[11-Jan-2025 21:00:26] NOTICE: exiting, bye-bye!
+[11-Jan-2025 21:00:26] NOTICE: Terminating ...
+[11-Jan-2025 21:00:26] NOTICE: exiting, bye-bye!
+[11-Jan-2025 21:00:26] NOTICE: Terminating ...
+[11-Jan-2025 21:00:26] NOTICE: exiting, bye-bye!
+[11-Jan-2025 21:00:44] NOTICE: fpm is running, pid 860
+[11-Jan-2025 21:00:44] NOTICE: ready to handle connections
+[11-Jan-2025 21:00:44] NOTICE: fpm is running, pid 870
+[11-Jan-2025 21:00:44] NOTICE: ready to handle connections
+[11-Jan-2025 21:00:44] NOTICE: fpm is running, pid 887
+[11-Jan-2025 21:00:44] NOTICE: ready to handle connections
+[11-Jan-2025 21:05:58] NOTICE: Terminating ...
+[11-Jan-2025 21:05:58] NOTICE: Terminating ...
+[11-Jan-2025 21:05:58] NOTICE: Terminating ...
+[11-Jan-2025 21:05:58] NOTICE: exiting, bye-bye!
+[11-Jan-2025 21:05:58] NOTICE: Terminating ...
+[11-Jan-2025 21:05:58] NOTICE: exiting, bye-bye!
+[11-Jan-2025 21:05:58] NOTICE: Terminating ...
+[11-Jan-2025 21:05:58] NOTICE: Terminating ...
+[11-Jan-2025 21:05:58] NOTICE: exiting, bye-bye!
+[11-Jan-2025 21:07:44] NOTICE: fpm is running, pid 860
+[11-Jan-2025 21:07:44] NOTICE: ready to handle connections
+[11-Jan-2025 21:07:45] NOTICE: fpm is running, pid 876
+[11-Jan-2025 21:07:45] NOTICE: ready to handle connections
+[11-Jan-2025 21:07:45] NOTICE: fpm is running, pid 889
+[11-Jan-2025 21:07:45] NOTICE: ready to handle connections
+[11-Jan-2025 21:11:09] WARNING: [pool xtreamcodes] child 1032 exited on signal 9 (SIGKILL) after 194.972302 seconds from start
+[11-Jan-2025 21:11:09] NOTICE: [pool xtreamcodes] child 7335 started
+[11-Jan-2025 21:11:11] WARNING: [pool xtreamcodes] child 985 exited on signal 9 (SIGKILL) after 206.596093 seconds from start
+[11-Jan-2025 21:11:11] NOTICE: [pool xtreamcodes] child 7405 started
+[11-Jan-2025 21:11:33] WARNING: [pool xtreamcodes] child 7335 exited on signal 9 (SIGKILL) after 24.124181 seconds from start
+[11-Jan-2025 21:11:33] NOTICE: [pool xtreamcodes] child 7909 started
+[11-Jan-2025 21:12:27] WARNING: [pool xtreamcodes] child 1041 exited on signal 9 (SIGKILL) after 269.316467 seconds from start
+[11-Jan-2025 21:12:27] NOTICE: [pool xtreamcodes] child 9387 started
+[11-Jan-2025 21:12:28] WARNING: [pool xtreamcodes] child 987 exited on signal 9 (SIGKILL) after 283.110875 seconds from start
+[11-Jan-2025 21:12:28] NOTICE: [pool xtreamcodes] child 9395 started
+[11-Jan-2025 21:15:04] WARNING: [pool xtreamcodes] child 7909 exited on signal 9 (SIGKILL) after 210.978678 seconds from start
+[11-Jan-2025 21:15:04] NOTICE: [pool xtreamcodes] child 13913 started
+[11-Jan-2025 21:15:51] WARNING: [pool xtreamcodes] child 13911 exited on signal 9 (SIGKILL) after 47.416426 seconds from start
+[11-Jan-2025 21:15:51] NOTICE: [pool xtreamcodes] child 15083 started
+[11-Jan-2025 21:15:52] WARNING: [pool xtreamcodes] child 14715 exited on signal 9 (SIGKILL) after 17.434203 seconds from start
+[11-Jan-2025 21:15:52] NOTICE: [pool xtreamcodes] child 15103 started
+[11-Jan-2025 21:15:58] WARNING: [pool xtreamcodes] child 14718 exited on signal 9 (SIGKILL) after 23.095564 seconds from start
+[11-Jan-2025 21:15:58] NOTICE: [pool xtreamcodes] child 15233 started
+[11-Jan-2025 21:16:00] WARNING: [pool xtreamcodes] child 15103 exited on signal 9 (SIGKILL) after 7.235005 seconds from start
+[11-Jan-2025 21:16:00] NOTICE: [pool xtreamcodes] child 15287 started
+[11-Jan-2025 21:16:01] WARNING: [pool xtreamcodes] child 15233 exited on signal 9 (SIGKILL) after 2.207181 seconds from start
+[11-Jan-2025 21:16:01] NOTICE: [pool xtreamcodes] child 15307 started
+[11-Jan-2025 21:16:02] WARNING: [pool xtreamcodes] child 15287 exited on signal 9 (SIGKILL) after 2.494222 seconds from start
+[11-Jan-2025 21:16:02] NOTICE: [pool xtreamcodes] child 15374 started
+[11-Jan-2025 21:16:08] WARNING: [pool xtreamcodes] child 15307 exited on signal 9 (SIGKILL) after 7.290785 seconds from start
+[11-Jan-2025 21:16:08] NOTICE: [pool xtreamcodes] child 15717 started
+[11-Jan-2025 21:16:09] WARNING: [pool xtreamcodes] child 15083 exited on signal 9 (SIGKILL) after 18.056866 seconds from start
+[11-Jan-2025 21:16:09] NOTICE: [pool xtreamcodes] child 15741 started
+[11-Jan-2025 21:16:10] WARNING: [pool xtreamcodes] child 15740 exited on signal 9 (SIGKILL) after 0.766583 seconds from start
+[11-Jan-2025 21:16:10] NOTICE: [pool xtreamcodes] child 15793 started
+[11-Jan-2025 21:16:11] WARNING: [pool xtreamcodes] child 15374 exited on signal 9 (SIGKILL) after 9.231656 seconds from start
+[11-Jan-2025 21:16:11] NOTICE: [pool xtreamcodes] child 15816 started
+[11-Jan-2025 21:16:13] WARNING: [pool xtreamcodes] child 15813 exited on signal 9 (SIGKILL) after 1.416749 seconds from start
+[11-Jan-2025 21:16:13] NOTICE: [pool xtreamcodes] child 15837 started
+[11-Jan-2025 21:19:25] WARNING: [pool xtreamcodes] child 17381 exited on signal 9 (SIGKILL) after 136.845474 seconds from start
+[11-Jan-2025 21:19:25] NOTICE: [pool xtreamcodes] child 21090 started
+[11-Jan-2025 21:20:13] WARNING: [pool xtreamcodes] child 20333 exited on signal 9 (SIGKILL) after 71.988590 seconds from start
+[11-Jan-2025 21:20:13] NOTICE: [pool xtreamcodes] child 22503 started
+[11-Jan-2025 21:20:15] WARNING: [pool xtreamcodes] child 20683 exited on signal 9 (SIGKILL) after 67.931604 seconds from start
+[11-Jan-2025 21:20:15] NOTICE: [pool xtreamcodes] child 22524 started
+[12-Jan-2025 11:23:54] NOTICE: Terminating ...
+[12-Jan-2025 11:23:54] NOTICE: Terminating ...
+[12-Jan-2025 11:23:54] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:23:54] NOTICE: Terminating ...
+[12-Jan-2025 11:23:54] NOTICE: Terminating ...
+[12-Jan-2025 11:23:54] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:23:54] NOTICE: Terminating ...
+[12-Jan-2025 11:23:54] NOTICE: Terminating ...
+[12-Jan-2025 11:23:54] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:23:54] NOTICE: fpm is running, pid 1426913
+[12-Jan-2025 11:23:54] NOTICE: ready to handle connections
+[12-Jan-2025 11:23:54] NOTICE: fpm is running, pid 1426915
+[12-Jan-2025 11:23:54] NOTICE: ready to handle connections
+[12-Jan-2025 11:23:54] NOTICE: fpm is running, pid 1426917
+[12-Jan-2025 11:23:54] NOTICE: ready to handle connections
+[12-Jan-2025 11:24:04] NOTICE: Terminating ...
+[12-Jan-2025 11:24:04] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:24:04] NOTICE: Terminating ...
+[12-Jan-2025 11:24:04] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:24:04] NOTICE: Terminating ...
+[12-Jan-2025 11:24:04] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:24:04] NOTICE: fpm is running, pid 1427510
+[12-Jan-2025 11:24:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:24:04] NOTICE: fpm is running, pid 1427512
+[12-Jan-2025 11:24:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:24:04] NOTICE: fpm is running, pid 1427514
+[12-Jan-2025 11:24:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:25:04] NOTICE: Terminating ...
+[12-Jan-2025 11:25:04] NOTICE: Terminating ...
+[12-Jan-2025 11:25:04] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:25:04] NOTICE: Terminating ...
+[12-Jan-2025 11:25:04] NOTICE: Terminating ...
+[12-Jan-2025 11:25:04] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:25:04] NOTICE: Terminating ...
+[12-Jan-2025 11:25:04] NOTICE: Terminating ...
+[12-Jan-2025 11:25:04] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:25:04] NOTICE: fpm is running, pid 1429382
+[12-Jan-2025 11:25:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:25:04] NOTICE: fpm is running, pid 1429392
+[12-Jan-2025 11:25:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:25:04] NOTICE: fpm is running, pid 1429404
+[12-Jan-2025 11:25:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:25:35] NOTICE: Terminating ...
+[12-Jan-2025 11:25:35] NOTICE: Terminating ...
+[12-Jan-2025 11:25:35] NOTICE: Terminating ...
+[12-Jan-2025 11:25:35] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:25:35] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:25:35] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:25:43] NOTICE: fpm is running, pid 1430799
+[12-Jan-2025 11:25:43] NOTICE: ready to handle connections
+[12-Jan-2025 11:25:43] NOTICE: fpm is running, pid 1430801
+[12-Jan-2025 11:25:43] NOTICE: ready to handle connections
+[12-Jan-2025 11:25:43] NOTICE: fpm is running, pid 1430803
+[12-Jan-2025 11:25:43] NOTICE: ready to handle connections
+[12-Jan-2025 11:29:03] NOTICE: Terminating ...
+[12-Jan-2025 11:29:03] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:29:03] NOTICE: Terminating ...
+[12-Jan-2025 11:29:03] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:29:03] NOTICE: Terminating ...
+[12-Jan-2025 11:29:03] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:29:03] NOTICE: fpm is running, pid 1432466
+[12-Jan-2025 11:29:03] NOTICE: ready to handle connections
+[12-Jan-2025 11:29:03] NOTICE: fpm is running, pid 1432469
+[12-Jan-2025 11:29:03] NOTICE: ready to handle connections
+[12-Jan-2025 11:29:03] NOTICE: fpm is running, pid 1432471
+[12-Jan-2025 11:29:03] NOTICE: ready to handle connections
+[12-Jan-2025 11:30:03] NOTICE: Terminating ...
+[12-Jan-2025 11:30:03] NOTICE: Terminating ...
+[12-Jan-2025 11:30:03] NOTICE: Terminating ...
+[12-Jan-2025 11:30:03] NOTICE: Terminating ...
+[12-Jan-2025 11:30:03] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:30:03] NOTICE: Terminating ...
+[12-Jan-2025 11:30:03] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:30:03] NOTICE: Terminating ...
+[12-Jan-2025 11:30:03] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:30:03] NOTICE: fpm is running, pid 1434403
+[12-Jan-2025 11:30:03] NOTICE: ready to handle connections
+[12-Jan-2025 11:30:03] NOTICE: fpm is running, pid 1434405
+[12-Jan-2025 11:30:03] NOTICE: ready to handle connections
+[12-Jan-2025 11:30:03] NOTICE: fpm is running, pid 1434407
+[12-Jan-2025 11:30:03] NOTICE: ready to handle connections
+[12-Jan-2025 11:31:04] NOTICE: Terminating ...
+[12-Jan-2025 11:31:04] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:31:04] NOTICE: Terminating ...
+[12-Jan-2025 11:31:04] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:31:04] NOTICE: Terminating ...
+[12-Jan-2025 11:31:04] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:31:04] NOTICE: fpm is running, pid 1436762
+[12-Jan-2025 11:31:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:31:04] NOTICE: fpm is running, pid 1436764
+[12-Jan-2025 11:31:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:31:04] NOTICE: fpm is running, pid 1436766
+[12-Jan-2025 11:31:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:32:03] NOTICE: Terminating ...
+[12-Jan-2025 11:32:03] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:32:03] NOTICE: Terminating ...
+[12-Jan-2025 11:32:03] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:32:03] NOTICE: Terminating ...
+[12-Jan-2025 11:32:03] NOTICE: exiting, bye-bye!
+[12-Jan-2025 11:32:04] NOTICE: fpm is running, pid 1439228
+[12-Jan-2025 11:32:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:32:04] NOTICE: fpm is running, pid 1439230
+[12-Jan-2025 11:32:04] NOTICE: ready to handle connections
+[12-Jan-2025 11:32:04] NOTICE: fpm is running, pid 1439232
+[12-Jan-2025 11:32:04] NOTICE: ready to handle connections
+[15-Jan-2025 20:08:05] NOTICE: Terminating ...
+[15-Jan-2025 20:08:05] NOTICE: exiting, bye-bye!
+[15-Jan-2025 20:08:05] NOTICE: Terminating ...
+[15-Jan-2025 20:08:05] NOTICE: exiting, bye-bye!
+[15-Jan-2025 20:08:05] NOTICE: Terminating ...
+[15-Jan-2025 20:08:05] NOTICE: exiting, bye-bye!
+[15-Jan-2025 20:08:05] NOTICE: fpm is running, pid 2696818
+[15-Jan-2025 20:08:05] NOTICE: ready to handle connections
+[15-Jan-2025 20:08:05] NOTICE: fpm is running, pid 2696820
+[15-Jan-2025 20:08:05] NOTICE: ready to handle connections
+[15-Jan-2025 20:08:05] NOTICE: fpm is running, pid 2696822
+[15-Jan-2025 20:08:05] NOTICE: ready to handle connections
+[15-Jan-2025 22:19:30] NOTICE: Terminating ...
+[15-Jan-2025 22:19:30] NOTICE: Terminating ...
+[15-Jan-2025 22:19:30] NOTICE: exiting, bye-bye!
+[15-Jan-2025 22:19:30] NOTICE: Terminating ...
+[15-Jan-2025 22:19:30] NOTICE: exiting, bye-bye!
+[15-Jan-2025 22:19:30] NOTICE: Terminating ...
+[15-Jan-2025 22:19:30] NOTICE: exiting, bye-bye!
+[15-Jan-2025 22:21:17] NOTICE: fpm is running, pid 861
+[15-Jan-2025 22:21:17] NOTICE: ready to handle connections
+[15-Jan-2025 22:21:17] NOTICE: fpm is running, pid 879
+[15-Jan-2025 22:21:17] NOTICE: ready to handle connections
+[15-Jan-2025 22:21:17] NOTICE: fpm is running, pid 892
+[15-Jan-2025 22:21:17] NOTICE: ready to handle connections
+[17-Jan-2025 19:03:40] NOTICE: Terminating ...
+[17-Jan-2025 19:03:40] NOTICE: exiting, bye-bye!
+[17-Jan-2025 19:03:40] NOTICE: Terminating ...
+[17-Jan-2025 19:03:40] NOTICE: Terminating ...
+[17-Jan-2025 19:03:40] NOTICE: exiting, bye-bye!
+[17-Jan-2025 19:03:40] NOTICE: Terminating ...
+[17-Jan-2025 19:03:40] NOTICE: exiting, bye-bye!
+[17-Jan-2025 19:03:40] NOTICE: fpm is running, pid 2549218
+[17-Jan-2025 19:03:40] NOTICE: ready to handle connections
+[17-Jan-2025 19:03:40] NOTICE: fpm is running, pid 2549220
+[17-Jan-2025 19:03:40] NOTICE: ready to handle connections
+[17-Jan-2025 19:03:40] NOTICE: fpm is running, pid 2549222
+[17-Jan-2025 19:03:40] NOTICE: ready to handle connections
+[17-Jan-2025 19:40:07] NOTICE: Terminating ...
+[17-Jan-2025 19:40:07] NOTICE: Terminating ...
+[17-Jan-2025 19:40:07] NOTICE: exiting, bye-bye!
+[17-Jan-2025 19:40:07] NOTICE: Terminating ...
+[17-Jan-2025 19:40:07] NOTICE: exiting, bye-bye!
+[17-Jan-2025 19:40:07] NOTICE: Terminating ...
+[17-Jan-2025 19:40:07] NOTICE: Terminating ...
+[17-Jan-2025 19:40:07] NOTICE: exiting, bye-bye!
+[17-Jan-2025 19:47:40] NOTICE: fpm is running, pid 2576253
+[17-Jan-2025 19:47:40] NOTICE: ready to handle connections
+[17-Jan-2025 19:47:40] NOTICE: fpm is running, pid 2576255
+[17-Jan-2025 19:47:40] NOTICE: ready to handle connections
+[17-Jan-2025 19:47:40] NOTICE: fpm is running, pid 2576257
+[17-Jan-2025 19:47:40] NOTICE: ready to handle connections
+[17-Jan-2025 19:53:37] NOTICE: Terminating ...
+[17-Jan-2025 19:53:37] NOTICE: Terminating ...
+[17-Jan-2025 19:53:37] NOTICE: exiting, bye-bye!
+[17-Jan-2025 19:53:37] NOTICE: Terminating ...
+[17-Jan-2025 19:53:37] NOTICE: exiting, bye-bye!
+[17-Jan-2025 19:53:37] NOTICE: exiting, bye-bye!
+[17-Jan-2025 19:53:54] NOTICE: fpm is running, pid 2582110
+[17-Jan-2025 19:53:54] NOTICE: ready to handle connections
+[17-Jan-2025 19:53:54] NOTICE: fpm is running, pid 2582112
+[17-Jan-2025 19:53:54] NOTICE: ready to handle connections
+[17-Jan-2025 19:53:54] NOTICE: fpm is running, pid 2582114
+[17-Jan-2025 19:53:54] NOTICE: ready to handle connections
+[17-Jan-2025 20:16:34] NOTICE: Terminating ...
+[17-Jan-2025 20:16:34] NOTICE: exiting, bye-bye!
+[17-Jan-2025 20:16:34] NOTICE: Terminating ...
+[17-Jan-2025 20:16:34] NOTICE: exiting, bye-bye!
+[17-Jan-2025 20:16:34] NOTICE: Terminating ...
+[17-Jan-2025 20:16:34] NOTICE: exiting, bye-bye!
+[17-Jan-2025 20:16:37] NOTICE: fpm is running, pid 2612563
+[17-Jan-2025 20:16:37] NOTICE: ready to handle connections
+[17-Jan-2025 20:16:37] NOTICE: fpm is running, pid 2612565
+[17-Jan-2025 20:16:37] NOTICE: ready to handle connections
+[17-Jan-2025 20:16:37] NOTICE: fpm is running, pid 2612568
+[17-Jan-2025 20:16:37] NOTICE: ready to handle connections
+[17-Jan-2025 20:22:19] NOTICE: Terminating ...
+[17-Jan-2025 20:22:19] NOTICE: exiting, bye-bye!
+[17-Jan-2025 20:22:19] NOTICE: Terminating ...
+[17-Jan-2025 20:22:19] NOTICE: exiting, bye-bye!
+[17-Jan-2025 20:22:19] NOTICE: Terminating ...
+[17-Jan-2025 20:22:19] NOTICE: exiting, bye-bye!
+[17-Jan-2025 20:23:42] NOTICE: fpm is running, pid 2614539
+[17-Jan-2025 20:23:42] NOTICE: ready to handle connections
+[17-Jan-2025 20:23:42] NOTICE: fpm is running, pid 2614541
+[17-Jan-2025 20:23:42] NOTICE: ready to handle connections
+[17-Jan-2025 20:23:42] NOTICE: fpm is running, pid 2614543
+[17-Jan-2025 20:23:42] NOTICE: ready to handle connections
+[17-Jan-2025 20:50:14] NOTICE: Terminating ...
+[17-Jan-2025 20:50:14] NOTICE: exiting, bye-bye!
+[17-Jan-2025 20:50:14] NOTICE: Terminating ...
+[17-Jan-2025 20:50:14] NOTICE: exiting, bye-bye!
+[17-Jan-2025 20:50:14] NOTICE: Terminating ...
+[17-Jan-2025 20:50:14] NOTICE: exiting, bye-bye!
+[17-Jan-2025 20:50:16] NOTICE: fpm is running, pid 2622033
+[17-Jan-2025 20:50:16] NOTICE: ready to handle connections
+[17-Jan-2025 20:50:16] NOTICE: fpm is running, pid 2622035
+[17-Jan-2025 20:50:16] NOTICE: ready to handle connections
+[17-Jan-2025 20:50:16] NOTICE: fpm is running, pid 2622037
+[17-Jan-2025 20:50:16] NOTICE: ready to handle connections
+[17-Jan-2025 21:22:26] NOTICE: fpm is running, pid 2645253
+[17-Jan-2025 21:22:26] NOTICE: ready to handle connections
+[17-Jan-2025 21:22:26] NOTICE: fpm is running, pid 2645255
+[17-Jan-2025 21:22:26] NOTICE: ready to handle connections
+[17-Jan-2025 21:22:26] NOTICE: fpm is running, pid 2645257
+[17-Jan-2025 21:22:26] NOTICE: ready to handle connections
+[18-Jan-2025 19:42:39] NOTICE: Terminating ...
+[18-Jan-2025 19:42:39] NOTICE: exiting, bye-bye!
+[18-Jan-2025 19:42:39] NOTICE: Terminating ...
+[18-Jan-2025 19:42:39] NOTICE: exiting, bye-bye!
+[18-Jan-2025 19:42:39] NOTICE: Terminating ...
+[18-Jan-2025 19:42:39] NOTICE: exiting, bye-bye!
+[18-Jan-2025 19:43:01] NOTICE: fpm is running, pid 857
+[18-Jan-2025 19:43:01] NOTICE: ready to handle connections
+[18-Jan-2025 19:43:02] NOTICE: fpm is running, pid 875
+[18-Jan-2025 19:43:02] NOTICE: ready to handle connections
+[18-Jan-2025 19:43:02] NOTICE: fpm is running, pid 886
+[18-Jan-2025 19:43:02] NOTICE: ready to handle connections
+[19-Jan-2025 16:12:07] WARNING: [pool xtreamcodes] child 1971144 exited on signal 9 (SIGKILL) after 37.297213 seconds from start
+[19-Jan-2025 16:12:07] NOTICE: [pool xtreamcodes] child 1972181 started
+[19-Jan-2025 16:12:08] WARNING: [pool xtreamcodes] child 1971248 exited on signal 9 (SIGKILL) after 34.664474 seconds from start
+[19-Jan-2025 16:12:08] NOTICE: [pool xtreamcodes] child 1972236 started
+[19-Jan-2025 16:17:12] WARNING: [pool xtreamcodes] child 1979875 exited on signal 9 (SIGKILL) after 16.735773 seconds from start
+[19-Jan-2025 16:17:12] NOTICE: [pool xtreamcodes] child 1980460 started
+[19-Jan-2025 16:17:31] WARNING: [pool xtreamcodes] child 1980459 exited on signal 9 (SIGKILL) after 19.568231 seconds from start
+[19-Jan-2025 16:17:31] NOTICE: [pool xtreamcodes] child 1980880 started
+[19-Jan-2025 16:17:37] WARNING: [pool xtreamcodes] child 1980460 exited on signal 9 (SIGKILL) after 25.454052 seconds from start
+[19-Jan-2025 16:17:37] NOTICE: [pool xtreamcodes] child 1981054 started
+[19-Jan-2025 16:17:38] WARNING: [pool xtreamcodes] child 1980880 exited on signal 9 (SIGKILL) after 7.255411 seconds from start
+[19-Jan-2025 16:17:38] NOTICE: [pool xtreamcodes] child 1981068 started
+[19-Jan-2025 16:20:36] WARNING: [pool xtreamcodes] child 1979876 exited on signal 9 (SIGKILL) after 221.401540 seconds from start
+[19-Jan-2025 16:20:36] NOTICE: [pool xtreamcodes] child 1985728 started
+[19-Jan-2025 16:20:53] WARNING: [pool xtreamcodes] child 1985698 exited on signal 9 (SIGKILL) after 18.244743 seconds from start
+[19-Jan-2025 16:20:53] NOTICE: [pool xtreamcodes] child 1986163 started
+[19-Jan-2025 16:20:59] WARNING: [pool xtreamcodes] child 1985670 exited on signal 9 (SIGKILL) after 25.688287 seconds from start
+[19-Jan-2025 16:20:59] NOTICE: [pool xtreamcodes] child 1986293 started
+[19-Jan-2025 17:58:16] WARNING: [pool xtreamcodes] child 2140255 exited on signal 9 (SIGKILL) after 142.014927 seconds from start
+[19-Jan-2025 17:58:16] NOTICE: [pool xtreamcodes] child 2144108 started
+[22-Jan-2025 14:06:49] NOTICE: Terminating ...
+[22-Jan-2025 14:06:49] NOTICE: exiting, bye-bye!
+[22-Jan-2025 14:06:49] NOTICE: Terminating ...
+[22-Jan-2025 14:06:49] NOTICE: exiting, bye-bye!
+[22-Jan-2025 14:06:49] NOTICE: Terminating ...
+[22-Jan-2025 14:06:49] NOTICE: exiting, bye-bye!
+[22-Jan-2025 14:06:51] NOTICE: fpm is running, pid 370572
+[22-Jan-2025 14:06:51] NOTICE: ready to handle connections
+[22-Jan-2025 14:06:51] NOTICE: fpm is running, pid 370574
+[22-Jan-2025 14:06:51] NOTICE: ready to handle connections
+[22-Jan-2025 14:06:51] NOTICE: fpm is running, pid 370576
+[22-Jan-2025 14:06:51] NOTICE: ready to handle connections
+[22-Jan-2025 20:29:51] NOTICE: Terminating ...
+[22-Jan-2025 20:29:51] NOTICE: exiting, bye-bye!
+[22-Jan-2025 20:29:51] NOTICE: Terminating ...
+[22-Jan-2025 20:29:51] NOTICE: exiting, bye-bye!
+[22-Jan-2025 20:29:51] NOTICE: Terminating ...
+[22-Jan-2025 20:29:51] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:18:05] NOTICE: fpm is running, pid 1125935
+[22-Jan-2025 21:18:05] NOTICE: ready to handle connections
+[22-Jan-2025 21:22:27] NOTICE: Terminating ...
+[22-Jan-2025 21:22:27] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:22:27] ERROR: Unable to remove the PID file (/home/xtreamcodes/bin/php/sockets/1.pid).: No such file or directory (2)
+[22-Jan-2025 21:22:29] NOTICE: fpm is running, pid 1133424
+[22-Jan-2025 21:22:29] NOTICE: ready to handle connections
+[22-Jan-2025 21:22:30] NOTICE: fpm is running, pid 1133426
+[22-Jan-2025 21:22:30] NOTICE: ready to handle connections
+[22-Jan-2025 21:22:30] NOTICE: fpm is running, pid 1133428
+[22-Jan-2025 21:22:30] NOTICE: ready to handle connections
+[22-Jan-2025 21:22:30] NOTICE: fpm is running, pid 1133430
+[22-Jan-2025 21:22:30] NOTICE: ready to handle connections
+[22-Jan-2025 21:27:37] NOTICE: Terminating ...
+[22-Jan-2025 21:27:37] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:27:37] NOTICE: Terminating ...
+[22-Jan-2025 21:27:37] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:27:37] NOTICE: Terminating ...
+[22-Jan-2025 21:27:37] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:27:37] NOTICE: Terminating ...
+[22-Jan-2025 21:27:37] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:27:39] NOTICE: fpm is running, pid 1142232
+[22-Jan-2025 21:27:39] NOTICE: ready to handle connections
+[22-Jan-2025 21:27:39] NOTICE: fpm is running, pid 1142234
+[22-Jan-2025 21:27:39] NOTICE: ready to handle connections
+[22-Jan-2025 21:27:39] NOTICE: fpm is running, pid 1142236
+[22-Jan-2025 21:27:39] NOTICE: ready to handle connections
+[22-Jan-2025 21:27:39] NOTICE: fpm is running, pid 1142238
+[22-Jan-2025 21:27:39] NOTICE: ready to handle connections
+[22-Jan-2025 21:30:16] NOTICE: Terminating ...
+[22-Jan-2025 21:30:16] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:30:16] NOTICE: Terminating ...
+[22-Jan-2025 21:30:16] NOTICE: Terminating ...
+[22-Jan-2025 21:30:16] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:30:16] NOTICE: Terminating ...
+[22-Jan-2025 21:30:16] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:30:16] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:30:18] NOTICE: fpm is running, pid 1146903
+[22-Jan-2025 21:30:18] NOTICE: ready to handle connections
+[22-Jan-2025 21:30:18] NOTICE: fpm is running, pid 1146905
+[22-Jan-2025 21:30:18] NOTICE: ready to handle connections
+[22-Jan-2025 21:30:18] NOTICE: fpm is running, pid 1146907
+[22-Jan-2025 21:30:18] NOTICE: ready to handle connections
+[22-Jan-2025 21:30:18] NOTICE: fpm is running, pid 1146909
+[22-Jan-2025 21:30:18] NOTICE: ready to handle connections
+[22-Jan-2025 21:32:52] NOTICE: Terminating ...
+[22-Jan-2025 21:32:52] NOTICE: Terminating ...
+[22-Jan-2025 21:32:52] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:32:52] NOTICE: Terminating ...
+[22-Jan-2025 21:32:52] NOTICE: Terminating ...
+[22-Jan-2025 21:32:52] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:32:52] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:32:52] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:32:54] NOTICE: fpm is running, pid 1151104
+[22-Jan-2025 21:32:54] NOTICE: ready to handle connections
+[22-Jan-2025 21:32:54] NOTICE: fpm is running, pid 1151106
+[22-Jan-2025 21:32:54] NOTICE: ready to handle connections
+[22-Jan-2025 21:32:54] NOTICE: fpm is running, pid 1151108
+[22-Jan-2025 21:32:54] NOTICE: ready to handle connections
+[22-Jan-2025 21:32:54] NOTICE: fpm is running, pid 1151110
+[22-Jan-2025 21:32:54] NOTICE: ready to handle connections
+[22-Jan-2025 21:36:27] NOTICE: Terminating ...
+[22-Jan-2025 21:36:27] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:36:27] NOTICE: Terminating ...
+[22-Jan-2025 21:36:27] NOTICE: Terminating ...
+[22-Jan-2025 21:36:27] NOTICE: Terminating ...
+[22-Jan-2025 21:36:27] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:36:27] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:36:27] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:36:29] NOTICE: fpm is running, pid 1157086
+[22-Jan-2025 21:36:29] NOTICE: ready to handle connections
+[22-Jan-2025 21:36:29] NOTICE: fpm is running, pid 1157088
+[22-Jan-2025 21:36:29] NOTICE: ready to handle connections
+[22-Jan-2025 21:36:29] NOTICE: fpm is running, pid 1157091
+[22-Jan-2025 21:36:29] NOTICE: ready to handle connections
+[22-Jan-2025 21:36:29] NOTICE: fpm is running, pid 1157093
+[22-Jan-2025 21:36:29] NOTICE: ready to handle connections
+[22-Jan-2025 21:38:26] NOTICE: Terminating ...
+[22-Jan-2025 21:38:26] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:38:26] NOTICE: Terminating ...
+[22-Jan-2025 21:38:26] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:38:26] NOTICE: Terminating ...
+[22-Jan-2025 21:38:26] NOTICE: Terminating ...
+[22-Jan-2025 21:38:26] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:38:26] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:38:29] NOTICE: fpm is running, pid 1160604
+[22-Jan-2025 21:38:29] NOTICE: ready to handle connections
+[22-Jan-2025 21:38:29] NOTICE: fpm is running, pid 1160606
+[22-Jan-2025 21:38:29] NOTICE: ready to handle connections
+[22-Jan-2025 21:38:29] NOTICE: fpm is running, pid 1160608
+[22-Jan-2025 21:38:29] NOTICE: ready to handle connections
+[22-Jan-2025 21:38:29] NOTICE: fpm is running, pid 1160610
+[22-Jan-2025 21:38:29] NOTICE: ready to handle connections
+[22-Jan-2025 21:39:32] NOTICE: Terminating ...
+[22-Jan-2025 21:39:32] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:39:32] NOTICE: Terminating ...
+[22-Jan-2025 21:39:32] NOTICE: Terminating ...
+[22-Jan-2025 21:39:32] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:39:32] NOTICE: Terminating ...
+[22-Jan-2025 21:39:32] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:39:32] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:39:34] NOTICE: fpm is running, pid 1162593
+[22-Jan-2025 21:39:34] NOTICE: ready to handle connections
+[22-Jan-2025 21:39:34] NOTICE: fpm is running, pid 1162595
+[22-Jan-2025 21:39:34] NOTICE: ready to handle connections
+[22-Jan-2025 21:39:34] NOTICE: fpm is running, pid 1162597
+[22-Jan-2025 21:39:34] NOTICE: ready to handle connections
+[22-Jan-2025 21:39:34] NOTICE: fpm is running, pid 1162599
+[22-Jan-2025 21:39:34] NOTICE: ready to handle connections
+[22-Jan-2025 21:41:17] NOTICE: Terminating ...
+[22-Jan-2025 21:41:17] NOTICE: Terminating ...
+[22-Jan-2025 21:41:17] NOTICE: Terminating ...
+[22-Jan-2025 21:41:17] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:41:17] NOTICE: Terminating ...
+[22-Jan-2025 21:41:17] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:41:17] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:41:17] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:41:19] NOTICE: fpm is running, pid 1165613
+[22-Jan-2025 21:41:19] NOTICE: ready to handle connections
+[22-Jan-2025 21:41:19] NOTICE: fpm is running, pid 1165615
+[22-Jan-2025 21:41:19] NOTICE: ready to handle connections
+[22-Jan-2025 21:41:19] NOTICE: fpm is running, pid 1165617
+[22-Jan-2025 21:41:19] NOTICE: ready to handle connections
+[22-Jan-2025 21:41:19] NOTICE: fpm is running, pid 1165619
+[22-Jan-2025 21:41:19] NOTICE: ready to handle connections
+[22-Jan-2025 21:44:02] NOTICE: Terminating ...
+[22-Jan-2025 21:44:02] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:44:02] NOTICE: Terminating ...
+[22-Jan-2025 21:44:02] NOTICE: Terminating ...
+[22-Jan-2025 21:44:02] NOTICE: Terminating ...
+[22-Jan-2025 21:44:02] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:44:02] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:44:02] NOTICE: exiting, bye-bye!
+[22-Jan-2025 21:44:05] NOTICE: fpm is running, pid 1170253
+[22-Jan-2025 21:44:05] NOTICE: ready to handle connections
+[22-Jan-2025 21:44:05] NOTICE: fpm is running, pid 1170257
+[22-Jan-2025 21:44:05] NOTICE: ready to handle connections
+[22-Jan-2025 21:44:05] NOTICE: fpm is running, pid 1170260
+[22-Jan-2025 21:44:05] NOTICE: ready to handle connections
+[22-Jan-2025 21:44:05] NOTICE: fpm is running, pid 1170262
+[22-Jan-2025 21:44:05] NOTICE: ready to handle connections
+[23-Jan-2025 19:40:03] NOTICE: Terminating ...
+[23-Jan-2025 19:40:03] NOTICE: exiting, bye-bye!
+[23-Jan-2025 19:40:03] NOTICE: Terminating ...
+[23-Jan-2025 19:40:03] NOTICE: exiting, bye-bye!
+[23-Jan-2025 19:40:03] NOTICE: Terminating ...
+[23-Jan-2025 19:40:03] NOTICE: exiting, bye-bye!
+[23-Jan-2025 19:40:03] NOTICE: Terminating ...
+[23-Jan-2025 19:40:03] NOTICE: exiting, bye-bye!
+[23-Jan-2025 19:40:05] NOTICE: fpm is running, pid 3297800
+[23-Jan-2025 19:40:05] NOTICE: ready to handle connections
+[23-Jan-2025 19:40:05] NOTICE: fpm is running, pid 3297802
+[23-Jan-2025 19:40:05] NOTICE: ready to handle connections
+[23-Jan-2025 19:40:05] NOTICE: fpm is running, pid 3297805
+[23-Jan-2025 19:40:05] NOTICE: ready to handle connections
+[23-Jan-2025 19:40:05] NOTICE: fpm is running, pid 3297807
+[23-Jan-2025 19:40:05] NOTICE: ready to handle connections
+[26-Jan-2025 15:29:03] NOTICE: Terminating ...
+[26-Jan-2025 15:29:03] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:29:03] ERROR: Unable to remove the PID file (/home/xtreamcodes/bin/php/sockets/2.pid).: No such file or directory (2)
+[26-Jan-2025 15:29:03] NOTICE: Terminating ...
+[26-Jan-2025 15:29:03] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:29:03] ERROR: Unable to remove the PID file (/home/xtreamcodes/bin/php/sockets/1.pid).: No such file or directory (2)
+[26-Jan-2025 15:29:03] NOTICE: Terminating ...
+[26-Jan-2025 15:29:03] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:29:03] ERROR: Unable to remove the PID file (/home/xtreamcodes/bin/php/sockets/3.pid).: No such file or directory (2)
+[26-Jan-2025 15:29:03] NOTICE: Terminating ...
+[26-Jan-2025 15:29:03] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:29:05] NOTICE: fpm is running, pid 1453076
+[26-Jan-2025 15:29:05] NOTICE: ready to handle connections
+[26-Jan-2025 15:29:05] NOTICE: fpm is running, pid 1453078
+[26-Jan-2025 15:29:05] NOTICE: ready to handle connections
+[26-Jan-2025 15:30:02] NOTICE: Terminating ...
+[26-Jan-2025 15:30:02] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:30:02] NOTICE: Terminating ...
+[26-Jan-2025 15:30:02] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:30:05] NOTICE: fpm is running, pid 1455001
+[26-Jan-2025 15:30:05] NOTICE: ready to handle connections
+[26-Jan-2025 15:30:05] NOTICE: fpm is running, pid 1455003
+[26-Jan-2025 15:30:05] NOTICE: ready to handle connections
+[26-Jan-2025 15:31:02] NOTICE: Terminating ...
+[26-Jan-2025 15:31:02] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:31:02] NOTICE: Terminating ...
+[26-Jan-2025 15:31:02] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:31:04] NOTICE: fpm is running, pid 1456872
+[26-Jan-2025 15:31:04] NOTICE: ready to handle connections
+[26-Jan-2025 15:31:04] NOTICE: fpm is running, pid 1456874
+[26-Jan-2025 15:31:04] NOTICE: ready to handle connections
+[26-Jan-2025 15:32:02] NOTICE: Terminating ...
+[26-Jan-2025 15:32:02] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:32:02] NOTICE: Terminating ...
+[26-Jan-2025 15:32:02] NOTICE: exiting, bye-bye!
+[26-Jan-2025 15:32:04] NOTICE: fpm is running, pid 1458671
+[26-Jan-2025 15:32:04] NOTICE: ready to handle connections
+[26-Jan-2025 15:32:04] NOTICE: fpm is running, pid 1458673
+[26-Jan-2025 15:32:04] NOTICE: ready to handle connections
+[26-Jan-2025 15:32:04] NOTICE: fpm is running, pid 1458675
+[26-Jan-2025 15:32:04] NOTICE: ready to handle connections
+[26-Jan-2025 15:32:04] NOTICE: fpm is running, pid 1458677
+[26-Jan-2025 15:32:04] NOTICE: ready to handle connections
+[26-Jan-2025 20:04:26] WARNING: [pool xtreamcodes] child 1894179 exited on signal 9 (SIGKILL) after 9.932709 seconds from start
+[26-Jan-2025 20:04:26] NOTICE: [pool xtreamcodes] child 1894414 started
+[26-Jan-2025 20:04:31] WARNING: [pool xtreamcodes] child 1894413 exited on signal 9 (SIGKILL) after 5.158898 seconds from start
+[26-Jan-2025 20:04:31] NOTICE: [pool xtreamcodes] child 1894545 started
+[26-Jan-2025 20:04:43] WARNING: [pool xtreamcodes] child 1894505 exited on signal 9 (SIGKILL) after 11.883882 seconds from start
+[26-Jan-2025 20:04:43] NOTICE: [pool xtreamcodes] child 1894858 started
+[26-Jan-2025 20:04:48] WARNING: [pool xtreamcodes] child 1894857 exited on signal 9 (SIGKILL) after 5.155627 seconds from start
+[26-Jan-2025 20:04:48] NOTICE: [pool xtreamcodes] child 1894983 started
+[26-Jan-2025 20:06:43] WARNING: [pool xtreamcodes] child 1897470 exited on signal 9 (SIGKILL) after 27.724961 seconds from start
+[26-Jan-2025 20:06:43] NOTICE: [pool xtreamcodes] child 1898102 started
+[26-Jan-2025 20:07:12] WARNING: [pool xtreamcodes] child 1898594 exited on signal 9 (SIGKILL) after 10.646216 seconds from start
+[26-Jan-2025 20:07:12] NOTICE: [pool xtreamcodes] child 1898973 started
+[26-Jan-2025 20:07:22] WARNING: [pool xtreamcodes] child 1898968 exited on signal 9 (SIGKILL) after 9.975087 seconds from start
+[26-Jan-2025 20:07:22] NOTICE: [pool xtreamcodes] child 1899208 started
+[26-Jan-2025 20:07:24] WARNING: [pool xtreamcodes] child 1899206 exited on signal 9 (SIGKILL) after 1.983280 seconds from start
+[26-Jan-2025 20:07:24] NOTICE: [pool xtreamcodes] child 1899246 started
+[26-Jan-2025 20:18:05] WARNING: [pool xtreamcodes] child 1916285 exited on signal 9 (SIGKILL) after 11.133545 seconds from start
+[26-Jan-2025 20:18:05] NOTICE: [pool xtreamcodes] child 1916726 started
+[26-Jan-2025 20:18:05] WARNING: [pool xtreamcodes] child 1916566 exited on signal 9 (SIGKILL) after 2.604874 seconds from start
+[26-Jan-2025 20:18:05] NOTICE: [pool xtreamcodes] child 1916734 started
+[26-Jan-2025 20:18:08] WARNING: [pool xtreamcodes] child 1916565 exited on signal 9 (SIGKILL) after 5.176877 seconds from start
+[26-Jan-2025 20:18:08] NOTICE: [pool xtreamcodes] child 1916777 started
+[26-Jan-2025 20:18:08] WARNING: [pool xtreamcodes] child 1916567 exited on signal 9 (SIGKILL) after 5.382086 seconds from start
+[26-Jan-2025 20:18:08] NOTICE: [pool xtreamcodes] child 1916785 started
+[26-Jan-2025 20:18:13] WARNING: [pool xtreamcodes] child 1916734 exited on signal 9 (SIGKILL) after 7.681685 seconds from start
+[26-Jan-2025 20:18:13] NOTICE: [pool xtreamcodes] child 1916902 started
+[26-Jan-2025 20:18:14] WARNING: [pool xtreamcodes] child 1916726 exited on signal 9 (SIGKILL) after 9.107631 seconds from start
+[26-Jan-2025 20:18:14] NOTICE: [pool xtreamcodes] child 1916947 started
+[26-Jan-2025 20:18:15] WARNING: [pool xtreamcodes] child 1916785 exited on signal 9 (SIGKILL) after 6.492930 seconds from start
+[26-Jan-2025 20:18:15] NOTICE: [pool xtreamcodes] child 1916964 started
+[26-Jan-2025 20:18:17] WARNING: [pool xtreamcodes] child 1916902 exited on signal 9 (SIGKILL) after 4.327536 seconds from start
+[26-Jan-2025 20:18:17] NOTICE: [pool xtreamcodes] child 1917012 started
+[26-Jan-2025 20:18:26] WARNING: [pool xtreamcodes] child 1916947 exited on signal 9 (SIGKILL) after 12.575064 seconds from start
+[26-Jan-2025 20:18:26] NOTICE: [pool xtreamcodes] child 1917228 started
+[26-Jan-2025 20:18:31] WARNING: [pool xtreamcodes] child 1917227 exited on signal 9 (SIGKILL) after 5.181532 seconds from start
+[26-Jan-2025 20:18:31] NOTICE: [pool xtreamcodes] child 1917351 started
+[26-Jan-2025 20:18:42] WARNING: [pool xtreamcodes] child 1917348 exited on signal 9 (SIGKILL) after 10.836475 seconds from start
+[26-Jan-2025 20:18:42] NOTICE: [pool xtreamcodes] child 1917608 started
+[26-Jan-2025 20:18:43] WARNING: [pool xtreamcodes] child 1917607 exited on signal 9 (SIGKILL) after 0.765602 seconds from start
+[26-Jan-2025 20:18:43] NOTICE: [pool xtreamcodes] child 1917619 started
+[26-Jan-2025 20:18:51] WARNING: [pool xtreamcodes] child 1917594 exited on signal 9 (SIGKILL) after 10.141365 seconds from start
+[26-Jan-2025 20:18:51] NOTICE: [pool xtreamcodes] child 1917834 started
+[26-Jan-2025 20:19:01] WARNING: [pool xtreamcodes] child 1917833 exited on signal 9 (SIGKILL) after 9.854482 seconds from start
+[26-Jan-2025 20:19:01] NOTICE: [pool xtreamcodes] child 1918104 started
+[31-Jan-2025 15:44:57] NOTICE: [pool xtreamcodes] child 245621 exited with code 0 after 7978.210361 seconds from start
+[31-Jan-2025 15:44:57] NOTICE: [pool xtreamcodes] child 454771 started
+[31-Jan-2025 15:44:57] NOTICE: [pool xtreamcodes] child 245653 exited with code 0 after 7976.527039 seconds from start
+[31-Jan-2025 15:44:57] NOTICE: [pool xtreamcodes] child 454772 started
+[31-Jan-2025 15:44:58] NOTICE: [pool xtreamcodes] child 245652 exited with code 0 after 7977.026782 seconds from start
+[31-Jan-2025 15:44:58] NOTICE: [pool xtreamcodes] child 454783 started
+[31-Jan-2025 15:44:58] NOTICE: [pool xtreamcodes] child 245654 exited with code 0 after 7977.175649 seconds from start
+[31-Jan-2025 15:44:58] NOTICE: [pool xtreamcodes] child 454794 started
+[31-Jan-2025 17:59:11] NOTICE: [pool xtreamcodes] child 454794 exited with code 0 after 8053.002400 seconds from start
+[31-Jan-2025 17:59:11] NOTICE: [pool xtreamcodes] child 667976 started
+[31-Jan-2025 17:59:11] NOTICE: [pool xtreamcodes] child 454771 exited with code 0 after 8053.892810 seconds from start
+[31-Jan-2025 17:59:11] NOTICE: [pool xtreamcodes] child 667979 started
+[31-Jan-2025 17:59:11] NOTICE: [pool xtreamcodes] child 454772 exited with code 0 after 8053.997872 seconds from start
+[31-Jan-2025 17:59:11] NOTICE: [pool xtreamcodes] child 667987 started
+[31-Jan-2025 17:59:11] NOTICE: [pool xtreamcodes] child 454783 exited with code 0 after 8053.698169 seconds from start
+[31-Jan-2025 17:59:11] NOTICE: [pool xtreamcodes] child 667991 started
+[31-Jan-2025 20:24:54] NOTICE: [pool xtreamcodes] child 667976 exited with code 0 after 8743.189819 seconds from start
+[31-Jan-2025 20:24:54] NOTICE: [pool xtreamcodes] child 894951 started
+[31-Jan-2025 21:09:08] NOTICE: [pool xtreamcodes] child 667991 exited with code 0 after 11396.372054 seconds from start
+[31-Jan-2025 21:09:08] NOTICE: [pool xtreamcodes] child 964580 started
+[31-Jan-2025 22:13:48] NOTICE: [pool xtreamcodes] child 857601 exited with code 0 after 7997.736097 seconds from start
+[31-Jan-2025 22:13:48] NOTICE: [pool xtreamcodes] child 1064877 started
+[31-Jan-2025 22:13:56] NOTICE: [pool xtreamcodes] child 857755 exited with code 0 after 8003.022418 seconds from start
+[31-Jan-2025 22:13:56] NOTICE: [pool xtreamcodes] child 1065089 started
+[31-Jan-2025 23:23:05] NOTICE: [pool xtreamcodes] child 964580 exited with code 0 after 8037.041415 seconds from start
+[31-Jan-2025 23:23:05] NOTICE: [pool xtreamcodes] child 1174924 started
+[01-Feb-2025 00:29:22] NOTICE: [pool xtreamcodes] child 1064877 exited with code 0 after 8134.058774 seconds from start
+[01-Feb-2025 00:29:22] NOTICE: [pool xtreamcodes] child 1280738 started
+[01-Feb-2025 00:29:23] NOTICE: [pool xtreamcodes] child 857598 exited with code 0 after 16132.739001 seconds from start
+[01-Feb-2025 00:29:23] NOTICE: [pool xtreamcodes] child 1280744 started
+[01-Feb-2025 00:29:30] NOTICE: [pool xtreamcodes] child 1065089 exited with code 0 after 8134.202981 seconds from start
+[01-Feb-2025 00:29:30] NOTICE: [pool xtreamcodes] child 1280945 started
+[01-Feb-2025 00:54:05] NOTICE: [pool xtreamcodes] child 894951 exited with code 0 after 16151.266539 seconds from start
+[01-Feb-2025 00:54:05] NOTICE: [pool xtreamcodes] child 1319707 started
+[01-Feb-2025 01:39:29] NOTICE: [pool xtreamcodes] child 1174924 exited with code 0 after 8184.369752 seconds from start
+[01-Feb-2025 01:39:29] NOTICE: [pool xtreamcodes] child 1392305 started
+[01-Feb-2025 02:44:15] NOTICE: [pool xtreamcodes] child 1280738 exited with code 0 after 8093.374760 seconds from start
+[01-Feb-2025 02:44:15] NOTICE: [pool xtreamcodes] child 1495854 started
+[01-Feb-2025 02:44:24] NOTICE: [pool xtreamcodes] child 1280945 exited with code 0 after 8094.026517 seconds from start
+[01-Feb-2025 02:44:24] NOTICE: [pool xtreamcodes] child 1496076 started
+[01-Feb-2025 05:18:21] NOTICE: [pool xtreamcodes] child 1530401 exited with code 0 after 7972.153523 seconds from start
+[01-Feb-2025 05:18:21] NOTICE: [pool xtreamcodes] child 1742494 started
+[01-Feb-2025 05:18:21] NOTICE: [pool xtreamcodes] child 1530402 exited with code 0 after 7972.249621 seconds from start
+[01-Feb-2025 05:18:21] NOTICE: [pool xtreamcodes] child 1742495 started
+[01-Feb-2025 05:18:21] NOTICE: [pool xtreamcodes] child 1530393 exited with code 0 after 7972.961679 seconds from start
+[01-Feb-2025 05:18:21] NOTICE: [pool xtreamcodes] child 1742497 started
+[01-Feb-2025 05:18:21] NOTICE: [pool xtreamcodes] child 1530410 exited with code 0 after 7972.717688 seconds from start
+[01-Feb-2025 05:18:21] NOTICE: [pool xtreamcodes] child 1742508 started
+[01-Feb-2025 07:31:18] NOTICE: [pool xtreamcodes] child 1742495 exited with code 0 after 7976.704945 seconds from start
+[01-Feb-2025 07:31:18] NOTICE: [pool xtreamcodes] child 1954453 started
+[01-Feb-2025 07:31:18] NOTICE: [pool xtreamcodes] child 1742494 exited with code 0 after 7976.898270 seconds from start
+[01-Feb-2025 07:31:18] NOTICE: [pool xtreamcodes] child 1954454 started
+[01-Feb-2025 07:31:18] NOTICE: [pool xtreamcodes] child 1742497 exited with code 0 after 7977.051157 seconds from start
+[01-Feb-2025 07:31:18] NOTICE: [pool xtreamcodes] child 1954462 started
+[01-Feb-2025 08:12:44] NOTICE: [pool xtreamcodes] child 1742508 exited with code 0 after 10462.500655 seconds from start
+[01-Feb-2025 08:12:44] NOTICE: [pool xtreamcodes] child 2020797 started
+[01-Feb-2025 09:44:19] NOTICE: [pool xtreamcodes] child 1954453 exited with code 0 after 7981.246886 seconds from start
+[01-Feb-2025 09:44:19] NOTICE: [pool xtreamcodes] child 2166134 started
+[01-Feb-2025 09:44:19] NOTICE: [pool xtreamcodes] child 1954454 exited with code 0 after 7981.300319 seconds from start
+[01-Feb-2025 09:44:19] NOTICE: [pool xtreamcodes] child 2166137 started
+[01-Feb-2025 09:44:19] NOTICE: [pool xtreamcodes] child 1954462 exited with code 0 after 7981.098044 seconds from start
+[01-Feb-2025 09:44:19] NOTICE: [pool xtreamcodes] child 2166148 started
+[01-Feb-2025 11:15:53] NOTICE: [pool xtreamcodes] child 1887920 exited with code 0 after 15961.319921 seconds from start
+[01-Feb-2025 11:15:53] NOTICE: [pool xtreamcodes] child 2311873 started
+[01-Feb-2025 11:57:15] NOTICE: [pool xtreamcodes] child 2166137 exited with code 0 after 7976.046490 seconds from start
+[01-Feb-2025 11:57:15] NOTICE: [pool xtreamcodes] child 2378132 started
+[01-Feb-2025 11:57:16] NOTICE: [pool xtreamcodes] child 2166134 exited with code 0 after 7976.824563 seconds from start
+[01-Feb-2025 11:57:16] NOTICE: [pool xtreamcodes] child 2378140 started
+[01-Feb-2025 11:57:16] NOTICE: [pool xtreamcodes] child 2166148 exited with code 0 after 7976.826804 seconds from start
+[01-Feb-2025 11:57:16] NOTICE: [pool xtreamcodes] child 2378148 started
+[01-Feb-2025 12:38:43] NOTICE: [pool xtreamcodes] child 2020797 exited with code 0 after 15959.532415 seconds from start
+[01-Feb-2025 12:38:43] NOTICE: [pool xtreamcodes] child 2443579 started
+[01-Feb-2025 18:58:55] WARNING: [pool xtreamcodes] child 3052212 exited on signal 9 (SIGKILL) after 13.746538 seconds from start
+[01-Feb-2025 18:58:55] NOTICE: [pool xtreamcodes] child 3052548 started
+[01-Feb-2025 18:58:59] WARNING: [pool xtreamcodes] child 3052417 exited on signal 9 (SIGKILL) after 9.525632 seconds from start
+[01-Feb-2025 18:58:59] NOTICE: [pool xtreamcodes] child 3052658 started
+[01-Feb-2025 18:59:58] WARNING: [pool xtreamcodes] child 3053868 exited on signal 9 (SIGKILL) after 15.067660 seconds from start
+[01-Feb-2025 18:59:58] NOTICE: [pool xtreamcodes] child 3054236 started
+[01-Feb-2025 19:00:54] WARNING: [pool xtreamcodes] child 3055341 exited on signal 9 (SIGKILL) after 18.077440 seconds from start
+[01-Feb-2025 19:00:54] NOTICE: [pool xtreamcodes] child 3055776 started
+[01-Feb-2025 19:00:55] WARNING: [pool xtreamcodes] child 3055740 exited on signal 9 (SIGKILL) after 3.501168 seconds from start
+[01-Feb-2025 19:00:55] NOTICE: [pool xtreamcodes] child 3055837 started
+[12-Feb-2025 21:43:20] NOTICE: Terminating ...
+[12-Feb-2025 21:43:20] NOTICE: exiting, bye-bye!
+[12-Feb-2025 21:43:20] NOTICE: Terminating ...
+[12-Feb-2025 21:43:20] NOTICE: exiting, bye-bye!
+[12-Feb-2025 21:43:20] NOTICE: Terminating ...
+[12-Feb-2025 21:43:20] NOTICE: exiting, bye-bye!
+[12-Feb-2025 21:43:20] NOTICE: Terminating ...
+[12-Feb-2025 21:43:20] NOTICE: exiting, bye-bye!

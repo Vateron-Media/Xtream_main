@@ -532,7 +532,6 @@ class Redis_Multi_Exec_Test extends TestSuite {
         // check that the group and salary have been changed
         $this->assertEquals(self::$new_group, $this->ra->get('1_{employee:joe}_group'));
         $this->assertEqualsWeak(self::$new_salary, $this->ra->get('1_{employee:joe}_salary'));
-
     }
 
     public function testMultiExecMSet() {
@@ -669,8 +668,14 @@ class Redis_Distributor_Test extends TestSuite {
     }
 }
 
-function run_ra_tests($test_class, $filter, $host, array $full_ring,
-    array $sub_ring, $auth) {
+function run_ra_tests(
+    $test_class,
+    $filter,
+    $host,
+    array $full_ring,
+    array $sub_ring,
+    $auth
+) {
     global $new_ring, $old_ring, $server_list;
 
     $server_list = $full_ring;
@@ -679,5 +684,3 @@ function run_ra_tests($test_class, $filter, $host, array $full_ring,
 
     return TestSuite::run($test_class, $filter, $host, NULL, $auth);
 }
-
-?>

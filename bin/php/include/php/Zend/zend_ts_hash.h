@@ -21,7 +21,8 @@
 
 #include "zend.h"
 
-typedef struct _zend_ts_hashtable {
+typedef struct _zend_ts_hashtable
+{
   HashTable hash;
   uint32_t reader;
 #ifdef ZTS
@@ -40,10 +41,10 @@ ZEND_API void _zend_ts_hash_init(TsHashTable *ht, uint32_t nSize,
 ZEND_API void zend_ts_hash_destroy(TsHashTable *ht);
 ZEND_API void zend_ts_hash_clean(TsHashTable *ht);
 
-#define zend_ts_hash_init(ht, nSize, pHashFunction, pDestructor, persistent)   \
+#define zend_ts_hash_init(ht, nSize, pHashFunction, pDestructor, persistent) \
   _zend_ts_hash_init(ht, nSize, pDestructor, persistent)
-#define zend_ts_hash_init_ex(ht, nSize, pHashFunction, pDestructor,            \
-                             persistent, bApplyProtection)                     \
+#define zend_ts_hash_init_ex(ht, nSize, pHashFunction, pDestructor, \
+                             persistent, bApplyProtection)          \
   _zend_ts_hash_init(ht, nSize, pDestructor, persistent)
 
 /* additions/updates/changes */
@@ -113,7 +114,8 @@ ZEND_API zval *zend_ts_hash_str_add(TsHashTable *ht, const char *key,
                                     size_t len, zval *pData);
 
 static zend_always_inline void *
-zend_ts_hash_str_find_ptr(TsHashTable *ht, const char *str, size_t len) {
+zend_ts_hash_str_find_ptr(TsHashTable *ht, const char *str, size_t len)
+{
   zval *zv;
 
   zv = zend_ts_hash_str_find(ht, str, len);
@@ -123,7 +125,8 @@ zend_ts_hash_str_find_ptr(TsHashTable *ht, const char *str, size_t len) {
 static zend_always_inline void *zend_ts_hash_str_update_ptr(TsHashTable *ht,
                                                             const char *str,
                                                             size_t len,
-                                                            void *pData) {
+                                                            void *pData)
+{
   zval tmp, *zv;
 
   ZVAL_PTR(&tmp, pData);
@@ -134,7 +137,8 @@ static zend_always_inline void *zend_ts_hash_str_update_ptr(TsHashTable *ht,
 static zend_always_inline void *zend_ts_hash_str_add_ptr(TsHashTable *ht,
                                                          const char *str,
                                                          size_t len,
-                                                         void *pData) {
+                                                         void *pData)
+{
   zval tmp, *zv;
 
   ZVAL_PTR(&tmp, pData);
@@ -143,12 +147,14 @@ static zend_always_inline void *zend_ts_hash_str_add_ptr(TsHashTable *ht,
 }
 
 static zend_always_inline int zend_ts_hash_exists(TsHashTable *ht,
-                                                  zend_string *key) {
+                                                  zend_string *key)
+{
   return zend_ts_hash_find(ht, key) != NULL;
 }
 
 static zend_always_inline int zend_ts_hash_index_exists(TsHashTable *ht,
-                                                        zend_ulong h) {
+                                                        zend_ulong h)
+{
   return zend_ts_hash_index_find(ht, h) != NULL;
 }
 
@@ -156,7 +162,7 @@ END_EXTERN_C()
 
 #define ZEND_TS_INIT_SYMTABLE(ht) ZEND_TS_INIT_SYMTABLE_EX(ht, 2, 0)
 
-#define ZEND_TS_INIT_SYMTABLE_EX(ht, n, persistent)                            \
+#define ZEND_TS_INIT_SYMTABLE_EX(ht, n, persistent) \
   zend_ts_hash_init(ht, n, NULL, ZVAL_PTR_DTOR, persistent)
 
 #endif /* ZEND_HASH_H */

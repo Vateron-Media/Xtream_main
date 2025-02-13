@@ -41,9 +41,6 @@
 /*********************************************************/
 
 #include <stdlib.h>
-#if (!defined(__OpenBSD__)) && HAVE_MALLOC_H
-#include <malloc.h>
-#endif
 #ifndef NULL
 #define NULL (void *)0
 #endif
@@ -55,27 +52,33 @@ typedef void (*gdCacheReleaseFn_t)(void *userdata);
 
 /* element structure */
 typedef struct gdCache_element_s gdCache_element_t;
-struct gdCache_element_s {
-  gdCache_element_t *next;
-  void *userdata;
+struct gdCache_element_s
+{
+	gdCache_element_t *next;
+	void *userdata;
 };
 
 /* head structure */
 typedef struct gdCache_head_s gdCache_head_t;
-struct gdCache_head_s {
-  gdCache_element_t *mru;
-  int size;
-  char *error;
-  gdCacheTestFn_t gdCacheTest;
-  gdCacheFetchFn_t gdCacheFetch;
-  gdCacheReleaseFn_t gdCacheRelease;
+struct gdCache_head_s
+{
+	gdCache_element_t *mru;
+	int size;
+	char *error;
+	gdCacheTestFn_t gdCacheTest;
+	gdCacheFetchFn_t gdCacheFetch;
+	gdCacheReleaseFn_t gdCacheRelease;
 };
 
 /* function templates */
-gdCache_head_t *gdCacheCreate(int size, gdCacheTestFn_t gdCacheTest,
-                              gdCacheFetchFn_t gdCacheFetch,
-                              gdCacheReleaseFn_t gdCacheRelease);
+gdCache_head_t *
+gdCacheCreate(
+	int size,
+	gdCacheTestFn_t gdCacheTest,
+	gdCacheFetchFn_t gdCacheFetch,
+	gdCacheReleaseFn_t gdCacheRelease);
 
 void gdCacheDelete(gdCache_head_t *head);
 
-void *gdCacheGet(gdCache_head_t *head, void *keydata);
+void *
+gdCacheGet(gdCache_head_t *head, void *keydata);

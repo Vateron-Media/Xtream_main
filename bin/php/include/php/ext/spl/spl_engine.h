@@ -29,7 +29,8 @@ PHPAPI zend_long spl_offset_convert_to_long(zval *offset);
 
 /* {{{ spl_instantiate_arg_ex1 */
 static inline int spl_instantiate_arg_ex1(zend_class_entry *pce, zval *retval,
-                                          zval *arg1) {
+                                          zval *arg1)
+{
   zend_function *func = pce->constructor;
   spl_instantiate(pce, retval);
 
@@ -41,7 +42,8 @@ static inline int spl_instantiate_arg_ex1(zend_class_entry *pce, zval *retval,
 
 /* {{{ spl_instantiate_arg_ex2 */
 static inline int spl_instantiate_arg_ex2(zend_class_entry *pce, zval *retval,
-                                          zval *arg1, zval *arg2) {
+                                          zval *arg1, zval *arg2)
+{
   zend_function *func = pce->constructor;
   spl_instantiate(pce, retval);
 
@@ -53,7 +55,8 @@ static inline int spl_instantiate_arg_ex2(zend_class_entry *pce, zval *retval,
 
 /* {{{ spl_instantiate_arg_n */
 static inline void spl_instantiate_arg_n(zend_class_entry *pce, zval *retval,
-                                         int argc, zval *argv) {
+                                         int argc, zval *argv)
+{
   zend_function *func = pce->constructor;
   zend_fcall_info fci;
   zend_fcall_info_cache fcc;

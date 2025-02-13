@@ -819,7 +819,7 @@ class PEAR_PackageFile_v2_rw extends PEAR_PackageFile_v2 {
                     } else {
                         $t = isset($this->_packageInfo['contents']['dir']['file']['attribs'][$this->_tasksNs .
                             ':' . $task->getName()]) ? $this->_packageInfo['contents']['dir']['file']['attribs'][$this->_tasksNs .
-                                    ':' . $task->getName()] : false;
+                            ':' . $task->getName()] : false;
                         if ($t && !isset($t[0])) {
                             $this->_packageInfo['contents']['dir']['file'][$this->_tasksNs . ':' . $task->getName()] = array($t);
                         }
@@ -1066,7 +1066,7 @@ class PEAR_PackageFile_v2_rw extends PEAR_PackageFile_v2 {
                 'warning',
                 array(
                     'dep' =>
-                        $this->_packageInfo['dependencies']['required']['php']
+                    $this->_packageInfo['dependencies']['required']['php']
                 ),
                 'warning: PHP dependency already exists, overwriting'
             );
@@ -1127,7 +1127,7 @@ class PEAR_PackageFile_v2_rw extends PEAR_PackageFile_v2 {
                 'warning',
                 array(
                     'dep' =>
-                        $this->_packageInfo['dependencies']['required']['pearinstaller']
+                    $this->_packageInfo['dependencies']['required']['pearinstaller']
                 ),
                 'warning: PEAR Installer dependency already exists, overwriting'
             );
@@ -2243,12 +2243,12 @@ class PEAR_PackageFile_v2_rw extends PEAR_PackageFile_v2 {
     function generateChangeLogEntry($notes = false) {
         return array(
             'version' =>
-                array(
-                    'release' => $this->getVersion('release'),
-                    'api' => $this->getVersion('api'),
-                ),
+            array(
+                'release' => $this->getVersion('release'),
+                'api' => $this->getVersion('api'),
+            ),
             'stability' =>
-                $this->getStability(),
+            $this->getStability(),
             'date' => $this->getDate(),
             'license' => $this->getLicense(true),
             'notes' => $notes ? $notes : $this->getNotes()

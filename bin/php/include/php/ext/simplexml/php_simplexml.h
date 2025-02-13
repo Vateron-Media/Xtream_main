@@ -1,13 +1,11 @@
 /*
   +----------------------------------------------------------------------+
-  | PHP Version 7                                                        |
-  +----------------------------------------------------------------------+
   | Copyright (c) The PHP Group                                          |
   +----------------------------------------------------------------------+
   | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
   | available through the world-wide-web at the following url:           |
-  | http://www.php.net/license/3_01.txt                                  |
+  | https://www.php.net/license/3_01.txt                                 |
   | If you did not receive a copy of the PHP license and are unable to   |
   | obtain it through the world-wide-web, please send a note to          |
   | license@php.net so we can mail you a copy immediately.               |
@@ -34,39 +32,42 @@ extern zend_module_entry simplexml_module_entry;
 #include <libxml/parserInternals.h>
 #include <libxml/tree.h>
 #include <libxml/uri.h>
-#include <libxml/xinclude.h>
 #include <libxml/xmlerror.h>
-#include <libxml/xmlschemas.h>
+#include <libxml/xinclude.h>
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 #include <libxml/xpointer.h>
+#include <libxml/xmlschemas.h>
 
 PHP_MINIT_FUNCTION(simplexml);
 PHP_MSHUTDOWN_FUNCTION(simplexml);
 PHP_MINFO_FUNCTION(simplexml);
 
-typedef enum {
-  SXE_ITER_NONE = 0,
-  SXE_ITER_ELEMENT = 1,
-  SXE_ITER_CHILD = 2,
-  SXE_ITER_ATTRLIST = 3
+typedef enum
+{
+	SXE_ITER_NONE = 0,
+	SXE_ITER_ELEMENT = 1,
+	SXE_ITER_CHILD = 2,
+	SXE_ITER_ATTRLIST = 3
 } SXE_ITER;
 
-typedef struct {
-  php_libxml_node_ptr *node;
-  php_libxml_ref_obj *document;
-  HashTable *properties;
-  xmlXPathContextPtr xpath;
-  struct {
-    xmlChar *name;
-    xmlChar *nsprefix;
-    int isprefix;
-    SXE_ITER type;
-    zval data;
-  } iter;
-  zval tmp;
-  zend_function *fptr_count;
-  zend_object zo;
+typedef struct
+{
+	php_libxml_node_ptr *node;
+	php_libxml_ref_obj *document;
+	HashTable *properties;
+	xmlXPathContextPtr xpath;
+	struct
+	{
+		zend_string *name;
+		zend_string *nsprefix;
+		int isprefix;
+		SXE_ITER type;
+		zval data;
+	} iter;
+	zval tmp;
+	zend_function *fptr_count;
+	zend_object zo;
 } php_sxe_object;
 
 #ifdef PHP_WIN32
@@ -79,6 +80,9 @@ typedef struct {
 #define PHP_SXE_API ZEND_API
 #endif
 
-PHP_SXE_API zend_class_entry *sxe_get_element_class_entry();
+extern PHP_SXE_API zend_class_entry *ce_SimpleXMLIterator;
+extern PHP_SXE_API zend_class_entry *ce_SimpleXMLElement;
+
+PHP_SXE_API zend_class_entry *sxe_get_element_class_entry(void);
 
 #endif
