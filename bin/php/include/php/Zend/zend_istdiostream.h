@@ -21,7 +21,8 @@
 #define _ZEND_STDIOSTREAM
 
 #if defined(ZTS) && !defined(HAVE_CLASS_ISTDIOSTREAM)
-class istdiostream : public istream {
+class istdiostream : public istream
+{
 private:
   stdiobuf _file;
 

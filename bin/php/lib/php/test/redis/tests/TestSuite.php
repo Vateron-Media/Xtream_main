@@ -106,8 +106,12 @@ class TestSuite {
         $msg = $fmt ? vsprintf($fmt, $args) : NULL;
 
         $fn = $this->findTestFunction($bt);
-        $lines[] = sprintf("%s %s - %s", $prefix, self::make_bold($fn),
-            $msg ? $msg : '(no message)');
+        $lines[] = sprintf(
+            "%s %s - %s",
+            $prefix,
+            self::make_bold($fn),
+            $msg ? $msg : '(no message)'
+        );
 
         array_shift($bt);
 
@@ -116,9 +120,14 @@ class TestSuite {
             $line = $bt[$i]['line'];
             $fn = $bt[$i + 1]['function'] ?? $bt[$i]['function'];
 
-            $lines[] = sprintf("%s %s:%d (%s)%s",
-                str_repeat(' ', strlen($prefix)), $file, $line,
-                $fn, $msg ? " $msg" : '');
+            $lines[] = sprintf(
+                "%s %s:%d (%s)%s",
+                str_repeat(' ', strlen($prefix)),
+                $file,
+                $line,
+                $fn,
+                $msg ? " $msg" : ''
+            );
 
             if (substr($fn, 0, 4) == 'test')
                 break;
@@ -136,8 +145,11 @@ class TestSuite {
         if ($actual === $expected)
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s !== %s", $this->printArg($actual),
-            $this->printArg($expected));
+        self::$errors[] = $this->assertionTrace(
+            "%s !== %s",
+            $this->printArg($actual),
+            $this->printArg($expected)
+        );
 
         return false;
     }
@@ -147,8 +159,11 @@ class TestSuite {
         if ($actual == $expected)
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s != %s", $this->printArg($actual),
-            $this->printArg($expected));
+        self::$errors[] = $this->assertionTrace(
+            "%s != %s",
+            $this->printArg($actual),
+            $this->printArg($expected)
+        );
 
         return false;
     }
@@ -175,8 +190,11 @@ class TestSuite {
         if ($value === true)
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s !== %s", $this->printArg($value),
-            $this->printArg(true));
+        self::$errors[] = $this->assertionTrace(
+            "%s !== %s",
+            $this->printArg($value),
+            $this->printArg(true)
+        );
 
         return false;
     }
@@ -185,8 +203,11 @@ class TestSuite {
         if ($value === false)
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s !== %s", $this->printArg($value),
-            $this->printArg(false));
+        self::$errors[] = $this->assertionTrace(
+            "%s !== %s",
+            $this->printArg($value),
+            $this->printArg(false)
+        );
 
         return false;
     }
@@ -195,8 +216,11 @@ class TestSuite {
         if ($value === NULL)
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s !== %s", $this->printArg($value),
-            $this->printArg(NULL));
+        self::$errors[] = $this->assertionTrace(
+            "%s !== %s",
+            $this->printArg($value),
+            $this->printArg(NULL)
+        );
 
         return false;
     }
@@ -211,9 +235,12 @@ class TestSuite {
         if ($key !== false && ($valid = $cb($ele)))
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s %s %s", $this->printArg($ele),
+        self::$errors[] = $this->assertionTrace(
+            "%s %s %s",
+            $this->printArg($ele),
             $key === false ? 'missing from' : 'is invalid in',
-            $this->printArg($arr));
+            $this->printArg($arr)
+        );
 
         return false;
     }
@@ -259,8 +286,11 @@ class TestSuite {
             self::$errors[] = $this->assertionTrace("%s is not an object", $this->printArg($v));
             return false;
         } else if ($type !== NULL && !($v instanceof $type)) {
-            self::$errors[] = $this->assertionTrace("%s is not an instance of %s",
-                $this->printArg($v), $type);
+            self::$errors[] = $this->assertionTrace(
+                "%s is not an instance of %s",
+                $this->printArg($v),
+                $type
+            );
             return false;
         }
 
@@ -271,9 +301,11 @@ class TestSuite {
         if (gettype($expected) === gettype($actual))
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s is not the same type as %s",
+        self::$errors[] = $this->assertionTrace(
+            "%s is not the same type as %s",
             $this->printArg($actual),
-            $this->printArg($expected));
+            $this->printArg($expected)
+        );
 
         return false;
     }
@@ -302,11 +334,17 @@ class TestSuite {
 
 
         if ($exists) {
-            $msg = sprintf("%s is invalid in %s", $this->printArg($arr[$key]),
-                $this->printArg($arr));
+            $msg = sprintf(
+                "%s is invalid in %s",
+                $this->printArg($arr[$key]),
+                $this->printArg($arr)
+            );
         } else {
-            $msg = sprintf("%s is not a key in %s", $this->printArg($key),
-                $this->printArg($arr));
+            $msg = sprintf(
+                "%s is not a key in %s",
+                $this->printArg($key),
+                $this->printArg($arr)
+            );
         }
 
         self::$errors[] = $this->assertionTrace($msg);
@@ -317,14 +355,21 @@ class TestSuite {
     protected function assertArrayKeyEquals($arr, $key, $value): bool {
         if (!isset($arr[$key])) {
             self::$errors[] = $this->assertionTrace(
-                "Key '%s' not found in %s", $key, $this->printArg($arr));
+                "Key '%s' not found in %s",
+                $key,
+                $this->printArg($arr)
+            );
             return false;
         }
 
         if ($arr[$key] !== $value) {
             self::$errors[] = $this->assertionTrace(
                 "Value '%s' != '%s' for key '%s' in %s",
-                $arr[$key], $value, $key, $this->printArg($arr));
+                $arr[$key],
+                $value,
+                $key,
+                $this->printArg($arr)
+            );
             return false;
         }
 
@@ -399,9 +444,12 @@ class TestSuite {
     protected function externalCmdFailure($cmd, $output, $msg = NULL, $exit_code = NULL) {
         $bt = debug_backtrace(false);
 
-        $lines[] = sprintf("Assertion failed: %s:%d (%s)",
-            $bt[0]['file'], $bt[0]['line'],
-            self::make_bold($bt[0]['function']));
+        $lines[] = sprintf(
+            "Assertion failed: %s:%d (%s)",
+            $bt[0]['file'],
+            $bt[0]['line'],
+            self::make_bold($bt[0]['function'])
+        );
 
 
         if ($msg)
@@ -427,8 +475,12 @@ class TestSuite {
                 return true;
         }
 
-        self::$errors[] = $this->assertionTrace(sprintf("'%s' not between '%s' and '%s'",
-            $value, $min, $max));
+        self::$errors[] = $this->assertionTrace(sprintf(
+            "'%s' not between '%s' and '%s'",
+            $value,
+            $min,
+            $max
+        ));
 
         return false;
     }
@@ -453,9 +505,11 @@ class TestSuite {
         if ($expected === $actual)
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s !== %s",
+        self::$errors[] = $this->assertionTrace(
+            "%s !== %s",
             $this->printArg($actual),
-            $this->printArg($expected));
+            $this->printArg($expected)
+        );
 
         return false;
     }
@@ -464,8 +518,11 @@ class TestSuite {
         if ($expected == $actual)
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s != %s", $this->printArg($actual),
-            $this->printArg($expected));
+        self::$errors[] = $this->assertionTrace(
+            "%s != %s",
+            $this->printArg($actual),
+            $this->printArg($expected)
+        );
 
         return false;
     }
@@ -474,8 +531,11 @@ class TestSuite {
         if ($expected === $actual)
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s !== %s", $this->printArg($actual),
-            $this->printArg($expected));
+        self::$errors[] = $this->assertionTrace(
+            "%s !== %s",
+            $this->printArg($actual),
+            $this->printArg($expected)
+        );
 
         return false;
     }
@@ -484,8 +544,11 @@ class TestSuite {
         if ($wrong_value !== $test_value)
             return true;
 
-        self::$errors[] = $this->assertionTrace("%s === %s", $this->printArg($wrong_value),
-            $this->printArg($test_value));
+        self::$errors[] = $this->assertionTrace(
+            "%s === %s",
+            $this->printArg($wrong_value),
+            $this->printArg($test_value)
+        );
 
         return false;
     }
@@ -506,8 +569,11 @@ class TestSuite {
         if (preg_match($pattern, $value))
             return true;
 
-        self::$errors[] = $this->assertionTrace("'%s' doesnt match '%s'", $value,
-            $pattern);
+        self::$errors[] = $this->assertionTrace(
+            "'%s' doesnt match '%s'",
+            $value,
+            $pattern
+        );
 
         return false;
     }
@@ -515,9 +581,13 @@ class TestSuite {
     protected function markTestSkipped(string $msg = '') {
         $bt = debug_backtrace(false);
 
-        self::$warnings[] = sprintf("Skipped test: %s:%d (%s) %s\n",
-            $bt[0]["file"], $bt[0]["line"],
-            $bt[1]["function"], $msg);
+        self::$warnings[] = sprintf(
+            "Skipped test: %s:%d (%s) %s\n",
+            $bt[0]["file"],
+            $bt[0]["line"],
+            $bt[1]["function"],
+            $msg
+        );
 
         throw new TestSkippedException($msg);
     }
@@ -581,9 +651,13 @@ class TestSuite {
             defined('STDOUT') && posix_isatty(STDOUT);
     }
 
-    public static function run($class_name, ?string $limit = NULL,
-        ?string $host = NULL, ?int $port = NULL,
-        $auth = NULL) {
+    public static function run(
+        $class_name,
+        ?string $limit = NULL,
+        ?string $host = NULL,
+        ?int $port = NULL,
+        $auth = NULL
+    ) {
         if ($limit)
             $limit = strtolower($limit);
 
@@ -642,5 +716,3 @@ class TestSuite {
         return 1;
     }
 }
-
-?>

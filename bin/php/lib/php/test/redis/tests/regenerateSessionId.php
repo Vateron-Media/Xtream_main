@@ -3,8 +3,12 @@
 error_reporting(E_ERROR | E_WARNING);
 
 $opt = getopt('', [
-    'handler:', 'save-path:', 'id:', 'locking-enabled:',
-    'destroy-previous:', 'proxy:'
+    'handler:',
+    'save-path:',
+    'id:',
+    'locking-enabled:',
+    'destroy-previous:',
+    'proxy:'
 ]);
 
 $handler = $opt['handler'] ?? NULL;

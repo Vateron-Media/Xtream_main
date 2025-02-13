@@ -7,19 +7,20 @@
 #define Putchar gdPutchar
 #endif
 
-typedef struct gdIOCtx {
-  int (*getC)(struct gdIOCtx *);
-  int (*getBuf)(struct gdIOCtx *, void *, int);
+typedef struct gdIOCtx
+{
+	int (*getC)(struct gdIOCtx *);
+	int (*getBuf)(struct gdIOCtx *, void *, int);
 
-  void (*putC)(struct gdIOCtx *, int);
-  int (*putBuf)(struct gdIOCtx *, const void *, int);
+	void (*putC)(struct gdIOCtx *, int);
+	int (*putBuf)(struct gdIOCtx *, const void *, int);
 
-  int (*seek)(struct gdIOCtx *, const int);
-  long (*tell)(struct gdIOCtx *);
+	int (*seek)(struct gdIOCtx *, const int);
+	long (*tell)(struct gdIOCtx *);
 
-  void (*gd_free)(struct gdIOCtx *);
+	void (*gd_free)(struct gdIOCtx *);
 
-  void *data;
+	void *data;
 } gdIOCtx;
 
 typedef struct gdIOCtx *gdIOCtxPtr;

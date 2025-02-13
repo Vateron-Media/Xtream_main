@@ -56,14 +56,16 @@ typedef void (*gdCacheReleaseFn_t)(void *userdata);
 
 /* element structure */
 typedef struct gdCache_element_s gdCache_element_t;
-struct gdCache_element_s {
+struct gdCache_element_s
+{
   gdCache_element_t *next;
   void *userdata;
 };
 
 /* head structure */
 typedef struct gdCache_head_s gdCache_head_t;
-struct gdCache_head_s {
+struct gdCache_head_s
+{
   gdCache_element_t *mru;
   int size;
   char *error;

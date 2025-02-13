@@ -265,9 +265,15 @@ class Redis_Cluster_Test extends Redis_Test {
 
     public function testInfo() {
         $fields = [
-            "redis_version", "arch_bits", "uptime_in_seconds", "uptime_in_days",
-            "connected_clients", "connected_slaves", "used_memory",
-            "total_connections_received", "total_commands_processed",
+            "redis_version",
+            "arch_bits",
+            "uptime_in_seconds",
+            "uptime_in_days",
+            "connected_clients",
+            "connected_slaves",
+            "used_memory",
+            "total_connections_received",
+            "total_commands_processed",
             "role"
         ];
 
@@ -640,7 +646,6 @@ class Redis_Cluster_Test extends Redis_Test {
             default:
                 return "unknown($key_type)";
         }
-
     }
 
     protected function genKeyName($key_index, $key_type) {
@@ -659,8 +664,12 @@ class Redis_Cluster_Test extends Redis_Test {
                 break;
             case Redis::REDIS_SET:
                 $value = [
-                    "$key-mem1", "$key-mem2", "$key-mem3",
-                    "$key-mem4", "$key-mem5", "$key-mem6"
+                    "$key-mem1",
+                    "$key-mem2",
+                    "$key-mem3",
+                    "$key-mem4",
+                    "$key-mem5",
+                    "$key-mem6"
                 ];
                 $args = $value;
                 array_unshift($args, $key);
@@ -676,8 +685,12 @@ class Redis_Cluster_Test extends Redis_Test {
                 break;
             case Redis::REDIS_LIST:
                 $value = [
-                    "$key-ele1", "$key-ele2", "$key-ele3",
-                    "$key-ele4", "$key-ele5", "$key-ele6"
+                    "$key-ele1",
+                    "$key-ele2",
+                    "$key-ele3",
+                    "$key-ele4",
+                    "$key-ele5",
+                    "$key-ele6"
                 ];
                 $args = $value;
                 array_unshift($args, $key);
@@ -686,8 +699,10 @@ class Redis_Cluster_Test extends Redis_Test {
             case Redis::REDIS_ZSET:
                 $score = 1;
                 $value = [
-                    "$key-mem1" => 1, "$key-mem2" => 2,
-                    "$key-mem3" => 3, "$key-mem3" => 3
+                    "$key-mem1" => 1,
+                    "$key-mem2" => 2,
+                    "$key-mem3" => 3,
+                    "$key-mem3" => 3
                 ];
                 foreach ($value as $mem => $score) {
                     $this->redis->zadd($key, $score, $mem);
@@ -894,4 +909,3 @@ class Redis_Cluster_Test extends Redis_Test {
         return $this->redis->waitaof(uniqid(), 0, 0, 0);
     }
 }
-?>

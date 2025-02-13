@@ -39,7 +39,8 @@
  */
 typedef struct _mbfl_identify_filter mbfl_identify_filter;
 
-struct _mbfl_identify_filter {
+struct _mbfl_identify_filter
+{
   void (*filter_ctor)(mbfl_identify_filter *filter);
   void (*filter_dtor)(mbfl_identify_filter *filter);
   int (*filter_function)(int c, mbfl_identify_filter *filter);
@@ -49,7 +50,8 @@ struct _mbfl_identify_filter {
   const mbfl_encoding *encoding;
 };
 
-struct mbfl_identify_vtbl {
+struct mbfl_identify_vtbl
+{
   enum mbfl_no_encoding encoding;
   void (*filter_ctor)(mbfl_identify_filter *filter);
   void (*filter_dtor)(mbfl_identify_filter *filter);

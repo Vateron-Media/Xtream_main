@@ -562,8 +562,7 @@ class PEAR_REST_10 {
                                 || stristr($inf['d'], $searchsummary) !== false))
                     ) {
                         continue;
-                    }
-                    ;
+                    };
                 }
                 $releases = $this->_rest->retrieveData($base . 'r/' . strtolower($package) .
                     '/allreleases.xml', false, false, $channel);
@@ -653,7 +652,7 @@ class PEAR_REST_10 {
                         'stable' => $latest,
                         'summary' => $inf['s'],
                         'description' =>
-                            $inf['d'],
+                        $inf['d'],
                         'deps' => $deps,
                         'category' => $inf['ca']['_content'],
                         'unstable' => $unstable,
@@ -664,7 +663,7 @@ class PEAR_REST_10 {
                         'stable' => $stable,
                         'summary' => $inf['s'],
                         'description' =>
-                            $inf['d'],
+                        $inf['d'],
                         'deps' => $deps,
                         'category' => $inf['ca']['_content'],
                         'unstable' => $unstable,

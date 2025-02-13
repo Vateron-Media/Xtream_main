@@ -40,10 +40,8 @@
 #ifdef ZEND_LONG_CAN_OVFL_INT
 #define ZEND_LONG_INT_OVFL(zlong) UNEXPECTED((zlong) > (zend_long)INT_MAX)
 #define ZEND_LONG_INT_UDFL(zlong) UNEXPECTED((zlong) < (zend_long)INT_MIN)
-#define ZEND_LONG_EXCEEDS_INT(zlong)                                           \
-  UNEXPECTED(ZEND_LONG_INT_OVFL(zlong) || ZEND_LONG_INT_UDFL(zlong))
-#define ZEND_LONG_UINT_OVFL(zlong)                                             \
-  UNEXPECTED((zlong) < 0 || (zlong) > (zend_long)UINT_MAX)
+#define ZEND_LONG_EXCEEDS_INT(zlong) UNEXPECTED(ZEND_LONG_INT_OVFL(zlong) || ZEND_LONG_INT_UDFL(zlong))
+#define ZEND_LONG_UINT_OVFL(zlong) UNEXPECTED((zlong) < 0 || (zlong) > (zend_long)UINT_MAX)
 #else
 #define ZEND_LONG_INT_OVFL(zl) (0)
 #define ZEND_LONG_INT_UDFL(zl) (0)
@@ -60,13 +58,9 @@
 #endif
 
 /* Comparison zend_long vs size_t */
-#define ZEND_SIZE_T_GT_ZEND_LONG(size, zlong)                                  \
-  ((zlong) < 0 || (size) > (size_t)(zlong))
-#define ZEND_SIZE_T_GTE_ZEND_LONG(size, zlong)                                 \
-  ((zlong) < 0 || (size) >= (size_t)(zlong))
-#define ZEND_SIZE_T_LT_ZEND_LONG(size, zlong)                                  \
-  ((zlong) >= 0 && (size) < (size_t)(zlong))
-#define ZEND_SIZE_T_LTE_ZEND_LONG(size, zlong)                                 \
-  ((zlong) >= 0 && (size) <= (size_t)(zlong))
+#define ZEND_SIZE_T_GT_ZEND_LONG(size, zlong) ((zlong) < 0 || (size) > (size_t)(zlong))
+#define ZEND_SIZE_T_GTE_ZEND_LONG(size, zlong) ((zlong) < 0 || (size) >= (size_t)(zlong))
+#define ZEND_SIZE_T_LT_ZEND_LONG(size, zlong) ((zlong) >= 0 && (size) < (size_t)(zlong))
+#define ZEND_SIZE_T_LTE_ZEND_LONG(size, zlong) ((zlong) >= 0 && (size) <= (size_t)(zlong))
 
 #endif /* ZEND_RANGE_CHECK_H */

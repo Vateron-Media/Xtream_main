@@ -55,14 +55,15 @@ char *alloca();
 #if (HAVE_ALLOCA || (defined(__GNUC__) && __GNUC__ >= 2))
 #define TSRM_ALLOCA_MAX_SIZE 4096
 #define TSRM_ALLOCA_FLAG(name) int name;
-#define tsrm_do_alloca_ex(size, limit, use_heap)                               \
+#define tsrm_do_alloca_ex(size, limit, use_heap) \
   ((use_heap = ((size) > (limit))) ? malloc(size) : alloca(size))
-#define tsrm_do_alloca(size, use_heap)                                         \
+#define tsrm_do_alloca(size, use_heap) \
   tsrm_do_alloca_ex(size, TSRM_ALLOCA_MAX_SIZE, use_heap)
-#define tsrm_free_alloca(p, use_heap)                                          \
-  do {                                                                         \
-    if (use_heap)                                                              \
-      free(p);                                                                 \
+#define tsrm_free_alloca(p, use_heap) \
+  do                                  \
+  {                                   \
+    if (use_heap)                     \
+      free(p);                        \
   } while (0)
 #else
 #define TSRM_ALLOCA_FLAG(name)

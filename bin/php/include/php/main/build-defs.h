@@ -1,13 +1,11 @@
 /*
    +----------------------------------------------------------------------+
-   | PHP Version 7                                                        |
-   +----------------------------------------------------------------------+
    | Copyright (c) The PHP Group                                          |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
    | available through the world-wide-web at the following url:           |
-   | http://www.php.net/license/3_01.txt                                  |
+   | https://www.php.net/license/3_01.txt                                 |
    | If you did not receive a copy of the PHP license and are unable to   |
    | obtain it through the world-wide-web, please send a note to          |
    | license@php.net so we can mail you a copy immediately.               |
@@ -16,29 +14,15 @@
    +----------------------------------------------------------------------+
 */
 
-#define CONFIGURE_COMMAND                                                      \
-  " './configure'  '--prefix=/home/xtreamcodes/bin/php' "                      \
-  "'--with-fpm-user=xtreamcodes' '--with-fpm-group=xtreamcodes' "              \
-  "'--enable-gd' '--with-jpeg' '--with-freetype' '--enable-static' "           \
-  "'--disable-shared' '--enable-opcache' '--enable-fpm' '--without-sqlite3' "  \
-  "'--without-pdo-sqlite' '--enable-mysqlnd' '--with-mysqli' '--with-curl' "   \
-  "'--disable-cgi' '--with-zlib' '--enable-sockets' '--with-openssl' "         \
-  "'--enable-shmop' '--enable-sysvsem' '--enable-sysvshm' '--enable-sysvmsg' " \
-  "'--enable-calendar' '--disable-rpath' '--enable-inline-optimization' "      \
-  "'--enable-pcntl' '--enable-mbregex' '--enable-exif' '--enable-bcmath' "     \
-  "'--with-mhash' '--with-gettext' '--with-xmlrpc' '--with-xsl' "              \
-  "'--with-libxml' '--with-pdo-mysql' '--disable-mbregex' '--enable-mbstring'"
+#define CONFIGURE_COMMAND " './configure'  '--prefix=/home/xtreamcodes/bin/php' '--with-fpm-user=xtreamcodes' '--with-fpm-group=xtreamcodes' '--enable-gd' '--with-jpeg' '--with-freetype' '--enable-static' '--disable-shared' '--enable-opcache' '--enable-fpm' '--without-sqlite3' '--without-pdo-sqlite' '--enable-mysqlnd' '--with-mysqli' '--with-curl' '--disable-cgi' '--with-zlib' '--enable-sockets' '--with-openssl' '--enable-shmop' '--enable-sysvsem' '--enable-sysvshm' '--enable-sysvmsg' '--enable-calendar' '--disable-rpath' '--enable-inline-optimization' '--enable-pcntl' '--enable-mbregex' '--enable-exif' '--enable-bcmath' '--with-mhash' '--with-gettext' '--with-xmlrpc' '--with-xsl' '--with-libxml' '--with-pdo-mysql' '--disable-mbregex' '--enable-mbstring'"
 #define PHP_ODBC_CFLAGS ""
 #define PHP_ODBC_LFLAGS ""
 #define PHP_ODBC_LIBS ""
 #define PHP_ODBC_TYPE ""
-#define PHP_OCI8_DIR ""
-#define PHP_OCI8_ORACLE_VERSION ""
 #define PHP_PROG_SENDMAIL "/usr/sbin/sendmail"
 #define PEAR_INSTALLDIR ""
 #define PHP_INCLUDE_PATH ".:"
-#define PHP_EXTENSION_DIR                                                      \
-  "/home/xtreamcodes/bin/php/lib/php/extensions/no-debug-non-zts-20190902"
+#define PHP_EXTENSION_DIR "/home/xtreamcodes/bin/php/lib/php/extensions/no-debug-non-zts-20240924"
 #define PHP_PREFIX "/home/xtreamcodes/bin/php"
 #define PHP_BINDIR "/home/xtreamcodes/bin/php/bin"
 #define PHP_SBINDIR "/home/xtreamcodes/bin/php/sbin"

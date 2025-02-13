@@ -221,7 +221,7 @@ class PEAR_Task_Replace extends PEAR_Task_Common {
         $this->logger->log(
             3,
             "doing " . sizeof($subst_from) .
-            " substitution(s) for $dest"
+                " substitution(s) for $dest"
         );
         if (sizeof($subst_from)) {
             $contents = str_replace($subst_from, $subst_to, $contents);

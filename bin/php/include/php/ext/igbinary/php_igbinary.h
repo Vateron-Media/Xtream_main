@@ -10,9 +10,8 @@
 /**
  * The below line is redundant
  * (and just mentioning phpext_ in a comment is sufficient).
- * This block is only here to make php-src/build/print_include.awk include this
- * file, when igbinary is placed in php-src/ext/igbinary/ (instead of compiled
- * separately with `phpize; ...`)
+ * This block is only here to make php-src/build/print_include.awk include this file,
+ * when igbinary is placed in php-src/ext/igbinary/ (instead of compiled separately with `phpize; ...`)
  */
 #ifndef phpext_igbinary_ptr
 extern zend_module_entry igbinary_module_entry;

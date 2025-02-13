@@ -21,7 +21,8 @@
 
 #include "ext/standard/basic_functions.h"
 
-typedef struct {
+typedef struct
+{
   int32_t s1;
   int32_t s2;
   int seeded;

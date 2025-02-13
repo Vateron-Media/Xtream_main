@@ -20,100 +20,103 @@
 #ifndef ZEND_PTR_STACK_H
 #define ZEND_PTR_STACK_H
 
-typedef struct _zend_ptr_stack {
-  int top, max;
-  void **elements;
-  void **top_element;
-  zend_bool persistent;
+#include "zend_alloc.h"
+
+typedef struct _zend_ptr_stack
+{
+	int top, max;
+	void **elements;
+	void **top_element;
+	bool persistent;
 } zend_ptr_stack;
 
 #define PTR_STACK_BLOCK_SIZE 64
 
 BEGIN_EXTERN_C()
 ZEND_API void zend_ptr_stack_init(zend_ptr_stack *stack);
-ZEND_API void zend_ptr_stack_init_ex(zend_ptr_stack *stack,
-                                     zend_bool persistent);
+ZEND_API void zend_ptr_stack_init_ex(zend_ptr_stack *stack, bool persistent);
 ZEND_API void zend_ptr_stack_n_push(zend_ptr_stack *stack, int count, ...);
 ZEND_API void zend_ptr_stack_n_pop(zend_ptr_stack *stack, int count, ...);
 ZEND_API void zend_ptr_stack_destroy(zend_ptr_stack *stack);
 ZEND_API void zend_ptr_stack_apply(zend_ptr_stack *stack, void (*func)(void *));
-ZEND_API void zend_ptr_stack_reverse_apply(zend_ptr_stack *stack,
-                                           void (*func)(void *));
-ZEND_API void zend_ptr_stack_clean(zend_ptr_stack *stack, void (*func)(void *),
-                                   zend_bool free_elements);
+ZEND_API void zend_ptr_stack_reverse_apply(zend_ptr_stack *stack, void (*func)(void *));
+ZEND_API void zend_ptr_stack_clean(zend_ptr_stack *stack, void (*func)(void *), bool free_elements);
 ZEND_API int zend_ptr_stack_num_elements(zend_ptr_stack *stack);
 END_EXTERN_C()
 
-#define ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, count)                          \
-  if (stack->top + count > stack->max) {                                       \
-    /* we need to allocate more memory */                                      \
-    do {                                                                       \
-      stack->max += PTR_STACK_BLOCK_SIZE;                                      \
-    } while (stack->top + count > stack->max);                                 \
-    stack->elements = (void **)perealloc(                                      \
-        stack->elements, (sizeof(void *) * (stack->max)), stack->persistent);  \
-    stack->top_element = stack->elements + stack->top;                         \
-  }
+#define ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, count)                                                                   \
+	if (stack->top + count > stack->max)                                                                                \
+	{                                                                                                                   \
+		/* we need to allocate more memory */                                                                           \
+		do                                                                                                              \
+		{                                                                                                               \
+			stack->max += PTR_STACK_BLOCK_SIZE;                                                                         \
+		} while (stack->top + count > stack->max);                                                                      \
+		stack->elements = (void **)safe_perealloc(stack->elements, sizeof(void *), (stack->max), 0, stack->persistent); \
+		stack->top_element = stack->elements + stack->top;                                                              \
+	}
 
-/*	Not doing this with a macro because of the loop unrolling in the element
-   assignment. Just using a macro for 3 in the body for readability sake. */
-static zend_always_inline void
-zend_ptr_stack_3_push(zend_ptr_stack *stack, void *a, void *b, void *c) {
+/*	Not doing this with a macro because of the loop unrolling in the element assignment.
+	Just using a macro for 3 in the body for readability sake. */
+static zend_always_inline void zend_ptr_stack_3_push(zend_ptr_stack *stack, void *a, void *b, void *c)
+{
 #define ZEND_PTR_STACK_NUM_ARGS 3
 
-  ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, ZEND_PTR_STACK_NUM_ARGS)
+	ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, ZEND_PTR_STACK_NUM_ARGS)
 
-  stack->top += ZEND_PTR_STACK_NUM_ARGS;
-  *(stack->top_element++) = a;
-  *(stack->top_element++) = b;
-  *(stack->top_element++) = c;
+	stack->top += ZEND_PTR_STACK_NUM_ARGS;
+	*(stack->top_element++) = a;
+	*(stack->top_element++) = b;
+	*(stack->top_element++) = c;
 
 #undef ZEND_PTR_STACK_NUM_ARGS
 }
 
-static zend_always_inline void zend_ptr_stack_2_push(zend_ptr_stack *stack,
-                                                     void *a, void *b) {
+static zend_always_inline void zend_ptr_stack_2_push(zend_ptr_stack *stack, void *a, void *b)
+{
 #define ZEND_PTR_STACK_NUM_ARGS 2
 
-  ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, ZEND_PTR_STACK_NUM_ARGS)
+	ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, ZEND_PTR_STACK_NUM_ARGS)
 
-  stack->top += ZEND_PTR_STACK_NUM_ARGS;
-  *(stack->top_element++) = a;
-  *(stack->top_element++) = b;
+	stack->top += ZEND_PTR_STACK_NUM_ARGS;
+	*(stack->top_element++) = a;
+	*(stack->top_element++) = b;
 
 #undef ZEND_PTR_STACK_NUM_ARGS
 }
 
-static zend_always_inline void
-zend_ptr_stack_3_pop(zend_ptr_stack *stack, void **a, void **b, void **c) {
-  *a = *(--stack->top_element);
-  *b = *(--stack->top_element);
-  *c = *(--stack->top_element);
-  stack->top -= 3;
+static zend_always_inline void zend_ptr_stack_3_pop(zend_ptr_stack *stack, void **a, void **b, void **c)
+{
+	*a = *(--stack->top_element);
+	*b = *(--stack->top_element);
+	*c = *(--stack->top_element);
+	stack->top -= 3;
 }
 
-static zend_always_inline void zend_ptr_stack_2_pop(zend_ptr_stack *stack,
-                                                    void **a, void **b) {
-  *a = *(--stack->top_element);
-  *b = *(--stack->top_element);
-  stack->top -= 2;
+static zend_always_inline void zend_ptr_stack_2_pop(zend_ptr_stack *stack, void **a, void **b)
+{
+	*a = *(--stack->top_element);
+	*b = *(--stack->top_element);
+	stack->top -= 2;
 }
 
-static zend_always_inline void zend_ptr_stack_push(zend_ptr_stack *stack,
-                                                   void *ptr) {
-  ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, 1)
+static zend_always_inline void zend_ptr_stack_push(zend_ptr_stack *stack, void *ptr)
+{
+	ZEND_PTR_STACK_RESIZE_IF_NEEDED(stack, 1)
 
-  stack->top++;
-  *(stack->top_element++) = ptr;
+	stack->top++;
+	*(stack->top_element++) = ptr;
 }
 
-static zend_always_inline void *zend_ptr_stack_pop(zend_ptr_stack *stack) {
-  stack->top--;
-  return *(--stack->top_element);
+static zend_always_inline void *zend_ptr_stack_pop(zend_ptr_stack *stack)
+{
+	stack->top--;
+	return *(--stack->top_element);
 }
 
-static zend_always_inline void *zend_ptr_stack_top(zend_ptr_stack *stack) {
-  return stack->elements[stack->top - 1];
+static zend_always_inline void *zend_ptr_stack_top(zend_ptr_stack *stack)
+{
+	return stack->elements[stack->top - 1];
 }
 
 #endif /* ZEND_PTR_STACK_H */

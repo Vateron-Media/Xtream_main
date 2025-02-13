@@ -110,13 +110,13 @@ class OS_Guess {
 
     function parseSignature($uname = null) {
         static $sysmap = array(
-        'HP-UX' => 'hpux',
-        'IRIX64' => 'irix',
+            'HP-UX' => 'hpux',
+            'IRIX64' => 'irix',
         );
         static $cpumap = array(
-        'i586' => 'i386',
-        'i686' => 'i386',
-        'ppc' => 'powerpc',
+            'i586' => 'i386',
+            'i686' => 'i386',
+            'ppc' => 'powerpc',
         );
         if ($uname === null) {
             $uname = php_uname();

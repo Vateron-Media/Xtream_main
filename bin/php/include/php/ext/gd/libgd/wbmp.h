@@ -24,11 +24,12 @@
 **
 */
 
-typedef struct Wbmp_ {
-  int type;    /* type of the wbmp */
-  int width;   /* width of the image */
-  int height;  /* height of the image */
-  int *bitmap; /* pointer to data: 0 = WHITE , 1 = BLACK */
+typedef struct Wbmp_
+{
+    int type;    /* type of the wbmp */
+    int width;   /* width of the image */
+    int height;  /* height of the image */
+    int *bitmap; /* pointer to data: 0 = WHITE , 1 = BLACK */
 } Wbmp;
 
 #define WBMP_WHITE 1
