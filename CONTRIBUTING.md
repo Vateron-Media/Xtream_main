@@ -41,19 +41,23 @@ Unfortunately you will have to install the panel on the server completely. It do
 
 ## 🔥 Submitting a Pull Request
 
-1. Fork the repository and create a new branch:
+1. Fork the repository
+   ```sh
+   git clone https://github.com/Vateron-Media/Xtream_main.git
+   ```
+2. Сreate a new branch:
    ```sh
    git checkout -b feature/your-feature
    ```
-2. Make your changes and commit them:
+3. Make your changes and commit them:
    ```sh
    git commit -m "Add feature: description"
    ```
-3. Push your branch:
+4. Push your branch:
    ```sh
    git push origin feature/your-feature
    ```
-4. Open a pull request on GitHub.
+5. Open a pull request on GitHub.
 
 ## Code Reviews:
 - All PRs must be reviewed by at least 2 maintainers. Address review comments before merging.
