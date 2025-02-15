@@ -50,6 +50,7 @@ function loadCron() {
         ipTV_lib::setCache('customisp', ipTV_lib::getIspAddon(true));
         ipTV_lib::setCache('blocked_isp', ipTV_lib::getBlockedISP(true));
         ipTV_lib::setCache('blocked_ips', ipTV_lib::getBlockedIPs(true));
+        ipTV_lib::setCache('allowed_ips', ipTV_lib::getAllowedIPs(true));
         ipTV_lib::setCache('categories', ipTV_lib::getCategories(null, true));
 
         if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
