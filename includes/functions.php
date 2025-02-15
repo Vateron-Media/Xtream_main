@@ -41,15 +41,286 @@ function getStats() {
 
     $rJSON['network_info'] = getNetwork((ipTV_lib::$Servers[SERVER_ID]['network_interface'] == 'auto' ? null : ipTV_lib::$Servers[SERVER_ID]['network_interface']));
     foreach ($rJSON['network_info'] as $rInterface => $rData) {
+        if (file_exists('/sys/class/net/' . $rInterface . '/speed')) {
+            $NetSpeed = intval(file_get_contents('/sys/class/net/' . $rInterface . '/speed'));
+            if (0 < $NetSpeed && $rJSON['network_speed'] == 0) {
+                $rJSON['network_speed'] = $NetSpeed;
+            }
+        }
         $rJSON['bytes_sent_total'] = (intval(trim(file_get_contents('/sys/class/net/' . $rInterface . '/statistics/tx_bytes'))) ?: 0);
         $rJSON['bytes_received_total'] = (intval(trim(file_get_contents('/sys/class/net/' . $rInterface . '/statistics/tx_bytes'))) ?: 0);
         $rJSON['bytes_sent'] += $rData['bytes_sent'];
         $rJSON['bytes_received'] += $rData['bytes_received'];
     }
-
+    $rJSON['audio_devices'] = array();
+    $rJSON['video_devices'] = $rJSON['audio_devices'];
+    $rJSON['gpu_info'] = $rJSON['video_devices'];
+    $rJSON['iostat_info'] = $rJSON['gpu_info'];
+    if (shell_exec('which iostat')) {
+        $rJSON['iostat_info'] = getIO();
+    }
+    if (shell_exec('which nvidia-smi')) {
+        $rJSON['gpu_info'] = getGPUInfo();
+    }
+    if (shell_exec('which v4l2-ctl')) {
+        $rJSON['video_devices'] = getVideoDevices();
+    }
+    if (shell_exec('which arecord')) {
+        $rJSON['audio_devices'] = getAudioDevices();
+    }
     list($rJSON['cpu_load_average']) = sys_getloadavg();
     return $rJSON;
 }
+/**
+ * Calculates the total CPU usage across all processes.
+ *
+ * This function retrieves the CPU usage of all running processes and sums them up.
+ * It then normalizes the total CPU usage based on the number of CPU cores.
+ *
+ * @return float The total CPU usage percentage across all CPU cores.
+ */
+function getTotalCPU() {
+    $rTotalLoad = 0; // Initialize variable to store the total CPU load.
+
+    // Execute `ps -Ao pid,pcpu` to retrieve the list of all processes and their CPU usage.
+    exec('ps -Ao pid,pcpu', $processes);
+
+    // Iterate through each process.
+    foreach ($processes as $process) {
+        // Remove extra spaces and split the string into columns.
+        $cols = explode(' ', preg_replace('!\\s+!', ' ', trim($process)));
+
+        // Sum the CPU usage, converting the value to a float.
+        $rTotalLoad += floatval($cols[1]);
+    }
+
+    // Get the number of CPU cores using `grep -P '^processor' /proc/cpuinfo | wc -l`.
+    $cpuCores = intval(shell_exec("grep -P '^processor' /proc/cpuinfo | wc -l"));
+
+    // Normalize the CPU load by dividing it by the number of CPU cores.
+    return ($cpuCores > 0) ? $rTotalLoad / $cpuCores : 0;
+}
+
+/**
+ * Calculates the total size of tmpfs (temporary filesystem) in use.
+ *
+ * This function retrieves the disk usage statistics for tmpfs filesystems
+ * and sums up the used space in kilobytes.
+ *
+ * @return int Total tmpfs usage in kilobytes.
+ */
+function getTotalTmpfs() {
+    $rTotal = 0; // Initialize variable to store the total tmpfs usage.
+
+    // Execute `df | grep tmpfs` to list tmpfs filesystems and their usage.
+    exec('df | grep tmpfs', $rOutput);
+
+    foreach ($rOutput as $rLine) {
+        // Normalize spacing and split the output into an array.
+        $rSplit = explode(' ', preg_replace('!\s+!', ' ', trim($rLine)));
+
+        // Ensure we are processing a valid tmpfs entry.
+        if ($rSplit[0] === 'tmpfs') {
+            $rTotal += intval($rSplit[2]); // Add used space (in KB).
+        }
+    }
+
+    return $rTotal; // Return total tmpfs usage.
+}
+
+/**
+ * Retrieves a list of active network interfaces.
+ *
+ * This function lists all available network interfaces except the loopback (`lo`)
+ * and bonded interfaces (`bond*`).
+ *
+ * @return array List of network interface names.
+ */
+function getNetworkInterfaces() {
+    $rReturn = array(); // Initialize an array to store network interfaces.
+
+    // Execute `ls /sys/class/net/` to list network interfaces.
+    exec('ls /sys/class/net/', $rOutput, $rReturnVar);
+
+    foreach ($rOutput as $rInterface) {
+        // Trim unnecessary characters from the interface name.
+        $rInterface = trim(rtrim($rInterface, ':'));
+
+        // Exclude the loopback interface (`lo`) and bonded interfaces (`bond*`).
+        if ($rInterface !== 'lo' && substr($rInterface, 0, 4) != 'bond') {
+            $rReturn[] = $rInterface;
+        }
+    }
+
+    return $rReturn; // Return the list of network interfaces.
+}
+
+/**
+ * Retrieves network statistics from a cached log file.
+ *
+ * This function reads the network statistics from a cached JSON file and
+ * returns relevant data for all network interfaces or a specific interface.
+ *
+ * @param string|null $Interface The name of the network interface to filter (optional).
+ * @return array Network statistics for the requested interface(s).
+ */
+function getNetwork($Interface = null) {
+    $Return = array(); // Initialize an array to store network data.
+
+    // Check if the network log file exists.
+    if (file_exists(LOGS_TMP_PATH . 'network')) {
+        // Read and decode network statistics from the JSON file.
+        $Network = json_decode(file_get_contents(LOGS_TMP_PATH . 'network'), true);
+
+        foreach ($Network as $Key => $Line) {
+            // Filter results based on the provided interface name.
+            // Exclude loopback (lo) and bonded (bond*) interfaces unless explicitly requested.
+            if (!($Interface && $Key != $Interface) && !($Key == 'lo' || !$Interface && substr($Key, 0, 4) == 'bond')) {
+                $Return[$Key] = $Line;
+            }
+        }
+    }
+
+    return $Return; // Return network statistics.
+}
+
+/**
+ * Retrieves system I/O statistics using the `iostat` command.
+ *
+ * This function executes `iostat` in JSON format to obtain disk and CPU I/O usage
+ * statistics and extracts relevant information.
+ *
+ * @return array Parsed I/O statistics, or an empty array if retrieval fails.
+ */
+function getIO() {
+    // Execute `iostat -o JSON -m` to get I/O statistics in JSON format.
+    exec('iostat -o JSON -m', $rOutput, $rReturnVar);
+
+    // Combine output lines into a single JSON string.
+    $rOutput = implode('', $rOutput);
+    $rJSON = json_decode($rOutput, true);
+
+    // Validate and return extracted statistics, or an empty array if unavailable.
+    if (isset($rJSON['sysstat'])) {
+        return $rJSON['sysstat']['hosts'][0]['statistics'][0];
+    }
+
+    return array();
+}
+
+/**
+ * Retrieves information about the system's NVIDIA GPUs using `nvidia-smi`.
+ *
+ * @return array An array containing GPU details such as driver version, CUDA version, and utilization.
+ */
+function getGPUInfo() {
+    exec('nvidia-smi -x -q', $rOutput, $rReturnVar);
+    $rOutput = implode('', $rOutput);
+
+    // Check if the output contains valid XML data
+    if (stripos($rOutput, '<?xml') === false) {
+        return array();
+    }
+
+    // Convert XML output to JSON and then decode it into an associative array
+    $rJSON = json_decode(json_encode(simplexml_load_string($rOutput)), true);
+
+    if (!isset($rJSON['driver_version'])) {
+        return array();
+    }
+
+    // Initialize the result array with general GPU information
+    $rGPU = array(
+        'attached_gpus'  => $rJSON['attached_gpus'],
+        'driver_version' => $rJSON['driver_version'],
+        'cuda_version'   => $rJSON['cuda_version'],
+        'gpus'           => array(),
+    );
+
+    // If there's only one GPU, convert it into an array
+    if (isset($rJSON['gpu']['board_id'])) {
+        $rJSON['gpu'] = array($rJSON['gpu']);
+    }
+
+    // Iterate through each GPU and extract relevant information
+    foreach ($rJSON['gpu'] as $rInstance) {
+        $rArray = array(
+            'name'           => $rInstance['product_name'] ?? 'Unknown',
+            'power_readings' => $rInstance['power_readings'] ?? array(),
+            'utilisation'    => $rInstance['utilization'] ?? array(),
+            'memory_usage'   => $rInstance['fb_memory_usage'] ?? array(),
+            'fan_speed'      => $rInstance['fan_speed'] ?? 'N/A',
+            'temperature'    => $rInstance['temperature'] ?? array(),
+            'clocks'         => $rInstance['clocks'] ?? array(),
+            'uuid'           => $rInstance['uuid'] ?? '',
+            'id'             => isset($rInstance['pci']['pci_device']) ? intval($rInstance['pci']['pci_device']) : 0,
+            'processes'      => array(),
+        );
+
+        // Extract running processes on the GPU
+        if (!empty($rInstance['processes']['process_info'])) {
+            $processes = is_array($rInstance['processes']['process_info']) ? $rInstance['processes']['process_info'] : array($rInstance['processes']['process_info']);
+            foreach ($processes as $rProcess) {
+                $rArray['processes'][] = array(
+                    'pid'    => isset($rProcess['pid']) ? intval($rProcess['pid']) : 0,
+                    'memory' => $rProcess['used_memory'] ?? 'N/A',
+                );
+            }
+        }
+
+        $rGPU['gpus'][] = $rArray;
+    }
+
+    return $rGPU;
+}
+
+/**
+ * Retrieves a list of available video devices using `v4l2-ctl`.
+ *
+ * @return array An array containing video device names and corresponding device paths.
+ */
+function getVideoDevices() {
+    $rReturn = array();
+    $rID = 0;
+
+    try {
+        // Get the list of video devices
+        $rDevices = array_values(array_filter(explode("\n", shell_exec('v4l2-ctl --list-devices'))));
+
+        if (!is_array($rDevices)) {
+            return $rReturn;
+        }
+
+        // Process the device list
+        foreach ($rDevices as $rKey => $rValue) {
+            if ($rKey % 2 == 0 && isset($rDevices[$rKey + 1])) {
+                $rReturn[$rID]['name'] = trim($rValue);
+                list(, $rReturn[$rID]['video_device']) = explode('/dev/', trim($rDevices[$rKey + 1]));
+                $rID++;
+            }
+        }
+    } catch (Exception $e) {
+        return array();
+    }
+
+    return $rReturn;
+}
+
+/**
+ * Retrieves a list of available audio devices using `arecord`.
+ *
+ * @return array An array of detected audio devices.
+ */
+function getAudioDevices() {
+    try {
+        // Use `arecord -L` to list all available audio devices
+        return array_filter(explode("\n", shell_exec('arecord -L | grep "hw:CARD="')));
+    } catch (Exception $e) {
+        return array();
+    }
+}
+
+
 function isMobileDevice() {
     $aMobileUA = array("/iphone/i" => "iPhone", "/ipod/i" => "iPod", "/ipad/i" => "iPad", "/android/i" => "Android", "/blackberry/i" => "BlackBerry", "/webos/i" => "Mobile");
     foreach ($aMobileUA as $sMobileKey => $sMobileOS) {
@@ -313,26 +584,6 @@ function GetEPGStream($stream_id, $from_now = false) {
         }
     }
     return array();
-}
-function getTotalCPU() {
-    $rTotalLoad = 0;
-    exec('ps -Ao pid,pcpu', $processes);
-    foreach ($processes as $process) {
-        $cols = explode(' ', preg_replace('!\\s+!', ' ', trim($process)));
-        $rTotalLoad += floatval($cols[1]);
-    }
-    return $rTotalLoad / intval(shell_exec("grep -P '^processor' /proc/cpuinfo|wc -l"));
-}
-function getTotalTmpfs() {
-    $rTotal = 0;
-    exec('df | grep tmpfs', $rOutput);
-    foreach ($rOutput as $rLine) {
-        $rSplit = explode(' ', preg_replace('!\\s+!', ' ', $rLine));
-        if ($rSplit[0] = 'tmpfs') {
-            $rTotal += intval($rSplit[2]);
-        }
-    }
-    return $rTotal;
 }
 function GetCategories($type = null) {
     global $ipTV_db;
@@ -645,7 +896,6 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                                                     } else {
                                                         $rURL = $rDomainName . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'] . '.' . $rOutputExt;
                                                     }
-
                                                 }
                                             } else {
                                                 $rAvailableServers = array_values(array_keys($rRTMPRows[$rChannel['id']]));
@@ -766,29 +1016,6 @@ function getUptime() {
     }
     $tmp = explode(' ', file_get_contents('/proc/uptime'));
     return secondsToTime(intval($tmp[0]));
-}
-function getNetworkInterfaces() {
-    $rReturn = array();
-    exec('ls /sys/class/net/', $rOutput, $rReturnVar);
-    foreach ($rOutput as $rInterface) {
-        $rInterface = trim(rtrim($rInterface, ':'));
-        if ($rInterface != 'lo' && substr($rInterface, 0, 4) != 'bond') {
-            $rReturn[] = $rInterface;
-        }
-    }
-    return $rReturn;
-}
-function getNetwork($Interface = null) {
-    $Return = array();
-    if (file_exists(LOGS_TMP_PATH . 'network')) {
-        $Network = json_decode(file_get_contents(LOGS_TMP_PATH . 'network'), true);
-        foreach ($Network as $Key => $Line) {
-            if (!($Interface && $Key != $Interface) && !($Key == 'lo' || !$Interface && substr($Key, 0, 4) == 'bond')) {
-                $Return[$Key] = $Line;
-            }
-        }
-    }
-    return $Return;
 }
 function secondsToTime($inputSeconds) {
     $secondsInAMinute = 60;
