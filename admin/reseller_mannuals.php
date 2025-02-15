@@ -26,7 +26,7 @@ include "header.php";
                     <div class="card-box card-body">
                         <div class="row">
                             <div class="col-1">
-                                <?php if ($rSettings["dark_mode"]) { ?>
+                                <?php if ($UserSettings["dark_mode"]) { ?>
                                     <div class="avatar-sm bg-secondary rounded">
                                         <i class="fas fa-info-circle avatar-title font-24 text-white"></i>
                                     </div>

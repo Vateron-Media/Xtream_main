@@ -5,7 +5,7 @@ if (!$rPermissions["is_admin"]) {
     header("Location: ./reseller.php");
 }
 
-if ($rSettings["dark_mode"]) {
+if ($UserSettings["dark_mode"]) {
     $rColours = array(1 => array("secondary", "#7e8e9d"), 2 => array("secondary", "#7e8e9d"), 3 => array("secondary", "#7e8e9d"), 4 => array("secondary", "#7e8e9d"));
 } else {
     $rColours = array(1 => array("purple", "#675db7"), 2 => array("success", "#23b397"), 3 => array("pink", "#e36498"), 4 => array("info", "#56C3D6"));

@@ -5,7 +5,7 @@ $rTableSearch = strtolower(basename($_SERVER["SCRIPT_FILENAME"], '.php')) === "t
 
 if (isset($_SESSION['hash'])) {
     $rUserInfo = getRegisteredUserHash($_SESSION['hash']);
-    $rSettings["dark_mode"] = $rUserInfo["dark_mode"];
+    $UserSettings["dark_mode"] = $rUserInfo["dark_mode"];
     $rPermissions = getPermissions($rUserInfo['member_group_id']);
     if ($rPermissions["is_admin"]) {
         $rPermissions["is_reseller"] = 0;
