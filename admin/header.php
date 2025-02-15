@@ -28,7 +28,7 @@
     <link href="assets/libs/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css" />
     <link href="assets/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
-    <?php if (!$rSettings["dark_mode"]) { ?>
+    <?php if (!$UserSettings["dark_mode"]) { ?>
         <link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/css/app.css" rel="stylesheet" type="text/css" />
     <?php } else { ?>

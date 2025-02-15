@@ -27,7 +27,7 @@ include "header.php";
                 <div class="card-box active-connections bg-info">
                     <div class="row">
                         <div class="col-6">
-                            <?php if ($rSettings["dark_mode"]) { ?>
+                            <?php if ($UserSettings["dark_mode"]) { ?>
                                 <div class="avatar-md rounded">
                                     <i class="fe-zap avatar-title font-22 text-white"></i>
                                 </div>
@@ -51,7 +51,7 @@ include "header.php";
                 <div class="card-box online-users bg-success">
                     <div class="row">
                         <div class="col-6">
-                            <?php if ($rSettings["dark_mode"]) { ?>
+                            <?php if ($UserSettings["dark_mode"]) { ?>
                                 <div class="avatar-md rounded">
                                     <i class="fe-zap avatar-title font-22 text-white"></i>
                                 </div>
@@ -75,7 +75,7 @@ include "header.php";
                 <div class="card-box active-accounts bg-purple">
                     <div class="row">
                         <div class="col-6">
-                            <?php if ($rSettings["dark_mode"]) { ?>
+                            <?php if ($UserSettings["dark_mode"]) { ?>
                                 <div class="avatar-md rounded">
                                     <i class="fe-zap avatar-title font-22 text-white"></i>
                                 </div>
@@ -99,7 +99,7 @@ include "header.php";
                 <div class="card-box credits bg-warning">
                     <div class="row">
                         <div class="col-6">
-                            <?php if ($rSettings["dark_mode"]) { ?>
+                            <?php if ($UserSettings["dark_mode"]) { ?>
                                 <div class="avatar-md rounded">
                                     <i class="fe-zap avatar-title font-22 text-white"></i>
                                 </div>
@@ -130,7 +130,7 @@ include "header.php";
                     <div id="cardCollpase1" class="collapse pt-3 show bg-white card-box" style="margin-bottom:-8px;">
                         <div class="row">
                             <div class="col-1">
-                                <?php if ($rSettings["dark_mode"]) { ?>
+                                <?php if ($UserSettings["dark_mode"]) { ?>
                                     <div class="avatar-sm bg-secondary rounded">
                                         <i class="fas fa-info-circle avatar-title font-24 text-white"></i>
                                     </div>

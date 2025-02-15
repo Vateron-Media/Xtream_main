@@ -41,7 +41,7 @@ if (isset(ipTV_lib::$request["submit_profile"])) {
         }
         $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $rPassword . "', `email` = '" . $rEmail . "', `reseller_dns` = '" . $rDNS . "', `default_lang` = '" . $bob . "', `dark_mode` = " . intval($rDarkMode) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
         $rUserInfo = getRegisteredUser($rUserInfo["id"]);
-        $rSettings["dark_mode"] = $rUserInfo["dark_mode"];
+        $UserSettings["dark_mode"] = $rUserInfo["dark_mode"];
         $_STATUS = 0;
     }
 }
