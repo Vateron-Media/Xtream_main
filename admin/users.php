@@ -101,7 +101,7 @@ include "header.php";
                                     <select id="user_show_entries" class="form-control" data-toggle="select2">
                                         <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                             <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                echo $_[" selected"];
+                                                echo $_["selected"];
                                             } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                             <?php } ?>
                                     </select>

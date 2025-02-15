@@ -732,7 +732,7 @@ include "header.php";
                                                         <div class="col-md-2">
                                                             <input type="text" class="form-control text-center"
                                                                 id="cache_playlists" name="cache_playlists"
-                                                                value="<?= intval($rSettings[" cache_playlists "]) ?>">
+                                                                value="<?= intval($rSettings["cache_playlists"]) ?>">
                                                         </div>
                                                         <label class="col-md-4 col-form-label"
                                                             for="playlist_from_mysql">Grab Playlists from MySQL <i
@@ -792,7 +792,7 @@ include "header.php";
                                                         <div class="col-md-8">
                                                             <input type="text" class="form-control" id="allowed_ips_admin"
                                                                 name="allowed_ips_admin"
-                                                                value="<?= htmlspecialchars($rSettings[" allowed_ips_admin "]) ?>">
+                                                                value="<?= htmlspecialchars($rSettings["allowed_ips_admin"]) ?>">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row mb-4">
@@ -1767,6 +1767,25 @@ include "header.php";
                                                         <div class="col-md-2">
                                                             <input name="show_expired_video" id="show_expired_video"
                                                                 type="checkbox" <?php if ($rSettings["show_expired_video"] == 1) {
+                                                                    echo "checked ";
+                                                                } ?>data-plugin="switchery" class="js-switch"
+                                                                data-color="#039cfd" />
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="expired_video_path" name="expired_video_path"
+                                                                value="<?= htmlspecialchars($rSettings["expired_video_path"]) ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                        <label class="col-md-4 col-form-label"
+                                                            for="show_expiring_video"><?= $_["expiring_video"] ?>
+                                                            <i data-toggle="tooltip" data-placement="top" title=""
+                                                                data-original-title="<?= $_["show_this_video_expiring"] ?>"
+                                                                class="mdi mdi-information"></i></label>
+                                                        <div class="col-md-2">
+                                                            <input name="show_expiring_video" id="show_expiring_video"
+                                                                type="checkbox" <?php if ($rSettings["show_expiring_video"] == 1) {
                                                                     echo "checked ";
                                                                 } ?>data-plugin="switchery" class="js-switch"
                                                                 data-color="#039cfd" />

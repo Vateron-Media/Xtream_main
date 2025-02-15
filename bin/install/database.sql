@@ -1028,11 +1028,11 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 (31, 'client_prebuffer', '15'),
 (32, 'mag_disable_ssl', '0'),
 (33, 'stream_max_analyze', '5000000'),
-(34, 'show_not_on_air_video', '0'),
+(34, 'show_not_on_air_video', '1'),
 (35, 'not_on_air_video_path', ''),
-(36, 'show_banned_video', '0'),
+(36, 'show_banned_video', '1'),
 (37, 'banned_video_path', ''),
-(38, 'show_expired_video', '0'),
+(38, 'show_expired_video', '1'),
 (39, 'expired_video_path', ''),
 (40, 'mag_container', 'ts'),
 (41, 'probesize', '5000000'),
@@ -1197,7 +1197,10 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 (255,'stream_logs_save','1'),
 (256,'keep_errors','0'),
 (257,'save_restart_logs','1'),
-(258,'keep_restarts','0');
+(258,'keep_restarts','0'),
+(259,'disable_ministra','0'),
+(260,'show_expiring_video', '1'),
+(261,'expired_video_path', '');
 
 -- --------------------------------------------------------
 
@@ -1344,6 +1347,7 @@ CREATE TABLE IF NOT EXISTS `streams` (
   `vframes_server_id` int(11) DEFAULT '0',
   `vframes_pid` int(11) DEFAULT '0',
   `year` int(4) DEFAULT NULL,
+  `llod` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `type` (`type`),
   KEY `created_channel_location` (`created_channel_location`),
