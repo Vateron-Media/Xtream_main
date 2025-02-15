@@ -460,25 +460,45 @@ function loadCron() {
         exit();
     }
 }
+/**
+ * Retrieves a list of blocked IP addresses from iptables and ip6tables.
+ *
+ * This function checks the system's firewall rules and extracts all IPs
+ * that have been explicitly blocked using the DROP rule.
+ *
+ * @return array An array of blocked IP addresses (both IPv4 and IPv6).
+ */
 function getBlockedIPs() {
-    $rReturn = array();
-    exec('sudo iptables -nL --line-numbers -t filter', $rLines);
-    foreach ($rLines as $rLine) {
-        $rLine = explode(' ', preg_replace('!\\s+!', ' ', $rLine));
-        if ($rLine[1] == 'DROP') {
-            $rReturn[] = $rLine[4];
+    $blockedIPs = [];
+
+    // Loop through both IPv4 and IPv6 firewall tables
+    foreach (['iptables', 'ip6tables'] as $table) {
+        $output = [];
+        
+        // Execute the command to list firewall rules
+        exec("sudo $table -nL --line-numbers -t filter", $output);
+
+        foreach ($output as $line) {
+            // Normalize spaces and split the line into an array
+            $columns = explode(' ', preg_replace('/\s+/', ' ', trim($line)));
+
+            // Check if this line contains a DROP rule
+            if (isset($columns[1]) && $columns[1] === 'DROP') {
+                // IPv4 addresses are usually in column 4, IPv6 in column 3
+                $ipIndex = ($table === 'iptables') ? 4 : 3;
+
+                // Ensure the index exists before adding to the list
+                if (isset($columns[$ipIndex])) {
+                    $blockedIPs[] = $columns[$ipIndex];
+                }
+            }
         }
     }
-    $rLines = '';
-    exec('sudo ip6tables -nL --line-numbers -t filter', $rLines);
-    foreach ($rLines as $rLine) {
-        $rLine = explode(' ', preg_replace('!\\s+!', ' ', $rLine));
-        if ($rLine[1] == 'DROP') {
-            $rReturn[] = $rLine[3];
-        }
-    }
-    return $rReturn;
+
+    // Remove duplicates and empty values, then return the final list
+    return array_values(array_unique(array_filter($blockedIPs)));
 }
+
 function blockip($rIP) {
     if (filter_var($rIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
         exec('sudo iptables -I INPUT -s ' . escapeshellcmd($rIP) . ' -j DROP');
