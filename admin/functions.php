@@ -1,8 +1,6 @@
 <?php
 require_once '/home/xtreamcodes/includes/admin.php';
 
-$rTableSearch = strtolower(basename($_SERVER["SCRIPT_FILENAME"], '.php')) === "table_search";
-
 if (isset($_SESSION['hash'])) {
     $rUserInfo = getRegisteredUserHash($_SESSION['hash']);
     $UserSettings["dark_mode"] = $rUserInfo["dark_mode"];
@@ -32,11 +30,19 @@ if (isset($_SESSION['hash'])) {
     }
 }
 
-if ((strlen($nabilos["default_lang"]) > 0) && (file_exists("./lang/" . $nabilos["default_lang"] . ".php"))) {
-    include "./lang/" . $nabilos["default_lang"] . ".php";
-} else {
-    include "/home/xtreamcodes/admin/lang/en.php";
+$defaultLang = 'en';
+$langPath = "/home/xtreamcodes/admin/lang/";
+$userLang = $defaultLang;
+
+if (php_sapi_name() !== 'cli' && isset($_SESSION['hash'])) {
+    $nabilos = getRegisteredUserHash($_SESSION['hash']);
+    
+    if (!empty($nabilos["default_lang"]) && file_exists("{$langPath}{$nabilos["default_lang"]}.php")) {
+        $userLang = $nabilos["default_lang"];
+    }
 }
+include "{$langPath}{$defaultLang}.php";
+
 
 if (isset(ipTV_lib::$request['status'])) {
     $_STATUS = intval(ipTV_lib::$request['status']);
