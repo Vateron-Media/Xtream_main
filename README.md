@@ -57,6 +57,7 @@ View logs in real time:
 
 ## 🤝 Contributing
 We welcome contributions! Check out our [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to get involved.
+You can also view the list of [contributors](CONTRIBUTORS.md).
 
 ## 📜 License
 This project is licensed under the [AGPL-3.0 License](LICENSE).
