@@ -195,11 +195,6 @@ include "header.php";
                             value="<?= $_["reboot_server"] ?>" style="width:100%" /></p>
                     </div>
                 </div>
-                <!--<div class="form-group row mb-4">
-                            <div class="col-md-6 mx-auto">
-                                <input id="update_release_ssh" type="submit" class="btn btn-danger" value="<?= $_["update_release"] ?>" style="width:100%" />
-                            </div>
-                        </div>-->
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -290,19 +285,6 @@ include "header.php";
                 $.toast("<?= $_["server_will_be_restarted_shortly"] ?>");
             } else {
                 $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
-            }
-            $("#root_password").val("");
-            $("#ssh_port").val("22");
-            $(".bs-server-modal-center").data("id", "");
-        });
-    });
-    $("#update_release_ssh").click(function () {
-        $(".bs-server-modal-center").modal("hide");
-        $.getJSON("./api.php?action=update_release&ssh_port=" + $("#ssh_port").val() + "&server_id=" + $(".bs-server-modal-center").data("id") + "&password=" + $("#root_password").val(), function (data) {
-            if (data.result === true) {
-                $.toast("Release will be updated shortly.");
-            } else {
-                $.toast("An error occured while processing your request.");
             }
             $("#root_password").val("");
             $("#ssh_port").val("22");

@@ -1085,7 +1085,6 @@ $_ = array(
   "kill" => "kill",
   "stop" => "Stop",
   "delete_server" => "Delete Server",
-  "update_release" => "UPDATE RELEASE",
   "installed_version" => "Installed Version",
   "official_release" => "Official Release",
   "e_a_release" => "Early Access Release",
