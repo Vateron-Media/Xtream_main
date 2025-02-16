@@ -29,8 +29,8 @@ $rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/
 $rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")[$release], 1);
 
 if (isset(ipTV_lib::$request["panel_version"])) {
-    $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . json_encode(array('action' => 'update')) . "`;");
-    $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . $_INFO["server_id"] . "', '" . time() . "', '" . json_encode(array('action' => 'update')) . "');");
+    $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` LIKE '%\"action\":\"update\"%';");
+    $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . $_INFO["server_id"] . "', '" . time() . "', '" . json_encode(array('action' => 'update', 'version' => $rUpdatePanel)) . "');");
     $_STATUS = STATUS_SUCCESS_UPDATE;
 }
 

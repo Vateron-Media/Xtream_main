@@ -361,7 +361,7 @@ function loadCron() {
                     case 'update':
                         echo 'Updating...' . "\n";
                         $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'UPDATE', 'Updating XC_VM...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                        shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" 2>&1 &');
+                        shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" "'. $rData['version'] . '" 2>&1 &');
                         break;
                     // case 'enable_ministra':
                     //     echo 'Enabling ministra /c...';
