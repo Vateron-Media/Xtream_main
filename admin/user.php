@@ -218,9 +218,14 @@ if (isset(ipTV_lib::$request["id"])) {
     if (($rUser["is_mag"])) {
         $rUser["lock_device"] = $rMAGUser["lock_device"];
         $rUser["mac_address_mag"] = base64_decode($rMAGUser["mac"]);
+    }else{
+        $rUser["lock_device"] = 0;
+        $rUser["mac_address_mag"] = "";
     }
     if (($rUser["is_e2"])) {
         $rUser["mac_address_e2"] = getE2User(ipTV_lib::$request["id"])["mac"];
+    }else{
+        $rUser["mac_address_e2"] = "";
     }
     $rUser["outputs"] = getOutputs($rUser["id"]);
 } elseif (!hasPermissions("adv", "add_user")) {
