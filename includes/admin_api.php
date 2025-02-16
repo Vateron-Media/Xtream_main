@@ -70,7 +70,7 @@ class API {
 						//Create user and add permisions
 						$userBD = "lb_" . intval($rInsertID);
 						self::$ipTV_db->query("CREATE USER `" . $userBD . "`@`" . $rArray["server_ip"] . "`;");
-						self::$ipTV_db->query("GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO `" . $userBD . "`@`" . $rArray["server_ip"] . "` WITH GRANT OPTION;");
+						self::$ipTV_db->query("GRANT ALL PRIVILEGES ON xc_vm.* TO `" . $userBD . "`@`" . $rArray["server_ip"] . "` WITH GRANT OPTION;");
 						self::$ipTV_db->query("FLUSH PRIVILEGES;");
 						$rCommand = PHP_BIN . ' ' . CLI_PATH . 'balancer.php ' . intval($rData['type']) . ' ' . intval($rInsertID) . ' ' . intval($rData['ssh_port']) . ' ' . escapeshellarg($rData['root_username']) . ' ' . escapeshellarg($rData['root_password']) . ' ' . $rArray["http_broadcast_port"] . ' ' . $rArray["https_broadcast_port"] . ' ' . intval($rUpdateSysctl) . ' > "' . BIN_PATH . 'install/' . intval($rInsertID) . '.install" 2>/dev/null &';
 						shell_exec($rCommand);

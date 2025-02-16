@@ -35,7 +35,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     $ipTV_db_admin->close_mysql();
 
                     $rFilename = MAIN_DIR . 'backups/backup_' . date('Y-m-d_H:i:s') . '.sql';
-                    $rCommand = "mysqldump -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " --ignore-table=xtream_iptvpro.user_activity --ignore-table=xtream_iptvpro.stream_logs --ignore-table=xtream_iptvpro.panel_logs --ignore-table=xtream_iptvpro.client_logs --ignore-table=xtream_iptvpro.epg_data > \"" . $rFilename . "\"";
+                    $rCommand = "mysqldump -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " --ignore-table=xc_vm.user_activity --ignore-table=xc_vm.stream_logs --ignore-table=xc_vm.panel_logs --ignore-table=xc_vm.client_logs --ignore-table=xc_vm.epg_data > \"" . $rFilename . "\"";
                     $rRet = shell_exec($rCommand);
                     if (filesize($rFilename) < 0) {
                         unlink($rFilename);
