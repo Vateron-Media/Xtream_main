@@ -168,6 +168,7 @@ if ($rChannelInfo) {
     }
     switch ($rExtension) {
         case "m3u8":
+            $rConnection = null;
             if (ipTV_lib::$settings["redis_handler"]) {
                 $rConnection = ipTV_streaming::getConnection($tokenData["uuid"]);
             } else {
@@ -230,6 +231,7 @@ if ($rChannelInfo) {
             }
             exit;
         default:
+            $rConnection = null;
             if (ipTV_lib::$settings["redis_handler"]) {
                 $rConnection = ipTV_streaming::getConnection($tokenData["uuid"]);
             } else {
