@@ -1054,7 +1054,6 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 (72, 'show_channel_logo_in_preview', '1'),
 (73, 'enable_connection_problem_indication', '1'),
 (75, 'vod_limit_at', '0'),
-(76, 'client_area_plugin', 'flow'),
 (78, 'record_max_length', '180'),
 (80, 'max_local_recordings', '10'),
 (81, 'allowed_stb_types_for_local_recording', '[\"MAG255\",\"MAG256\",\"MAG257\"]'),
