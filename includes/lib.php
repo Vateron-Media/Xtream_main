@@ -119,7 +119,7 @@ class ipTV_lib {
     public static function getIspAddon($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('customisp', 60);
-            if ($cache !== false) {
+            if (is_array($cache)) {
                 return $cache;
             }
         }
@@ -146,7 +146,7 @@ class ipTV_lib {
     public static function getBlockedUserAgents($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('blocked_ua', 20);
-            if ($cache !== false) {
+            if (is_array($cache)) {
                 return $cache;
             }
         }
@@ -164,7 +164,7 @@ class ipTV_lib {
     public static function getBouquets($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('bouquets', 60);
-            if ($cache !== false) {
+            if (is_array($cache)) {
                 return $cache;
             }
         }
@@ -197,7 +197,7 @@ class ipTV_lib {
     public static function getBlockedIPs($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('blocked_ips', 20);
-            if ($cache !== false) {
+            if (is_array($cache)) {
                 return $cache;
             }
         }
@@ -217,7 +217,7 @@ class ipTV_lib {
     public static function getBlockedISP($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('blocked_isp', 20);
-            if ($cache !== false) {
+            if (is_array($cache)) {
                 return $cache;
             }
         }
@@ -245,7 +245,7 @@ class ipTV_lib {
     public static function getSettings($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('settings', 20);
-            if ($cache !== false) {
+            if (is_array($cache)) {
                 return $cache;
             }
         }
@@ -264,7 +264,6 @@ class ipTV_lib {
         if (array_key_exists("bouquet_name", $output)) {
             $output["bouquet_name"] = str_replace(" ", "_", $output["bouquet_name"]);
         }
-        $output["watchdog"] = json_decode($output["watchdog_data"], true);
         $output["api_ips"] = explode(",", $output["api_ips"]);
         self::setCache('settings', $output);
         return $output;
@@ -319,7 +318,7 @@ class ipTV_lib {
         }
         if (!$rForce) {
             $cache = self::getCache('categories', 20);
-            if ($cache !== false) {
+            if (is_array($cache)) {
                 return $cache;
             }
         }
@@ -344,7 +343,7 @@ class ipTV_lib {
     public static function getServers($rForce = false) {
         if (!$rForce) {
             $cache = self::getCache('servers', 20);
-            if ($cache !== false) {
+            if (is_array($cache)) {
                 return $cache;
             }
         }
@@ -378,37 +377,67 @@ class ipTV_lib {
             $row["isp_names"] = empty($row["isp_names"]) ? array() : json_decode($row["isp_names"], true);
             $row["server_online"] = in_array($row["status"], $server_status) && time() - $row["last_check_ago"] <= 90 || SERVER_ID == $row["id"] ? true : false;
             $row['domains'] = array('protocol' => $server_protocol, 'port' => $http_port, 'urls' => array_filter(array_map('escapeshellcmd', explode(',', $row['domain_name']))));
-            unset($row["ssh_password"], $row["watchdog_data"], $row["last_check_ago"]);
+            $row['watchdog'] = json_decode($row['watchdog_data'], true);
+            
+            unset($row["ssh_password"], $row["last_check_ago"]);
             $servers[intval($row["id"])] = $row;
         }
         self::setCache('servers', $servers);
 
         return $servers;
     }
-    public static function getAllowedIPs() {
-        $cache = self::getCache('allowed_ips', 60);
-        if ($cache !== false) {
-            return $cache;
+    public static function getAllowedIPs($rForce = false) {
+        if (!$rForce) {
+            $cache = self::getCache('allowed_ips', 60);
+            if (is_array($cache)) {
+                return $cache;
+            }
         }
 
-        $IPs = array('127.0.0.1', $_SERVER['SERVER_ADDR']);
+        $IPs = ['127.0.0.1'];
+
+        if (isset($_SERVER['SERVER_ADDR'])) {
+            $IPs[] = $_SERVER['SERVER_ADDR'];
+        }
+
         foreach (self::$Servers as $rServerID => $serverInfo) {
             if (!empty($serverInfo['whitelist_ips'])) {
-                $IPs = array_merge($IPs, json_decode($serverInfo['whitelist_ips'], true));
+                $whitelist = json_decode($serverInfo['whitelist_ips'], true);
+                if (is_array($whitelist)) {
+                    $IPs = array_merge($IPs, array_filter($whitelist));
+                }
             }
-            $IPs[] = $serverInfo['server_ip'];
-            foreach (explode(',', $serverInfo['domain_name']) as $IP) {
-                if (filter_var($IP, FILTER_VALIDATE_IP)) {
-                    $IPs[] = $IP;
+
+            if (!empty($serverInfo['server_ip'])) {
+                $IPs[] = $serverInfo['server_ip'];
+            }
+
+            if (!empty($serverInfo['private_ip'])) {
+                $IPs[] = $serverInfo['private_ip'];
+            }
+
+            if (!empty($serverInfo['domain_name'])) {
+                foreach (explode(',', $serverInfo['domain_name']) as $IP) {
+                    $IP = trim($IP);
+                    if (filter_var($IP, FILTER_VALIDATE_IP)) {
+                        $IPs[] = $IP;
+                    }
                 }
             }
         }
+
         if (!empty(self::$settings['allowed_ips_admin'])) {
-            $IPs = array_merge($IPs, explode(',', self::$settings['allowed_ips_admin']));
+            $admin_ips = explode(',', self::$settings['allowed_ips_admin']);
+            $IPs = array_merge($IPs, array_filter($admin_ips));
         }
+
+        $IPs = array_unique(array_filter($IPs));
+
         self::setCache('allowed_ips', $IPs);
-        return array_unique($IPs);
+
+        return $IPs;
     }
+
     public static function seriesData() {
         $output = array();
         if (file_exists(TMP_PATH . "series_data.php")) {
