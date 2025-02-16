@@ -651,7 +651,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
         case "get_package":
-            $rReturn = array();
+            $return = array();
             $rOverride = json_decode($rUserInfo["override_packages"], true);
             $ipTV_db_admin->query("SELECT `id`, `bouquets`, `official_credits` AS `cost_credits`, `official_duration`, `official_duration_in`, `max_connections`, `can_gen_mag`, `can_gen_e2`, `only_mag`, `only_e2` FROM `packages` WHERE `id` = " . intval(ipTV_lib::$request["package_id"]) . ";");
             if ($ipTV_db_admin->num_rows() == 1) {
@@ -673,16 +673,16 @@ if (isset(ipTV_lib::$request["action"])) {
                     $ipTV_db_admin->query("SELECT * FROM `bouquets` WHERE `id` = " . intval($rBouquet) . ";");
                     if ($ipTV_db_admin->num_rows() == 1) {
                         $rRow = $ipTV_db_admin->get_row();
-                        $rReturn[] = array("id" => $rRow["id"], "bouquet_name" => $rRow["bouquet_name"], "bouquet_channels" => json_decode($rRow["bouquet_channels"], true), "bouquet_series" => json_decode($rRow["bouquet_series"], true));
+                        $return[] = array("id" => $rRow["id"], "bouquet_name" => $rRow["bouquet_name"], "bouquet_channels" => json_decode($rRow["bouquet_channels"], true), "bouquet_series" => json_decode($rRow["bouquet_series"], true));
                     }
                 }
-                echo json_encode(array("result" => true, "bouquets" => $rReturn, "data" => $rData));
+                echo json_encode(array("result" => true, "bouquets" => $return, "data" => $rData));
             } else {
                 echo json_encode(array("result" => false));
             }
             exit;
         case "get_package_trial":
-            $rReturn = array();
+            $return = array();
             $ipTV_db_admin->query("SELECT `bouquets`, `trial_credits` AS `cost_credits`, `trial_duration`, `trial_duration_in`, `max_connections`, `can_gen_mag`, `can_gen_e2`, `only_mag`, `only_e2` FROM `packages` WHERE `id` = " . intval(ipTV_lib::$request["package_id"]) . ";");
             if ($ipTV_db_admin->num_rows() == 1) {
                 $rData = $ipTV_db_admin->get_row();
@@ -691,10 +691,10 @@ if (isset(ipTV_lib::$request["action"])) {
                     $ipTV_db_admin->query("SELECT * FROM `bouquets` WHERE `id` = " . intval($rBouquet) . ";");
                     if ($ipTV_db_admin->num_rows() == 1) {
                         $rRow = $ipTV_db_admin->get_row();
-                        $rReturn[] = array("id" => $rRow["id"], "bouquet_name" => $rRow["bouquet_name"], "bouquet_channels" => json_decode($rRow["bouquet_channels"], true), "bouquet_series" => json_decode($rRow["bouquet_series"], true));
+                        $return[] = array("id" => $rRow["id"], "bouquet_name" => $rRow["bouquet_name"], "bouquet_channels" => json_decode($rRow["bouquet_channels"], true), "bouquet_series" => json_decode($rRow["bouquet_series"], true));
                     }
                 }
-                echo json_encode(array("result" => true, "bouquets" => $rReturn, "data" => $rData));
+                echo json_encode(array("result" => true, "bouquets" => $return, "data" => $rData));
             } else {
                 echo json_encode(array("result" => false));
             }
@@ -727,81 +727,207 @@ if (isset(ipTV_lib::$request["action"])) {
             echo json_encode(array("result" => true, "data" => $rStatistics, "dates" => array("hour" => array($rMax - (60 * 60), $rMax), "day" => array($rMax - (60 * 60 * 24), $rMax), "week" => array(null, null))));
             exit;
         case "stats":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "index"))) {
-                echo json_encode(array("result" => false));
-                exit;
+            if (!hasPermissions('adv', 'index')) {
+                echo json_encode(array('result' => false));
+                exit();
             }
-            $return = array("cpu" => 0, "mem" => 0, "uptime" => "--", "total_running_streams" => 0, "bytes_sent" => 0, "bytes_received" => 0, "offline_streams" => 0, "servers" => array());
-            if (isset(ipTV_lib::$request["server_id"])) {
-                $rServerID = intval(ipTV_lib::$request["server_id"]);
-                $rWatchDog = json_decode($rServers[$rServerID]["watchdog_data"], true);
-                if (is_array($rWatchDog)) {
-                    $return["uptime"] = $rWatchDog["uptime"];
-                    $return["mem"] = intval($rWatchDog["total_mem_used_percent"]);
-                    $return["cpu"] = intval($rWatchDog["cpu_avg"]);
-                    $return["bytes_received"] = intval($rWatchDog["bytes_received"]);
-                    $return["bytes_sent"] = intval($rWatchDog["bytes_sent"]);
+            $rServers = ipTV_lib::getServers(true);
+            $return = array('cpu' => 0, 'mem' => 0, 'io' => 0, 'fs' => 0, 'uptime' => '--', 'bytes_sent' => 0, 'bytes_received' => 0, 'open_connections' => 0, 'total_connections' => 0, 'online_users' => 0, 'total_users' => 0, 'total_streams' => 0, 'total_running_streams' => 0, 'offline_streams' => 0, 'requests_per_second' => 0, 'servers' => array());
+
+            if (ipTV_lib::$settings['redis_handler']) {
+                $return['total_users'] = ipTV_lib::$settings['total_users'];
+            } else {
+                $ipTV_db_admin->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
+
+                if ($ipTV_db_admin->num_rows() > 0) {
+                    $return['total_users'] = $ipTV_db_admin->num_rows();
                 }
-                $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = " . $rServerID . ";");
-                $return["open_connections"] = $ipTV_db_admin->get_row()["count"];
-                $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `lines_live`;");
-                $return["total_connections"] = $ipTV_db_admin->get_row()["count"];
-                $ipTV_db_admin->query("SELECT COUNT(`user_id`) AS `count` FROM `lines_live` WHERE `server_id` = " . $rServerID . " GROUP BY `user_id`;");
-                $return["online_users"] = $ipTV_db_admin->num_rows();
-                $ipTV_db_admin->query("SELECT COUNT(`user_id`) AS `count` FROM `lines_live` GROUP BY `user_id`;");
-                $return["total_users"] = $ipTV_db_admin->num_rows();
-                $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `stream_status` <> 2 AND `type` IN (1,3);");
-                $return["total_streams"] = $ipTV_db_admin->get_row()["count"];
-                $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `pid` > 0 AND `type` IN (1,3);");
-                $return["total_running_streams"] = $ipTV_db_admin->get_row()["count"];
-                $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND ((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0);");
-                $return["offline_streams"] = $ipTV_db_admin->get_row()["count"];
-                $return["network_guaranteed_speed"] = $rServers[$rServerID]["network_guaranteed_speed"];
+            }
+
+            if (isset(ipTV_lib::$request['server_id'])) {
+                $rServerID = intval(ipTV_lib::$request['server_id']);
+                $rWatchDog = json_decode($rServers[$rServerID]['watchdog_data'], true);
+
+                if (is_array($rWatchDog)) {
+                    $return['uptime'] = $rWatchDog['uptime'];
+                    $return['mem'] = round($rWatchDog['total_mem_used_percent'], 0);
+                    $return['cpu'] = round($rWatchDog['cpu'], 0);
+
+                    if (isset($rWatchDog['iostat_info'])) {
+                        $return['io'] = round($rWatchDog['iostat_info']['avg-cpu']['iowait'], 0);
+                    }
+
+                    if (isset($rWatchDog['total_disk_space'])) {
+                        $return['fs'] = intval(($rWatchDog['total_disk_space'] - $rWatchDog['free_disk_space']) / $rWatchDog['total_disk_space'] * 100);
+                    }
+
+                    $return['bytes_received'] = intval($rWatchDog['bytes_received']);
+                    $return['bytes_sent'] = intval($rWatchDog['bytes_sent']);
+                }
+
+                $return['requests_per_second'] = $rServers[$rServerID]['requests_per_second'];
+
+                if (ipTV_lib::$settings['redis_handler']) {
+                    $return['open_connections'] = $rServers[$rServerID]['connections'];
+                    $return['online_users'] = $rServers[$rServerID]['users'];
+
+                    foreach (array_keys($rServers) as $rSID) {
+                        if ($rServers[$rSID]['server_online']) {
+                            $return['total_connections'] += $rServers[$rSID]['connections'];
+                        }
+                    }
+                } else {
+                    $ipTV_db_admin->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = ? AND `hls_end` = 0;', $rServerID);
+
+                    if ($ipTV_db_admin->num_rows() > 0) {
+                        $return['open_connections'] = $ipTV_db_admin->get_row()['count'];
+                    }
+
+                    $ipTV_db_admin->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `hls_end` = 0;');
+
+                    if ($ipTV_db_admin->num_rows() > 0) {
+                        $return['total_connections'] = $ipTV_db_admin->get_row()['count'];
+                    }
+
+                    $ipTV_db_admin->query('SELECT `activity_id` FROM `lines_live` WHERE `server_id` = ? AND `hls_end` = 0 GROUP BY `user_id`;', $rServerID);
+
+                    if ($ipTV_db_admin->num_rows() > 0) {
+                        $return['online_users'] = $ipTV_db_admin->num_rows();
+                    }
+                }
+
+                $ipTV_db_admin->query('SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = ? AND `stream_status` <> 2 AND `type` = 1;', $rServerID);
+
+                if ($ipTV_db_admin->num_rows() > 0) {
+                    $return['total_streams'] = $ipTV_db_admin->get_row()['count'];
+                }
+
+                $ipTV_db_admin->query('SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = ? AND `pid` > 0 AND `type` = 1;', $rServerID);
+
+                if ($ipTV_db_admin->num_rows() > 0) {
+                    $return['total_running_streams'] = $ipTV_db_admin->get_row()['count'];
+                }
+
+                $ipTV_db_admin->query('SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = ? AND `type` = 1 AND (`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0);', $rServerID);
+
+                if ($ipTV_db_admin->num_rows() > 0) {
+                    $return['offline_streams'] = $ipTV_db_admin->get_row()['count'];
+                }
+
+                $return['network_guaranteed_speed'] = $rServers[$rServerID]['network_guaranteed_speed'];
             } else {
                 $rUptime = 0;
-                $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `lines_live`;");
-                $rTotalConnections = $ipTV_db_admin->get_row()["count"];
-                $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `lines_live` GROUP BY `user_id`;");
-                $rTotalUsers = $ipTV_db_admin->get_row()["count"];
-                $ipTV_db_admin->query("SELECT `user_id` FROM `lines_live` GROUP BY `user_id`;");
-                $return["online_users"] = $ipTV_db_admin->num_rows();
-                $return["open_connections"] = $rTotalConnections;
-                foreach (array_keys($rServers) as $rServerID) {
-                    $rArray = array();
-                    $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `server_id` = " . $rServerID . ";");
-                    $rArray["open_connections"] = $ipTV_db_admin->get_row()["count"];
-                    $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `stream_status` <> 2 AND `type` IN (1,3);");
-                    $rArray["total_streams"] = $ipTV_db_admin->get_row()["count"];
-                    $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND `pid` > 0 AND `type` IN (1,3);");
-                    $rArray["total_running_streams"] = $ipTV_db_admin->get_row()["count"];
-                    $ipTV_db_admin->query("SELECT COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `server_id` = " . $rServerID . " AND ((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0);");
-                    $rArray["offline_streams"] = $ipTV_db_admin->get_row()["count"];
-                    $rArray["network_guaranteed_speed"] = $rServers[$rServerID]["network_guaranteed_speed"];
-                    $ipTV_db_admin->query("SELECT `user_id` FROM `lines_live` WHERE `server_id` = " . intval($rServerID) . " GROUP BY `user_id`;");
-                    $rArray["online_users"] = $ipTV_db_admin->num_rows();
-                    $rWatchDog = json_decode($rServers[$rServerID]["watchdog_data"], true);
-                    if (is_array($rWatchDog)) {
-                        $rArray["uptime"] = $rWatchDog["uptime"];
-                        $rArray["mem"] = intval($rWatchDog["total_mem_used_percent"]);
-                        $rArray["cpu"] = intval($rWatchDog["cpu_avg"]);
-                        $rArray["bytes_received"] = intval($rWatchDog["bytes_received"]);
-                        $rArray["bytes_sent"] = intval($rWatchDog["bytes_sent"]);
+
+                if (!ipTV_lib::$settings['redis_handler']) {
+                    $ipTV_db_admin->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `hls_end` = 0;');
+
+                    if (0 < $ipTV_db_admin->num_rows()) {
+                        $rTotalConnections = $ipTV_db_admin->get_row()['count'];
+                    } else {
+                        $rTotalConnections = 0;
                     }
-                    $rArray["total_connections"] = $rTotalConnections;
-                    $rArray["total_users"] = $rTotalUsers;
-                    $rArray["server_id"] = $rServerID;
-                    $return["servers"][] = $rArray;
+
+                    $ipTV_db_admin->query('SELECT `activity_id` AS `count` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
+
+                    if (0 < $ipTV_db_admin->num_rows()) {
+                        $rTotalUsers = $ipTV_db_admin->num_rows();
+                    } else {
+                        $rTotalUsers = 0;
+                    }
+
+                    $ipTV_db_admin->query('SELECT `user_id` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
+                    $return['online_users'] = $ipTV_db_admin->num_rows();
+                    $return['open_connections'] = $rTotalConnections;
                 }
-                foreach ($return["servers"] as $rServerArray) {
-                    $return["total_streams"] += $rServerArray["total_streams"];
-                    $return["total_running_streams"] += $rServerArray["total_running_streams"];
-                    $return["offline_streams"] += $rServerArray["offline_streams"];
-                    $return["bytes_received"] += $rServerArray["bytes_received"]; // total input
-                    $return["bytes_sent"] += $rServerArray["bytes_sent"]; // total output
+
+                $rTotalStreams = $rOnlineStreams = $rOfflineStreams = $rOnlineUsers = $rOpenConnections = array();
+                $ipTV_db_admin->query('SELECT `server_id`, COUNT(*) AS `count` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `server_id`;');
+
+                foreach ($ipTV_db_admin->get_rows() as $rRow) {
+                    $rOpenConnections[intval($rRow['server_id'])] = intval($rRow['count']);
                 }
+                $ipTV_db_admin->query('SELECT `server_id`, COUNT(DISTINCT(`user_id`)) AS `count` FROM `lines_live` GROUP BY `server_id`;');
+
+                foreach ($ipTV_db_admin->get_rows() as $rRow) {
+                    $rOnlineUsers[intval($rRow['server_id'])] = intval($rRow['count']);
+                }
+                $ipTV_db_admin->query('SELECT `server_id`, COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `stream_status` <> 2 AND `type` = 1 GROUP BY `server_id`;');
+
+                foreach ($ipTV_db_admin->get_rows() as $rRow) {
+                    $rTotalStreams[intval($rRow['server_id'])] = intval($rRow['count']);
+                }
+                $ipTV_db_admin->query('SELECT `server_id`, COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `type` = 1 AND (`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0) GROUP BY `server_id`;');
+
+                foreach ($ipTV_db_admin->get_rows() as $rRow) {
+                    $rOfflineStreams[intval($rRow['server_id'])] = intval($rRow['count']);
+                }
+                $ipTV_db_admin->query('SELECT `server_id`, COUNT(*) AS `count` FROM `streams_servers` LEFT JOIN `streams` ON `streams`.`id` = `streams_servers`.`stream_id` WHERE `pid` > 0 AND `type` = 1 GROUP BY `server_id`;');
+
+                foreach ($ipTV_db_admin->get_rows() as $rRow) {
+                    $rOnlineStreams[intval($rRow['server_id'])] = intval($rRow['count']);
+                }
+
+                foreach (array_keys($rServers) as $rServerID) {
+                    if ($rServers[$rServerID]['server_online']) {
+                        $rArray = array();
+
+                        if (ipTV_lib::$settings['redis_handler']) {
+                            $rArray['open_connections'] = $rServers[$rServerID]['connections'];
+                            $return['open_connections'] += $rServers[$rServerID]['connections'];
+                            $return['total_connections'] += $rServers[$rServerID]['connections'];
+                            $rArray['online_users'] = $rServers[$rServerID]['users'];
+                            $return['online_users'] += $rServers[$rServerID]['users'];
+                            $return['total_users'] += $rServers[$rServerID]['users'];
+                        } else {
+                            $rArray['open_connections'] = $rOpenConnections[$rServerID] ?? 0;
+                            $rArray['online_users'] = $rOnlineUsers[$rServerID] ?? 0;
+                        }
+
+                        $rArray['requests_per_second'] = $rServers[$rServerID]['requests_per_second'];
+                        $rArray['total_streams'] = ($rTotalStreams[$rServerID] ?: 0);
+                        $rArray['total_running_streams'] = ($rOnlineStreams[$rServerID] ?: 0);
+                        $rArray['offline_streams'] = ($rOfflineStreams[$rServerID] ?? 0);
+                        $rArray['network_guaranteed_speed'] = $rServers[$rServerID]['network_guaranteed_speed'];
+                        $rWatchDog = json_decode($rServers[$rServerID]['watchdog_data'], true);
+
+                        if (is_array($rWatchDog)) {
+                            $rArray['uptime'] = $rWatchDog['uptime'];
+                            $rArray['mem'] = round($rWatchDog['total_mem_used_percent'], 0);
+                            $rArray['cpu'] = round($rWatchDog['cpu'], 0);
+
+                            if (isset($rWatchDog['iostat_info'])) {
+                                $rArray['io'] = round($rWatchDog['iostat_info']['avg-cpu']['iowait'], 0);
+                            }
+
+                            if (isset($rWatchDog['total_disk_space'])) {
+                                $rArray['fs'] = intval(($rWatchDog['total_disk_space'] - $rWatchDog['free_disk_space']) / $rWatchDog['total_disk_space'] * 100);
+                            }
+
+                            $rArray['bytes_received'] = intval($rWatchDog['bytes_received']);
+                            $rArray['bytes_sent'] = intval($rWatchDog['bytes_sent']);
+                            $return['bytes_received'] += intval($rWatchDog['bytes_received']);
+                            $return['bytes_sent'] += intval($rWatchDog['bytes_sent']);
+                        }
+
+                        $rArray['total_connections'] = $rTotalConnections;
+                        $rArray['server_id'] = $rServerID;
+                        $rArray['server_type'] = $rServers[$rServerID]['server_type'];
+                        $return['servers'][] = $rArray;
+                    }
+                }
+
+                foreach ($return['servers'] as $rServerArray) {
+                    $return['total_streams'] += $rServerArray['total_streams'];
+                    $return['total_running_streams'] += $rServerArray['total_running_streams'];
+                    $return['offline_streams'] += $rServerArray['offline_streams'];
+                }
+                $return['online_users'] = ipTV_lib::$settings['total_users'];
             }
-            echo json_encode($return);
-            exit;
+
+            echo json_encode($return, JSON_PARTIAL_OUTPUT_ON_ERROR);
+
+            exit();
+
         case "reseller_dashboard":
             if ($rPermissions["is_admin"]) {
                 echo json_encode(array("result" => false));
@@ -1086,21 +1212,6 @@ if (isset(ipTV_lib::$request["action"])) {
             }
             echo json_encode(array('result' => false));
             exit;
-            // case "update_release":
-            //     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
-            //         echo json_encode(array("result" => false));
-            //         exit;
-            //     }
-            //     $rServerID = intval(ipTV_lib::$request["server_id"]);
-            //     if (isset($rServers[$rServerID])) {
-            //         $rServer = $rServers[$rServerID];
-            //         $rJSON = array("status" => 0, "port" => intval(ipTV_lib::$request["ssh_port"]), "host" => $rServer["server_ip"], "password" => ipTV_lib::$request["password"], "time" => intval(time()), "id" => $rServerID, "type" => "urelease");
-            //         file_put_contents("/home/xtreamcodes/adtools/balancer/" . $rServerID . ".json", json_encode($rJSON));
-            //         echo json_encode(array("result" => true));
-            //         exit;
-            //     }
-            //     echo json_encode(array("result" => false));
-            //     exit;
         case "map_stream":
             if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_stream")) && (!hasPermissions("adv", "edit_stream")))) {
                 echo json_encode(array("result" => false));
