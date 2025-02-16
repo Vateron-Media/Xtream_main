@@ -30,27 +30,16 @@ if (!isset($_STATUS)) {
 					$rChangePass = md5($rUserInfo["password"]);
 				} else {
 					$rPermissions = getPermissions($rUserInfo["member_group_id"]);
-					if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
+					if (($rPermissions) && (($rPermissions["is_admin"]) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
 						$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = ? WHERE `id` = ?;", getIP(), intval($rUserInfo["id"]));
 						$_SESSION['hash'] = md5($rUserInfo["username"]);
 						$_SESSION['ip'] = getIP();
 						if ($rPermissions["is_admin"]) {
-							if (strlen(ipTV_lib::$request["referrer"]) > 0) {
-								header("Location: ." . ipTV_lib::$request["referrer"]);
-							} else {
-								header("Location: ./dashboard.php");
-							}
-						} else {
-							$ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> Logged In');");
-							if (strlen(ipTV_lib::$request["referrer"]) > 0) {
-								header("Location: ." . ipTV_lib::$request["referrer"]);
-							} else {
-								header("Location: ./reseller.php");
-							}
+							header("Location: ./dashboard.php");
 						}
-					} elseif (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
+					} elseif (($rPermissions) && (($rPermissions["is_admin"]) && ($rPermissions["is_banned"]))) {
 						$_STATUS = 2;
-					} elseif (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && (!$rUserInfo["status"]))) {
+					} elseif (($rPermissions) && (($rPermissions["is_admin"]) && (!$rUserInfo["status"]))) {
 						$_STATUS = 3;
 					} else {
 						$_STATUS = 4;
@@ -69,19 +58,16 @@ if (!isset($_STATUS)) {
 		if (($rUserInfo) && ($rChangePass == md5($rUserInfo["password"]))) {
 			if ((ipTV_lib::$request["newpass"] == ipTV_lib::$request["confirm"]) && (strlen(ipTV_lib::$request["newpass"]) >= intval($rSettings["pass_length"]))) {
 				$rPermissions = getPermissions($rUserInfo["member_group_id"]);
-				if (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
+				if (($rPermissions) && (($rPermissions["is_admin"]) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
 					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . cryptPassword(ipTV_lib::$request["newpass"]) . "', `ip` = '" . getIP() . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
 					$_SESSION['hash'] = md5($rUserInfo["username"]);
 					$_SESSION['ip'] = getIP();
 					if ($rPermissions["is_admin"]) {
 						header("Location: ./dashboard.php");
-					} else {
-						$ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '', '', " . intval(time()) . ", '[<b>UserPanel</b>] -> Logged In');");
-						header("Location: ./reseller.php");
 					}
-				} elseif (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && ($rPermissions["is_banned"]))) {
+				} elseif (($rPermissions) && (($rPermissions["is_admin"]) && ($rPermissions["is_banned"]))) {
 					$_STATUS = 2;
-				} elseif (($rPermissions) && ((($rPermissions["is_admin"]) or ($rPermissions["is_reseller"])) && (!$rUserInfo["status"]))) {
+				} elseif (($rPermissions) && (($rPermissions["is_admin"]) && (!$rUserInfo["status"]))) {
 					$_STATUS = 3;
 				} else {
 					$_STATUS = 4;
@@ -259,7 +245,7 @@ if (!isset($_STATUS)) {
 			<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 		<?php } ?>
 		<script>
-			$(document).ready(function () {
+			$(document).ready(function() {
 				if (window.location.hash.substring(0, 1) == "#") {
 					$("#username_group").hide();
 					$("#username").val(window.location.hash.substring(1));
@@ -270,4 +256,5 @@ if (!isset($_STATUS)) {
 		</script>
 </body>
 <!-- XC_VM -->
+
 </html>
