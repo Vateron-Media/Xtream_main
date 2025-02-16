@@ -1083,7 +1083,6 @@ $_ = array(
   "kill" => "Tuer",
   "stop" => "Arrêt",
   "delete_server" => "Supprimer le serveur",
-  "update_release" => "UPDATE RELEASE",
   "installed_version" => "Version installée",
   "official_release" => "Version officielle",
   "e_a_release" => "Version anticipée",
