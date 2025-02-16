@@ -392,6 +392,15 @@ function checkPermissions($rPage = null) {
                 break;
             }
             return true;
+        case 'reg_user':
+            if (isset(ipTV_lib::$request['id']) && hasPermissions('adv', 'edit_reguser')) {
+                return true;
+            }
+
+            if (isset(ipTV_lib::$request['id']) || !hasPermissions('adv', 'add_reguser')) {
+                break;
+            }
+            return true;
         default:
             return true;
     }

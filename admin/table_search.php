@@ -243,7 +243,8 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "mags") {
+}
+if ($rType == "mags") {
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_mag"))) {
         exit;
     }
@@ -457,7 +458,8 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "enigmas") {
+}
+if ($rType == "enigmas") {
     if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_e2"))) {
         exit;
     }
@@ -652,7 +654,8 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "streams") {
+}
+if ($rType == "streams") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
@@ -899,7 +902,8 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "radios") {
+}
+if ($rType == "radios") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
@@ -1115,7 +1119,8 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "movies") {
+}
+if ($rType == "movies") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
@@ -1284,7 +1289,8 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "episode_list") {
+}
+if ($rType == "episode_list") {
     if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "import_episodes")) && (!hasPermissions("adv", "mass_delete")))) {
         exit;
     }
@@ -1361,7 +1367,8 @@ if ($rType == "users") {
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "user_activity") {
+}
+if ($rType == "user_activity") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reseller_client_connection_logs"])) {
         exit;
     }
@@ -1418,10 +1425,10 @@ if ($rType == "users") {
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT SUBSTR(FROM_BASE64(mac), 1, 18) mag, `lines`.`is_restreamer`, SUBSTR(`user_activity`.`isp`, 1, 47) isp, `user_activity`.`activity_id`, `user_activity`.`user_id`, `user_activity`.`stream_id`, `user_activity`.`server_id`, SUBSTR(`user_activity`.`user_agent`, 1, 22) user_agent, `user_activity`.`user_ip`, `user_activity`.`date_start`, `user_activity`.`date_end`, `user_activity`.`container`, `user_activity`.`geoip_country_code`, SUBSTR(`lines`.`username`, 1, 18) username, SUBSTR(`streams`.`stream_display_name`, 1, 25) stream_display_name, `streams`.`type`, SUBSTR(`servers`.`server_name`, 1, 18) server_name, (`user_activity`.`date_end` - `user_activity`.`date_start`) total_time FROM `user_activity`
-INNER JOIN `lines` ON `user_activity`.`user_id` = `lines`.`id`
-LEFT JOIN `mag_devices` ON `user_activity`.`user_id` = `mag_devices`.`user_id`
-LEFT JOIN `streams` ON `user_activity`.`stream_id` = `streams`.`id`
-LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+                    INNER JOIN `lines` ON `user_activity`.`user_id` = `lines`.`id`
+                    LEFT JOIN `mag_devices` ON `user_activity`.`user_id` = `mag_devices`.`user_id`
+                    LEFT JOIN `streams` ON `user_activity`.`stream_id` = `streams`.`id`
+                    LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
@@ -1473,7 +1480,8 @@ LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereStri
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "live_connections") {
+}
+if ($rType == "live_connections") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reseller_client_connection_logs"])) {
         exit;
     }
@@ -1523,10 +1531,10 @@ LEFT JOIN `servers` ON `user_activity`.`server_id` = `servers`.`id` {$rWhereStri
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
         $rQuery = "SELECT FROM_BASE64(mac) mag, SUBSTR(`lines_live`.`isp`, 1, 47) isp, `lines_live`.`activity_id`, `lines_live`.`divergence`, `lines_live`.`user_id`, `lines_live`.`stream_id`, `lines_live`.`server_id`, SUBSTR(`lines_live`.`user_agent`, 1, 35) user_agent, `lines_live`.`user_ip`, `lines_live`.`container`, `lines_live`.`pid`, `lines_live`.`date_start`, `lines_live`.`geoip_country_code`, `lines`.`username`, SUBSTR(`streams`.`stream_display_name`, 1, 30) stream_display_name, `streams`.`type`, SUBSTR(`servers`.`server_name`, 1, 25) server_name FROM `lines_live`
-INNER JOIN `lines` ON `lines_live`.`user_id` = `lines`.`id`
-LEFT JOIN `mag_devices` ON `lines_live`.`user_id` = `mag_devices`.`user_id`
-LEFT JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id`
-LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+    INNER JOIN `lines` ON `lines_live`.`user_id` = `lines`.`id`
+    LEFT JOIN `mag_devices` ON `lines_live`.`user_id` = `mag_devices`.`user_id`
+    LEFT JOIN `streams` ON `lines_live`.`stream_id` = `streams`.`id`
+    LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
@@ -1617,7 +1625,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "stream_list") {
+}
+if ($rType == "stream_list") {
     if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "import_streams")) && (!hasPermissions("adv", "mass_delete")))) {
         exit;
     }
@@ -1684,7 +1693,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "movie_list") {
+}
+if ($rType == "movie_list") {
     if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "import_movies")) && (!hasPermissions("adv", "mass_delete")))) {
         exit;
     }
@@ -1763,7 +1773,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "radio_list") {
+}
+if ($rType == "radio_list") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_delete"))) {
         exit;
     }
@@ -1826,7 +1837,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "series_list") {
+}
+if ($rType == "series_list") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_delete"))) {
         exit;
     }
@@ -1877,7 +1889,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "credits_log") {
+}
+if ($rType == "credits_log") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "credits_log"))) {
         exit;
     }
@@ -1944,7 +1957,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "user_ips") {
+}
+if ($rType == "user_ips") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "connection_logs"))) {
         exit;
     }
@@ -1986,7 +2000,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "client_logs") {
+}
+if ($rType == "client_logs") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "client_request_log"))) {
         exit;
     }
@@ -2051,7 +2066,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "reg_user_logs") {
+}
+if ($rType == "reg_user_logs") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "reg_userlog"))) {
         exit;
     }
@@ -2116,7 +2132,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "stream_logs") {
+}
+if ($rType == "stream_logs") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "stream_errors"))) {
         exit;
     }
@@ -2176,7 +2193,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "stream_unique") {
+}
+if ($rType == "stream_unique") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "fingerprint"))) {
         exit;
     }
@@ -2225,7 +2243,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "reg_users") {
+}
+if ($rType == "reg_users") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["create_sub_resellers"])) {
         exit;
     }
@@ -2324,7 +2343,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "series") {
+}
+if ($rType == "series") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
@@ -2405,7 +2425,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "episodes") {
+}
+if ($rType == "episodes") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
@@ -2573,7 +2594,8 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "backups") {
+}
+if ($rType == "backups") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
         exit;
     }
@@ -2586,14 +2608,16 @@ LEFT JOIN `servers` ON `lines_live`.`server_id` = `servers`.`id` {$rWhereString}
     }
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "conn") {
+}
+if ($rType == "conn") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
         exit;
     }
     $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 1, "recordsFiltered" => 1, "data" => array($_INFO['hostname'], $_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['port']));
     echo json_encode($rReturn);
     exit;
-} elseif ($rType == "watch_output") {
+}
+if ($rType == "watch_output") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch_output"))) {
         exit;
     }

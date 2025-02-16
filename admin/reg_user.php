@@ -1,8 +1,9 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_reguser")) && (!hasPermissions("adv", "edit_reguser")))) {
-    exit;
+
+if (!checkPermissions()) {
+    goHome();
 }
 
 if (isset(ipTV_lib::$request["submit_user"])) {
@@ -87,15 +88,12 @@ if (isset(ipTV_lib::$request["submit_user"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rUser = getRegisteredUser(ipTV_lib::$request["id"]);
-    if ((!$rUser) or (!hasPermissions("adv", "edit_reguser"))) {
-        exit;
-    }
-} elseif (!hasPermissions("adv", "add_reguser")) {
-    exit;
+$rUser = isset(ipTV_lib::$request['id']) ? getRegisteredUser(ipTV_lib::$request['id']) : null;
+if ($rUser === false) {
+    goHome();
 }
 
+$_TITLE = 'User';
 include "header.php";
 ?>
 <div class="wrapper boxed-layout">
@@ -112,11 +110,7 @@ include "header.php";
                             </a>
                         </ol>
                     </div>
-                    <h4 class="page-title"><?php if (isset($rUser)) {
-                        echo $_["edit"];
-                    } else {
-                        echo $_["add"];
-                    } ?> <?= $_["registered_user"] ?></h4>
+                    <h4 class="page-title"><?= $rUser ? $_["edit"] : $_["add"] ?> <?= $_["registered_user"] ?></h4>
                 </div>
             </div>
         </div>
@@ -148,12 +142,12 @@ include "header.php";
                 <div class="card">
                     <div class="card-body">
                         <form action="./reg_user.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
-                        } ?>" method="POST" id="reg_user_form" data-parsley-validate="">
-                            <?php if (isset($rUser)) { ?>
+                                                        echo "?id=" . ipTV_lib::$request["id"];
+                                                    } ?>" method="POST" id="reg_user_form" data-parsley-validate="">
+                            <?php if ($rUser): ?>
                                 <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
                                 <input type="hidden" name="status" value="<?= $rUser["status"] ?>" />
-                            <?php } ?>
+                            <?php endif; ?>
                             <div id="basicwizard">
                                 <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                     <li class="nav-item">
@@ -162,6 +156,7 @@ include "header.php";
                                             <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                         </a>
                                     </li>
+                                    <?php if ($rUser): ?>
                                     <li class="nav-item">
                                         <a href="#package-override" data-toggle="tab"
                                             class="nav-link rounded-0 pt-2 pb-2">
@@ -169,6 +164,7 @@ include "header.php";
                                             <span class="d-none d-sm-inline"><?= $_["package_override"] ?></span>
                                         </a>
                                     </li>
+									<?php endif; ?>
                                 </ul>
                                 <div class="tab-content b-0 mb-0 pt-0">
                                     <div class="tab-pane" id="user-details">
@@ -179,21 +175,21 @@ include "header.php";
                                                         for="username"><?= $_["username"] ?></label>
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" id="username"
-                                                            name="username" value="<?php if (isset($rUser)) {
-                                                                echo htmlspecialchars($rUser["username"]);
-                                                            } ?>" required data-parsley-trigger="change">
+                                                            name="username"
+                                                            value="<?= $rUser ? htmlspecialchars($rUser['username']) : generateString(10) ?>"
+                                                            required data-parsley-trigger="change">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
                                                     <label class="col-md-4 col-form-label" for="password"><?php if (isset($rUser)) {
-                                                        ?><?= $_["change"] ?>     <?php
-                                                    } ?><?= $_["password"] ?></label>
+                                                                                                            ?><?= $_["change"] ?> <?php
+                                                                                                                                } ?><?= $_["password"] ?></label>
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" id="password" name="password" <?php if (!isset($rUser)) {
-                                                            echo 'value="' . generateString(10) . '" required data-parsley-trigger="change"';
-                                                        } else {
-                                                            echo 'value=""';
-                                                        } ?>>
+                                                                                                                                    echo 'value="' . generateString(10) . '" required data-parsley-trigger="change"';
+                                                                                                                                } else {
+                                                                                                                                    echo 'value=""';
+                                                                                                                                } ?>>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
@@ -202,8 +198,8 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <input type="email" id="email" class="form-control" name="email"
                                                             required value="<?php if (isset($rUser)) {
-                                                                echo htmlspecialchars($rUser["email"]);
-                                                            } ?>" required data-parsley-trigger="change">
+                                                                                echo htmlspecialchars($rUser["email"]);
+                                                                            } ?>" required data-parsley-trigger="change">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
@@ -214,10 +210,10 @@ include "header.php";
                                                             class="form-control select2" data-toggle="select2">
                                                             <?php foreach (getMemberGroups() as $rGroup) { ?>
                                                                 <option <?php if (isset($rUser)) {
-                                                                    if (intval($rUser["member_group_id"]) == intval($rGroup["group_id"])) {
-                                                                        echo "selected ";
-                                                                    }
-                                                                } ?>value="<?= $rGroup["group_id"] ?>"><?= htmlspecialchars($rGroup["group_name"]) ?></option>
+                                                                            if (intval($rUser["member_group_id"]) == intval($rGroup["group_id"])) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } ?>value="<?= $rGroup["group_id"] ?>"><?= htmlspecialchars($rGroup["group_name"]) ?></option>
                                                             <?php } ?>
                                                         </select>
                                                     </div>
@@ -231,14 +227,14 @@ include "header.php";
                                                             <option value="0"><?= $_["no_owner"] ?></option>
                                                             <?php foreach (getRegisteredUsers(0) as $rRegUser) { ?>
                                                                 <option <?php if (isset($rUser)) {
-                                                                    if (intval($rUser["owner_id"]) == intval($rRegUser["id"])) {
-                                                                        echo "selected ";
-                                                                    }
-                                                                } else {
-                                                                    if (intval($rUserInfo["id"]) == intval($rRegUser["id"])) {
-                                                                        echo "selected ";
-                                                                    }
-                                                                } ?>value="<?= $rRegUser["id"] ?>"><?= $rRegUser["username"] ?></option>
+                                                                            if (intval($rUser["owner_id"]) == intval($rRegUser["id"])) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } else {
+                                                                            if (intval($rUserInfo["id"]) == intval($rRegUser["id"])) {
+                                                                                echo "selected ";
+                                                                            }
+                                                                        } ?>value="<?= $rRegUser["id"] ?>"><?= $rRegUser["username"] ?></option>
                                                             <?php } ?>
                                                         </select>
                                                     </div>
@@ -248,8 +244,8 @@ include "header.php";
                                                         for="verified"><?= $_["verified"] ?></label>
                                                     <div class="col-md-2">
                                                         <input name="verified" id="verified" type="checkbox" <?php if ((isset($rUser)) && ($rUser["verified"] == 1)) {
-                                                            echo "checked ";
-                                                        } ?>data-plugin="switchery" class="js-switch"
+                                                                                                                    echo "checked ";
+                                                                                                                } ?>data-plugin="switchery" class="js-switch"
                                                             data-color="#039cfd" />
                                                     </div>
                                                     <label class="col-md-4 col-form-label"
@@ -257,10 +253,10 @@ include "header.php";
                                                     <div class="col-md-2">
                                                         <input type="text" class="form-control text-center" id="credits"
                                                             onkeypress="return isNumberKey(event)" name="credits" value="<?php if (isset($rUser)) {
-                                                                echo htmlspecialchars($rUser["credits"]);
-                                                            } else {
-                                                                echo "0";
-                                                            } ?>">
+                                                                                                                                echo htmlspecialchars($rUser["credits"]);
+                                                                                                                            } else {
+                                                                                                                                echo "0";
+                                                                                                                            } ?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4" style="display: none;"
@@ -278,8 +274,8 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" id="reseller_dns"
                                                             name="reseller_dns" value="<?php if (isset($rUser)) {
-                                                                echo htmlspecialchars($rUser["reseller_dns"]);
-                                                            } ?>">
+                                                                                            echo htmlspecialchars($rUser["reseller_dns"]);
+                                                                                        } ?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
@@ -288,8 +284,8 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <textarea id="notes" name="notes" class="form-control" rows="3"
                                                             placeholder=""><?php if (isset($rUser)) {
-                                                                echo htmlspecialchars($rUser["notes"]);
-                                                            } ?></textarea>
+                                                                                echo htmlspecialchars($rUser["notes"]);
+                                                                            } ?></textarea>
                                                     </div>
                                                 </div>
                                             </div> <!-- end col -->
@@ -297,13 +293,14 @@ include "header.php";
                                         <ul class="list-inline wizard mb-0">
                                             <li class="list-inline-item float-right">
                                                 <input name="submit_user" type="submit" class="btn btn-primary" value="<?php if (isset($rUser)) {
-                                                    echo $_["edit"];
-                                                } else {
-                                                    echo $_["add"];
-                                                } ?> <?= $_["user"] ?>" />
+                                                                                                                            echo $_["edit"];
+                                                                                                                        } else {
+                                                                                                                            echo $_["add"];
+                                                                                                                        } ?> <?= $_["user"] ?>" />
                                             </li>
                                         </ul>
                                     </div>
+                                    <?php if ($rUser): ?>
                                     <div class="tab-pane" id="package-override">
                                         <div class="row">
                                             <div class="col-12">
@@ -321,11 +318,7 @@ include "header.php";
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        if (isset($rUser)) {
-                                                            $rOverride = json_decode($rUser["override_packages"], true);
-                                                        } else {
-                                                            $rOverride = array();
-                                                        }
+                                                        $rOverride = json_decode($rUser["override_packages"], true);
                                                         foreach (getPackages($rUser["member_group_id"]) as $rPackage) {
                                                             if ($rPackage["is_official"]) { ?>
                                                                 <tr>
@@ -338,12 +331,12 @@ include "header.php";
                                                                             onkeypress="return isNumberKey(event)"
                                                                             name="override_<?= $rPackage["id"] ?>" type="text"
                                                                             value="<?php if (isset($rOverride[$rPackage["id"]])) {
-                                                                                echo htmlspecialchars($rOverride[$rPackage["id"]]["official_credits"]);
-                                                                            } ?>"
+                                                                                        echo htmlspecialchars($rOverride[$rPackage["id"]]["official_credits"]);
+                                                                                    } ?>"
                                                                             style="width:100px;" class="text-center" />
                                                                     </td>
                                                                 </tr>
-                                                            <?php }
+                                                        <?php }
                                                         } ?>
                                                     </tbody>
                                                 </table><br /><br />
@@ -352,13 +345,14 @@ include "header.php";
                                         <ul class="list-inline wizard mb-0">
                                             <li class="list-inline-item float-right">
                                                 <input name="submit_user" type="submit" class="btn btn-primary" value="<?php if (isset($rUser)) {
-                                                    echo $_["edit"];
-                                                } else {
-                                                    echo $_["add"];
-                                                } ?> <?= $_["user"] ?>" />
+                                                                                                                            echo $_["edit"];
+                                                                                                                        } else {
+                                                                                                                            echo $_["add"];
+                                                                                                                        } ?> <?= $_["user"] ?>" />
                                             </li>
                                         </ul>
                                     </div>
+									<?php endif; ?>
                                 </div> <!-- tab-content -->
                             </div> <!-- end #basicwizard-->
                         </form>
@@ -400,9 +394,9 @@ include "header.php";
 <script src="assets/js/app.min.js"></script>
 
 <script>
-    (function ($) {
-        $.fn.inputFilter = function (inputFilter) {
-            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+    (function($) {
+        $.fn.inputFilter = function(inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
                 if (inputFilter(this.value)) {
                     this.oldValue = this.value;
                     this.oldSelectionStart = this.selectionStart;
@@ -416,13 +410,13 @@ include "header.php";
     }(jQuery));
 
     function selectAll() {
-        $(".bouquet-checkbox").each(function () {
+        $(".bouquet-checkbox").each(function() {
             $(this).prop('checked', true);
         });
     }
 
     function selectNone() {
-        $(".bouquet-checkbox").each(function () {
+        $(".bouquet-checkbox").each(function() {
             $(this).prop('checked', false);
         });
     }
@@ -445,12 +439,12 @@ include "header.php";
         }
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('select.select2').select2({
             width: '100%'
         })
         var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-        elems.forEach(function (html) {
+        elems.forEach(function(html) {
             var switchery = new Switchery(html);
         });
 
@@ -463,7 +457,7 @@ include "header.php";
             }
         });
 
-        $("#no_expire").change(function () {
+        $("#no_expire").change(function() {
             if ($(this).prop("checked")) {
                 $("#exp_date").prop("disabled", true);
             } else {
@@ -471,15 +465,15 @@ include "header.php";
             }
         });
 
-        $(window).keypress(function (event) {
+        $(window).keypress(function(event) {
             if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
         });
 
-        $("#credits").change(function () {
+        $("#credits").change(function() {
             $("#credits_reason_div").show();
         });
 
-        $("#max_connections").inputFilter(function (value) {
+        $("#max_connections").inputFilter(function(value) {
             return /^\d*$/.test(value);
         });
         $("form").attr('autocomplete', 'off');
@@ -494,7 +488,7 @@ include "header.php";
         } ?>
     });
 
-    $(window).bind('beforeunload', function () {
+    $(window).bind('beforeunload', function() {
         formCache.save();
     });
 </script>
