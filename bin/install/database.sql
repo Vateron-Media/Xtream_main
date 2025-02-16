@@ -1199,7 +1199,8 @@ INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 (258,'keep_restarts','0'),
 (259,'disable_ministra','0'),
 (260,'show_expiring_video', '1'),
-(261,'expired_video_path', '');
+(261,'expired_video_path', ''),
+(262,'update_chanel', 'stable');
 
 -- --------------------------------------------------------
 

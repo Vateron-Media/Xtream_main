@@ -16,10 +16,17 @@ if (isset(ipTV_lib::$request["geolite2"])) {
     }
 }
 
+if ($rSettings['update_chanel'] == 'stable'){
+    $release = 'latest_release';
+}else{
+    $release = 'latest_prerelease';
+}
+
+
 #Get versions
 $rGeoLite2Latest = getGithubReleases("Vateron-Media/Xtream_Update")['latest_release'];
 $rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true)["geolite2_version"];
-$rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")['latest_release'], 1);
+$rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")[$release], 1);
 
 if (isset(ipTV_lib::$request["panel_version"])) {
     $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` = `" . json_encode(array('action' => 'update')) . "`;");
@@ -351,6 +358,24 @@ include "header.php";
                                                                     echo "checked ";
                                                                 } ?>data-plugin="switchery" class="js-switch"
                                                                 data-color="#039cfd" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-4">
+                                                    <label class="col-md-4 col-form-label"
+                                                            for="update_chanel"><?= $_["update_chanel"] ?></label>
+                                                        <div class="col-md-2">
+                                                            <select name="update_chanel" id="update_chanel"
+                                                                class="form-control text-center" data-toggle="select2">
+                                                                <?php foreach (array("stable" => "Stable releases", "prerelease" => "Beta releases") as $rKey => $rParser) { ?>
+                                                                    <option<?php if ($rSettings["update_chanel"] == $rKey) {
+                                                                        echo " selected";
+                                                                    } ?> value="<?= $rKey ?>">
+                                                                        <?= $rParser
+                                                                            ?>
+                                                                        </option>
+                                                                        <?php
+                                                                } ?>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     </br>

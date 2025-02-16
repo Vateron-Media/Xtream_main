@@ -1556,4 +1556,5 @@ $_ = array(
   "desc_mag_disable_ssl" => "Force MAG's to use non-SSL URL's, you should think about removing support for old MAG devices that don't support newer SSL protocols rather than disabling this.",
   "choose_" => "Choose ...",
   "desc_allow_countries" => "Select individual countries to allow. This is a global geo-lock, selet All Countries to allow everyone.",
+  "update_chanel" => "Update channel",
 );
