@@ -269,5 +269,5 @@ if (!isset($_STATUS)) {
 			});
 		</script>
 </body>
-
+<!-- XC_VM -->
 </html>
