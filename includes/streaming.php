@@ -473,7 +473,7 @@ class ipTV_streaming {
             self::closeConnections($userInfo['id'], $userInfo['max_connections'], $IP, $userAgent);
         }
     }
-    
+
     /**
      * Retrieves active connections from Redis based on the given parameters.
      *
@@ -645,7 +645,11 @@ class ipTV_streaming {
             }
             foreach ($rDelSID as $streamID => $rUUIDs) {
                 foreach ($rUUIDs as $rUUID) {
-                    ipTV_lib::unlinkFile(CONS_TMP_PATH . $streamID . '/' . $rUUID);
+                    if (is_array($rUUID)) {
+                        ipTV_lib::unlinkFile(CONS_TMP_PATH . $streamID . '/' . $rUUID[0]);
+                    }else{
+                        ipTV_lib::unlinkFile(CONS_TMP_PATH . $streamID . '/' . $rUUID);
+                    }
                 }
             }
         }
