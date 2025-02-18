@@ -1236,7 +1236,7 @@ CREATE TABLE IF NOT EXISTS `servers` (
   `ssh_password` mediumtext DEFAULT NULL,
   `ssh_port` int(11) DEFAULT NULL,
   `http_broadcast_port` int(11) NOT NULL DEFAULT 25461,
-  `total_clients` int(11) NOT NULL DEFAULT 250,
+  `total_clients` int(11) NOT NULL DEFAULT 1000,
   `network_interface` varchar(255) NOT NULL DEFAULT 'auto',
   `status` tinyint(4) NOT NULL DEFAULT -1,
   `enable_geoip` int(11) NOT NULL DEFAULT 0,

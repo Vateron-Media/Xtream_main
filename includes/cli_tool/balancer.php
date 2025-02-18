@@ -16,14 +16,21 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
             ipTV_lib::$Servers = ipTV_lib::getServers();
             $rType = intval($argv[1]);
             $rPort = intval($argv[3]);
-            list(, , , , $rUsername, $rPassword) = $argv;
+            list(,,,, $rUsername, $rPassword) = $argv;
             $rHTTPPort = (empty($argv[6]) ? 25461 : intval($argv[6]));
             $rHTTPSPort = (empty($argv[7]) ? 25463 : intval($argv[7]));
             $rUpdateSysctl = (empty($argv[8]) ? 0 : intval($argv[8]));
+
+            if (ipTV_lib::$settings['update_chanel'] == 'stable') {
+                $release = 'latest_release';
+            } else {
+                $release = 'latest_prerelease';
+            }
+
             $rSysCtl = '# XC_VM' . PHP_EOL . PHP_EOL . 'net.ipv4.tcp_congestion_control = bbr' . PHP_EOL . 'net.core.default_qdisc = fq' . PHP_EOL . 'net.ipv4.tcp_rmem = 8192 87380 134217728' . PHP_EOL . 'net.ipv4.udp_rmem_min = 16384' . PHP_EOL . 'net.core.rmem_default = 262144' . PHP_EOL . 'net.core.rmem_max = 268435456' . PHP_EOL . 'net.ipv4.tcp_wmem = 8192 65536 134217728' . PHP_EOL . 'net.ipv4.udp_wmem_min = 16384' . PHP_EOL . 'net.core.wmem_default = 262144' . PHP_EOL . 'net.core.wmem_max = 268435456' . PHP_EOL . 'net.core.somaxconn = 1000000' . PHP_EOL . 'net.core.netdev_max_backlog = 250000' . PHP_EOL . 'net.core.optmem_max = 65535' . PHP_EOL . 'net.ipv4.tcp_max_tw_buckets = 1440000' . PHP_EOL . 'net.ipv4.tcp_max_orphans = 16384' . PHP_EOL . 'net.ipv4.ip_local_port_range = 2000 65000' . PHP_EOL . 'net.ipv4.tcp_no_metrics_save = 1' . PHP_EOL . 'net.ipv4.tcp_slow_start_after_idle = 0' . PHP_EOL . 'net.ipv4.tcp_fin_timeout = 15' . PHP_EOL . 'net.ipv4.tcp_keepalive_time = 300' . PHP_EOL . 'net.ipv4.tcp_keepalive_probes = 5' . PHP_EOL . 'net.ipv4.tcp_keepalive_intvl = 15' . PHP_EOL . 'fs.file-max=20970800' . PHP_EOL . 'fs.nr_open=20970800' . PHP_EOL . 'fs.aio-max-nr=20970800' . PHP_EOL . 'net.ipv4.tcp_timestamps = 1' . PHP_EOL . 'net.ipv4.tcp_window_scaling = 1' . PHP_EOL . 'net.ipv4.tcp_mtu_probing = 1' . PHP_EOL . 'net.ipv4.route.flush = 1' . PHP_EOL . 'net.ipv6.route.flush = 1';
             $rInstallDir = BIN_PATH . 'install/';
-            $rFiles = array('lb' => 'loadbalancer.tar.gz', 'lb_update' => 'loadbalancer_update.tar.gz');
-            $lastVersion = mb_substr(get_recent_stable_release("https://github.com/Vateron-Media/Xtream_lb/releases/latest"), 1);
+            $rFiles = array('lb' => 'lb_xui.tar.gz', 'lb_update' => 'update.tar.gz');
+            $lastVersion = mb_substr(getGithubReleases("Vateron-Media/Xtream_lb")[$release], 1);
 
             if ($rType == 1) {
                 $rPackages = array(
@@ -108,9 +115,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     }
 
                     echo 'Download and install panel' . "\n";
-                    runCommand($rConn, 'wget -q -O "/tmp/sub_xui.tar.gz" ' . $rInstallFiles);
-                    runCommand($rConn, 'sudo tar -zxvf "/tmp/sub_xui.tar.gz" -C "' . MAIN_DIR . '"');
-                    runCommand($rConn, 'sudo rm -f "/tmp/sub_xui.tar.gz"');
+                    runCommand($rConn, 'wget -q -O "/tmp/lb_xui.tar.gz" ' . $rInstallFiles);
+                    runCommand($rConn, 'sudo tar -zxvf "/tmp/lb_xui.tar.gz" -C "' . MAIN_DIR . '"');
+                    runCommand($rConn, 'sudo rm -f "/tmp/lb_xui.tar.gz"');
                     if (!file_exists(MAIN_DIR . 'status')) {
                         $ipTV_db->query('UPDATE `servers` SET `status` = 4 WHERE `id` = ?;', $rServerID);
                         echo 'Failed to extract files! Exiting' . "\n";
@@ -257,6 +264,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
 } else {
     exit('Please run as XC_VM!' . "\n");
 }
+
 function sendFile($rConn, $rPath, $rOutput, $rWarn = false) {
     $rMD5 = md5_file($rPath);
     ssh2_scp_send($rConn, $rPath, $rOutput);
@@ -282,6 +290,7 @@ function sendFile($rConn, $rPath, $rOutput, $rWarn = false) {
     }
     return $rSuccess;
 }
+
 function runCommand($rConn, $rCommand) {
     $rStream = ssh2_exec($rConn, $rCommand);
     $rError = ssh2_fetch_stream($rStream, SSH2_STREAM_STDERR);
@@ -289,59 +298,73 @@ function runCommand($rConn, $rCommand) {
     stream_set_blocking($rStream, true);
     return array('output' => stream_get_contents($rStream), 'error' => stream_get_contents($rError));
 }
-/**
- * Retrieves the most recent stable release version from a given URL.
- *
- * This function sends a HEAD request to the provided URL, follows any redirects,
- * and attempts to extract the version number from the final URL's basename.
- * It assumes the version is the basename of the URL, minus the first character.
- *
- * @param string $url The URL to check for the latest stable release.
- *
- * @return string|false The extracted version number as a string, or false on failure.
- *                      The returned version string does not include the first character
- *                      of the basename (typically removing a 'v' prefix if present).
- *
- * @throws Exception If there's an issue with the cURL request or version extraction.
- *                   The exception message will be logged using error_log().
- *
- */
-function get_recent_stable_release(string $url) {
-    // Initialize cURL session
-    $ch = curl_init();
 
-    // Set cURL options
+/**
+ * Fetches the latest release and pre-release information from a GitHub repository
+ *
+ * @param string $repo The repository name in format "owner/repository"
+ *
+ * @return array{
+ *     latest_release?: string|null,
+ *     latest_prerelease?: string|null,
+ *     error?: string
+ * } Returns an array containing:
+ *           - latest_release: The tag name of the latest stable release (null if none found)
+ *           - latest_prerelease: The tag name of the latest pre-release (null if none found)
+ *           - error: Error message if the request fails
+ *
+ * @throws Exception When the GitHub API request fails or returns invalid data
+ */
+function getGithubReleases(string $repo): array {
+    $url = "https://api.github.com/repos/$repo/releases";
+
+    $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'User-Agent: PHP-Request'
+    ]);
 
-    // Execute cURL request
-    $result = curl_exec($ch);
+    $response = curl_exec($ch);
 
-    if ($result === false) {
-        error_log("cURL Error: " . curl_error($ch));
-        curl_close($ch);
-        return false;
+    if (curl_errno($ch)) {
+        return ['error' => 'Request error: ' . curl_error($ch)];
     }
 
-    // Get the effective URL after following redirects
-    $effective_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
-
-    // Close cURL session
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    // Extract the version from the URL
-    $version = basename($effective_url);
-
-    if (empty($version)) {
-        error_log("Error: Could not extract version from URL");
-        return false;
+    if ($httpCode !== 200) {
+        return ['error' => "GitHub API returned HTTP code $httpCode"];
     }
 
-    return $version;
+    $releases = json_decode($response, true);
+    if (empty($releases)) {
+        return ['error' => 'No releases found'];
+    }
+
+    $latestRelease = null;
+    $latestPrerelease = null;
+
+    foreach ($releases as $release) {
+        if (!$release['prerelease'] && !$latestRelease) {
+            $latestRelease = $release['tag_name'];
+        }
+        if ($release['prerelease'] && !$latestPrerelease) {
+            $latestPrerelease = $release['tag_name'];
+        }
+
+        if ($latestRelease && $latestPrerelease) {
+            break;
+        }
+    }
+
+    return [
+        'latest_release' => $latestRelease,
+        'latest_prerelease' => $latestPrerelease
+    ];
 }
+
 function shutdown() {
     global $ipTV_db;
     if (is_object($ipTV_db)) {

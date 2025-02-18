@@ -154,7 +154,7 @@ function getStreamingServers($online = false) {
     }
     if ($ipTV_db_admin->num_rows() > 0) {
         foreach ($ipTV_db_admin->get_rows() as $row) {
-            if (isset($rPermissions["is_reseller"])) {
+            if (isset($rPermissions["is_reseller"]) && $rPermissions["is_reseller"]) {
                 $row["server_name"] = "Server #" . $row["id"];
             }
             $return[intval($row['id'])] = $row;

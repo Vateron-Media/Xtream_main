@@ -53,6 +53,7 @@ class API {
 				// 	return array('status' => STATUS_SUCCESS, 'data' => array('insert_id' => $rServer['id']));
 				// }
 				$rData['can_delete'] = 1;
+				$rData['total_clients'] = 1000;
 				$rArray = verifyPostTable('servers', $rData);
 				$rArray['status'] = 3;
 				unset($rArray['id']);
