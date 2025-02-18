@@ -125,7 +125,7 @@ define('VIDEO_PATH', CONTENT_PATH . 'video/');
 // -------------------
 
 // CONSTANTS VAR
-define('SCRIPT_VERSION', '1.2.6.2');
+define('SCRIPT_VERSION', '1.2.6.3');
 define('FFMPEG_FONTS_PATH', BIN_PATH . 'free-sans.ttf');
 define('OPENSSL_EXTRA', '5gd46z5s4fg6sd8f4gs6');
 define('RESTART_TAKE_CACHE', 5);
