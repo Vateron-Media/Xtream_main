@@ -884,7 +884,7 @@ if (isset(ipTV_lib::$request["action"])) {
                         }
 
                         $rArray['requests_per_second'] = $rServers[$rServerID]['requests_per_second'];
-                        $rArray['total_streams'] = ($rTotalStreams[$rServerID] ?: 0);
+                        $rArray['total_streams'] = ($rTotalStreams[$rServerID] ?? 0);
                         $rArray['total_running_streams'] = ($rOnlineStreams[$rServerID] ?: 0);
                         $rArray['offline_streams'] = ($rOfflineStreams[$rServerID] ?? 0);
                         $rArray['network_guaranteed_speed'] = $rServers[$rServerID]['network_guaranteed_speed'];
