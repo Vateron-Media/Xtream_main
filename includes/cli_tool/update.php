@@ -72,6 +72,9 @@ function loadcli() {
             logMessage("Updating server status to active and setting script version.");
             $ipTV_db->query('UPDATE `servers` SET `status` = 1, `script_version` = ? WHERE `id` = ?;', SCRIPT_VERSION, SERVER_ID);
 
+            logMessage("Executing a script to delete old files.");
+            exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . '/update_delete.php');
+
             logMessage("Executing database update script.");
             exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . '/update_bd.php');
 
