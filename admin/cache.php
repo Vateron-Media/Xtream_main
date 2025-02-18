@@ -52,7 +52,8 @@ if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "se
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box">
-                        <h4 class="page-title"><?= $_["cache_cron_redis_settings"] ?></h4>
+                        <h4 class="page-title"><?= $_["cache_cron_redis_settings"] ?>  (not
+                        worked)</h4>
                     </div>
                 </div>
             </div>
