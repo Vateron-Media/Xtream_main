@@ -656,184 +656,368 @@ if ($rType == "enigmas") {
     exit;
 }
 if ($rType == "streams") {
-    $rCategories = getCategories_admin('live');
-    if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
+    if (!hasPermissions("adv", "streams") && !hasPermissions("adv", "mass_edit_streams")) {
         exit;
     }
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "streams")) && (!hasPermissions("adv", "mass_edit_streams"))) {
-        exit;
-    }
-    $rReturn = array("draw" => ipTV_lib::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
-    $rOrder = array("`streams`.`id`", false, "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`clients`", "`streams_servers`.`stream_started`", false, false, false, "`streams_servers`.`bitrate`");
-    if (strlen(ipTV_lib::$request["order"][0]["column"]) > 0) {
-        $rOrderRow = intval(ipTV_lib::$request["order"][0]["column"]);
+    $rSettings["streams_grouped"] = 0;
+    $rSettings["fails_per_time"] = 86400;
+
+    $rCategories = getCategories_admin("live");
+    $rOrder = ["`streams`.`id`", "`streams`.`stream_icon`", "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`clients`", "`streams_servers`.`stream_started`", false, false, false, "`streams_servers`.`bitrate`"];
+    if (isset(ipTV_lib::$request["order"]) && 0 < strlen(ipTV_lib::$request["order"][0]["column"])) {
+        $rOrderRow = (int) ipTV_lib::$request["order"][0]["column"];
     } else {
         $rOrderRow = 0;
     }
-    $rWhere = array();
-    $rWhere[] = "`streams`.`type` in (1,3)";
+    $rCreated = isset(ipTV_lib::$request["created"]);
+    $rWhere = $rWhereV = [];
+    if ($rCreated) {
+        $rWhere[] = "`streams`.`type` = 3";
+    } else {
+        $rWhere[] = "`streams`.`type` = 1";
+    }
     if (isset(ipTV_lib::$request["stream_id"])) {
-        $rWhere[] = "`streams`.`id` = " . intval(ipTV_lib::$request["stream_id"]);
+        $rWhere[] = "`streams`.`id` = ?";
+        $rWhereV[] = ipTV_lib::$request["stream_id"];
         $rOrderBy = "ORDER BY `streams_servers`.`server_stream_id` ASC";
     } else {
-        if (strlen(ipTV_lib::$request["search"]["value"]) > 0) {
-            $rSearch = ipTV_lib::$request["search"]["value"];
-            $rWhere[] = "(`streams`.`id` LIKE '%{$rSearch}%' OR `streams`.`stream_display_name` LIKE '%{$rSearch}%' OR `streams`.`notes` LIKE '%{$rSearch}%' OR `streams_servers`.`current_source` LIKE '%{$rSearch}%' OR `stream_categories`.`category_name` LIKE '%{$rSearch}%' OR `servers`.`server_name` LIKE '%{$rSearch}%')";
-        }
-        if (strlen(ipTV_lib::$request["filter"]) > 0) {
-            if (ipTV_lib::$request["filter"] == 1) {
-                $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0)";
-            } elseif (ipTV_lib::$request["filter"] == 2) {
-                $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` <> 0)";
-            } elseif (ipTV_lib::$request["filter"] == 3) {
-                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
-            } elseif (ipTV_lib::$request["filter"] == 4) {
-                $rWhere[] = "((`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 0)";
-            } elseif (ipTV_lib::$request["filter"] == 5) {
-                $rWhere[] = "`streams_servers`.`on_demand` = 1";
-            } elseif (ipTV_lib::$request["filter"] == 6) {
-                $rWhere[] = "`streams`.`direct_source` = 1";
-            } elseif (ipTV_lib::$request["filter"] == 7) {
-                $rWhere[] = "`streams`.`tv_archive_duration` > 0";
-            } elseif (ipTV_lib::$request["filter"] == 8) {
-                $rWhere[] = "`streams`.`type` = 3";
+        if (0 < strlen(ipTV_lib::$request["search"]["value"])) {
+            foreach (range(1, 4) as $rInt) {
+                $rWhereV[] = "%" . ipTV_lib::$request["search"]["value"] . "%";
             }
+            $rWhere[] = "(`streams`.`id` LIKE ? OR `streams`.`stream_display_name` LIKE ? OR `streams`.`notes` LIKE ? OR `streams_servers`.`current_source` LIKE ?)";
         }
-        if (strlen(ipTV_lib::$request["category"]) > 0) {
-            $rWhere[] = "`streams`.`category_id` = " . intval(ipTV_lib::$request["category"]);
+        if (0 < (int) ipTV_lib::$request["category"]) {
+            $rWhere[] = "JSON_CONTAINS(`streams`.`category_id`, ?, '\$')";
+            $rWhereV[] = ipTV_lib::$request["category"];
+        } elseif ((int) ipTV_lib::$request["category"] == -1) {
+            $rWhere[] = "(`streams`.`category_id` = '[]' OR `streams`.`category_id` IS NULL)";
         }
-        if (strlen(ipTV_lib::$request["server"]) > 0) {
-            $rWhere[] = "`streams_servers`.`server_id` = " . intval(ipTV_lib::$request["server"]);
+        if (isset(ipTV_lib::$request["refresh"])) {
+            $rWhere = ["`streams`.`id` IN (" . implode(",", array_map("intval", explode(",", ipTV_lib::$request["refresh"]))) . ")"];
+            $rStart = 0;
+            $rLimit = 1000;
+        }
+        if (0 < strlen(ipTV_lib::$request["filter"])) {
+                if (ipTV_lib::$request["filter"] == 1) {
+                    $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`stream_status` = 0)";
+                } elseif (ipTV_lib::$request["filter"] == 2) {
+                    $rWhere[] = "((`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 1))";
+                } elseif (ipTV_lib::$request["filter"] == 3) {
+                    $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
+                } elseif (ipTV_lib::$request["filter"] == 4) {
+                    $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 2)";
+                } elseif (ipTV_lib::$request["filter"] == 5) {
+                    $rWhere[] = "`streams_servers`.`on_demand` = 1";
+                } elseif (ipTV_lib::$request["filter"] == 6) {
+                    $rWhere[] = "`streams`.`direct_source` = 1";
+                } elseif (ipTV_lib::$request["filter"] == 7) {
+                    $rWhere[] = "`streams`.`tv_archive_server_id` > 0 AND `streams`.`tv_archive_duration` > 0";
+                } elseif (ipTV_lib::$request["filter"] == 8) {
+                    $rWhere[] = "`streams`.`type` = 3";
+                }
+
+        }
+        if (0 < (int) ipTV_lib::$request["server"]) {
+            $rWhere[] = "`streams_servers`.`server_id` = ?";
+            $rWhereV[] = (int) ipTV_lib::$request["server"];
+        } elseif ((int) ipTV_lib::$request["server"] == -1) {
+            $rWhere[] = "`streams_servers`.`server_id` IS NULL";
         }
         if ($rOrder[$rOrderRow]) {
-            $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === 'desc' ? 'desc' : 'asc';
+            $rOrderDirection = strtolower(ipTV_lib::$request["order"][0]["dir"]) === "desc" ? "desc" : "asc";
             $rOrderBy = "ORDER BY " . $rOrder[$rOrderRow] . " " . $rOrderDirection;
         }
     }
-    if (count($rWhere) > 0) {
-        $rWhereString = "WHERE " . join(" AND ", $rWhere);
+    if (0 < count($rWhere)) {
+        $rWhereString = "WHERE " . implode(" AND ", $rWhere);
     } else {
         $rWhereString = "";
     }
-    $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` LEFT JOIN `stream_categories` ON `stream_categories`.`id` = `streams`.`category_id` LEFT JOIN `servers` ON `servers`.`id` = `streams_servers`.`server_id` {$rWhereString};";
-    $ipTV_db_admin->query($rCountQuery);
+    if (isset(ipTV_lib::$request["single"])) {
+        $rSettings["streams_grouped"] = 0;
+    }
+    if ($rSettings["streams_grouped"] == 1) {
+        $rCountQuery = "SELECT COUNT(*) AS `count` FROM (SELECT `id` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` AND `streams_servers`.`parent_id` IS NULL " . $rWhereString . " GROUP BY `streams`.`id`) t1;";
+    } else {
+        $rCountQuery = "SELECT COUNT(*) AS `count` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` " . $rWhereString . ";";
+    }
+    $ipTV_db_admin->query($rCountQuery, ...$rWhereV);
     if ($ipTV_db_admin->num_rows() == 1) {
         $rReturn["recordsTotal"] = $ipTV_db_admin->get_row()["count"];
     } else {
         $rReturn["recordsTotal"] = 0;
     }
-    $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
-    if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = 'SELECT `streams`.`id`, `streams`.`type`, `streams`.`stream_icon`, `streams_servers`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams`.`tv_archive_server_id`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`cc_info`, `streams_servers`.`on_demand`, `streams`.`category_id`, (SELECT `server_name` FROM `servers` WHERE `id` = `streams_servers`.`server_id`) AS `server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id` AND `hls_end` = 0) AS `clients`, `streams`.`epg_id`, `streams`.`channel_id`, `streams_servers`.`parent_id` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` ' . $rWhereString . ' ' . $rOrderBy . ' LIMIT ' . $rStart . ', ' . $rLimit . ';';
-        $ipTV_db_admin->query($rQuery);
-        if ($ipTV_db_admin->num_rows() > 0) {
-            foreach ($ipTV_db_admin->get_rows() as $rRow) {
-                $rCategoryIDs = json_decode($rRow['category_id'], true);
-                $rCategory = ($rCategories[$rCategoryIDs[0]]['category_name'] ?: 'No Category');
-
-                if ($rRow["tv_archive_duration"] > 0) {
-                    $rRow["stream_display_name"] .= " <i class='text-danger mdi mdi-record'></i>";
+    $rReturn["recordsFiltered"] =  $rReturn["recordsTotal"];
+    if (0 < $rReturn["recordsTotal"]) {
+        if ($rSettings["streams_grouped"] == 1) {
+            $rQuery = "SELECT `streams`.`id`, `streams_servers`.`stream_id`, `streams`.`type`, `streams`.`stream_icon`, `streams`.`adaptive_link`, `streams_servers`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams`.`tv_archive_server_id`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams`.`direct_proxy`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`cc_info`, `streams_servers`.`on_demand`, `streams`.`category_id`, (SELECT `server_name` FROM `servers` WHERE `id` = `streams_servers`.`server_id`) AS `server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`stream_id` = `streams`.`id` AND `hls_end` = 0) AS `clients`, `streams`.`epg_id`, `streams`.`channel_id` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` AND `streams_servers`.`parent_id` IS NULL " . $rWhereString . " GROUP BY `streams`.`id` " . $rOrderBy . ", -`stream_started` DESC LIMIT " . $rStart . ", " . $rLimit . ";";
+        } else {
+            $rQuery = "SELECT `streams`.`id`, `streams`.`type`, `streams`.`stream_icon`, `streams`.`adaptive_link`, `streams_servers`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams`.`tv_archive_server_id`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`cc_info`, `streams_servers`.`on_demand`, `streams`.`category_id`, (SELECT `server_name` FROM `servers` WHERE `id` = `streams_servers`.`server_id`) AS `server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id` AND `hls_end` = 0) AS `clients`, `streams`.`epg_id`, `streams`.`channel_id`, `streams_servers`.`parent_id` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` " . $rWhereString . " " . $rOrderBy . " LIMIT " . $rStart . ", " . $rLimit . ";";
+        }
+        $ipTV_db_admin->query($rQuery, ...$rWhereV);
+        if (0 < $ipTV_db_admin->num_rows()) {
+            $rRows = $ipTV_db_admin->get_rows();
+            $rEPGIDs = $rServerCount = $rStreamIDs = [];
+            foreach ($rRows as $rRow) {
+                $rStreamIDs[] = $rRow["id"];
+                if ($rRow["channel_id"] && !in_array("'" . $rRow["epg_id"] . "_" . $rRow["channel_id"] . "'", $rEPGIDs)) {
+                    $rEPGIDs[] = "'" . $rRow["epg_id"] . "_" . str_replace("'", "\\'", $rRow["channel_id"]) . "'";
                 }
-                $rStreamName = "<b>" . $rRow['stream_display_name'] . "</b><br><span style='font-size:11px;'>{$rCategory}</span>";
-                if ($rRow["server_name"]) {
-                    if ($rPermissions["is_admin"]) {
-                        $rServerName = $rRow["server_name"];
+            }
+            if (0 < count($rStreamIDs)) {
+                $ipTV_db_admin->query("SELECT `stream_id`, COUNT(`server_stream_id`) AS `count` FROM `streams_servers` WHERE `stream_id` IN (" . implode(",", array_map("intval", $rStreamIDs)) . ") GROUP BY `stream_id`;");
+                foreach ($ipTV_db_admin->get_rows() as $rRow) {
+                    $rServerCount[$rRow["stream_id"]] = $rRow["count"];
+                }
+                if (ipTV_lib::$settings["redis_handler"]) {
+                    if ($rSettings["streams_grouped"]) {
+                        $rConnectionCount = ipTV_streaming::getStreamConnections($rStreamIDs, true, true);
                     } else {
-                        $rServerName = "Server #" . $rRow["server_id"];
+                        $rConnectionCount = ipTV_streaming::getStreamConnections($rStreamIDs, false, false);
+                    }
+                }
+            }
+            foreach ($rRows as $rRow) {
+                if (ipTV_lib::$settings["redis_handler"]) {
+                    if ($rSettings["streams_grouped"] == 1) {
+                        $rRow["clients"] = $rConnectionCount[$rRow["id"]] ?: 0;
+                    } else {
+                        $rRow["clients"] = count($rConnectionCount[$rRow["id"]][$rRow["server_id"]]) ?: 0;
+                    }
+                }
+                $rCategoryIDs = json_decode($rRow["category_id"], true);
+                if (0 < strlen(ipTV_lib::$request["category"])) {
+                    $rCategory = $rCategories[(int) ipTV_lib::$request["category"]]["category_name"] ?: "No Category";
+                } else {
+                    if (0 < count($rCategoryIDs)) {
+                        $rCategory = $rCategories[$rCategoryIDs[0]]["category_name"] ?: "No Category";
+                    }else{
+                        $rCategory = "No Category";
+                    }
+                }
+                if (1 < count($rCategoryIDs)) {
+                    $rCategory .= " (+" . (count($rCategoryIDs) - 1) . " others)";
+                }
+                if (0 < $rRow["tv_archive_duration"] && 0 < $rRow["tv_archive_server_id"]) {
+                    " &nbsp;<a href='archive?id=" . $rRow["id"] . "'><i class='text-danger mdi mdi-record'></i></a>";
+                    $rRow >>= "stream_display_name";
+                }
+                if (0 < count(json_decode($rRow["adaptive_link"], true))) {
+                    " &nbsp;<a href='stream_view?id=" . $rRow["id"] . "'><i class='text-info mdi mdi-wifi-strength-3'></i></a>";
+                    $rRow >>= "stream_display_name";
+                }
+                $rStreamName = "<a href='stream_view?id=" . $rRow["id"] . "'><strong>" . $rRow["stream_display_name"] . "</strong><br><span style='font-size:11px;'>" . $rCategory . "</span></a>";
+                if ($rRow["server_name"]) {
+                    if (hasPermissions("adv", "servers")) {
+                        $rServerName = "<a href='server_view?id=" . $rRow["server_id"] . "'>" . $rRow["server_name"] . "</a>";
+                    } else {
+                        $rServerName = $rRow["server_name"];
+                    }
+                    if ($rSettings["streams_grouped"] && 1 < $rServerCount[$rRow["id"]]) {
+                        $rServerName .= " &nbsp; <button title=\"View All Servers\" onClick=\"viewSources('" . str_replace("'", "\\'", $rRow["stream_display_name"]) . "', " . (int) $rRow["id"] . ");\" type='button' class='tooltip-left btn btn-info btn-xs waves-effect waves-light'>+ " . ($rServerCount[$rRow["id"]] - 1) . "</button>";
+                    }
+                    if ($rServers[$rRow["server_id"]]["last_status"] != 1) {
+                        $rServerName .= " &nbsp; <button title=\"Server Offline!<br/>Uptime cannot be confirmed.\" type='button' class='tooltip btn btn-danger btn-xs waves-effect waves-light'><i class='mdi mdi-alert'></i></button>";
                     }
                 } else {
                     $rServerName = "No Server Selected";
                 }
-                if ($rRow["type"] == 3) {
-                    $rStreamSource = "<br/><span style='font-size:11px;'>Created Channel</span>";
+                if (0 < (int) $rRow["parent_id"]) {
+                    $rStreamSource = "<br/><span style='font-size:11px;'>loop: " . strtolower(ipTV_lib::$Servers[$rRow["parent_id"]]["server_name"]) . "</span>";
                 } else {
-                    $rStreamSource = "<br/><span style='font-size:11px;'>" . parse_url($rRow["current_source"])['host'] . "</span>";
-                }
-                if ($rPermissions["is_admin"]) {
-                    $rServerName .= $rStreamSource;
-                }
-                $rUptime = 0;
-                $rActualStatus = 0;
-                if (intval($rRow["direct_source"]) == 1) {
-                    // Direct
-                    $rActualStatus = 5;
-                } elseif ($rRow["monitor_pid"]) {
-                    // Started
-                    if (($rRow["pid"]) && ($rRow["pid"] > 0)) {
-                        // Running
-                        $rActualStatus = 1;
-                        $rUptime = time() - intval($rRow["stream_started"]);
+                    if ($rRow["current_source"]) {
+                        $rStreamSource = "<br/><span style='font-size:11px;'>" . strtolower(parse_url($rRow["current_source"])["host"]) . "</span>";
                     } else {
-                        if (intval($rRow["stream_status"]) == 0) {
-                            // Starting
-                            $rActualStatus = 2;
+                        $rStreamSource = "<br/><span style='font-size:11px;'>N/A</span>";
+                    }
+                    // $rStreamSource = "<br/><span style='font-size:11px;'>" . strtolower(parse_url($rRow["current_source"])["host"]) . "</span>";
+                }
+                $rServerName .= $rStreamSource;
+                if (0 < (int) $rRow["stream_started"]) {
+                    $rSeconds = $rUptime = time() - (int) $rRow["stream_started"];
+                }
+                $rActualStatus = 0;
+                if ($rRow["server_id"]) {
+                    if (!$rCreated) {
+                        if ((int) $rRow["direct_source"] == 1) {
+                            if ((int) $rRow["direct_proxy"] == 1) {
+                                if ($rRow["pid"] && 0 < $rRow["pid"]) {
+                                    $rActualStatus = 1;
+                                } else {
+                                    $rActualStatus = 7;
+                                }
+                            } else {
+                                $rActualStatus = 5;
+                            }
+                        } elseif ($rRow["monitor_pid"]) {
+                            if ($rRow["pid"] && 0 < $rRow["pid"]) {
+                                if ((int) $rRow["stream_status"] == 2) {
+                                    $rActualStatus = 2;
+                                } else {
+                                    $rActualStatus = 1;
+                                }
+                            } elseif ($rRow["stream_status"] == 0) {
+                                $rActualStatus = 2;
+                            } else {
+                                $rActualStatus = 3;
+                            }
+                        } elseif ((int) $rRow["on_demand"] == 1) {
+                            $rActualStatus = 4;
                         } else {
-                            // Stalled
-                            $rActualStatus = 3;
+                            $rActualStatus = 0;
+                        }
+                    } else {
+                        if ($rRow["monitor_pid"]) {
+                            if ($rRow["pid"] && 0 < $rRow["pid"]) {
+                                if ((int) $rRow["stream_status"] == 2) {
+                                    $rActualStatus = 2;
+                                } else {
+                                    $rActualStatus = 1;
+                                }
+                            } elseif ($rRow["stream_status"] == 0) {
+                                $rActualStatus = 2;
+                            } else {
+                                $rActualStatus = 3;
+                            }
+                        } else {
+                            $rActualStatus = 0;
+                        }
+                        if (count(json_decode($rRow["cchannel_rsources"], true)) != count(json_decode($rRow["stream_source"], true)) && !$rRow["parent_id"]) {
+                            $rActualStatus = 6;
                         }
                     }
-                } elseif (intval($rRow["on_demand"]) == 1) {
-                    // On Demand
-                    $rActualStatus = 4;
+                } elseif ((int) $rRow["direct_source"] == 1) {
+                    $rActualStatus = 5;
                 } else {
-                    // Stopped
-                    $rActualStatus = 0;
-                }
-                if ($rRow["type"] == 3) {
-                    if (count(json_decode($rRow["cchannel_rsources"], true)) <> count(json_decode($rRow["stream_source"], true))) {
-                        // Still processing...
-                        $rActualStatus = 6;
-                    }
-                }
-                if (hasPermissions("adv", "live_connections")) {
-                    $rClients = "<a href=\"./live_connections.php?stream_id=" . $rRow["id"] . "&server_id=" . $rRow["server_id"] . "\">" . $rRow["clients"] . "</a>";
-                } else {
-                    $rClients = $rRow["clients"];
-                }
-                if ($rActualStatus == 1) {
-                    if ($rUptime >= 86400) {
-                        $rUptime = sprintf('%02dd %02dh %02dm %02ds', ($rUptime / 86400), ($rUptime / 3600 % 24), ($rUptime / 60 % 60), ($rUptime % 60));
-                    } else {
-                        $rUptime = sprintf('%02dh %02dm %02ds', ($rUptime / 3600), ($rUptime / 60 % 60), ($rUptime % 60));
-                    }
-                    $rUptime = "<button type='button' class='btn btn-outline-success btn-rounded btn-xs waves-effect waves-light'>{$rUptime}</button>";
-                } else {
-                    $rUptime = $rStatusArray[$rActualStatus];
+                    $rActualStatus = -1;
                 }
                 if (!$rRow["server_id"]) {
                     $rRow["server_id"] = 0;
                 }
-                $rButtons = '<div class="btn-group">';
-                if ($rPermissions["is_admin"]) {
-                    if (strlen($rRow["notes"]) > 0) {
-                        $rButtons .= '<button type="button" class="btn btn-light waves-effect waves-light btn-xs" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $rRow["notes"] . '"><i class="mdi mdi-note"></i></button>';
+                if ($rSettings["streams_grouped"] == 1) {
+                    $rRow["server_id"] = -1;
+                }
+                if (hasPermissions("adv", "live_connections")) {
+                    if (0 < $rRow["clients"]) {
+                        $rClients = "<a href='javascript: void(0);' onClick='viewLiveConnections(" . (int) $rRow["id"] . ", " . (int) $rRow["server_id"] . ");'><button type='button' class='btn btn-info btn-xs waves-effect waves-light'>" . number_format($rRow["clients"], 0) . "</button></a>";
                     } else {
-                        $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
+                        $rClients = "<button type='button' class='btn btn-secondary btn-xs waves-effect waves-light'>0</button>";
                     }
+                } elseif (0 < $rRow["clients"]) {
+                    $rClients = "<button type='button' class='btn btn-secondary btn-xs waves-effect waves-light'>" . number_format($rRow["clients"], 0) . "</button>";
+                } else {
+                    $rClients = "<button type='button' class='btn btn-secondary btn-xs waves-effect waves-light'>0</button>";
+                }
+                $rBtnLength = "btn-fixed";
+                if ($rActualStatus == 1) {
+                    if (86400 <= $rUptime) {
+                        $rUptime = sprintf("%02dd %02dh %02dm", $rUptime / 86400, $rUptime / 3600 % 24, $rUptime / 60 % 60);
+                    } else {
+                        $rUptime = sprintf("%02dh %02dm %02ds", $rUptime / 3600, $rUptime / 60 % 60, $rUptime % 60);
+                    }
+                    $rUptime = "<button type='button' class='btn btn-success btn-xs waves-effect waves-light " . $rBtnLength . "'>" . $rUptime . "</button>";
+                } elseif ($rActualStatus == 3) {
+                    $rUptime = "<button type='button' class='btn btn-danger btn-xs waves-effect waves-light " . $rBtnLength . "'>DOWN</button>";
+                } elseif ($rActualStatus == 6) {
+                    $rSources = json_decode($rRow["stream_source"], true);
+                    $rLeft = count(array_diff($rSources, json_decode($rRow["cchannel_rsources"], true)));
+                    $rPercent = (int) ((count($rSources) - $rLeft) / count($rSources) * 100);
+                    $rUptime = "<button type='button' class='btn btn-primary btn-xs waves-effect waves-light btn-fixed-xl'>" . $rPercent . "% DONE</button>";
+                } else {
+                    $rUptime = $rStatusArray[$rActualStatus];
+                }
+                if (in_array($rActualStatus, [1, 2, 3])) {
+                    if ($rCreated) {
+                        $rCCInfo = json_decode($rRow["cc_info"], true);
+                        $rTrackInfo = $rRow["parent_id"] ? "Channel is looping from another server, real position cannot be determined." : "No information available.";
+                        if ($rActualStatus == 1 && 0 < count($rCCInfo) && !$rRow["parent_id"]) {
+                            $rSources = json_decode($rRow["stream_source"], true);
+                            foreach ($rCCInfo as $rTrack) {
+                                if ($rTrack["start"] <= $rSeconds && $rSeconds < $rTrack["finish"]) {
+                                    $rTrackInfo = pathinfo($rSources[$rTrack["position"]])["filename"] . "<br/><br/>Track # " . ($rTrack["position"] + 1) . " of " . count($rSources) . "<br/>";
+                                    if ($rTrack["position"] < count($rSources) - 1) {
+                                        $rTrackInfo .= "Next track in " . number_format(($rTrack["finish"] - $rSeconds) / 60, 0) . " minutes.";
+                                    } else {
+                                        $rTrackInfo .= "Looping in " . number_format(($rTrack["finish"] - $rSeconds) / 60, 0) . " minutes.";
+                                    }
+                                }
+                            }
+                            $rUptime = "<button type='button' title='" . htmlspecialchars($rTrackInfo) . "' class='btn tooltip btn-success btn-xs waves-effect waves-light btn-fixed-xs'><i class='text-light fas fa-check-circle'></i></button>" . $rUptime;
+                        } else {
+                            $rUptime = "<button type='button' title='" . htmlspecialchars($rTrackInfo) . "' class='btn tooltip btn-secondary btn-xs waves-effect waves-light btn-fixed-xs'><i class='text-light fas fa-minus-circle'></i></button>" . $rUptime;
+                        }
+                    }
+                }
+
+                //Action
+                $rButtons = '<div class="btn-group">';
+                if (strlen($rRow["notes"]) > 0) {
+                    $rButtons .= '<button type="button" class="btn btn-light waves-effect waves-light btn-xs" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $rRow["notes"] . '"><i class="mdi mdi-note"></i></button>';
+                } else {
+                    $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
                 }
                 if (hasPermissions("adv", "edit_stream")) {
                     if ((intval($rActualStatus) == 1) or (intval($rActualStatus) == 2) or (intval($rActualStatus) == 3) or ($rRow["on_demand"] == 1) or ($rActualStatus == 5)) {
-                        $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Stop" type="button" class="btn btn-light waves-effect waves-light btn-xs api-stop" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'stop\');"><i class="mdi mdi-stop"></i></button>
-						';
+                        $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Stop" type="button" class="btn btn-light waves-effect waves-light btn-xs api-stop" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'stop\');"><i class="mdi mdi-stop"></i></button>';
                         $rStatus = '';
                     } else {
-                        $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Start" type="button" class="btn btn-light waves-effect waves-light btn-xs api-start" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'start\');"><i class="mdi mdi-play"></i></button>
-						';
+                        $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Start" type="button" class="btn btn-light waves-effect waves-light btn-xs api-start" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'start\');"><i class="mdi mdi-play"></i></button>';
                         $rStatus = ' disabled';
                     }
-                    $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Restart" type="button" class="btn btn-light waves-effect waves-light btn-xs api-restart" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'restart\');"' . $rStatus . '><i class="mdi mdi-refresh"></i></button>
-					';
+                    $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Restart" type="button" class="btn btn-light waves-effect waves-light btn-xs api-restart" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'restart\');"' . $rStatus . '><i class="mdi mdi-refresh"></i></button>';
                     if ($rRow["type"] == 3) {
-                        $rButtons .= '<a href="./created_channel.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
-						';
+                        $rButtons .= '<a href="./created_channel?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                     } else {
-                        $rButtons .= '<a href="./stream.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
-						';
+                        $rButtons .= '<a href="./stream?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                     }
-                    $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'delete\');"><i class="mdi mdi-close"></i></button>
-					';
+                    $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'delete\');"><i class="mdi mdi-close"></i></button>';
                 }
                 $rButtons .= '</div>';
+                /// ---------
+
+                $rStreamInfoText = "<table style='font-size: 10px;' class='table-data nowrap' align='center'><tbody><tr><td colspan='5'>No information available</td></tr></tbody></table>";
+                $rStreamInfo = json_decode($rRow["stream_info"], true);
+                $rProgressInfo = json_decode($rRow["progress_info"], true);
+                if ($rActualStatus == 1) {
+                    if (!isset($rStreamInfo["codecs"]["video"])) {
+                        $rStreamInfo["codecs"]["video"] = ["width" => "?", "height" => "?", "codec_name" => "N/A", "r_frame_rate" => "--"];
+                    }
+                    if (!isset($rStreamInfo["codecs"]["audio"])) {
+                        $rStreamInfo["codecs"]["audio"] = ["codec_name" => "N/A"];
+                    }
+                    if ($rRow["bitrate"] == 0) {
+                        $rRow["bitrate"] = "?";
+                    }
+                    if (isset($rProgressInfo["speed"])) {
+                        $rSpeed = floor(floatval($rProgressInfo["speed"]) * 100) / 100 . "x";
+                    } else {
+                        $rSpeed = "1x";
+                    }
+                    $rFPS = NULL;
+                    if (isset($rProgressInfo["fps"])) {
+                        $rFPS = (int) $rProgressInfo["fps"];
+                    } elseif (isset($rStreamInfo["codecs"]["video"]["r_frame_rate"])) {
+                        $rFPS = (int) $rStreamInfo["codecs"]["video"]["r_frame_rate"];
+                    }
+                    if ($rFPS) {
+                        if (1000 <= $rFPS) {
+                            $rFPS = (int) ($rFPS / 1000);
+                        }
+                        $rFPS = $rFPS . " FPS";
+                    } else {
+                        $rFPS = "--";
+                    }
+                    $rStreamInfoText = "<table class='table-data nowrap' align='center'><tbody><tr><td class='double'>" . number_format($rRow["bitrate"], 0) . " Kbps</td><td class='text-success'><i class='mdi mdi-video' data-name='mdi-video'></i></td><td class='text-success'><i class='mdi mdi-volume-high' data-name='mdi-volume-high'></i></td>";
+                    if (!$rCreated) {
+                        $rStreamInfoText .= "<td class='text-success'><i class='mdi mdi-play-speed' data-name='mdi-play-speed'></i></td>";
+                    }
+                    $rStreamInfoText .= "<td class='text-success'><i class='mdi mdi-layers' data-name='mdi-layers'></i></td></tr><tr><td class='double'>" . $rStreamInfo["codecs"]["video"]["width"] . " x " . $rStreamInfo["codecs"]["video"]["height"] . "</td><td>" . $rStreamInfo["codecs"]["video"]["codec_name"] . "</td><td>" . $rStreamInfo["codecs"]["audio"]["codec_name"] . "</td>";
+                    if (!$rCreated) {
+                        $rStreamInfoText .= "<td>" . $rSpeed . "</td>";
+                    }
+                    $rStreamInfoText .= "<td>" . $rFPS . "</td></tr></tbody></table>";
+                }
                 if (hasPermissions("adv", "player")) {
                     if (((intval($rActualStatus) == 1) or ($rRow["on_demand"] == 1) or ($rActualStatus == 5))) {
                         $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ');"><i class="mdi mdi-play"></i></button>';
@@ -843,61 +1027,26 @@ if ($rType == "streams") {
                 } else {
                     $rPlayer = '<button type="button" disabled class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-play"></i></button>';
                 }
-                $rStreamInfoText = "<div style='font-size: 10px;' class='text-center' align='center'><tbody><tr><td colspan='5' class='col'>No information available</td></tr></tbody></div>";
-                $rStreamInfo = json_decode($rRow["stream_info"], true);
-                if ($rStreamInfo == 0 || $rStreamInfo == "") {
-                    $rStreamInfo = [];
-                }
-                $rProgressInfo = json_decode($rRow["progress_info"], true);
-                if ($rActualStatus == 1) {
-                    if (!isset($rStreamInfo["codecs"]["video"])) {
-                        $rStreamInfo["codecs"]["video"] = array("width" => "?", "height" => "?", "codec_name" => "N/A", "r_frame_rate" => "--");
-                    }
-                    if (!isset($rStreamInfo["codecs"]["audio"])) {
-                        $rStreamInfo["codecs"]["audio"] = array("codec_name" => "N/A");
-                    }
-                    if ($rRow['bitrate'] == 0) {
-                        $rRow['bitrate'] = "?";
-                    }
-                    if (isset($rProgressInfo["speed"])) {
-                        $rSpeed = $rProgressInfo["speed"];
-                    } else {
-                        $rSpeed = "--";
-                    }
-                    if (isset($rProgressInfo["fps"])) {
-                        $rFPS = intval($rProgressInfo["fps"]) . " FPS";
-                    } else {
-                        if (isset($rStreamInfo["codecs"]["video"]["r_frame_rate"])) {
-                            $rFPS = intval($rStreamInfo["codecs"]["video"]["r_frame_rate"]) . " FPS";
-                        } else {
-                            $rFPS = "--";
-                        }
-                    }
-                    $rStreamInfoText = "<div style='font-size: 12px;' class='text-center' align='center'>
-                                <td class='col'><i class='mdi mdi-video' data-name='mdi-video' style='color: #20a009;'></i>" . $rStreamInfo["codecs"]["video"]["codec_name"] . "</td>
-                                <td class='col'><i class='mdi mdi-volume-high' data-name='mdi-volume-high' style='color: #20a009;'></i>" . $rStreamInfo["codecs"]["audio"]["codec_name"] . "</td>
-                                <td class='col'><i class='mdi mdi-play-speed' data-name='mdi-play-speed' style='color: #20a009;'></i>" . $rSpeed . "</td>
-                                <td class='col'><i class='mdi mdi-layers' data-name='mdi-layers' style='color: #20a009;'></i>" . $rFPS . "</td>
-								<br>
-								<td class='col'>" . $rRow['bitrate'] . " Kbps " . $rStreamInfo["codecs"]["video"]["width"] . "x" . $rStreamInfo["codecs"]["video"]["height"] . "</td>
-                    </div>";
-                }
-                if ($rRow["count_epg"] > 0) {
-                    $rEPG = '<i class="text-success fas fa-circle"></i>';
+                if (file_exists(EPG_PATH . "stream_" . $rRow["id"])) {
+                    $rEPG = "<button onClick=\"viewEPG(" . (int) $rRow["id"] . ");\" type='button' title='View EPG' class='tooltip btn btn-success btn-xs waves-effect waves-light'><i class='text-white fas fa-square'></i></button>";
                 } elseif ($rRow["channel_id"]) {
-                    $rEPG = '<i class="text-warning fas fa-circle"></i>';
+                    $rEPG = "<button type='button' class='btn btn-warning btn-xs waves-effect waves-light'><i class='text-white fas fa-square'></i></button>";
                 } else {
-                    $rEPG = '<i class="text-danger far fa-circle"></i>';
+                    $rEPG = "<button type='button' class='btn btn-secondary btn-xs waves-effect waves-light'><i class='text-white fas fa-square'></i></button>";
                 }
                 if (strlen($rRow["stream_icon"]) > 0) {
-                    $rIcon = "<img loading='lazy' src='./resize?maxw=96&maxh=32&url=" . $rRow["stream_icon"] . "' />";
+                    $rIcon = "<img loading='lazy' src='resize?maxw=96&maxh=32&url=" . $rRow["stream_icon"] . "' />";
                 } else {
                     $rIcon = "";
                 }
-                if ($rPermissions["is_admin"]) {
-                    $rReturn["data"][] = array($rRow["id"], $rIcon, $rStreamName, $rServerName, $rClients, $rUptime, $rButtons, $rPlayer, $rEPG, $rStreamInfoText);
+                $rID = $rRow["id"];
+                if (!$rSettings["streams_grouped"] && 1 < $rServerCount[$rRow["id"]]) {
+                    $rID .= "-" . $rRow["server_id"];
+                }
+                if ($rCreated) {
+                    $rReturn["data"][] = ["<a href='stream_view?id=" . $rRow["id"] . "'>" . $rID . "</a>", $rIcon, $rStreamName, $rServerName, $rClients, $rUptime, $rButtons, $rPlayer, $rStreamInfoText];
                 } else {
-                    $rReturn["data"][] = array($rRow["id"], $rIcon, $rStreamName, $rServerName, $rStreamInfoText);
+                    $rReturn["data"][] = ["<a href='stream_view?id=" . $rRow["id"] . "'>" . $rID . "</a>", $rIcon, $rStreamName, $rServerName, $rClients, $rUptime, $rButtons, $rPlayer, $rEPG, $rStreamInfoText];
                 }
             }
         }
@@ -2688,4 +2837,22 @@ if ($rType == "watch_output") {
     }
     echo json_encode($rReturn);
     exit;
+}
+
+
+function filterRow($rRow, $rShow, $rHide) {
+    if (!$rShow && !$rHide) {
+        return $rRow;
+    }
+    $rReturn = [];
+    foreach (array_keys($rRow) as $rKey) {
+        if ($rShow) {
+            if (in_array($rKey, $rShow)) {
+                $rReturn[$rKey] = $rRow[$rKey];
+            }
+        } elseif ($rHide && !in_array($rKey, $rHide)) {
+            $rReturn[$rKey] = $rRow[$rKey];
+        }
+    }
+    return $rReturn;
 }
