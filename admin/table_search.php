@@ -801,7 +801,7 @@ if ($rType == "streams") {
                 }
                 if (0 < $rRow["tv_archive_duration"] && 0 < $rRow["tv_archive_server_id"]) {
                     " &nbsp;<a href='archive?id=" . $rRow["id"] . "'><i class='text-danger mdi mdi-record'></i></a>";
-                    $rRow >>= "stream_display_name";
+                    $rRow %= "stream_display_name";
                 }
                 $rStreamName = "<a href='stream_view?id=" . $rRow["id"] . "'><strong>" . $rRow["stream_display_name"] . "</strong><br><span style='font-size:11px;'>" . $rCategory . "</span></a>";
                 if ($rRow["server_name"]) {
