@@ -161,7 +161,25 @@ while (true) {
                 }
             }
             $rData = ipTV_stream::startStream($streamID, false, $rForceSource, false, $rOffset);
-        } else if ($streamInfo['llod'] > 0 && $streamInfo['on_demand'] && $rFirstRun) {
+        } else if ($streamInfo['on_demand'] == 1) {
+            // Handle on-demand streams
+            if ($rForceSource) {
+                $streamSource = $rForceSource;
+            } else {
+                $streamSource = is_array($sources) && !empty($sources) ? $sources[0] : $streamInfo['stream_source'];
+                if (is_array($streamSource)) {
+                    $streamSource = $streamSource[0];
+                }
+            }
+            
+            // Start on-demand stream with proper arguments
+            $rData = ipTV_stream::startStream($streamID, false, $streamSource, true);
+            
+            if (!is_numeric($rData)) {
+                echo "Starting on-demand stream with source: $streamSource\n";
+                $rFirstRun = false;
+            }
+        } else if ($streamInfo['llod'] > 0 && $rFirstRun) {
             if ($streamInfo['llod'] == 1) {
                 if ($rForceSource) {
                     $streamSource = $rForceSource;
@@ -190,6 +208,11 @@ while (true) {
         }
 
         if (!$rData) {
+            if ($streamInfo['on_demand'] == 1) {
+                // For on-demand streams, wait a bit and retry
+                sleep(2);
+                continue;
+            }
             exit();
         }
 
@@ -527,7 +550,25 @@ while (true) {
                 }
             }
             $rData = ipTV_stream::startStream($streamID, false, $rForceSource, false, $rOffset);
-        } else if ($streamInfo['llod'] > 0 && $streamInfo['on_demand'] && $rFirstRun) {
+        } else if ($streamInfo['on_demand'] == 1) {
+            // Handle on-demand streams
+            if ($rForceSource) {
+                $streamSource = $rForceSource;
+            } else {
+                $streamSource = is_array($sources) && !empty($sources) ? $sources[0] : $streamInfo['stream_source'];
+                if (is_array($streamSource)) {
+                    $streamSource = $streamSource[0];
+                }
+            }
+            
+            // Start on-demand stream with proper arguments
+            $rData = ipTV_stream::startStream($streamID, false, $streamSource, true);
+            
+            if (!is_numeric($rData)) {
+                echo "Starting on-demand stream with source: $streamSource\n";
+                $rFirstRun = false;
+            }
+        } else if ($streamInfo['llod'] > 0 && $rFirstRun) {
             if ($streamInfo['llod'] == 1) {
                 if ($rForceSource) {
                     $streamSource = $rForceSource;
@@ -556,6 +597,11 @@ while (true) {
         }
 
         if (!$rData) {
+            if ($streamInfo['on_demand'] == 1) {
+                // For on-demand streams, wait a bit and retry
+                sleep(2);
+                continue;
+            }
             exit();
         }
 
