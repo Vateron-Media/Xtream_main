@@ -62,6 +62,12 @@ if (isset(ipTV_lib::$request["submit_stream"])) {
     } else {
         $rArray["allow_record"] = 0;
     }
+    if (isset(ipTV_lib::$request["llod"])) {
+        $rArray["llod"] = 1;
+        unset(ipTV_lib::$request["llod"]);
+    } else {
+        $rArray["llod"] = 0;
+    }
     if (isset(ipTV_lib::$request["rtmp_output"])) {
         $rArray["rtmp_output"] = 1;
         unset(ipTV_lib::$request["rtmp_output"]);
@@ -750,8 +756,6 @@ include "header.php";
                                                                 if ($rStream["allow_record"] == 1) {
                                                                     echo "checked ";
                                                                 }
-                                                            } else {
-                                                                echo "checked ";
                                                             } ?>data-plugin="switchery"
                                                             class="js-switch" data-color="#039cfd" />
                                                     </div>
@@ -786,7 +790,7 @@ include "header.php";
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
-                                                    <label class="col-md-4 col-form-label"
+                                                       <label class="col-md-4 col-form-label"
                                                         for="custom_sid"><?= $_["custom_channel_sid"] ?> <i
                                                             data-toggle="tooltip" data-placement="top" title=""
                                                             data-original-title="Here you can specify the SID of the channel in order to work with the epg on the enigma2 devices. You have to specify the code with the ':' but without the first number, 1 or 4097 . Example: if we have this code:  '1:0:1:13f:157c:13e:820000:0:0:0:2097' then you have to add on this field:  ':0:1:13f:157c:13e:820000:0:0:0:"
@@ -1197,6 +1201,16 @@ include "header.php";
                                                         <input name="restart_on_edit" id="restart_on_edit"
                                                             type="checkbox" data-plugin="switchery" class="js-switch"
                                                             data-color="#039cfd" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-4">
+                                                    <label class="col-md-4 col-form-label" for="llod"><?= $_["low_latency_od"] ?></label>
+                                                    <div class="col-md-2">
+                                                        <input name="llod" id="llod" type="checkbox" <?php if (isset($rStream)) {
+                                                            if ($rStream["llod"] == 1) {
+                                                                echo "checked ";
+                                                            }
+                                                        } ?>data-plugin="switchery" class="js-switch" data-color="#039cfd" />
                                                     </div>
                                                 </div>
                                             </div> <!-- end col -->
