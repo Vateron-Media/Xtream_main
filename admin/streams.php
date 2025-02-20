@@ -22,8 +22,8 @@ include "header.php";
 ?>
 
 <div class="wrapper<?php if ($rPermissions["is_reseller"]) {
-    echo " boxed-layout-ext";
-} ?>">
+                        echo " boxed-layout-ext";
+                    } ?>">
     <div class="container-fluid">
         <!-- start page title -->
         <div class="row">
@@ -42,19 +42,7 @@ include "header.php";
                                         <i class="mdi mdi-magnify"></i>
                                     </button>
                                 </a>
-                                <?php if (!$detect->isMobile()) { ?>
-                                    <a href="#" onClick="toggleAuto();">
-                                        <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
-                                            <span class="auto-text"><?= $_["auto_refresh"] ?> </span>
-                                        </button>
-                                    </a>
-                                <?php } else { ?>
-                                    <a href="javascript:location.reload();" onClick="toggleAuto();">
-                                        <button type="button" class="btn btn-dark waves-effect waves-light btn-sm">
-                                            <?= $_["refresh"] ?>
-                                        </button>
-                                    </a>
-                                <?php }
+                                <?php 
                                 if ($rPermissions["is_admin"]) {
                                     if (hasPermissions("adv", "add_stream")) { ?>
                                         <a href="stream.php">
@@ -69,14 +57,14 @@ include "header.php";
                                                 <?= $_["create"] ?>
                                             </button>
                                         </a>
-                                    <?php }
+                                <?php }
                                 } ?>
                             </li>
                         </ol>
                     </div>
                     <h4 class="page-title"><?= $_["streams"] ?> <?php if ($rCategory) {
-                           echo " - " . $rCategory["category_name"];
-                       } ?></h4>
+                                                                    echo " - " . $rCategory["category_name"];
+                                                                } ?></h4>
                 </div>
             </div>
         </div>
@@ -98,8 +86,8 @@ include "header.php";
                                             <option value="" selected><?= $_["all_categories"] ?></option>
                                             <?php foreach ($rCategories as $rCategory) { ?>
                                                 <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
-                                                      echo " selected";
-                                                  } ?>><?= $rCategory["category_name"] ?></option>
+                                                                                            echo " selected";
+                                                                                        } ?>><?= $rCategory["category_name"] ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -108,8 +96,8 @@ include "header.php";
                                             <option value="" selected><?= $_["all_servers"] ?></option>
                                             <?php foreach (getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
-                                                      echo " selected";
-                                                  } ?>><?= $rServer["server_name"] ?></option>
+                                                                                            echo " selected";
+                                                                                        } ?>><?= $rServer["server_name"] ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -119,8 +107,8 @@ include "header.php";
                                         <select id="stream_show_entries" class="form-control" data-toggle="select2">
                                             <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                 <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                    echo " selected";
-                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                            echo " selected";
+                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                 <?php } ?>
                                         </select>
                                     </div>
@@ -134,8 +122,8 @@ include "header.php";
                                             <option value="" selected><?= $_["all_servers"] ?></option>
                                             <?php foreach (getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
-                                                      echo " selected";
-                                                  } ?>><?= $rServer["server_name"] ?></option>
+                                                                                            echo " selected";
+                                                                                        } ?>><?= $rServer["server_name"] ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -144,40 +132,40 @@ include "header.php";
                                             <option value="" selected><?= $_["all_categories"] ?></option>
                                             <?php foreach ($rCategories as $rCategory) { ?>
                                                 <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
-                                                      echo " selected";
-                                                  } ?>><?= $rCategory["category_name"] ?></option>
+                                                                                            echo " selected";
+                                                                                        } ?>><?= $rCategory["category_name"] ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
                                     <div class="col-md-2">
                                         <select id="stream_filter" class="form-control" data-toggle="select2">
                                             <option value="" <?php if (!isset(ipTV_lib::$request["filter"])) {
-                                                echo " selected";
-                                            } ?>><?= $_["no_filter"] ?></option>
+                                                                    echo " selected";
+                                                                } ?>><?= $_["no_filter"] ?></option>
                                             <option value="1" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 1)) {
-                                                echo " selected";
-                                            } ?>><?= $_["online"] ?></option>
+                                                                    echo " selected";
+                                                                } ?>><?= $_["online"] ?></option>
                                             <option value="2" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 2)) {
-                                                echo " selected";
-                                            } ?>><?= $_["down"] ?></option>
+                                                                    echo " selected";
+                                                                } ?>><?= $_["down"] ?></option>
                                             <option value="3" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 3)) {
-                                                echo " selected";
-                                            } ?>><?= $_["stopped"] ?></option>
+                                                                    echo " selected";
+                                                                } ?>><?= $_["stopped"] ?></option>
                                             <option value="4" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 4)) {
-                                                echo " selected";
-                                            } ?>><?= $_["starting"] ?></option>
+                                                                    echo " selected";
+                                                                } ?>><?= $_["starting"] ?></option>
                                             <option value="5" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 5)) {
-                                                echo " selected";
-                                            } ?>><?= $_["on_demand"] ?></option>
+                                                                    echo " selected";
+                                                                } ?>><?= $_["on_demand"] ?></option>
                                             <option value="6" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 6)) {
-                                                echo " selected";
-                                            } ?>><?= $_["direct"] ?></option>
+                                                                    echo " selected";
+                                                                } ?>><?= $_["direct"] ?></option>
                                             <option value="7" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 7)) {
-                                                echo " selected";
-                                            } ?>><?= $_["timeshift"] ?></option>
+                                                                    echo " selected";
+                                                                } ?>><?= $_["timeshift"] ?></option>
                                             <option value="8" <?php if ((isset(ipTV_lib::$request["filter"])) && (ipTV_lib::$request["filter"] == 8)) {
-                                                echo " selected";
-                                            } ?>><?= $_["created_channel"] ?></option>
+                                                                    echo " selected";
+                                                                } ?>><?= $_["created_channel"] ?></option>
                                         </select>
                                     </div>
                                     <label class="col-md-1 col-form-label text-center"
@@ -186,8 +174,8 @@ include "header.php";
                                         <select id="stream_show_entries" class="form-control" data-toggle="select2">
                                             <?php foreach (array(10, 25, 50, 250, 500, 1000) as $rShow) { ?>
                                                 <option<?php if ($rSettings["default_entries"] == $rShow) {
-                                                    echo " selected";
-                                                } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
+                                                            echo " selected";
+                                                        } ?> value="<?= $rShow ?>"><?= $rShow ?></option>
                                                 <?php } ?>
                                         </select>
                                     </div>
@@ -250,26 +238,14 @@ include "header.php";
 <script src="assets/js/app.min.js"></script>
 
 <script>
-    var autoRefresh = true;
     var rClearing = false;
-
-    function toggleAuto() {
-        if (autoRefresh == true) {
-            autoRefresh = false;
-            $(".auto-text").html("Manual Mode");
-        } else {
-            autoRefresh = true;
-            $(".auto-text").html("Auto-Refresh");
-        }
-    }
-
     function api(rID, rServerID, rType) {
         if (rType == "delete") {
             if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_stream"] ?>') == false) {
                 return;
             }
         }
-        $.getJSON("./api.php?action=stream&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function (data) {
+        $.getJSON("./api.php?action=stream&sub=" + rType + "&stream_id=" + rID + "&server_id=" + rServerID, function(data) {
             if (data.result == true) {
                 if (rType == "start") {
                     $.toast("<?= $_["stream_successfully_started"] ?>");
@@ -280,7 +256,7 @@ include "header.php";
                 } else if (rType == "delete") {
                     $.toast("<?= $_["stream_successfully_deleted"] ?>");
                 }
-                $.each($('.tooltip'), function (index, element) {
+                $.each($('.tooltip'), function(index, element) {
                     $(this).remove();
                 });
                 $('[data-toggle="tooltip"]').tooltip("hide");
@@ -288,7 +264,7 @@ include "header.php";
             } else {
                 $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
             }
-        }).fail(function () {
+        }).fail(function() {
             $.toast("<?= $_["an_error_occured_while_processing_your_request"] ?>");
         });
     }
@@ -302,12 +278,40 @@ include "header.php";
         });
     }
 
-    function reloadStreams() {
-        if (autoRefresh == true) {
-            $('[data-toggle="tooltip"]').tooltip("hide");
-            $("#datatable-streampage").DataTable().ajax.reload(null, false);
+    function getStreamIDs() {
+        var rStreamIDs = [];
+        var rIndexes = [];
+        $("#datatable-streampage").DataTable().rows().every(function(rowIdx, tableLoop, rowLoop) {
+            rStreamIDs.push($($("#datatable-streampage").DataTable().row(rowIdx).data()[0]).text());
+            rIndexes.push(rowIdx);
+        });
+        return [rStreamIDs, rIndexes];
+    }
+
+    function refreshInformation() {
+        if (!window.rProcessing) {
+            var rUpdateColumns = [4, 5, 6, 7, 9];
+            var rStreamIDs = getStreamIDs();
+            if (rStreamIDs[0].length > 0) {
+                $.getJSON("./table_search.php?" + $.param($("#datatable-streampage").DataTable().ajax.params()) + "&refresh=" + rStreamIDs[0].join(","), function(rTable) {
+                    if (!window.rProcessing) {
+                        $(rTable.data).each(function(rIndex, rItem) {
+                            for (i in rUpdateColumns) {
+                                var rIndex = rStreamIDs[0].indexOf($(rItem[0]).text());
+                                if (rIndex >= 0) {
+                                    if ($('#datatable-streampage').DataTable().cell(rStreamIDs[1][rIndex], rUpdateColumns[i]).data() != rItem[rUpdateColumns[i]]) {
+                                        $('#datatable-streampage').DataTable().cell(rStreamIDs[1][rIndex], rUpdateColumns[i]).data(rItem[rUpdateColumns[i]]);
+                                    }
+                                }
+                            }
+                        });
+                        refreshTooltips(false);
+                    }
+                });
+            }
         }
-        setTimeout(reloadStreams, 5000);
+        clearTimeout(window.rRefresh);
+        window.rRefresh = setTimeout(refreshInformation, 5000);
     }
 
     function getCategory() {
@@ -350,8 +354,8 @@ include "header.php";
         $('[data-toggle="tooltip"]').tooltip("hide");
         $("#datatable-streampage").DataTable().ajax.reload(null, false);
     }
-    $(document).ready(function () {
-        $(window).keypress(function (event) {
+    $(document).ready(function() {
+        $(window).keypress(function(event) {
             if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
         });
         formCache.init();
@@ -369,11 +373,11 @@ include "header.php";
                     next: "<i class='mdi mdi-chevron-right'>"
                 }
             },
-            drawCallback: function () {
+            drawCallback: function() {
                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                 $('[data-toggle="tooltip"]').tooltip();
             },
-            createdRow: function (row, data, index) {
+            createdRow: function(row, data, index) {
                 $(row).addClass('stream-' + data[0]);
             },
             responsive: false,
@@ -381,7 +385,7 @@ include "header.php";
             serverSide: true,
             ajax: {
                 url: "./table_search.php",
-                "data": function (d) {
+                "data": function(d) {
                     d.id = "streams",
                         d.category = getCategory();
                     <?php if ($rPermissions["is_admin"]) { ?>
@@ -394,7 +398,7 @@ include "header.php";
             },
             columnDefs: [
                 <?php if ($rPermissions["is_admin"]) {
-                    ?> {
+                ?> {
                         "className": "dt-center",
                         "targets": [0, 1, 4, 5, 6, 7, 8, 9]
                     },
@@ -402,12 +406,12 @@ include "header.php";
                         "orderable": false,
                         "targets": [6, 7]
                     }
-                            <?php } else {
-                    ?> {
+                <?php } else {
+                ?> {
                         "className": "dt-center",
                         "targets": [0, 1, 4]
                     }
-                            <?php } ?>
+                <?php } ?>
             ],
             order: [
                 [0, "desc"]
@@ -417,46 +421,43 @@ include "header.php";
             stateSave: true
         });
         $("#datatable-streampage").css("width", "100%");
-        $('#stream_search').keyup(function () {
+        $('#stream_search').keyup(function() {
             if (!window.rClearing) {
                 $('#datatable-streampage').DataTable().search($(this).val()).draw();
             }
         });
-        $('#stream_show_entries').change(function () {
+        $('#stream_show_entries').change(function() {
             if (!window.rClearing) {
                 $('#datatable-streampage').DataTable().page.len($(this).val()).draw();
             }
         });
-        $('#stream_category_id').change(function () {
+        $('#stream_category_id').change(function() {
             if (!window.rClearing) {
                 $('[data-toggle="tooltip"]').tooltip("hide");
                 $("#datatable-streampage").DataTable().ajax.reload(null, false);
             }
         });
-        $('#stream_server_id').change(function () {
+        $('#stream_server_id').change(function() {
             if (!window.rClearing) {
                 $('[data-toggle="tooltip"]').tooltip("hide");
                 $("#datatable-streampage").DataTable().ajax.reload(null, false);
             }
         });
-        $('#stream_filter').change(function () {
+        $('#stream_filter').change(function() {
             if (!window.rClearing) {
                 $('[data-toggle="tooltip"]').tooltip("hide");
                 $("#datatable-streampage").DataTable().ajax.reload(null, false);
             }
         });
-        <?php if (!$detect->isMobile()) { ?>
-            setTimeout(reloadStreams, 5000);
-        <?php }
-        if (!$rSettings["auto_refresh"]) { ?>
-            toggleAuto();
-        <?php } ?>
+        if ($("#datatable-streampage").DataTable().rows().count() <= 50) {
+            setTimeout(refreshInformation, 5000);
+        }
         if ($('#stream_search').val().length > 0) {
             $('#datatable-streampage').DataTable().search($('#stream_search').val()).draw();
         }
     });
 
-    $(window).bind('beforeunload', function () {
+    $(window).bind('beforeunload', function() {
         formCache.save();
     });
 </script>
