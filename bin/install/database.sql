@@ -1348,7 +1348,6 @@ CREATE TABLE IF NOT EXISTS `streams` (
   `vframes_pid` int(11) DEFAULT '0',
   `year` int(4) DEFAULT NULL,
   `llod` tinyint(4) DEFAULT '0',
-  `adaptive_link` mediumtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `type` (`type`),
   KEY `created_channel_location` (`created_channel_location`),

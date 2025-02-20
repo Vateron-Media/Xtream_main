@@ -369,58 +369,19 @@ if ($rExtension) {
                         if ((ipTV_lib::$settings['disable_hls'] && (!$rUserInfo['is_restreamer'] || !ipTV_lib::$settings['disable_hls_allow_restream']))) {
                             generateError('HLS_DISABLED');
                         }
+                        $tokenData = array('stream_id' => $streamID, 'username' => $rUserInfo['username'], 'password' => $rUserInfo['password'], 'extension' => $rExtension, 'pid' => $PID, 'channel_info' => array('redirect_id' => $rChannelInfo['redirect_id'], 'pid' => $rChannelInfo['pid'], 'on_demand' => $rChannelInfo['on_demand'], 'llod' => $rChannelInfo['llod'], 'monitor_pid' => $rChannelInfo['monitor_pid']), 'user_info' => array('id' => $rUserInfo['id'], 'max_connections' => $rUserInfo['max_connections'], 'pair_id' => $rUserInfo['pair_id'], 'con_isp_name' => $rUserInfo['con_isp_name'], 'is_restreamer' => $rUserInfo['is_restreamer']), 'external_device' => $rExternalDevice, 'activity_start' => $rActivityStart, 'country_code' => $rCountryCode, 'video_codec' => $rVideoCodec, 'uuid' => $rUUID);
 
-                        $rAdaptive = json_decode($rChannelInfo['adaptive_link'], true);
+                        $rToken = encryptData(json_encode($tokenData), ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
 
-                        if (is_array($rAdaptive) && 0 < count($rAdaptive)) {
-                            $rParts = array();
-
-                            foreach (array_merge(array($streamID), $rAdaptive) as $rAdaptiveID) {
-                                if ($rAdaptiveID != $streamID) {
-                                    $rAdaptiveInfo = ipTV_streaming::channelInfo($rAdaptiveID, $rExtension, $rUserInfo, $rCountryCode, $rUserInfo['con_isp_name'], 'live');
-                                    $rURL = ipTV_streaming::getStreamingURL($rAdaptiveInfo['redirect_id'], $rForceHTTP);
-                                } else {
-                                    $rAdaptiveInfo = $rChannelInfo;
-                                }
-
-                                $rStreamInfo = json_decode($rAdaptiveInfo['stream_info'], true);
-                                $rBitrate = ($rStreamInfo['bitrate'] ?: 0);
-                                $rWidth = ($rStreamInfo['codecs']['video']['width'] ?: 0);
-                                $rHeight = ($rStreamInfo['codecs']['video']['height'] ?: 0);
-
-                                if ((0 < $rBitrate && 0 < $rHeight && 0 < $rWidth)) {
-                                    $tokenData = array('stream_id' => $rAdaptiveID, 'username' => $rUserInfo['username'], 'password' => $rUserInfo['password'], 'extension' => $rExtension, 'pid' => $PID, 'channel_info' => array('redirect_id' => $rAdaptiveInfo['redirect_id'], 'pid' => $rAdaptiveInfo['pid'], 'on_demand' => $rAdaptiveInfo['on_demand'], 'monitor_pid' => $rAdaptiveInfo['monitor_pid']), 'user_info' => array('id' => $rUserInfo['id'], 'max_connections' => $rUserInfo['max_connections'], 'pair_id' => $rUserInfo['pair_id'], 'con_isp_name' => $rUserInfo['con_isp_name'], 'is_restreamer' => $rUserInfo['is_restreamer']), 'external_device' => $rExternalDevice, 'activity_start' => $rActivityStart, 'country_code' => $rCountryCode, 'video_codec' => ($rStreamInfo['codecs']['video']['codec_name'] ?: 'h264'), 'uuid' => $rUUID, 'adaptive' => array($rChannelInfo['redirect_id'], $streamID));
-                                    $rStreamURL = (string) $rURL . '/sauth/' . encryptData(json_encode($tokenData), ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                                    $rParts[$rBitrate] = '#EXT-X-STREAM-INF:BANDWIDTH=' . $rBitrate . ',RESOLUTION=' . $rWidth . 'x' . $rHeight . "\n" . $rStreamURL;
-                                }
-                            }
-
-                            if (0 < count($rParts)) {
-                                krsort($rParts);
-                                $rM3U8 = "#EXTM3U\n" . implode("\n", array_values($rParts));
-                                ob_end_clean();
-                                header('Content-Type: application/x-mpegurl');
-                                header('Content-Length: ' . strlen($rM3U8));
-                                echo $rM3U8;
-
-                                exit();
-                            }
-                            ipTV_streaming::showVideoServer('show_not_on_air_video', 'not_on_air_video_path', 'ts', $rUserInfo, $IP, $rCountryCode, $rUserInfo['con_isp_name'], ($rChannelInfo['originator_id'] ?: $rChannelInfo['redirect_id']));
-                            exit();
-                        } else {
-                            $tokenData = array('stream_id' => $streamID, 'username' => $rUserInfo['username'], 'password' => $rUserInfo['password'], 'extension' => $rExtension, 'pid' => $PID, 'channel_info' => array('redirect_id' => $rChannelInfo['redirect_id'], 'pid' => $rChannelInfo['pid'], 'on_demand' => $rChannelInfo['on_demand'], 'llod' => $rChannelInfo['llod'], 'monitor_pid' => $rChannelInfo['monitor_pid']), 'user_info' => array('id' => $rUserInfo['id'], 'max_connections' => $rUserInfo['max_connections'], 'pair_id' => $rUserInfo['pair_id'], 'con_isp_name' => $rUserInfo['con_isp_name'], 'is_restreamer' => $rUserInfo['is_restreamer']), 'external_device' => $rExternalDevice, 'activity_start' => $rActivityStart, 'country_code' => $rCountryCode, 'video_codec' => $rVideoCodec, 'uuid' => $rUUID);
-
-                            $rToken = encryptData(json_encode($tokenData), ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-
-                            if (ipTV_lib::$settings['allow_cdn_access']) {
-                                header('Location: ' . $rURL . '/sauth/' . $streamID . '.m3u8?token=' . $rToken);
-                                exit();
-                            }
-
-                            header('Location: ' . $rURL . '/sauth/' . $rToken);
-
+                        if (ipTV_lib::$settings['allow_cdn_access']) {
+                            header('Location: ' . $rURL . '/sauth/' . $streamID . '.m3u8?token=' . $rToken);
                             exit();
                         }
+
+                        header('Location: ' . $rURL . '/sauth/' . $rToken);
+
+                        exit();
+
 
                         // no break
                     case 'ts':
