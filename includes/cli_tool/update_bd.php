@@ -27,4 +27,10 @@ if ($ipTV_db->num_rows() == 0) {
     $ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `llod` tinyint(4) DEFAULT '0'");
 }
 
+$ipTV_db->query("SHOW COLUMNS FROM `streams` LIKE 'adaptive_link';");
+if ($ipTV_db->num_rows() == 0) {
+    $ipTV_db->query("ALTER TABLE `streams` ADD COLUMN `adaptive_link` mediumtext COLLATE utf8_unicode_ci;");
+}
+
+
 return true;
