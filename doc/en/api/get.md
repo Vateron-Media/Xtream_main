@@ -2,7 +2,7 @@
 
 ## File location
 ```
-/home/xtreamcodes/wwwdir/get.php
+/home/xc_vm/wwwdir/get.php
 ```
 
 ## Overview

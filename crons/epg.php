@@ -113,7 +113,7 @@ class Epg {
 }
 
 
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     if (@$argc) {
         shell_exec("kill -9 `ps -ef | grep 'XC_VM\\[EPG\\]' | grep -v grep | awk '{print \$2}'`;");
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';

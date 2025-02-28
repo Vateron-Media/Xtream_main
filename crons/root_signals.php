@@ -145,7 +145,7 @@ function loadCron() {
     }
     if (ipTV_lib::$settings['restart_php_fpm']) {
         $rPHP = $rNginx = 0;
-        exec('ps -fp $(pgrep -u xtreamcodes)', $rOutput, $rReturnVar);
+        exec('ps -fp $(pgrep -u xc_vm)', $rOutput, $rReturnVar);
         foreach ($rOutput as $rProcess) {
             $rSplit = explode(' ', preg_replace('!\\s+!', ' ', trim($rProcess)));
             if ($rSplit[8] == 'php-fpm:' && $rSplit[9] == 'master') {
@@ -159,8 +159,8 @@ function loadCron() {
             if ($rPHP == 0) {
                 echo 'PHP-FPM ERROR - Restarting...';
                 $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'PHP-FPM', 'Restarted PHP-FPM instances due to a suspected crash.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                shell_exec('sudo systemctl stop xtreamcodes');
-                shell_exec('sudo systemctl start xtreamcodes');
+                shell_exec('sudo systemctl stop xc_vm');
+                shell_exec('sudo systemctl start xc_vm');
                 exit();
             }
         }
@@ -173,8 +173,8 @@ function loadCron() {
         } else {
             echo $rCode . ' ERROR - Restarting...';
             $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'PHP-FPM', 'Restarted services due to " . $rCode . " error.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-            shell_exec('sudo systemctl stop xtreamcodes');
-            shell_exec('sudo systemctl start xtreamcodes');
+            shell_exec('sudo systemctl stop xc_vm');
+            shell_exec('sudo systemctl start xc_vm');
             exit();
         }
     }
@@ -270,7 +270,7 @@ function loadCron() {
         // }
         // }
         if (file_exists(TMP_PATH . 'crontab')) {
-            exec('crontab -u xtreamcodes -l', $rCrons);
+            exec('crontab -u xc_vm -l', $rCrons);
             $rCurrentCron = trim(implode("\n", $rCrons));
             $ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
             foreach ($ipTV_db->get_rows() as $rRow) {
@@ -309,13 +309,13 @@ function loadCron() {
                     case 'restart_services':
                         echo 'Restarting services...' . "\n";
                         $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'RESTART', 'XC_VM services restarted on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                        shell_exec('sudo systemctl stop xtreamcodes');
-                        shell_exec('sudo systemctl start xtreamcodes');
+                        shell_exec('sudo systemctl stop xc_vm');
+                        shell_exec('sudo systemctl start xc_vm');
                         break;
                     case 'stop_services':
                         echo 'Stopping services...' . "\n";
                         $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'STOP', 'XC_VM services stopped on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                        shell_exec('sudo systemctl stop xtreamcodes');
+                        shell_exec('sudo systemctl stop xc_vm');
                         break;
                     case 'reload_nginx':
                         echo 'Reloading nginx...' . "\n";
@@ -328,7 +328,7 @@ function loadCron() {
                         $rFstab = file_get_contents('/etc/fstab');
                         $rOutput = array();
                         foreach (explode("\n", $rFstab) as $rLine) {
-                            if (substr($rLine, 0, 31) != 'tmpfs /home/xtreamcodes/content/streams') {
+                            if (substr($rLine, 0, 31) != 'tmpfs /home/xc_vm/content/streams') {
                             } else {
                                 $rLine = '#' . $rLine;
                             }
@@ -336,14 +336,14 @@ function loadCron() {
                         }
                         file_put_contents('/etc/fstab', implode("\n", $rOutput));
                         shell_exec('sudo umount -l ' . STREAMS_PATH);
-                        shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . STREAMS_PATH);
+                        shell_exec('sudo chown -R xc_vm:xc_vm ' . STREAMS_PATH);
                         break;
                     case 'enable_ramdisk':
                         echo 'Enabling ramdisk...' . "\n";
                         $rFstab = file_get_contents('/etc/fstab');
                         $rOutput = array();
                         foreach (explode("\n", $rFstab) as $rLine) {
-                            if (substr($rLine, 0, 32) != '#tmpfs /home/xtreamcodes/content/streams') {
+                            if (substr($rLine, 0, 32) != '#tmpfs /home/xc_vm/content/streams') {
                             } else {
                                 $rLine = ltrim($rLine, '#');
                             }
@@ -351,7 +351,7 @@ function loadCron() {
                         }
                         file_put_contents('/etc/fstab', implode("\n", $rOutput));
                         shell_exec('sudo mount ' . STREAMS_PATH);
-                        shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . STREAMS_PATH);
+                        shell_exec('sudo chown -R xc_vm:xc_vm ' . STREAMS_PATH);
                         break;
                     // case 'update_binaries':
                     //     echo 'Updating binaries...' . "\n";
@@ -377,13 +377,13 @@ function loadCron() {
                         echo 'Setting PHP Services' . "\n";
                         $rServices = intval($rData['count']);
                         if ($rData['reload']) {
-                            shell_exec('sudo systemctl stop xtreamcodes');
+                            shell_exec('sudo systemctl stop xc_vm');
                         }
                         shell_exec('sudo rm ' . MAIN_DIR . 'bin/php/etc/*.conf');
                         $rNewScript = "#! /bin/bash\n\n"
-                            . "if pgrep -u xtreamcodes php-fpm > /dev/null; then\n"
+                            . "if pgrep -u xc_vm php-fpm > /dev/null; then\n"
                             . "    echo \"PHP-FPM is already running, stopping existing instances...\"\n"
-                            . "    pkill -u xtreamcodes php-fpm\n"
+                            . "    pkill -u xc_vm php-fpm\n"
                             . "    sleep 2\n"
                             . "fi\n\n"
                             . "# Now start PHP-FPM instances\n";
@@ -396,9 +396,9 @@ function loadCron() {
                         }
                         file_put_contents(MAIN_DIR . 'bin/daemons.sh', $rNewScript);
                         file_put_contents(MAIN_DIR . 'bin/nginx/conf/balance.conf', $rNewBalance . '}');
-                        shell_exec('sudo chown xtreamcodes:xtreamcodes ' . MAIN_DIR . 'bin/php/etc/*');
+                        shell_exec('sudo chown xc_vm:xc_vm ' . MAIN_DIR . 'bin/php/etc/*');
                         if ($rData['reload']) {
-                            shell_exec('sudo systemctl start xtreamcodes');
+                            shell_exec('sudo systemctl start xc_vm');
                         }
                         break;
                     case 'set_sysctl':

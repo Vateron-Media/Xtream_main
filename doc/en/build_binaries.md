@@ -41,17 +41,17 @@ cd nginx-1.26.3
 
 ### 2️⃣ **Configure the Build**  
 ```sh
-./configure --prefix=/home/xtreamcodes/bin/nginx \
-    --http-client-body-temp-path=/home/xtreamcodes/tmp/client_temp \
-    --http-proxy-temp-path=/home/xtreamcodes/tmp/proxy_temp \
-    --http-fastcgi-temp-path=/home/xtreamcodes/tmp/fastcgi_temp \
-    --lock-path=/home/xtreamcodes/tmp/nginx.lock \
-    --http-uwsgi-temp-path=/home/xtreamcodes/tmp/uwsgi_temp \
-    --http-scgi-temp-path=/home/xtreamcodes/tmp/scgi_temp \
-    --conf-path=/home/xtreamcodes/bin/nginx/conf/nginx.conf \
-    --error-log-path=/home/xtreamcodes/logs/error.log \
-    --http-log-path=/home/xtreamcodes/logs/access.log \
-    --pid-path=/home/xtreamcodes/bin/nginx/nginx.pid \
+./configure --prefix=/home/xc_vm/bin/nginx \
+    --http-client-body-temp-path=/home/xc_vm/tmp/client_temp \
+    --http-proxy-temp-path=/home/xc_vm/tmp/proxy_temp \
+    --http-fastcgi-temp-path=/home/xc_vm/tmp/fastcgi_temp \
+    --lock-path=/home/xc_vm/tmp/nginx.lock \
+    --http-uwsgi-temp-path=/home/xc_vm/tmp/uwsgi_temp \
+    --http-scgi-temp-path=/home/xc_vm/tmp/scgi_temp \
+    --conf-path=/home/xc_vm/bin/nginx/conf/nginx.conf \
+    --error-log-path=/home/xc_vm/logs/error.log \
+    --http-log-path=/home/xc_vm/logs/access.log \
+    --pid-path=/home/xc_vm/bin/nginx/nginx.pid \
     --with-http_ssl_module \
     --with-http_realip_module \
     --with-http_addition_module \
@@ -86,7 +86,7 @@ make
 
 ### 5️⃣ **replace the file with this binary**
 ```
-/home/xtreamcodes/bin/nginx/sbin/nginx
+/home/xc_vm/bin/nginx/sbin/nginx
 ```
 
 ---
@@ -102,12 +102,12 @@ cd nginx-1.26.3
 
 ### 2️⃣ **Configure the Build**  
 ```sh
-./configure --prefix=/home/xtreamcodes/bin/nginx_rtmp \
-    --lock-path=/home/xtreamcodes/bin/nginx_rtmp/nginx_rtmp.lock \
-    --conf-path=/home/xtreamcodes/bin/nginx_rtmp/conf/nginx.conf \
-    --error-log-path=/home/xtreamcodes/logs/rtmp_error.log \
-    --http-log-path=/home/xtreamcodes/logs/rtmp_access.log \
-    --pid-path=/home/xtreamcodes/bin/nginx_rtmp/nginx.pid \
+./configure --prefix=/home/xc_vm/bin/nginx_rtmp \
+    --lock-path=/home/xc_vm/bin/nginx_rtmp/nginx_rtmp.lock \
+    --conf-path=/home/xc_vm/bin/nginx_rtmp/conf/nginx.conf \
+    --error-log-path=/home/xc_vm/logs/rtmp_error.log \
+    --http-log-path=/home/xc_vm/logs/rtmp_access.log \
+    --pid-path=/home/xc_vm/bin/nginx_rtmp/nginx.pid \
     --add-module=/root/nginx-rtmp-module-1.2.2 \
     --with-ld-opt='-Wl,-z,relro -Wl,--as-needed -static' \
     --with-pcre \
@@ -131,29 +131,25 @@ make
 
 ### 5️⃣ **replace the file with this binary**
 ```
-/home/xtreamcodes/bin/nginx_rtmp/sbin/nginx_rtmp
+/home/xc_vm/bin/nginx_rtmp/sbin/nginx_rtmp
+```
 
 ---
 
 ## 🐘 **Building PHP-FPM**  
 
-### 1️⃣ **Install Additional Dependencies**  
-```sh
-sudo apt-get install libcurl4-gnutls-dev libbz2-dev libzip-dev -y
-```
-
-### 2️⃣ **Download the Source Code**  
+### 1️⃣ **Download the Source Code**  
 ```sh
 wget https://www.php.net/distributions/php-8.4.3.tar.gz
 tar -xzvf php-8.4.3.tar.gz
 cd php-8.4.3
 ```
 
-### 3️⃣ **Configure the Build**  
+### 2️⃣ **Configure the Build**  
 ```sh
-./configure --prefix=/home/xtreamcodes/bin/php \
-    --with-fpm-user=xtreamcodes \
-    --with-fpm-group=xtreamcodes \
+./configure --prefix=/home/xc_vm/bin/php \
+    --with-fpm-user=xc_vm \
+    --with-fpm-group=xc_vm \
     --enable-gd \
     --with-jpeg \
     --with-freetype \
@@ -169,7 +165,7 @@ cd php-8.4.3
     --disable-cgi \
     --with-zlib \
     --enable-sockets \
-    --with-openssl \
+    --with-openssl=/root/openssl-3.4.1 \
     --enable-shmop \
     --enable-sysvsem \
     --enable-sysvshm \
@@ -191,7 +187,7 @@ cd php-8.4.3
     --enable-mbstring
 ```
 
-### 4️⃣ **Compile the Binaries**  
+### 3️⃣ **Compile the Binaries**  
 ```sh
 make
 make install
@@ -203,7 +199,7 @@ make install
 
 ### 📌 **Redis**  
 ```sh
-/home/xtreamcodes/bin/php/bin/pecl install redis
+/home/xc_vm/bin/php/bin/pecl install redis
 ```
 
 🔹 Select the following options:  
@@ -218,15 +214,15 @@ use system liblz4? [yes] :
 
 ### 📌 **MaxMindDB**  
 ```sh
-/home/xtreamcodes/bin/php/bin/pecl install maxminddb
+/home/xc_vm/bin/php/bin/pecl install maxminddb
 ```
 
 ### 📌 **SSH2**  
 ```sh
-/home/xtreamcodes/bin/php/bin/pecl install ssh2
+/home/xc_vm/bin/php/bin/pecl install ssh2
 ```
 
 ### 📌 **Igbinary**  
 ```sh
-/home/xtreamcodes/bin/php/bin/pecl install igbinary
+/home/xc_vm/bin/php/bin/pecl install igbinary
 ```

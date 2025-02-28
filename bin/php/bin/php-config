@@ -1,8 +1,8 @@
 #! /bin/sh
 
 SED="/bin/sed"
-prefix="/home/xtreamcodes/bin/php"
-datarootdir="/home/xtreamcodes/bin/php/php"
+prefix="/home/xc_vm/bin/php"
+datarootdir="/home/xc_vm/bin/php/php"
 exec_prefix="${prefix}"
 version="8.4.3"
 vernum="80403"
@@ -11,17 +11,17 @@ lib_dir="${exec_prefix}/lib"
 includes="-I$include_dir -I$include_dir/main -I$include_dir/TSRM -I$include_dir/Zend -I$include_dir/ext -I$include_dir/ext/date/lib"
 ldflags=" -L/build/libjpeg-turbo-Iy19nI/libjpeg-turbo-2.0.3/obj-x86_64-linux-gnu/lib/x86_64-linux-gnu"
 libs="  -lresolv -lutil -lm -ldl  -lxml2 -lssl -lcrypto -lz -lcurl -lxml2 -lz -lpng16 -lz -ljpeg -lfreetype -lxml2 -lxml2 -lxml2 -lxml2 -lxslt -lxml2 -lexslt -lxslt -lxml2 -lz -lssl -lcrypto"
-extension_dir="/home/xtreamcodes/bin/php/lib/php/extensions/no-debug-non-zts-20240924"
+extension_dir="/home/xc_vm/bin/php/lib/php/extensions/no-debug-non-zts-20240924"
 man_dir=`eval echo ${datarootdir}/man`
 program_prefix=""
 program_suffix=""
 exe_extension=""
 php_cli_binary=NONE
 php_cgi_binary=NONE
-configure_options=" '--prefix=/home/xtreamcodes/bin/php' '--with-fpm-user=xtreamcodes' '--with-fpm-group=xtreamcodes' '--enable-gd' '--with-jpeg' '--with-freetype' '--enable-static' '--disable-shared' '--enable-opcache' '--enable-fpm' '--without-sqlite3' '--without-pdo-sqlite' '--enable-mysqlnd' '--with-mysqli' '--with-curl' '--disable-cgi' '--with-zlib' '--enable-sockets' '--with-openssl' '--enable-shmop' '--enable-sysvsem' '--enable-sysvshm' '--enable-sysvmsg' '--enable-calendar' '--disable-rpath' '--enable-inline-optimization' '--enable-pcntl' '--enable-mbregex' '--enable-exif' '--enable-bcmath' '--with-mhash' '--with-gettext' '--with-xmlrpc' '--with-xsl' '--with-libxml' '--with-pdo-mysql' '--disable-mbregex' '--enable-mbstring'"
+configure_options=" '--prefix=/home/xc_vm/bin/php' '--with-fpm-user=xc_vm' '--with-fpm-group=xc_vm' '--enable-gd' '--with-jpeg' '--with-freetype' '--enable-static' '--disable-shared' '--enable-opcache' '--enable-fpm' '--without-sqlite3' '--without-pdo-sqlite' '--enable-mysqlnd' '--with-mysqli' '--with-curl' '--disable-cgi' '--with-zlib' '--enable-sockets' '--with-openssl' '--enable-shmop' '--enable-sysvsem' '--enable-sysvshm' '--enable-sysvmsg' '--enable-calendar' '--disable-rpath' '--enable-inline-optimization' '--enable-pcntl' '--enable-mbregex' '--enable-exif' '--enable-bcmath' '--with-mhash' '--with-gettext' '--with-xmlrpc' '--with-xsl' '--with-libxml' '--with-pdo-mysql' '--disable-mbregex' '--enable-mbstring'"
 php_sapis=" cli fpm phpdbg"
 ini_dir=""
-ini_path="/home/xtreamcodes/bin/php/lib"
+ini_path="/home/xc_vm/bin/php/lib"
 php_embed_type=""
 
 # Set php_cli_binary and php_cgi_binary if available

@@ -1220,7 +1220,7 @@ if (isset(ipTV_lib::$request["action"])) {
             set_time_limit(300);
             ini_set('max_execution_time', 300);
             ini_set('default_socket_timeout', 300);
-            echo shell_exec("/home/xtreamcodes/bin/ffprobe -v quiet -probesize 4000000 -print_format json -show_format -show_streams \"" . ipTV_lib::$request["stream"] . "\"");
+            echo shell_exec("/home/xc_vm/bin/ffprobe -v quiet -probesize 4000000 -print_format json -show_format -show_streams \"" . ipTV_lib::$request["stream"] . "\"");
             exit;
         case "clear_logs":
             if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "reg_userlog")) && (!hasPermissions("adv", "client_request_log")) && (!hasPermissions("adv", "connection_logs")) && (!hasPermissions("adv", "stream_errors")) && (!hasPermissions("adv", "panel_errors")) && (!hasPermissions("adv", "credits_log")) && (!hasPermissions("adv", "folder_watch_settings")))) {
@@ -1373,7 +1373,7 @@ if (isset(ipTV_lib::$request["action"])) {
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php');
 
-                $rCache = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
+                $rCache = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
                 if ($rCache == 0) {
                     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
                 }
@@ -1410,14 +1410,14 @@ if (isset(ipTV_lib::$request["action"])) {
                     unlink(CACHE_TMP_PATH . 'settings');
                 }
 
-                exec('pgrep -u xtreamcodes redis-server', $rRedis);
+                exec('pgrep -u xc_vm redis-server', $rRedis);
 
                 if (0 < count($rRedis) && is_numeric($rRedis[0])) {
                     $rPID = intval($rRedis[0]);
                     shell_exec('kill -9 ' . $rPID);
                 }
 
-                exec("pgrep -U xtreamcodes | xargs ps | grep signals | awk '{print \$1}'", $rPID);
+                exec("pgrep -U xc_vm | xargs ps | grep signals | awk '{print \$1}'", $rPID);
 
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);
@@ -1425,7 +1425,7 @@ if (isset(ipTV_lib::$request["action"])) {
                     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'signals.php > /dev/null 2>/dev/null &');
                 }
 
-                exec("pgrep -U xtreamcodes | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
+                exec("pgrep -U xc_vm | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
 
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);
@@ -1447,7 +1447,7 @@ if (isset(ipTV_lib::$request["action"])) {
                     unlink(CACHE_TMP_PATH . 'settings');
                 }
 
-                exec('pgrep -u xtreamcodes redis-server', $rRedis);
+                exec('pgrep -u xc_vm redis-server', $rRedis);
 
                 if (count($rRedis) < 0 && !is_numeric($rRedis[0])) {
                     $rPID = intval($rRedis[0]);
@@ -1456,7 +1456,7 @@ if (isset(ipTV_lib::$request["action"])) {
 
                 shell_exec(BIN_PATH . 'redis/redis-server ' . BIN_PATH . 'redis/redis.conf > /dev/null 2>/dev/null &');
                 sleep(1);
-                exec("pgrep -U xtreamcodes | xargs ps | grep signals | awk '{print \$1}'", $rPID);
+                exec("pgrep -U xc_vm | xargs ps | grep signals | awk '{print \$1}'", $rPID);
 
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);
@@ -1464,7 +1464,7 @@ if (isset(ipTV_lib::$request["action"])) {
                     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'signals.php > /dev/null 2>/dev/null &');
                 }
 
-                exec("pgrep -U xtreamcodes | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
+                exec("pgrep -U xc_vm | xargs ps | grep watchdog | awk '{print \$1}'", $rPID);
 
                 if (0 < count($rPID) && is_numeric($rPID[0])) {
                     $rPID = intval($rPID[0]);

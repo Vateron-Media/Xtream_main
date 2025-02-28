@@ -2,7 +2,7 @@
 
 ## File location
 ```
-/home/xtreamcodes/wwwdir/api.php
+/home/xc_vm/wwwdir/api.php
 ```
 
 ## Overview

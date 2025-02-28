@@ -1,5 +1,5 @@
 <?php
-require_once '/home/xtreamcodes/includes/admin.php';
+require_once '/home/xc_vm/includes/admin.php';
 
 if (isset($_SESSION['hash'])) {
     $rUserInfo = getRegisteredUserHash($_SESSION['hash']);
@@ -31,7 +31,7 @@ if (isset($_SESSION['hash'])) {
 }
 
 $defaultLang = 'en';
-$langPath = "/home/xtreamcodes/admin/lang/";
+$langPath = "/home/xc_vm/admin/lang/";
 $userLang = $defaultLang;
 
 if (php_sapi_name() !== 'cli' && isset($_SESSION['hash'])) {

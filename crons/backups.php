@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(32757);
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     set_time_limit(0);
     if ($argc) {
         require str_replace('\\', '/', dirname($argv[0])) . '/../includes/admin.php';

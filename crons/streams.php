@@ -1,5 +1,5 @@
 <?php
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     if ($argc) {
         register_shutdown_function('shutdown');
         require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";

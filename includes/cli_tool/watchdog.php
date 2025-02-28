@@ -1,5 +1,5 @@
 <?php
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     if ($argc) {
         require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
         shell_exec('kill $(ps aux | grep watchdog | grep -v grep | grep -v ' . getmypid() . " | awk '{print \$2}')");
@@ -44,7 +44,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 }
                 $rStats['cpu_average_array'] = $rCPUAverage;
                 $rPHPPIDs = array();
-                exec("ps -u xtreamcodes | grep php-fpm | awk {'print \$1'}", $rPHPPIDs);
+                exec("ps -u xc_vm | grep php-fpm | awk {'print \$1'}", $rPHPPIDs);
                 $rConnections = $rUsers = 0;
                 if (!ipTV_lib::$settings['redis_handler']) {
                     $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `hls_end` = 0 AND `server_id` = ?;', SERVER_ID);

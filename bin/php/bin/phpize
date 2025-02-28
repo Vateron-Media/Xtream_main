@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Variable declaration
-prefix='/home/xtreamcodes/bin/php'
-datarootdir='/home/xtreamcodes/bin/php/php'
+prefix='/home/xc_vm/bin/php'
+datarootdir='/home/xc_vm/bin/php/php'
 exec_prefix="`eval echo ${prefix}`"
 phpdir="`eval echo ${exec_prefix}/lib/php`/build"
 includedir="`eval echo ${prefix}/include`/php"
@@ -155,7 +155,7 @@ phpize_copy_files()
 phpize_replace_prefix()
 {
   $SED \
-  -e "s#/home/xtreamcodes/bin/php#$prefix#" \
+  -e "s#/home/xc_vm/bin/php#$prefix#" \
   < "$phpdir/phpize.m4" > configure.ac
 }
 

@@ -5,7 +5,7 @@ session_write_close();
 if (isset($_SESSION['hash'])) {
     set_time_limit(2);
     ini_set('default_socket_timeout', 2);
-    define('MAIN_DIR', '/home/xtreamcodes/');
+    define('MAIN_DIR', '/home/xc_vm/');
     define('WWW_PATH', MAIN_DIR . 'wwwdir/');
     define('IMAGES_PATH', WWW_PATH . 'images/');
     define('TMP_PATH', MAIN_DIR . 'tmp/');

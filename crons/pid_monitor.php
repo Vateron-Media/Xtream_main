@@ -1,8 +1,8 @@
 <?php
 //Cleanup
 
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
-    define("MAIN_DIR", "/home/xtreamcodes/");
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
+    define("MAIN_DIR", "/home/xc_vm/");
     define('CONFIG_PATH', MAIN_DIR . 'config/');
 
     function xor_parse($data, $key) {

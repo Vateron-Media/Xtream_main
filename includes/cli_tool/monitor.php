@@ -16,7 +16,7 @@ function checkRunning($streamID) {
         }
     }
 }
-if ((posix_getpwuid(posix_geteuid())['name'] != 'xtreamcodes')) {
+if ((posix_getpwuid(posix_geteuid())['name'] != 'xc_vm')) {
     exit('Please run as XC_VM!' . "\n");
 }
 if ((!@$argc || ($argc <= 1))) {

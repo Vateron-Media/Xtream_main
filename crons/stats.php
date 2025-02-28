@@ -1,6 +1,6 @@
 <?php
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
-	include "/home/xtreamcodes/admin/functions.php";
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
+	include "/home/xc_vm/admin/functions.php";
 
 	$rPID = getmypid();
 	if (isset($rSettings["stats_pid"])) {

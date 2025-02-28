@@ -17,9 +17,9 @@ if ($argc) {
     if (filesize(MAIN_DIR . 'bin/daemons.sh') == 0) {
         echo 'Daemons corrupted! Regenerating...' . "\n";
         $rNewScript = "#! /bin/bash\n\n"
-            . "if pgrep -u xtreamcodes php-fpm > /dev/null; then\n"
+            . "if pgrep -u xc_vm php-fpm > /dev/null; then\n"
             . "    echo \"PHP-FPM is already running, stopping existing instances...\"\n"
-            . "    pkill -u xtreamcodes php-fpm\n"
+            . "    pkill -u xc_vm php-fpm\n"
             . "    sleep 2\n"
             . "fi\n\n"
             . "# Now start PHP-FPM instances\n";
@@ -63,10 +63,10 @@ if ($argc) {
             echo 'Crontab already installed' . "\n";
         }
         if (!$rFixCron) {
-            exec('sudo -u xtreamcodes ' . PHP_BIN . ' ' . CRON_PATH . 'cache.php 1', $rOutput);
+            exec('sudo -u xc_vm ' . PHP_BIN . ' ' . CRON_PATH . 'cache.php 1', $rOutput);
             if (file_exists(CRON_PATH . 'cache_engine.php') || !file_exists(CACHE_TMP_PATH . 'cache_complete')) {
                 echo 'Generating cache...' . "\n";
-                exec('sudo -u xtreamcodes ' . PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php >/dev/null 2>/dev/null &');
+                exec('sudo -u xc_vm ' . PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php >/dev/null 2>/dev/null &');
             }
         }
     } else {

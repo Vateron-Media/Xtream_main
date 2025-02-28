@@ -15,7 +15,7 @@ $_INFO = array();
 $rTimeout = 60;             // Seconds Timeout for Functions & Requests
 $rSQLTimeout = 5;           // Max execution time for MySQL queries.
 
-require_once '/home/xtreamcodes/wwwdir/constants.php';
+require_once '/home/xc_vm/wwwdir/constants.php';
 require_once INCLUDES_PATH . 'functions.php';
 require_once INCLUDES_PATH . 'lib.php';
 require_once INCLUDES_PATH . 'pdo.php';
@@ -102,7 +102,7 @@ function doLogin($rUsername, $rPassword) {
     return null;
 }
 
-function cryptPassword($password, $salt = "xtreamcodes", $rounds = 20000) {
+function cryptPassword($password, $salt = "xc_vm", $rounds = 20000) {
     if ($salt == "") {
         $salt = substr(bin2hex(openssl_random_pseudo_bytes(16)), 0, 16);
     }
@@ -1471,7 +1471,7 @@ function sortArrayByArray(array $rArray, array $rSort) {
 
 function updateGeoLite2() {
     $rGeoLite2Latest = get_recent_stable_release("https://github.com/Vateron-Media/Xtream_Update/releases/latest");
-    $rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true)["geolite2_version"];
+    $rGeoLite2Curent = json_decode(file_get_contents("/home/xc_vm/bin/maxmind/version.json"), true)["geolite2_version"];
     if ($rGeoLite2Latest == $rGeoLite2Curent) {
         return true;
     }
@@ -1481,7 +1481,7 @@ function updateGeoLite2() {
         foreach ($fileNames as $key => $value) {
             $rFileData = file_get_contents("https://github.com/Vateron-Media/Xtream_Update/releases/download/{$rGeoLite2Latest}/{$value}");
             if (stripos($rFileData, "MaxMind.com") !== false) {
-                $rFilePath = "/home/xtreamcodes/bin/maxmind/{$value}";
+                $rFilePath = "/home/xc_vm/bin/maxmind/{$value}";
                 exec("sudo chattr -i {$rFilePath}");
                 unlink($rFilePath);
                 file_put_contents($rFilePath, $rFileData);
@@ -1494,7 +1494,7 @@ function updateGeoLite2() {
         }
         if ($checker[0] && $checker[1] && $checker[2]) {
             # create json version file and write version geolite
-            $versionFile = "/home/xtreamcodes/bin/maxmind/version.json";
+            $versionFile = "/home/xc_vm/bin/maxmind/version.json";
             $data = ["geolite2_version" => $rGeoLite2Latest];
             $json = json_encode($data);
             unlink($versionFile);
@@ -1593,7 +1593,7 @@ function getFreeSpace($rServerID) {
 
     foreach ($rLines as $rLine) {
         $rSplit = explode(' ', preg_replace('!\\s+!', ' ', trim($rLine)));
-        if (0 < strlen($rSplit[0]) && strpos($rSplit[5], 'xtreamcodes') !== false || $rSplit[5] == '/') {
+        if (0 < strlen($rSplit[0]) && strpos($rSplit[5], 'xc_vm') !== false || $rSplit[5] == '/') {
             $rReturn[] = array('filesystem' => $rSplit[0], 'size' => $rSplit[1], 'used' => $rSplit[2], 'avail' => $rSplit[3], 'percentage' => $rSplit[4], 'mount' => implode(' ', array_slice($rSplit, 5, count($rSplit) - 5)));
         }
     }

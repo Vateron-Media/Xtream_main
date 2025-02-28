@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;
 
 ; All relative paths in this configuration file are relative to PHP's install
-; prefix (/home/xtreamcodes/bin/php). This prefix can be dynamically changed by using the
+; prefix (/home/xc_vm/bin/php). This prefix can be dynamically changed by using the
 ; '-p' argument from the command line.
 
 ;;;;;;;;;;;;;;;;;;
@@ -12,14 +12,14 @@
 
 [global]
 ; Pid file
-; Note: the default prefix is /home/xtreamcodes/bin/php/var
+; Note: the default prefix is /home/xc_vm/bin/php/var
 ; Default Value: none
 ;pid = run/php-fpm.pid
 
 ; Error log file
 ; If it's set to "syslog", log is sent to syslogd instead of being written
 ; into a local file.
-; Note: the default prefix is /home/xtreamcodes/bin/php/var
+; Note: the default prefix is /home/xc_vm/bin/php/var
 ; Default Value: log/php-fpm.log
 ;error_log = log/php-fpm.log
 
@@ -138,5 +138,5 @@
 ; file.
 ; Relative path can also be used. They will be prefixed by:
 ;  - the global prefix if it's been set (-p argument)
-;  - /home/xtreamcodes/bin/php otherwise
-include=/home/xtreamcodes/bin/php/etc/php-fpm.d/*.conf
+;  - /home/xc_vm/bin/php otherwise
+include=/home/xc_vm/bin/php/etc/php-fpm.d/*.conf

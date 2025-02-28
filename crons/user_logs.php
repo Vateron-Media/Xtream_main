@@ -1,7 +1,7 @@
 <?php
 
 //cron users log
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     set_time_limit(0);
     if ($argc) {
         register_shutdown_function('shutdown');

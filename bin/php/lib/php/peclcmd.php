@@ -21,8 +21,8 @@
  */
 //the space is needed for windows include paths with trailing backslash
 // http://pear.php.net/bugs/bug.php?id=19482
-if ('/home/xtreamcodes/bin/php/lib/php ' != '@' . 'include_path' . '@ ') {
-    ini_set('include_path', trim('/home/xtreamcodes/bin/php/lib/php ') . PATH_SEPARATOR . get_include_path());
+if ('/home/xc_vm/bin/php/lib/php ' != '@' . 'include_path' . '@ ') {
+    ini_set('include_path', trim('/home/xc_vm/bin/php/lib/php ') . PATH_SEPARATOR . get_include_path());
     $raw = false;
 } else {
     // this is a raw, uninstalled pear, either a cvs checkout, or php distro
