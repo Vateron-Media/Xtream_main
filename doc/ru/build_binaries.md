@@ -7,8 +7,6 @@
 - [Предварительная настройка](#-предварительная-настройка)  
 - [Сборка NGINX](#-сборка-nginx)  
 - [Сборка NGINX-RTMP](#-сборка-nginx-rtmp)  
-- [Сборка PHP-FPM](#-сборка-php-fpm)  
-- [Дополнительные расширения PHP](#-установка-расширений-php)  
 
 ---
 
@@ -77,16 +75,12 @@ cd nginx-1.26.3
 ### 3️⃣ **Соберите бинарные файлы**  
 ```sh
 make
+make install
 ```
 
 ### 4️⃣ **Проверьте версию**  
 ```sh
-/root/nginx-1.26.3/objs/nginx -V
-```
-
-### 5️⃣ **replace the file with this binary**
-```
-/home/xc_vm/bin/nginx/sbin/nginx
+/home/xc_vm/bin/nginx/sbin/nginx -V
 ```
 
 ---
@@ -122,110 +116,10 @@ cd nginx-1.26.3
 ### 3️⃣ **Соберите бинарные файлы**  
 ```sh
 make
+make install
 ```
 
 ### 4️⃣ **Проверьте версию**  
 ```sh
-/root/nginx-1.26.3/objs/nginx -v
-```
-
-### 5️⃣ **replace the file with this binary**
-```
-/home/xc_vm/bin/nginx_rtmp/sbin/nginx_rtmp
-
----
-
-## 🐘 **Сборка PHP-FPM**  
-
-### 1️⃣ **Установите дополнительные зависимости**  
-```sh
-sudo apt-get install libcurl4-gnutls-dev libbz2-dev libzip-dev -y
-```
-
-### 2️⃣ **Скачайте исходный код**  
-```sh
-wget https://www.php.net/distributions/php-8.4.3.tar.gz
-tar -xzvf php-8.4.3.tar.gz
-cd php-8.4.3
-```
-
-### 3️⃣ **Сконфигурируйте сборку**  
-```sh
-./configure --prefix=/home/xc_vm/bin/php \
-    --with-fpm-user=xc_vm \
-    --with-fpm-group=xc_vm \
-    --enable-gd \
-    --with-jpeg \
-    --with-freetype \
-    --enable-static \
-    --disable-shared \
-    --enable-opcache \
-    --enable-fpm \
-    --without-sqlite3 \
-    --without-pdo-sqlite \
-    --enable-mysqlnd \
-    --with-mysqli \
-    --with-curl \
-    --disable-cgi \
-    --with-zlib \
-    --enable-sockets \
-    --with-openssl \
-    --enable-shmop \
-    --enable-sysvsem \
-    --enable-sysvshm \
-    --enable-sysvmsg \
-    --enable-calendar \
-    --disable-rpath \
-    --enable-inline-optimization \
-    --enable-pcntl \
-    --enable-mbregex \
-    --enable-exif \
-    --enable-bcmath \
-    --with-mhash \
-    --with-gettext \
-    --with-xmlrpc \
-    --with-xsl \
-    --with-libxml \
-    --with-pdo-mysql \
-    --disable-mbregex \
-    --enable-mbstring
-```
-
-### 4️⃣ **Соберите бинарные файлы**  
-```sh
-make
-make install
-```
-
----
-
-## 🔌 **Установка расширений PHP**  
-
-### 📌 **Redis**  
-```sh
-/home/xc_vm/bin/php/bin/pecl install redis
-```
-🔹 При установке выберите:  
-```
-enable igbinary serializer support? [no] : yes
-enable lzf compression support? [no] : 
-enable zstd compression support? [no] : 
-enable msgpack serializer support? [no] :
-enable lz4 compression? [no] : 
-use system liblz4? [yes] : 
-```
-
-### 📌 **MaxMindDB**  
-```sh
-/home/xc_vm/bin/php/bin/pecl install maxminddb
-```
-
-### 📌 **SSH2**  
-```sh
-/home/xc_vm/bin/php/bin/pecl install ssh2
-```
-
-### 📌 **Igbinary**  
-```sh
-/home/xc_vm/bin/php/bin/pecl install igbinary
+/home/xc_vm/bin/nginx_rtmp/sbin/nginx_rtmp -v
 ```
