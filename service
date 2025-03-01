@@ -29,12 +29,12 @@ start() {
   sudo -u xc_vm "$SCRIPT/bin/nginx/sbin/nginx" >/dev/null 2>&1 || log "Failed to start nginx"
   sudo -u xc_vm "$SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp" >/dev/null 2>&1 || log "Failed to start nginx_rtmp"
   sudo -u xc_vm "$SCRIPT/bin/daemons.sh" || log "Failed to start daemons.sh"
-  sudo "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/startup.php" || log "Failed to start startup.php"
-  sudo -u xc_vm "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/signals.php" >/dev/null 2>&1 &
-  sudo -u xc_vm "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/watchdog.php" >/dev/null 2>&1 &
-  sudo -u xc_vm "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/queue.php" >/dev/null 2>&1 &
+  sudo "/bin/php" "$SCRIPT/includes/cli_tool/startup.php" || log "Failed to start startup.php"
+  sudo -u xc_vm "/bin/php" "$SCRIPT/includes/cli_tool/signals.php" >/dev/null 2>&1 &
+  sudo -u xc_vm "/bin/php" "$SCRIPT/includes/cli_tool/watchdog.php" >/dev/null 2>&1 &
+  sudo -u xc_vm "/bin/php" "$SCRIPT/includes/cli_tool/queue.php" >/dev/null 2>&1 &
     if [ -f $SCRIPT/includes/cli_tool/cache_handler.php ]; then
-    sudo -u xc_vm $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/cache_handler.php >/dev/null 2>&1 &
+    sudo -u xc_vm /bin/php $SCRIPT/includes/cli_tool/cache_handler.php >/dev/null 2>&1 &
   fi
   log "XC_VM started in foreground."
   sleep infinity

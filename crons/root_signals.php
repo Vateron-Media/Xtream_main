@@ -188,10 +188,10 @@ function loadCron() {
                 case 'enable_ramdisk':
                     $rCheck['ramdisk'] = false;
                     break;
-                // case 'enable_ministra':
-                // case 'disable_ministra':
-                //     $rCheck['mag'] = false;
-                //     break;
+                    // case 'enable_ministra':
+                    // case 'disable_ministra':
+                    //     $rCheck['mag'] = false;
+                    //     break;
                 case 'set_services':
                     $rCheck['services'] = false;
                     break;
@@ -353,50 +353,49 @@ function loadCron() {
                         shell_exec('sudo mount ' . STREAMS_PATH);
                         shell_exec('sudo chown -R xc_vm:xc_vm ' . STREAMS_PATH);
                         break;
-                    // case 'update_binaries':
-                    //     echo 'Updating binaries...' . "\n";
-                    //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'BINARIES', 'Updating XC_VM binaries from XC_VMr...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                    //     shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'binaries.php 2>&1 &');
-                    //     break;
+                        // case 'update_binaries':
+                        //     echo 'Updating binaries...' . "\n";
+                        //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'BINARIES', 'Updating XC_VM binaries from XC_VMr...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
+                        //     shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'binaries.php 2>&1 &');
+                        //     break;
                     case 'update':
                         echo 'Updating...' . "\n";
                         $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'UPDATE', 'Updating XC_VM...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                        shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" "'. $rData['version'] . '" 2>&1 &');
+                        shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" "' . $rData['version'] . '" 2>&1 &');
                         break;
-                    // case 'enable_ministra':
-                    //     echo 'Enabling ministra /c...';
-                    //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra ' . MAIN_DIR . 'www/c');
-                    //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra/portal.php ' . MAIN_DIR . 'www/portal.php');
-                    //     break;
-                    // case 'disable_ministra':
-                    //     echo 'Disabling ministra /c...';
-                    //     shell_exec('sudo rm ' . MAIN_DIR . 'www/c');
-                    //     shell_exec('sudo rm ' . MAIN_DIR . 'www/portal.php');
-                    //     break;
+                        // case 'enable_ministra':
+                        //     echo 'Enabling ministra /c...';
+                        //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra ' . MAIN_DIR . 'www/c');
+                        //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra/portal.php ' . MAIN_DIR . 'www/portal.php');
+                        //     break;
+                        // case 'disable_ministra':
+                        //     echo 'Disabling ministra /c...';
+                        //     shell_exec('sudo rm ' . MAIN_DIR . 'www/c');
+                        //     shell_exec('sudo rm ' . MAIN_DIR . 'www/portal.php');
+                        //     break;
                     case 'set_services':
                         echo 'Setting PHP Services' . "\n";
                         $rServices = intval($rData['count']);
                         if ($rData['reload']) {
                             shell_exec('sudo systemctl stop xc_vm');
                         }
-                        shell_exec('sudo rm ' . MAIN_DIR . 'bin/php/etc/*.conf');
                         $rNewScript = "#! /bin/bash\n\n"
-                            . "if pgrep -u xc_vm php-fpm > /dev/null; then\n"
+                            . "if pgrep -u xc_vm php-fpm8.4 > /dev/null; then\n"
                             . "    echo \"PHP-FPM is already running, stopping existing instances...\"\n"
-                            . "    pkill -u xc_vm php-fpm\n"
+                            . "    pkill -u xc_vm php-fpm8.4\n"
                             . "    sleep 2\n"
                             . "fi\n\n"
                             . "# Now start PHP-FPM instances\n";
                         $rNewBalance = 'upstream php {' . "\n" . '    least_conn;' . "\n";
-                        $rTemplate = file_get_contents(MAIN_DIR . 'bin/php/etc/template');
+                        $rTemplate = file_get_contents(MAIN_DIR . 'bin/install/php/fpm_pool_template');
                         foreach (range(1, $rServices) as $i) {
-                            $rNewScript .= 'start-stop-daemon --start --quiet --pidfile ' . MAIN_DIR . 'bin/php/sockets/' . $i . '.pid --exec ' . MAIN_DIR . 'bin/php/sbin/php-fpm -- --daemonize --fpm-config ' . MAIN_DIR . 'bin/php/etc/' . $i . '.conf' . "\n";
-                            $rNewBalance .= '    server unix:' . MAIN_DIR . 'bin/php/sockets/' . $i . '.sock;' . "\n";
-                            file_put_contents(MAIN_DIR . 'bin/php/etc/' . $i . '.conf', str_replace('#PATH#', MAIN_DIR, str_replace('#ID#', $i, $rTemplate)));
+                            $rNewScript .= 'start-stop-daemon --start --quiet --pidfile ' . MAIN_DIR . 'bin/php_sockets/' . $i . '.pid --exec /usr/sbin/php-fpm8.4 -- --daemonize --fpm-config /etc/php/8.4/fpm/pool.d/' . $i . '.conf' . "\n";
+                            $rNewBalance .= '    server unix:' . MAIN_DIR . 'bin/php_sockets/' . $i . '.sock;' . "\n";
+                            file_put_contents('/etc/php/8.4/fpm/pool.d/' . $i . '.conf', str_replace('#PATH#', MAIN_DIR, str_replace('#ID#', $i, $rTemplate)));
                         }
                         file_put_contents(MAIN_DIR . 'bin/daemons.sh', $rNewScript);
                         file_put_contents(MAIN_DIR . 'bin/nginx/conf/balance.conf', $rNewBalance . '}');
-                        shell_exec('sudo chown xc_vm:xc_vm ' . MAIN_DIR . 'bin/php/etc/*');
+                        shell_exec('sudo chmod 0771 ' . MAIN_DIR . 'bin/daemons.sh');
                         if ($rData['reload']) {
                             shell_exec('sudo systemctl start xc_vm');
                         }
@@ -474,7 +473,7 @@ function getBlockedIPs() {
     // Loop through both IPv4 and IPv6 firewall tables
     foreach (['iptables', 'ip6tables'] as $table) {
         $output = [];
-        
+
         // Execute the command to list firewall rules
         exec("sudo $table -nL --line-numbers -t filter", $output);
 
