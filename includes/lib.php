@@ -53,14 +53,6 @@ class ipTV_lib {
         }
         self::$SegmentsSettings = self::calculateSegNumbers();
         switch (self::$settings['ffmpeg_cpu']) {
-            case '4.4':
-                self::$FFMPEG_CPU = FFMPEG_BIN_44;
-                self::$FFPROBE = FFPROBE_BIN_44;
-                break;
-            case '4.3':
-                self::$FFMPEG_CPU = FFMPEG_BIN_43;
-                self::$FFPROBE = FFPROBE_BIN_43;
-                break;
             default:
                 self::$FFMPEG_CPU = FFMPEG_BIN_40;
                 self::$FFPROBE = FFPROBE_BIN_40;
