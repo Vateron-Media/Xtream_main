@@ -177,23 +177,22 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                         $rIP = '127.0.0.1:' . ipTV_lib::$Servers[$rServerID]['http_broadcast_port'];
                         runCommand($rConn, 'sudo echo "on_play http://' . $rIP . '/streaming/rtmp.php; on_publish http://' . $rIP . '/streaming/rtmp.php; on_play_done http://' . $rIP . '/streaming/rtmp.php;" > "/home/xc_vm/bin/nginx_rtmp/conf/live.conf"');
                         $rServices = (intval(runCommand($rConn, 'sudo cat /proc/cpuinfo | grep "^processor" | wc -l')['output']) ?: 4);
-                        runCommand($rConn, 'sudo rm ' . MAIN_DIR . 'bin/php/etc/*.conf');
                         $rNewScript = "#! /bin/bash\n\n"
-                            . "if pgrep -u xc_vm php-fpm > /dev/null; then\n"
+                            . "if pgrep -u xc_vm php-fpm8.4 > /dev/null; then\n"
                             . "    echo \"PHP-FPM is already running, stopping existing instances...\"\n"
-                            . "    pkill -u xc_vm php-fpm\n"
+                            . "    pkill -u xc_vm php-fpm8.4\n"
                             . "    sleep 2\n"
                             . "fi\n\n"
                             . "# Now start PHP-FPM instances\n";
 
                         $rNewBalance = 'upstream php {' . "\n" . '    least_conn;' . "\n";
-                        $rTemplate = file_get_contents(MAIN_DIR . 'bin/php/etc/template');
+                        $rTemplate = file_get_contents(MAIN_DIR . 'bin/install/php/fpm_pool_template');
                         foreach (range(1, $rServices) as $i) {
-                            $rNewScript .= 'start-stop-daemon --start --quiet --pidfile ' . MAIN_DIR . 'bin/php/sockets/' . $i . '.pid --exec ' . MAIN_DIR . 'bin/php/sbin/php-fpm -- --daemonize --fpm-config ' . MAIN_DIR . 'bin/php/etc/' . $i . '.conf' . "\n";
-                            $rNewBalance .= '    server unix:' . MAIN_DIR . 'bin/php/sockets/' . $i . '.sock;' . "\n";
+                            $rNewScript .= 'start-stop-daemon --start --quiet --pidfile ' . MAIN_DIR . 'bin/php_sockets/' . $i . '.pid --exec /usr/sbin/php-fpm8.4 -- --daemonize --fpm-config /etc/php/8.4/fpm/pool.d/' . $i . '.conf' . "\n";
+                            $rNewBalance .= '    server unix:' . MAIN_DIR . 'bin/php_sockets/' . $i . '.sock;' . "\n";
                             $rTmpPath = TMP_PATH . md5(time() . $i . '.conf');
                             file_put_contents($rTmpPath, str_replace('#PATH#', MAIN_DIR, str_replace('#ID#', $i, $rTemplate)));
-                            sendfile($rConn, $rTmpPath, MAIN_DIR . 'bin/php/etc/' . $i . '.conf');
+                            sendfile($rConn, $rTmpPath, '/etc/php/8.4/fpm/pool.d/' . $i . '.conf');
                         }
                         $rNewBalance .= '}';
                         $rTmpPath = TMP_PATH . md5(time() . 'daemons.sh');

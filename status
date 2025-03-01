@@ -1,4 +1,4 @@
-#!/home/xc_vm/bin/php/bin/php
+#!/bin/php
 <?php
 
 if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
@@ -31,7 +31,6 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 
 		$rServers = ServerInfo();
 
-		shell_exec('sudo chmod 0660 ' . MAIN_DIR . 'bin/php/sockets/*');
 		shell_exec('sudo chmod 0771 ' . MAIN_DIR . 'bin/daemons.sh');
 		shell_exec('sudo chown -R xc_vm:xc_vm ' . MAIN_DIR . 'config');
 		shell_exec("sudo echo 'net.ipv4.ip_unprivileged_port_start=0' > /etc/sysctl.d/50-allports-nonroot.conf && sudo sysctl --system 2> /dev/null");
