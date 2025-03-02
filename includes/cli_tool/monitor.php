@@ -18,7 +18,7 @@ function checkRunning($streamID) {
 }
 
 // Verify running as xtreamcodes user
-if (posix_getpwuid(posix_geteuid())['name'] != 'xtreamcodes') {
+if (posix_getpwuid(posix_geteuid())['name'] != 'xc_vm') {
     exit('Please run as XC_VM!' . "\n");
 }
 
@@ -50,6 +50,8 @@ $ipTV_db->query('UPDATE `streams_servers` SET `monitor_pid` = ? WHERE `server_st
 if (ipTV_lib::$settings["enable_cache"]) {
     ipTV_streaming::updateStream($streamID);
 }
+
+// Initialize stream variables
 $rPID = (file_exists(STREAMS_PATH . $streamID . '_.pid') ? intval(file_get_contents(STREAMS_PATH . $streamID . '_.pid')) : $streamInfo['pid']);
 $rAutoRestart = json_decode($streamInfo['auto_restart'], true);
 $rPlaylist = STREAMS_PATH . $streamID . '_.m3u8';
@@ -60,19 +62,27 @@ $sources = [];
 $segmentTime = ipTV_lib::$SegmentsSettings['seg_time'];
 $rPrioritySwitch = false;
 $rMaxFails = 0;
+
+// Get stream sources
 if ($rParentID == 0) {
     $sources = json_decode($streamInfo['stream_source'], true);
 }
+
+// Set current source
 if ($rParentID <= 0) {
     $rCurrentSource = $streamInfo['current_source'];
 } else {
     $rCurrentSource = 'Loopback: #' . $rParentID;
 }
+
 // Initialize stream parameters
 $rLastSegment = null;
 $rForceSource = null;
+
+// Get stream arguments
 $ipTV_db->query('SELECT t1.*, t2.* FROM `streams_options` t1, `streams_arguments` t2 WHERE t1.stream_id = ? AND t1.argument_id = t2.id', $streamID);
 $streamArguments = $ipTV_db->get_rows();
+
 if (0 < $streamInfo["delay_minutes"] && $streamInfo["parent_id"] == 0) {
     $rFolder = DELAY_PATH;
     $rPlaylist = DELAY_PATH . $streamID . "_.m3u8";
@@ -81,18 +91,22 @@ if (0 < $streamInfo["delay_minutes"] && $streamInfo["parent_id"] == 0) {
     $rDelay = false;
     $rFolder = STREAMS_PATH;
 }
+
 $rFirstRun = true;
 $rTotalCalls = 0;
+
+// Check if stream is running
 if (ipTV_streaming::isStreamRunning($rPID, $streamID)) {
     echo 'Stream is running.' . "\n";
     if ($restart) {
         $rTotalCalls = MONITOR_CALLS;
-        if ((is_numeric($rPID) && (0 < $rPID))) {
+        if (is_numeric($rPID) && $rPID > 0) {
             shell_exec('kill -9 ' . intval($rPID));
         }
         shell_exec('rm -f ' . STREAMS_PATH . intval($streamID) . '_*');
         file_put_contents(STREAMS_PATH . $streamID . '_.monitor', getmypid());
-        if (($rDelay && ipTV_streaming::isDelayRunning($rDelayPID, $streamID) && is_numeric($rDelayPID) && (0 < $rDelayPID))) {
+
+        if ($rDelay && ipTV_streaming::isDelayRunning($rDelayPID, $streamID) && is_numeric($rDelayPID) && $rDelayPID > 0) {
             shell_exec('kill -9 ' . intval($rDelayPID));
         }
         usleep(50000);
@@ -101,10 +115,12 @@ if (ipTV_streaming::isStreamRunning($rPID, $streamID)) {
 } else {
     file_put_contents(STREAMS_PATH . $streamID . '_.monitor', getmypid());
 }
+
+// Kill rogue ffmpeg processes if enabled
 if (ipTV_lib::$settings['kill_rogue_ffmpeg']) {
     exec('ps aux | grep -v grep | grep \'/' . $streamID . '_.m3u8\' | awk \'{print $2}\'', $rFFMPEG);
     foreach ($rFFMPEG as $roguePID) {
-        if ((is_numeric($roguePID) && (0 < intval($roguePID)) && (intval($roguePID) != intval($rPID)))) {
+        if (is_numeric($roguePID) && intval($roguePID) > 0 && intval($roguePID) != intval($rPID)) {
             shell_exec('kill -9 ' . $roguePID . ';');
         }
     }
