@@ -72,6 +72,7 @@ include "header.php";
                                     <th class="text-center"><?= $_["id"] ?> </th>
                                     <th><?= $_["stream"] ?> </th>
                                     <th><?= $_["server"] ?> </th>
+                                    <th><?= $_["action"] ?> </th>
                                     <th><?= $_["error"] ?> </th>
                                     <th class="text-center"><?= $_["date"] ?> </th>
                                 </tr>

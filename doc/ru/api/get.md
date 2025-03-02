@@ -2,7 +2,7 @@
 
 ## Расположение файла
 ```
-/home/xtreamcodes/wwwdir/get.php
+/home/xc_vm/wwwdir/get.php
 ```
 
 ## Обзор

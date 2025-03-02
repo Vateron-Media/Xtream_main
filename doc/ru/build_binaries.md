@@ -7,8 +7,6 @@
 - [Предварительная настройка](#-предварительная-настройка)  
 - [Сборка NGINX](#-сборка-nginx)  
 - [Сборка NGINX-RTMP](#-сборка-nginx-rtmp)  
-- [Сборка PHP-FPM](#-сборка-php-fpm)  
-- [Дополнительные расширения PHP](#-установка-расширений-php)  
 
 ---
 
@@ -41,17 +39,17 @@ cd nginx-1.26.3
 
 ### 2️⃣ **Сконфигурируйте сборку**  
 ```sh
-./configure --prefix=/home/xtreamcodes/bin/nginx \
-    --http-client-body-temp-path=/home/xtreamcodes/tmp/client_temp \
-    --http-proxy-temp-path=/home/xtreamcodes/tmp/proxy_temp \
-    --http-fastcgi-temp-path=/home/xtreamcodes/tmp/fastcgi_temp \
-    --lock-path=/home/xtreamcodes/tmp/nginx.lock \
-    --http-uwsgi-temp-path=/home/xtreamcodes/tmp/uwsgi_temp \
-    --http-scgi-temp-path=/home/xtreamcodes/tmp/scgi_temp \
-    --conf-path=/home/xtreamcodes/bin/nginx/conf/nginx.conf \
-    --error-log-path=/home/xtreamcodes/logs/error.log \
-    --http-log-path=/home/xtreamcodes/logs/access.log \
-    --pid-path=/home/xtreamcodes/bin/nginx/nginx.pid \
+./configure --prefix=/home/xc_vm/bin/nginx \
+    --http-client-body-temp-path=/home/xc_vm/tmp/client_temp \
+    --http-proxy-temp-path=/home/xc_vm/tmp/proxy_temp \
+    --http-fastcgi-temp-path=/home/xc_vm/tmp/fastcgi_temp \
+    --lock-path=/home/xc_vm/tmp/nginx.lock \
+    --http-uwsgi-temp-path=/home/xc_vm/tmp/uwsgi_temp \
+    --http-scgi-temp-path=/home/xc_vm/tmp/scgi_temp \
+    --conf-path=/home/xc_vm/bin/nginx/conf/nginx.conf \
+    --error-log-path=/home/xc_vm/logs/error.log \
+    --http-log-path=/home/xc_vm/logs/access.log \
+    --pid-path=/home/xc_vm/bin/nginx/nginx.pid \
     --with-http_ssl_module \
     --with-http_realip_module \
     --with-http_addition_module \
@@ -77,16 +75,12 @@ cd nginx-1.26.3
 ### 3️⃣ **Соберите бинарные файлы**  
 ```sh
 make
+make install
 ```
 
 ### 4️⃣ **Проверьте версию**  
 ```sh
-/root/nginx-1.26.3/objs/nginx -V
-```
-
-### 5️⃣ **replace the file with this binary**
-```
-/home/xtreamcodes/bin/nginx/sbin/nginx
+/home/xc_vm/bin/nginx/sbin/nginx -V
 ```
 
 ---
@@ -102,12 +96,12 @@ cd nginx-1.26.3
 
 ### 2️⃣ **Сконфигурируйте сборку**  
 ```sh
-./configure --prefix=/home/xtreamcodes/bin/nginx_rtmp \
-    --lock-path=/home/xtreamcodes/bin/nginx_rtmp/nginx_rtmp.lock \
-    --conf-path=/home/xtreamcodes/bin/nginx_rtmp/conf/nginx.conf \
-    --error-log-path=/home/xtreamcodes/logs/rtmp_error.log \
-    --http-log-path=/home/xtreamcodes/logs/rtmp_access.log \
-    --pid-path=/home/xtreamcodes/bin/nginx_rtmp/nginx.pid \
+./configure --prefix=/home/xc_vm/bin/nginx_rtmp \
+    --lock-path=/home/xc_vm/bin/nginx_rtmp/nginx_rtmp.lock \
+    --conf-path=/home/xc_vm/bin/nginx_rtmp/conf/nginx.conf \
+    --error-log-path=/home/xc_vm/logs/rtmp_error.log \
+    --http-log-path=/home/xc_vm/logs/rtmp_access.log \
+    --pid-path=/home/xc_vm/bin/nginx_rtmp/nginx.pid \
     --add-module=/root/nginx-rtmp-module-1.2.2 \
     --with-ld-opt='-Wl,-z,relro -Wl,--as-needed -static' \
     --with-pcre \
@@ -122,110 +116,10 @@ cd nginx-1.26.3
 ### 3️⃣ **Соберите бинарные файлы**  
 ```sh
 make
+make install
 ```
 
 ### 4️⃣ **Проверьте версию**  
 ```sh
-/root/nginx-1.26.3/objs/nginx -v
-```
-
-### 5️⃣ **replace the file with this binary**
-```
-/home/xtreamcodes/bin/nginx_rtmp/sbin/nginx_rtmp
-
----
-
-## 🐘 **Сборка PHP-FPM**  
-
-### 1️⃣ **Установите дополнительные зависимости**  
-```sh
-sudo apt-get install libcurl4-gnutls-dev libbz2-dev libzip-dev -y
-```
-
-### 2️⃣ **Скачайте исходный код**  
-```sh
-wget https://www.php.net/distributions/php-8.4.3.tar.gz
-tar -xzvf php-8.4.3.tar.gz
-cd php-8.4.3
-```
-
-### 3️⃣ **Сконфигурируйте сборку**  
-```sh
-./configure --prefix=/home/xtreamcodes/bin/php \
-    --with-fpm-user=xtreamcodes \
-    --with-fpm-group=xtreamcodes \
-    --enable-gd \
-    --with-jpeg \
-    --with-freetype \
-    --enable-static \
-    --disable-shared \
-    --enable-opcache \
-    --enable-fpm \
-    --without-sqlite3 \
-    --without-pdo-sqlite \
-    --enable-mysqlnd \
-    --with-mysqli \
-    --with-curl \
-    --disable-cgi \
-    --with-zlib \
-    --enable-sockets \
-    --with-openssl \
-    --enable-shmop \
-    --enable-sysvsem \
-    --enable-sysvshm \
-    --enable-sysvmsg \
-    --enable-calendar \
-    --disable-rpath \
-    --enable-inline-optimization \
-    --enable-pcntl \
-    --enable-mbregex \
-    --enable-exif \
-    --enable-bcmath \
-    --with-mhash \
-    --with-gettext \
-    --with-xmlrpc \
-    --with-xsl \
-    --with-libxml \
-    --with-pdo-mysql \
-    --disable-mbregex \
-    --enable-mbstring
-```
-
-### 4️⃣ **Соберите бинарные файлы**  
-```sh
-make
-make install
-```
-
----
-
-## 🔌 **Установка расширений PHP**  
-
-### 📌 **Redis**  
-```sh
-/home/xtreamcodes/bin/php/bin/pecl install redis
-```
-🔹 При установке выберите:  
-```
-enable igbinary serializer support? [no] : yes
-enable lzf compression support? [no] : 
-enable zstd compression support? [no] : 
-enable msgpack serializer support? [no] :
-enable lz4 compression? [no] : 
-use system liblz4? [yes] : 
-```
-
-### 📌 **MaxMindDB**  
-```sh
-/home/xtreamcodes/bin/php/bin/pecl install maxminddb
-```
-
-### 📌 **SSH2**  
-```sh
-/home/xtreamcodes/bin/php/bin/pecl install ssh2
-```
-
-### 📌 **Igbinary**  
-```sh
-/home/xtreamcodes/bin/php/bin/pecl install igbinary
+/home/xc_vm/bin/nginx_rtmp/sbin/nginx_rtmp -v
 ```

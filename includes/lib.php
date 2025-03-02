@@ -53,14 +53,6 @@ class ipTV_lib {
         }
         self::$SegmentsSettings = self::calculateSegNumbers();
         switch (self::$settings['ffmpeg_cpu']) {
-            case '4.4':
-                self::$FFMPEG_CPU = FFMPEG_BIN_44;
-                self::$FFPROBE = FFPROBE_BIN_44;
-                break;
-            case '4.3':
-                self::$FFMPEG_CPU = FFMPEG_BIN_43;
-                self::$FFPROBE = FFPROBE_BIN_43;
-                break;
             default:
                 self::$FFMPEG_CPU = FFMPEG_BIN_40;
                 self::$FFPROBE = FFPROBE_BIN_40;
@@ -476,7 +468,7 @@ class ipTV_lib {
      * @return void
      */
     public static function setCache($cache, $data) {
-        if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+        if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
             $serializedData = igbinary_serialize($data);
             if (!file_exists(CACHE_TMP_PATH)) {
                 mkdir(CACHE_TMP_PATH);
@@ -696,7 +688,7 @@ class ipTV_lib {
     }
     public static function isRunning() {
         $rNginx = 0;
-        exec('ps -fp $(pgrep -u xtreamcodes)', $rOutput, $rReturnVar);
+        exec('ps -fp $(pgrep -u xc_vm)', $rOutput, $rReturnVar);
         foreach ($rOutput as $rProcess) {
             $rSplit = explode(' ', preg_replace('!\\s+!', ' ', trim($rProcess)));
             if ($rSplit[8] == 'nginx:' && $rSplit[9] == 'master') {
@@ -708,7 +700,7 @@ class ipTV_lib {
 
     public static function generateCron() {
         if (!file_exists(TMP_PATH . 'crontab')) {
-            if (posix_getpwuid(posix_geteuid())['name'] == "xtreamcodes") {
+            if (posix_getpwuid(posix_geteuid())['name'] == "xc_vm") {
                 $rJobs = array();
                 self::$ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
                 foreach (self::$ipTV_db->get_rows() as $rRow) {
@@ -722,7 +714,7 @@ class ipTV_lib {
                 $rHandle = fopen($rTempName, 'w');
                 fwrite($rHandle, implode("\n", $rJobs) . "\n");
                 fclose($rHandle);
-                shell_exec('crontab -u xtreamcodes ' . $rTempName);
+                shell_exec('crontab -u xc_vm ' . $rTempName);
                 @unlink($rTempName);
                 file_put_contents(TMP_PATH . 'crontab', 1);
                 return true;

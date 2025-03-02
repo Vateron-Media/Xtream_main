@@ -1,4 +1,4 @@
-#!/home/xtreamcodes/bin/php/bin/php
+#!/bin/php
 <?php
 
 if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
@@ -31,9 +31,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 
 		$rServers = ServerInfo();
 
-		shell_exec('sudo chmod 0660 ' . MAIN_DIR . 'bin/php/sockets/*');
 		shell_exec('sudo chmod 0771 ' . MAIN_DIR . 'bin/daemons.sh');
-		shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'config');
+		shell_exec('sudo chown -R xc_vm:xc_vm ' . MAIN_DIR . 'config');
 		shell_exec("sudo echo 'net.ipv4.ip_unprivileged_port_start=0' > /etc/sysctl.d/50-allports-nonroot.conf && sudo sysctl --system 2> /dev/null");
 		$rSSLConfig = file_get_contents(MAIN_DIR . 'bin/nginx/conf/ssl.conf');
 
@@ -52,8 +51,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 		// }
 
 		if ($rReload) {
-			exec('sudo -u xtreamcodes ' . MAIN_DIR . 'bin/nginx/sbin/nginx -s reload');
-			exec('sudo service xtreamcodes restart');
+			exec('sudo -u xc_vm ' . MAIN_DIR . 'bin/nginx/sbin/nginx -s reload');
+			exec('sudo service xc_vm restart');
 		}
 
 		$rCrons = array();
@@ -218,7 +217,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 
 function isrunning() {
 	$rNginx = 0;
-	exec('ps -fp $(pgrep -u xtreamcodes 2>/dev/null) 2>/dev/null', $rOutput, $rReturnVar);
+	exec('ps -fp $(pgrep -u xc_vm 2>/dev/null) 2>/dev/null', $rOutput, $rReturnVar);
 
 	foreach ($rOutput as $rProcess) {
 		$rSplit = explode(' ', preg_replace('!\\s+!', ' ', trim($rProcess)));

@@ -18,8 +18,8 @@ function deleteStreamFile($timestamp) {
 }
 function killStreamProcess($stream_id) {
     clearstatcache(true);
-    if (file_exists("/home/xtreamcodes/streams/" . $stream_id . ".monitor_delay")) {
-        $pid = intval(file_get_contents("/home/xtreamcodes/streams/" . $stream_id . ".monitor_delay"));
+    if (file_exists("/home/xc_vm/streams/" . $stream_id . ".monitor_delay")) {
+        $pid = intval(file_get_contents("/home/xc_vm/streams/" . $stream_id . ".monitor_delay"));
     }
     if (empty($pid)) {
         shell_exec("kill -9 `ps -ef | grep 'XC_VMDelay\\[" . $stream_id . "\\]' | grep -v grep | awk '{print \$2}'`;");
@@ -31,7 +31,7 @@ function killStreamProcess($stream_id) {
             }
         }
     }
-    file_put_contents("/home/xtreamcodes/streams/" . $stream_id . ".monitor_delay", getmypid());
+    file_put_contents("/home/xc_vm/streams/" . $stream_id . ".monitor_delay", getmypid());
 }
 function processM3uFile($m3uFile, &$segment_list, $total_segments) {
     $segments = [];

@@ -1,6 +1,6 @@
 <?php
 
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     if ($argc) {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
@@ -21,7 +21,7 @@ function loadCron() {
     if (ipTV_lib::isRunning()) {
         $rServers = ipTV_lib::getServers(true);
         if ($rServers[SERVER_ID]['is_main'] && ipTV_lib::$settings['redis_handler']) {
-            exec('pgrep -u xtreamcodes redis-server', $rRedis);
+            exec('pgrep -u xc_vm redis-server', $rRedis);
             if (count($rRedis) == 0) {
                 echo 'Restarting Redis!' . "\n";
                 shell_exec(MAIN_DIR . 'bin/redis/redis-server ' . MAIN_DIR . '/bin/redis/redis.conf > /dev/null 2>/dev/null &');
@@ -29,18 +29,18 @@ function loadCron() {
         }
         #create all network stats
         getNetworkStats();
-        $rSignals = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep signals | grep -v grep | grep -v pgrep | wc -l')));
+        $rSignals = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep signals | grep -v grep | grep -v pgrep | wc -l')));
         if ($rSignals == 0) {
             shell_exec(PHP_BIN . ' ' . CLI_PATH . 'signals.php > /dev/null 2>/dev/null &');
         }
         if ($rServers[SERVER_ID]['is_main']) {
-            $rCache = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
+            $rCache = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
             if (ipTV_lib::$settings['enable_cache'] && $rCache == 0) {
                 shell_exec(PHP_BIN . ' ' . CLI_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
             } else {
                 if (!ipTV_lib::$settings['enable_cache'] || $rCache > 0) {
                     echo 'Killing Cache Handler' . "\n";
-                    exec("pgrep -U xtreamcodes | xargs ps | grep cache_handler | awk '{print \$1}'", $rPIDs);
+                    exec("pgrep -U xc_vm | xargs ps | grep cache_handler | awk '{print \$1}'", $rPIDs);
                     foreach ($rPIDs as $rPID) {
                         if (intval($rPID) > 0) {
                             shell_exec('kill -9 ' . intval($rPID));
@@ -49,21 +49,21 @@ function loadCron() {
                 }
             }
         }
-        $rWatchdog = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep watchdog | grep -v grep | grep -v pgrep | wc -l')));
+        $rWatchdog = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep watchdog | grep -v grep | grep -v pgrep | wc -l')));
         if ($rWatchdog == 0) {
             shell_exec(PHP_BIN . ' ' . CLI_PATH . 'watchdog.php > /dev/null 2>/dev/null &');
         }
-        $rQueue = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep queue | grep -v grep | grep -v pgrep | wc -l')));
+        $rQueue = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep queue | grep -v grep | grep -v pgrep | wc -l')));
         if ($rQueue == 0) {
             shell_exec(PHP_BIN . ' ' . CLI_PATH . 'queue.php > /dev/null 2>/dev/null &');
         }
-        $rOnDemand = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep ondemand | grep -v grep | grep -v pgrep | wc -l')));
+        $rOnDemand = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep ondemand | grep -v grep | grep -v pgrep | wc -l')));
         if (ipTV_lib::$settings['on_demand_instant_off'] && $rOnDemand == 0) {
             shell_exec(PHP_BIN . ' ' . CLI_PATH . 'ondemand.php > /dev/null 2>/dev/null &');
         } else {
             if (!ipTV_lib::$settings['on_demand_instant_off'] || $rOnDemand > 0) {
                 echo 'Killing On-Demand Instant-Off' . "\n";
-                exec("pgrep -U xtreamcodes | xargs ps | grep ondemand | awk '{print \$1}'", $rPIDs);
+                exec("pgrep -U xc_vm | xargs ps | grep ondemand | awk '{print \$1}'", $rPIDs);
                 foreach ($rPIDs as $rPID) {
                     if (intval($rPID) > 0) {
                         shell_exec('kill -9 ' . intval($rPID));
@@ -71,13 +71,13 @@ function loadCron() {
                 }
             }
         }
-        // $rScanner = intval(trim(shell_exec('pgrep -U xtreamcodes | xargs ps -f -p | grep scanner | grep -v grep | grep -v pgrep | wc -l')));
+        // $rScanner = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep scanner | grep -v grep | grep -v pgrep | wc -l')));
         // if (ipTV_lib::$settings['on_demand_checker'] && $rScanner == 0) {
         //     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'scanner.php > /dev/null 2>/dev/null &');
         // } else {
         //     if (!ipTV_lib::$settings['on_demand_checker'] || $rScanner > 0) {
         //         echo 'Killing On-Demand Scanner' . "\n";
-        //         exec("pgrep -U xtreamcodes | xargs ps | grep scanner | awk '{print \$1}'", $rPIDs);
+        //         exec("pgrep -U xc_vm | xargs ps | grep scanner | awk '{print \$1}'", $rPIDs);
         //         foreach ($rPIDs as $rPID) {
         //             if (intval($rPID) > 0) {
         //                 shell_exec('kill -9 ' . intval($rPID));

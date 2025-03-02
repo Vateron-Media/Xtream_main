@@ -2,7 +2,7 @@
 
 ## Расположение файлов
 ```
-/home/xtreamcodes/wwwdir/api.php
+/home/xc_vm/wwwdir/api.php
 ```
 
 ## Обзор

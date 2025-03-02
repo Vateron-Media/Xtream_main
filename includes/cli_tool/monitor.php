@@ -16,7 +16,6 @@ function checkRunning($streamID) {
         }
     }
 }
-
 // Verify running as xtreamcodes user
 if (posix_getpwuid(posix_geteuid())['name'] != 'xc_vm') {
     exit('Please run as XC_VM!' . "\n");

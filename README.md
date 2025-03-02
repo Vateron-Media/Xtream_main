@@ -35,7 +35,7 @@ To install Xtream Main, follow the instructions in the **[Xtream Install reposit
 ## 🛠️ Managing the Panel
 To start the Xtream Codes panel, use:
 ```sh
-sudo systemctl start xtreamcodes
+sudo systemctl start xc_vm
 ```
 | Command | Description |
 |---------|------------|
@@ -46,13 +46,13 @@ sudo systemctl start xtreamcodes
 
 To check the panel status:
 ```sh
-sudo systemctl status xtreamcodes.service
+sudo systemctl status xc_vm.service
 ```
 
 ## 📊 Monitoring
 View logs in real time:
   ```sh
-  journalctl -u xtreamcodes -f
+  journalctl -u xc_vm -f
   ```
 
 ## 🤝 Contributing

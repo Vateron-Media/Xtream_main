@@ -999,19 +999,36 @@ class ipTV_streaming {
      *
      * @param int $PID The process ID of the monitor.
      * @param int $streamID The stream ID to check against.
-     * @param string $ffmpeg_path The path to the FFmpeg executable (default is PHP_BIN).
+     * @param string $rEXE The path to the FFmpeg executable (default is PHP_BIN).
      * @return bool Returns true if the monitor process is running with the specified PID and stream ID, false otherwise.
      */
-    public static function checkMonitorRunning($PID, $streamID, $ffmpeg_path = PHP_BIN) {
+    public static function checkMonitorRunning($PID, $streamID, $rEXE = PHP_BIN) {
         if (!empty($PID)) {
             clearstatcache(true);
-            if (file_exists('/proc/' . $PID) && is_readable('/proc/' . $PID . '/exe') && basename(readlink('/proc/' . $PID . '/exe')) == basename($ffmpeg_path)) {
-                $value = trim(file_get_contents("/proc/{$PID}/cmdline"));
-                if ($value == "XC_VM[{$streamID}]") {
-                    return true;
-                }
+            $procDir = "/proc/{$PID}";
+            $exePath = "{$procDir}/exe";
+            $cmdlinePath = "{$procDir}/cmdline";
+    
+            // Checking the existence of the process and access rights
+            if (!file_exists($procDir) || !is_readable($exePath) || !is_readable($cmdlinePath)) {
+                return false;
             }
-            return false;
+    
+            // Checking the executable file
+            $processExe = basename(readlink($exePath));
+            $targetExe = basename($rEXE);
+            if ($processExe !== $targetExe) {
+                return false;
+            }
+    
+            // Command line reading and processing
+            $cmdline = str_replace("\0", " ", file_get_contents($cmdlinePath));
+            $cmdline = trim($cmdline);
+    
+            // Checking for the XC_VM[StreamID] template
+            if (preg_match("/XC_VM\[{$streamID}\]/", $cmdline)) {
+                return true;
+            }
         }
         return false;
     }

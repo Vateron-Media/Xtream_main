@@ -3,7 +3,7 @@
 // $rType = 1 install lb
 // $rType = 2 update lb
 
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     if ($argc && $argc >= 6) {
         $rServerID = intval($argv[2]);
         if ($rServerID != 0) {
@@ -95,8 +95,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                 $rResult = @ssh2_auth_password($rConn, $rUsername, $rPassword);
                 if ($rResult) {
                     echo "\n" . 'Stopping any previous version of XC_VM' . "\n";
-                    runCommand($rConn, 'sudo systemctl stop xtreamcodes');
-                    runCommand($rConn, 'sudo killall -9 -u xtreamcodes');
+                    runCommand($rConn, 'sudo systemctl stop xc_vm');
+                    runCommand($rConn, 'sudo killall -9 -u xc_vm');
                     echo "\n" . 'Updating system' . "\n";
                     runCommand($rConn, 'sudo rm /var/lib/dpkg/lock-frontend && sudo rm /var/cache/apt/archives/lock && sudo rm /var/lib/dpkg/lock');
                     if ($rType == 1) {
@@ -109,7 +109,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     }
                     if ($rType == 1) {
                         echo 'Creating XC_VM system user' . "\n";
-                        runCommand($rConn, 'sudo adduser --system --shell /bin/false --group --disabled-login xtreamcodes');
+                        runCommand($rConn, 'sudo adduser --system --shell /bin/false --group --disabled-login xc_vm');
                         runCommand($rConn, 'sudo mkdir ' . MAIN_DIR);
                         // runCommand($rConn, 'sudo rm -rf ' . BIN_PATH);
                     }
@@ -155,45 +155,44 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     file_put_contents(TMP_PATH . 'config_' . $rServerID, $rNewConfig);
                     sendfile($rConn, TMP_PATH . 'config_' . $rServerID, CONFIG_PATH . 'config.ini');
                     echo 'Installing service' . "\n";
-                    runCommand($rConn, 'sudo rm /etc/systemd/system/xtreamcodes.service');
-                    $rSystemd = '[Unit]' . "\n" . 'SourcePath=/home/xtreamcodes/service' . "\n" . 'Description=XC_VM Service' . "\n" . 'After=network.target' . "\n" . 'StartLimitIntervalSec=0' . "\n\n" . '[Service]' . "\n" . 'Type=simple' . "\n" . 'User=root' . "\n" . 'Restart=always' . "\n" . 'RestartSec=1' . "\n" . 'ExecStart=/bin/bash /home/xtreamcodes/service start' . "\n" . 'ExecReload=/bin/bash /home/xtreamcodes/service restart' . "\n" . 'ExecStop=/bin/bash /home/xtreamcodes/service stop' . "\n\n" . '[Install]' . "\n" . 'WantedBy=multi-user.target';
+                    runCommand($rConn, 'sudo rm /etc/systemd/system/xc_vm.service');
+                    $rSystemd = '[Unit]' . "\n" . 'SourcePath=/home/xc_vm/service' . "\n" . 'Description=XC_VM Service' . "\n" . 'After=network.target' . "\n" . 'StartLimitIntervalSec=0' . "\n\n" . '[Service]' . "\n" . 'Type=simple' . "\n" . 'User=root' . "\n" . 'Restart=always' . "\n" . 'RestartSec=1' . "\n" . 'ExecStart=/bin/bash /home/xc_vm/service start' . "\n" . 'ExecReload=/bin/bash /home/xc_vm/service restart' . "\n" . 'ExecStop=/bin/bash /home/xc_vm/service stop' . "\n\n" . '[Install]' . "\n" . 'WantedBy=multi-user.target';
                     file_put_contents(TMP_PATH . 'systemd_' . $rServerID, $rSystemd);
-                    sendfile($rConn, TMP_PATH . 'systemd_' . $rServerID, '/etc/systemd/system/xtreamcodes.service');
-                    runCommand($rConn, 'sudo chmod +x /etc/systemd/system/xtreamcodes.service');
-                    runCommand($rConn, 'sudo rm /etc/init.d/xtreamcodes');
+                    sendfile($rConn, TMP_PATH . 'systemd_' . $rServerID, '/etc/systemd/system/xc_vm.service');
+                    runCommand($rConn, 'sudo chmod +x /etc/systemd/system/xc_vm.service');
+                    runCommand($rConn, 'sudo rm /etc/init.d/xc_vm');
                     runCommand($rConn, 'sudo systemctl daemon-reload');
-                    runCommand($rConn, 'sudo systemctl enable xtreamcodes');
+                    runCommand($rConn, 'sudo systemctl enable xc_vm');
 
                     // sendfile($rConn, CONFIG_PATH . 'credentials', CONFIG_PATH . 'credentials');
                     sendfile($rConn, MAIN_DIR . 'bin/nginx/conf/custom.conf', MAIN_DIR . 'bin/nginx/conf/custom.conf');
                     sendfile($rConn, MAIN_DIR . 'bin/nginx/conf/realip_cdn.conf', MAIN_DIR . 'bin/nginx/conf/realip_cdn.conf');
                     sendfile($rConn, MAIN_DIR . 'bin/nginx/conf/realip_cloudflare.conf', MAIN_DIR . 'bin/nginx/conf/realip_cloudflare.conf');
                     sendfile($rConn, MAIN_DIR . 'bin/nginx/conf/realip_xtream.conf', MAIN_DIR . 'bin/nginx/conf/realip_xtream.conf');
-                    runCommand($rConn, 'sudo echo "" > "/home/xtreamcodes/bin/nginx/conf/limit.conf"');
-                    runCommand($rConn, 'sudo echo "" > "/home/xtreamcodes/bin/nginx/conf/limit_queue.conf"');
+                    runCommand($rConn, 'sudo echo "" > "/home/xc_vm/bin/nginx/conf/limit.conf"');
+                    runCommand($rConn, 'sudo echo "" > "/home/xc_vm/bin/nginx/conf/limit_queue.conf"');
                     if ($rType == 1) {
-                        runCommand($rConn, 'sudo echo "listen ' . $rHTTPPort . ';" > "/home/xtreamcodes/bin/nginx/conf/ports/http.conf"');
-                        runCommand($rConn, 'sudo echo "listen ' . $rHTTPSPort . ' ssl;" > "/home/xtreamcodes/bin/nginx/conf/ports/https.conf"');
+                        runCommand($rConn, 'sudo echo "listen ' . $rHTTPPort . ';" > "/home/xc_vm/bin/nginx/conf/ports/http.conf"');
+                        runCommand($rConn, 'sudo echo "listen ' . $rHTTPSPort . ' ssl;" > "/home/xc_vm/bin/nginx/conf/ports/https.conf"');
                         $rIP = '127.0.0.1:' . ipTV_lib::$Servers[$rServerID]['http_broadcast_port'];
-                        runCommand($rConn, 'sudo echo "on_play http://' . $rIP . '/streaming/rtmp.php; on_publish http://' . $rIP . '/streaming/rtmp.php; on_play_done http://' . $rIP . '/streaming/rtmp.php;" > "/home/xtreamcodes/bin/nginx_rtmp/conf/live.conf"');
+                        runCommand($rConn, 'sudo echo "on_play http://' . $rIP . '/streaming/rtmp.php; on_publish http://' . $rIP . '/streaming/rtmp.php; on_play_done http://' . $rIP . '/streaming/rtmp.php;" > "/home/xc_vm/bin/nginx_rtmp/conf/live.conf"');
                         $rServices = (intval(runCommand($rConn, 'sudo cat /proc/cpuinfo | grep "^processor" | wc -l')['output']) ?: 4);
-                        runCommand($rConn, 'sudo rm ' . MAIN_DIR . 'bin/php/etc/*.conf');
                         $rNewScript = "#! /bin/bash\n\n"
-                            . "if pgrep -u xtreamcodes php-fpm > /dev/null; then\n"
+                            . "if pgrep -u xc_vm php-fpm8.4 > /dev/null; then\n"
                             . "    echo \"PHP-FPM is already running, stopping existing instances...\"\n"
-                            . "    pkill -u xtreamcodes php-fpm\n"
+                            . "    pkill -u xc_vm php-fpm8.4\n"
                             . "    sleep 2\n"
                             . "fi\n\n"
                             . "# Now start PHP-FPM instances\n";
 
                         $rNewBalance = 'upstream php {' . "\n" . '    least_conn;' . "\n";
-                        $rTemplate = file_get_contents(MAIN_DIR . 'bin/php/etc/template');
+                        $rTemplate = file_get_contents(MAIN_DIR . 'bin/install/php/fpm_pool_template');
                         foreach (range(1, $rServices) as $i) {
-                            $rNewScript .= 'start-stop-daemon --start --quiet --pidfile ' . MAIN_DIR . 'bin/php/sockets/' . $i . '.pid --exec ' . MAIN_DIR . 'bin/php/sbin/php-fpm -- --daemonize --fpm-config ' . MAIN_DIR . 'bin/php/etc/' . $i . '.conf' . "\n";
-                            $rNewBalance .= '    server unix:' . MAIN_DIR . 'bin/php/sockets/' . $i . '.sock;' . "\n";
+                            $rNewScript .= 'start-stop-daemon --start --quiet --pidfile ' . MAIN_DIR . 'bin/php_sockets/' . $i . '.pid --exec /usr/sbin/php-fpm8.4 -- --daemonize --fpm-config /etc/php/8.4/fpm/pool.d/' . $i . '.conf' . "\n";
+                            $rNewBalance .= '    server unix:' . MAIN_DIR . 'bin/php_sockets/' . $i . '.sock;' . "\n";
                             $rTmpPath = TMP_PATH . md5(time() . $i . '.conf');
                             file_put_contents($rTmpPath, str_replace('#PATH#', MAIN_DIR, str_replace('#ID#', $i, $rTemplate)));
-                            sendfile($rConn, $rTmpPath, MAIN_DIR . 'bin/php/etc/' . $i . '.conf');
+                            sendfile($rConn, $rTmpPath, '/etc/php/8.4/fpm/pool.d/' . $i . '.conf');
                         }
                         $rNewBalance .= '}';
                         $rTmpPath = TMP_PATH . md5(time() . 'daemons.sh');
@@ -220,23 +219,23 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
                     runCommand($rConn, 'sudo mount -a');
                     runCommand($rConn, "sudo echo 'net.ipv4.ip_unprivileged_port_start=0' > /etc/sysctl.d/50-allports-nonroot.conf && sudo sysctl --system");
                     sleep(3);
-                    runCommand($rConn, 'sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'tmp');
-                    runCommand($rConn, 'sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR . 'content/streams');
-                    runCommand($rConn, 'sudo chown -R xtreamcodes:xtreamcodes ' . MAIN_DIR);
+                    runCommand($rConn, 'sudo chown -R xc_vm:xc_vm ' . MAIN_DIR . 'tmp');
+                    runCommand($rConn, 'sudo chown -R xc_vm:xc_vm ' . MAIN_DIR . 'content/streams');
+                    runCommand($rConn, 'sudo chown -R xc_vm:xc_vm ' . MAIN_DIR);
                     runCommand($rConn, 'sleep 2 && sudo ' . MAIN_DIR . 'permissions.sh > /dev/null');
                     echo 'Installation complete! Starting XC_VM' . "\n";
-                    runCommand($rConn, 'sudo service xtreamcodes restart');
+                    runCommand($rConn, 'sudo service xc_vm restart');
                     if ($rType == 1) {
                         runCommand($rConn, 'sudo ' . MAIN_DIR . 'status 1');
-                        runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . CLI_PATH . 'startup.php');
-                        runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . CRON_PATH . 'servers.php');
+                        runCommand($rConn, 'sudo -u xc_vm ' . PHP_BIN . ' ' . CLI_PATH . 'startup.php');
+                        runCommand($rConn, 'sudo -u xc_vm ' . PHP_BIN . ' ' . CRON_PATH . 'servers.php');
                     } elseif ($rType == 2) {
                         runCommand($rConn, 'sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "post-update"');
                         runCommand($rConn, 'sudo ' . MAIN_DIR . 'status 1');
-                        runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . CLI_PATH . 'startup.php');
-                        runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . CRON_PATH . 'servers.php');
+                        runCommand($rConn, 'sudo -u xc_vm ' . PHP_BIN . ' ' . CLI_PATH . 'startup.php');
+                        runCommand($rConn, 'sudo -u xc_vm ' . PHP_BIN . ' ' . CRON_PATH . 'servers.php');
                     } else {
-                        runCommand($rConn, 'sudo -u xtreamcodes ' . PHP_BIN . ' ' . INCLUDES_PATH . 'startup.php');
+                        runCommand($rConn, 'sudo -u xc_vm ' . PHP_BIN . ' ' . INCLUDES_PATH . 'startup.php');
                     }
 
                     if ($rType == 1) {

@@ -56,7 +56,7 @@ if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
 
 // FOLDERS
 if (!defined('MAIN_DIR')) {
-    define('MAIN_DIR', '/home/xtreamcodes/');
+    define('MAIN_DIR', '/home/xc_vm/');
 }
 define('IPTV_ROOT_PATH', str_replace('\\', '/', dirname(__FILE__)) . '/');
 define('INCLUDES_PATH', MAIN_DIR . 'includes/');
@@ -74,18 +74,14 @@ define('CLI_PATH', INCLUDES_PATH . 'cli_tool/');
 // -------------------
 
 // BINARIES FILE
-define('PHP_BIN', '/home/xtreamcodes/bin/php/bin/php');
+define('PHP_BIN', 'php8.4');
 define('YOUTUBE_PATH', BIN_PATH . 'yt-dlp');
 define('GEOIP2COUNTRY_FILENAME', BIN_PATH . 'maxmind/GeoLite2-Country.mmdb');
 define('GEOIP2ASN_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ASN.mmdb');
 define('GEOIP2CITY_FILENAME', BIN_PATH . 'maxmind/GeoLite2-City.mmdb');
 define('GEOIP2ISP_FILENAME', BIN_PATH . 'maxmind/GeoIP2-ISP.mmdb');
 define('FFMPEG_BIN_40', BIN_PATH . 'ffmpeg_bin/4.0/ffmpeg');
-define('FFMPEG_BIN_43', BIN_PATH . 'ffmpeg_bin/4.3/ffmpeg');
-define('FFMPEG_BIN_44', BIN_PATH . 'ffmpeg_bin/4.4/ffmpeg');
 define('FFPROBE_BIN_40', BIN_PATH . 'ffmpeg_bin/4.0/ffprobe');
-define('FFPROBE_BIN_43', BIN_PATH . 'ffmpeg_bin/4.3/ffprobe');
-define('FFPROBE_BIN_44', BIN_PATH . 'ffmpeg_bin/4.4/ffprobe');
 // -------------------
 
 // TEMP FOLDERS

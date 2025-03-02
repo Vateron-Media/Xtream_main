@@ -1,5 +1,5 @@
 <?php
-include "/home/xtreamcodes/admin/functions.php";
+include "/home/xc_vm/admin/functions.php";
 require INCLUDES_PATH . 'libs/tmdb.php';
 require INCLUDES_PATH . 'libs/tmdb_release.php';
 

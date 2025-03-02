@@ -1,5 +1,5 @@
 <?php
-if (posix_getpwuid(posix_geteuid())['name'] == 'xtreamcodes') {
+if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     set_time_limit(0);
     ini_set('memory_limit', -1);
     if ($argc) {

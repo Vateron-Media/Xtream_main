@@ -1,0 +1,23 @@
+[global]
+pid = #PATH#bin/php_sockets/#ID#.pid
+events.mechanism = epoll
+daemonize = yes
+rlimit_files = 4000
+error_log = /home/xc_vm/logs/php-fpm-global.log
+
+[xc_vm]
+user = xc_vm
+group = xc_vm
+listen = #PATH#bin/php_sockets/#ID#.sock
+listen.allowed_clients = 127.0.0.1
+listen.mode = 0660
+listen.owner = xc_vm
+listen.group = xc_vm
+pm = ondemand
+pm.max_children = 4000
+pm.max_requests = 40000
+security.limit_extensions = .php
+pm.process_idle_timeout = 3s
+
+php_admin_value[error_log] = /home/xc_vm/logs/php-fpm-#ID#.log
+php_admin_flag[log_errors] = on

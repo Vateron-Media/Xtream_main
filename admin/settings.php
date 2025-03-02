@@ -25,7 +25,7 @@ if ($rSettings['update_chanel'] == 'stable'){
 
 #Get versions
 $rGeoLite2Latest = getGithubReleases("Vateron-Media/Xtream_Update")['latest_release'];
-$rGeoLite2Curent = json_decode(file_get_contents("/home/xtreamcodes/bin/maxmind/version.json"), true)["geolite2_version"];
+$rGeoLite2Curent = json_decode(file_get_contents("/home/xc_vm/bin/maxmind/version.json"), true)["geolite2_version"];
 $rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")[$release], 1);
 
 if (isset(ipTV_lib::$request["panel_version"])) {

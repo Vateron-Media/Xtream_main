@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SCRIPT=/home/xtreamcodes
+SCRIPT=/home/xc_vm
 USER=$(whoami)
 
 if [ "$USER" != "root" ]; then
@@ -13,61 +13,61 @@ log() {
 }
 
 start() {
-  pids=$(pgrep -u xtreamcodes nginx | wc -l)
+  pids=$(pgrep -u xc_vm nginx | wc -l)
   if [ "$pids" -ne 0 ]; then
     log "XC_VM is already running"
     return 1
   fi
 
   log "Starting XC_VM..."
-  sudo chown -R xtreamcodes:xtreamcodes /sys/class/net || exit 1
-  sudo chown -R xtreamcodes:xtreamcodes "$SCRIPT/content/streams" || exit 1
-  sudo chown -R xtreamcodes:xtreamcodes "$SCRIPT/tmp" || exit 1
+  sudo chown -R xc_vm:xc_vm /sys/class/net || exit 1
+  sudo chown -R xc_vm:xc_vm "$SCRIPT/content/streams" || exit 1
+  sudo chown -R xc_vm:xc_vm "$SCRIPT/tmp" || exit 1
   if [ -f $SCRIPT/bin/redis/redis-server ]; then
-    sudo -u xtreamcodes $SCRIPT/bin/redis/redis-server $SCRIPT/bin/redis/redis.conf >/dev/null 2>&1 &
+    sudo -u xc_vm $SCRIPT/bin/redis/redis-server $SCRIPT/bin/redis/redis.conf >/dev/null 2>&1 &
   fi
-  sudo -u xtreamcodes "$SCRIPT/bin/nginx/sbin/nginx" >/dev/null 2>&1 || log "Failed to start nginx"
-  sudo -u xtreamcodes "$SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp" >/dev/null 2>&1 || log "Failed to start nginx_rtmp"
-  sudo -u xtreamcodes "$SCRIPT/bin/daemons.sh" || log "Failed to start daemons.sh"
-  sudo "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/startup.php" || log "Failed to start startup.php"
-  sudo -u xtreamcodes "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/signals.php" >/dev/null 2>&1 &
-  sudo -u xtreamcodes "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/watchdog.php" >/dev/null 2>&1 &
-  sudo -u xtreamcodes "$SCRIPT/bin/php/bin/php" "$SCRIPT/includes/cli_tool/queue.php" >/dev/null 2>&1 &
+  sudo -u xc_vm "$SCRIPT/bin/nginx/sbin/nginx" >/dev/null 2>&1 || log "Failed to start nginx"
+  sudo -u xc_vm "$SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp" >/dev/null 2>&1 || log "Failed to start nginx_rtmp"
+  sudo -u xc_vm "$SCRIPT/bin/daemons.sh" || log "Failed to start daemons.sh"
+  sudo "/bin/php" "$SCRIPT/includes/cli_tool/startup.php" || log "Failed to start startup.php"
+  sudo -u xc_vm "/bin/php" "$SCRIPT/includes/cli_tool/signals.php" >/dev/null 2>&1 &
+  sudo -u xc_vm "/bin/php" "$SCRIPT/includes/cli_tool/watchdog.php" >/dev/null 2>&1 &
+  sudo -u xc_vm "/bin/php" "$SCRIPT/includes/cli_tool/queue.php" >/dev/null 2>&1 &
     if [ -f $SCRIPT/includes/cli_tool/cache_handler.php ]; then
-    sudo -u xtreamcodes $SCRIPT/bin/php/bin/php $SCRIPT/includes/cli_tool/cache_handler.php >/dev/null 2>&1 &
+    sudo -u xc_vm /bin/php $SCRIPT/includes/cli_tool/cache_handler.php >/dev/null 2>&1 &
   fi
   log "XC_VM started in foreground."
   sleep infinity
 }
 
 stop() {
-  pids=$(pgrep -u xtreamcodes nginx | wc -l)
+  pids=$(pgrep -u xc_vm nginx | wc -l)
   if [ "$pids" -eq 0 ]; then
     log 'XC_VM is not running'
     return 1
   fi
   log 'Stopping XC_VM...'
-  sudo killall -u xtreamcodes
+  sudo killall -u xc_vm
   sleep 1
-  sudo killall -u xtreamcodes
+  sudo killall -u xc_vm
   sleep 1
-  sudo killall -u xtreamcodes
+  sudo killall -u xc_vm
 }
 
 restart() {
-  ps -U xtreamcodes | egrep -v "ffmpeg|PID" | awk '{print $1}' | xargs kill -9
+  ps -U xc_vm | egrep -v "ffmpeg|PID" | awk '{print $1}' | xargs kill -9
   start
 }
 
 reload() {
-  pids=$(pgrep -u xtreamcodes nginx | wc -l)
+  pids=$(pgrep -u xc_vm nginx | wc -l)
   if [ "$pids" -eq 0 ]; then
     log 'XC_VM is not running'
     return 1
   fi
   log "Reloading XC_VM..."
-  sudo -u xtreamcodes "$SCRIPT/bin/nginx/sbin/nginx" -s reload
-  sudo -u xtreamcodes "$SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp" -s reload
+  sudo -u xc_vm "$SCRIPT/bin/nginx/sbin/nginx" -s reload
+  sudo -u xc_vm "$SCRIPT/bin/nginx_rtmp/sbin/nginx_rtmp" -s reload
 }
 
 case "$1" in

@@ -145,7 +145,7 @@ function loadCron() {
     }
     if (ipTV_lib::$settings['restart_php_fpm']) {
         $rPHP = $rNginx = 0;
-        exec('ps -fp $(pgrep -u xtreamcodes)', $rOutput, $rReturnVar);
+        exec('ps -fp $(pgrep -u xc_vm)', $rOutput, $rReturnVar);
         foreach ($rOutput as $rProcess) {
             $rSplit = explode(' ', preg_replace('!\\s+!', ' ', trim($rProcess)));
             if ($rSplit[8] == 'php-fpm:' && $rSplit[9] == 'master') {
@@ -159,8 +159,8 @@ function loadCron() {
             if ($rPHP == 0) {
                 echo 'PHP-FPM ERROR - Restarting...';
                 $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'PHP-FPM', 'Restarted PHP-FPM instances due to a suspected crash.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                shell_exec('sudo systemctl stop xtreamcodes');
-                shell_exec('sudo systemctl start xtreamcodes');
+                shell_exec('sudo systemctl stop xc_vm');
+                shell_exec('sudo systemctl start xc_vm');
                 exit();
             }
         }
@@ -173,8 +173,8 @@ function loadCron() {
         } else {
             echo $rCode . ' ERROR - Restarting...';
             $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'PHP-FPM', 'Restarted services due to " . $rCode . " error.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-            shell_exec('sudo systemctl stop xtreamcodes');
-            shell_exec('sudo systemctl start xtreamcodes');
+            shell_exec('sudo systemctl stop xc_vm');
+            shell_exec('sudo systemctl start xc_vm');
             exit();
         }
     }
@@ -188,10 +188,10 @@ function loadCron() {
                 case 'enable_ramdisk':
                     $rCheck['ramdisk'] = false;
                     break;
-                // case 'enable_ministra':
-                // case 'disable_ministra':
-                //     $rCheck['mag'] = false;
-                //     break;
+                    // case 'enable_ministra':
+                    // case 'disable_ministra':
+                    //     $rCheck['mag'] = false;
+                    //     break;
                 case 'set_services':
                     $rCheck['services'] = false;
                     break;
@@ -270,7 +270,7 @@ function loadCron() {
         // }
         // }
         if (file_exists(TMP_PATH . 'crontab')) {
-            exec('crontab -u xtreamcodes -l', $rCrons);
+            exec('crontab -u xc_vm -l', $rCrons);
             $rCurrentCron = trim(implode("\n", $rCrons));
             $ipTV_db->query('SELECT * FROM `crontab` WHERE `enabled` = 1;');
             foreach ($ipTV_db->get_rows() as $rRow) {
@@ -309,13 +309,13 @@ function loadCron() {
                     case 'restart_services':
                         echo 'Restarting services...' . "\n";
                         $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'RESTART', 'XC_VM services restarted on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                        shell_exec('sudo systemctl stop xtreamcodes');
-                        shell_exec('sudo systemctl start xtreamcodes');
+                        shell_exec('sudo systemctl stop xc_vm');
+                        shell_exec('sudo systemctl start xc_vm');
                         break;
                     case 'stop_services':
                         echo 'Stopping services...' . "\n";
                         $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'STOP', 'XC_VM services stopped on request.', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                        shell_exec('sudo systemctl stop xtreamcodes');
+                        shell_exec('sudo systemctl stop xc_vm');
                         break;
                     case 'reload_nginx':
                         echo 'Reloading nginx...' . "\n";
@@ -328,7 +328,7 @@ function loadCron() {
                         $rFstab = file_get_contents('/etc/fstab');
                         $rOutput = array();
                         foreach (explode("\n", $rFstab) as $rLine) {
-                            if (substr($rLine, 0, 31) != 'tmpfs /home/xtreamcodes/content/streams') {
+                            if (substr($rLine, 0, 31) != 'tmpfs /home/xc_vm/content/streams') {
                             } else {
                                 $rLine = '#' . $rLine;
                             }
@@ -336,14 +336,14 @@ function loadCron() {
                         }
                         file_put_contents('/etc/fstab', implode("\n", $rOutput));
                         shell_exec('sudo umount -l ' . STREAMS_PATH);
-                        shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . STREAMS_PATH);
+                        shell_exec('sudo chown -R xc_vm:xc_vm ' . STREAMS_PATH);
                         break;
                     case 'enable_ramdisk':
                         echo 'Enabling ramdisk...' . "\n";
                         $rFstab = file_get_contents('/etc/fstab');
                         $rOutput = array();
                         foreach (explode("\n", $rFstab) as $rLine) {
-                            if (substr($rLine, 0, 32) != '#tmpfs /home/xtreamcodes/content/streams') {
+                            if (substr($rLine, 0, 32) != '#tmpfs /home/xc_vm/content/streams') {
                             } else {
                                 $rLine = ltrim($rLine, '#');
                             }
@@ -351,54 +351,53 @@ function loadCron() {
                         }
                         file_put_contents('/etc/fstab', implode("\n", $rOutput));
                         shell_exec('sudo mount ' . STREAMS_PATH);
-                        shell_exec('sudo chown -R xtreamcodes:xtreamcodes ' . STREAMS_PATH);
+                        shell_exec('sudo chown -R xc_vm:xc_vm ' . STREAMS_PATH);
                         break;
-                    // case 'update_binaries':
-                    //     echo 'Updating binaries...' . "\n";
-                    //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'BINARIES', 'Updating XC_VM binaries from XC_VMr...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                    //     shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'binaries.php 2>&1 &');
-                    //     break;
+                        // case 'update_binaries':
+                        //     echo 'Updating binaries...' . "\n";
+                        //     $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'BINARIES', 'Updating XC_VM binaries from XC_VMr...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
+                        //     shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'binaries.php 2>&1 &');
+                        //     break;
                     case 'update':
                         echo 'Updating...' . "\n";
                         $ipTV_db->query("INSERT INTO `mysql_syslog`(`server_id`, `type`, `error`, `username`, `ip`, `database`, `date`) VALUES(?, 'UPDATE', 'Updating XC_VM...', 'root', 'localhost', NULL, ?);", SERVER_ID, time());
-                        shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" "'. $rData['version'] . '" 2>&1 &');
+                        shell_exec('sudo ' . PHP_BIN . ' ' . CLI_PATH . 'update.php "update" "' . $rData['version'] . '" 2>&1 &');
                         break;
-                    // case 'enable_ministra':
-                    //     echo 'Enabling ministra /c...';
-                    //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra ' . MAIN_DIR . 'www/c');
-                    //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra/portal.php ' . MAIN_DIR . 'www/portal.php');
-                    //     break;
-                    // case 'disable_ministra':
-                    //     echo 'Disabling ministra /c...';
-                    //     shell_exec('sudo rm ' . MAIN_DIR . 'www/c');
-                    //     shell_exec('sudo rm ' . MAIN_DIR . 'www/portal.php');
-                    //     break;
+                        // case 'enable_ministra':
+                        //     echo 'Enabling ministra /c...';
+                        //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra ' . MAIN_DIR . 'www/c');
+                        //     shell_exec('sudo ln -sfn ' . MAIN_DIR . 'ministra/portal.php ' . MAIN_DIR . 'www/portal.php');
+                        //     break;
+                        // case 'disable_ministra':
+                        //     echo 'Disabling ministra /c...';
+                        //     shell_exec('sudo rm ' . MAIN_DIR . 'www/c');
+                        //     shell_exec('sudo rm ' . MAIN_DIR . 'www/portal.php');
+                        //     break;
                     case 'set_services':
                         echo 'Setting PHP Services' . "\n";
                         $rServices = intval($rData['count']);
                         if ($rData['reload']) {
-                            shell_exec('sudo systemctl stop xtreamcodes');
+                            shell_exec('sudo systemctl stop xc_vm');
                         }
-                        shell_exec('sudo rm ' . MAIN_DIR . 'bin/php/etc/*.conf');
                         $rNewScript = "#! /bin/bash\n\n"
-                            . "if pgrep -u xtreamcodes php-fpm > /dev/null; then\n"
+                            . "if pgrep -u xc_vm php-fpm8.4 > /dev/null; then\n"
                             . "    echo \"PHP-FPM is already running, stopping existing instances...\"\n"
-                            . "    pkill -u xtreamcodes php-fpm\n"
+                            . "    pkill -u xc_vm php-fpm8.4\n"
                             . "    sleep 2\n"
                             . "fi\n\n"
                             . "# Now start PHP-FPM instances\n";
                         $rNewBalance = 'upstream php {' . "\n" . '    least_conn;' . "\n";
-                        $rTemplate = file_get_contents(MAIN_DIR . 'bin/php/etc/template');
+                        $rTemplate = file_get_contents(MAIN_DIR . 'bin/install/php/fpm_pool_template');
                         foreach (range(1, $rServices) as $i) {
-                            $rNewScript .= 'start-stop-daemon --start --quiet --pidfile ' . MAIN_DIR . 'bin/php/sockets/' . $i . '.pid --exec ' . MAIN_DIR . 'bin/php/sbin/php-fpm -- --daemonize --fpm-config ' . MAIN_DIR . 'bin/php/etc/' . $i . '.conf' . "\n";
-                            $rNewBalance .= '    server unix:' . MAIN_DIR . 'bin/php/sockets/' . $i . '.sock;' . "\n";
-                            file_put_contents(MAIN_DIR . 'bin/php/etc/' . $i . '.conf', str_replace('#PATH#', MAIN_DIR, str_replace('#ID#', $i, $rTemplate)));
+                            $rNewScript .= 'start-stop-daemon --start --quiet --pidfile ' . MAIN_DIR . 'bin/php_sockets/' . $i . '.pid --exec /usr/sbin/php-fpm8.4 -- --daemonize --fpm-config /etc/php/8.4/fpm/pool.d/' . $i . '.conf' . "\n";
+                            $rNewBalance .= '    server unix:' . MAIN_DIR . 'bin/php_sockets/' . $i . '.sock;' . "\n";
+                            file_put_contents('/etc/php/8.4/fpm/pool.d/' . $i . '.conf', str_replace('#PATH#', MAIN_DIR, str_replace('#ID#', $i, $rTemplate)));
                         }
                         file_put_contents(MAIN_DIR . 'bin/daemons.sh', $rNewScript);
                         file_put_contents(MAIN_DIR . 'bin/nginx/conf/balance.conf', $rNewBalance . '}');
-                        shell_exec('sudo chown xtreamcodes:xtreamcodes ' . MAIN_DIR . 'bin/php/etc/*');
+                        shell_exec('sudo chmod 0771 ' . MAIN_DIR . 'bin/daemons.sh');
                         if ($rData['reload']) {
-                            shell_exec('sudo systemctl start xtreamcodes');
+                            shell_exec('sudo systemctl start xc_vm');
                         }
                         break;
                     case 'set_sysctl':
@@ -474,7 +473,7 @@ function getBlockedIPs() {
     // Loop through both IPv4 and IPv6 firewall tables
     foreach (['iptables', 'ip6tables'] as $table) {
         $output = [];
-        
+
         // Execute the command to list firewall rules
         exec("sudo $table -nL --line-numbers -t filter", $output);
 

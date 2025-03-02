@@ -134,7 +134,17 @@ class Database {
             $this->result = $this->dbh->prepare($query);
             $this->result->execute($next_arg_list);
         } catch (PDOException $e) {
-            $actual_query = trim(explode("\n", explode('Sent SQL:', $this->debugString($this->result))[1])[0]);
+            $debug_output = $this->debugString($this->result);
+            if (strpos($debug_output, 'Sent SQL:') !== false) {
+                $parts = explode('Sent SQL:', $debug_output);
+                if (isset($parts[1])) {
+                    $actual_query = trim(explode("\n", $parts[1])[0]);
+                } else {
+                    $actual_query = '';
+                }
+            } else {
+                $actual_query = '';
+            }
 
             if (strlen($actual_query) == 0) {
                 $actual_query = $query;
