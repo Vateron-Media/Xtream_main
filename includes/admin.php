@@ -5,7 +5,9 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 define('STATUS_FAILURE', 0);
 define('STATUS_SUCCESS', 1);
+define('STATUS_NO_SOURCES', 4);
 define('STATUS_INVALID_IP', 9);
+define('STATUS_INVALID_FILE', 15);
 define('STATUS_INVALID_INPUT', 34);
 define('STATUS_FAILURE_GEOLITE', 49);
 define('STATUS_SUCCESS_GEOLITE', 50);
@@ -19,7 +21,7 @@ require_once '/home/xc_vm/wwwdir/constants.php';
 require_once INCLUDES_PATH . 'functions.php';
 require_once INCLUDES_PATH . 'lib.php';
 require_once INCLUDES_PATH . 'pdo.php';
-// require_once INCLUDES_PATH . 'streaming.php';
+require_once INCLUDES_PATH . 'streaming.php';
 // require_once INCLUDES_PATH . 'servers.php';
 // require_once INCLUDES_PATH . 'stream.php';
 require_once INCLUDES_PATH . 'admin_api.php';
@@ -38,7 +40,7 @@ $ipTV_db_admin = new Database($_INFO['username'], $_INFO['password'], $_INFO['da
 
 ipTV_lib::$ipTV_db = &$ipTV_db_admin;
 ipTV_lib::init();
-// ipTV_streaming::$ipTV_db = &$ipTV_db_admin;
+ipTV_streaming::$ipTV_db = &$ipTV_db_admin;
 // ipTV_stream::$ipTV_db = &$ipTV_db_admin;
 API::$ipTV_db = &$ipTV_db_admin;
 API::init();
@@ -255,6 +257,11 @@ function setSysctl($rServerID, $rSysCtl) {
 
 function scanBouquets() {
     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'tools.php "bouquets" > /dev/null 2>/dev/null &');
+}
+
+function processEPGAPI($rStreamID, $rChannelID) {
+	shell_exec(PHP_BIN . ' ' . CRON_PATH . 'epg.php ' . intval($rStreamID) . ' ' . escapeshellarg($rChannelID) . ' > /dev/null 2>/dev/null &');
+	return true;
 }
 
 function scanBouquet($rID) {
@@ -1822,26 +1829,33 @@ is_restreamer < 1;");
 }
 //############
 
-
-
-function downloadImage($rImage) {
-    if ((strlen($rImage) > 0) && (substr(strtolower($rImage), 0, 4) == "http")) {
+function downloadImage($rImage, $rType = null) {
+    if (0 < strlen($rImage) && substr(strtolower($rImage), 0, 4) == 'http') {
         $rPathInfo = pathinfo($rImage);
-        $rExt = $rPathInfo["extension"];
-        if (in_array(strtolower($rExt), array("jpg", "jpeg", "png"))) {
-            $rPrevPath = MAIN_DIR . "wwwdir/images/" . $rPathInfo["filename"] . "." . $rExt;
+        $rExt = $rPathInfo['extension'];
+        if (!$rExt) {
+            $rImageInfo = getimagesize($rImage);
+            if ($rImageInfo['mime']) {
+                list(, $rExt) = explode('/', $rImageInfo['mime']);
+            }
+        }
+        if (in_array(strtolower($rExt), array('jpg', 'jpeg', 'png'))) {
+            $rFilename = encryptData($rImage, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+            $rPrevPath = IMAGES_PATH . $rFilename . '.' . $rExt;
             if (file_exists($rPrevPath)) {
-                return getURL() . "/images/" . $rPathInfo["filename"] . "." . $rExt;
-            } else {
-                $rCont = stream_context_create(array('http' => array('timeout' => 10, 'method' => "GET")));
-                $rData = file_get_contents($rImage, false, $rCont);
-                if (strlen($rData) > 0) {
-                    $rFilename = md5($rPathInfo["filename"]);
-                    $rPath = MAIN_DIR . "wwwdir/images/" . $rFilename . "." . $rExt;
-                    file_put_contents($rPath, $rData);
-                    if (strlen(file_get_contents($rPath)) == strlen($rData)) {
-                        return getURL() . "/images/" . $rFilename . "." . $rExt;
-                    }
+                return 's:' . SERVER_ID . ':/images/' . $rFilename . '.' . $rExt;
+            }
+            $rCurl = curl_init();
+            curl_setopt($rCurl, CURLOPT_URL, $rImage);
+            curl_setopt($rCurl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($rCurl, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($rCurl, CURLOPT_TIMEOUT, 5);
+            $rData = curl_exec($rCurl);
+            if (strlen($rData)>0) {
+                $rPath = IMAGES_PATH . $rFilename . '.' . $rExt;
+                file_put_contents($rPath, $rData);
+                if (file_exists($rPath)) {
+                    return 's:' . SERVER_ID . ':/images/' . $rFilename . '.' . $rExt;
                 }
             }
         }
@@ -1920,3 +1934,104 @@ function rdeleteBlockedIP($rID) {
 
     return true;
 }
+
+/**
+ * Overwrites values in an existing data array with values from another array.
+ * 
+ * This function replaces values in `$data` with corresponding values from `$overwrite`,
+ * except for keys listed in `$skip` or those that do not exist in `$data`.
+ * 
+ * @param array $data The original array that will be modified.
+ * @param array $overwrite The array containing new values to overwrite in `$data`.
+ * @param array $skip Optional. Keys that should not be overwritten.
+ * @return array The modified `$data` array with overwritten values.
+ */
+function overwriteData(array $data, array $overwrite, array $skip = []): array {
+    foreach ($overwrite as $key => $value) {
+        // Skip keys that do not exist in $data or are in the $skip list
+        if (!array_key_exists($key, $data) || in_array($key, $skip, true)) {
+            continue;
+        }
+
+        // If the new value is empty and the current value is null, keep it as null
+        if (empty($value) && is_null($data[$key])) {
+            $data[$key] = null;
+            continue;
+        }
+
+        // Overwrite the value
+        $data[$key] = $value;
+    }
+    return $data;
+}
+
+function deleteStream($rID, $rServerID = -1, $rDeleteFiles = true, $f2d619cb38696890 = true) {
+	global $ipTV_db_admin;
+	$ipTV_db_admin->query('SELECT `id`, `type` FROM `streams` WHERE `id` = ?;', $rID);
+
+	if (0 >= $ipTV_db_admin->num_rows()) {
+		return false;
+	}
+
+	$rType = $ipTV_db_admin->get_row()['type'];
+	$rRemaining = 0;
+
+	if ($rServerID != -1) {
+		$ipTV_db_admin->query('SELECT `server_stream_id` FROM `streams_servers` WHERE `stream_id` = ? AND `server_id` <> ?;', $rID, $rServerID);
+		$rRemaining = $ipTV_db_admin->num_rows();
+	}
+
+	if ($rRemaining == 0 && $f2d619cb38696890) {
+		$ipTV_db_admin->query('DELETE FROM `lines_logs` WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `mag_claims` WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `streams` WHERE `id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `streams_episodes` WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `streams_errors` WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `streams_logs` WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `streams_options` WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `streams_stats` WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `watch_refresh` WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `watch_logs` WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('DELETE FROM `recordings` WHERE `created_id` = ? OR `stream_id` = ?;', $rID, $rID);
+		$ipTV_db_admin->query('UPDATE `lines_activity` SET `stream_id` = 0 WHERE `stream_id` = ?;', $rID);
+		$ipTV_db_admin->query('SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = ?;', $rID);
+		$rServerIDs = array();
+
+		foreach ($ipTV_db_admin->get_rows() as $rRow) {
+			$rServerIDs[] = $rRow['server_id'];
+		}
+
+		if ($rDeleteFiles && 0 < count($rServerIDs) && in_array($rType, array(2, 5))) {
+			deleteMovieFile($rServerIDs, $rID);
+		}
+
+		$ipTV_db_admin->query('DELETE FROM `streams_servers` WHERE `stream_id` = ?;', $rID);
+	} else {
+		$rServerIDs = array($rServerID);
+		$ipTV_db_admin->query('DELETE FROM `streams_servers` WHERE `stream_id` = ? AND `server_id` = ?;', $rID, $rServerID);
+
+		if ($rDeleteFiles && in_array($rType, array(2, 5))) {
+			deleteMovieFile(array($rServerID), $rID);
+		}
+	}
+
+	$ipTV_db_admin->query('DELETE FROM `streams_servers` WHERE `parent_id` IS NOT NULL AND `parent_id` > 0 AND `parent_id` NOT IN (SELECT `id` FROM `servers` WHERE `server_type` = 0);');
+	ipTV_streaming::updateStream($rID);
+	scanBouquets();
+
+	return true;
+}
+
+function parseM3U($rData, $rFile = true) {
+	require_once INCLUDES_PATH . 'libs/m3u.php';
+	$rParser = new M3uParser();
+	$rParser->addDefaultTags();
+
+	if ($rFile) {
+		return $rParser->parseFile($rData);
+	}
+
+	$data = $rParser->parse($rData);
+    return $data;
+}
+

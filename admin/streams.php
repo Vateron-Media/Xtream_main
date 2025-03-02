@@ -42,7 +42,7 @@ include "header.php";
                                         <i class="mdi mdi-magnify"></i>
                                     </button>
                                 </a>
-                                <?php 
+                                <?php
                                 if ($rPermissions["is_admin"]) {
                                     if (hasPermissions("adv", "add_stream")) { ?>
                                         <a href="stream.php">
@@ -239,6 +239,7 @@ include "header.php";
 
 <script>
     var rClearing = false;
+
     function api(rID, rServerID, rType) {
         if (rType == "delete") {
             if (confirm('<?= $_["are_you_sure_you_want_to_delete_this_stream"] ?>') == false) {
@@ -305,7 +306,6 @@ include "header.php";
                                 }
                             }
                         });
-                        refreshTooltips(false);
                     }
                 });
             }

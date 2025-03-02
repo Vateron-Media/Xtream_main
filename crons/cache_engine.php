@@ -471,7 +471,7 @@ function generateStreams($rStart = null, $rCount = null, $cacheLockMechanism = a
                         if (!$rStreamInfo['direct_source']) {
                             unset($rStreamInfo['stream_source']);
                         }
-                        $rOutput = array('info' => $rStreamInfo, 'bouquets' => ($rBouquetMap[intval($rStreamInfo['id'])] ?: array()), 'servers' => (isset($rStreamMap[intval($rStreamInfo['id'])]) ? $rStreamMap[intval($rStreamInfo['id'])] : array()));
+                        $rOutput = array('info' => $rStreamInfo, 'bouquets' => ($rBouquetMap[intval($rStreamInfo['id'])] ?? array()), 'servers' => (isset($rStreamMap[intval($rStreamInfo['id'])]) ? $rStreamMap[intval($rStreamInfo['id'])] : array()));
                         file_put_contents(STREAMS_TMP_PATH . 'stream_' . $rStreamInfo['id'], igbinary_serialize($rOutput));
                     }
                     unset($rRows, $rStreamMap, $rStreamIDs);

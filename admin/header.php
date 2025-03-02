@@ -625,7 +625,7 @@
                                         <p>
                                         <?php }
                                     if (hasPermissions("adv", "import_streams")) { ?>
-                                            <li><a href="./stream.php?import"><span class="mdi mdi-file-plus mdi-18px">
+                                            <li><a href="./stream.php?import=1"><span class="mdi mdi-file-plus mdi-18px">
                                                         <?= $_["import_streams"] ?></a></li>
                                         <p>
                                         <?php } ?>

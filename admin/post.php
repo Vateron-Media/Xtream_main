@@ -15,7 +15,7 @@ foreach (get_defined_constants(true)['user'] as $rKey => $rValue) {
 }
 
 if (1 < $rICount) {
-    ?>
+?>
     <script>
         var rCurrentPage = "<?= $_PAGE ?>";
         var rReferer = null;
@@ -33,7 +33,7 @@ if (1 < $rICount) {
                 data: rData,
                 processData: false,
                 contentType: false,
-                success: function (rReturn) {
+                success: function(rReturn) {
                     try {
                         var rJSON = $.parseJSON(rReturn);
                     } catch (e) {
@@ -82,6 +82,22 @@ if (1 < $rICount) {
                                 break;
                         }
                         break;
+                    case "stream":
+                        switch (window.rErrors[rData.status]) {
+                            case "STATUS_INVALID_FILE":
+                                showError("Could not process M3U file, please use another.");
+                                break;
+                            case "STATUS_EXISTS_SOURCE":
+                                showError("This stream source is already in your database. Please use another URL.");
+                                break;
+                            case "STATUS_NO_SOURCES":
+                                showError("Please select at least one source for your stream.");
+                                break;
+                            default:
+                                showError("An error occured while processing your request.");
+                                break;
+                        }
+                        break;
                     default:
                         showError("An error occured while processing your request.");
                         break;
@@ -119,7 +135,7 @@ if (1 < $rICount) {
         }
     </script>
 
-    <?php
+<?php
 } else {
     if (isset(ipTV_lib::$request['referer'])) {
         $rReferer = ipTV_lib::$request['referer'];
@@ -172,7 +188,21 @@ if (1 < $rICount) {
                 }
                 echo json_encode(array('result' => false, 'data' => $rReturn['data'], 'status' => $rReturn['status']));
                 exit();
+            case 'stream':
+                $rReturn = API::processStream($rData);
 
+                if ($rReturn['status'] == STATUS_SUCCESS) {
+                    if (isset($_FILES['m3u_file'])) {
+                        echo json_encode(array('result' => true, 'location' => 'streams?status=' . intval($rReturn['status']), 'status' => $rReturn['status']));
+                        exit();
+                    }
+
+                    echo json_encode(array('result' => true, 'location' => 'stream?id=' . intval($rReturn['data']['insert_id']) . '&status=' . intval($rReturn['status']), 'status' => $rReturn['status']));
+                    exit();
+                }
+
+                echo json_encode(array('result' => false, 'data' => $rReturn['data'], 'status' => $rReturn['status']));
+                exit();
         }
     }
     echo json_encode(array('result' => false));
