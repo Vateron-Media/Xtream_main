@@ -35,7 +35,7 @@ Unfortunately you will have to install the panel on the server completely. It do
 - Write unit tests for PHP scripts.
 - To run tests:
   ```sh
-  /bin/php /home/xc_vm/bin/php/bin/phpunit-9.6.21.phar --configuration /home/xc_vm/tests/phpunit.xml 
+  php8.4 /home/xc_vm/bin/install/php/phpunit-12.0.5.phar --configuration /home/xc_vm/tests/phpunit.xml 
   ```
 - Ensure all tests pass before submitting PRs.
 
