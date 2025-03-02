@@ -699,24 +699,23 @@ if ($rType == "streams") {
             $rLimit = 1000;
         }
         if (0 < strlen(ipTV_lib::$request["filter"])) {
-                if (ipTV_lib::$request["filter"] == 1) {
-                    $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`stream_status` = 0)";
-                } elseif (ipTV_lib::$request["filter"] == 2) {
-                    $rWhere[] = "((`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 1))";
-                } elseif (ipTV_lib::$request["filter"] == 3) {
-                    $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
-                } elseif (ipTV_lib::$request["filter"] == 4) {
-                    $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 2)";
-                } elseif (ipTV_lib::$request["filter"] == 5) {
-                    $rWhere[] = "`streams_servers`.`on_demand` = 1";
-                } elseif (ipTV_lib::$request["filter"] == 6) {
-                    $rWhere[] = "`streams`.`direct_source` = 1";
-                } elseif (ipTV_lib::$request["filter"] == 7) {
-                    $rWhere[] = "`streams`.`tv_archive_server_id` > 0 AND `streams`.`tv_archive_duration` > 0";
-                } elseif (ipTV_lib::$request["filter"] == 8) {
-                    $rWhere[] = "`streams`.`type` = 3";
-                }
-
+            if (ipTV_lib::$request["filter"] == 1) {
+                $rWhere[] = "(`streams_servers`.`monitor_pid` > 0 AND `streams_servers`.`pid` > 0 AND `streams_servers`.`stream_status` = 0)";
+            } elseif (ipTV_lib::$request["filter"] == 2) {
+                $rWhere[] = "((`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 1))";
+            } elseif (ipTV_lib::$request["filter"] == 3) {
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NULL OR `streams_servers`.`monitor_pid` <= 0) AND `streams_servers`.`on_demand` = 0)";
+            } elseif (ipTV_lib::$request["filter"] == 4) {
+                $rWhere[] = "(`streams`.`direct_source` = 0 AND (`streams_servers`.`monitor_pid` IS NOT NULL AND `streams_servers`.`monitor_pid` > 0) AND (`streams_servers`.`pid` IS NULL OR `streams_servers`.`pid` <= 0) AND `streams_servers`.`stream_status` = 2)";
+            } elseif (ipTV_lib::$request["filter"] == 5) {
+                $rWhere[] = "`streams_servers`.`on_demand` = 1";
+            } elseif (ipTV_lib::$request["filter"] == 6) {
+                $rWhere[] = "`streams`.`direct_source` = 1";
+            } elseif (ipTV_lib::$request["filter"] == 7) {
+                $rWhere[] = "`streams`.`tv_archive_server_id` > 0 AND `streams`.`tv_archive_duration` > 0";
+            } elseif (ipTV_lib::$request["filter"] == 8) {
+                $rWhere[] = "`streams`.`type` = 3";
+            }
         }
         if (0 < (int) ipTV_lib::$request["server"]) {
             $rWhere[] = "`streams_servers`.`server_id` = ?";
@@ -751,7 +750,7 @@ if ($rType == "streams") {
     $rReturn["recordsFiltered"] =  $rReturn["recordsTotal"];
     if (0 < $rReturn["recordsTotal"]) {
         if ($rSettings["streams_grouped"] == 1) {
-            $rQuery = "SELECT `streams`.`id`, `streams_servers`.`stream_id`, `streams`.`type`, `streams`.`stream_icon`, `streams_servers`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams`.`tv_archive_server_id`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams`.`direct_proxy`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`cc_info`, `streams_servers`.`on_demand`, `streams`.`category_id`, (SELECT `server_name` FROM `servers` WHERE `id` = `streams_servers`.`server_id`) AS `server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`stream_id` = `streams`.`id` AND `hls_end` = 0) AS `clients`, `streams`.`epg_id`, `streams`.`channel_id` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` AND `streams_servers`.`parent_id` IS NULL " . $rWhereString . " GROUP BY `streams`.`id` " . $rOrderBy . ", -`stream_started` DESC LIMIT " . $rStart . ", " . $rLimit . ";";
+            $rQuery = "SELECT `streams`.`id`, `streams_servers`.`stream_id`, `streams`.`type`, `streams`.`stream_icon`, `streams_servers`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams`.`tv_archive_server_id`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`cc_info`, `streams_servers`.`on_demand`, `streams`.`category_id`, (SELECT `server_name` FROM `servers` WHERE `id` = `streams_servers`.`server_id`) AS `server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`stream_id` = `streams`.`id` AND `hls_end` = 0) AS `clients`, `streams`.`epg_id`, `streams`.`channel_id` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` AND `streams_servers`.`parent_id` IS NULL " . $rWhereString . " GROUP BY `streams`.`id` " . $rOrderBy . ", -`stream_started` DESC LIMIT " . $rStart . ", " . $rLimit . ";";
         } else {
             $rQuery = "SELECT `streams`.`id`, `streams`.`type`, `streams`.`stream_icon`, `streams_servers`.`cchannel_rsources`, `streams`.`stream_source`, `streams`.`stream_display_name`, `streams`.`tv_archive_duration`, `streams`.`tv_archive_server_id`, `streams_servers`.`server_id`, `streams`.`notes`, `streams`.`direct_source`, `streams_servers`.`pid`, `streams_servers`.`monitor_pid`, `streams_servers`.`stream_status`, `streams_servers`.`stream_started`, `streams_servers`.`stream_info`, `streams_servers`.`current_source`, `streams_servers`.`bitrate`, `streams_servers`.`progress_info`, `streams_servers`.`cc_info`, `streams_servers`.`on_demand`, `streams`.`category_id`, (SELECT `server_name` FROM `servers` WHERE `id` = `streams_servers`.`server_id`) AS `server_name`, (SELECT COUNT(*) FROM `lines_live` WHERE `lines_live`.`server_id` = `streams_servers`.`server_id` AND `lines_live`.`stream_id` = `streams`.`id` AND `hls_end` = 0) AS `clients`, `streams`.`epg_id`, `streams`.`channel_id`, `streams_servers`.`parent_id` FROM `streams` LEFT JOIN `streams_servers` ON `streams_servers`.`stream_id` = `streams`.`id` " . $rWhereString . " " . $rOrderBy . " LIMIT " . $rStart . ", " . $rLimit . ";";
         }
@@ -787,12 +786,12 @@ if ($rType == "streams") {
                     }
                 }
                 $rCategoryIDs = json_decode($rRow["category_id"], true);
-                if (0 < strlen(ipTV_lib::$request["category"])) {
+                if (isset(ipTV_lib::$request["category"]) && 0 < strlen(ipTV_lib::$request["category"])) {
                     $rCategory = $rCategories[(int) ipTV_lib::$request["category"]]["category_name"] ?: "No Category";
                 } else {
                     if (0 < count($rCategoryIDs)) {
                         $rCategory = $rCategories[$rCategoryIDs[0]]["category_name"] ?: "No Category";
-                    }else{
+                    } else {
                         $rCategory = "No Category";
                     }
                 }
@@ -837,15 +836,7 @@ if ($rType == "streams") {
                 if ($rRow["server_id"]) {
                     if (!$rCreated) {
                         if ((int) $rRow["direct_source"] == 1) {
-                            if ((int) $rRow["direct_proxy"] == 1) {
-                                if ($rRow["pid"] && 0 < $rRow["pid"]) {
-                                    $rActualStatus = 1;
-                                } else {
-                                    $rActualStatus = 7;
-                                }
-                            } else {
                                 $rActualStatus = 5;
-                            }
                         } elseif ($rRow["monitor_pid"]) {
                             if ($rRow["pid"] && 0 < $rRow["pid"]) {
                                 if ((int) $rRow["stream_status"] == 2) {
@@ -2330,11 +2321,11 @@ if ($rType == "stream_logs") {
     }
     $rReturn["recordsFiltered"] = $rReturn["recordsTotal"];
     if ($rReturn["recordsTotal"] > 0) {
-        $rQuery = "SELECT `stream_logs`.`id`, `stream_logs`.`stream_id`, `stream_logs`.`server_id`, `streams`.`stream_display_name`, `servers`.`server_name`, `stream_logs`.`error`, FROM_UNIXTIME(`stream_logs`.`date`) AS `date` FROM `stream_logs` LEFT JOIN `streams` ON `streams`.`id` = `stream_logs`.`stream_id` LEFT JOIN `servers` ON `servers`.`id` = `stream_logs`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
+        $rQuery = "SELECT `stream_logs`.`id`, `stream_logs`.`stream_id`,`stream_logs`.`action`, `stream_logs`.`server_id`, `streams`.`stream_display_name`, `servers`.`server_name`, `stream_logs`.`error`, FROM_UNIXTIME(`stream_logs`.`date`) AS `date` FROM `stream_logs` LEFT JOIN `streams` ON `streams`.`id` = `stream_logs`.`stream_id` LEFT JOIN `servers` ON `servers`.`id` = `stream_logs`.`server_id` {$rWhereString} {$rOrderBy} LIMIT {$rStart}, {$rLimit};";
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
-                $rReturn["data"][] = array($rRow["id"], $rRow["stream_display_name"], $rRow["server_name"], $rRow["error"], $rRow["date"]);
+                $rReturn["data"][] = array($rRow["id"], $rRow["stream_display_name"], $rRow["server_name"],$rRow["action"], $rRow["error"], $rRow["date"]);
             }
         }
     }

@@ -245,7 +245,8 @@ INSERT INTO `crontab` (`id`, `filename`, `time`, `enabled`) VALUES
 (15, 'users.php', '* * * * *', 1),
 (16, 'series.php', '* * * * *', 1),
 (17, 'vod.php', '* * * * *', 1),
-(18, 'watch_folder.php', '*/5 * * * *', 1);
+(18, 'watch_folder.php', '*/5 * * * *', 1),
+(19, 'streams_logs.php', '* * * * *', 1);
 
 -- --------------------------------------------------------
 
@@ -1533,13 +1534,14 @@ CREATE TABLE IF NOT EXISTS `stream_categories` (
 
 CREATE TABLE IF NOT EXISTS `stream_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `stream_id` int(11) NOT NULL,
-  `server_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
+  `stream_id` int(11) DEFAULT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `action` varchar(500) DEFAULT NULL,
+  `source` varchar(1024) DEFAULT NULL,
+  `date` int(11) DEFAULT NULL,
   `error` varchar(500) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `stream_id` (`stream_id`),
-  KEY `server_id` (`server_id`)
+  KEY `stream_id` (`stream_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
