@@ -74,7 +74,7 @@ define('CLI_PATH', INCLUDES_PATH . 'cli_tool/');
 // -------------------
 
 // BINARIES FILE
-define('PHP_BIN', '/bin/php');
+define('PHP_BIN', 'php8.4');
 define('YOUTUBE_PATH', BIN_PATH . 'yt-dlp');
 define('GEOIP2COUNTRY_FILENAME', BIN_PATH . 'maxmind/GeoLite2-Country.mmdb');
 define('GEOIP2ASN_FILENAME', BIN_PATH . 'maxmind/GeoLite2-ASN.mmdb');
