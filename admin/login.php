@@ -169,7 +169,6 @@ if (!isset($_STATUS)) {
 							<h5 class="auth-title"><?= $_["admin_reseller_interface"] ?></h5>
 							<?php if ((!isset($_STATUS)) or ($_STATUS <> 7)) { ?>
 								<form action="./login.php" method="POST" data-parsley-validate="" id="login_form">
-									<input type="hidden" name="referrer" value="<?= ipTV_lib::$request["referrer"] ?>" />
 									<?php if ((!isset($rQR)) && (!isset($rChangePass))) { ?>
 										<div class="form-group mblog-3" id="username_group">
 											<label class="label-login" for="username"><?= $_["username"] ?></label>
