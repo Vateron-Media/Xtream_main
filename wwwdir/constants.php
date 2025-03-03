@@ -237,6 +237,7 @@ function panelLog($rType, $rMessage, $rExtra = '', $rLine = 0) {
     // Ensure directory exists
     if (!is_dir(LOGS_TMP_PATH)) {
         mkdir(LOGS_TMP_PATH, 0775, true);
+        chown(LOGS_TMP_PATH, 'xc_vm');
     }
     $data = [
         'type' => $rType,
