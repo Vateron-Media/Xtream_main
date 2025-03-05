@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../includes/admin.php';
         cli_set_process_title('XC_VM[Series]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::checkCron($unique_id);
+        CoreUtilities::checkCron($unique_id);
         loadCron();
         @unlink($unique_id);
     } else {
@@ -16,10 +16,10 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
 }
 function loadCron() {
     global $ipTV_db_admin;
-    if (time() - ipTV_lib::$settings['cc_time'] < 3600) {
+    if (time() - CoreUtilities::$settings['cc_time'] < 3600) {
         exit();
     }
-    ipTV_lib::setSettings(["cc_time" => intval(time())]);
+    CoreUtilities::setSettings(["cc_time" => intval(time())]);
 
     $ipTV_db_admin->query('SELECT `id`, `stream_display_name`, `series_no`, `stream_source` FROM `streams` WHERE `type` = 3 AND `series_no` <> 0;');
     if ($ipTV_db_admin->num_rows() > 0) {

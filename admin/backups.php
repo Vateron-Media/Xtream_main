@@ -6,15 +6,15 @@ if (!checkPermissions()) {
     goHome();
 }
 
-if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "database"))) {
+if ((isset(CoreUtilities::$request["submit_settings"])) && (hasPermissions("adv", "database"))) {
     $rArray = getSettings();
 
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
+    foreach (CoreUtilities::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
     }
-    if (ipTV_lib::setSettings($rArray)) {
+    if (CoreUtilities::setSettings($rArray)) {
         $_STATUS = 0;
     } else {
         $_STATUS = 1;

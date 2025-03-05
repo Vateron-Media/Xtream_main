@@ -5,8 +5,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_bouquet"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["reorder"])) {
-    $rOrder = json_decode(ipTV_lib::$request["stream_order_array"], true);
+if (isset(CoreUtilities::$request["reorder"])) {
+    $rOrder = json_decode(CoreUtilities::$request["stream_order_array"], true);
     if (is_array($rOrder)) {
         $rStreamOrder = $rOrder["stream"];
         foreach ($rOrder["movie"] as $rID) {
@@ -15,14 +15,14 @@ if (isset(ipTV_lib::$request["reorder"])) {
         foreach ($rOrder["radio"] as $rID) {
             $rStreamOrder[] = $rID;
         }
-        $ipTV_db_admin->query("UPDATE `bouquets` SET `bouquet_channels` = '" . json_encode($rStreamOrder) . "', `bouquet_series` = '" . json_encode($rOrder["series"]) . "' WHERE `id` = " . intval(ipTV_lib::$request["reorder"]) . ";");
+        $ipTV_db_admin->query("UPDATE `bouquets` SET `bouquet_channels` = '" . json_encode($rStreamOrder) . "', `bouquet_series` = '" . json_encode($rOrder["series"]) . "' WHERE `id` = " . intval(CoreUtilities::$request["reorder"]) . ";");
     }
 }
 
-if (!isset(ipTV_lib::$request["id"])) {
+if (!isset(CoreUtilities::$request["id"])) {
     exit;
 }
-$rBouquet = getBouquet(ipTV_lib::$request["id"]);
+$rBouquet = getBouquet(CoreUtilities::$request["id"]);
 if (!$rBouquet) {
     exit;
 }
@@ -81,7 +81,7 @@ include "header.php";
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li>
-                                <a href="bouquet.php?id=<?= ipTV_lib::$request["id"] ?>">
+                                <a href="bouquet.php?id=<?= CoreUtilities::$request["id"] ?>">
                                     <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
                                         <i class="mdi mdi-pencil-outline"></i> <?= $_["edit_bouquet"] ?>
                                     </button>
@@ -98,10 +98,10 @@ include "header.php";
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="./bouquet_order.php?id=<?= ipTV_lib::$request["id"] ?>" method="POST"
+                        <form action="./bouquet_order.php?id=<?= CoreUtilities::$request["id"] ?>" method="POST"
                             id="bouquet_order_form">
                             <input type="hidden" id="stream_order_array" name="stream_order_array" value="" />
-                            <input type="hidden" name="reorder" value="<?= ipTV_lib::$request["id"] ?>" />
+                            <input type="hidden" name="reorder" value="<?= CoreUtilities::$request["id"] ?>" />
                             <div id="basicwizard">
                                 <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                     <li class="nav-item">

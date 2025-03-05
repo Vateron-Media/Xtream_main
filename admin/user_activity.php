@@ -323,11 +323,11 @@ include "header.php";
                 $("#datatable-activity").DataTable().ajax.reload(null, false);
             }
         })
-        <?php if (isset(ipTV_lib::$request["search"])) { ?>
-            $("#act_search").val("<?= str_replace('"', '\"', ipTV_lib::$request["search"]) ?>").trigger('change');
+        <?php if (isset(CoreUtilities::$request["search"])) { ?>
+            $("#act_search").val("<?= str_replace('"', '\"', CoreUtilities::$request["search"]) ?>").trigger('change');
         <?php }
-        if (isset(ipTV_lib::$request["dates"])) { ?>
-            $("#act_range").val("<?= str_replace('"', '\"', ipTV_lib::$request["dates"]) ?>").trigger('change');
+        if (isset(CoreUtilities::$request["dates"])) { ?>
+            $("#act_range").val("<?= str_replace('"', '\"', CoreUtilities::$request["dates"]) ?>").trigger('change');
         <?php } ?>
         if ($('#act_search').val().length > 0) {
             $('#datatable-activity').DataTable().search($('#act_search').val()).draw();

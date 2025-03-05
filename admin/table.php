@@ -10,12 +10,12 @@ if (!isset($_SESSION['hash'])) {
 
 $joinQuery = "";
 
-if (ipTV_lib::$request["id"] == "mag_events") {
+if (CoreUtilities::$request["id"] == "mag_events") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "manage_events"))) {
         exit;
     }
     $table = 'mag_events';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
     $extraWhere = "";
 
@@ -46,15 +46,15 @@ if (ipTV_lib::$request["id"] == "mag_events") {
             }
         )
     );
-} elseif (ipTV_lib::$request["id"] == "bouquets_streams") {
+} elseif (CoreUtilities::$request["id"] == "bouquets_streams") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
         exit;
     }
     $table = 'streams';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
-    if ((isset(ipTV_lib::$request["category_id"])) && (strlen(ipTV_lib::$request["category_id"]) > 0)) {
-        $extraWhere = "(`type` = 1 OR `type` = 3) AND `category_id` = " . intval(ipTV_lib::$request["category_id"]);
+    if ((isset(CoreUtilities::$request["category_id"])) && (strlen(CoreUtilities::$request["category_id"]) > 0)) {
+        $extraWhere = "(`type` = 1 OR `type` = 3) AND `category_id` = " . intval(CoreUtilities::$request["category_id"]);
     } else {
         $extraWhere = "(`type` = 1 OR `type` = 3)";
     }
@@ -78,15 +78,15 @@ if (ipTV_lib::$request["id"] == "mag_events") {
             }
         )
     );
-} elseif (ipTV_lib::$request["id"] == "streams_short") {
+} elseif (CoreUtilities::$request["id"] == "streams_short") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
         exit;
     }
     $table = 'streams';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
-    if ((isset(ipTV_lib::$request["category_id"])) && (strlen(ipTV_lib::$request["category_id"]) > 0)) {
-        $extraWhere = "(`type` = 1 OR `type` = 3) AND `category_id` = " . intval(ipTV_lib::$request["category_id"]);
+    if ((isset(CoreUtilities::$request["category_id"])) && (strlen(CoreUtilities::$request["category_id"]) > 0)) {
+        $extraWhere = "(`type` = 1 OR `type` = 3) AND `category_id` = " . intval(CoreUtilities::$request["category_id"]);
     } else {
         $extraWhere = "(`type` = 1 OR `type` = 3)";
     }
@@ -105,15 +105,15 @@ if (ipTV_lib::$request["id"] == "mag_events") {
             }
         )
     );
-} elseif (ipTV_lib::$request["id"] == "movies_short") {
+} elseif (CoreUtilities::$request["id"] == "movies_short") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
         exit;
     }
     $table = 'streams';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
-    if ((isset(ipTV_lib::$request["category_id"])) && (strlen(ipTV_lib::$request["category_id"]) > 0)) {
-        $extraWhere = "`type` = 2 AND `category_id` = " . intval(ipTV_lib::$request["category_id"]);
+    if ((isset(CoreUtilities::$request["category_id"])) && (strlen(CoreUtilities::$request["category_id"]) > 0)) {
+        $extraWhere = "`type` = 2 AND `category_id` = " . intval(CoreUtilities::$request["category_id"]);
     } else {
         $extraWhere = "`type` = 2";
     }
@@ -132,15 +132,15 @@ if (ipTV_lib::$request["id"] == "mag_events") {
             }
         )
     );
-} elseif (ipTV_lib::$request["id"] == "radios_short") {
+} elseif (CoreUtilities::$request["id"] == "radios_short") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
         exit;
     }
     $table = 'streams';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
-    if ((isset(ipTV_lib::$request["category_id"])) && (strlen(ipTV_lib::$request["category_id"]) > 0)) {
-        $extraWhere = "`type` = 4 AND `category_id` = " . intval(ipTV_lib::$request["category_id"]);
+    if ((isset(CoreUtilities::$request["category_id"])) && (strlen(CoreUtilities::$request["category_id"]) > 0)) {
+        $extraWhere = "`type` = 4 AND `category_id` = " . intval(CoreUtilities::$request["category_id"]);
     } else {
         $extraWhere = "`type` = 4";
     }
@@ -159,15 +159,15 @@ if (ipTV_lib::$request["id"] == "mag_events") {
             }
         )
     );
-} elseif (ipTV_lib::$request["id"] == "series_short") {
+} elseif (CoreUtilities::$request["id"] == "series_short") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
         exit;
     }
     $table = 'series';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
-    if ((isset(ipTV_lib::$request["category_id"])) && (strlen(ipTV_lib::$request["category_id"]) > 0)) {
-        $extraWhere = "`category_id` = " . intval(ipTV_lib::$request["category_id"]);
+    if ((isset(CoreUtilities::$request["category_id"])) && (strlen(CoreUtilities::$request["category_id"]) > 0)) {
+        $extraWhere = "`category_id` = " . intval(CoreUtilities::$request["category_id"]);
     } else {
         $extraWhere = "";
     }
@@ -186,17 +186,17 @@ if (ipTV_lib::$request["id"] == "mag_events") {
             }
         )
     );
-} elseif (ipTV_lib::$request["id"] == "vod_selection") {
+} elseif (CoreUtilities::$request["id"] == "vod_selection") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "create_channel"))) {
         exit;
     }
     $rCategoriesVOD = getCategories_admin("movie");
     $rSeriesList = getEpisodeParents();
     $table = 'streams';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
-    if ((isset(ipTV_lib::$request["category_id"])) && (strlen(ipTV_lib::$request["category_id"]) > 0)) {
-        $rSplit = explode(":", ipTV_lib::$request["category_id"]);
+    if ((isset(CoreUtilities::$request["category_id"])) && (strlen(CoreUtilities::$request["category_id"]) > 0)) {
+        $rSplit = explode(":", CoreUtilities::$request["category_id"]);
         if (intval($rSplit[0]) == 0) {
             $extraWhere = "`type` = 2 AND `category_id` = " . intval($rSplit[1]);
         } else {
@@ -211,7 +211,7 @@ if (ipTV_lib::$request["id"] == "mag_events") {
     } else {
         $extraWhere = "`type` IN (2,5)";
     }
-    $extraWhere .= " AND `stream_source` LIKE '%s:" . intval(ipTV_lib::$request["server_id"]) . ":%'";
+    $extraWhere .= " AND `stream_source` LIKE '%s:" . intval(CoreUtilities::$request["server_id"]) . ":%'";
     $columns = array(
         array('db' => 'id', 'dt' => 0),
         array('db' => 'stream_display_name', 'dt' => 1),
@@ -236,16 +236,16 @@ if (ipTV_lib::$request["id"] == "mag_events") {
             }
         )
     );
-} elseif (ipTV_lib::$request["id"] == "bouquets_vod") {
+} elseif (CoreUtilities::$request["id"] == "bouquets_vod") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
         exit;
     }
     $rCategoriesVOD = getCategories_admin("movie");
     $table = 'streams';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
-    if ((isset(ipTV_lib::$request["category_id"])) && (strlen(ipTV_lib::$request["category_id"]) > 0)) {
-        $extraWhere = "`type` = 2 AND `category_id` = " . intval(ipTV_lib::$request["category_id"]);
+    if ((isset(CoreUtilities::$request["category_id"])) && (strlen(CoreUtilities::$request["category_id"]) > 0)) {
+        $extraWhere = "`type` = 2 AND `category_id` = " . intval(CoreUtilities::$request["category_id"]);
     } else {
         $extraWhere = "`type` = 2";
     }
@@ -269,16 +269,16 @@ if (ipTV_lib::$request["id"] == "mag_events") {
             }
         )
     );
-} elseif (ipTV_lib::$request["id"] == "bouquets_series") {
+} elseif (CoreUtilities::$request["id"] == "bouquets_series") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
         exit;
     }
     $rCategoriesVOD = getCategories_admin("series");
     $table = 'series';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
-    if ((isset(ipTV_lib::$request["category_id"])) && (strlen(ipTV_lib::$request["category_id"]) > 0)) {
-        $extraWhere = "`category_id` = " . intval(ipTV_lib::$request["category_id"]);
+    if ((isset(CoreUtilities::$request["category_id"])) && (strlen(CoreUtilities::$request["category_id"]) > 0)) {
+        $extraWhere = "`category_id` = " . intval(CoreUtilities::$request["category_id"]);
     } else {
         $extraWhere = "";
     }
@@ -302,16 +302,16 @@ if (ipTV_lib::$request["id"] == "mag_events") {
             }
         )
     );
-} elseif (ipTV_lib::$request["id"] == "bouquets_radios") {
+} elseif (CoreUtilities::$request["id"] == "bouquets_radios") {
     if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
         exit;
     }
     $rCategoriesVOD = getCategories_admin("radio");
     $table = 'streams';
-    $get = ipTV_lib::$request["id"];
+    $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
-    if ((isset(ipTV_lib::$request["category_id"])) && (strlen(ipTV_lib::$request["category_id"]) > 0)) {
-        $extraWhere = "`type` = 4 AND `category_id` = " . intval(ipTV_lib::$request["category_id"]);
+    if ((isset(CoreUtilities::$request["category_id"])) && (strlen(CoreUtilities::$request["category_id"]) > 0)) {
+        $extraWhere = "`type` = 4 AND `category_id` = " . intval(CoreUtilities::$request["category_id"]);
     } else {
         $extraWhere = "`type` = 4";
     }
@@ -708,4 +708,4 @@ class SSP {
     }
 }
 
-echo json_encode(SSP::simple(ipTV_lib::$request, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere));
+echo json_encode(SSP::simple(CoreUtilities::$request, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere));

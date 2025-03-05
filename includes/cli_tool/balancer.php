@@ -13,7 +13,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
             register_shutdown_function('shutdown');
             require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
             unlink(CACHE_TMP_PATH . 'servers');
-            ipTV_lib::$Servers = ipTV_lib::getServers();
+            CoreUtilities::$Servers = CoreUtilities::getServers();
             $rType = intval($argv[1]);
             $rPort = intval($argv[3]);
             list(,,,, $rUsername, $rPassword) = $argv;
@@ -21,7 +21,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
             $rHTTPSPort = (empty($argv[7]) ? 25463 : intval($argv[7]));
             $rUpdateSysctl = (empty($argv[8]) ? 0 : intval($argv[8]));
 
-            if (ipTV_lib::$settings['update_chanel'] == 'stable') {
+            if (CoreUtilities::$settings['update_chanel'] == 'stable') {
                 $release = 'latest_release';
             } else {
                 $release = 'latest_prerelease';
@@ -84,7 +84,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
 
             file_put_contents($rInstallDir . $rServerID . '.json', json_encode(array('root_username' => $rUsername, 'root_password' => $rPassword, 'ssh_port' => $rPort)));
 
-            $rHost = ipTV_lib::$Servers[$rServerID]['server_ip'];
+            $rHost = CoreUtilities::$Servers[$rServerID]['server_ip'];
             echo 'Connecting to ' . $rHost . ':' . $rPort . "\n";
             if ($rConn = ssh2_connect($rHost, $rPort)) {
                 if ($rUsername == 'root') {
@@ -151,7 +151,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                     echo 'Generating configuration file' . "\n";
                     $rMasterConfig = parse_ini_file(CONFIG_PATH . 'config.ini');
 
-                    $rNewConfig = '; XC_VM Configuration' . "\n" . '; -----------------' . "\n" . '; Your username and password will be encrypted and' . "\n" . "; saved to the 'credentials' file in this folder" . "\n" . '; automatically.' . "\n" . ';' . "\n" . '; To change your username or password, modify BOTH' . "\n" . '; below and XC_VM will read and re-encrypt them.' . "\n\n" . '[XC_VM]' . "\n" . 'hostname    =   "' . ipTV_lib::$Servers[SERVER_ID]['server_ip'] . '"' . "\n" . 'database    =   "xc_vm"' . "\n" . 'port        =   ' . intval(ipTV_lib::$config['port']) . "\n" . 'server_id   =   ' . $rServerID . "\n" . 'is_lb       =   1' . "\n\n" . '[Encrypted]' . "\n" . 'username    =   "lb_' . $rServerID . '"' . "\n" . 'password    =   ""';
+                    $rNewConfig = '; XC_VM Configuration' . "\n" . '; -----------------' . "\n" . '; Your username and password will be encrypted and' . "\n" . "; saved to the 'credentials' file in this folder" . "\n" . '; automatically.' . "\n" . ';' . "\n" . '; To change your username or password, modify BOTH' . "\n" . '; below and XC_VM will read and re-encrypt them.' . "\n\n" . '[XC_VM]' . "\n" . 'hostname    =   "' . CoreUtilities::$Servers[SERVER_ID]['server_ip'] . '"' . "\n" . 'database    =   "xc_vm"' . "\n" . 'port        =   ' . intval(CoreUtilities::$config['port']) . "\n" . 'server_id   =   ' . $rServerID . "\n" . 'is_lb       =   1' . "\n\n" . '[Encrypted]' . "\n" . 'username    =   "lb_' . $rServerID . '"' . "\n" . 'password    =   ""';
                     file_put_contents(TMP_PATH . 'config_' . $rServerID, $rNewConfig);
                     sendfile($rConn, TMP_PATH . 'config_' . $rServerID, CONFIG_PATH . 'config.ini');
                     echo 'Installing service' . "\n";
@@ -174,7 +174,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                     if ($rType == 1) {
                         runCommand($rConn, 'sudo echo "listen ' . $rHTTPPort . ';" > "/home/xc_vm/bin/nginx/conf/ports/http.conf"');
                         runCommand($rConn, 'sudo echo "listen ' . $rHTTPSPort . ' ssl;" > "/home/xc_vm/bin/nginx/conf/ports/https.conf"');
-                        $rIP = '127.0.0.1:' . ipTV_lib::$Servers[$rServerID]['http_broadcast_port'];
+                        $rIP = '127.0.0.1:' . CoreUtilities::$Servers[$rServerID]['http_broadcast_port'];
                         runCommand($rConn, 'sudo echo "on_play http://' . $rIP . '/streaming/rtmp.php; on_publish http://' . $rIP . '/streaming/rtmp.php; on_play_done http://' . $rIP . '/streaming/rtmp.php;" > "/home/xc_vm/bin/nginx_rtmp/conf/live.conf"');
                         $rServices = (intval(runCommand($rConn, 'sudo cat /proc/cpuinfo | grep "^processor" | wc -l')['output']) ?: 4);
                         $rNewScript = "#! /bin/bash\n\n"

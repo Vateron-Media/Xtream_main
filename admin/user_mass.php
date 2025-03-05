@@ -5,49 +5,49 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_edit_users")))
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_user"])) {
+if (isset(CoreUtilities::$request["submit_user"])) {
     $rArray = array();
     foreach (array("is_stalker", "is_mag", "is_e2", "is_restreamer", "is_trial") as $rItem) {
-        if (isset(ipTV_lib::$request["c_" . $rItem])) {
-            if (isset(ipTV_lib::$request[$rItem])) {
+        if (isset(CoreUtilities::$request["c_" . $rItem])) {
+            if (isset(CoreUtilities::$request[$rItem])) {
                 $rArray[$rItem] = 1;
             } else {
                 $rArray[$rItem] = 0;
             }
         }
     }
-    if (isset(ipTV_lib::$request["c_admin_notes"])) {
-        $rArray["admin_notes"] = ipTV_lib::$request["admin_notes"];
+    if (isset(CoreUtilities::$request["c_admin_notes"])) {
+        $rArray["admin_notes"] = CoreUtilities::$request["admin_notes"];
     }
-    if (isset(ipTV_lib::$request["c_reseller_notes"])) {
-        $rArray["reseller_notes"] = ipTV_lib::$request["reseller_notes"];
+    if (isset(CoreUtilities::$request["c_reseller_notes"])) {
+        $rArray["reseller_notes"] = CoreUtilities::$request["reseller_notes"];
     }
-    if (isset(ipTV_lib::$request["c_forced_country"])) {
-        $rArray["forced_country"] = ipTV_lib::$request["forced_country"];
+    if (isset(CoreUtilities::$request["c_forced_country"])) {
+        $rArray["forced_country"] = CoreUtilities::$request["forced_country"];
     }
-    if (isset(ipTV_lib::$request["c_member_id"])) {
-        $rArray["member_id"] = intval(ipTV_lib::$request["member_id"]);
+    if (isset(CoreUtilities::$request["c_member_id"])) {
+        $rArray["member_id"] = intval(CoreUtilities::$request["member_id"]);
     }
-    if (isset(ipTV_lib::$request["c_force_server_id"])) {
-        $rArray["force_server_id"] = intval(ipTV_lib::$request["force_server_id"]);
+    if (isset(CoreUtilities::$request["c_force_server_id"])) {
+        $rArray["force_server_id"] = intval(CoreUtilities::$request["force_server_id"]);
     }
-    if (isset(ipTV_lib::$request["c_max_connections"])) {
-        $rArray["max_connections"] = intval(ipTV_lib::$request["max_connections"]);
+    if (isset(CoreUtilities::$request["c_max_connections"])) {
+        $rArray["max_connections"] = intval(CoreUtilities::$request["max_connections"]);
     }
-    if (isset(ipTV_lib::$request["c_exp_date"])) {
-        if (isset(ipTV_lib::$request["no_expire"])) {
+    if (isset(CoreUtilities::$request["c_exp_date"])) {
+        if (isset(CoreUtilities::$request["no_expire"])) {
             $rArray["exp_date"] = "NULL";
         } else {
             try {
-                $rDate = new DateTime(ipTV_lib::$request["exp_date"]);
+                $rDate = new DateTime(CoreUtilities::$request["exp_date"]);
                 $rArray["exp_date"] = $rDate->format("U");
             } catch (Exception $e) {
             }
         }
     }
-    if (isset(ipTV_lib::$request["c_bouquets"])) {
+    if (isset(CoreUtilities::$request["c_bouquets"])) {
         $rArray["bouquet"] = array();
-        foreach (json_decode(ipTV_lib::$request["bouquets_selected"], true) as $rBouquet) {
+        foreach (json_decode(CoreUtilities::$request["bouquets_selected"], true) as $rBouquet) {
             if (is_numeric($rBouquet)) {
                 $rArray["bouquet"][] = intval($rBouquet);
             }
@@ -55,7 +55,7 @@ if (isset(ipTV_lib::$request["submit_user"])) {
         $rArray["bouquet"] = sortArrayByArray($rArray["bouquet"], array_keys(getBouquetOrder()));
         $rArray["bouquet"] = "[" . join(",", $rArray["bouquet"]) . "]";
     }
-    $rUsers = json_decode(ipTV_lib::$request["users_selected"], true);
+    $rUsers = json_decode(CoreUtilities::$request["users_selected"], true);
     if (count($rUsers) > 0) {
         foreach ($rUsers as $rUser) {
             $rQueries = array();
@@ -67,23 +67,23 @@ if (isset(ipTV_lib::$request["submit_user"])) {
                 $rQuery = "UPDATE `lines` SET " . $rQueryString . " WHERE `id` = " . intval($rUser) . ";";
                 $ipTV_db_admin->query($rQuery);
             }
-            if (isset(ipTV_lib::$request["c_access_output"])) {
+            if (isset(CoreUtilities::$request["c_access_output"])) {
                 $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
-                foreach (ipTV_lib::$request["access_output"] as $rOutputID) {
+                foreach (CoreUtilities::$request["access_output"] as $rOutputID) {
                     $ipTV_db_admin->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rUser) . ", " . intval($rOutputID) . ");");
                 }
             }
         }
-        if ((isset(ipTV_lib::$request["c_lock_device"])) or (isset(ipTV_lib::$request["reset_stb_lock"]))) {
+        if ((isset(CoreUtilities::$request["c_lock_device"])) or (isset(CoreUtilities::$request["reset_stb_lock"]))) {
             $ipTV_db_admin->query("SELECT `mag_id`, `user_id` FROM `mag_devices`;");
             if ($ipTV_db_admin->num_rows() > 0) {
                 foreach ($ipTV_db_admin->get_rows() as $rRow) {
                     if (in_array($rRow["user_id"], $rUsers)) {
-                        if (isset(ipTV_lib::$request["reset_stb_lock"])) {
+                        if (isset(CoreUtilities::$request["reset_stb_lock"])) {
                             resetSTB($rRow["mag_id"]);
                         }
-                        if (isset(ipTV_lib::$request["c_lock_device"])) {
-                            if (isset(ipTV_lib::$request["lock_device"])) {
+                        if (isset(CoreUtilities::$request["c_lock_device"])) {
+                            if (isset(CoreUtilities::$request["lock_device"])) {
                                 $ipTV_db_admin->query("UPDATE `mag_devices` SET `lock_device` = 1 WHERE `mag_id` = " . intval($rRow["mag_id"]) . ";");
                             } else {
                                 $ipTV_db_admin->query("UPDATE `mag_devices` SET `lock_device` = 0 WHERE `mag_id` = " . intval($rRow["mag_id"]) . ";");

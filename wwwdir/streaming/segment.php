@@ -84,7 +84,7 @@ if (isset($_GET['token'])) {
                             ipTV_streaming::sendSignalFFMPEG($rSignalData, basename($rSegment), $rVideoCodec);
                         }
 
-                        ipTV_lib::unlinkFile(SIGNALS_PATH . $rUUID);
+                        CoreUtilities::unlinkFile(SIGNALS_PATH . $rUUID);
 
                         exit();
                     }
@@ -118,7 +118,7 @@ if (isset($_GET['token'])) {
                         $rData = openssl_encrypt(file_get_contents($rSegment), 'aes-128-cbc', $rKey, OPENSSL_RAW_DATA, $rIV);
                         file_put_contents($rSegment . '.enc', $rData);
                         unset($rData);
-                        ipTV_lib::unlinkFile($rSegment . '.enc_write');
+                        CoreUtilities::unlinkFile($rSegment . '.enc_write');
                         ignore_user_abort(false);
                     }
 

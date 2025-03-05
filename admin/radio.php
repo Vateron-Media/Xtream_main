@@ -5,12 +5,12 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_radio")) && (!
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_radio"])) {
-    if (isset(ipTV_lib::$request["edit"])) {
+if (isset(CoreUtilities::$request["submit_radio"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         if (!hasPermissions("adv", "edit_radio")) {
             exit;
         }
-        $rArray = getStream(ipTV_lib::$request["edit"]);
+        $rArray = getStream(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
         if (!hasPermissions("adv", "add_radio")) {
@@ -18,9 +18,9 @@ if (isset(ipTV_lib::$request["submit_radio"])) {
         }
         $rArray = array("type" => 4, "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 0, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "category_id" => array(), "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "custom_map" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 128000);
     }
-    if ((isset(ipTV_lib::$request["days_to_restart"])) && (preg_match("/^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/", ipTV_lib::$request["time_to_restart"]))) {
-        $rTimeArray = array("days" => array(), "at" => ipTV_lib::$request["time_to_restart"]);
-        foreach (ipTV_lib::$request["days_to_restart"] as $rID => $rDay) {
+    if ((isset(CoreUtilities::$request["days_to_restart"])) && (preg_match("/^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/", CoreUtilities::$request["time_to_restart"]))) {
+        $rTimeArray = array("days" => array(), "at" => CoreUtilities::$request["time_to_restart"]);
+        foreach (CoreUtilities::$request["days_to_restart"] as $rID => $rDay) {
             $rTimeArray["days"][] = $rDay;
         }
         $rArray["auto_restart"] = $rTimeArray;
@@ -28,46 +28,46 @@ if (isset(ipTV_lib::$request["submit_radio"])) {
         $rArray["auto_restart"] = "";
     }
     $rOnDemandArray = array();
-    if (isset(ipTV_lib::$request["on_demand"])) {
-        foreach (ipTV_lib::$request["on_demand"] as $rID) {
+    if (isset(CoreUtilities::$request["on_demand"])) {
+        foreach (CoreUtilities::$request["on_demand"] as $rID) {
             $rOnDemandArray[] = $rID;
         }
     }
-    if (isset(ipTV_lib::$request["custom_ffmpeg"])) {
-        $rArray["custom_ffmpeg"] = ipTV_lib::$request["custom_ffmpeg"];
+    if (isset(CoreUtilities::$request["custom_ffmpeg"])) {
+        $rArray["custom_ffmpeg"] = CoreUtilities::$request["custom_ffmpeg"];
     }
-    if (isset(ipTV_lib::$request["custom_sid"])) {
-        $rArray["custom_sid"] = ipTV_lib::$request["custom_sid"];
+    if (isset(CoreUtilities::$request["custom_sid"])) {
+        $rArray["custom_sid"] = CoreUtilities::$request["custom_sid"];
     }
-    if (isset(ipTV_lib::$request["direct_source"])) {
+    if (isset(CoreUtilities::$request["direct_source"])) {
         $rArray["direct_source"] = 1;
-        unset(ipTV_lib::$request["direct_source"]);
+        unset(CoreUtilities::$request["direct_source"]);
     } else {
         $rArray["direct_source"] = 0;
     }
-    if (isset(ipTV_lib::$request["probesize_ondemand"])) {
-        $rArray["probesize_ondemand"] = intval(ipTV_lib::$request["probesize_ondemand"]);
-        unset(ipTV_lib::$request["probesize_ondemand"]);
+    if (isset(CoreUtilities::$request["probesize_ondemand"])) {
+        $rArray["probesize_ondemand"] = intval(CoreUtilities::$request["probesize_ondemand"]);
+        unset(CoreUtilities::$request["probesize_ondemand"]);
     } else {
         $rArray["probesize_ondemand"] = 128000;
     }
-    if (isset(ipTV_lib::$request["restart_on_edit"])) {
+    if (isset(CoreUtilities::$request["restart_on_edit"])) {
         $rRestart = true;
-        unset(ipTV_lib::$request["restart_on_edit"]);
+        unset(CoreUtilities::$request["restart_on_edit"]);
     } else {
         $rRestart = false;
     }
-    $rBouquets = ipTV_lib::$request["bouquets"];
-    unset(ipTV_lib::$request["bouquets"]);
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
+    $rBouquets = CoreUtilities::$request["bouquets"];
+    unset(CoreUtilities::$request["bouquets"]);
+    foreach (CoreUtilities::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
     }
     $rImportStreams = array();
-    if (strlen(ipTV_lib::$request["stream_source"][0]) > 0) {
-        $rImportArray = array("stream_source" => ipTV_lib::$request["stream_source"], "stream_icon" => $rArray["stream_icon"], "stream_display_name" => $rArray["stream_display_name"]);
-        if (isset(ipTV_lib::$request["edit"])) {
+    if (strlen(CoreUtilities::$request["stream_source"][0]) > 0) {
+        $rImportArray = array("stream_source" => CoreUtilities::$request["stream_source"], "stream_icon" => $rArray["stream_icon"], "stream_display_name" => $rArray["stream_display_name"]);
+        if (isset(CoreUtilities::$request["edit"])) {
             $rImportStreams[] = $rImportArray;
         } else {
             $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . $rImportArray["stream_display_name"] . "' AND `type` = 4;");
@@ -104,21 +104,21 @@ if (isset(ipTV_lib::$request["submit_radio"])) {
                     $rValues .= '\'' . $rValue . '\'';
                 }
             }
-            if (isset(ipTV_lib::$request["edit"])) {
+            if (isset(CoreUtilities::$request["edit"])) {
                 $rCols = "`id`," . $rCols;
-                $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+                $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
-                if (isset(ipTV_lib::$request["edit"])) {
-                    $rInsertID = intval(ipTV_lib::$request["edit"]);
+                if (isset(CoreUtilities::$request["edit"])) {
+                    $rInsertID = intval(CoreUtilities::$request["edit"]);
                 } else {
                     $rInsertID = $ipTV_db_admin->last_insert_id();
                 }
             }
             if (isset($rInsertID)) {
                 $rStationExists = array();
-                if (isset(ipTV_lib::$request["edit"])) {
+                if (isset(CoreUtilities::$request["edit"])) {
                     $ipTV_db_admin->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
                     if ($ipTV_db_admin->num_rows() > 0) {
                         foreach ($ipTV_db_admin->get_rows() as $row) {
@@ -126,9 +126,9 @@ if (isset(ipTV_lib::$request["submit_radio"])) {
                         }
                     }
                 }
-                if (isset(ipTV_lib::$request["server_tree_data"])) {
+                if (isset(CoreUtilities::$request["server_tree_data"])) {
                     $rStationsAdded = array();
-                    $rServerTree = json_decode(ipTV_lib::$request["server_tree_data"], true);
+                    $rServerTree = json_decode(CoreUtilities::$request["server_tree_data"], true);
                     foreach ($rServerTree as $rServer) {
                         if ($rServer["parent"] <> "#") {
                             $rServerID = intval($rServer["id"]);
@@ -157,17 +157,17 @@ if (isset(ipTV_lib::$request["submit_radio"])) {
                     }
                 }
                 $ipTV_db_admin->query("DELETE FROM `streams_options` WHERE `stream_id` = " . intval($rInsertID) . ";");
-                if ((isset(ipTV_lib::$request["user_agent"])) && (strlen(ipTV_lib::$request["user_agent"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 1, '" . ipTV_lib::$request["user_agent"] . "');");
+                if ((isset(CoreUtilities::$request["user_agent"])) && (strlen(CoreUtilities::$request["user_agent"]) > 0)) {
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 1, '" . CoreUtilities::$request["user_agent"] . "');");
                 }
-                if ((isset(ipTV_lib::$request["http_proxy"])) && (strlen(ipTV_lib::$request["http_proxy"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 2, '" . ipTV_lib::$request["http_proxy"] . "');");
+                if ((isset(CoreUtilities::$request["http_proxy"])) && (strlen(CoreUtilities::$request["http_proxy"]) > 0)) {
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 2, '" . CoreUtilities::$request["http_proxy"] . "');");
                 }
-                if ((isset(ipTV_lib::$request["cookie"])) && (strlen(ipTV_lib::$request["cookie"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 17, '" . ipTV_lib::$request["cookie"] . "');");
+                if ((isset(CoreUtilities::$request["cookie"])) && (strlen(CoreUtilities::$request["cookie"]) > 0)) {
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 17, '" . CoreUtilities::$request["cookie"] . "');");
                 }
-                if ((isset(ipTV_lib::$request["headers"])) && (strlen(ipTV_lib::$request["headers"]) > 0)) {
-                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 19, '" . ipTV_lib::$request["headers"] . "');");
+                if ((isset(CoreUtilities::$request["headers"])) && (strlen(CoreUtilities::$request["headers"]) > 0)) {
+                    $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 19, '" . CoreUtilities::$request["headers"] . "');");
                 }
                 if ($rRestart) {
                     APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rInsertID)));
@@ -175,7 +175,7 @@ if (isset(ipTV_lib::$request["submit_radio"])) {
                 foreach ($rBouquets as $rBouquet) {
                     addToBouquet("radio", $rBouquet, $rInsertID);
                 }
-                if (isset(ipTV_lib::$request["edit"])) {
+                if (isset(CoreUtilities::$request["edit"])) {
                     foreach (getBouquets() as $rBouquet) {
                         if (!in_array($rBouquet["id"], $rBouquets)) {
                             removeFromBouquet("radio", $rBouquet["id"], $rInsertID);
@@ -213,16 +213,16 @@ $rStationArguments = getStreamArguments();
 $rServerTree = array();
 $rOnDemand = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>" . $_["stream_source"] . "</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
-if (isset(ipTV_lib::$request["id"])) {
+if (isset(CoreUtilities::$request["id"])) {
     if (!hasPermissions("adv", "edit_radio")) {
         exit;
     }
-    $rStation = getStream(ipTV_lib::$request["id"]);
+    $rStation = getStream(CoreUtilities::$request["id"]);
     if ((!$rStation) or ($rStation["type"] <> 4)) {
         exit;
     }
-    $rStationOptions = getStreamOptions(ipTV_lib::$request["id"]);
-    $rStationSys = getStreamSys(ipTV_lib::$request["id"]);
+    $rStationOptions = getStreamOptions(CoreUtilities::$request["id"]);
+    $rStationSys = getStreamSys(CoreUtilities::$request["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStationSys[intval($rServer["id"])])) {
             if ($rStationSys[intval($rServer["id"])]["parent_id"] <> 0) {
@@ -328,8 +328,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./radio.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./radio.php<?php if (isset(CoreUtilities::$request["id"])) {
+                            echo "?id=" . CoreUtilities::$request["id"];
                         } ?>" method="POST" id="radio_form"
                             data-parsley-validate="">
                             <?php if (isset($rStation["id"])) { ?>
@@ -402,7 +402,7 @@ include "header.php";
                                                                     if (intval($rStation["category_id"]) == intval($rCategory["id"])) {
                                                                         echo "selected ";
                                                                     }
-                                                                } elseif ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
+                                                                } elseif ((isset(CoreUtilities::$request["category"])) && (CoreUtilities::$request["category"] == $rCategory["id"])) {
                                                                     echo "selected ";
                                                                 } ?>value="<?= $rCategory["id"] ?>">
                                                                     <?= $rCategory["category_name"] ?>

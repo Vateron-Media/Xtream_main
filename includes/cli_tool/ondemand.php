@@ -4,25 +4,25 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         set_time_limit(0);
         require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
         shell_exec('kill -9 $(ps aux | grep ondemand | grep -v grep | grep -v ' . getmypid() . " | awk '{print \$2}')");
-        if (ipTV_lib::$settings['on_demand_instant_off']) {
-            if (ipTV_lib::$settings['redis_handler']) {
-                ipTV_lib::connectRedis();
+        if (CoreUtilities::$settings['on_demand_instant_off']) {
+            if (CoreUtilities::$settings['redis_handler']) {
+                CoreUtilities::connectRedis();
             }
             $rMainID = ipTV_streaming::getMainID();
             $rLastCheck = null;
             $rInterval = 60;
             $rMD5 = md5_file(__FILE__);
-            while (true && $ipTV_db && $ipTV_db->ping() && !(ipTV_lib::$settings['redis_handler'] && (!ipTV_lib::$redis || !ipTV_lib::$redis->ping()))) {
+            while (true && $ipTV_db && $ipTV_db->ping() && !(CoreUtilities::$settings['redis_handler'] && (!CoreUtilities::$redis || !CoreUtilities::$redis->ping()))) {
                 if (!$rLastCheck && $rInterval < time() - $rLastCheck) {
                     if (md5_file(__FILE__) == $rMD5) {
-                        ipTV_lib::$settings = ipTV_lib::getSettings(true);
+                        CoreUtilities::$settings = CoreUtilities::getSettings(true);
                         $rLastCheck = time();
                     } else {
                         echo 'File changed! Break.' . "\n";
                     }
                 }
                 $rRows = array();
-                if (ipTV_lib::$settings['redis_handler']) {
+                if (CoreUtilities::$settings['redis_handler']) {
                     $rStreamIDs = $rAttached = $rRows = array();
                     if ($ipTV_db->query('SELECT t1.stream_id, servers_attached.attached FROM `streams_servers` t1 LEFT JOIN (SELECT `stream_id`, COUNT(*) AS `attached` FROM `streams_servers` WHERE `parent_id` = ? AND `pid` IS NOT NULL AND `pid` > 0 AND `monitor_pid` IS NOT NULL AND `monitor_pid` > 0) AS `servers_attached` ON `servers_attached`.`stream_id` = t1.`stream_id` WHERE t1.pid IS NOT NULL AND t1.pid > 0 AND t1.server_id = ? AND t1.`on_demand` = 1;', SERVER_ID, SERVER_ID)) {
                         foreach ($ipTV_db->get_rows() as $rRow) {

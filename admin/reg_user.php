@@ -6,12 +6,12 @@ if (!checkPermissions()) {
     goHome();
 }
 
-if (isset(ipTV_lib::$request["submit_user"])) {
-    if (isset(ipTV_lib::$request["edit"])) {
+if (isset(CoreUtilities::$request["submit_user"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         if (!hasPermissions("adv", "edit_reguser")) {
             exit;
         }
-        $rArray = getRegisteredUser(ipTV_lib::$request["edit"]);
+        $rArray = getRegisteredUser(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
         if (!hasPermissions("adv", "add_reguser")) {
@@ -19,37 +19,37 @@ if (isset(ipTV_lib::$request["submit_user"])) {
         }
         $rArray = array("username" => "", "password" => "", "email" => "", "member_group_id" => 1, "verified" => 0, "credits" => 0, "notes" => "", "status" => 1, "owner_id" => 0);
     }
-    if ((strlen(ipTV_lib::$request["username"]) == 0) or ((strlen(ipTV_lib::$request["email"]) == 0))) {
+    if ((strlen(CoreUtilities::$request["username"]) == 0) or ((strlen(CoreUtilities::$request["email"]) == 0))) {
         $_STATUS = 1;
     }
-    if (strlen(ipTV_lib::$request["password"]) > 0) {
-        $rArray["password"] = cryptPassword(ipTV_lib::$request["password"]);
-    } elseif (!isset(ipTV_lib::$request["edit"])) {
+    if (strlen(CoreUtilities::$request["password"]) > 0) {
+        $rArray["password"] = cryptPassword(CoreUtilities::$request["password"]);
+    } elseif (!isset(CoreUtilities::$request["edit"])) {
         $_STATUS = 1;
     }
     if (!isset($_STATUS)) {
         $rOverride = array();
-        foreach (ipTV_lib::$request as $rKey => $rValue) {
+        foreach (CoreUtilities::$request as $rKey => $rValue) {
             if (substr($rKey, 0, 9) == "override_") {
                 $rID = intval(explode("override_", $rKey)[1]);
                 $rCredits = $rValue;
                 $rOverride[$rID] = array("assign" => 1, "official_credits" => $rCredits);
-                unset(ipTV_lib::$request[$rKey]);
+                unset(CoreUtilities::$request[$rKey]);
             }
         }
         $rArray["override_packages"] = json_encode($rOverride);
-        if (isset(ipTV_lib::$request["verified"])) {
+        if (isset(CoreUtilities::$request["verified"])) {
             $rArray["verified"] = 1;
-            unset(ipTV_lib::$request["verified"]);
+            unset(CoreUtilities::$request["verified"]);
         } else {
             $rArray["verified"] = 0;
         }
-        unset(ipTV_lib::$request["password"]);
-        if ($rArray["credits"] <> ipTV_lib::$request["credits"]) {
-            $rCreditsAdjustment = ipTV_lib::$request["credits"] - $rArray["credits"];
-            $rReason = ipTV_lib::$request["credits_reason"];
+        unset(CoreUtilities::$request["password"]);
+        if ($rArray["credits"] <> CoreUtilities::$request["credits"]) {
+            $rCreditsAdjustment = CoreUtilities::$request["credits"] - $rArray["credits"];
+            $rReason = CoreUtilities::$request["credits_reason"];
         }
-        foreach (ipTV_lib::$request as $rKey => $rValue) {
+        foreach (CoreUtilities::$request as $rKey => $rValue) {
             if (isset($rArray[$rKey])) {
                 $rArray[$rKey] = $rValue;
             }
@@ -66,14 +66,14 @@ if (isset(ipTV_lib::$request["submit_user"])) {
                 $rValues .= '\'' . $rValue . '\'';
             }
         }
-        if (isset(ipTV_lib::$request["edit"])) {
+        if (isset(CoreUtilities::$request["edit"])) {
             $rCols = "`id`," . $rCols;
-            $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+            $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `reg_users`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
-            if (isset(ipTV_lib::$request["edit"])) {
-                $rInsertID = intval(ipTV_lib::$request["edit"]);
+            if (isset(CoreUtilities::$request["edit"])) {
+                $rInsertID = intval(CoreUtilities::$request["edit"]);
             } else {
                 $rInsertID = $ipTV_db_admin->last_insert_id();
             }
@@ -88,7 +88,7 @@ if (isset(ipTV_lib::$request["submit_user"])) {
     }
 }
 
-$rUser = isset(ipTV_lib::$request['id']) ? getRegisteredUser(ipTV_lib::$request['id']) : null;
+$rUser = isset(CoreUtilities::$request['id']) ? getRegisteredUser(CoreUtilities::$request['id']) : null;
 if ($rUser === false) {
     goHome();
 }
@@ -141,8 +141,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./reg_user.php<?php if (isset(ipTV_lib::$request["id"])) {
-                                                        echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./reg_user.php<?php if (isset(CoreUtilities::$request["id"])) {
+                                                        echo "?id=" . CoreUtilities::$request["id"];
                                                     } ?>" method="POST" id="reg_user_form" data-parsley-validate="">
                             <?php if ($rUser): ?>
                                 <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />

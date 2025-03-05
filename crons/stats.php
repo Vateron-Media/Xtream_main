@@ -7,7 +7,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
 		if ((file_exists("/proc/" . $rSettings["stats_pid"])) && (strlen($rSettings["stats_pid"]) > 0)) {
 			exit;
 		} else {
-			ipTV_lib::setSettings(["stats_pid" => intval($rPID)]);
+			CoreUtilities::setSettings(["stats_pid" => intval($rPID)]);
 		}
 	}
 

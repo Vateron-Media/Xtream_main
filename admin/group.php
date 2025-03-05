@@ -99,12 +99,12 @@ $rAdvPermissions = array(
     array("system_logs", $_["permission_system_logs"], $_["permission_system_logs_text"])
 );
 
-if (isset(ipTV_lib::$request["submit_group"])) {
-    if (isset(ipTV_lib::$request["edit"])) {
+if (isset(CoreUtilities::$request["submit_group"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         if (!hasPermissions("adv", "edit_group")) {
             exit;
         }
-        $rArray = getMemberGroup(ipTV_lib::$request["edit"]);
+        $rArray = getMemberGroup(CoreUtilities::$request["edit"]);
         $rGroup = $rArray;
         unset($rArray["group_id"]);
     } else {
@@ -113,25 +113,25 @@ if (isset(ipTV_lib::$request["submit_group"])) {
         }
         $rArray = array("group_name" => "", "group_color" => "", "is_banned" => 0, "is_admin" => 0, "is_reseller" => 0, "total_allowed_gen_in" => "day", "total_allowed_gen_trials" => 0, "minimum_trial_credits" => 0, "can_delete" => 1, "delete_users" => 0, "allowed_pages" => "", "reseller_force_server" => "", "create_sub_resellers_price" => 0, "create_sub_resellers" => 0, "alter_packages_ids" => 0, "alter_packages_prices" => 0, "reseller_client_connection_logs" => 0, "reseller_assign_pass" => 0, "allow_change_pass" => 0, "allow_import" => 0, "allow_export" => 0, "reseller_trial_credit_allow" => 0, "edit_mac" => 0, "edit_isplock" => 0, "reset_stb_data" => 0, "reseller_bonus_package_inc" => 0, "allow_download" => 1, "reseller_can_select_bouquets" => 0);
     }
-    if (strlen(ipTV_lib::$request["group_name"]) == 0) {
+    if (strlen(CoreUtilities::$request["group_name"]) == 0) {
         $_STATUS = 1;
     }
     foreach (array("is_admin", "is_reseller", "is_banned", "delete_users", "create_sub_resellers", "allow_change_pass", "allow_download", "reseller_client_connection_logs", "reset_stb_data", "allow_import", "reseller_can_select_bouquets") as $rSelection) {
-        if (isset(ipTV_lib::$request[$rSelection])) {
+        if (isset(CoreUtilities::$request[$rSelection])) {
             $rArray[$rSelection] = 1;
-            unset(ipTV_lib::$request[$rSelection]);
+            unset(CoreUtilities::$request[$rSelection]);
         } else {
             $rArray[$rSelection] = 0;
         }
     }
-    if ((!$rArray["can_delete"]) && (isset(ipTV_lib::$request["edit"]))) {
+    if ((!$rArray["can_delete"]) && (isset(CoreUtilities::$request["edit"]))) {
         $rArray["is_admin"] = $rGroup["is_admin"];
         $rArray["is_reseller"] = $rGroup["is_reseller"];
     }
-    $rArray["allowed_pages"] = array_values(json_decode(ipTV_lib::$request["permissions_selected"], true));
-    unset(ipTV_lib::$request["permissions_selected"]);
+    $rArray["allowed_pages"] = array_values(json_decode(CoreUtilities::$request["permissions_selected"], true));
+    unset(CoreUtilities::$request["permissions_selected"]);
     if (!isset($_STATUS)) {
-        foreach (ipTV_lib::$request as $rKey => $rValue) {
+        foreach (CoreUtilities::$request as $rKey => $rValue) {
             if (isset($rArray[$rKey])) {
                 $rArray[$rKey] = $rValue;
             }
@@ -148,14 +148,14 @@ if (isset(ipTV_lib::$request["submit_group"])) {
                 $rValues .= '\'' . $rValue . '\'';
             }
         }
-        if (isset(ipTV_lib::$request["edit"])) {
+        if (isset(CoreUtilities::$request["edit"])) {
             $rCols = "`group_id`," . $rCols;
-            $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+            $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `member_groups`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
-            if (isset(ipTV_lib::$request["edit"])) {
-                $rInsertID = intval(ipTV_lib::$request["edit"]);
+            if (isset(CoreUtilities::$request["edit"])) {
+                $rInsertID = intval(CoreUtilities::$request["edit"]);
             } else {
                 $rInsertID = $ipTV_db_admin->last_insert_id();
             }
@@ -167,8 +167,8 @@ if (isset(ipTV_lib::$request["submit_group"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rGroup = getMemberGroup(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rGroup = getMemberGroup(CoreUtilities::$request["id"]);
     if ((!$rGroup) or (!hasPermissions("adv", "edit_group"))) {
         exit;
     }
@@ -221,8 +221,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./group.php<?php if (isset(ipTV_lib::$request["id"])) {
-                                                        echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./group.php<?php if (isset(CoreUtilities::$request["id"])) {
+                                                        echo "?id=" . CoreUtilities::$request["id"];
                                                     } ?>" method="POST" id="group_form"
                             data-parsley-validate="">
                             <?php if (isset($rGroup)) { ?>

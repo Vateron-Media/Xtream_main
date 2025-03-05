@@ -3,39 +3,39 @@ include "session.php";
 include "functions.php";
 
 $nabillangues = array("" => "Default - EN", "fr" => "French", "es" => "Spanish", "it" => "Italian", "pt" => "Portuguese", "ru" => "Русский");
-if (isset(ipTV_lib::$request["submit_profile"])) {
-    if (((strlen(ipTV_lib::$request["password"]) > 0)) && (strlen(ipTV_lib::$request["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
+if (isset(CoreUtilities::$request["submit_profile"])) {
+    if (((strlen(CoreUtilities::$request["password"]) > 0)) && (strlen(CoreUtilities::$request["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
         $_STATUS = 1;
     }
-    if (((strlen(ipTV_lib::$request["email"]) == 0) or (!filter_var(ipTV_lib::$request["email"], FILTER_VALIDATE_EMAIL))) && (($rSettings["change_own_email"]) or ($rPermissions["is_admin"]))) {
+    if (((strlen(CoreUtilities::$request["email"]) == 0) or (!filter_var(CoreUtilities::$request["email"], FILTER_VALIDATE_EMAIL))) && (($rSettings["change_own_email"]) or ($rPermissions["is_admin"]))) {
         $_STATUS = 2;
     }
-    if ((strlen(ipTV_lib::$request["reseller_dns"]) > 0) && (!filter_var("http://" . ipTV_lib::$request["reseller_dns"], FILTER_VALIDATE_URL))) {
+    if ((strlen(CoreUtilities::$request["reseller_dns"]) > 0) && (!filter_var("http://" . CoreUtilities::$request["reseller_dns"], FILTER_VALIDATE_URL))) {
         $_STATUS = 3;
     }
-    if (isset(ipTV_lib::$request["dark_mode"])) {
+    if (isset(CoreUtilities::$request["dark_mode"])) {
         $rDarkMode = true;
     } else {
         $rDarkMode = false;
     }
     if (!isset($_STATUS)) {
-        if ((strlen(ipTV_lib::$request["password"]) > 0) && (($rSettings["change_own_password"]) or ($rPermissions["is_admin"]))) {
-            $rPassword = cryptPassword(ipTV_lib::$request["password"]);
+        if ((strlen(CoreUtilities::$request["password"]) > 0) && (($rSettings["change_own_password"]) or ($rPermissions["is_admin"]))) {
+            $rPassword = cryptPassword(CoreUtilities::$request["password"]);
         } else {
             $rPassword = $rUserInfo["password"];
         }
         if (($rSettings["change_own_email"]) or ($rPermissions["is_admin"])) {
-            $rEmail = ipTV_lib::$request["email"];
+            $rEmail = CoreUtilities::$request["email"];
         } else {
             $rEmail = $rUserInfo["email"];
         }
         if (($rSettings["change_own_dns"]) or ($rPermissions["is_admin"])) {
-            $rDNS = ipTV_lib::$request["reseller_dns"];
+            $rDNS = CoreUtilities::$request["reseller_dns"];
         } else {
             $rDNS = $rUserInfo["reseller_dns"];
         }
         if (($rSettings["change_own_lang"]) or ($rPermissions["is_admin"])) {
-            $bob = ipTV_lib::$request["default_lang"];
+            $bob = CoreUtilities::$request["default_lang"];
         } else {
             $bob = $rUserInfo["default_lang"];
         }

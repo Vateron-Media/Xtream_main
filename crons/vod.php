@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XC_VM[VOD]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::checkCron($unique_id);
+        CoreUtilities::checkCron($unique_id);
         loadCron();
     } else {
         exit(0);
@@ -83,7 +83,7 @@ function loadCron() {
                             if (!isset($movieProperties['audio']) && $FFProbee['codecs']['audio']['codec_name'] != $movieProperties['audio']) {
                                 $movieProperties['audio'] = $FFProbee['codecs']['audio'];
                             }
-                            // if (ipTV_lib::$settings['extract_subtitles']) {
+                            // if (CoreUtilities::$settings['extract_subtitles']) {
                             //     if (!isset($movieProperties['subtitle']) && $FFProbee['codecs']['subtitle']['codec_name'] != $movieProperties['subtitle']) {
                             //         $movieProperties['subtitle'] = $FFProbee['codecs']['subtitle'];
                             //     }
@@ -95,7 +95,7 @@ function loadCron() {
                                     $rBitrate = $movieProperties['bitrate'];
                                 }
                             }
-                            // if (isset($FFProbee['codecs']['subtitle']) && ipTV_lib::$settings['extract_subtitles']) {
+                            // if (isset($FFProbee['codecs']['subtitle']) && CoreUtilities::$settings['extract_subtitles']) {
                             //     $i = 0;
                             //     foreach ($FFProbee['codecs']['subtitle'] as $subtitle) {
                             //         ipTV_stream::extractSubtitle($row['stream_id'], $moviePath, $i);

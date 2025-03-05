@@ -3,17 +3,17 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     if ($argc) {
         require str_replace('\\', '/', dirname($argv[0])) . '/../../wwwdir/init.php';
         shell_exec('kill $(ps aux | grep watchdog | grep -v grep | grep -v ' . getmypid() . " | awk '{print \$2}')");
-        $rInterval = (intval(ipTV_lib::$settings['online_capacity_interval']) ?: 10);
+        $rInterval = (intval(CoreUtilities::$settings['online_capacity_interval']) ?: 10);
         $rLastRequests = $rLastRequestsTime = $rPrevStat = $rLastCheck = null;
         $rMD5 = md5_file(__FILE__);
-        if (ipTV_lib::$settings['redis_handler']) {
-            ipTV_lib::connectRedis();
+        if (CoreUtilities::$settings['redis_handler']) {
+            CoreUtilities::connectRedis();
         }
-        $rWatchdog = json_decode(ipTV_lib::$Servers[SERVER_ID]['watchdog_data'], true);
+        $rWatchdog = json_decode(CoreUtilities::$Servers[SERVER_ID]['watchdog_data'], true);
         $rCPUAverage = ($rWatchdog['cpu_average_array'] ?: array());
-        while (true && $ipTV_db->ping() && !(ipTV_lib::$settings['redis_handler'] && (!ipTV_lib::$redis || !ipTV_lib::$redis->ping()))) {
+        while (true && $ipTV_db->ping() && !(CoreUtilities::$settings['redis_handler'] && (!CoreUtilities::$redis || !CoreUtilities::$redis->ping()))) {
             if ($rLastCheck && $rInterval > time() - $rLastCheck) {
-                $rNginx = explode("\n", file_get_contents('http://127.0.0.1:' . ipTV_lib::$Servers[SERVER_ID]['http_broadcast_port'] . '/nginx_status'));
+                $rNginx = explode("\n", file_get_contents('http://127.0.0.1:' . CoreUtilities::$Servers[SERVER_ID]['http_broadcast_port'] . '/nginx_status'));
                 list($rAccepted, $rHandled, $rRequests) = explode(' ', trim($rNginx[2]));
                 $rRequestsPerSecond = ($rLastRequests ? intval(floatval($rRequests - $rLastRequests) / (time() - $rLastRequestsTime)) : 0);
                 $rLastRequests = $rRequests;
@@ -46,7 +46,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                 $rPHPPIDs = array();
                 exec("ps -u xc_vm | grep php-fpm | awk {'print \$1'}", $rPHPPIDs);
                 $rConnections = $rUsers = 0;
-                if (!ipTV_lib::$settings['redis_handler']) {
+                if (!CoreUtilities::$settings['redis_handler']) {
                     $ipTV_db->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `hls_end` = 0 AND `server_id` = ?;', SERVER_ID);
                     $rConnections = $ipTV_db->get_row()['count'];
                     $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 AND `server_id` = ? GROUP BY `user_id`;', SERVER_ID);
@@ -56,11 +56,11 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                     $rResult = $ipTV_db->query('UPDATE `servers` SET `watchdog_data` = ?, `last_check_ago` = UNIX_TIMESTAMP(), `requests_per_second` = ?, `php_pids` = ? WHERE `id` = ?;', json_encode($rStats, JSON_PARTIAL_OUTPUT_ON_ERROR), $rRequestsPerSecond, json_encode($rPHPPIDs), SERVER_ID);
                 }
                 if ($rResult) {
-                    if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
-                        if (ipTV_lib::$settings['redis_handler']) {
-                            $rMulti = ipTV_lib::$redis->multi();
-                            foreach (array_keys(ipTV_lib::$Servers) as $rServerID) {
-                                if (ipTV_lib::$Servers[$rServerID]['server_online']) {
+                    if (CoreUtilities::$Servers[SERVER_ID]['is_main']) {
+                        if (CoreUtilities::$settings['redis_handler']) {
+                            $rMulti = CoreUtilities::$redis->multi();
+                            foreach (array_keys(CoreUtilities::$Servers) as $rServerID) {
+                                if (CoreUtilities::$Servers[$rServerID]['server_online']) {
                                     $rMulti->zCard('SERVER#' . $rServerID);
                                     $rMulti->zRangeByScore('SERVER_LINES#' . $rServerID, '-inf', '+inf', array('withscores' => true));
                                 }
@@ -68,18 +68,18 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                             $rResults = $rMulti->exec();
                             $rTotalUsers = array();
                             $i = 0;
-                            foreach (array_keys(ipTV_lib::$Servers) as $rServerID) {
-                                if (ipTV_lib::$Servers[$rServerID]['server_online']) {
+                            foreach (array_keys(CoreUtilities::$Servers) as $rServerID) {
+                                if (CoreUtilities::$Servers[$rServerID]['server_online']) {
                                     $ipTV_db->query('UPDATE `servers` SET `connections` = ?, `users` = ? WHERE `id` = ?;', $rResults[$i * 2], count(array_unique(array_values($rResults[$i * 2 + 1]))), $rServerID);
                                     $rTotalUsers = array_merge(array_values($rResults[$i * 2 + 1]), $rTotalUsers);
                                     $i++;
                                 }
                             }
-                            ipTV_lib::setSettings(["total_users" => count(array_unique($rTotalUsers))]);
+                            CoreUtilities::setSettings(["total_users" => count(array_unique($rTotalUsers))]);
                         } else {
                             $ipTV_db->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
                             $rTotalUsers = $ipTV_db->num_rows();
-                            ipTV_lib::setSettings(["total_users" => $rTotalUsers]);
+                            CoreUtilities::setSettings(["total_users" => $rTotalUsers]);
                         }
                     }
                     sleep(2);
@@ -88,10 +88,10 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                 }
                 break;
             }
-            if (ipTV_lib::isRunning()) {
+            if (CoreUtilities::isRunning()) {
                 if (md5_file(__FILE__) == $rMD5) {
-                    ipTV_lib::$Servers = ipTV_lib::getServers(true);
-                    ipTV_lib::$settings = ipTV_lib::getSettings(true);
+                    CoreUtilities::$Servers = CoreUtilities::getServers(true);
+                    CoreUtilities::$settings = CoreUtilities::getSettings(true);
                     ipTV_streaming::getCapacity();
                     $rLastCheck = time();
                 } else {

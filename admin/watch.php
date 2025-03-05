@@ -5,7 +5,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["kill"])) {
+if (isset(CoreUtilities::$request["kill"])) {
     if (isset($rSettings["watch_pid"])) {
         exec("pkill -9 " . $rSettings["watch_pid"]);
     }
@@ -64,7 +64,7 @@ include "header.php";
 
         <div class="row">
             <div class="col-12">
-                <?php if (isset(ipTV_lib::$request["kill"])) { ?>
+                <?php if (isset(CoreUtilities::$request["kill"])) { ?>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>

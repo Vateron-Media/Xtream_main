@@ -4,22 +4,22 @@ require 'init.php';
 header('Content-Type: application/json');
 $remote_addr = $_SERVER['REMOTE_ADDR'];
 $user_agent = trim($_SERVER['HTTP_USER_AGENT']);
-if (!empty(ipTV_lib::$request['action']) && ipTV_lib::$request['action'] == 'gen_mac' && !empty(ipTV_lib::$request['pversion'])) {
-    if (ipTV_lib::$request['pversion'] != '0.0.1') {
+if (!empty(CoreUtilities::$request['action']) && CoreUtilities::$request['action'] == 'gen_mac' && !empty(CoreUtilities::$request['pversion'])) {
+    if (CoreUtilities::$request['pversion'] != '0.0.1') {
         echo json_encode(strtoupper(implode(':', str_split(substr(md5(mt_rand()), 0, 12), 2))));
     }
     die;
 }
-if (!empty(ipTV_lib::$request['action']) && ipTV_lib::$request['action'] == 'auth') {
-    $mac = isset(ipTV_lib::$request['mac']) ? htmlentities(ipTV_lib::$request['mac']) : '';
-    $mmac = isset(ipTV_lib::$request['mmac']) ? htmlentities(ipTV_lib::$request['mmac']) : '';
-    $ip = isset(ipTV_lib::$request['ip']) ? htmlentities(ipTV_lib::$request['ip']) : '';
-    $version = isset(ipTV_lib::$request['version']) ? htmlentities(ipTV_lib::$request['version']) : '';
-    $type = isset(ipTV_lib::$request['type']) ? htmlentities(ipTV_lib::$request['type']) : '';
-    $pversion = isset(ipTV_lib::$request['pversion']) ? htmlentities(ipTV_lib::$request['pversion']) : '';
-    $lversion = isset(ipTV_lib::$request['lversion']) ? base64_decode(ipTV_lib::$request['lversion']) : '';
-    $dn = !empty(ipTV_lib::$request['dn']) ? htmlentities(ipTV_lib::$request['dn']) : '-';
-    $cmac = !empty(ipTV_lib::$request['cmac']) ? htmlentities(strtoupper(ipTV_lib::$request['cmac'])) : '';
+if (!empty(CoreUtilities::$request['action']) && CoreUtilities::$request['action'] == 'auth') {
+    $mac = isset(CoreUtilities::$request['mac']) ? htmlentities(CoreUtilities::$request['mac']) : '';
+    $mmac = isset(CoreUtilities::$request['mmac']) ? htmlentities(CoreUtilities::$request['mmac']) : '';
+    $ip = isset(CoreUtilities::$request['ip']) ? htmlentities(CoreUtilities::$request['ip']) : '';
+    $version = isset(CoreUtilities::$request['version']) ? htmlentities(CoreUtilities::$request['version']) : '';
+    $type = isset(CoreUtilities::$request['type']) ? htmlentities(CoreUtilities::$request['type']) : '';
+    $pversion = isset(CoreUtilities::$request['pversion']) ? htmlentities(CoreUtilities::$request['pversion']) : '';
+    $lversion = isset(CoreUtilities::$request['lversion']) ? base64_decode(CoreUtilities::$request['lversion']) : '';
+    $dn = !empty(CoreUtilities::$request['dn']) ? htmlentities(CoreUtilities::$request['dn']) : '-';
+    $cmac = !empty(CoreUtilities::$request['cmac']) ? htmlentities(strtoupper(CoreUtilities::$request['cmac'])) : '';
     $json = array();
     if ($enigma_devices = ipTV_streaming::enigmaDevices(array('device_id' => null, 'mac' => strtoupper($mac)))) {
         if ($enigma_devices['enigma2']['lock_device'] == 1) {
@@ -39,10 +39,10 @@ if (!empty(ipTV_lib::$request['action']) && ipTV_lib::$request['action'] == 'aut
     echo json_encode($json);
     die;
 }
-if (empty(ipTV_lib::$request['token'])) {
+if (empty(CoreUtilities::$request['token'])) {
     die(json_encode(array('valid' => false)));
 }
-$token = ipTV_lib::$request['token'];
+$token = CoreUtilities::$request['token'];
 $ipTV_db->query('SELECT * FROM enigma2_devices WHERE `token` = ? AND `public_ip` = ? AND `key_auth` = ? LIMIT 1', $token, $remote_addr, $user_agent);
 if ($ipTV_db->num_rows() <= 0) {
     die(json_encode(array('valid' => false)));
@@ -51,13 +51,13 @@ $device_info = $ipTV_db->get_row();
 if (time() - $device_info['last_updated'] > $device_info['watchdog_timeout'] + 20) {
     die(json_encode(array('valid' => false)));
 }
-$page = isset(ipTV_lib::$request['page']) ? ipTV_lib::$request['page'] : '';
+$page = isset(CoreUtilities::$request['page']) ? CoreUtilities::$request['page'] : '';
 if (!empty($page)) {
     if ($page == 'file') {
         if (!empty($_FILES['f']['name'])) {
             if ($_FILES['f']['error'] == 0) {
                 $tmp_name = strtolower($_FILES['f']['tmp_name']);
-                $type = ipTV_lib::$request['t'];
+                $type = CoreUtilities::$request['t'];
                 switch ($type) {
                     case 'screen':
                         move_uploaded_file($_FILES['f']['tmp_name'], ENIGMA2_IMAGES_PATH . $device_info['device_id'] . '_screen_' . time() . '_' . uniqid() . '.jpg');
@@ -66,7 +66,7 @@ if (!empty($page)) {
             }
         }
     } else {
-        $ipTV_db->query('UPDATE `enigma2_devices` SET `last_updated` = ?,`rc` = ? WHERE `device_id` = ?', time(), ipTV_lib::$request['rc'], $device_info['device_id']);
+        $ipTV_db->query('UPDATE `enigma2_devices` SET `last_updated` = ?,`rc` = ? WHERE `device_id` = ?', time(), CoreUtilities::$request['rc'], $device_info['device_id']);
         $ipTV_db->query('SELECT * FROM `enigma2_actions` WHERE `device_id` = ?', $device_info['device_id']);
         $result = array();
         if ($ipTV_db->num_rows() > 0) {

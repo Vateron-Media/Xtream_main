@@ -17,7 +17,7 @@ if (isset($rSettings["tmdb_pid"])) {
     if ((file_exists("/proc/" . $rSettings["tmdb_pid"])) && (strlen($rSettings["tmdb_pid"]) > 0)) {
         exit;
     } else {
-        ipTV_lib::setSettings(["tmdb_pid" => intval($rPID)]);
+        CoreUtilities::setSettings(["tmdb_pid" => intval($rPID)]);
     }
 }
 

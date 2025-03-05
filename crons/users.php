@@ -7,11 +7,11 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XC_VM[Users Parser]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::checkCron($unique_id);
+        CoreUtilities::checkCron($unique_id);
         $rSync = null;
-        if (count($argv) == 2 && ipTV_lib::$Servers[SERVER_ID]['is_main']) {
-            ipTV_lib::connectRedis();
-            if (is_object(ipTV_lib::$redis)) {
+        if (count($argv) == 2 && CoreUtilities::$Servers[SERVER_ID]['is_main']) {
+            CoreUtilities::connectRedis();
+            if (is_object(CoreUtilities::$redis)) {
                 $rSync = intval($argv[1]);
                 if ($rSync == 1) {
                     $rDeSync = $rRedisUsers = $rRedisUpdate = $rRedisSet = array();
@@ -31,7 +31,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                                 $rOnDemand[$rRow['stream_id']][$rRow['server_id']] = intval($rRow['on_demand']);
                             }
                         }
-                        $rRedis = ipTV_lib::$redis->multi();
+                        $rRedis = CoreUtilities::$redis->multi();
                         foreach ($rRows as $rRow) {
                             echo 'Resynchronising UUID: ' . $rRow['uuid'] . "\n";
                             if (empty($rRow['hmac_id'])) {
@@ -62,10 +62,10 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                 exit("Couldn't connect to Redis." . "\n");
             }
         }
-        if (ipTV_lib::$settings['redis_handler'] && ipTV_lib::$Servers[SERVER_ID]['is_main']) {
-            ipTV_lib::$Servers = ipTV_lib::getServers(true);
+        if (CoreUtilities::$settings['redis_handler'] && CoreUtilities::$Servers[SERVER_ID]['is_main']) {
+            CoreUtilities::$Servers = CoreUtilities::getServers(true);
             $rPHPPIDs = array();
-            foreach (ipTV_lib::$Servers as $rServer) {
+            foreach (CoreUtilities::$Servers as $rServer) {
                 $rPHPPIDs[$rServer['id']] = (array_map('intval', json_decode($rServer['php_pids'], true)) ?: array());
             }
         }
@@ -79,9 +79,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
 function processDeletions($rDelete, $rDelStream = array()) {
     global $ipTV_db;
     $rTime = time();
-    if (ipTV_lib::$settings['redis_handler']) {
+    if (CoreUtilities::$settings['redis_handler']) {
         if ($rDelete['count'] > 0) {
-            $rRedis = ipTV_lib::$redis->multi();
+            $rRedis = CoreUtilities::$redis->multi();
             foreach ($rDelete['line'] as $rUserID => $rUUIDs) {
                 $rRedis->zRem('LINE#' . $rUserID, ...$rUUIDs);
                 $rRedis->zRem('LINE_ALL#' . $rUserID, ...$rUUIDs);
@@ -108,7 +108,7 @@ function processDeletions($rDelete, $rDelStream = array()) {
             }
         }
     }
-    foreach ((ipTV_lib::$settings['redis_handler'] ? $rDelete['server'] : $rDelete) as $rServerID => $rConnections) {
+    foreach ((CoreUtilities::$settings['redis_handler'] ? $rDelete['server'] : $rDelete) as $rServerID => $rConnections) {
         if ($rServerID != SERVER_ID) {
             $rQuery = '';
             foreach ($rConnections as $rConnection) {
@@ -122,10 +122,10 @@ function processDeletions($rDelete, $rDelStream = array()) {
     }
     foreach ($rDelStream as $rStreamID => $rConnections) {
         foreach ($rConnections as $rConnection) {
-            ipTV_lib::unlinkFile(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
+            CoreUtilities::unlinkFile(CONS_TMP_PATH . $rStreamID . '/' . $rConnection);
         }
     }
-    if (ipTV_lib::$settings['redis_handler']) {
+    if (CoreUtilities::$settings['redis_handler']) {
         return array('line' => array(), 'server' => array(), 'server_lines' => array(), 'stream' => array(), 'uuid' => array(), 'count' => 0);
     }
     return array();
@@ -133,14 +133,14 @@ function processDeletions($rDelete, $rDelStream = array()) {
 function loadCron() {
     global $ipTV_db;
     global $rPHPPIDs;
-    if (ipTV_lib::$settings['redis_handler']) {
-        ipTV_lib::connectRedis();
+    if (CoreUtilities::$settings['redis_handler']) {
+        CoreUtilities::connectRedis();
     }
     $rStartTime = time();
-    if (!ipTV_lib::$settings['redis_handler'] && ipTV_lib::$Servers[SERVER_ID]['is_main']) {
-        $rAutoKick = ipTV_lib::$settings['user_auto_kick_hours'] * 3600;
+    if (!CoreUtilities::$settings['redis_handler'] && CoreUtilities::$Servers[SERVER_ID]['is_main']) {
+        $rAutoKick = CoreUtilities::$settings['user_auto_kick_hours'] * 3600;
         $rLiveKeys = $rDelete = $rDeleteStream = array();
-        if (ipTV_lib::$settings['redis_handler']) {
+        if (CoreUtilities::$settings['redis_handler']) {
             $rRedisDelete = array('line' => array(), 'server' => array(), 'server_lines' => array(), 'stream' => array(), 'uuid' => array(), 'count' => 0);
             $rUsers = array();
             list($rKeys, $rConnections) = ipTV_streaming::getConnections();
@@ -157,10 +157,10 @@ function loadCron() {
             }
             unset($rConnections);
         } else {
-            $rUsers = ipTV_streaming::getConnections((ipTV_lib::$Servers[SERVER_ID]['is_main'] ? null : SERVER_ID));
+            $rUsers = ipTV_streaming::getConnections((CoreUtilities::$Servers[SERVER_ID]['is_main'] ? null : SERVER_ID));
         }
         $rRestreamerArray = $rMaxConnectionsArray = array();
-        $rUserIDs = ipTV_lib::confirmIDs(array_keys($rUsers));
+        $rUserIDs = CoreUtilities::confirmIDs(array_keys($rUsers));
         if (count($rUserIDs) > 0) {
             $ipTV_db->query('SELECT `id`, `max_connections`, `is_restreamer` FROM `lines` WHERE `id` IN (' . implode(',', $rUserIDs) . ');');
             foreach ($ipTV_db->get_rows() as $rRow) {
@@ -168,7 +168,7 @@ function loadCron() {
                 $rRestreamerArray[$rRow['id']] = $rRow['is_restreamer'];
             }
         }
-        if (ipTV_lib::$settings['redis_handler'] && ipTV_lib::$Servers[SERVER_ID]['is_main']) {
+        if (CoreUtilities::$settings['redis_handler'] && CoreUtilities::$Servers[SERVER_ID]['is_main']) {
             foreach (ipTV_streaming::getEnded() as $rConnection) {
                 if (is_array($rConnection)) {
                     if (!in_array($rConnection['container'], array('ts', 'hls', 'rtmp')) && time() - $rConnection['hls_last_read'] < 300) {
@@ -196,7 +196,7 @@ function loadCron() {
             $rMaxConnections = $rMaxConnectionsArray[$rUserID];
             $rIsRestreamer = ($rRestreamerArray[$rUserID] ?: false);
             foreach ($rConnections as $rKey => $rConnection) {
-                if ($rConnection['server_id'] == SERVER_ID || ipTV_lib::$settings['redis_handler']) {
+                if ($rConnection['server_id'] == SERVER_ID || CoreUtilities::$settings['redis_handler']) {
                     if (is_null($rConnection['exp_date']) || $rConnection['exp_date'] >= $rStartTime) {
                         $rTotalTime = $rStartTime - $rConnection['date_start'];
                         if (!($rAutoKick != 0 && $rAutoKick <= $rTotalTime) || $rIsRestreamer) {
@@ -204,7 +204,7 @@ function loadCron() {
                                 if (30 <= $rStartTime - $rConnection['hls_last_read'] || $rConnection['hls_end'] == 1) {
                                     echo 'Close connection 2: ' . $rConnection['uuid'] . "\n";
                                     ipTV_streaming::closeConnection($rConnection, false, false);
-                                    if (ipTV_lib::$settings['redis_handler']) {
+                                    if (CoreUtilities::$settings['redis_handler']) {
                                         $rRedisDelete['count']++;
                                         $rRedisDelete['line'][$rConnection['identity']][] = $rConnection['uuid'];
                                         $rRedisDelete['stream'][$rConnection['stream_id']][] = $rConnection['uuid'];
@@ -222,7 +222,7 @@ function loadCron() {
                                 if ($rConnection['server_id'] == SERVER_ID) {
                                     $rIsRunning = ipTV_streaming::isProcessRunning($rConnection['pid'], 'php-fpm');
                                 } else {
-                                    if ($rConnection['date_start'] <= ipTV_lib::$Servers[$rConnection['server_id']]['last_check_ago'] - 1 && 0 < count($rPHPPIDs[$rConnection['server_id']])) {
+                                    if ($rConnection['date_start'] <= CoreUtilities::$Servers[$rConnection['server_id']]['last_check_ago'] - 1 && 0 < count($rPHPPIDs[$rConnection['server_id']])) {
                                         $rIsRunning = in_array(intval($rConnection['pid']), $rPHPPIDs[$rConnection['server_id']]);
                                     } else {
                                         $rIsRunning = true;
@@ -231,7 +231,7 @@ function loadCron() {
                                 if (($rConnection['hls_end'] == 1 && 300 <= $rStartTime - $rConnection['hls_last_read']) || !$rIsRunning) {
                                     echo 'Close connection 3: ' . $rConnection['uuid'] . "\n";
                                     ipTV_streaming::closeConnection($rConnection, false, false);
-                                    if (ipTV_lib::$settings['redis_handler']) {
+                                    if (CoreUtilities::$settings['redis_handler']) {
                                         $rRedisDelete['count']++;
                                         $rRedisDelete['line'][$rConnection['identity']][] = $rConnection['uuid'];
                                         $rRedisDelete['stream'][$rConnection['stream_id']][] = $rConnection['uuid'];
@@ -249,7 +249,7 @@ function loadCron() {
                         } else {
                             echo 'Close connection 4: ' . $rConnection['uuid'] . "\n";
                             ipTV_streaming::closeConnection($rConnection, false, false);
-                            if (ipTV_lib::$settings['redis_handler']) {
+                            if (CoreUtilities::$settings['redis_handler']) {
                                 $rRedisDelete['count']++;
                                 $rRedisDelete['line'][$rConnection['identity']][] = $rConnection['uuid'];
                                 $rRedisDelete['stream'][$rConnection['stream_id']][] = $rConnection['uuid'];
@@ -266,7 +266,7 @@ function loadCron() {
                     } else {
                         echo 'Close connection 5: ' . $rConnection['uuid'] . "\n";
                         ipTV_streaming::closeConnection($rConnection, false, false);
-                        if (ipTV_lib::$settings['redis_handler']) {
+                        if (CoreUtilities::$settings['redis_handler']) {
                             $rRedisDelete['count']++;
                             $rRedisDelete['line'][$rConnection['identity']][] = $rConnection['uuid'];
                             $rRedisDelete['stream'][$rConnection['stream_id']][] = $rConnection['uuid'];
@@ -285,12 +285,12 @@ function loadCron() {
                     $rActiveCount++;
                 }
             }
-            if (ipTV_lib::$Servers[SERVER_ID]['is_main'] && 0 < $rMaxConnections && $rMaxConnections < $rActiveCount) {
+            if (CoreUtilities::$Servers[SERVER_ID]['is_main'] && 0 < $rMaxConnections && $rMaxConnections < $rActiveCount) {
                 foreach ($rConnections as $rKey => $rConnection) {
                     if (!$rConnection['hls_end']) {
                         echo 'Close connection 6: ' . $rConnection['uuid'] . "\n";
                         ipTV_streaming::closeConnection($rConnection, false, false);
-                        if (ipTV_lib::$settings['redis_handler']) {
+                        if (CoreUtilities::$settings['redis_handler']) {
                             $rRedisDelete['count']++;
                             $rRedisDelete['line'][$rConnection['identity']][] = $rConnection['uuid'];
                             $rRedisDelete['stream'][$rConnection['stream_id']][] = $rConnection['uuid'];
@@ -311,21 +311,21 @@ function loadCron() {
                     }
                 }
             }
-            if (ipTV_lib::$settings['redis_handler'] && 1000 <= $rRedisDelete['count']) {
+            if (CoreUtilities::$settings['redis_handler'] && 1000 <= $rRedisDelete['count']) {
                 $rRedisDelete = processDeletions($rRedisDelete, $rRedisDelete['stream']);
-            } elseif (!ipTV_lib::$settings['redis_handler'] || count($rDelete) > 1000) {
+            } elseif (!CoreUtilities::$settings['redis_handler'] || count($rDelete) > 1000) {
                 $rDelete = processDeletions($rDelete, $rDeleteStream);
             }
         }
-        if (ipTV_lib::$settings['redis_handler'] && 0 < $rRedisDelete['count']) {
+        if (CoreUtilities::$settings['redis_handler'] && 0 < $rRedisDelete['count']) {
             processDeletions($rRedisDelete, $rRedisDelete['stream']);
-        } elseif (!ipTV_lib::$settings['redis_handler'] || count($rDelete) > 0) {
+        } elseif (!CoreUtilities::$settings['redis_handler'] || count($rDelete) > 0) {
             processDeletions($rDelete, $rDeleteStream);
         }
     }
     $rConnectionSpeeds = glob(DIVERGENCE_TMP_PATH . '*');
     if (count($rConnectionSpeeds) > 0) {
-        if (ipTV_lib::$settings['redis_handler']) {
+        if (CoreUtilities::$settings['redis_handler']) {
             $rStreamMap = $rBitrates = array();
             $ipTV_db->query('SELECT `stream_id`, `bitrate` FROM `streams_servers` WHERE `server_id` = ? AND `bitrate` IS NOT NULL;', SERVER_ID);
             foreach ($ipTV_db->get_rows() as $rRow) {
@@ -338,7 +338,7 @@ function loadCron() {
                 }
             }
             if (count($rUUIDs) > 0) {
-                $rConnections = array_map('igbinary_unserialize', ipTV_lib::$redis->mGet($rUUIDs));
+                $rConnections = array_map('igbinary_unserialize', CoreUtilities::$redis->mGet($rUUIDs));
                 foreach ($rConnections as $rConnection) {
                     if (is_array($rConnection)) {
                         $rBitrates[$rConnection['uuid']] = $rStreamMap[intval($rConnection['stream_id'])];
@@ -353,7 +353,7 @@ function loadCron() {
                 $rBitrates[$rRow['uuid']] = intval($rRow['bitrate'] / 8 * 0.92);
             }
         }
-        if (!ipTV_lib::$settings['redis_handler']) {
+        if (!CoreUtilities::$settings['redis_handler']) {
             $rUUIDMap = array();
             $ipTV_db->query('SELECT `uuid`, `activity_id` FROM `lines_live`;');
             foreach ($ipTV_db->get_rows() as $rRow) {
@@ -370,7 +370,7 @@ function loadCron() {
                     $rDivergence = 0;
                 }
                 $rDivergenceUpdate[] = "('" . $rUUID . "', " . abs($rDivergence) . ')';
-                if (!ipTV_lib::$settings['redis_handler'] && isset($rUUIDMap[$rUUID])) {
+                if (!CoreUtilities::$settings['redis_handler'] && isset($rUUIDMap[$rUUID])) {
                     $rLiveQuery[] = '(' . $rUUIDMap[$rUUID] . ', ' . abs($rDivergence) . ')';
                 }
             }
@@ -379,20 +379,20 @@ function loadCron() {
             $rUpdateQuery = implode(',', $rDivergenceUpdate);
             $ipTV_db->query('INSERT INTO `lines_divergence`(`uuid`,`divergence`) VALUES ' . $rUpdateQuery . ' ON DUPLICATE KEY UPDATE `divergence`=VALUES(`divergence`);');
         }
-        if (!ipTV_lib::$settings['redis_handler'] && count($rLiveQuery) > 0) {
+        if (!CoreUtilities::$settings['redis_handler'] && count($rLiveQuery) > 0) {
             $rLiveQuery = implode(',', $rLiveQuery);
             $ipTV_db->query('INSERT INTO `lines_live`(`activity_id`,`divergence`) VALUES ' . $rLiveQuery . ' ON DUPLICATE KEY UPDATE `divergence`=VALUES(`divergence`);');
         }
         shell_exec('rm -f ' . DIVERGENCE_TMP_PATH . '*');
     }
-    if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
-        if (ipTV_lib::$settings['redis_handler']) {
+    if (CoreUtilities::$Servers[SERVER_ID]['is_main']) {
+        if (CoreUtilities::$settings['redis_handler']) {
             $ipTV_db->query('DELETE FROM `lines_divergence` WHERE `uuid` NOT IN (SELECT `uuid` FROM `lines_live`);');
         } else {
             $ipTV_db->query("DELETE FROM `lines_divergence` WHERE `uuid` NOT IN ('" . implode("','", $rLiveKeys) . "');");
         }
     }
-    if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
+    if (CoreUtilities::$Servers[SERVER_ID]['is_main']) {
         $ipTV_db->query('DELETE FROM `lines_live` WHERE `uuid` IS NULL;');
     }
 }

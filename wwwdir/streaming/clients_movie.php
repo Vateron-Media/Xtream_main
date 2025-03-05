@@ -3,8 +3,8 @@
 register_shutdown_function('shutdown');
 set_time_limit(0);
 require '../init.php';
-unset(ipTV_lib::$settings['watchdog_data']);
-unset(ipTV_lib::$settings['server_hardware']);
+unset(CoreUtilities::$settings['watchdog_data']);
+unset(CoreUtilities::$settings['server_hardware']);
 header('Access-Control-Allow-Origin: *');
 
 $rCreateExpiration = 60;
@@ -16,15 +16,15 @@ $rCloseCon = false;
 $rPID = getmypid();
 $rIsMag = false;
 
-if (isset(ipTV_lib::$request['token'])) {
-    $rTokenData = json_decode(decryptData(ipTV_lib::$request['token'], ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA), true);
+if (isset(CoreUtilities::$request['token'])) {
+    $rTokenData = json_decode(decryptData(CoreUtilities::$request['token'], CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA), true);
 
     if (!is_array($rTokenData)) {
         ipTV_streaming::clientLog(0, 0, "LB_TOKEN_INVALID", $IP);
         generateError('LB_TOKEN_INVALID');
     }
 
-    if (isset($rTokenData['expires']) && $rTokenData['expires'] < time() - intval(ipTV_lib::$Servers[SERVER_ID]['time_offset'])) {
+    if (isset($rTokenData['expires']) && $rTokenData['expires'] < time() - intval(CoreUtilities::$Servers[SERVER_ID]['time_offset'])) {
         generateError('TOKEN_EXPIRED');
     }
 
@@ -53,7 +53,7 @@ if (!file_exists($rRequest)) {
     generateError('VOD_DOESNT_EXIST');
 }
 
-if (ipTV_lib::$settings['use_buffer'] == 0) {
+if (CoreUtilities::$settings['use_buffer'] == 0) {
     header('X-Accel-Buffering: no');
 }
 
@@ -76,14 +76,14 @@ if ($rChannelInfo) {
 
 
     if (!$rConnection) {
-        if (!(file_exists(CONS_TMP_PATH . $rTokenData['uuid']) || ($activityStart + $rCreateExpiration) - intval(ipTV_lib::$Servers[SERVER_ID]['time_offset']) >= time())) {
+        if (!(file_exists(CONS_TMP_PATH . $rTokenData['uuid']) || ($activityStart + $rCreateExpiration) - intval(CoreUtilities::$Servers[SERVER_ID]['time_offset']) >= time())) {
             generateError('TOKEN_EXPIRED');
         }
         $rResult = $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`uuid`,`date_start`,`geoip_country_code`,`isp`) VALUES(?,?,?,?,?,?,?,?,?,?,?);', $rUserInfo['id'], $streamID, $serverID, $rUserAgent, $IP, 'VOD', $rPID, $rTokenData['uuid'], $activityStart, $rCountryCode, $rUserInfo['con_isp_name']);
     } else {
-        $IPMatch = (ipTV_lib::$settings['ip_subnet_match'] ? implode('.', array_slice(explode('.', $rConnection['user_ip']), 0, -1)) == implode('.', array_slice(explode('.', $IP), 0, -1)) : $rConnection['user_ip'] == $IP);
+        $IPMatch = (CoreUtilities::$settings['ip_subnet_match'] ? implode('.', array_slice(explode('.', $rConnection['user_ip']), 0, -1)) == implode('.', array_slice(explode('.', $IP), 0, -1)) : $rConnection['user_ip'] == $IP);
 
-        if (!$IPMatch || ipTV_lib::$settings['restrict_same_ip']) {
+        if (!$IPMatch || CoreUtilities::$settings['restrict_same_ip']) {
             ipTV_streaming::clientLog($streamID, $rUserInfo['id'], 'IP_MISMATCH', $IP);
             generateError('IP_MISMATCH');
         }
@@ -149,7 +149,7 @@ if ($rChannelInfo) {
             header('Content-Type: application/octet-stream');
     }
     $rDownloadBytes = (!empty($rChannelInfo['bitrate']) ? $rChannelInfo['bitrate'] * 125 : 0);
-    $rDownloadBytes += $rDownloadBytes * ipTV_lib::$settings['vod_bitrate_plus'] * 0.01;
+    $rDownloadBytes += $rDownloadBytes * CoreUtilities::$settings['vod_bitrate_plus'] * 0.01;
     $rRequest = VOD_PATH . $streamID . '.' . $rExtension;
 
     if (file_exists($rRequest)) {
@@ -200,12 +200,12 @@ if ($rChannelInfo) {
         header('Content-Length: ' . $rLength);
         $rLastCheck = $rTimeStart = $rTimeChecked = time();
         $rBytesRead = 0;
-        $buffer = ipTV_lib::$settings['read_buffer_size'];
+        $buffer = CoreUtilities::$settings['read_buffer_size'];
         $i = 0;
         $o = 0;
 
-        if (0 < ipTV_lib::$settings['vod_limit_perc'] && !$rUserInfo['is_restreamer']) {
-            $rLimitAt = intval($rLength * floatval(ipTV_lib::$settings['vod_limit_perc'] / 100));
+        if (0 < CoreUtilities::$settings['vod_limit_perc'] && !$rUserInfo['is_restreamer']) {
+            $rLimitAt = intval($rLength * floatval(CoreUtilities::$settings['vod_limit_perc'] / 100));
         } else {
             $rLimitAt = $rLength;
         }
@@ -239,7 +239,7 @@ if ($rChannelInfo) {
             if (300 < time() - $rLastCheck) {
                 $rLastCheck = time();
                 $rConnection = null;
-                ipTV_lib::$settings = ipTV_lib::getCache('settings');
+                CoreUtilities::$settings = CoreUtilities::getCache('settings');
 
                 $ipTV_db->query('SELECT `pid`, `hls_end` FROM `lines_live` WHERE `uuid` = ?', $rTokenData['uuid']);
 
@@ -267,10 +267,10 @@ function shutdown() {
     global $rTokenData;
     global $rPID;
     global $ipTV_db;
-    ipTV_lib::$settings = ipTV_lib::getCache('settings');
+    CoreUtilities::$settings = CoreUtilities::getCache('settings');
 
     if ($rCloseCon) {
-        $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = ? WHERE `uuid` = ? AND `pid` = ?;', time() - intval(ipTV_lib::$Servers[SERVER_ID]['time_offset']), $rTokenData['uuid'], $rPID);
+        $ipTV_db->query('UPDATE `lines_live` SET `hls_end` = 1, `hls_last_read` = ? WHERE `uuid` = ? AND `pid` = ?;', time() - intval(CoreUtilities::$Servers[SERVER_ID]['time_offset']), $rTokenData['uuid'], $rPID);
     }
 
     if (is_object($ipTV_db)) {

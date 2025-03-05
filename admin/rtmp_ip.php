@@ -5,8 +5,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_rtmp"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_ip"])) {
-    $rArray = array("ip" => ipTV_lib::$request["ip"], "notes" => ipTV_lib::$request["notes"]);
+if (isset(CoreUtilities::$request["submit_ip"])) {
+    $rArray = array("ip" => CoreUtilities::$request["ip"], "notes" => CoreUtilities::$request["notes"]);
     $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
     foreach (array_values($rArray) as $rValue) {
         isset($rValues) ? $rValues .= ',' : $rValues = '';
@@ -19,14 +19,14 @@ if (isset(ipTV_lib::$request["submit_ip"])) {
             $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset(ipTV_lib::$request["edit"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         $rCols = "id," . $rCols;
-        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+        $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `rtmp_ips`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset(ipTV_lib::$request["edit"])) {
-            $rInsertID = intval(ipTV_lib::$request["edit"]);
+        if (isset(CoreUtilities::$request["edit"])) {
+            $rInsertID = intval(CoreUtilities::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -39,8 +39,8 @@ if (isset(ipTV_lib::$request["submit_ip"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rIPArr = getRTMPIP(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rIPArr = getRTMPIP(CoreUtilities::$request["id"]);
     if (!$rIPArr) {
         exit;
     }
@@ -90,8 +90,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./rtmp_ip.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./rtmp_ip.php<?php if (isset(CoreUtilities::$request["id"])) {
+                            echo "?id=" . CoreUtilities::$request["id"];
                         } ?>" method="POST" id="ip_form" data-parsley-validate="">
                             <?php if (isset($rIPArr)) { ?>
                                 <input type="hidden" name="edit" value="<?= $rIPArr["id"] ?>" />

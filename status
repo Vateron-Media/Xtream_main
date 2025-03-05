@@ -145,7 +145,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 
 			if ($rPassword == '#PASSWORD#') {
 				$rWrite = true;
-				$rPassword = ipTV_lib::generateString(512);
+				$rPassword = CoreUtilities::generateString(512);
 				$rConfig = str_replace('#PASSWORD#', $rPassword, $rConfig);
 				echo 'Generating a new Redis password' . "\n\n";
 			}
@@ -158,7 +158,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 
 			if ($ipTV_db->get_row()['value'] != $rPassword) {
 				echo 'Updating Redis password in database' . "\n";
-				ipTV_lib::setSettings(["redis_password" => $rPassword]);
+				CoreUtilities::setSettings(["redis_password" => $rPassword]);
 			}
 		}
 
@@ -166,8 +166,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 			$ipTV_db->query('UPDATE `servers` SET `is_main` = 0 WHERE `id` <> ?;', SERVER_ID);
 			$ipTV_db->query('UPDATE `servers` SET `is_main` = 1 WHERE `id` = ?;', SERVER_ID);
 
-			if (stripos(ipTV_lib::$settings['server_name'], 'xtream') !== false || stripos(ipTV_lib::$settings['server_name'], 'zapx') !== false || stripos(ipTV_lib::$settings['server_name'], 'streamcreed') !== false) {
-				ipTV_lib::setSettings(["server_name" => "XC_VM"]);
+			if (stripos(CoreUtilities::$settings['server_name'], 'xtream') !== false || stripos(CoreUtilities::$settings['server_name'], 'zapx') !== false || stripos(CoreUtilities::$settings['server_name'], 'streamcreed') !== false) {
+				CoreUtilities::setSettings(["server_name" => "XC_VM"]);
 			}
 
 			echo 'Servers' . "\n" . '------------------------------' . "\n";

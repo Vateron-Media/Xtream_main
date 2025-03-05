@@ -6,7 +6,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XC_VM[Stream Logs]');
         $rIdentifier = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::checkCron($rIdentifier);
+        CoreUtilities::checkCron($rIdentifier);
         $rLog = LOGS_TMP_PATH . 'stream_log.log';
         if (file_exists($rLog)) {
             $rQuery = rtrim(parseLog($rLog), ',');

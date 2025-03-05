@@ -39,7 +39,7 @@ function getStats() {
         $rJSON['total_mem_used_percent'] = 100;
     }
 
-    $rJSON['network_info'] = getNetwork((ipTV_lib::$Servers[SERVER_ID]['network_interface'] == 'auto' ? null : ipTV_lib::$Servers[SERVER_ID]['network_interface']));
+    $rJSON['network_info'] = getNetwork((CoreUtilities::$Servers[SERVER_ID]['network_interface'] == 'auto' ? null : CoreUtilities::$Servers[SERVER_ID]['network_interface']));
     foreach ($rJSON['network_info'] as $rInterface => $rData) {
         if (file_exists('/sys/class/net/' . $rInterface . '/speed')) {
             $NetSpeed = intval(file_get_contents('/sys/class/net/' . $rInterface . '/speed'));
@@ -369,33 +369,33 @@ function KillProcessCmd($file, $time = 600) {
  */
 function checkFlood($rIP = null) {
     global $ipTV_db;
-    if (ipTV_lib::$settings['flood_limit'] != 0) {
+    if (CoreUtilities::$settings['flood_limit'] != 0) {
         if (!$rIP) {
             $rIP = ipTV_streaming::getUserIP();
         }
-        if (!(empty($rIP) || in_array($rIP, ipTV_lib::$allowedIPs))) {
-            $rFloodExclude = array_filter(array_unique(explode(',', ipTV_lib::$settings['flood_ips_exclude'])));
+        if (!(empty($rIP) || in_array($rIP, CoreUtilities::$allowedIPs))) {
+            $rFloodExclude = array_filter(array_unique(explode(',', CoreUtilities::$settings['flood_ips_exclude'])));
             if (!in_array($rIP, $rFloodExclude)) {
                 $rIPFile = FLOOD_TMP_PATH . $rIP;
                 if (file_exists($rIPFile)) {
                     $rFloodRow = json_decode(file_get_contents($rIPFile), true);
-                    $rFloodSeconds = ipTV_lib::$settings['flood_seconds'];
-                    $rFloodLimit = ipTV_lib::$settings['flood_limit'];
+                    $rFloodSeconds = CoreUtilities::$settings['flood_seconds'];
+                    $rFloodLimit = CoreUtilities::$settings['flood_limit'];
                     if (time() - $rFloodRow['last_request'] <= $rFloodSeconds) {
                         $rFloodRow['requests']++;
                         if ($rFloodLimit > $rFloodRow['requests']) {
                             $rFloodRow['last_request'] = time();
                             file_put_contents($rIPFile, json_encode($rFloodRow), LOCK_EX);
                         } else {
-                            if (!in_array($rIP, ipTV_lib::$blockedISP)) {
-                                if (ipTV_lib::$cached) {
-                                    ipTV_lib::setSignal('flood_attack/' . $rIP, 1);
+                            if (!in_array($rIP, CoreUtilities::$blockedISP)) {
+                                if (CoreUtilities::$cached) {
+                                    CoreUtilities::setSignal('flood_attack/' . $rIP, 1);
                                 } else {
                                     $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?,?,?)', $rIP, 'FLOOD ATTACK', time());
                                 }
                                 touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                             }
-                            ipTV_lib::unlinkFile($rIPFile);
+                            CoreUtilities::unlinkFile($rIPFile);
                             return null;
                         }
                     } else {
@@ -429,22 +429,22 @@ function checkFlood($rIP = null) {
  * @return null|null Returns null if no authentication flood attempt is detected, or a string indicating the block status if the user is blocked.
  */
 function checkAuthFlood($rUser, $rIP = null) {
-    if (ipTV_lib::$settings['auth_flood_limit'] != 0) {
+    if (CoreUtilities::$settings['auth_flood_limit'] != 0) {
         if (!$rUser['is_restreamer']) {
             if (!$rIP) {
                 $rIP = ipTV_streaming::getUserIP();
             }
-            if (!(empty($rIP) || in_array($rIP, ipTV_lib::$allowedIPs))) {
-                $rFloodExclude = array_filter(array_unique(explode(',', ipTV_lib::$settings['flood_ips_exclude'])));
+            if (!(empty($rIP) || in_array($rIP, CoreUtilities::$allowedIPs))) {
+                $rFloodExclude = array_filter(array_unique(explode(',', CoreUtilities::$settings['flood_ips_exclude'])));
                 if (!in_array($rIP, $rFloodExclude)) {
                     $rUserFile = FLOOD_TMP_PATH . intval($rUser['id']) . '_' . $rIP;
                     if (file_exists($rUserFile)) {
                         $rFloodRow = json_decode(file_get_contents($rUserFile), true);
-                        $rFloodSeconds = ipTV_lib::$settings['auth_flood_seconds'];
-                        $rFloodLimit = ipTV_lib::$settings['auth_flood_limit'];
+                        $rFloodSeconds = CoreUtilities::$settings['auth_flood_seconds'];
+                        $rFloodLimit = CoreUtilities::$settings['auth_flood_limit'];
                         $rFloodRow['attempts'] = truncateAttempts($rFloodRow['attempts'], $rFloodSeconds, true);
                         if ($rFloodLimit < count($rFloodRow['attempts'])) {
-                            $rFloodRow['block_until'] = time() + intval(ipTV_lib::$settings['auth_flood_seconds']);
+                            $rFloodRow['block_until'] = time() + intval(CoreUtilities::$settings['auth_flood_seconds']);
                         }
                         $rFloodRow['attempts'][] = time();
                         file_put_contents($rUserFile, json_encode($rFloodRow), LOCK_EX);
@@ -482,36 +482,36 @@ function checkAuthFlood($rUser, $rIP = null) {
 function checkBruteforce($rIP = null, $rMAC = null, $rUsername = null) {
     global $ipTV_db;
     if ($rMAC || $rUsername) {
-        if (!($rMAC && ipTV_lib::$settings['bruteforce_mac_attempts'] == 0)) {
-            if (!($rUsername && ipTV_lib::$settings['bruteforce_username_attempts'] == 0)) {
+        if (!($rMAC && CoreUtilities::$settings['bruteforce_mac_attempts'] == 0)) {
+            if (!($rUsername && CoreUtilities::$settings['bruteforce_username_attempts'] == 0)) {
                 if (!$rIP) {
                     $rIP = ipTV_streaming::getUserIP();
                 }
-                if (!(empty($rIP) || in_array($rIP, ipTV_lib::$allowedIPs))) {
-                    $rFloodExclude = array_filter(array_unique(explode(',', ipTV_lib::$settings['flood_ips_exclude'])));
+                if (!(empty($rIP) || in_array($rIP, CoreUtilities::$allowedIPs))) {
+                    $rFloodExclude = array_filter(array_unique(explode(',', CoreUtilities::$settings['flood_ips_exclude'])));
                     if (!in_array($rIP, $rFloodExclude)) {
                         $rFloodType = (!is_null($rMAC) ? 'mac' : 'user');
                         $rTerm = (!is_null($rMAC) ? $rMAC : $rUsername);
                         $rIPFile = FLOOD_TMP_PATH . $rIP . '_' . $rFloodType;
                         if (file_exists($rIPFile)) {
                             $rFloodRow = json_decode(file_get_contents($rIPFile), true);
-                            $rFloodSeconds = intval(ipTV_lib::$settings['bruteforce_frequency']);
-                            $rFloodLimit = intval(ipTV_lib::$settings[array('mac' => 'bruteforce_mac_attempts', 'user' => 'bruteforce_username_attempts')[$rFloodType]]);
+                            $rFloodSeconds = intval(CoreUtilities::$settings['bruteforce_frequency']);
+                            $rFloodLimit = intval(CoreUtilities::$settings[array('mac' => 'bruteforce_mac_attempts', 'user' => 'bruteforce_username_attempts')[$rFloodType]]);
                             $rFloodRow['attempts'] = truncateAttempts($rFloodRow['attempts'], $rFloodSeconds);
                             if (!in_array($rTerm, array_keys($rFloodRow['attempts']))) {
                                 $rFloodRow['attempts'][$rTerm] = time();
                                 if ($rFloodLimit > count($rFloodRow['attempts'])) {
                                     file_put_contents($rIPFile, json_encode($rFloodRow), LOCK_EX);
                                 } else {
-                                    if (!in_array($rIP, ipTV_lib::$blockedIPs)) {
-                                        if (ipTV_lib::$cached) {
-                                            ipTV_lib::setSignal('bruteforce_attack/' . $rIP, 1);
+                                    if (!in_array($rIP, CoreUtilities::$blockedIPs)) {
+                                        if (CoreUtilities::$cached) {
+                                            CoreUtilities::setSignal('bruteforce_attack/' . $rIP, 1);
                                         } else {
                                             $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?,?,?)', $rIP, 'BRUTEFORCE ' . strtoupper($rFloodType) . ' ATTACK', time());
                                         }
                                         touch(FLOOD_TMP_PATH . 'block_' . $rIP);
                                     }
-                                    ipTV_lib::unlinkFile($rIPFile);
+                                    CoreUtilities::unlinkFile($rIPFile);
                                     return null;
                                 }
                             }
@@ -595,7 +595,7 @@ function GetCategories($type = null) {
     return $ipTV_db->num_rows() > 0 ? $ipTV_db->get_rows(true, 'id') : array();
 }
 function generateUniqueCode() {
-    return substr(md5(ipTV_lib::$settings['live_streaming_pass']), 0, 15);
+    return substr(md5(CoreUtilities::$settings['live_streaming_pass']), 0, 15);
 }
 function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey = null, $rNoCache = false) {
     global $ipTV_db;
@@ -614,7 +614,7 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
         if ($ipTV_db->num_rows() > 0) {
             $rCacheName = $rUserInfo['id'] . '_' . $rDeviceKey . '_' . $rOutputKey . '_' . implode('_', ($rTypeKey ?: array()));
             $rOutputExt = $ipTV_db->get_row()["output_ext"];
-            $rEncryptPlaylist = ($rUserInfo['is_restreamer'] ? ipTV_lib::$settings['encrypt_playlist_restreamer'] : ipTV_lib::$settings['encrypt_playlist']);
+            $rEncryptPlaylist = ($rUserInfo['is_restreamer'] ? CoreUtilities::$settings['encrypt_playlist_restreamer'] : CoreUtilities::$settings['encrypt_playlist']);
             if ($rUserInfo['is_stalker']) {
                 $rEncryptPlaylist = false;
             }
@@ -638,12 +638,12 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                 } else {
                     $rFilename = str_replace('{USERNAME}', $rUserInfo['username'], $rDeviceInfo['device_filename']);
                 }
-                if (!(0 < ipTV_lib::$settings['cache_playlists'] && !$rNoCache && file_exists(PLAYLIST_PATH . md5($rCacheName)))) {
+                if (!(0 < CoreUtilities::$settings['cache_playlists'] && !$rNoCache && file_exists(PLAYLIST_PATH . md5($rCacheName)))) {
                     $rData = '';
                     $rSeriesAllocation = $rSeriesEpisodes = $rSeriesInfo = array();
                     $rUserInfo['episode_ids'] = array();
                     if (count($rUserInfo['series_ids']) > 0) {
-                        if (ipTV_lib::$cached) {
+                        if (CoreUtilities::$cached) {
                             foreach ($rUserInfo['series_ids'] as $rSeriesID) {
                                 $rSeriesInfo[$rSeriesID] = igbinary_unserialize(file_get_contents(SERIES_TMP_PATH . 'series_' . intval($rSeriesID)));
                                 $rSeriesData = igbinary_unserialize(file_get_contents(SERIES_TMP_PATH . 'episodes_' . intval($rSeriesID)));
@@ -700,8 +700,8 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                     } else {
                         $rChannelIDs = $rUserInfo['channel_ids'];
                     }
-                    if (in_array(ipTV_lib::$settings['channel_number_type'], array('bouquet_new', 'manual'))) {
-                        $rChannelIDs = ipTV_lib::sortChannels($rChannelIDs);
+                    if (in_array(CoreUtilities::$settings['channel_number_type'], array('bouquet_new', 'manual'))) {
+                        $rChannelIDs = CoreUtilities::sortChannels($rChannelIDs);
                     }
                     unset($rUserInfo['live_ids'], $rUserInfo['vod_ids'], $rUserInfo['radio_ids'], $rUserInfo['episode_ids'], $rUserInfo['channel_ids']);
                     $rOutputFile = null;
@@ -715,7 +715,7 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                     } else {
                         header('Content-Disposition: attachment; filename="' . str_replace('{USERNAME}', $rUserInfo['username'], $rDeviceInfo['device_filename']) . '"');
                     }
-                    if (ipTV_lib::$settings['cache_playlists'] > 0) {
+                    if (CoreUtilities::$settings['cache_playlists'] > 0) {
                         $rOutputPath = PLAYLIST_PATH . md5($rCacheName) . '.write';
                         $rOutputFile = fopen($rOutputPath, 'w');
                     }
@@ -727,7 +727,7 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                         $rOutput['iptvstreams_list']['group']['name'] = 'IPTV';
                         $rOutput['iptvstreams_list']['group']['channel'] = array();
                         foreach (array_chunk($rChannelIDs, 1000) as $rBlockIDs) {
-                            if (ipTV_lib::$settings['playlist_from_mysql'] || !ipTV_lib::$cached) {
+                            if (CoreUtilities::$settings['playlist_from_mysql'] || !CoreUtilities::$cached) {
                                 $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
                                 $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.year,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
                                 $rRows = $ipTV_db->get_rows();
@@ -755,7 +755,7 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                                         $rURL = $rDomainName . $rChannelInfo['type_output'] . '/' . $rUserInfo['access_token'] . '/';
                                         if ($rChannelInfo['live'] == 0) {
                                             $rURL .= $rChannelInfo['id'] . '.' . $rChannelInfo['target_container'];
-                                        } elseif (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                        } elseif (CoreUtilities::$settings['cloudflare'] && $rOutputExt == 'ts') {
                                             $rURL .= $rChannelInfo['id'];
                                         } else {
                                             $rURL .= $rChannelInfo['id'] . '.' . $rOutputExt;
@@ -765,12 +765,12 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                                             $rEncData = $rChannelInfo['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/';
                                             if ($rChannelInfo['live'] == 0) {
                                                 $rEncData .= $rChannelInfo['id'] . '/' . $rChannelInfo['target_container'];
-                                            } elseif (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                            } elseif (CoreUtilities::$settings['cloudflare'] && $rOutputExt == 'ts') {
                                                 $rEncData .= $rChannelInfo['id'];
                                             } else {
                                                 $rEncData .= $rChannelInfo['id'] . '/' . $rOutputExt;
                                             }
-                                            $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                                             $rURL = $rDomainName . 'play/' . $rToken;
                                             if ($rChannelInfo['live'] == 0) {
                                                 $rURL .= '#.' . $rChannelInfo['target_container'];
@@ -779,7 +779,7 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                                             $rURL = $rDomainName . $rChannelInfo['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/';
                                             if ($rChannelInfo['live'] == 0) {
                                                 $rURL .= $rChannelInfo['id'] . '.' . $rChannelInfo['target_container'];
-                                            } elseif (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                            } elseif (CoreUtilities::$settings['cloudflare'] && $rOutputExt == 'ts') {
                                                 $rURL .= $rChannelInfo['id'];
                                             } else {
                                                 $rURL .= $rChannelInfo['id'] . '.' . $rOutputExt;
@@ -807,7 +807,7 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                     } else {
                         if (!empty($rDeviceInfo['device_header'])) {
                             $rAppend = ($rDeviceInfo['device_header'] == '#EXTM3U' ? "\n" . '#EXT-X-SESSION-DATA:DATA-ID="XC_VM.' . str_replace('.', '_', SCRIPT_VERSION) . '"' : '');
-                            $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array('{BOUQUET_NAME}', '{USERNAME}', '{PASSWORD}', '{SERVER_URL}', '{OUTPUT_KEY}'), array(ipTV_lib::$settings['server_name'], $rUserInfo['username'], $rUserInfo['password'], $rDomainName, $rOutputKey), $rDeviceInfo['device_header'] . $rAppend)) . "\n";
+                            $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array('{BOUQUET_NAME}', '{USERNAME}', '{PASSWORD}', '{SERVER_URL}', '{OUTPUT_KEY}'), array(CoreUtilities::$settings['server_name'], $rUserInfo['username'], $rUserInfo['password'], $rDomainName, $rOutputKey), $rDeviceInfo['device_header'] . $rAppend)) . "\n";
                             if ($rOutputFile) {
                                 fwrite($rOutputFile, $rData);
                             }
@@ -823,7 +823,7 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                                 $rPattern = '{URL}';
                             }
                             foreach (array_chunk($rChannelIDs, 1000) as $rBlockIDs) {
-                                if (ipTV_lib::$settings['playlist_from_mysql'] || !ipTV_lib::$cached) {
+                                if (CoreUtilities::$settings['playlist_from_mysql'] || !CoreUtilities::$cached) {
                                     $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rBlockIDs) . ')';
                                     $ipTV_db->query('SELECT t1.id,t1.channel_id,t1.year,t1.movie_properties,t1.stream_icon,t1.custom_sid,t1.category_id,t1.stream_display_name,t2.type_output,t2.type_key,t1.target_container,t2.live,t1.tv_archive_duration,t1.tv_archive_server_id FROM `streams` t1 INNER JOIN `streams_types` t2 ON t2.type_id = t1.type WHERE `t1`.`id` IN (' . implode(',', array_map('intval', $rBlockIDs)) . ') ORDER BY ' . $rOrder . ';');
                                     $rRows = $ipTV_db->get_rows();
@@ -865,7 +865,7 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                                             } else {
                                                 if ($rEncryptPlaylist) {
                                                     $rEncData = $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'] . '/' . $rChannel['target_container'];
-                                                    $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                                    $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                                                     $rURL = $rDomainName . 'play/' . $rToken . '#.' . $rChannel['target_container'];
                                                 } else {
                                                     $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'] . '.' . $rChannel['target_container'];
@@ -877,21 +877,21 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                                         } else {
                                             if ($rOutputKey != 'rtmp' || !array_key_exists($rChannel['id'], $rRTMPRows)) {
                                                 if (strlen($rUserInfo['access_token']) == 32) {
-                                                    if (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                                    if (CoreUtilities::$settings['cloudflare'] && $rOutputExt == 'ts') {
                                                         $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['access_token'] . '/' . $rChannel['id'];
                                                     } else {
                                                         $rURL = $rDomainName . $rChannel['type_output'] . '/' . $rUserInfo['access_token'] . '/' . $rChannel['id'] . '.' . $rOutputExt;
                                                     }
                                                 } elseif ($rEncryptPlaylist) {
                                                     $rEncData = $rChannel['type_output'] . '/' . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'];
-                                                    $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                                                    if (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                                    $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                                    if (CoreUtilities::$settings['cloudflare'] && $rOutputExt == 'ts') {
                                                         $rURL = $rDomainName . 'play/' . $rToken;
                                                     } else {
                                                         $rURL = $rDomainName . 'play/' . $rToken . '/' . $rOutputExt;
                                                     }
                                                 } else {
-                                                    if (ipTV_lib::$settings['cloudflare'] && $rOutputExt == 'ts') {
+                                                    if (CoreUtilities::$settings['cloudflare'] && $rOutputExt == 'ts') {
                                                         $rURL = $rDomainName . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'];
                                                     } else {
                                                         $rURL = $rDomainName . $rUserInfo['username'] . '/' . $rUserInfo['password'] . '/' . $rChannel['id'] . '.' . $rOutputExt;
@@ -902,21 +902,21 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                                                 if (in_array($rUserInfo['force_server_id'], $rAvailableServers)) {
                                                     $rServerID = $rUserInfo['force_server_id'];
                                                 } else {
-                                                    if (ipTV_lib::$settings['rtmp_random'] == 1) {
+                                                    if (CoreUtilities::$settings['rtmp_random'] == 1) {
                                                         $rServerID = $rAvailableServers[array_rand($rAvailableServers, 1)];
                                                     } else {
                                                         $rServerID = $rAvailableServers[0];
                                                     }
                                                 }
                                                 if (strlen($rUserInfo['access_token']) == 32) {
-                                                    $rURL = ipTV_lib::$Servers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rUserInfo['access_token'];
+                                                    $rURL = CoreUtilities::$Servers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rUserInfo['access_token'];
                                                 } else {
                                                     if ($rEncryptPlaylist) {
                                                         $rEncData = $rUserInfo['username'] . '/' . $rUserInfo['password'];
-                                                        $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                                                        $rURL = ipTV_lib::$Servers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rToken;
+                                                        $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                                        $rURL = CoreUtilities::$Servers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?token=' . $rToken;
                                                     } else {
-                                                        $rURL = ipTV_lib::$Servers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?username=' . $rUserInfo['username'] . '&password=' . $rUserInfo['password'];
+                                                        $rURL = CoreUtilities::$Servers[$rServerID]['rtmp_server'] . $rChannel['id'] . '?username=' . $rUserInfo['username'] . '&password=' . $rUserInfo['password'];
                                                     }
                                                 }
                                             }
@@ -927,8 +927,8 @@ function generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey = 'ts', $rTypeKey
                                         $rCategoryIDs = json_decode($rChannel['category_id'], true);
                                         if (count($rCategoryIDs) > 0) {
                                             foreach ($rCategoryIDs as $rCategoryID) {
-                                                if (isset(ipTV_lib::$categories[$rCategoryID])) {
-                                                    $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array($rPattern, '{ESR_ID}', '{SID}', '{CHANNEL_NAME}', '{CHANNEL_ID}', '{XUI_ID}', '{CATEGORY}', '{CHANNEL_ICON}'), array(str_replace($rCharts, array_map('urlencode', $rCharts), $rURL), $rESRID, $rSID, $rChannel['stream_display_name'], $rChannel['channel_id'], $rChannel['id'], ipTV_lib::$categories[$rCategoryID]['category_name'], $rIcon), $rConfig)) . "\r\n";
+                                                if (isset(CoreUtilities::$categories[$rCategoryID])) {
+                                                    $rData = str_replace(array('&lt;', '&gt;'), array('<', '>'), str_replace(array($rPattern, '{ESR_ID}', '{SID}', '{CHANNEL_NAME}', '{CHANNEL_ID}', '{XUI_ID}', '{CATEGORY}', '{CHANNEL_ICON}'), array(str_replace($rCharts, array_map('urlencode', $rCharts), $rURL), $rESRID, $rSID, $rChannel['stream_display_name'], $rChannel['channel_id'], $rChannel['id'], CoreUtilities::$categories[$rCategoryID]['category_name'], $rIcon), $rConfig)) . "\r\n";
                                                     if ($rOutputFile) {
                                                         fwrite($rOutputFile, $rData);
                                                     }
@@ -992,7 +992,7 @@ function GetContainerExtension($target_container, $stalker_container_priority = 
     } else {
         return $target_container;
     }
-    $container = $stalker_container_priority ? ipTV_lib::$settings['stalker_container_priority'] : ipTV_lib::$settings['gen_container_priority'];
+    $container = $stalker_container_priority ? CoreUtilities::$settings['stalker_container_priority'] : CoreUtilities::$settings['gen_container_priority'];
     if (is_array($container)) {
         foreach ($container as $container_priority) {
             if (in_array($container_priority, $target_container)) {
@@ -1178,14 +1178,14 @@ function getDomainName($rForceSSL = false) {
     $rDomainName = null;
     $rKey = ($rForceSSL ? 'https_url' : 'site_url');
 
-    if (ipTV_lib::$settings['use_mdomain_in_lists'] == 1) {
-        $rDomainName = ipTV_lib::$Servers[SERVER_ID][$rKey];
+    if (CoreUtilities::$settings['use_mdomain_in_lists'] == 1) {
+        $rDomainName = CoreUtilities::$Servers[SERVER_ID][$rKey];
     } else {
         list($serverIPAddress, $serverPort) = explode(':', $_SERVER['HTTP_HOST']);
         if ($rForceSSL) {
-            $rDomainName = 'https://' . $serverIPAddress . ':' . ipTV_lib::$Servers[SERVER_ID]['https_broadcast_port'] . '/';
+            $rDomainName = 'https://' . $serverIPAddress . ':' . CoreUtilities::$Servers[SERVER_ID]['https_broadcast_port'] . '/';
         } else {
-            $rDomainName = ipTV_lib::$Servers[SERVER_ID]['server_protocol'] . '://' . $serverIPAddress . ':' . ipTV_lib::$Servers[SERVER_ID]['request_port'] . '/';
+            $rDomainName = CoreUtilities::$Servers[SERVER_ID]['server_protocol'] . '://' . $serverIPAddress . ':' . CoreUtilities::$Servers[SERVER_ID]['request_port'] . '/';
         }
     }
     return $rDomainName;

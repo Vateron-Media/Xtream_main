@@ -5,7 +5,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_ips"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["flush"])) {
+if (isset(CoreUtilities::$request["flush"])) {
     flushIPs();
     header("Location: ./ips.php");
 }

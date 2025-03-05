@@ -354,19 +354,19 @@ function checkPermissions($rPage = null) {
         case 'setup':
             return hasPermissions('adv', 'database');
         case 'server':
-            if (isset(ipTV_lib::$request['id']) && hasPermissions('adv', 'edit_server')) {
+            if (isset(CoreUtilities::$request['id']) && hasPermissions('adv', 'edit_server')) {
                 return true;
             }
-            if (isset(ipTV_lib::$request['id']) || !hasPermissions('adv', 'add_server')) {
+            if (isset(CoreUtilities::$request['id']) || !hasPermissions('adv', 'add_server')) {
                 break;
             }
             return true;
         case 'reg_user':
-            if (isset(ipTV_lib::$request['id']) && hasPermissions('adv', 'edit_reguser')) {
+            if (isset(CoreUtilities::$request['id']) && hasPermissions('adv', 'edit_reguser')) {
                 return true;
             }
 
-            if (isset(ipTV_lib::$request['id']) || !hasPermissions('adv', 'add_reguser')) {
+            if (isset(CoreUtilities::$request['id']) || !hasPermissions('adv', 'add_reguser')) {
                 break;
             }
             return true;
@@ -1478,10 +1478,10 @@ function updateGeoLite2() {
 
 function APIRequest($rData, $rTimeout = 5) {
     ini_set('default_socket_timeout', $rTimeout);
-    $rAPI = 'http://127.0.0.1:' . intval(ipTV_lib::$Servers[SERVER_ID]['http_broadcast_port']) . '/admin/api';
+    $rAPI = 'http://127.0.0.1:' . intval(CoreUtilities::$Servers[SERVER_ID]['http_broadcast_port']) . '/admin/api';
 
-    if (!empty(ipTV_lib::$settings['api_pass'])) {
-        $rData['api_pass'] = ipTV_lib::$settings['api_pass'];
+    if (!empty(CoreUtilities::$settings['api_pass'])) {
+        $rData['api_pass'] = CoreUtilities::$settings['api_pass'];
     }
 
     $rPost = http_build_query($rData);
@@ -1802,7 +1802,7 @@ function downloadImage($rImage, $rType = null) {
             }
         }
         if (in_array(strtolower($rExt), array('jpg', 'jpeg', 'png'))) {
-            $rFilename = encryptData($rImage, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+            $rFilename = encryptData($rImage, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
             $rPrevPath = IMAGES_PATH . $rFilename . '.' . $rExt;
             if (file_exists($rPrevPath)) {
                 return 's:' . SERVER_ID . ':/images/' . $rFilename . '.' . $rExt;

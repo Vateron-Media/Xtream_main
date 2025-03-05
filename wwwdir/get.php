@@ -9,13 +9,13 @@ $rDownloading = false;
 $rIP = ipTV_streaming::getUserIP();
 $rCountryCode = ipTV_streaming::getIPInfo($userIP)['country']['iso_code'];
 $rUserAgent = (empty($_SERVER['HTTP_USER_AGENT']) ? '' : htmlentities(trim($_SERVER['HTTP_USER_AGENT'])));
-$rDeviceKey = (empty(ipTV_lib::$request['type']) ? 'm3u_plus' : ipTV_lib::$request['type']);
-$rTypeKey = (empty(ipTV_lib::$request['key']) ? null : explode(',', ipTV_lib::$request['key']));
-$rOutputKey = (empty(ipTV_lib::$request['output']) ? '' : ipTV_lib::$request['output']);
-$rNoCache = !empty(ipTV_lib::$request['nocache']);
-if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'])) {
-    $rUsername = ipTV_lib::$request['username'];
-    $rPassword = ipTV_lib::$request['password'];
+$rDeviceKey = (empty(CoreUtilities::$request['type']) ? 'm3u_plus' : CoreUtilities::$request['type']);
+$rTypeKey = (empty(CoreUtilities::$request['key']) ? null : explode(',', CoreUtilities::$request['key']));
+$rOutputKey = (empty(CoreUtilities::$request['output']) ? '' : CoreUtilities::$request['output']);
+$rNoCache = !empty(CoreUtilities::$request['nocache']);
+if (isset(CoreUtilities::$request['username']) && isset(CoreUtilities::$request['password'])) {
+    $rUsername = CoreUtilities::$request['username'];
+    $rPassword = CoreUtilities::$request['password'];
 
     if (empty($rUsername) || empty($rPassword)) {
         generateError('NO_CREDENTIALS');
@@ -23,8 +23,8 @@ if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'
 
     $rUserInfo = ipTV_streaming::getUserInfo(null, $rUsername, $rPassword, true, false, $rIP);
 } else {
-    if (isset(ipTV_lib::$request['token'])) {
-        $rToken = ipTV_lib::$request['token'];
+    if (isset(CoreUtilities::$request['token'])) {
+        $rToken = CoreUtilities::$request['token'];
 
         if (empty($rToken)) {
             generateError('NO_CREDENTIALS');
@@ -64,7 +64,7 @@ if ($rUserInfo) {
         generateError('DISABLED');
     }
 
-    if (empty($rUserAgent) && ipTV_lib::$settings['disallow_empty_user_agents'] == 1) {
+    if (empty($rUserAgent) && CoreUtilities::$settings['disallow_empty_user_agents'] == 1) {
         generateError('EMPTY_USER_AGENT');
     }
 
@@ -80,7 +80,7 @@ if ($rUserInfo) {
             generateError('FORCED_COUNTRY_INVALID');
         }
 
-        if ($rForceCountry || in_array('ALL', ipTV_lib::$settings['allow_countries']) || in_array($rCountryCode, ipTV_lib::$settings['allow_countries'])) {
+        if ($rForceCountry || in_array('ALL', CoreUtilities::$settings['allow_countries']) || in_array($rCountryCode, CoreUtilities::$settings['allow_countries'])) {
         } else {
             generateError('NOT_IN_ALLOWED_COUNTRY');
         }

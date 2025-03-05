@@ -17,7 +17,7 @@ if (isset($rSettings["watch_pid"])) {
     if ((file_exists("/proc/" . $rSettings["watch_pid"])) && (strlen($rSettings["watch_pid"]) > 0)) {
         exit;
     } else {
-        ipTV_lib::setSettings(["watch_pid" => intval($rPID)]);
+        CoreUtilities::setSettings(["watch_pid" => intval($rPID)]);
     }
 }
 

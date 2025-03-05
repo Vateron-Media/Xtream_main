@@ -5,18 +5,18 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_bouquet"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["bouquet_order_array"])) {
+if (isset(CoreUtilities::$request["bouquet_order_array"])) {
     set_time_limit(0);
     ini_set('mysql.connect_timeout', 0);
     ini_set('max_execution_time', 0);
     ini_set('default_socket_timeout', 0);
-    $rOrder = json_decode(ipTV_lib::$request["bouquet_order_array"], true);
+    $rOrder = json_decode(CoreUtilities::$request["bouquet_order_array"], true);
     $rSort = 1;
     foreach ($rOrder as $rBouquetID) {
         $ipTV_db_admin->query("UPDATE `bouquets` SET `bouquet_order` = " . intval($rSort) . " WHERE `id` = " . intval($rBouquetID) . ";");
         $rSort++;
     }
-    if (isset(ipTV_lib::$request["confirmReplace"])) {
+    if (isset(CoreUtilities::$request["confirmReplace"])) {
         $rUsers = getUserBouquets();
         foreach ($rUsers as $rUser) {
             $rBouquet = json_decode($rUser["bouquet"], true);

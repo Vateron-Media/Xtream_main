@@ -13,14 +13,14 @@ if (strtolower(explode('.', ltrim(parse_url($_SERVER['REQUEST_URI'])['path'], '/
 
 $rIP = $_SERVER['REMOTE_ADDR'];
 $rUserAgent = trim($_SERVER['HTTP_USER_AGENT']);
-$rOffset = (empty(ipTV_lib::$request['params']['offset']) ? 0 : abs(intval(ipTV_lib::$request['params']['offset'])));
-$rLimit = (empty(ipTV_lib::$request['params']['items_per_page']) ? 0 : abs(intval(ipTV_lib::$request['params']['items_per_page'])));
+$rOffset = (empty(CoreUtilities::$request['params']['offset']) ? 0 : abs(intval(CoreUtilities::$request['params']['offset'])));
+$rLimit = (empty(CoreUtilities::$request['params']['items_per_page']) ? 0 : abs(intval(CoreUtilities::$request['params']['items_per_page'])));
 $rNameTypes = array('live' => 'Live Streams', 'movie' => 'Movies', 'created_live' => 'Created Channels', 'radio_streams' => 'Radio Stations', 'series' => 'TV Series');
 $rDomainName = getDomainName();
 $rDomain = parse_url($rDomainName)['host'];
 $rValidActions = array(200 => 'get_vod_categories', 201 => 'get_live_categories', 202 => 'get_live_streams', 203 => 'get_vod_streams', 204 => 'get_series_info', 205 => 'get_short_epg', 206 => 'get_series_categories', 207 => 'get_simple_data_table', 208 => 'get_series', 209 => 'get_vod_info');
 $output = array();
-$rAction = (!empty(ipTV_lib::$request['action']) && (in_array(ipTV_lib::$request['action'], $rValidActions) || array_key_exists(ipTV_lib::$request['action'], $rValidActions)) ? ipTV_lib::$request['action'] : '');
+$rAction = (!empty(CoreUtilities::$request['action']) && (in_array(CoreUtilities::$request['action'], $rValidActions) || array_key_exists(CoreUtilities::$request['action'], $rValidActions)) ? CoreUtilities::$request['action'] : '');
 
 if (isset($rValidActions[$rAction])) {
     $rAction = $rValidActions[$rAction];
@@ -34,9 +34,9 @@ if ($rPanelAPI && empty($rAction)) {
 
 $rExtract = array('offset' => $rOffset, 'items_per_page' => $rLimit);
 
-if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'])) {
-    $rUsername = ipTV_lib::$request['username'];
-    $rPassword = ipTV_lib::$request['password'];
+if (isset(CoreUtilities::$request['username']) && isset(CoreUtilities::$request['password'])) {
+    $rUsername = CoreUtilities::$request['username'];
+    $rPassword = CoreUtilities::$request['password'];
 
     if (empty($rUsername) || empty($rPassword)) {
         generateError('NO_CREDENTIALS');
@@ -44,8 +44,8 @@ if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'
 
     $rUserInfo = ipTV_streaming::getUserInfo(null, $rUsername, $rPassword, $rGetChannels);
 } else {
-    if (isset(ipTV_lib::$request['token'])) {
-        $rToken = ipTV_lib::$request['token'];
+    if (isset(CoreUtilities::$request['token'])) {
+        $rToken = CoreUtilities::$request['token'];
 
         if (empty($rToken)) {
             generateError('NO_CREDENTIALS');
@@ -60,7 +60,7 @@ ini_set('memory_limit', -1);
 if ($rUserInfo) {
     $rDeny = false;
     $rValidUser = false;
-    $mobile_apps = ipTV_lib::$settings['mobile_apps'];
+    $mobile_apps = CoreUtilities::$settings['mobile_apps'];
 
     if ($rUserInfo['admin_enabled'] == 1 && $rUserInfo['enabled'] == 1 && (is_null($rUserInfo['exp_date']) || time() < $rUserInfo['exp_date'])) {
         $rValidUser = true;
@@ -87,7 +87,7 @@ if ($rUserInfo) {
 
     switch ($rAction) {
         case 'get_series_info':
-            $rSeriesID = (empty(ipTV_lib::$request['series_id']) ? 0 : intval(ipTV_lib::$request['series_id']));
+            $rSeriesID = (empty(CoreUtilities::$request['series_id']) ? 0 : intval(CoreUtilities::$request['series_id']));
 
 
             $ipTV_db->query('SELECT * FROM `streams_episodes` t1 INNER JOIN `streams` t2 ON t2.id=t1.stream_id WHERE t1.series_id = ? ORDER BY t1.season_num ASC, t1.episode_num ASC', $rSeriesID);
@@ -160,12 +160,12 @@ if ($rUserInfo) {
             break;
 
         case 'get_series':
-            $rCategoryIDSearch = (empty(ipTV_lib::$request['category_id']) ? null : intval(ipTV_lib::$request['category_id']));
+            $rCategoryIDSearch = (empty(CoreUtilities::$request['category_id']) ? null : intval(CoreUtilities::$request['category_id']));
             $rMovieNum = 0;
 
             if (count($rUserInfo['series_ids']) > 0) {
                 if (!empty($rUserInfo['series_ids'])) {
-                    if (ipTV_lib::$settings['vod_sort_newest']) {
+                    if (CoreUtilities::$settings['vod_sort_newest']) {
                         $ipTV_db->query('SELECT *, (SELECT MAX(`streams`.`added`) FROM `streams_episodes` LEFT JOIN `streams` ON `streams`.`id` = `streams_episodes`.`stream_id` WHERE `streams_episodes`.`series_id` = `streams_series`.`id`) AS `last_modified_stream` FROM `streams_series` WHERE `id` IN (' . implode(',', array_map('intval', $rUserInfo['series_ids'])) . ') ORDER BY `last_modified_stream` DESC, `last_modified` DESC;');
                     } else {
                         $ipTV_db->query('SELECT * FROM `streams_series` WHERE `id` IN (' . implode(',', array_map('intval', $rUserInfo['series_ids'])) . ') ORDER BY FIELD(`id`,' . implode(',', $rUserInfo['series_ids']) . ') ASC;');
@@ -239,13 +239,13 @@ if ($rUserInfo) {
         case 'get_simple_data_table':
             $output['epg_listings'] = array();
 
-            if (!empty(ipTV_lib::$request['stream_id'])) {
-                if (is_numeric(ipTV_lib::$request['stream_id']) && !isset(ipTV_lib::$request['multi'])) {
+            if (!empty(CoreUtilities::$request['stream_id'])) {
+                if (is_numeric(CoreUtilities::$request['stream_id']) && !isset(CoreUtilities::$request['multi'])) {
                     $rMulti = false;
-                    $rStreamIDs = array(intval(ipTV_lib::$request['stream_id']));
+                    $rStreamIDs = array(intval(CoreUtilities::$request['stream_id']));
                 } else {
                     $rMulti = true;
-                    $rStreamIDs = array_map('intval', explode(',', ipTV_lib::$request['stream_id']));
+                    $rStreamIDs = array_map('intval', explode(',', CoreUtilities::$request['stream_id']));
                 }
 
                 if (count($rStreamIDs) > 0) {
@@ -299,15 +299,15 @@ if ($rUserInfo) {
         case 'get_short_epg':
             $output['epg_listings'] = array();
 
-            if (!empty(ipTV_lib::$request['stream_id'])) {
-                $rLimit = (empty(ipTV_lib::$request['limit']) ? 4 : intval(ipTV_lib::$request['limit']));
+            if (!empty(CoreUtilities::$request['stream_id'])) {
+                $rLimit = (empty(CoreUtilities::$request['limit']) ? 4 : intval(CoreUtilities::$request['limit']));
 
-                if (is_numeric(ipTV_lib::$request['stream_id']) && !isset(ipTV_lib::$request['multi'])) {
+                if (is_numeric(CoreUtilities::$request['stream_id']) && !isset(CoreUtilities::$request['multi'])) {
                     $rMulti = false;
-                    $rStreamIDs = array(intval(ipTV_lib::$request['stream_id']));
+                    $rStreamIDs = array(intval(CoreUtilities::$request['stream_id']));
                 } else {
                     $rMulti = true;
-                    $rStreamIDs = array_map('intval', explode(',', ipTV_lib::$request['stream_id']));
+                    $rStreamIDs = array_map('intval', explode(',', CoreUtilities::$request['stream_id']));
                 }
 
                 if (count($rStreamIDs) > 0) {
@@ -347,7 +347,7 @@ if ($rUserInfo) {
             break;
 
         case 'get_live_streams':
-            $rCategoryIDSearch = (empty(ipTV_lib::$request['category_id']) ? null : intval(ipTV_lib::$request['category_id']));
+            $rCategoryIDSearch = (empty(CoreUtilities::$request['category_id']) ? null : intval(CoreUtilities::$request['category_id']));
             $rLiveNum = 0;
             $rUserInfo['live_ids'] = array_merge($rUserInfo['live_ids'], $rUserInfo['radio_ids']);
 
@@ -355,7 +355,7 @@ if ($rUserInfo) {
                 $rUserInfo['live_ids'] = array_slice($rUserInfo['live_ids'], $rExtract['offset'], $rExtract['items_per_page']);
             }
 
-            $rUserInfo['live_ids'] = ipTV_lib::sortChannels($rUserInfo['live_ids']);
+            $rUserInfo['live_ids'] = CoreUtilities::sortChannels($rUserInfo['live_ids']);
             $rChannels = array();
 
             if (count($rUserInfo['live_ids']) > 0) {
@@ -369,7 +369,7 @@ if ($rUserInfo) {
                 $rWhere[] = '`t1`.`id` IN (' . implode(',', $rUserInfo['live_ids']) . ')';
                 $rWhereString = 'WHERE ' . implode(' AND ', $rWhere);
 
-                if (ipTV_lib::$settings['channel_number_type'] != 'manual') {
+                if (CoreUtilities::$settings['channel_number_type'] != 'manual') {
                     $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rUserInfo['live_ids']) . ')';
                 } else {
                     $rOrder = '`order`';
@@ -405,8 +405,8 @@ if ($rUserInfo) {
         case 'get_vod_info':
             $output['info'] = array();
 
-            if (!empty(ipTV_lib::$request['vod_id'])) {
-                $rVODID = intval(ipTV_lib::$request['vod_id']);
+            if (!empty(CoreUtilities::$request['vod_id'])) {
+                $rVODID = intval(CoreUtilities::$request['vod_id']);
 
                 $ipTV_db->query('SELECT * FROM `streams` WHERE `id` = ?', $rVODID);
                 $rRow = $ipTV_db->get_row();
@@ -450,14 +450,14 @@ if ($rUserInfo) {
             break;
 
         case 'get_vod_streams':
-            $rCategoryIDSearch = (empty(ipTV_lib::$request['category_id']) ? null : intval(ipTV_lib::$request['category_id']));
+            $rCategoryIDSearch = (empty(CoreUtilities::$request['category_id']) ? null : intval(CoreUtilities::$request['category_id']));
             $rMovieNum = 0;
 
             if (!empty($rExtract['items_per_page'])) {
                 $rUserInfo['vod_ids'] = array_slice($rUserInfo['vod_ids'], $rExtract['offset'], $rExtract['items_per_page']);
             }
 
-            $rUserInfo['vod_ids'] = ipTV_lib::sortChannels($rUserInfo['vod_ids']);
+            $rUserInfo['vod_ids'] = CoreUtilities::sortChannels($rUserInfo['vod_ids']);
 
             $rChannels = array();
 
@@ -472,7 +472,7 @@ if ($rUserInfo) {
                 $rWhere[] = '`t1`.`id` IN (' . implode(',', $rUserInfo['vod_ids']) . ')';
                 $rWhereString = 'WHERE ' . implode(' AND ', $rWhere);
 
-                if (ipTV_lib::$settings['channel_number_type'] != 'manual') {
+                if (CoreUtilities::$settings['channel_number_type'] != 'manual') {
                     $rOrder = 'FIELD(`t1`.`id`,' . implode(',', $rUserInfo['vod_ids']) . ')';
                 } else {
                     $rOrder = '`order`';
@@ -506,14 +506,14 @@ if ($rUserInfo) {
 
         default:
             $output['user_info'] = array();
-            $url = empty(ipTV_lib::$Servers[SERVER_ID]['domain_name']) ? ipTV_lib::$Servers[SERVER_ID]['server_ip'] : ipTV_lib::$Servers[SERVER_ID]['domain_name'];
-            $output['server_info'] = array('url' => $url, 'port' => ipTV_lib::$Servers[SERVER_ID]['http_broadcast_port'], 'https_port' => ipTV_lib::$Servers[SERVER_ID]['https_broadcast_port'], 'server_protocol' => ipTV_lib::$Servers[SERVER_ID]['server_protocol'], 'rtmp_port' => ipTV_lib::$Servers[SERVER_ID]['rtmp_port'], 'timezone' => ipTV_lib::$settings['default_timezone'], 'timestamp_now' => time(), 'time_now' => date('Y-m-d H:i:s'));
+            $url = empty(CoreUtilities::$Servers[SERVER_ID]['domain_name']) ? CoreUtilities::$Servers[SERVER_ID]['server_ip'] : CoreUtilities::$Servers[SERVER_ID]['domain_name'];
+            $output['server_info'] = array('url' => $url, 'port' => CoreUtilities::$Servers[SERVER_ID]['http_broadcast_port'], 'https_port' => CoreUtilities::$Servers[SERVER_ID]['https_broadcast_port'], 'server_protocol' => CoreUtilities::$Servers[SERVER_ID]['server_protocol'], 'rtmp_port' => CoreUtilities::$Servers[SERVER_ID]['rtmp_port'], 'timezone' => CoreUtilities::$settings['default_timezone'], 'timestamp_now' => time(), 'time_now' => date('Y-m-d H:i:s'));
             if ($mobile_apps == 1) {
                 $output['server_info']['process'] = true;
             }
             $output['user_info']['username'] = $rUserInfo['username'];
             $output['user_info']['password'] = $rUserInfo['password'];
-            $output['user_info']['message'] = ipTV_lib::$settings['message_of_day'];
+            $output['user_info']['message'] = CoreUtilities::$settings['message_of_day'];
             $output['user_info']['auth'] = 1;
             if ($rUserInfo['admin_enabled'] == 0) {
                 $output['user_info']['status'] = 'Banned';

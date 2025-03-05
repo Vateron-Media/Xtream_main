@@ -5,7 +5,7 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "flood_login"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["flush"])) {
+if (isset(CoreUtilities::$request["flush"])) {
     flushLogins();
     header("Location: ./flood_login.php");
 }

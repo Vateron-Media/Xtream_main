@@ -5,12 +5,12 @@ if ((!$rPermissions["is_reseller"]) or (!$rPermissions["create_sub_resellers"]))
     exit;
 }
 
-if ((isset(ipTV_lib::$request["submit_credits"])) && (isset(ipTV_lib::$request["id"]))) {
-    if (!hasPermissions("reg_user", ipTV_lib::$request["id"])) {
+if ((isset(CoreUtilities::$request["submit_credits"])) && (isset(CoreUtilities::$request["id"]))) {
+    if (!hasPermissions("reg_user", CoreUtilities::$request["id"])) {
         exit;
     }
-    $rUser = getRegisteredUser(ipTV_lib::$request["id"]);
-    $rCost = intval(ipTV_lib::$request["credits"]);
+    $rUser = getRegisteredUser(CoreUtilities::$request["id"]);
+    $rCost = intval(CoreUtilities::$request["credits"]);
     if (($rUserInfo["credits"] - $rCost < 0) && ($rCost > 0)) {
         $_STATUS = 1;
     }
@@ -29,13 +29,13 @@ if ((isset(ipTV_lib::$request["submit_credits"])) && (isset(ipTV_lib::$request["
     }
 }
 
-if (!isset(ipTV_lib::$request["id"])) {
+if (!isset(CoreUtilities::$request["id"])) {
     exit;
 }
-if (!hasPermissions("reg_user", ipTV_lib::$request["id"])) {
+if (!hasPermissions("reg_user", CoreUtilities::$request["id"])) {
     exit;
 }
-$rUser = getRegisteredUser(ipTV_lib::$request["id"]);
+$rUser = getRegisteredUser(CoreUtilities::$request["id"]);
 if (!$rUser) {
     exit;
 }
@@ -80,10 +80,10 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./credits_add.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./credits_add.php<?php if (isset(CoreUtilities::$request["id"])) {
+                            echo "?id=" . CoreUtilities::$request["id"];
                         } ?>" method="POST" id="credits_form" data-parsley-validate="">
-                            <input type="hidden" name="id" value="<?= ipTV_lib::$request["id"] ?>" />
+                            <input type="hidden" name="id" value="<?= CoreUtilities::$request["id"] ?>" />
                             <div id="basicwizard">
                                 <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                     <li class="nav-item">

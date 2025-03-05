@@ -8,8 +8,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_delete"))) {
 set_time_limit(0);
 ini_set('max_execution_time', 0);
 
-if (isset(ipTV_lib::$request["submit_streams"])) {
-    $rStreams = json_decode(ipTV_lib::$request["streams"], true);
+if (isset(CoreUtilities::$request["submit_streams"])) {
+    $rStreams = json_decode(CoreUtilities::$request["streams"], true);
     foreach ($rStreams as $rStream) {
         $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStream) . ";");
         $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rStream) . ";");
@@ -17,8 +17,8 @@ if (isset(ipTV_lib::$request["submit_streams"])) {
     $_STATUS = 0;
 }
 
-if (isset(ipTV_lib::$request["submit_movies"])) {
-    $rMovies = json_decode(ipTV_lib::$request["movies"], true);
+if (isset(CoreUtilities::$request["submit_movies"])) {
+    $rMovies = json_decode(CoreUtilities::$request["movies"], true);
     foreach ($rMovies as $rMovie) {
         $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
         if ($ipTV_db_admin->num_rows() > 0) {
@@ -32,8 +32,8 @@ if (isset(ipTV_lib::$request["submit_movies"])) {
     $_STATUS = 1;
 }
 
-if (isset(ipTV_lib::$request["submit_users"])) {
-    $rUsers = json_decode(ipTV_lib::$request["users"], true);
+if (isset(CoreUtilities::$request["submit_users"])) {
+    $rUsers = json_decode(CoreUtilities::$request["users"], true);
     foreach ($rUsers as $rUser) {
         $ipTV_db_admin->query("DELETE FROM `lines` WHERE `id` = " . intval($rUser) . ";");
         $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rUser) . ";");
@@ -43,8 +43,8 @@ if (isset(ipTV_lib::$request["submit_users"])) {
     $_STATUS = 2;
 }
 
-if (isset(ipTV_lib::$request["submit_series"])) {
-    $rSeries = json_decode(ipTV_lib::$request["series"], true);
+if (isset(CoreUtilities::$request["submit_series"])) {
+    $rSeries = json_decode(CoreUtilities::$request["series"], true);
     foreach ($rSeries as $rSerie) {
         $ipTV_db_admin->query("DELETE FROM `series` WHERE `id` = " . intval($rSerie) . ";");
         $ipTV_db_admin->query("SELECT `stream_id` FROM `series_episodes` WHERE `series_id` = " . intval($rSerie) . ";");
@@ -66,8 +66,8 @@ if (isset(ipTV_lib::$request["submit_series"])) {
     $_STATUS = 3;
 }
 
-if (isset(ipTV_lib::$request["submit_episodes"])) {
-    $rEpisodes = json_decode(ipTV_lib::$request["episodes"], true);
+if (isset(CoreUtilities::$request["submit_episodes"])) {
+    $rEpisodes = json_decode(CoreUtilities::$request["episodes"], true);
     foreach ($rEpisodes as $rEpisode) {
         $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rEpisode) . ";");
         if ($ipTV_db_admin->num_rows() > 0) {
@@ -82,7 +82,7 @@ if (isset(ipTV_lib::$request["submit_episodes"])) {
     $_STATUS = 4;
 }
 
-if ((isset(ipTV_lib::$request["submit_streams"])) or (isset(ipTV_lib::$request["submit_movies"]))) {
+if ((isset(CoreUtilities::$request["submit_streams"])) or (isset(CoreUtilities::$request["submit_movies"]))) {
     scanBouquets();
 }
 
@@ -189,7 +189,7 @@ include "header.php";
                                                     <option value="" selected><?= $_["all_categories"] ?>
                                                     </option>
                                                     <?php foreach ($rCategories as $rCategory) { ?>
-                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
+                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(CoreUtilities::$request["category"])) && (CoreUtilities::$request["category"] == $rCategory["id"])) {
                                                                                                     echo " selected";
                                                                                                 } ?>><?= $rCategory["category_name"] ?>
                                                         </option>
@@ -246,7 +246,7 @@ include "header.php";
                                                     <option value="" selected><?= $_["all_categories"] ?>
                                                     </option>
                                                     <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
-                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
+                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(CoreUtilities::$request["category"])) && (CoreUtilities::$request["category"] == $rCategory["id"])) {
                                                                                                     echo " selected";
                                                                                                 } ?>><?= $rCategory["category_name"] ?>
                                                         </option>
@@ -316,7 +316,7 @@ include "header.php";
                                                     </option>
                                                     <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                     <?php foreach (getCategories_admin("series") as $rCategory) { ?>
-                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
+                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(CoreUtilities::$request["category"])) && (CoreUtilities::$request["category"] == $rCategory["id"])) {
                                                                                                     echo " selected";
                                                                                                 } ?>><?= $rCategory["category_name"] ?>
                                                         </option>

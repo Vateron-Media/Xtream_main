@@ -61,7 +61,7 @@ include "header.php";
                                                     <option value="" selected><?= $_["all_categories"] ?>
                                                     </option>
                                                     <?php foreach ($rCategories as $rCategory) { ?>
-                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
+                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(CoreUtilities::$request["category"])) && (CoreUtilities::$request["category"] == $rCategory["id"])) {
                                                               echo " selected";
                                                           } ?>><?= $rCategory["category_name"] ?>
                                                         </option>

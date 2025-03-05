@@ -6,26 +6,26 @@ require 'init.php';
 $rDeny = true;
 global $rDeny;
 
-if (empty(ipTV_lib::$request['password']) || ipTV_lib::$request['password'] != ipTV_lib::$settings['live_streaming_pass']) {
+if (empty(CoreUtilities::$request['password']) || CoreUtilities::$request['password'] != CoreUtilities::$settings['live_streaming_pass']) {
     generateError('INVALID_API_PASSWORD');
 }
 
-unset(ipTV_lib::$request['password']);
+unset(CoreUtilities::$request['password']);
 
-if (!in_array($rIP, ipTV_lib::$allowedIPs)) {
+if (!in_array($rIP, CoreUtilities::$allowedIPs)) {
     generateError('API_IP_NOT_ALLOWED');
 }
 
 header('Access-Control-Allow-Origin: *');
-$action = (!empty(ipTV_lib::$request['action']) ? ipTV_lib::$request['action'] : '');
+$action = (!empty(CoreUtilities::$request['action']) ? CoreUtilities::$request['action'] : '');
 $rDeny = false;
 
 switch ($action) {
     // case 'view_log':
-    //     if (empty(ipTV_lib::$request['stream_id'])) {
+    //     if (empty(CoreUtilities::$request['stream_id'])) {
     //         break;
     //     }
-    //     $streamID = intval(ipTV_lib::$request['stream_id']);
+    //     $streamID = intval(CoreUtilities::$request['stream_id']);
     //     if (file_exists(STREAMS_PATH . $streamID . '.errors')) {
     //         echo file_get_contents(STREAMS_PATH . $streamID . '.errors');
     //     } elseif (file_exists(VOD_PATH . $streamID . '.errors')) {
@@ -38,9 +38,9 @@ switch ($action) {
     //     break;
         
     case 'vod':
-        if (!empty(ipTV_lib::$request['stream_ids']) && !empty(ipTV_lib::$request['function'])) {
-            $streamIDs = array_map('intval', ipTV_lib::$request['stream_ids']);
-            $function = ipTV_lib::$request['function'];
+        if (!empty(CoreUtilities::$request['stream_ids']) && !empty(CoreUtilities::$request['function'])) {
+            $streamIDs = array_map('intval', CoreUtilities::$request['stream_ids']);
+            $function = CoreUtilities::$request['function'];
             switch ($function) {
                 case 'start':
                     foreach ($streamIDs as $streamID) {
@@ -60,9 +60,9 @@ switch ($action) {
         }
 
     case 'stream':
-        if (!empty(ipTV_lib::$request['stream_ids']) && !empty(ipTV_lib::$request['function'])) {
-            $streamIDs = array_map('intval', ipTV_lib::$request['stream_ids']);
-            $function = ipTV_lib::$request['function'];
+        if (!empty(CoreUtilities::$request['stream_ids']) && !empty(CoreUtilities::$request['function'])) {
+            $streamIDs = array_map('intval', CoreUtilities::$request['stream_ids']);
+            $function = CoreUtilities::$request['function'];
 
             switch ($function) {
                 case 'start':
@@ -93,20 +93,20 @@ switch ($action) {
         exit();
 
     case 'getDiff':
-        if (!empty(ipTV_lib::$request['main_time'])) {
-            $main_time = ipTV_lib::$request['main_time'];
+        if (!empty(CoreUtilities::$request['main_time'])) {
+            $main_time = CoreUtilities::$request['main_time'];
             echo json_encode($main_time - time());
             die;
         }
         break;
 
     case 'pidsAreRunning':
-        if (empty(ipTV_lib::$request['pids']) && !is_array(ipTV_lib::$request['pids']) && empty(ipTV_lib::$request['program'])) {
+        if (empty(CoreUtilities::$request['pids']) && !is_array(CoreUtilities::$request['pids']) && empty(CoreUtilities::$request['program'])) {
             break;
         }
 
-        $PIDs = array_map('intval', ipTV_lib::$request['pids']);
-        $program = ipTV_lib::$request['program'];
+        $PIDs = array_map('intval', CoreUtilities::$request['pids']);
+        $program = CoreUtilities::$request['program'];
         $output = array();
 
         foreach ($PIDs as $rPID) {
@@ -120,11 +120,11 @@ switch ($action) {
         exit();
 
     case 'getFile':
-        if (empty(ipTV_lib::$request['filename'])) {
+        if (empty(CoreUtilities::$request['filename'])) {
             break;
         }
 
-        $filename = ipTV_lib::$request['filename'];
+        $filename = CoreUtilities::$request['filename'];
         if (in_array(strtolower(pathinfo($filename)['extension']), array('log', 'tar.gz', 'gz', 'zip', 'm3u8', 'mp4', 'mkv', 'avi', 'mpg', 'flv', '3gp', 'm4v', 'wmv', 'mov', 'ts', 'srt', 'sub', 'sbv', 'jpg', 'png', 'bmp', 'jpeg', 'gif', 'tif'))) {
             if (file_exists($filename) && is_readable($filename)) {
                 header('Content-Type: application/octet-stream');
@@ -172,7 +172,7 @@ switch ($action) {
                 header('Content-Length: ' . $length);
 
                 while (!feof($fp) && ftell($fp) <= $end) {
-                    echo stream_get_line($fp, (intval(ipTV_lib::$settings['read_buffer_size']) ?: 8192));
+                    echo stream_get_line($fp, (intval(CoreUtilities::$settings['read_buffer_size']) ?: 8192));
                 }
                 fclose($fp);
             }
@@ -182,7 +182,7 @@ switch ($action) {
         exit(json_encode(array('result' => false, 'error' => 'Invalid file extension.')));
 
     case 'viewDir':
-        $dir = urldecode(ipTV_lib::$request['dir']);
+        $dir = urldecode(CoreUtilities::$request['dir']);
         if (file_exists($dir)) {
             $files = scandir($dir);
             natcasesort($files);
@@ -205,16 +205,16 @@ switch ($action) {
         die;
 
     case 'redirect_connection':
-        if (!empty(ipTV_lib::$request['activity_id']) && !empty(ipTV_lib::$request['stream_id'])) {
-            ipTV_lib::$request['type'] = 'redirect';
-            file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
+        if (!empty(CoreUtilities::$request['activity_id']) && !empty(CoreUtilities::$request['stream_id'])) {
+            CoreUtilities::$request['type'] = 'redirect';
+            file_put_contents(SIGNALS_PATH . CoreUtilities::$request['uuid'], json_encode(CoreUtilities::$request));
         }
         break;
 
     case 'signal_send':
-        if (!empty(ipTV_lib::$request['message']) && !empty(ipTV_lib::$request['activity_id'])) {
-            ipTV_lib::$request['type'] = 'signal';
-            file_put_contents(SIGNALS_PATH . ipTV_lib::$request['uuid'], json_encode(ipTV_lib::$request));
+        if (!empty(CoreUtilities::$request['message']) && !empty(CoreUtilities::$request['activity_id'])) {
+            CoreUtilities::$request['type'] = 'signal';
+            file_put_contents(SIGNALS_PATH . CoreUtilities::$request['uuid'], json_encode(CoreUtilities::$request));
         }
         break;
 
@@ -240,7 +240,7 @@ switch ($action) {
         exit();
         
     case 'kill_pid':
-        $rPID = intval(ipTV_lib::$request['pid']);
+        $rPID = intval(CoreUtilities::$request['pid']);
         if ($rPID > 0) {
             posix_kill($rPID, 9);
             echo json_encode(array('result' => true));

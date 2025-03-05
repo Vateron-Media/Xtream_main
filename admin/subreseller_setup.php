@@ -5,13 +5,13 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "subreseller"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_subreseller"])) {
-    if (!((intval(ipTV_lib::$request["reseller"]) > 0) && (intval(ipTV_lib::$request["subreseller"]) > 0) && (intval(ipTV_lib::$request["reseller"]) <> intval(ipTV_lib::$request["subreseller"])))) {
+if (isset(CoreUtilities::$request["submit_subreseller"])) {
+    if (!((intval(CoreUtilities::$request["reseller"]) > 0) && (intval(CoreUtilities::$request["subreseller"]) > 0) && (intval(CoreUtilities::$request["reseller"]) <> intval(CoreUtilities::$request["subreseller"])))) {
         $_STATUS = 1;
     }
     if (!isset($_STATUS)) {
         $rArray = array("reseller" => 0, "subreseller" => 0);
-        foreach (ipTV_lib::$request as $rKey => $rValue) {
+        foreach (CoreUtilities::$request as $rKey => $rValue) {
             if (isset($rArray[$rKey])) {
                 $rArray[$rKey] = $rValue;
             }
@@ -28,14 +28,14 @@ if (isset(ipTV_lib::$request["submit_subreseller"])) {
                 $rValues .= '\'' . $rValue . '\'';
             }
         }
-        if (isset(ipTV_lib::$request["edit"])) {
+        if (isset(CoreUtilities::$request["edit"])) {
             $rCols = "id," . $rCols;
-            $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+            $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `subreseller_setup`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
-            if (isset(ipTV_lib::$request["edit"])) {
-                $rInsertID = intval(ipTV_lib::$request["edit"]);
+            if (isset(CoreUtilities::$request["edit"])) {
+                $rInsertID = intval(CoreUtilities::$request["edit"]);
             } else {
                 $rInsertID = $ipTV_db_admin->last_insert_id();
             }
@@ -49,8 +49,8 @@ if (isset(ipTV_lib::$request["submit_subreseller"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rSubreseller = getSubresellerSetup(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rSubreseller = getSubresellerSetup(CoreUtilities::$request["id"]);
     if (!$rSubreseller) {
         exit;
     }

@@ -7,12 +7,12 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_sedits"))) {
 
 $rCategories = getCategories_admin("series");
 
-if (isset(ipTV_lib::$request["submit_series"])) {
+if (isset(CoreUtilities::$request["submit_series"])) {
     $rArray = array();
-    if (isset(ipTV_lib::$request["c_category_id"])) {
-        $rArray["category_id"] = intval(ipTV_lib::$request["category_id"]);
+    if (isset(CoreUtilities::$request["c_category_id"])) {
+        $rArray["category_id"] = intval(CoreUtilities::$request["category_id"]);
     }
-    $rSeriesIDs = json_decode(ipTV_lib::$request["series"], true);
+    $rSeriesIDs = json_decode(CoreUtilities::$request["series"], true);
     if (count($rSeriesIDs) > 0) {
         foreach ($rSeriesIDs as $rSeriesID) {
             $rQueries = array();
@@ -26,8 +26,8 @@ if (isset(ipTV_lib::$request["submit_series"])) {
                     $_STATUS = 1;
                 }
             }
-            if (isset(ipTV_lib::$request["c_bouquets"])) {
-                $rBouquets = ipTV_lib::$request["bouquets"];
+            if (isset(CoreUtilities::$request["c_bouquets"])) {
+                $rBouquets = CoreUtilities::$request["bouquets"];
                 foreach ($rBouquets as $rBouquet) {
                     addToBouquet("series", $rBouquet, $rSeriesID);
                 }
@@ -38,14 +38,14 @@ if (isset(ipTV_lib::$request["submit_series"])) {
                 }
             }
         }
-        if (isset(ipTV_lib::$request["reprocess_tmdb"])) {
+        if (isset(CoreUtilities::$request["reprocess_tmdb"])) {
             foreach ($rSeriesIDs as $rSeriesID) {
                 if (intval($rSeriesID) > 0) {
                     $ipTV_db_admin->query("INSERT INTO `tmdb_async`(`type`, `stream_id`, `status`) VALUES(2, " . intval($rSeriesID) . ", 0);");
                 }
             }
         }
-        if (isset(ipTV_lib::$request["c_bouquets"])) {
+        if (isset(CoreUtilities::$request["c_bouquets"])) {
             scanBouquets();
         }
     }
@@ -125,7 +125,7 @@ include "header.php";
                                                     </option>
                                                     <option value="-1"><?= $_["no_tmdb_match"] ?></option>
                                                     <?php foreach ($rCategories as $rCategory) { ?>
-                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(ipTV_lib::$request["category"])) && (ipTV_lib::$request["category"] == $rCategory["id"])) {
+                                                        <option value="<?= $rCategory["id"] ?>" <?php if ((isset(CoreUtilities::$request["category"])) && (CoreUtilities::$request["category"] == $rCategory["id"])) {
                                                               echo " selected";
                                                           } ?>>
                                                             <?= $rCategory["category_name"] ?>

@@ -6,31 +6,31 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
     set_time_limit(0);
     if ($argc) {
         require str_replace('\\', '/', dirname($argv[0])) . '/../includes/admin.php';
-        if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
+        if (CoreUtilities::$Servers[SERVER_ID]['is_main']) {
             cli_set_process_title('XC_VM[Backups]');
             $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-            ipTV_lib::checkCron($unique_id);
+            CoreUtilities::checkCron($unique_id);
             $rForce = false;
             if (count($argv) > 1) {
                 if (intval($argv[1]) == 1) {
                     $rForce = true;
                 }
             }
-            $rBackups = ipTV_lib::$settings['automatic_backups'];
-            $rLastBackup = intval(ipTV_lib::$settings['last_backup']);
+            $rBackups = CoreUtilities::$settings['automatic_backups'];
+            $rLastBackup = intval(CoreUtilities::$settings['last_backup']);
             $rPeriod = array('hourly' => 3600, 'daily' => 86400, 'weekly' => 604800, 'monthly' => 2419200);
             if (!$rForce) {
                 $rPID = getmypid();
-                if (file_exists('/proc/' . ipTV_lib::$settings['backups_pid']) && 0 < strlen(ipTV_lib::$settings['backups_pid'])) {
+                if (file_exists('/proc/' . CoreUtilities::$settings['backups_pid']) && 0 < strlen(CoreUtilities::$settings['backups_pid'])) {
                     exit();
                 }
-                ipTV_lib::setSettings(["backups_pid" => $rPID]);
+                CoreUtilities::setSettings(["backups_pid" => $rPID]);
             }
 
             if (isset($rBackups) && $rBackups != 'off' || $rForce) {
                 if ($rLastBackup + $rPeriod[$rBackups] <= time() || $rForce) {
                     if (!$rForce) {
-                        ipTV_lib::setSettings(["last_backup" => time()]);
+                        CoreUtilities::setSettings(["last_backup" => time()]);
                     }
                     $ipTV_db_admin->close_mysql();
 
@@ -43,8 +43,8 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                 }
             }
             $rBackups = getBackups();
-            if ((count($rBackups) > intval(ipTV_lib::$settings['backups_to_keep'])) && (intval(ipTV_lib::$settings['backups_to_keep']) > 0)) {
-                $rDelete = array_slice($rBackups, 0, count($rBackups) - intval(ipTV_lib::$settings['backups_to_keep']));
+            if ((count($rBackups) > intval(CoreUtilities::$settings['backups_to_keep'])) && (intval(CoreUtilities::$settings['backups_to_keep']) > 0)) {
+                $rDelete = array_slice($rBackups, 0, count($rBackups) - intval(CoreUtilities::$settings['backups_to_keep']));
                 foreach ($rDelete as $rItem) {
                     if (file_exists(MAIN_DIR . 'backups/' . $rItem['filename'])) {
                         unlink(MAIN_DIR . 'backups/' . $rItem['filename']);

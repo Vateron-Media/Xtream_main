@@ -7,8 +7,8 @@ class GetStreamingURLTest extends TestCase {
 
     // Метод, который вызывается перед каждым тестом
     protected function setUp(): void {
-        // Создаём мок для ipTV_lib, чтобы избежать зависимости от настоящих данных
-        $this->mockIPTVLib = $this->getMockBuilder('ipTV_lib')
+        // Создаём мок для CoreUtilities, чтобы избежать зависимости от настоящих данных
+        $this->mockIPTVLib = $this->getMockBuilder('CoreUtilities')
             ->disableOriginalConstructor()  // Не вызываем конструктор
             ->getMock();
 
@@ -37,7 +37,7 @@ class GetStreamingURLTest extends TestCase {
         ];
 
         // Мокаем статическое свойство Servers
-        $this->mockStaticProperty('ipTV_lib', 'Servers', $servers);
+        $this->mockStaticProperty('CoreUtilities', 'Servers', $servers);
 
         // Ожидаем, что вернётся правильный URL с протоколом https
         $result = ipTV_streaming::getStreamingURL($serverID, false);
@@ -58,7 +58,7 @@ class GetStreamingURLTest extends TestCase {
     //     ];
 
     //     // Мокаем статическое свойство Servers;
-    //     $this->mockStaticProperty('ipTV_lib', 'Servers', $servers);
+    //     $this->mockStaticProperty('CoreUtilities', 'Servers', $servers);
 
     //     // Ожидаем, что вернётся URL с протоколом http;
     //     $result = ipTV_streaming::getStreamingURL($serverID, true);
@@ -79,7 +79,7 @@ class GetStreamingURLTest extends TestCase {
         ];
 
         // Мокаем статическое свойство Servers
-        $this->mockStaticProperty('ipTV_lib', 'Servers', $servers);
+        $this->mockStaticProperty('CoreUtilities', 'Servers', $servers);
 
         // Ожидаем, что будет использован SERVER_ID
         $result = ipTV_streaming::getStreamingURL(null, false);
@@ -100,7 +100,7 @@ class GetStreamingURLTest extends TestCase {
         ];
 
         // Мокаем статическое свойство Servers
-        $this->mockStaticProperty('ipTV_lib', 'Servers', $servers);
+        $this->mockStaticProperty('CoreUtilities', 'Servers', $servers);
 
         // Ожидаем, что URL будет случайным из списка доменов
         $result = ipTV_streaming::getStreamingURL($serverID, false);
@@ -124,7 +124,7 @@ class GetStreamingURLTest extends TestCase {
         ];
 
         // Мокаем статическое свойство Servers
-        $this->mockStaticProperty('ipTV_lib', 'Servers', $servers);
+        $this->mockStaticProperty('CoreUtilities', 'Servers', $servers);
 
         // Ожидаем, что будет использован fallback URL
         $result = ipTV_streaming::getStreamingURL($serverID, false);
@@ -263,7 +263,7 @@ class MatchCIDRTest extends TestCase {
 class CheckISPTest extends TestCase {
     protected function setUp(): void {
         // Моделируем список заблокированных ISP
-        ipTV_lib::$blockedISP = [
+        CoreUtilities::$blockedISP = [
             ['isp' => 'BlockedISP1', 'blocked' => 1],
             ['isp' => 'BlockedISP2', 'blocked' => 1],
             ['isp' => 'AllowedISP', 'blocked' => 0],

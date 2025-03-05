@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::checkCron($unique_id);
+        CoreUtilities::checkCron($unique_id);
         shell_exec("sudo kill -9 `ps -ef | grep 'XC_VM[Signals]' | grep -v grep | awk '{print \$2}'`;");
         cli_set_process_title('XC_VM[Signals]');
         file_put_contents(CONFIG_PATH . 'signals.last', time());
@@ -20,7 +20,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
 function loadCron() {
     global $ipTV_db;
     global $rSaveIPTables;
-    ipTV_lib::$Servers = ipTV_lib::getServers(true);
+    CoreUtilities::$Servers = CoreUtilities::getServers(true);
     $ipTV_db->query("SELECT `signal_id` FROM `signals` WHERE `server_id` = ? AND `custom_data` = '{\"action\":\"flush\"}' AND `cache` = 0;", SERVER_ID);
     if (0 < $ipTV_db->num_rows()) {
         echo "Flushing IP's...";
@@ -73,7 +73,7 @@ function loadCron() {
         }
     }
     $rReload = false;
-    $rAllowedIPs = ipTV_lib::getAllowedIPs();
+    $rAllowedIPs = CoreUtilities::getAllowedIPs();
     $XtreamList = array();
     foreach ($rAllowedIPs as $rIP) {
         if (!empty($rIP) || filter_var($rIP, FILTER_VALIDATE_IP) || !in_array('set_real_ip_from ' . $rIP . ';', $XtreamList)) {
@@ -89,7 +89,7 @@ function loadCron() {
         $rReload = true;
     }
     $rCurrentList = (trim(file_get_contents(BIN_PATH . 'nginx/conf/realip_cloudflare.conf')) ?: '');
-    if (ipTV_lib::$settings['cloudflare']) {
+    if (CoreUtilities::$settings['cloudflare']) {
         if (empty($rCurrentList)) {
             echo 'Enabling Cloudflare...' . "\n";
             file_put_contents(BIN_PATH . 'nginx/conf/realip_cloudflare.conf', 'set_real_ip_from 103.21.244.0/22;' . "\n" . 'set_real_ip_from 103.22.200.0/22;' . "\n" . 'set_real_ip_from 103.31.4.0/22;' . "\n" . 'set_real_ip_from 104.16.0.0/13;' . "\n" . 'set_real_ip_from 104.24.0.0/14;' . "\n" . 'set_real_ip_from 108.162.192.0/18;' . "\n" . 'set_real_ip_from 131.0.72.0/22;' . "\n" . 'set_real_ip_from 141.101.64.0/18;' . "\n" . 'set_real_ip_from 162.158.0.0/15;' . "\n" . 'set_real_ip_from 172.64.0.0/13;' . "\n" . 'set_real_ip_from 173.245.48.0/20;' . "\n" . 'set_real_ip_from 188.114.96.0/20;' . "\n" . 'set_real_ip_from 190.93.240.0/20;' . "\n" . 'set_real_ip_from 197.234.240.0/22;' . "\n" . 'set_real_ip_from 198.41.128.0/17;' . "\n" . 'set_real_ip_from 2400:cb00::/32;' . "\n" . 'set_real_ip_from 2606:4700::/32;' . "\n" . 'set_real_ip_from 2803:f800::/32;' . "\n" . 'set_real_ip_from 2405:b500::/32;' . "\n" . 'set_real_ip_from 2405:8100::/32;' . "\n" . 'set_real_ip_from 2c0f:f248::/32;' . "\n" . 'set_real_ip_from 2a06:98c0::/29;');
@@ -102,9 +102,9 @@ function loadCron() {
             $rReload = true;
         }
     }
-    if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
+    if (CoreUtilities::$Servers[SERVER_ID]['is_main']) {
         $rCurrentStatus = stripos((trim(file_get_contents(BIN_PATH . 'nginx/conf/gzip.conf')) ?: 'gzip off'), 'gzip on') !== false;
-        if (ipTV_lib::$Servers[SERVER_ID]['enable_gzip']) {
+        if (CoreUtilities::$Servers[SERVER_ID]['enable_gzip']) {
             if (!$rCurrentStatus) {
                 echo 'Enabling GZIP...' . "\n";
                 file_put_contents(BIN_PATH . 'nginx/conf/gzip.conf', 'gzip on;' . "\n" . 'gzip_min_length 1000;' . "\n" . 'gzip_buffers 4 32k;' . "\n" . 'gzip_proxied any;' . "\n" . 'gzip_types application/json application/xml;' . "\n" . 'gzip_vary on;' . "\n" . 'gzip_disable "MSIE [1-6].(?!.*SV1)";');
@@ -118,8 +118,8 @@ function loadCron() {
             }
         }
     }
-    if (0 < ipTV_lib::$Servers[SERVER_ID]['limit_requests']) {
-        $rLimitConf = 'limit_req_zone global zone=two:10m rate=' . intval(ipTV_lib::$Servers[SERVER_ID]['limit_requests']) . 'r/s;';
+    if (0 < CoreUtilities::$Servers[SERVER_ID]['limit_requests']) {
+        $rLimitConf = 'limit_req_zone global zone=two:10m rate=' . intval(CoreUtilities::$Servers[SERVER_ID]['limit_requests']) . 'r/s;';
     } else {
         $rLimitConf = '';
     }
@@ -129,8 +129,8 @@ function loadCron() {
         file_put_contents(BIN_PATH . 'nginx/conf/limit.conf', $rLimitConf);
         $rReload = true;
     }
-    if (0 < ipTV_lib::$Servers[SERVER_ID]['limit_requests']) {
-        $rLimitConf = 'limit_req zone=two burst=' . intval(ipTV_lib::$Servers[SERVER_ID]['limit_burst']) . ';';
+    if (0 < CoreUtilities::$Servers[SERVER_ID]['limit_requests']) {
+        $rLimitConf = 'limit_req zone=two burst=' . intval(CoreUtilities::$Servers[SERVER_ID]['limit_burst']) . ';';
     } else {
         $rLimitConf = '';
     }
@@ -143,7 +143,7 @@ function loadCron() {
     if ($rReload) {
         shell_exec('sudo ' . BIN_PATH . 'nginx/sbin/nginx -s reload');
     }
-    if (ipTV_lib::$settings['restart_php_fpm']) {
+    if (CoreUtilities::$settings['restart_php_fpm']) {
         $rPHP = $rNginx = 0;
         exec('ps -fp $(pgrep -u xc_vm)', $rOutput, $rReturnVar);
         foreach ($rOutput as $rProcess) {
@@ -164,7 +164,7 @@ function loadCron() {
                 exit();
             }
         }
-        $rHandle = curl_init('http://127.0.0.1:' . ipTV_lib::$Servers[SERVER_ID]['http_broadcast_port'] . '/init');
+        $rHandle = curl_init('http://127.0.0.1:' . CoreUtilities::$Servers[SERVER_ID]['http_broadcast_port'] . '/init');
         curl_setopt($rHandle, CURLOPT_RETURNTRANSFER, true);
         $rResponse = curl_exec($rHandle);
         $rCode = curl_getinfo($rHandle, CURLINFO_HTTP_CODE);
@@ -201,7 +201,7 @@ function loadCron() {
             }
         }
         // if ($rCheck['mag']) {
-        //     if (ipTV_lib::$settings['mag_legacy_redirect']) {
+        //     if (CoreUtilities::$settings['mag_legacy_redirect']) {
         //         if (!file_exists(MAIN_DIR . 'wwwdir/c')) {
         //             array_unshift($rRows, array('custom_data' => json_encode(array('action' => 'enable_ministra'))));
         //         }
@@ -220,19 +220,19 @@ function loadCron() {
                     $rCurServices++;
                 }
             }
-            if (ipTV_lib::$Servers[SERVER_ID]['total_services'] != $rCurServices) {
-                array_unshift($rRows, array('custom_data' => json_encode(array('action' => 'set_services', 'count' => ipTV_lib::$Servers[SERVER_ID]['total_services'], 'reload' => true))));
+            if (CoreUtilities::$Servers[SERVER_ID]['total_services'] != $rCurServices) {
+                array_unshift($rRows, array('custom_data' => json_encode(array('action' => 'set_services', 'count' => CoreUtilities::$Servers[SERVER_ID]['total_services'], 'reload' => true))));
             }
         }
         // if ($rCheck['ports']) {
         //     $rListen = $rPorts = array('http' => array(), 'https' => array());
-        //     foreach (array_merge(array(intval(ipTV_lib::$Servers[SERVER_ID]['http_broadcast_port'])), explode(',', ipTV_lib::$Servers[SERVER_ID]['http_ports_add'])) as $rPort) {
+        //     foreach (array_merge(array(intval(CoreUtilities::$Servers[SERVER_ID]['http_broadcast_port'])), explode(',', CoreUtilities::$Servers[SERVER_ID]['http_ports_add'])) as $rPort) {
         //         if (is_numeric($rPort) && 0 < $rPort && $rPort <= 65535) {
         //             $rListen['http'][] = 'listen ' . intval($rPort) . ';';
         //             $rPorts['http'][] = intval($rPort);
         //         }
         //     }
-        //     foreach (array_merge(array(intval(ipTV_lib::$Servers[SERVER_ID]['https_broadcast_port'])), explode(',', ipTV_lib::$Servers[SERVER_ID]['https_ports_add'])) as $rPort) {
+        //     foreach (array_merge(array(intval(CoreUtilities::$Servers[SERVER_ID]['https_broadcast_port'])), explode(',', CoreUtilities::$Servers[SERVER_ID]['https_ports_add'])) as $rPort) {
         //         if (is_numeric($rPort) && 0 < $rPort && $rPort <= 65535) {
         //             $rListen['https'][] = 'listen ' . intval($rPort) . ' ssl;';
         //             $rPorts['https'][] = intval($rPort);
@@ -244,8 +244,8 @@ function loadCron() {
         //     if (trim(implode(' ', $rListen['https'])) != trim(file_get_contents(MAIN_DIR . 'bin/nginx/conf/ports/https.conf'))) {
         //         array_unshift($rRows, array('custom_data' => json_encode(array('action' => 'set_port', 'type' => 1, 'ports' => $rPorts['https'], 'reload' => true))));
         //     }
-        //     if ('listen ' . intval(ipTV_lib::$Servers[SERVER_ID]['rtmp_port']) . ';' != trim(file_get_contents(MAIN_DIR . 'bin/nginx_rtmp/conf/port.conf'))) {
-        //         array_unshift($rRows, array('custom_data' => json_encode(array('action' => 'set_port', 'type' => 2, 'ports' => array(intval(ipTV_lib::$Servers[SERVER_ID]['rtmp_port'])), 'reload' => true))));
+        //     if ('listen ' . intval(CoreUtilities::$Servers[SERVER_ID]['rtmp_port']) . ';' != trim(file_get_contents(MAIN_DIR . 'bin/nginx_rtmp/conf/port.conf'))) {
+        //         array_unshift($rRows, array('custom_data' => json_encode(array('action' => 'set_port', 'type' => 2, 'ports' => array(intval(CoreUtilities::$Servers[SERVER_ID]['rtmp_port'])), 'reload' => true))));
         //     }
         // }
         // if ($rCheck['ramdisk']) {
@@ -259,7 +259,7 @@ function loadCron() {
         //             break;
         //         }
         //     }
-        // if (ipTV_lib::$Servers[SERVER_ID]['use_disk']) {
+        // if (CoreUtilities::$Servers[SERVER_ID]['use_disk']) {
         //     if ($rMounted) {
         //         array_unshift($rRows, array('custom_data' => json_encode(array('action' => 'disable_ramdisk'))));
         //     }

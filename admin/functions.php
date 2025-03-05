@@ -21,7 +21,7 @@ $rSQLTimeout = 5;           // Max execution time for MySQL queries.
 
 require_once '/home/xc_vm/wwwdir/constants.php';
 require_once INCLUDES_PATH . 'functions.php';
-require_once INCLUDES_PATH . 'lib.php';
+require_once INCLUDES_PATH . 'core_utilities.php';
 require_once INCLUDES_PATH . 'pdo.php';
 require_once INCLUDES_PATH . 'streaming.php';
 // require_once INCLUDES_PATH . 'servers.php';
@@ -40,16 +40,16 @@ if (file_exists(MAIN_DIR . 'config')) {
 
 $ipTV_db_admin = new Database($_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['hostname'], $_INFO['port'], empty($_INFO['pconnect']) ? false : true);
 
-ipTV_lib::$ipTV_db = &$ipTV_db_admin;
-ipTV_lib::init();
+CoreUtilities::$ipTV_db = &$ipTV_db_admin;
+CoreUtilities::init();
 ipTV_streaming::$ipTV_db = &$ipTV_db_admin;
 // ipTV_stream::$ipTV_db = &$ipTV_db_admin;
 API::$ipTV_db = &$ipTV_db_admin;
 API::init();
-ipTV_lib::connectRedis();
+CoreUtilities::connectRedis();
 
 $rProtocol = getProtocol();
-$rSettings = ipTV_lib::$settings;
+$rSettings = CoreUtilities::$settings;
 $detect = new Mobile_Detect;
 $defaultLang = 'en';
 $langPath = "/home/xc_vm/admin/lang/";
@@ -110,8 +110,8 @@ if (php_sapi_name() !== 'cli' && isset($_SESSION['hash'])) {
 }
 include "{$langPath}{$userLang}.php";
 
-if (isset(ipTV_lib::$request['status'])) {
-    $_STATUS = intval(ipTV_lib::$request['status']);
+if (isset(CoreUtilities::$request['status'])) {
+    $_STATUS = intval(CoreUtilities::$request['status']);
 }
 
 if (getPageName() != 'setup') {

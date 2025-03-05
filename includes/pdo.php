@@ -149,8 +149,8 @@ class Database {
             if (strlen($actual_query) == 0) {
                 $actual_query = $query;
             }
-            if (class_exists('ipTV_lib')) {
-                ipTV_lib::saveLog('pdo', $e->getMessage(), $actual_query);
+            if (class_exists('CoreUtilities')) {
+                CoreUtilities::saveLog('pdo', $e->getMessage(), $actual_query);
             }
 
             return false;
@@ -285,8 +285,8 @@ class Database {
         try {
             $this->result = $this->dbh->query($query);
         } catch (Exception $e) {
-            if (class_exists('ipTV_lib')) {
-                ipTV_lib::saveLog('pdo', $e->getMessage(), $query);
+            if (class_exists('CoreUtilities')) {
+                CoreUtilities::saveLog('pdo', $e->getMessage(), $query);
             }
             return false;
         }

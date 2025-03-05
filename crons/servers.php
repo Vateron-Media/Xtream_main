@@ -6,7 +6,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XC_VMrs]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::checkCron($unique_id);
+        CoreUtilities::checkCron($unique_id);
         loadCron();
     } else {
         exit(0);
@@ -17,10 +17,10 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
 
 function loadCron() {
     global $ipTV_db;
-    ipTV_lib::$settings = ipTV_lib::getSettings(true);
-    if (ipTV_lib::isRunning()) {
-        $rServers = ipTV_lib::getServers(true);
-        if ($rServers[SERVER_ID]['is_main'] && ipTV_lib::$settings['redis_handler']) {
+    CoreUtilities::$settings = CoreUtilities::getSettings(true);
+    if (CoreUtilities::isRunning()) {
+        $rServers = CoreUtilities::getServers(true);
+        if ($rServers[SERVER_ID]['is_main'] && CoreUtilities::$settings['redis_handler']) {
             exec('pgrep -u xc_vm redis-server', $rRedis);
             if (count($rRedis) == 0) {
                 echo 'Restarting Redis!' . "\n";
@@ -35,10 +35,10 @@ function loadCron() {
         }
         if ($rServers[SERVER_ID]['is_main']) {
             $rCache = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep cache_handler | grep -v grep | grep -v pgrep | wc -l')));
-            if (ipTV_lib::$settings['enable_cache'] && $rCache == 0) {
+            if (CoreUtilities::$settings['enable_cache'] && $rCache == 0) {
                 shell_exec(PHP_BIN . ' ' . CLI_PATH . 'cache_handler.php > /dev/null 2>/dev/null &');
             } else {
-                if (!ipTV_lib::$settings['enable_cache'] || $rCache > 0) {
+                if (!CoreUtilities::$settings['enable_cache'] || $rCache > 0) {
                     echo 'Killing Cache Handler' . "\n";
                     exec("pgrep -U xc_vm | xargs ps | grep cache_handler | awk '{print \$1}'", $rPIDs);
                     foreach ($rPIDs as $rPID) {
@@ -58,10 +58,10 @@ function loadCron() {
             shell_exec(PHP_BIN . ' ' . CLI_PATH . 'queue.php > /dev/null 2>/dev/null &');
         }
         $rOnDemand = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep ondemand | grep -v grep | grep -v pgrep | wc -l')));
-        if (ipTV_lib::$settings['on_demand_instant_off'] && $rOnDemand == 0) {
+        if (CoreUtilities::$settings['on_demand_instant_off'] && $rOnDemand == 0) {
             shell_exec(PHP_BIN . ' ' . CLI_PATH . 'ondemand.php > /dev/null 2>/dev/null &');
         } else {
-            if (!ipTV_lib::$settings['on_demand_instant_off'] || $rOnDemand > 0) {
+            if (!CoreUtilities::$settings['on_demand_instant_off'] || $rOnDemand > 0) {
                 echo 'Killing On-Demand Instant-Off' . "\n";
                 exec("pgrep -U xc_vm | xargs ps | grep ondemand | awk '{print \$1}'", $rPIDs);
                 foreach ($rPIDs as $rPID) {
@@ -72,10 +72,10 @@ function loadCron() {
             }
         }
         // $rScanner = intval(trim(shell_exec('pgrep -U xc_vm | xargs ps -f -p | grep scanner | grep -v grep | grep -v pgrep | wc -l')));
-        // if (ipTV_lib::$settings['on_demand_checker'] && $rScanner == 0) {
+        // if (CoreUtilities::$settings['on_demand_checker'] && $rScanner == 0) {
         //     shell_exec(PHP_BIN . ' ' . CLI_PATH . 'scanner.php > /dev/null 2>/dev/null &');
         // } else {
-        //     if (!ipTV_lib::$settings['on_demand_checker'] || $rScanner > 0) {
+        //     if (!CoreUtilities::$settings['on_demand_checker'] || $rScanner > 0) {
         //         echo 'Killing On-Demand Scanner' . "\n";
         //         exec("pgrep -U xc_vm | xargs ps | grep scanner | awk '{print \$1}'", $rPIDs);
         //         foreach ($rPIDs as $rPID) {
@@ -97,7 +97,7 @@ function loadCron() {
         } else {
             $rRemoteStatus = false;
         }
-        if (ipTV_lib::$settings['redis_handler']) {
+        if (CoreUtilities::$settings['redis_handler']) {
             $rConnections = $rServers[SERVER_ID]['connections'];
             $rUsers = $rServers[SERVER_ID]['users'];
             $rAllUsers = 0;

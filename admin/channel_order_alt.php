@@ -5,12 +5,12 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "channel_order"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["stream_order_array"])) {
+if (isset(CoreUtilities::$request["stream_order_array"])) {
     set_time_limit(0);
     ini_set('mysql.connect_timeout', 0);
     ini_set('max_execution_time', 0);
     ini_set('default_socket_timeout', 0);
-    $rOrder = json_decode(ipTV_lib::$request["stream_order_array"], true);
+    $rOrder = json_decode(CoreUtilities::$request["stream_order_array"], true);
     $rSort = 0;
     foreach ($rOrder as $rStream) {
         $ipTV_db_admin->query("UPDATE `streams` SET `order` = " . intval($rSort) . " WHERE `id` = " . intval($rStream) . ";");

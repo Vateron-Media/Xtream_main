@@ -5,8 +5,8 @@ if ($_SERVER['REMOTE_ADDR'] != '127.0.0.1') {
 }
 set_time_limit(0);
 require '../init.php';
-if (ipTV_lib::$request['call'] == 'publish') {
-    if (!in_array(ipTV_lib::$request['addr'], ipTV_streaming::rtmpIps())) {
+if (CoreUtilities::$request['call'] == 'publish') {
+    if (!in_array(CoreUtilities::$request['addr'], ipTV_streaming::rtmpIps())) {
         http_response_code(404);
         die;
     } else {
@@ -14,23 +14,23 @@ if (ipTV_lib::$request['call'] == 'publish') {
         die;
     }
 }
-if (ipTV_lib::$request['call'] == 'play_done') {
-    ipTV_streaming::playDone(ipTV_lib::$request['clientid']);
+if (CoreUtilities::$request['call'] == 'play_done') {
+    ipTV_streaming::playDone(CoreUtilities::$request['clientid']);
     http_response_code(200);
     die;
 }
-if (empty(ipTV_lib::$request['username']) && empty(ipTV_lib::$request['password']) && in_array(ipTV_lib::$request['addr'], ipTV_streaming::getAllowedIPsAdmin())) {
+if (empty(CoreUtilities::$request['username']) && empty(CoreUtilities::$request['password']) && in_array(CoreUtilities::$request['addr'], ipTV_streaming::getAllowedIPsAdmin())) {
     http_response_code(200);
     die;
 }
-if (!isset(ipTV_lib::$request['username']) || !isset(ipTV_lib::$request['password']) || !isset(ipTV_lib::$request['tcurl']) || !isset(ipTV_lib::$request['app'])) {
+if (!isset(CoreUtilities::$request['username']) || !isset(CoreUtilities::$request['password']) || !isset(CoreUtilities::$request['tcurl']) || !isset(CoreUtilities::$request['app'])) {
     http_response_code(404);
     die('Missing parameters.');
 }
-$stream_id = intval(ipTV_lib::$request['name']);
-$user_ip = ipTV_lib::$request['addr'];
-$username = ipTV_lib::$request['username'];
-$password = ipTV_lib::$request['password'];
+$stream_id = intval(CoreUtilities::$request['name']);
+$user_ip = CoreUtilities::$request['addr'];
+$username = CoreUtilities::$request['username'];
+$password = CoreUtilities::$request['password'];
 $extension = 'rtmp';
 $external_device = '';
 if ($user_info = ipTV_streaming::getUserInfo(null, $username, $password, true, false, true, array(), false, $user_ip)) {
@@ -63,7 +63,7 @@ if ($user_info = ipTV_streaming::getUserInfo(null, $username, $password, true, f
             http_response_code(404);
             die;
         }
-        if (!$forced_country && !in_array('ALL', ipTV_lib::$settings['allow_countries']) && !in_array($geoip_country_code, ipTV_lib::$settings['allow_countries'])) {
+        if (!$forced_country && !in_array('ALL', CoreUtilities::$settings['allow_countries']) && !in_array($geoip_country_code, CoreUtilities::$settings['allow_countries'])) {
             ipTV_streaming::clientLog($stream_id, $user_info['id'], 'COUNTRY_DISALLOW', $user_ip);
             http_response_code(404);
             die;
@@ -113,12 +113,12 @@ if ($user_info = ipTV_streaming::getUserInfo(null, $username, $password, true, f
     }
     if ($channel_info = ipTV_streaming::channelInfo($stream_id, $extension, $user_info, $user_ip, $geoip_country_code, $external_device, $user_info['con_isp_name'], 'live')) {
         $playlist = STREAMS_PATH . $stream_id . '_.m3u8';
-        if (!ipTV_streaming::isProcessRunning($channel_info['pid'], ipTV_lib::$FFMPEG_CPU) && $channel_info['on_demand'] == 1) {
+        if (!ipTV_streaming::isProcessRunning($channel_info['pid'], CoreUtilities::$FFMPEG_CPU) && $channel_info['on_demand'] == 1) {
             ipTV_stream::startMonitor($stream_id);
             sleep(5);
         }
         if ($user_info['max_connections'] == 0 || $user_info['active_cons'] < $user_info['max_connections']) {
-            $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES(?,?,?,?,?,?,?,?,?,?,?)', $user_info['id'], $stream_id, SERVER_ID, '', $user_ip, $extension, ipTV_lib::$request['clientid'], time(), $geoip_country_code, $user_info['con_isp_name'], $external_device);
+            $ipTV_db->query('INSERT INTO `lines_live` (`user_id`,`stream_id`,`server_id`,`user_agent`,`user_ip`,`container`,`pid`,`date_start`,`geoip_country_code`,`isp`,`external_device`) VALUES(?,?,?,?,?,?,?,?,?,?,?)', $user_info['id'], $stream_id, SERVER_ID, '', $user_ip, $extension, CoreUtilities::$request['clientid'], time(), $geoip_country_code, $user_info['con_isp_name'], $external_device);
             $activity_id = $ipTV_db->last_insert_id();
             $ipTV_db->close_mysql();
             http_response_code(200);

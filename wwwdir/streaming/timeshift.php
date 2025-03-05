@@ -5,32 +5,32 @@ set_time_limit(0);
 require '../init.php';
 header('Access-Control-Allow-Origin: *');
 $streaming_block = true;
-if (!isset(ipTV_lib::$request['start']) || !isset(ipTV_lib::$request['duration']) || !isset(ipTV_lib::$request['stream'])) {
+if (!isset(CoreUtilities::$request['start']) || !isset(CoreUtilities::$request['duration']) || !isset(CoreUtilities::$request['stream'])) {
     die('Missing parameters.');
 }
-if (ipTV_lib::$settings['use_buffer'] == 0) {
+if (CoreUtilities::$settings['use_buffer'] == 0) {
     header('X-Accel-Buffering: no');
 }
 $geoip = MaxMind\Db\Reader(GEOIP2COUNTRY_FILENAME);
 $activity_id = 0;
 $connection_speed_file = null;
 $container_priority = null;
-$username = empty(ipTV_lib::$request['username']) ? '' : ipTV_lib::$request['username'];
-$password = empty(ipTV_lib::$request['password']) ? '' : ipTV_lib::$request['password'];
-$stream_id = ipTV_lib::$request['stream'];
+$username = empty(CoreUtilities::$request['username']) ? '' : CoreUtilities::$request['username'];
+$password = empty(CoreUtilities::$request['password']) ? '' : CoreUtilities::$request['password'];
+$stream_id = CoreUtilities::$request['stream'];
 $size = 0;
 if (!is_numeric($stream_id) && stristr($stream_id, '_')) {
     list($stream_id, $pos, $size) = explode('_', $stream_id);
     $stream_id = intval($stream_id);
     $stream_item = intval($pos);
     $size = intval($size);
-    ipTV_lib::$request['extension'] = 'm3u8';
+    CoreUtilities::$request['extension'] = 'm3u8';
 }
 $user_ip = ipTV_streaming::getUserIP();
 $user_agent = empty($_SERVER['HTTP_USER_AGENT']) ? '' : htmlentities(trim($_SERVER['HTTP_USER_AGENT']));
 $geoip_country_code = $geoip->getWithPrefixLen($user_ip)[0]['registered_country']['iso_code'];
 $geoip->close();
-$play_token = empty(ipTV_lib::$request['play_token']) ? null : ipTV_lib::$request['play_token'];
+$play_token = empty(CoreUtilities::$request['play_token']) ? null : CoreUtilities::$request['play_token'];
 if ($user_info = ipTV_streaming::getUserInfo(null, $username, $password, true, false, true, array(), false, $user_ip, $user_agent, array(), $play_token, $stream_id)) {
     if (isset($user_info['mag_invalid_token'])) {
         ipTV_streaming::clientLog($stream_id, $user_info['id'], 'MAG_TOKEN_INVALID', $user_ip);
@@ -51,7 +51,7 @@ if ($user_info = ipTV_streaming::getUserInfo(null, $username, $password, true, f
         ipTV_streaming::showVideo($user_info['is_restreamer'], 'show_banned_video', 'banned_video_path');
         die;
     }
-    if (empty($user_agent) && ipTV_lib::$settings['disallow_empty_user_agents'] == 1) {
+    if (empty($user_agent) && CoreUtilities::$settings['disallow_empty_user_agents'] == 1) {
         ipTV_streaming::clientLog($stream_id, $user_info['id'], 'EMPTY_UA', $user_ip);
         die;
     }
@@ -65,7 +65,7 @@ if ($user_info = ipTV_streaming::getUserInfo(null, $username, $password, true, f
             ipTV_streaming::clientLog($stream_id, $user_info['id'], 'COUNTRY_DISALLOW', $user_ip);
             die;
         }
-        if (!$forced_country && !in_array('ALL', ipTV_lib::$settings['allow_countries']) && !in_array($geoip_country_code, ipTV_lib::$settings['allow_countries'])) {
+        if (!$forced_country && !in_array('ALL', CoreUtilities::$settings['allow_countries']) && !in_array($geoip_country_code, CoreUtilities::$settings['allow_countries'])) {
             ipTV_streaming::clientLog($stream_id, $user_info['id'], 'COUNTRY_DISALLOW', $user_ip);
             die;
         }
@@ -118,8 +118,8 @@ if (empty($channel_info)) {
     http_response_code(403);
     die;
 }
-$start = ipTV_lib::$request['start'];
-$duration = intval(ipTV_lib::$request['duration']);
+$start = CoreUtilities::$request['start'];
+$duration = intval(CoreUtilities::$request['duration']);
 if (!is_numeric($start)) {
     if (substr_count($start, '-') == 1) {
         list($date, $job) = explode('-', $start);
@@ -171,7 +171,7 @@ while ($index < $duration) {
 if (!empty($queue)) {
     $date = time();
     $container_priority = 'TV Archive';
-    switch (ipTV_lib::$request['extension']) {
+    switch (CoreUtilities::$request['extension']) {
         case 'm3u8':
             if (isset($stream_item)) {
                 if (!empty($queue[$stream_item]) && file_exists($queue[$stream_item]['filename']) && $queue[$stream_item]['filesize'] == $size) {
@@ -186,7 +186,7 @@ if (!empty($queue)) {
                     $fp = fopen($queue[$stream_item]['filename'], 'r');
                     fseek($fp, $offset);
                     while (!feof($fp)) {
-                        echo stream_get_line($fp, ipTV_lib::$settings['read_buffer_size']);
+                        echo stream_get_line($fp, CoreUtilities::$settings['read_buffer_size']);
                     }
                     fclose($fp);
                 }
@@ -274,14 +274,14 @@ if (!empty($queue)) {
             $offset = 0;
             $total_file_size = 0;
             $total_bitrate = $bitrate * 125;
-            $total_bitrate += $total_bitrate * ipTV_lib::$settings['vod_bitrate_plus'] * 0.01;
+            $total_bitrate += $total_bitrate * CoreUtilities::$settings['vod_bitrate_plus'] * 0.01;
             $time_start = time();
             $movie_file_size = 0;
-            $buffer = ipTV_lib::$settings['read_buffer_size'];
+            $buffer = CoreUtilities::$settings['read_buffer_size'];
             $index = 0;
             $limit_count = 0;
-            if (ipTV_lib::$settings['vod_limit_at'] > 0) {
-                $vod_limit_at_length = intval($size * ipTV_lib::$settings['vod_limit_at'] / 100);
+            if (CoreUtilities::$settings['vod_limit_at'] > 0) {
+                $vod_limit_at_length = intval($size * CoreUtilities::$settings['vod_limit_at'] / 100);
             } else {
                 $vod_limit_at_length = $size;
             }
@@ -342,7 +342,7 @@ function shutdown() {
     if ($activity_id !== false) {
         ipTV_streaming::closeAndTransfer($activity_id);
         ipTV_streaming::writeOfflineActivity(SERVER_ID, $user_info['id'], $stream_id, $date, $user_agent, $user_ip, $container_priority, $geoip_country_code, $user_info['con_isp_name'], $external_device);
-        ipTV_lib::unlinkFile($connection_speed_file);
+        CoreUtilities::unlinkFile($connection_speed_file);
     }
     fastcgi_finish_request();
     posix_kill(getmypid(), 9);

@@ -5,13 +5,13 @@ if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "ticket"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_ticket"])) {
-    if (((strlen(ipTV_lib::$request["title"]) == 0) && (!isset(ipTV_lib::$request["respond"]))) or ((strlen(ipTV_lib::$request["message"]) == 0))) {
+if (isset(CoreUtilities::$request["submit_ticket"])) {
+    if (((strlen(CoreUtilities::$request["title"]) == 0) && (!isset(CoreUtilities::$request["respond"]))) or ((strlen(CoreUtilities::$request["message"]) == 0))) {
         $_STATUS = 1;
     }
     if (!isset($_STATUS)) {
-        if (!isset(ipTV_lib::$request["respond"])) {
-            $rArray = array("member_id" => $rUserInfo["id"], "title" => ipTV_lib::$request["title"], "status" => 1, "admin_read" => 0, "user_read" => 1);
+        if (!isset(CoreUtilities::$request["respond"])) {
+            $rArray = array("member_id" => $rUserInfo["id"], "title" => CoreUtilities::$request["title"], "status" => 1, "admin_read" => 0, "user_read" => 1);
             $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
             foreach (array_values($rArray) as $rValue) {
                 isset($rValues) ? $rValues .= ',' : $rValues = '';
@@ -27,22 +27,22 @@ if (isset(ipTV_lib::$request["submit_ticket"])) {
             $rQuery = "INSERT INTO `tickets`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
                 $rInsertID = $ipTV_db_admin->last_insert_id();
-                $ipTV_db_admin->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . $rInsertID . ", 0, '" . ipTV_lib::$request["message"] . "', " . time() . ");");
+                $ipTV_db_admin->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . $rInsertID . ", 0, '" . CoreUtilities::$request["message"] . "', " . time() . ");");
                 header("Location: ./ticket_view.php?id=" . intval($rInsertID));
             } else {
                 $_STATUS = 2;
             }
         } else {
-            $rTicket = getTicket(ipTV_lib::$request["respond"]);
+            $rTicket = getTicket(CoreUtilities::$request["respond"]);
             if ($rTicket) {
                 if (intval($rUserInfo["id"]) == intval($rTicket["member_id"])) {
-                    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 0, `user_read` = 1 WHERE `id` = " . intval(ipTV_lib::$request["respond"]) . ";");
-                    $ipTV_db_admin->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . intval(ipTV_lib::$request["respond"]) . ", 0, '" . ipTV_lib::$request["message"] . "', " . time() . ");");
+                    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 0, `user_read` = 1 WHERE `id` = " . intval(CoreUtilities::$request["respond"]) . ";");
+                    $ipTV_db_admin->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . intval(CoreUtilities::$request["respond"]) . ", 0, '" . CoreUtilities::$request["message"] . "', " . time() . ");");
                 } else {
-                    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 0, `user_read` = 0 WHERE `id` = " . intval(ipTV_lib::$request["respond"]) . ";");
-                    $ipTV_db_admin->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . intval(ipTV_lib::$request["respond"]) . ", 1, '" . ipTV_lib::$request["message"] . "', " . time() . ");");
+                    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 0, `user_read` = 0 WHERE `id` = " . intval(CoreUtilities::$request["respond"]) . ";");
+                    $ipTV_db_admin->query("INSERT INTO `tickets_replies`(`ticket_id`, `admin_reply`, `message`, `date`) VALUES(" . intval(CoreUtilities::$request["respond"]) . ", 1, '" . CoreUtilities::$request["message"] . "', " . time() . ");");
                 }
-                header("Location: ./ticket_view.php?id=" . intval(ipTV_lib::$request["respond"]));
+                header("Location: ./ticket_view.php?id=" . intval(CoreUtilities::$request["respond"]));
             } else {
                 $_STATUS = 2;
             }
@@ -50,8 +50,8 @@ if (isset(ipTV_lib::$request["submit_ticket"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rTicket = getTicket(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rTicket = getTicket(CoreUtilities::$request["id"]);
     if (!$rTicket) {
         exit;
     }

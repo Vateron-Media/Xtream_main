@@ -23,11 +23,11 @@ if (file_exists(TMP_PATH . '.migration.status') && file_exists(TMP_PATH . '.migr
     }
 }
 
-if (!isset(ipTV_lib::$request['update'])) {
-    if (isset(ipTV_lib::$request['migrate'])) {
+if (!isset(CoreUtilities::$request['update'])) {
+    if (isset(CoreUtilities::$request['migrate'])) {
         $rMigrateOptions = array();
 
-        foreach (ipTV_lib::$request as $rKey => $rValue) {
+        foreach (CoreUtilities::$request as $rKey => $rValue) {
             if (substr($rKey, 0, 8) == 'migrate#') {
                 list(, $rMigrateOptions[]) = explode('#', $rKey);
             }
@@ -51,15 +51,15 @@ if (!isset(ipTV_lib::$request['update'])) {
             exit();
         }
     } else {
-        if (isset(ipTV_lib::$request['new_user']) && $rFirstRun) {
-            if (strlen(ipTV_lib::$request['password']) < 8 || strlen(ipTV_lib::$request['username']) < 8) {
-                ipTV_lib::$request['new'] = 1;
+        if (isset(CoreUtilities::$request['new_user']) && $rFirstRun) {
+            if (strlen(CoreUtilities::$request['password']) < 8 || strlen(CoreUtilities::$request['username']) < 8) {
+                CoreUtilities::$request['new'] = 1;
                 $_STATUS = STATUS_FAILURE;
             } else {
                 $rArray = verifyPostTable('reg_users');
-                $rArray['username'] = ipTV_lib::$request['username'];
-                $rArray['password'] = cryptPassword(ipTV_lib::$request['password']);
-                $rArray['email'] = ipTV_lib::$request['email'];
+                $rArray['username'] = CoreUtilities::$request['username'];
+                $rArray['password'] = cryptPassword(CoreUtilities::$request['password']);
+                $rArray['email'] = CoreUtilities::$request['email'];
                 $rArray['last_login'] = time();
                 $rArray['date_registered'] = $rArray['last_login'];
                 $rArray['member_group_id'] = 1;
@@ -74,14 +74,14 @@ if (!isset(ipTV_lib::$request['update'])) {
                     $_SESSION['ip'] = getIP();
                     $_SESSION['verify'] = md5($rArray['username'] . '||' . $rArray['password']);
                     $ipTV_db_admin->query('UPDATE `servers` SET `server_ip` = ? WHERE `is_main` = 1 AND `server_type` = 0 LIMIT 1;', $_SERVER['SERVER_ADDR']);
-                    ipTV_lib::setSettings(["live_streaming_pass" => generateString(15)]);
+                    CoreUtilities::setSettings(["live_streaming_pass" => generateString(15)]);
 
                     header('Location: ./dashboard.php');
 
                     exit();
                 }
 
-                ipTV_lib::$request['new'] = 1;
+                CoreUtilities::$request['new'] = 1;
                 $_STATUS = STATUS_FAILURE;
             }
         }
@@ -219,7 +219,7 @@ if (!isset(ipTV_lib::$request['update'])) {
                                     </div>
                                 </div>
                                 <?php } else {
-                                if (isset(ipTV_lib::$request['new']) && $rFirstRun) { ?>
+                                if (isset(CoreUtilities::$request['new']) && $rFirstRun) { ?>
                                     <form action="./setup.php" method="POST" data-parsley-validate="">
                                         <div class="row">
                                             <div class="col-12">

@@ -9,12 +9,12 @@ if (!checkPermissions()) {
     goHome();
 }
 
-if (!isset(ipTV_lib::$request['id']) || !isset($rServers[ipTV_lib::$request['id']])) {
+if (!isset(CoreUtilities::$request['id']) || !isset($rServers[CoreUtilities::$request['id']])) {
     goHome();
     return;
 }
 
-$rServerArr = $rServers[ipTV_lib::$request['id']];
+$rServerArr = $rServers[CoreUtilities::$request['id']];
 
 $rWatchdog = json_decode($rServerArr['watchdog_data'], true);
 $rServiceMax = (0 < intval($rWatchdog['cpu_cores']) ? $rWatchdog['cpu_cores'] : 16);

@@ -10,7 +10,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         while (true && $ipTV_db->ping()) {
             if (!($rLastCheck && $rInterval > time() - $rLastCheck)) {
                 if (md5_file(__FILE__) == $rMD5) {
-                    ipTV_lib::$settings = ipTV_lib::getSettings(true);
+                    CoreUtilities::$settings = CoreUtilities::getSettings(true);
                     $rLastCheck = time();
                 } else {
                     echo 'File changed! Break.' . "\n";
@@ -27,7 +27,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                         }
                     }
                 }
-                // $rFreeSlots = (0 < ipTV_lib::$settings['max_encode_movies'] ? intval(ipTV_lib::$settings['max_encode_movies']) - count($rInProgress) : 50);
+                // $rFreeSlots = (0 < CoreUtilities::$settings['max_encode_movies'] ? intval(CoreUtilities::$settings['max_encode_movies']) - count($rInProgress) : 50);
                 // if ($rFreeSlots > 0) {
                 //     if ($ipTV_db->query("SELECT `id`, `stream_id` FROM `queue` WHERE `server_id` = ? AND `pid` IS NULL AND `type` = 'movie' ORDER BY `added` ASC LIMIT " . $rFreeSlots . ';', SERVER_ID)) {
                 //         if ($ipTV_db->num_rows() > 0) {
@@ -53,7 +53,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                             }
                         }
                     }
-                    // $rFreeSlots = (0 < ipTV_lib::$settings['max_encode_cc'] ? intval(ipTV_lib::$settings['max_encode_cc']) - count($rInProgress) : 1);
+                    // $rFreeSlots = (0 < CoreUtilities::$settings['max_encode_cc'] ? intval(CoreUtilities::$settings['max_encode_cc']) - count($rInProgress) : 1);
                     // if ($rFreeSlots > 0) {
                     //     if ($ipTV_db->query("SELECT `id`, `stream_id` FROM `queue` WHERE `server_id` = ? AND `pid` IS NULL AND `type` = 'channel' ORDER BY `added` ASC LIMIT " . $rFreeSlots . ';', SERVER_ID)) {
                     //         if ($ipTV_db->num_rows() > 0) {
@@ -83,7 +83,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                     if (count($rDelete) > 0) {
                         $ipTV_db->query('DELETE FROM `queue` WHERE `id` IN (' . implode(',', $rDelete) . ');');
                     }
-                    sleep((0 < ipTV_lib::$settings['queue_loop'] ? intval(ipTV_lib::$settings['queue_loop']) : 5));
+                    sleep((0 < CoreUtilities::$settings['queue_loop'] ? intval(CoreUtilities::$settings['queue_loop']) : 5));
                 }
                 break;
             }

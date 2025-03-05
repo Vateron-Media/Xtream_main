@@ -5,16 +5,16 @@ if (!isset($_SESSION['hash'])) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["action"])) {
-    switch (ipTV_lib::$request["action"]) {
+if (isset(CoreUtilities::$request["action"])) {
+    switch (CoreUtilities::$request["action"]) {
         case "stream":
             if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_stream"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rStreamID = intval(ipTV_lib::$request["stream_id"]);
-            $rServerID = intval(ipTV_lib::$request["server_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rStreamID = intval(CoreUtilities::$request["stream_id"]);
+            $rServerID = intval(CoreUtilities::$request["server_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if (in_array($rSub, array("start", "stop"))) {
                 echo APIRequest(array("action" => "stream", "sub" => $rSub, "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
@@ -39,9 +39,9 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rStreamID = intval(ipTV_lib::$request["stream_id"]);
-            $rServerID = intval(ipTV_lib::$request["server_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rStreamID = intval(CoreUtilities::$request["stream_id"]);
+            $rServerID = intval(CoreUtilities::$request["server_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if (in_array($rSub, array("start", "stop"))) {
                 echo APIRequest(array("action" => "vod", "sub" => $rSub, "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
@@ -64,9 +64,9 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rStreamID = intval(ipTV_lib::$request["stream_id"]);
-            $rServerID = intval(ipTV_lib::$request["server_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rStreamID = intval(CoreUtilities::$request["stream_id"]);
+            $rServerID = intval(CoreUtilities::$request["server_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if (in_array($rSub, array("start", "stop"))) {
                 echo APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
@@ -86,7 +86,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
         case "user":
-            $rUserID = intval(ipTV_lib::$request["user_id"]);
+            $rUserID = intval(CoreUtilities::$request["user_id"]);
             // Check if this user falls under the reseller or subresellers.
             if (($rPermissions["is_reseller"]) && (!hasPermissions("user", $rUserID))) {
                 echo json_encode(array("result" => false));
@@ -95,7 +95,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rSub = ipTV_lib::$request["sub"];
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or ($rPermissions["is_admin"])) {
                     if ($rPermissions["is_reseller"]) {
@@ -159,7 +159,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
                 //isp lock
             } elseif ($rSub == "kill") {
-                if (ipTV_lib::$settings['redis_handler']) {
+                if (CoreUtilities::$settings['redis_handler']) {
                     foreach (ipTV_streaming::getRedisConnections($rUserID, null, null, true, false, false) as $rConnection) {
                         ipTV_streaming::closeConnection($rConnection);
                     }
@@ -176,7 +176,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
         case "user_activity":
-            $rPID = intval(ipTV_lib::$request["pid"]);
+            $rPID = intval(CoreUtilities::$request["pid"]);
             // Check if the user running this PID falls under the reseller or subresellers.
             if (($rPermissions["is_reseller"]) && (!hasPermissions("pid", $rPID))) {
                 echo json_encode(array("result" => false));
@@ -185,7 +185,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rSub = ipTV_lib::$request["sub"];
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "kill") {
                 $ipTV_db_admin->query("SELECT `server_id` FROM `lines_live` WHERE `pid` = " . intval($rPID) . " LIMIT 1;");
                 if ($ipTV_db_admin->num_rows() == 1) {
@@ -202,11 +202,11 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            SystemAPIRequest(ipTV_lib::$request['server'], array('action' => 'kill_pid', 'pid' => intval(ipTV_lib::$request['pid'])));
+            SystemAPIRequest(CoreUtilities::$request['server'], array('action' => 'kill_pid', 'pid' => intval(CoreUtilities::$request['pid'])));
             echo json_encode(array('result' => true));
             exit();
         case "reg_user":
-            $rUserID = intval(ipTV_lib::$request["user_id"]);
+            $rUserID = intval(CoreUtilities::$request["user_id"]);
             // Check if this registered user falls under the reseller or subresellers.
             if (($rPermissions["is_reseller"]) && (!hasPermissions("reg_user", $rUserID))) {
                 echo json_encode(array("result" => false));
@@ -215,7 +215,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rSub = ipTV_lib::$request["sub"];
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or ($rPermissions["is_admin"])) {
                     if ($rPermissions["is_reseller"]) {
@@ -252,7 +252,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
         case "ticket":
-            $rTicketID = intval(ipTV_lib::$request["ticket_id"]);
+            $rTicketID = intval(CoreUtilities::$request["ticket_id"]);
             // Check if this ticket falls under the reseller or subresellers.
             if (($rPermissions["is_reseller"]) && (!hasPermissions("ticket", $rTicketID))) {
                 echo json_encode(array("result" => false));
@@ -261,7 +261,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rSub = ipTV_lib::$request["sub"];
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `tickets` WHERE `id` = " . intval($rTicketID) . ";");
                 $ipTV_db_admin->query("DELETE FROM `tickets_replies` WHERE `ticket_id` = " . intval($rTicketID) . ";");
@@ -288,7 +288,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
         case "mag":
-            $rMagID = intval(ipTV_lib::$request["mag_id"]);
+            $rMagID = intval(CoreUtilities::$request["mag_id"]);
             // Check if this device falls under the reseller or subresellers.
             if (($rPermissions["is_reseller"]) && (!hasPermissions("mag", $rMagID))) {
                 echo json_encode(array("result" => false));
@@ -297,7 +297,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rSub = ipTV_lib::$request["sub"];
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $rMagDetails = getMag($rMagID);
                 if (isset($rMagDetails["user_id"])) {
@@ -316,8 +316,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rMagID = intval(ipTV_lib::$request["mag_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rMagID = intval(CoreUtilities::$request["mag_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `mag_events` WHERE `id` = " . intval($rMagID) . ";");
                 echo json_encode(array("result" => true));
@@ -331,8 +331,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rEPGID = intval(ipTV_lib::$request["epg_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rEPGID = intval(CoreUtilities::$request["epg_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `epg` WHERE `id` = " . intval($rEPGID) . ";");
                 echo json_encode(array("result" => true));
@@ -346,8 +346,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rProfileID = intval(ipTV_lib::$request["profile_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rProfileID = intval(CoreUtilities::$request["profile_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `transcoding_profiles` WHERE `profile_id` = " . intval($rProfileID) . ";");
                 echo json_encode(array("result" => true));
@@ -361,8 +361,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rSeriesID = intval(ipTV_lib::$request["series_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rSeriesID = intval(CoreUtilities::$request["series_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `series` WHERE `id` = " . intval($rSeriesID) . ";");
                 $ipTV_db_admin->query("SELECT `stream_id` FROM `series_episodes` WHERE `series_id` = " . intval($rSeriesID) . ";");
@@ -386,8 +386,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rFolderID = intval(ipTV_lib::$request["folder_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rFolderID = intval(CoreUtilities::$request["folder_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `watch_folders` WHERE `id` = " . intval($rFolderID) . ";");
                 echo json_encode(array("result" => true));
@@ -401,8 +401,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rUAID = intval(ipTV_lib::$request["ua_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rUAID = intval(CoreUtilities::$request["ua_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `blocked_user_agents` WHERE `id` = " . intval($rUAID) . ";");
                 echo json_encode(array("result" => true));
@@ -416,8 +416,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rISPID = intval(ipTV_lib::$request["isp_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rISPID = intval(CoreUtilities::$request["isp_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `isp_addon` WHERE `id` = " . intval($rISPID) . ";");
                 echo json_encode(array("result" => true));
@@ -431,10 +431,10 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rSub = ipTV_lib::$request['sub'];
+            $rSub = CoreUtilities::$request['sub'];
 
             if ($rSub == 'delete') {
-                rdeleteBlockedIP(ipTV_lib::$request['ip']);
+                rdeleteBlockedIP(CoreUtilities::$request['ip']);
                 echo json_encode(array('result' => true));
                 exit();
             }
@@ -445,8 +445,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rIPID = intval(ipTV_lib::$request["ip"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rIPID = intval(CoreUtilities::$request["ip"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `login_flood` WHERE `id` = " . intval($rIPID) . ";");
                 echo json_encode(array("result" => true));
@@ -460,8 +460,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rIPID = intval(ipTV_lib::$request["ip"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rIPID = intval(CoreUtilities::$request["ip"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `rtmp_ips` WHERE `id` = " . intval($rIPID) . ";");
                 echo json_encode(array("result" => true));
@@ -475,8 +475,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rID = intval(ipTV_lib::$request["id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rID = intval(CoreUtilities::$request["id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `subreseller_setup` WHERE `id` = " . intval($rID) . ";");
                 echo json_encode(array("result" => true));
@@ -490,8 +490,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rID = intval(ipTV_lib::$request["result_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rID = intval(CoreUtilities::$request["result_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `watch_output` WHERE `id` = " . intval($rID) . ";");
                 echo json_encode(array("result" => true));
@@ -501,7 +501,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
         case "enigma":
-            $rEnigmaID = intval(ipTV_lib::$request["enigma_id"]);
+            $rEnigmaID = intval(CoreUtilities::$request["enigma_id"]);
             // Check if this device falls under the reseller or subresellers.
             if (($rPermissions["is_reseller"]) && (!hasPermissions("e2", $rEnigmaID))) {
                 echo json_encode(array("result" => false));
@@ -510,7 +510,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rSub = ipTV_lib::$request["sub"];
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $rEnigmaDetails = getEnigma($rEnigmaID);
                 if (isset($rEnigmaDetails["user_id"])) {
@@ -529,14 +529,14 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rServerID = intval(ipTV_lib::$request["server_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rServerID = intval(CoreUtilities::$request["server_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
-                if ($rServers[ipTV_lib::$request["server_id"]]["can_delete"] == 1) {
+                if ($rServers[CoreUtilities::$request["server_id"]]["can_delete"] == 1) {
                     $ipTV_db_admin->query("DELETE FROM `servers` WHERE `id` = " . intval($rServerID) . ";");
                     $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `server_id` = " . intval($rServerID) . ";");
                     // drop user mysql
-                    $ipTV_db_admin->query("DROP USER 'lb_" . ipTV_lib::$request["server_id"] . "'@'" . $rServers[ipTV_lib::$request["server_id"]]["server_ip"] . "';");
+                    $ipTV_db_admin->query("DROP USER 'lb_" . CoreUtilities::$request["server_id"] . "'@'" . $rServers[CoreUtilities::$request["server_id"]]["server_ip"] . "';");
                     echo json_encode(array("result" => true));
                     exit;
                 } else {
@@ -587,14 +587,14 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rPackageID = intval(ipTV_lib::$request["package_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rPackageID = intval(CoreUtilities::$request["package_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `packages` WHERE `id` = " . intval($rPackageID) . ";");
                 echo json_encode(array("result" => true));
                 exit;
             } elseif (in_array($rSub, array("is_trial", "is_official", "can_gen_mag", "can_gen_e2", "only_mag", "only_e2"))) {
-                $ipTV_db_admin->query("UPDATE `packages` SET `" . $rSub . "` = " . intval(ipTV_lib::$request["value"]) . " WHERE `id` = " . intval($rPackageID) . ";");
+                $ipTV_db_admin->query("UPDATE `packages` SET `" . $rSub . "` = " . intval(CoreUtilities::$request["value"]) . " WHERE `id` = " . intval($rPackageID) . ";");
                 echo json_encode(array("result" => true));
                 exit;
             } else {
@@ -606,14 +606,14 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rGroupID = intval(ipTV_lib::$request["group_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rGroupID = intval(CoreUtilities::$request["group_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `member_groups` WHERE `group_id` = " . intval($rGroupID) . " AND `can_delete` = 1;");
                 echo json_encode(array("result" => true));
                 exit;
             } elseif (in_array($rSub, array("is_banned", "is_admin", "is_reseller"))) {
-                $ipTV_db_admin->query("UPDATE `member_groups` SET `" . $rSub . "` = " . intval(ipTV_lib::$request["value"]) . " WHERE `group_id` = " . intval($rGroupID) . ";");
+                $ipTV_db_admin->query("UPDATE `member_groups` SET `" . $rSub . "` = " . intval(CoreUtilities::$request["value"]) . " WHERE `group_id` = " . intval($rGroupID) . ";");
                 echo json_encode(array("result" => true));
                 exit;
             } else {
@@ -625,8 +625,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rBouquetID = intval(ipTV_lib::$request["bouquet_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rBouquetID = intval(CoreUtilities::$request["bouquet_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `bouquets` WHERE `id` = " . intval($rBouquetID) . ";");
                 echo json_encode(array("result" => true));
@@ -640,8 +640,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rCategoryID = intval(ipTV_lib::$request["category_id"]);
-            $rSub = ipTV_lib::$request["sub"];
+            $rCategoryID = intval(CoreUtilities::$request["category_id"]);
+            $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `stream_categories` WHERE `id` = " . intval($rCategoryID) . ";");
                 echo json_encode(array("result" => true));
@@ -653,15 +653,15 @@ if (isset(ipTV_lib::$request["action"])) {
         case "get_package":
             $return = array();
             $rOverride = json_decode($rUserInfo["override_packages"], true);
-            $ipTV_db_admin->query("SELECT `id`, `bouquets`, `official_credits` AS `cost_credits`, `official_duration`, `official_duration_in`, `max_connections`, `can_gen_mag`, `can_gen_e2`, `only_mag`, `only_e2` FROM `packages` WHERE `id` = " . intval(ipTV_lib::$request["package_id"]) . ";");
+            $ipTV_db_admin->query("SELECT `id`, `bouquets`, `official_credits` AS `cost_credits`, `official_duration`, `official_duration_in`, `max_connections`, `can_gen_mag`, `can_gen_e2`, `only_mag`, `only_e2` FROM `packages` WHERE `id` = " . intval(CoreUtilities::$request["package_id"]) . ";");
             if ($ipTV_db_admin->num_rows() == 1) {
                 $rData = $ipTV_db_admin->get_row();
                 if ((isset($rOverride[$rData["id"]]["official_credits"])) && (strlen($rOverride[$rData["id"]]["official_credits"]) > 0)) {
                     $rData["cost_credits"] = $rOverride[$rData["id"]]["official_credits"];
                 }
                 $rData["exp_date"] = date('Y-m-d', strtotime('+' . intval($rData["official_duration"]) . ' ' . $rData["official_duration_in"]));
-                if (isset(ipTV_lib::$request["user_id"])) {
-                    if ($rUser = getUser(ipTV_lib::$request["user_id"])) {
+                if (isset(CoreUtilities::$request["user_id"])) {
+                    if ($rUser = getUser(CoreUtilities::$request["user_id"])) {
                         if (time() < $rUser["exp_date"]) {
                             $rData["exp_date"] = date('Y-m-d', strtotime('+' . intval($rData["official_duration"]) . ' ' . $rData["official_duration_in"], $rUser["exp_date"]));
                         } else {
@@ -683,7 +683,7 @@ if (isset(ipTV_lib::$request["action"])) {
             exit;
         case "get_package_trial":
             $return = array();
-            $ipTV_db_admin->query("SELECT `bouquets`, `trial_credits` AS `cost_credits`, `trial_duration`, `trial_duration_in`, `max_connections`, `can_gen_mag`, `can_gen_e2`, `only_mag`, `only_e2` FROM `packages` WHERE `id` = " . intval(ipTV_lib::$request["package_id"]) . ";");
+            $ipTV_db_admin->query("SELECT `bouquets`, `trial_credits` AS `cost_credits`, `trial_duration`, `trial_duration_in`, `max_connections`, `can_gen_mag`, `can_gen_e2`, `only_mag`, `only_e2` FROM `packages` WHERE `id` = " . intval(CoreUtilities::$request["package_id"]) . ";");
             if ($ipTV_db_admin->num_rows() == 1) {
                 $rData = $ipTV_db_admin->get_row();
                 $rData["exp_date"] = date('Y-m-d', strtotime('+' . intval($rData["trial_duration"]) . ' ' . $rData["trial_duration_in"]));
@@ -705,7 +705,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
             $rData = array();
-            $rStreamIDs = json_decode(ipTV_lib::$request["stream_ids"], true);
+            $rStreamIDs = json_decode(CoreUtilities::$request["stream_ids"], true);
             $rStreams = getStreams(null, false, $rStreamIDs);
             echo json_encode(array("result" => true, "data" => $rStreams));
             exit;
@@ -731,11 +731,11 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array('result' => false));
                 exit();
             }
-            $rServers = ipTV_lib::getServers(true);
+            $rServers = CoreUtilities::getServers(true);
             $return = array('cpu' => 0, 'mem' => 0, 'io' => 0, 'fs' => 0, 'uptime' => '--', 'bytes_sent' => 0, 'bytes_received' => 0, 'open_connections' => 0, 'total_connections' => 0, 'online_users' => 0, 'total_users' => 0, 'total_streams' => 0, 'total_running_streams' => 0, 'offline_streams' => 0, 'requests_per_second' => 0, 'servers' => array());
 
-            if (ipTV_lib::$settings['redis_handler']) {
-                $return['total_users'] = ipTV_lib::$settings['total_users'];
+            if (CoreUtilities::$settings['redis_handler']) {
+                $return['total_users'] = CoreUtilities::$settings['total_users'];
             } else {
                 $ipTV_db_admin->query('SELECT `activity_id` FROM `lines_live` WHERE `hls_end` = 0 GROUP BY `user_id`;');
 
@@ -744,8 +744,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 }
             }
 
-            if (isset(ipTV_lib::$request['server_id'])) {
-                $rServerID = intval(ipTV_lib::$request['server_id']);
+            if (isset(CoreUtilities::$request['server_id'])) {
+                $rServerID = intval(CoreUtilities::$request['server_id']);
                 $rWatchDog = json_decode($rServers[$rServerID]['watchdog_data'], true);
 
                 if (is_array($rWatchDog)) {
@@ -767,7 +767,7 @@ if (isset(ipTV_lib::$request["action"])) {
 
                 $return['requests_per_second'] = $rServers[$rServerID]['requests_per_second'];
 
-                if (ipTV_lib::$settings['redis_handler']) {
+                if (CoreUtilities::$settings['redis_handler']) {
                     $return['open_connections'] = $rServers[$rServerID]['connections'];
                     $return['online_users'] = $rServers[$rServerID]['users'];
 
@@ -818,7 +818,7 @@ if (isset(ipTV_lib::$request["action"])) {
             } else {
                 $rUptime = 0;
 
-                if (!ipTV_lib::$settings['redis_handler']) {
+                if (!CoreUtilities::$settings['redis_handler']) {
                     $ipTV_db_admin->query('SELECT COUNT(*) AS `count` FROM `lines_live` WHERE `hls_end` = 0;');
 
                     if (0 < $ipTV_db_admin->num_rows()) {
@@ -871,7 +871,7 @@ if (isset(ipTV_lib::$request["action"])) {
                     if ($rServers[$rServerID]['server_online']) {
                         $rArray = array();
 
-                        if (ipTV_lib::$settings['redis_handler']) {
+                        if (CoreUtilities::$settings['redis_handler']) {
                             $rArray['open_connections'] = $rServers[$rServerID]['connections'];
                             $return['open_connections'] += $rServers[$rServerID]['connections'];
                             $return['total_connections'] += $rServers[$rServerID]['connections'];
@@ -921,7 +921,7 @@ if (isset(ipTV_lib::$request["action"])) {
                     $return['total_running_streams'] += $rServerArray['total_running_streams'];
                     $return['offline_streams'] += $rServerArray['offline_streams'];
                 }
-                $return['online_users'] = ipTV_lib::$settings['total_users'];
+                $return['online_users'] = CoreUtilities::$settings['total_users'];
             }
 
             echo json_encode($return, JSON_PARTIAL_OUTPUT_ON_ERROR);
@@ -949,8 +949,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
             $return = array("streams" => array(), "result" => true);
-            if (isset(ipTV_lib::$request["data"])) {
-                foreach (ipTV_lib::$request["data"] as $rStreamID) {
+            if (isset(CoreUtilities::$request["data"])) {
+                foreach (CoreUtilities::$request["data"] as $rStreamID) {
                     $ipTV_db_admin->query("SELECT `id`, `stream_display_name`, `stream_source` FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                     if ($ipTV_db_admin->num_rows() == 1) {
                         $rData = $ipTV_db_admin->get_row();
@@ -967,8 +967,8 @@ if (isset(ipTV_lib::$request["action"])) {
             }
             $return = array("streams" => array(), "vod" => array(), "series" => array(), "radios" => array(), "result" => true);
             // stream
-            if (isset(ipTV_lib::$request["data"]["stream"])) {
-                foreach (ipTV_lib::$request["data"]["stream"] as $rStreamID) {
+            if (isset(CoreUtilities::$request["data"]["stream"])) {
+                foreach (CoreUtilities::$request["data"]["stream"] as $rStreamID) {
                     $ipTV_db_admin->query("SELECT `id`, `stream_display_name`, `type` FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                     if ($ipTV_db_admin->num_rows() == 1) {
                         $return["streams"][] = $ipTV_db_admin->get_row();
@@ -976,8 +976,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 }
             }
             // vod
-            if (isset(ipTV_lib::$request["data"]["vod"])) {
-                foreach (ipTV_lib::$request["data"]["vod"] as $rStreamID) {
+            if (isset(CoreUtilities::$request["data"]["vod"])) {
+                foreach (CoreUtilities::$request["data"]["vod"] as $rStreamID) {
                     $ipTV_db_admin->query("SELECT `id`, `stream_display_name`, `type` FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                     if ($ipTV_db_admin->num_rows() == 1) {
                         $return["vod"][] = $ipTV_db_admin->get_row();
@@ -985,8 +985,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 }
             }
             // radios
-            if (isset(ipTV_lib::$request["data"]["radios"])) {
-                foreach (ipTV_lib::$request["data"]["radios"] as $rStreamID) {
+            if (isset(CoreUtilities::$request["data"]["radios"])) {
+                foreach (CoreUtilities::$request["data"]["radios"] as $rStreamID) {
                     $ipTV_db_admin->query("SELECT `id`, `stream_display_name`, `type` FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                     if ($ipTV_db_admin->num_rows() == 1) {
                         $return["radios"][] = $ipTV_db_admin->get_row();
@@ -994,8 +994,8 @@ if (isset(ipTV_lib::$request["action"])) {
                 }
             }
             // series
-            if (isset(ipTV_lib::$request["data"]["series"])) {
-                foreach (ipTV_lib::$request["data"]["series"] as $rSeriesID) {
+            if (isset(CoreUtilities::$request["data"]["series"])) {
+                foreach (CoreUtilities::$request["data"]["series"] as $rSeriesID) {
                     $ipTV_db_admin->query("SELECT `id`, `title` FROM `series` WHERE `id` = " . intval($rSeriesID) . ";");
                     if ($ipTV_db_admin->num_rows() == 1) {
                         $rData = $ipTV_db_admin->get_row();
@@ -1011,15 +1011,15 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
             $return = array("total_count" => 0, "items" => array(), "result" => true);
-            if (isset(ipTV_lib::$request["search"])) {
-                if (isset(ipTV_lib::$request["page"])) {
-                    $rPage = intval(ipTV_lib::$request["page"]);
+            if (isset(CoreUtilities::$request["search"])) {
+                if (isset(CoreUtilities::$request["page"])) {
+                    $rPage = intval(CoreUtilities::$request["page"]);
                 } else {
                     $rPage = 1;
                 }
-                $ipTV_db_admin->query("SELECT COUNT(`id`) AS `id` FROM `lines` WHERE `username` LIKE '%" . ipTV_lib::$request["search"] . "%' AND `is_e2` = 0 AND `is_mag` = 0;");
+                $ipTV_db_admin->query("SELECT COUNT(`id`) AS `id` FROM `lines` WHERE `username` LIKE '%" . CoreUtilities::$request["search"] . "%' AND `is_e2` = 0 AND `is_mag` = 0;");
                 $return["total_count"] = $ipTV_db_admin->get_row()["id"];
-                $ipTV_db_admin->query("SELECT `id`, `username` FROM `lines` WHERE `username` LIKE '%" . ipTV_lib::$request["search"] . "%' AND `is_e2` = 0 AND `is_mag` = 0 ORDER BY `username` ASC LIMIT " . (($rPage - 1) * 100) . ", 100;");
+                $ipTV_db_admin->query("SELECT `id`, `username` FROM `lines` WHERE `username` LIKE '%" . CoreUtilities::$request["search"] . "%' AND `is_e2` = 0 AND `is_mag` = 0 ORDER BY `username` ASC LIMIT " . (($rPage - 1) * 100) . ", 100;");
                 if ($ipTV_db_admin->num_rows() > 0) {
                     foreach ($ipTV_db_admin->get_rows() as $rRow) {
                         $return["items"][] = array("id" => $rRow["id"], "text" => $rRow["username"]);
@@ -1034,15 +1034,15 @@ if (isset(ipTV_lib::$request["action"])) {
                 exit;
             }
             $return = array("total_count" => 0, "items" => array(), "result" => true);
-            if (isset(ipTV_lib::$request["search"])) {
-                if (isset(ipTV_lib::$request["page"])) {
-                    $rPage = intval(ipTV_lib::$request["page"]);
+            if (isset(CoreUtilities::$request["search"])) {
+                if (isset(CoreUtilities::$request["page"])) {
+                    $rPage = intval(CoreUtilities::$request["page"]);
                 } else {
                     $rPage = 1;
                 }
-                $ipTV_db_admin->query("SELECT COUNT(`id`) AS `id` FROM `streams` WHERE `stream_display_name` LIKE '%" . ipTV_lib::$request["search"] . "%';");
+                $ipTV_db_admin->query("SELECT COUNT(`id`) AS `id` FROM `streams` WHERE `stream_display_name` LIKE '%" . CoreUtilities::$request["search"] . "%';");
                 $return["total_count"] = $ipTV_db_admin->get_row()["id"];
-                $ipTV_db_admin->query("SELECT `id`, `stream_display_name` FROM `streams` WHERE `stream_display_name` LIKE '%" . ipTV_lib::$request["search"] . "%' ORDER BY `stream_display_name` ASC LIMIT " . (($rPage - 1) * 100) . ", 100;");
+                $ipTV_db_admin->query("SELECT `id`, `stream_display_name` FROM `streams` WHERE `stream_display_name` LIKE '%" . CoreUtilities::$request["search"] . "%' ORDER BY `stream_display_name` ASC LIMIT " . (($rPage - 1) * 100) . ", 100;");
                 if ($ipTV_db_admin->num_rows() > 0) {
                     foreach ($ipTV_db_admin->get_rows() as $rRow) {
                         $return["items"][] = array("id" => $rRow["id"], "text" => $rRow["stream_display_name"]);
@@ -1071,7 +1071,7 @@ if (isset(ipTV_lib::$request["action"])) {
             } else {
                 $rTMDB = new TMDB($rSettings["tmdb_api_key"]);
             }
-            $rTerm = ipTV_lib::$request["term"];
+            $rTerm = CoreUtilities::$request["term"];
             if ($rSettings["release_parser"] == "php") {
                 include INCLUDES_PATH . "libs/tmdb_release.php";
                 $rRelease = new Release($rTerm);
@@ -1081,18 +1081,18 @@ if (isset(ipTV_lib::$request["action"])) {
                 $rTerm = $rRelease["title"];
             }
             $rJSON = array();
-            if (ipTV_lib::$request["type"] == "movie") {
+            if (CoreUtilities::$request["type"] == "movie") {
                 $rResults = $rTMDB->searchMovie($rTerm);
                 foreach ($rResults as $rResult) {
                     $rJSON[] = json_decode($rResult->getJSON(), true);
                 }
-            } elseif (ipTV_lib::$request["type"] == "series") {
+            } elseif (CoreUtilities::$request["type"] == "series") {
                 $rResults = $rTMDB->searchTVShow($rTerm);
                 foreach ($rResults as $rResult) {
                     $rJSON[] = json_decode($rResult->getJSON(), true);
                 }
             } else {
-                $rJSON = json_decode($rTMDB->getSeason($rTerm, intval(ipTV_lib::$request["season"]))->getJSON(), true);
+                $rJSON = json_decode($rTMDB->getSeason($rTerm, intval(CoreUtilities::$request["season"]))->getJSON(), true);
             }
             if (count($rJSON) > 0) {
                 echo json_encode(array("result" => true, "data" => $rJSON));
@@ -1111,12 +1111,12 @@ if (isset(ipTV_lib::$request["action"])) {
             } else {
                 $rTMDB = new TMDB($rSettings["tmdb_api_key"]);
             }
-            $rID = ipTV_lib::$request["id"];
-            if (ipTV_lib::$request["type"] == "movie") {
+            $rID = CoreUtilities::$request["id"];
+            if (CoreUtilities::$request["type"] == "movie") {
                 $rMovie = $rTMDB->getMovie($rID);
                 $rResult = json_decode($rMovie->getJSON(), true);
                 $rResult["trailer"] = $rMovie->getTrailer();
-            } elseif (ipTV_lib::$request["type"] == "series") {
+            } elseif (CoreUtilities::$request["type"] == "series") {
                 $rSeries = $rTMDB->getTVShow($rID);
                 $rResult = json_decode($rSeries->getJSON(), true);
                 $rResult["trailer"] = getSeriesTrailer($rID);
@@ -1132,15 +1132,15 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            if (ipTV_lib::$request["filter"] == "video") {
+            if (CoreUtilities::$request["filter"] == "video") {
                 $rFilter = array("mp4", "mkv", "avi", "mpg", "flv");
-            } elseif (ipTV_lib::$request["filter"] == "subs") {
+            } elseif (CoreUtilities::$request["filter"] == "subs") {
                 $rFilter = array("srt", "sub", "sbv");
             } else {
                 $rFilter = null;
             }
-            if ((isset(ipTV_lib::$request["server"])) && (isset(ipTV_lib::$request["dir"]))) {
-                echo json_encode(array("result" => true, "data" => listDir(intval(ipTV_lib::$request["server"]), ipTV_lib::$request["dir"], $rFilter)));
+            if ((isset(CoreUtilities::$request["server"])) && (isset(CoreUtilities::$request["dir"]))) {
+                echo json_encode(array("result" => true, "data" => listDir(intval(CoreUtilities::$request["server"]), CoreUtilities::$request["dir"], $rFilter)));
                 exit;
             }
             echo json_encode(array("result" => false));
@@ -1150,7 +1150,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rData = json_decode(ipTV_lib::$request["data"], true);
+            $rData = json_decode(CoreUtilities::$request["data"], true);
             $rActiveServers = array();
             foreach ($rServers as $rServer) {
                 if (((((time() - $rServer["last_check_ago"]) > 360)) or ($rServer["status"] == 2)) and ($rServer["can_delete"] == 1) and ($rServer["status"] <> 3)) {
@@ -1193,7 +1193,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rServerID = intval(ipTV_lib::$request["server_id"]);
+            $rServerID = intval(CoreUtilities::$request["server_id"]);
             if (isset($rServers[$rServerID])) {
                 $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `custom_data`, `time`) VALUES('" . $rServerID . "', '" . json_encode(array('action' => 'restart_services')) . "', '" . time() . "');");
                 echo json_encode(array('result' => true));
@@ -1205,7 +1205,7 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            $rServerID = intval(ipTV_lib::$request["server_id"]);
+            $rServerID = intval(CoreUtilities::$request["server_id"]);
             if (isset($rServers[$rServerID])) {
                 $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `custom_data`, `time`) VALUES('" . $rServerID . "', '" . json_encode(array('action' => 'reboot')) . "', '" . time() . "');");
                 echo json_encode(array('result' => true));
@@ -1220,41 +1220,41 @@ if (isset(ipTV_lib::$request["action"])) {
             set_time_limit(300);
             ini_set('max_execution_time', 300);
             ini_set('default_socket_timeout', 300);
-            echo shell_exec("/home/xc_vm/bin/ffprobe -v quiet -probesize 4000000 -print_format json -show_format -show_streams \"" . ipTV_lib::$request["stream"] . "\"");
+            echo shell_exec("/home/xc_vm/bin/ffprobe -v quiet -probesize 4000000 -print_format json -show_format -show_streams \"" . CoreUtilities::$request["stream"] . "\"");
             exit;
         case "clear_logs":
             if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "reg_userlog")) && (!hasPermissions("adv", "client_request_log")) && (!hasPermissions("adv", "connection_logs")) && (!hasPermissions("adv", "stream_errors")) && (!hasPermissions("adv", "panel_errors")) && (!hasPermissions("adv", "credits_log")) && (!hasPermissions("adv", "folder_watch_settings")))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            if (strlen(ipTV_lib::$request["from"]) == 0) {
+            if (strlen(CoreUtilities::$request["from"]) == 0) {
                 $rStartTime = null;
-            } elseif (!$rStartTime = strtotime(ipTV_lib::$request["from"] . " 00:00:00")) {
+            } elseif (!$rStartTime = strtotime(CoreUtilities::$request["from"] . " 00:00:00")) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            if (strlen(ipTV_lib::$request["to"]) == 0) {
+            if (strlen(CoreUtilities::$request["to"]) == 0) {
                 $rEndTime = null;
-            } elseif (!$rEndTime = strtotime(ipTV_lib::$request["to"] . " 23:59:59")) {
+            } elseif (!$rEndTime = strtotime(CoreUtilities::$request["to"] . " 23:59:59")) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            if (in_array(ipTV_lib::$request["type"], array("client_logs", "stream_logs", "user_activity", "credits_log", "reg_userlog", "panel_logs", "mysql_syslog"))) {
-                if (ipTV_lib::$request["type"] == "user_activity") {
+            if (in_array(CoreUtilities::$request["type"], array("client_logs", "stream_logs", "user_activity", "credits_log", "reg_userlog", "panel_logs", "mysql_syslog"))) {
+                if (CoreUtilities::$request["type"] == "user_activity") {
                     $rColumn = "date_start";
                 } else {
                     $rColumn = "date";
                 }
                 if (($rStartTime) && ($rEndTime)) {
-                    $ipTV_db_admin->query("DELETE FROM `" . ipTV_lib::$request["type"] . "` WHERE `" . $rColumn . "` >= " . intval($rStartTime) . " AND `" . $rColumn . "` <= " . intval($rEndTime) . ";");
+                    $ipTV_db_admin->query("DELETE FROM `" . CoreUtilities::$request["type"] . "` WHERE `" . $rColumn . "` >= " . intval($rStartTime) . " AND `" . $rColumn . "` <= " . intval($rEndTime) . ";");
                 } elseif ($rStartTime) {
-                    $ipTV_db_admin->query("DELETE FROM `" . ipTV_lib::$request["type"] . "` WHERE `" . $rColumn . "` >= " . intval($rStartTime) . ";");
+                    $ipTV_db_admin->query("DELETE FROM `" . CoreUtilities::$request["type"] . "` WHERE `" . $rColumn . "` >= " . intval($rStartTime) . ";");
                 } elseif ($rEndTime) {
-                    $ipTV_db_admin->query("DELETE FROM `" . ipTV_lib::$request["type"] . "` WHERE `" . $rColumn . "` <= " . intval($rEndTime) . ";");
+                    $ipTV_db_admin->query("DELETE FROM `" . CoreUtilities::$request["type"] . "` WHERE `" . $rColumn . "` <= " . intval($rEndTime) . ";");
                 } else {
-                    $ipTV_db_admin->query("DELETE FROM `" . ipTV_lib::$request["type"] . "`;");
+                    $ipTV_db_admin->query("DELETE FROM `" . CoreUtilities::$request["type"] . "`;");
                 }
-            } elseif (ipTV_lib::$request["type"] == "watch_output") {
+            } elseif (CoreUtilities::$request["type"] == "watch_output") {
                 if (($rStartTime) && ($rEndTime)) {
                     $ipTV_db_admin->query("DELETE FROM `watch_output` WHERE UNIX_TIMESTAMP(`dateadded`) >= " . intval($rStartTime) . " AND UNIX_TIMESTAMP(`dateadded`) <= " . intval($rEndTime) . ";");
                 } elseif ($rStartTime) {
@@ -1272,10 +1272,10 @@ if (isset(ipTV_lib::$request["action"])) {
                 echo json_encode(array('result' => false));
                 exit();
             }
-            $rSub = ipTV_lib::$request['sub'];
+            $rSub = CoreUtilities::$request['sub'];
 
             if ($rSub == 'delete') {
-                $rBackup = pathinfo(ipTV_lib::$request['filename'])['filename'];
+                $rBackup = pathinfo(CoreUtilities::$request['filename'])['filename'];
 
                 if (file_exists(MAIN_DIR . 'backups/' . $rBackup . '.sql')) {
                     unlink(MAIN_DIR . 'backups/' . $rBackup . '.sql');
@@ -1286,7 +1286,7 @@ if (isset(ipTV_lib::$request["action"])) {
             }
 
             if ($rSub == 'restore') {
-                $rBackup = pathinfo(ipTV_lib::$request["filename"])["filename"];
+                $rBackup = pathinfo(CoreUtilities::$request["filename"])["filename"];
                 $rFilename = MAIN_DIR . "backups/" . $rBackup . ".sql";
                 $rCommand = "mysql -u " . $_INFO['username'] . " -p" . $_INFO['password'] . " -P " . $_INFO['port'] . " " . $_INFO['database'] . " < \"" . $rFilename . "\"";
                 $rRet = shell_exec($rCommand);
@@ -1306,7 +1306,7 @@ if (isset(ipTV_lib::$request["action"])) {
             /*
  case "send_event":
     if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "manage_events"))) { echo json_encode(Array("result" => false)); exit; }
-    $rData = json_decode(ipTV_lib::$request["data"], true);
+    $rData = json_decode(CoreUtilities::$request["data"], true);
     $rMag = getMag($rData["id"]);
     if ($rMag) {
         if ($rData["type"] == "send_msg") {
@@ -1333,7 +1333,7 @@ if (isset(ipTV_lib::$request["action"])) {
             // SEND MAG EVENT RESELLERS
         case "send_event":
             if (($rPermissions["is_admin"]) && (hasPermissions("adv", "manage_events")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_mag_events"]))) {
-                $rData = json_decode(ipTV_lib::$request["data"], true);
+                $rData = json_decode(CoreUtilities::$request["data"], true);
                 $rMag = getMag($rData["id"]);
                 if ($rMag) {
                     if ($rData["type"] == "send_msg") {
@@ -1369,7 +1369,7 @@ if (isset(ipTV_lib::$request["action"])) {
             }
         case "enable_cache":
             if (hasPermissions('adv', 'backups')) {
-                ipTV_lib::setSettings(["enable_cache" => 1]);
+                CoreUtilities::setSettings(["enable_cache" => 1]);
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php');
 
@@ -1385,7 +1385,7 @@ if (isset(ipTV_lib::$request["action"])) {
 
         case "disable_cache":
             if (hasPermissions('adv', 'backups')) {
-                ipTV_lib::setSettings(["enable_cache" => 0]);
+                CoreUtilities::setSettings(["enable_cache" => 0]);
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache.php');
                 echo json_encode(array('result' => true));
@@ -1404,7 +1404,7 @@ if (isset(ipTV_lib::$request["action"])) {
 
         case 'disable_handler':
             if (hasPermissions('adv', 'backups')) {
-                ipTV_lib::setSettings(["redis_handler" => 0]);
+                CoreUtilities::setSettings(["redis_handler" => 0]);
 
                 if (file_exists(CACHE_TMP_PATH . 'settings')) {
                     unlink(CACHE_TMP_PATH . 'settings');
@@ -1441,7 +1441,7 @@ if (isset(ipTV_lib::$request["action"])) {
 
         case 'enable_handler':
             if (hasPermissions('adv', 'backups')) {
-                ipTV_lib::setSettings(["redis_handler" => 1]);
+                CoreUtilities::setSettings(["redis_handler" => 1]);
 
                 if (file_exists(CACHE_TMP_PATH . 'settings')) {
                     unlink(CACHE_TMP_PATH . 'settings');

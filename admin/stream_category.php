@@ -5,9 +5,9 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_cat"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_category"])) {
+if (isset(CoreUtilities::$request["submit_category"])) {
     $rArray = array("category_type" => "live", "category_name" => "", "parent_id" => 0, "cat_order" => 99);
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
+    foreach (CoreUtilities::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
@@ -24,14 +24,14 @@ if (isset(ipTV_lib::$request["submit_category"])) {
             $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if ((isset(ipTV_lib::$request["edit"])) && (hasPermissions("adv", "edit_cat"))) {
+    if ((isset(CoreUtilities::$request["edit"])) && (hasPermissions("adv", "edit_cat"))) {
         $rCols = "id," . $rCols;
-        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+        $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `stream_categories`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset(ipTV_lib::$request["edit"])) {
-            $rInsertID = intval(ipTV_lib::$request["edit"]);
+        if (isset(CoreUtilities::$request["edit"])) {
+            $rInsertID = intval(CoreUtilities::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -44,8 +44,8 @@ if (isset(ipTV_lib::$request["submit_category"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rCategoryArr = getCategory(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rCategoryArr = getCategory(CoreUtilities::$request["id"]);
     if ((!$rCategoryArr) or (!hasPermissions("adv", "edit_cat"))) {
         exit;
     }
@@ -95,8 +95,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./stream_category.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./stream_category.php<?php if (isset(CoreUtilities::$request["id"])) {
+                            echo "?id=" . CoreUtilities::$request["id"];
                         } ?>" method="POST" id="category_form" data-parsley-validate="">
                             <?php if (isset($rCategoryArr)) { ?>
                                 <input type="hidden" name="edit" value="<?= $rCategoryArr["id"] ?>" />

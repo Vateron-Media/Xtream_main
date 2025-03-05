@@ -5,14 +5,14 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "stream_tools"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["replace_dns"])) {
-    $rOldDNS = str_replace("/", "\/", ipTV_lib::$request["old_dns"]);
-    $rNewDNS = str_replace("/", "\/", ipTV_lib::$request["new_dns"]);
+if (isset(CoreUtilities::$request["replace_dns"])) {
+    $rOldDNS = str_replace("/", "\/", CoreUtilities::$request["old_dns"]);
+    $rNewDNS = str_replace("/", "\/", CoreUtilities::$request["new_dns"]);
     $ipTV_db_admin->query("UPDATE `streams` SET `stream_source` = REPLACE(`stream_source`, '" . $rOldDNS . "', '" . $rNewDNS . "');");
     $_STATUS = 1;
-} elseif (isset(ipTV_lib::$request["move_streams"])) {
-    $rSource = ipTV_lib::$request["source_server"];
-    $rReplacement = ipTV_lib::$request["replacement_server"];
+} elseif (isset(CoreUtilities::$request["move_streams"])) {
+    $rSource = CoreUtilities::$request["source_server"];
+    $rReplacement = CoreUtilities::$request["replacement_server"];
     $rExisting = array();
     $ipTV_db_admin->query("SELECT `id` FROM `streams_servers` WHERE `server_id` = " . intval($rReplacement) . ";");
     if ($ipTV_db_admin->num_rows() > 0) {
@@ -30,7 +30,7 @@ if (isset(ipTV_lib::$request["replace_dns"])) {
     }
     $ipTV_db_admin->query("UPDATE `streams_servers` SET `server_id` = " . intval($rReplacement) . " WHERE `server_id` = " . intval($rSource) . ";");
     $_STATUS = 2;
-} elseif (isset(ipTV_lib::$request["cleanup_streams"])) {
+} elseif (isset(CoreUtilities::$request["cleanup_streams"])) {
     $rStreams = getStreamList();
     $rStreamArray = array();
     foreach ($rStreams as $rStream) {

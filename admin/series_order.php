@@ -5,8 +5,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_series"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["reorder"])) {
-    $rOrder = json_decode(ipTV_lib::$request["episode_order_array"], true);
+if (isset(CoreUtilities::$request["reorder"])) {
+    $rOrder = json_decode(CoreUtilities::$request["episode_order_array"], true);
     if (is_array($rOrder)) {
         foreach ($rOrder as $rSeason => $rEpisodes) {
             $rSort = 0;
@@ -18,10 +18,10 @@ if (isset(ipTV_lib::$request["reorder"])) {
     }
 }
 
-if (!isset(ipTV_lib::$request["id"])) {
+if (!isset(CoreUtilities::$request["id"])) {
     exit;
 }
-$rSeries = getSerie(ipTV_lib::$request["id"]);
+$rSeries = getSerie(CoreUtilities::$request["id"]);
 if (!$rSeries) {
     exit;
 }
@@ -59,10 +59,10 @@ include "header.php";
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="./series_order.php?id=<?= ipTV_lib::$request["id"] ?>" method="POST"
+                        <form action="./series_order.php?id=<?= CoreUtilities::$request["id"] ?>" method="POST"
                             id="episode_order_form">
                             <input type="hidden" id="episode_order_array" name="episode_order_array" value="" />
-                            <input type="hidden" name="reorder" value="<?= ipTV_lib::$request["id"] ?>" />
+                            <input type="hidden" name="reorder" value="<?= CoreUtilities::$request["id"] ?>" />
                             <div id="basicwizard">
                                 <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                                     <?php foreach ($rSeasons as $rSeasonNum => $rSeasonArray) { ?>

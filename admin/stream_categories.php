@@ -5,8 +5,8 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["categories"])) {
-    $rPostCategories = json_decode(ipTV_lib::$request["categories"], true);
+if (isset(CoreUtilities::$request["categories"])) {
+    $rPostCategories = json_decode(CoreUtilities::$request["categories"], true);
     if (count($rPostCategories) > 0) {
         foreach ($rPostCategories as $rOrder => $rPostCategory) {
             $ipTV_db_admin->query("UPDATE `stream_categories` SET `cat_order` = " . (intval($rOrder) + 1) . ", `parent_id` = 0 WHERE `id` = " . intval($rPostCategory["id"]) . ";");

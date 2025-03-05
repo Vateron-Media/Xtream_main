@@ -5,9 +5,9 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_ips"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_ip"])) {
-    if (filter_var(ipTV_lib::$request["ip"], FILTER_VALIDATE_IP)) {
-        $rArray = array("ip" => ipTV_lib::$request["ip"], "notes" => ipTV_lib::$request["notes"], "date" => time(), "attempts_blocked" => 0);
+if (isset(CoreUtilities::$request["submit_ip"])) {
+    if (filter_var(CoreUtilities::$request["ip"], FILTER_VALIDATE_IP)) {
+        $rArray = array("ip" => CoreUtilities::$request["ip"], "notes" => CoreUtilities::$request["notes"], "date" => time(), "attempts_blocked" => 0);
         $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
         foreach (array_values($rArray) as $rValue) {
             isset($rValues) ? $rValues .= ',' : $rValues = '';

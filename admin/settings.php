@@ -8,7 +8,7 @@ if ((!hasPermissions("adv", "settings")) && (!hasPermissions("adv", "database"))
     exit;
 }
 
-if (isset(ipTV_lib::$request["geolite2"])) {
+if (isset(CoreUtilities::$request["geolite2"])) {
     if (updateGeoLite2()) {
         $_STATUS = STATUS_SUCCESS_GEOLITE;
     } else {
@@ -28,7 +28,7 @@ $rGeoLite2Latest = getGithubReleases("Vateron-Media/Xtream_Update")['latest_rele
 $rGeoLite2Curent = json_decode(file_get_contents("/home/xc_vm/bin/maxmind/version.json"), true)["geolite2_version"];
 $rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")[$release], 1);
 
-if (isset(ipTV_lib::$request["panel_version"])) {
+if (isset(CoreUtilities::$request["panel_version"])) {
     $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` LIKE '%\"action\":\"update\"%';");
     $ipTV_db_admin->query("INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES('" . $_INFO["server_id"] . "', '" . time() . "', '" . json_encode(array('action' => 'update', 'version' => $rUpdatePanel)) . "');");
     $_STATUS = STATUS_SUCCESS_UPDATE;

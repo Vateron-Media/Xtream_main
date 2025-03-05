@@ -59,9 +59,9 @@ function loadcli() {
         case 'post-update':
             logMessage("Starting post-update process...");
 
-            if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
+            if (CoreUtilities::$Servers[SERVER_ID]['is_main']) {
                 logMessage("Server is main, sending update signals to other servers.");
-                foreach (ipTV_lib::$Servers as $rServer) {
+                foreach (CoreUtilities::$Servers as $rServer) {
                     if ($rServer['enabled'] && $rServer['status'] == 1 && time() - $rServer['last_check_ago'] <= 180 && !$rServer['is_main']) {
                         logMessage("Sending update signal to server ID: " . $rServer['id']);
                         $ipTV_db->query('INSERT INTO `signals`(`server_id`, `time`, `custom_data`) VALUES(?, ?, ?);', $rServer['id'], time(), json_encode(array('action' => 'update')));

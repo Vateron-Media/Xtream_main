@@ -10,7 +10,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         }
         cli_set_process_title('XC_VM[Cache Builder]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::checkCron($unique_id);
+        CoreUtilities::checkCron($unique_id);
         loadCron();
     } else {
         exit(0);
@@ -41,19 +41,19 @@ function loadCron() {
                 mkdir($rPath);
             }
         }
-        ipTV_lib::setCache('settings', ipTV_lib::getSettings(true));
-        ipTV_lib::setCache('bouquets', ipTV_lib::getBouquets(true));
-        $rServers = ipTV_lib::getServers(true);
+        CoreUtilities::setCache('settings', CoreUtilities::getSettings(true));
+        CoreUtilities::setCache('bouquets', CoreUtilities::getBouquets(true));
+        $rServers = CoreUtilities::getServers(true);
         unset($rServers['php_pids']);
-        ipTV_lib::setCache('servers', $rServers);
-        ipTV_lib::setCache('blocked_ua', ipTV_lib::getBlockedUserAgents(true));
-        ipTV_lib::setCache('customisp', ipTV_lib::getIspAddon(true));
-        ipTV_lib::setCache('blocked_isp', ipTV_lib::getBlockedISP(true));
-        ipTV_lib::setCache('blocked_ips', ipTV_lib::getBlockedIPs(true));
-        ipTV_lib::setCache('allowed_ips', ipTV_lib::getAllowedIPs(true));
-        ipTV_lib::setCache('categories', ipTV_lib::getCategories(null, true));
+        CoreUtilities::setCache('servers', $rServers);
+        CoreUtilities::setCache('blocked_ua', CoreUtilities::getBlockedUserAgents(true));
+        CoreUtilities::setCache('customisp', CoreUtilities::getIspAddon(true));
+        CoreUtilities::setCache('blocked_isp', CoreUtilities::getBlockedISP(true));
+        CoreUtilities::setCache('blocked_ips', CoreUtilities::getBlockedIPs(true));
+        CoreUtilities::setCache('allowed_ips', CoreUtilities::getAllowedIPs(true));
+        CoreUtilities::setCache('categories', CoreUtilities::getCategories(null, true));
 
-        if (ipTV_lib::$Servers[SERVER_ID]['is_main']) {
+        if (CoreUtilities::$Servers[SERVER_ID]['is_main']) {
             $rOutputFormats = array();
             $ipTV_db->query('SELECT `access_output_id`, `output_key` FROM `access_output`;');
             foreach ($ipTV_db->get_rows() as $rRow) {
@@ -76,7 +76,7 @@ function loadCron() {
                 }
             }
             $rChannelOrder = array();
-            if (ipTV_lib::$settings['channel_number_type'] == 'manual') {
+            if (CoreUtilities::$settings['channel_number_type'] == 'manual') {
                 $ipTV_db->query('SELECT `id`, `order` FROM `streams` ORDER BY `order` ASC;');
                 foreach ($ipTV_db->get_rows() as $rRow) {
                     $rChannelOrder[] = intval($rRow['id']);
@@ -146,7 +146,7 @@ function loadCron() {
                 }
                 $rCategoryMap[$rID] = array_unique($rAllowedCategories);
             }
-            if (ipTV_lib::$settings['channel_number_type'] != 'manual') {
+            if (CoreUtilities::$settings['channel_number_type'] != 'manual') {
                 foreach (array('channels', 'radios', 'movies', 'episodes') as $rKey) {
                     if (0 < count($rStreamIDs[$rKey])) {
                         $rWhere = 'AND `id` NOT IN (' . implode(',', array_map('intval', $rStreamIDs[$rKey])) . ')';
@@ -174,7 +174,7 @@ function loadCron() {
                         }
                     }
                 }
-                // if (ipTV_lib::$settings['vod_sort_newest']) {
+                // if (CoreUtilities::$settings['vod_sort_newest']) {
                 //     $rStreamIDs['movies'] = array();
                 //     $rStreamIDs['episodes'] = array();
                 //     $ipTV_db->query('SELECT `type`, `id` FROM `streams` WHERE `type` IN (2,5) ORDER BY `added` DESC, `id` DESC;');

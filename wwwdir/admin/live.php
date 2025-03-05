@@ -7,42 +7,42 @@ require '../init.php';
 $rIP = ipTV_streaming::getUserIP();
 $rPID = getmypid();
 
-if (ipTV_lib::$settings['use_buffer'] == 0) {
+if (CoreUtilities::$settings['use_buffer'] == 0) {
     header('X-Accel-Buffering: no');
 }
 
-if (!empty(ipTV_lib::$request['uitoken'])) {
-    $rTokenData = json_decode(decryptData(ipTV_lib::$request['uitoken'], ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA), true);
-    ipTV_lib::$request['stream'] = $rTokenData['stream_id'];
-    ipTV_lib::$request['extension'] = 'm3u8';
-    $rIPMatch = (ipTV_lib::$settings['ip_subnet_match'] ? implode('.', array_slice(explode('.', $rTokenData['ip']), 0, -1)) == implode('.', array_slice(explode('.', ipTV_streaming::getUserIP()), 0, -1)) : $rTokenData['ip'] == ipTV_streaming::getUserIP());
+if (!empty(CoreUtilities::$request['uitoken'])) {
+    $rTokenData = json_decode(decryptData(CoreUtilities::$request['uitoken'], CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA), true);
+    CoreUtilities::$request['stream'] = $rTokenData['stream_id'];
+    CoreUtilities::$request['extension'] = 'm3u8';
+    $rIPMatch = (CoreUtilities::$settings['ip_subnet_match'] ? implode('.', array_slice(explode('.', $rTokenData['ip']), 0, -1)) == implode('.', array_slice(explode('.', ipTV_streaming::getUserIP()), 0, -1)) : $rTokenData['ip'] == ipTV_streaming::getUserIP());
 
     if ($rTokenData['expires'] < time() && !$rIPMatch) {
         generate404();
     }
 
-    $rPrebuffer = ipTV_lib::$SegmentsSettings['seg_time'];
+    $rPrebuffer = CoreUtilities::$SegmentsSettings['seg_time'];
 } else {
-    if (empty(ipTV_lib::$request['password']) || ipTV_lib::$settings['live_streaming_pass'] != ipTV_lib::$request['password']) {
+    if (empty(CoreUtilities::$request['password']) || CoreUtilities::$settings['live_streaming_pass'] != CoreUtilities::$request['password']) {
         generate404();
     } else {
-        if (!in_array($rIP, ipTV_lib::getAllowedIPs())) {
+        if (!in_array($rIP, CoreUtilities::getAllowedIPs())) {
             generate404();
         } else {
-            $rPrebuffer = (isset(ipTV_lib::$request['prebuffer']) ? ipTV_lib::$SegmentsSettings['seg_time'] : 0);
+            $rPrebuffer = (isset(CoreUtilities::$request['prebuffer']) ? CoreUtilities::$SegmentsSettings['seg_time'] : 0);
 
             foreach (getallheaders() as $rKey => $rValue) {
                 if (strtoupper($rKey) == 'X-XTREAMUI-PREBUFFER') {
-                    $rPrebuffer = ipTV_lib::$SegmentsSettings['seg_time'];
+                    $rPrebuffer = CoreUtilities::$SegmentsSettings['seg_time'];
                 }
             }
         }
     }
 }
 
-$rPassword = ipTV_lib::$settings['live_streaming_pass'];
-$rStreamID = intval(ipTV_lib::$request['stream']);
-$rExtension = ipTV_lib::$request['extension'];
+$rPassword = CoreUtilities::$settings['live_streaming_pass'];
+$rStreamID = intval(CoreUtilities::$request['stream']);
+$rExtension = CoreUtilities::$request['extension'];
 $rWaitTime = 20;
 $ipTV_db->query('SELECT * FROM `streams` t1 INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.server_id = ? WHERE t1.`id` = ?', SERVER_ID, $rStreamID);
 
@@ -59,7 +59,7 @@ if (0 < $ipTV_db->num_rows()) {
         $rChannelInfo['monitor_pid'] = intval(file_get_contents(STREAMS_PATH . $rStreamID . '_.monitor'));
     }
 
-    if (ipTV_lib::$settings['on_demand_instant_off'] && $rChannelInfo['on_demand'] == 1) {
+    if (CoreUtilities::$settings['on_demand_instant_off'] && $rChannelInfo['on_demand'] == 1) {
         ipTV_streaming::addToQueue($rStreamID, $rPID);
     }
 
@@ -115,14 +115,14 @@ if (0 < $ipTV_db->num_rows()) {
     }
 
     if ($rRetries == intval($rWaitTime) * 10) {
-        if (isset(ipTV_lib::$request['odstart'])) {
+        if (isset(CoreUtilities::$request['odstart'])) {
             echo '0';
             exit();
         }
 
         generate404();
     } else {
-        if (isset(ipTV_lib::$request['odstart'])) {
+        if (isset(CoreUtilities::$request['odstart'])) {
             echo '1';
 
             exit();
@@ -136,8 +136,8 @@ if (0 < $ipTV_db->num_rows()) {
     switch ($rExtension) {
         case 'm3u8':
             if (ipTV_streaming::isValidStream($rPlaylist, $rChannelInfo['pid'])) {
-                if (empty(ipTV_lib::$request['segment'])) {
-                    if ($rSource = ipTV_streaming::generateAdminHLS($rPlaylist, $rPassword, $rStreamID, ipTV_lib::$request['uitoken'])) {
+                if (empty(CoreUtilities::$request['segment'])) {
+                    if ($rSource = ipTV_streaming::generateAdminHLS($rPlaylist, $rPassword, $rStreamID, CoreUtilities::$request['uitoken'])) {
                         header('Content-Type: application/vnd.apple.mpegurl');
                         header('Content-Length: ' . strlen($rSource));
                         ob_end_flush();
@@ -146,7 +146,7 @@ if (0 < $ipTV_db->num_rows()) {
                         exit();
                     }
                 } else {
-                    $rSegment = STREAMS_PATH . str_replace(array('\\', '/'), '', urldecode(ipTV_lib::$request['segment']));
+                    $rSegment = STREAMS_PATH . str_replace(array('\\', '/'), '', urldecode(CoreUtilities::$request['segment']));
 
                     if (file_exists($rSegment)) {
                         $rBytes = filesize($rSegment);
@@ -168,10 +168,10 @@ if (0 < $ipTV_db->num_rows()) {
                 if (file_exists(STREAMS_PATH . $rStreamID . '_.dur')) {
                     $rDuration = intval(file_get_contents(STREAMS_PATH . $rStreamID . '_.dur'));
 
-                    ipTV_lib::$SegmentsSettings['seg_time'] = max(ipTV_lib::$SegmentsSettings['seg_time'], $rDuration);
+                    CoreUtilities::$SegmentsSettings['seg_time'] = max(CoreUtilities::$SegmentsSettings['seg_time'], $rDuration);
                 }
 
-                $rSegments = ipTV_streaming::getPlaylistSegments($rPlaylist, $rPrebuffer, ipTV_lib::$SegmentsSettings['seg_time']);
+                $rSegments = ipTV_streaming::getPlaylistSegments($rPlaylist, $rPrebuffer, CoreUtilities::$SegmentsSettings['seg_time']);
             } else {
                 $rSegments = null;
             }
@@ -202,10 +202,10 @@ if (0 < $ipTV_db->num_rows()) {
             }
 
             $rFails = 0;
-            $rTotalFails = ipTV_lib::$SegmentsSettings['seg_time'] * 2;
+            $rTotalFails = CoreUtilities::$SegmentsSettings['seg_time'] * 2;
 
-            if (($rTotalFails < intval(ipTV_lib::$settings['segment_wait_time']) ?: 20)) {
-                $rTotalFails = (intval(ipTV_lib::$settings['segment_wait_time']) ?: 20);
+            if (($rTotalFails < intval(CoreUtilities::$settings['segment_wait_time']) ?: 20)) {
+                $rTotalFails = (intval(CoreUtilities::$settings['segment_wait_time']) ?: 20);
             }
 
             while (true) {
@@ -228,7 +228,7 @@ if (0 < $ipTV_db->num_rows()) {
                     $rFP = fopen(STREAMS_PATH . $rSegmentFile, 'r');
 
                     while ($rFails <= $rTotalFails && !file_exists(STREAMS_PATH . $rNextSegment)) {
-                        $rData = stream_get_line($rFP, ipTV_lib::$settings['read_buffer_size']);
+                        $rData = stream_get_line($rFP, CoreUtilities::$settings['read_buffer_size']);
 
                         if (!empty($rData)) {
                             echo $rData;
@@ -277,7 +277,7 @@ function shutdown() {
         $ipTV_db->close_mysql();
     }
 
-    if (ipTV_lib::$settings['on_demand_instant_off'] && $rChannelInfo['on_demand'] == 1) {
+    if (CoreUtilities::$settings['on_demand_instant_off'] && $rChannelInfo['on_demand'] == 1) {
         ipTV_streaming::removeFromQueue($rStreamID, $rPID);
     }
 }

@@ -3,20 +3,20 @@
 set_time_limit(0);
 require '../init.php';
 $user_ip = $_SERVER['REMOTE_ADDR'];
-if (!in_array($user_ip, ipTV_streaming::getAllowedIPsAdmin()) && !in_array($user_ip, ipTV_lib::$settings['api_ips'])) {
+if (!in_array($user_ip, ipTV_streaming::getAllowedIPsAdmin()) && !in_array($user_ip, CoreUtilities::$settings['api_ips'])) {
     die(json_encode(array('result' => false, 'IP FORBIDDEN')));
 }
-if (!empty(ipTV_lib::$settings['api_pass']) && ipTV_lib::$request['api_pass'] != ipTV_lib::$settings['api_pass']) {
+if (!empty(CoreUtilities::$settings['api_pass']) && CoreUtilities::$request['api_pass'] != CoreUtilities::$settings['api_pass']) {
     die(json_encode(array('result' => false, 'KEY WRONG')));
 }
-$action = !empty(ipTV_lib::$request['action']) ? ipTV_lib::$request['action'] : '';
-$sub = !empty(ipTV_lib::$request['sub']) ? ipTV_lib::$request['sub'] : '';
+$action = !empty(CoreUtilities::$request['action']) ? CoreUtilities::$request['action'] : '';
+$sub = !empty(CoreUtilities::$request['sub']) ? CoreUtilities::$request['sub'] : '';
 switch ($action) {
     case 'server':
         switch ($sub) {
             case 'list':
                 $output = array();
-                foreach (ipTV_lib::$Servers as $server_id => $server) {
+                foreach (CoreUtilities::$Servers as $server_id => $server) {
                     $output[] = array('id' => $server_id, 'server_name' => $server['server_name'], 'online' => $server['server_online'], 'info' => json_decode($server['server_hardware'], true));
                 }
                 echo json_encode($output);
@@ -24,15 +24,15 @@ switch ($action) {
         }
         break;
     case 'vod':
-        $stream_ids = array_map('intval', ipTV_lib::$request['stream_ids']);
+        $stream_ids = array_map('intval', CoreUtilities::$request['stream_ids']);
         switch ($sub) {
             case 'start':
             case 'stop':
-                $servers = empty(ipTV_lib::$request['servers']) ? array_keys(ipTV_lib::$Servers) : array_map('intval', ipTV_lib::$request['servers']);
+                $servers = empty(CoreUtilities::$request['servers']) ? array_keys(CoreUtilities::$Servers) : array_map('intval', CoreUtilities::$request['servers']);
                 foreach ($servers as $server_id) {
-                    $urls[$server_id] = array('url' => ipTV_lib::$Servers[$server_id]['api_url_ip'] . '&action=vod', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
+                    $urls[$server_id] = array('url' => CoreUtilities::$Servers[$server_id]['api_url_ip'] . '&action=vod', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
                 }
-                ipTV_lib::getMultiCURL($urls);
+                CoreUtilities::getMultiCURL($urls);
                 echo json_encode(array('result' => true));
                 die;
                 break;
@@ -42,10 +42,10 @@ switch ($action) {
         switch ($sub) {
             case 'start':
             case 'stop':
-                $stream_ids = array_map('intval', ipTV_lib::$request['stream_ids']);
-                $servers = empty(ipTV_lib::$request['servers']) ? array_keys(ipTV_lib::$Servers) : array_map('intval', ipTV_lib::$request['servers']);
+                $stream_ids = array_map('intval', CoreUtilities::$request['stream_ids']);
+                $servers = empty(CoreUtilities::$request['servers']) ? array_keys(CoreUtilities::$Servers) : array_map('intval', CoreUtilities::$request['servers']);
                 foreach ($servers as $server_id) {
-                    $urls[$server_id] = array('url' => ipTV_lib::$Servers[$server_id]['api_url_ip'] . '&action=stream', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
+                    $urls[$server_id] = array('url' => CoreUtilities::$Servers[$server_id]['api_url_ip'] . '&action=stream', 'postdata' => array('function' => $sub, 'stream_ids' => $stream_ids));
                 }
                 // $urls = array(
                 //     1 => array(
@@ -56,7 +56,7 @@ switch ($action) {
                 //         )
                 //     )
                 // );
-                ipTV_lib::getMultiCURL($urls);
+                CoreUtilities::getMultiCURL($urls);
                 echo json_encode(array('result' => true));
                 die;
                 break;
@@ -91,8 +91,8 @@ switch ($action) {
     case 'stb':
         switch ($sub) {
             case 'info':
-                if (!empty(ipTV_lib::$request['mac'])) {
-                    $mac = ipTV_lib::$request['mac'];
+                if (!empty(CoreUtilities::$request['mac'])) {
+                    $mac = CoreUtilities::$request['mac'];
                     $user_info = ipTV_streaming::getMagInfo(false, $mac, true, false, true);
                     if (!empty($user_info)) {
                         echo json_encode(array_merge(array('result' => true), $user_info));
@@ -104,9 +104,9 @@ switch ($action) {
                 }
                 break;
             case 'edit':
-                if (!empty(ipTV_lib::$request['mac'])) {
-                    $mac = ipTV_lib::$request['mac'];
-                    $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
+                if (!empty(CoreUtilities::$request['mac'])) {
+                    $mac = CoreUtilities::$request['mac'];
+                    $user_data = empty(CoreUtilities::$request['user_data']) ? array() : CoreUtilities::$request['user_data'];
                     $user_data['is_mag'] = 1;
                     $query = GetColumnNames($user_data);
                     if ($ipTV_db->query("UPDATE `lines` SET {$query} WHERE id = ( SELECT user_id FROM mag_devices WHERE `mac` = ? )", base64_encode(strtoupper($mac)))) {
@@ -124,13 +124,13 @@ switch ($action) {
                 }
                 break;
             case 'create':
-                $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
+                $user_data = empty(CoreUtilities::$request['user_data']) ? array() : CoreUtilities::$request['user_data'];
                 if (!empty($user_data['mac'])) {
                     $output_formats_types = array(1, 2, 3);
                     $mac = base64_encode(strtoupper($user_data['mac']));
                     unset($user_data['mac']);
-                    $user_data['username'] = ipTV_lib::generateString(10);
-                    $user_data['password'] = ipTV_lib::generateString(10);
+                    $user_data['username'] = CoreUtilities::generateString(10);
+                    $user_data['password'] = CoreUtilities::generateString(10);
                     if (!array_key_exists('allowed_ips', $user_data) || !parseJson($user_data['allowed_ips'])) {
                         $user_data['allowed_ips'] = json_encode(array());
                     }
@@ -175,9 +175,9 @@ switch ($action) {
     case 'user':
         switch ($sub) {
             case 'info':
-                if (!empty(ipTV_lib::$request['username']) && !empty(ipTV_lib::$request['password'])) {
-                    $username = ipTV_lib::$request['username'];
-                    $password = ipTV_lib::$request['password'];
+                if (!empty(CoreUtilities::$request['username']) && !empty(CoreUtilities::$request['password'])) {
+                    $username = CoreUtilities::$request['username'];
+                    $password = CoreUtilities::$request['password'];
                     $user_info = ipTV_streaming::getUserInfo(false, $username, $password, true, false, true);
                     if (!empty($user_info)) {
                         echo json_encode(array('result' => true, 'user_info' => $user_info));
@@ -189,10 +189,10 @@ switch ($action) {
                 }
                 break;
             case 'edit':
-                if (!empty(ipTV_lib::$request['username']) && !empty(ipTV_lib::$request['password'])) {
-                    $username = ipTV_lib::$request['username'];
-                    $password = ipTV_lib::$request['password'];
-                    $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
+                if (!empty(CoreUtilities::$request['username']) && !empty(CoreUtilities::$request['password'])) {
+                    $username = CoreUtilities::$request['username'];
+                    $password = CoreUtilities::$request['password'];
+                    $user_data = empty(CoreUtilities::$request['user_data']) ? array() : CoreUtilities::$request['user_data'];
                     $ipTV_db->query('SELECT * FROM `lines` WHERE `username` = ? and `password` = ?', $username, $password);
                     if ($ipTV_db->num_rows() > 0) {
                         $query = GetColumnNames($user_data);
@@ -211,12 +211,12 @@ switch ($action) {
                 break;
             case 'create':
                 $output_formats_types = array(1, 2, 3);
-                $user_data = empty(ipTV_lib::$request['user_data']) ? array() : ipTV_lib::$request['user_data'];
+                $user_data = empty(CoreUtilities::$request['user_data']) ? array() : CoreUtilities::$request['user_data'];
                 if (!array_key_exists('username', $user_data)) {
-                    $user_data['username'] = ipTV_lib::generateString(10);
+                    $user_data['username'] = CoreUtilities::generateString(10);
                 }
                 if (!array_key_exists('password', $user_data)) {
-                    $user_data['password'] = ipTV_lib::generateString(10);
+                    $user_data['password'] = CoreUtilities::generateString(10);
                 }
                 if (!array_key_exists('allowed_ips', $user_data) || !parseJson($user_data['allowed_ips'])) {
                     $user_data['allowed_ips'] = json_encode(array());
@@ -263,12 +263,12 @@ switch ($action) {
                 echo json_encode($results);
                 break;
             case 'credits':
-                if (!empty(ipTV_lib::$request['amount']) && (!empty(ipTV_lib::$request['id']) || !empty(ipTV_lib::$request['username']))) {
-                    $amount = sprintf('%.2f', ipTV_lib::$request['amount']);
-                    if (!empty(ipTV_lib::$request['id'])) {
-                        $ipTV_db->query('SELECT * FROM reg_users WHERE `id` = ?', ipTV_lib::$request['id']);
+                if (!empty(CoreUtilities::$request['amount']) && (!empty(CoreUtilities::$request['id']) || !empty(CoreUtilities::$request['username']))) {
+                    $amount = sprintf('%.2f', CoreUtilities::$request['amount']);
+                    if (!empty(CoreUtilities::$request['id'])) {
+                        $ipTV_db->query('SELECT * FROM reg_users WHERE `id` = ?', CoreUtilities::$request['id']);
                     } else {
-                        $ipTV_db->query('SELECT * FROM reg_users WHERE `username` = ?', ipTV_lib::$request['username']);
+                        $ipTV_db->query('SELECT * FROM reg_users WHERE `username` = ?', CoreUtilities::$request['username']);
                     }
                     if ($ipTV_db->num_rows()) {
                         $RegUser = $ipTV_db->get_row();

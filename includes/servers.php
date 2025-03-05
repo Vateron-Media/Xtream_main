@@ -37,8 +37,8 @@ class ipTV_servers {
         $PIDs = array_map('intval', $PIDs);
         $output = array();
         foreach ($serverIDS as $serverID) {
-            if (array_key_exists($serverID, ipTV_lib::$Servers)) {
-                $esponse = self::serverRequest($serverID, ipTV_lib::$Servers[$serverID]['api_url_ip'] . '&action=pidsAreRunning', array('program' => $eXE, 'pids' => $PIDs));
+            if (array_key_exists($serverID, CoreUtilities::$Servers)) {
+                $esponse = self::serverRequest($serverID, CoreUtilities::$Servers[$serverID]['api_url_ip'] . '&action=pidsAreRunning', array('program' => $eXE, 'pids' => $PIDs));
                 if ($esponse) {
                     $output[$serverID] = array_map('trim', json_decode($esponse, true));
                 } else {
@@ -50,7 +50,7 @@ class ipTV_servers {
     }
 
     public static function serverRequest($serverID, $rURL, $postData = array()) {
-        if (ipTV_lib::$Servers[$serverID]['server_online']) {
+        if (CoreUtilities::$Servers[$serverID]['server_online']) {
             $output = false;
             $i = 1;
             while ($i <= 2) {
@@ -76,7 +76,7 @@ class ipTV_servers {
                 @curl_close($ch);
                 if ($error != 0 || $esponseCode != 200) {
                     $i++;
-                    ipTV_lib::saveLog_old("[MAIN->LB] Response from Server ID {$serverID} was Invalid ( ERROR: {$error} | Response Code: {$esponseCode} | Try: {$i} )");
+                    CoreUtilities::saveLog_old("[MAIN->LB] Response from Server ID {$serverID} was Invalid ( ERROR: {$error} | Response Code: {$esponseCode} | Try: {$i} )");
                     break;
                 }
             }

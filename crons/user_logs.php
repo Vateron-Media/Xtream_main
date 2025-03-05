@@ -8,7 +8,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XC_VM Logs]');
         $identifier = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::checkCron($identifier);
+        CoreUtilities::checkCron($identifier);
         loadCron();
     } else {
         exit(0);

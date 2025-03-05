@@ -5,13 +5,13 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_uas"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_ua"])) {
+if (isset(CoreUtilities::$request["submit_ua"])) {
     $rArray = array("user_agent" => "", "exact_match" => 0, "attempts_blocked" => 0);
-    if (isset(ipTV_lib::$request["exact_match"])) {
+    if (isset(CoreUtilities::$request["exact_match"])) {
         $rArray["exact_match"] = true;
-        unset(ipTV_lib::$request["exact_match"]);
+        unset(CoreUtilities::$request["exact_match"]);
     }
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
+    foreach (CoreUtilities::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
@@ -28,14 +28,14 @@ if (isset(ipTV_lib::$request["submit_ua"])) {
             $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset(ipTV_lib::$request["edit"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         $rCols = "id," . $rCols;
-        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+        $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `blocked_user_agents`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset(ipTV_lib::$request["edit"])) {
-            $rInsertID = intval(ipTV_lib::$request["edit"]);
+        if (isset(CoreUtilities::$request["edit"])) {
+            $rInsertID = intval(CoreUtilities::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -48,8 +48,8 @@ if (isset(ipTV_lib::$request["submit_ua"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rUAArr = getUserAgent(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rUAArr = getUserAgent(CoreUtilities::$request["id"]);
     if (!$rUAArr) {
         exit;
     }
@@ -98,8 +98,8 @@ include "header.php";
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./useragent.php<?php if (isset(ipTV_lib::$request["id"])) {
-                                                                        echo "?id=" . ipTV_lib::$request["id"];
+                                    <form action="./useragent.php<?php if (isset(CoreUtilities::$request["id"])) {
+                                                                        echo "?id=" . CoreUtilities::$request["id"];
                                                                  } ?>" method="POST" id="useragent_form" data-parsley-validate="">
                                         <?php if (isset($rUAArr)) { ?>
                                             <input type="hidden" name="edit" value="<?= $rUAArr["id"] ?>" />

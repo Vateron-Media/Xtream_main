@@ -137,15 +137,15 @@ if (1 < $rICount) {
 
 <?php
 } else {
-    if (isset(ipTV_lib::$request['referer'])) {
-        $rReferer = ipTV_lib::$request['referer'];
-        unset(ipTV_lib::$request['referer']);
+    if (isset(CoreUtilities::$request['referer'])) {
+        $rReferer = CoreUtilities::$request['referer'];
+        unset(CoreUtilities::$request['referer']);
     } else {
         $rReferer = null;
     }
 
-    $rAction = ipTV_lib::$request['action'];
-    $rData = ipTV_lib::$request;
+    $rAction = CoreUtilities::$request['action'];
+    $rData = CoreUtilities::$request;
     unset($rData['action']);
 
     if (count($rData) == 0) {

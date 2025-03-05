@@ -6,9 +6,9 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 0);
-        ipTV_lib::$settings = ipTV_lib::getSettings(true);
+        CoreUtilities::$settings = CoreUtilities::getSettings(true);
         $rSplit = 10000;
-        $rThreadCount = (ipTV_lib::$settings['cache_thread_count'] ?: 10);
+        $rThreadCount = (CoreUtilities::$settings['cache_thread_count'] ?: 10);
         $rGroupStart = $rGroupMax = $rType = null;
         if (1 < count($argv)) {
             $rType = $argv[1];
@@ -22,7 +22,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
             }
             if ($rType == 'force') {
                 echo 'Forcing cache regen...' . "\n";
-                ipTV_lib::$settings['cache_changes'] = false;
+                CoreUtilities::$settings['cache_changes'] = false;
             }
         } else {
             shell_exec("kill -9 \$(ps aux | grep 'cache_engine' | grep -v grep | grep -v " . $rPID . " | awk '{print \$2}')");
@@ -176,8 +176,8 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
     global $rUpdateIDs;
     global $rThreadCount;
     $rStartTime = time();
-    if (ipTV_lib::isRunning()) {
-        if (ipTV_lib::$cached || isset($rUpdateIDs)) {
+    if (CoreUtilities::isRunning()) {
+        if (CoreUtilities::$cached || isset($rUpdateIDs)) {
             switch ($rType) {
                 case 'users':
                     generateUsers($rGroupStart, $rGroupMax);
@@ -224,7 +224,7 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
                     // file_put_contents(SERIES_TMP_PATH . 'series_categories', igbinary_serialize($rSeriesCategories));
                     $rDelete = array('streams' => array(), 'users_i' => array(), 'users_c' => array(), 'users_t' => array());
                     $cacheDataKey = array();
-                    if (ipTV_lib::$settings['cache_changes']) {
+                    if (CoreUtilities::$settings['cache_changes']) {
                         $rChanges = getChangedUsers();
                         $rDelete['users_i'] = $rChanges['delete_i'];
                         $rDelete['users_c'] = $rChanges['delete_c'];
@@ -260,7 +260,7 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
                     //     }
                     //     $cacheDataKey[] = PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "series" ' . $rStart . ' ' . $rMax;
                     // }
-                    if (ipTV_lib::$settings['cache_changes']) {
+                    if (CoreUtilities::$settings['cache_changes']) {
                         $rChanges = getchangedstreams();
                         $rDelete['streams'] = $rChanges['delete'];
                         if (count($rChanges['changes']) > 0) {
@@ -313,7 +313,7 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
                     // foreach ($rSeriesEpisodes as $rSeriesID => $rSeasons) {
                     //     file_put_contents(SERIES_TMP_PATH . 'episodes_' . $rSeriesID, igbinary_serialize($rSeasons));
                     // }
-                    if (ipTV_lib::$settings['cache_changes']) {
+                    if (CoreUtilities::$settings['cache_changes']) {
                         foreach ($rDelete['streams'] as $rStreamID) {
                             @unlink(STREAMS_TMP_PATH . 'stream_' . $rStreamID);
                         }
@@ -339,7 +339,7 @@ function loadCron($rType, $rGroupStart, $rGroupMax) {
                     }
                     echo 'Cache updated!' . "\n";
                     file_put_contents(CACHE_TMP_PATH . 'cache_complete', time());
-                    ipTV_lib::setSettings(["last_cache" => time(), "last_cache_taken" => time() - $rStartTime]);
+                    CoreUtilities::setSettings(["last_cache" => time(), "last_cache_taken" => time() - $rStartTime]);
                     break;
             }
         } else {
@@ -400,7 +400,7 @@ function generateUsers($rStart = null, $rCount = null, $cacheLockMechanism = arr
                     foreach ($ipTV_db->get_rows() as $rUserInfo) {
                         $rExists[] = $rUserInfo['id'];
                         file_put_contents(USER_TMP_PATH . 'user_i_' . $rUserInfo['id'], igbinary_serialize($rUserInfo));
-                        $rKey = (ipTV_lib::$settings['case_sensitive_line'] ? $rUserInfo['username'] . '_' . $rUserInfo['password'] : strtolower($rUserInfo['username'] . '_' . $rUserInfo['password']));
+                        $rKey = (CoreUtilities::$settings['case_sensitive_line'] ? $rUserInfo['username'] . '_' . $rUserInfo['password'] : strtolower($rUserInfo['username'] . '_' . $rUserInfo['password']));
                         file_put_contents(USER_TMP_PATH . 'user_c_' . $rKey, $rUserInfo['id']);
                         if (!empty($rUserInfo['access_token'])) {
                             file_put_contents(USER_TMP_PATH . 'user_t_' . $rUserInfo['access_token'], $rUserInfo['id']);
@@ -633,7 +633,7 @@ function getChangedUsers() {
                     $rReturn['changes'][] = $rRow['id'];
                 }
                 $cacheRevalidationCheck[] = $rRow['id'];
-                $cacheDataCompression[] = (ipTV_lib::$settings['case_sensitive_line'] ? $rRow['username'] . '_' . $rRow['password'] : strtolower($rRow['username'] . '_' . $rRow['password']));
+                $cacheDataCompression[] = (CoreUtilities::$settings['case_sensitive_line'] ? $rRow['username'] . '_' . $rRow['password'] : strtolower($rRow['username'] . '_' . $rRow['password']));
                 if ($rRow['access_token']) {
                     $cacheDataDecompression[] = $rRow['access_token'];
                 }

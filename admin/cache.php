@@ -5,23 +5,23 @@ include 'functions.php';
 if (!$rPermissions["is_admin"]) {
     exit;
 }
-ipTV_lib::$settings = ipTV_lib::getSettings(true);
-$rSettings = ipTV_lib::$settings;
+CoreUtilities::$settings = CoreUtilities::getSettings(true);
+$rSettings = CoreUtilities::$settings;
 
 include "header.php";
-if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "settings"))) {
+if ((isset(CoreUtilities::$request["submit_settings"])) && (hasPermissions("adv", "settings"))) {
     $rCheck = array(false, false);
     $rCron = array('*', '*', '*', '*', '*');
     $rPattern = '/^[0-9\\/*,-]+$/';
-    $rCron[0] = ipTV_lib::$request['minute'];
+    $rCron[0] = CoreUtilities::$request['minute'];
     preg_match($rPattern, $rCron[0], $rMatches);
     $rCheck[0] = 0 < count($rMatches);
-    $rCron[1] = ipTV_lib::$request['hour'];
+    $rCron[1] = CoreUtilities::$request['hour'];
     preg_match($rPattern, $rCron[1], $rMatches);
     $rCheck[1] = 0 < count($rMatches);
     $rCronOutput = implode(' ', $rCron);
 
-    if (isset(ipTV_lib::$request['cache_changes'])) {
+    if (isset(CoreUtilities::$request['cache_changes'])) {
         $rCacheChanges = true;
     } else {
         $rCacheChanges = false;
@@ -29,7 +29,7 @@ if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "se
 
     if ($rCheck[0] && $rCheck[1]) {
         $ipTV_db_admin->query("UPDATE `crontab` SET `time` = '" . $rCronOutput . "' WHERE `filename` = 'cache_engine.php';");
-        ipTV_lib::setSettings(["cache_thread_count" => ipTV_lib::$request['cache_thread_count'], "cache_changes" => $rCacheChanges]);
+        CoreUtilities::setSettings(["cache_thread_count" => CoreUtilities::$request['cache_thread_count'], "cache_changes" => $rCacheChanges]);
 
         if (file_exists(TMP_PATH . 'crontab')) {
             unlink(TMP_PATH . 'crontab');
@@ -76,18 +76,18 @@ if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "se
                             
                             $rMessage = "You're using neither Caching or Redis Connection Handler, the server will perform poorly compared to having either enabled."; // Default message
                             
-                            if (ipTV_lib::$settings['enable_cache'] || ipTV_lib::$settings['redis_handler']) {
+                            if (CoreUtilities::$settings['enable_cache'] || CoreUtilities::$settings['redis_handler']) {
                                 $rHeader = 'Good';
                                 $rColour = 'info';
                                 $rMessage = "Redis Connection Handler is disabled on your service, if you have a lot of throughput you will see better performance with Redis enabled.<br/>If you maintain active connections of over 10,000 for example you should consider this. Below this amount you're unlikely to see any benefit.";
                                 $rSize = 75;
 
-                                if (!ipTV_lib::$settings['enable_cache']) {
+                                if (!CoreUtilities::$settings['enable_cache']) {
                                     $rSize = 50;
                                     $rMessage = 'Caching is disabled on your service, this will impact performance significantly under load compared to having it enabled.';
                                 }
 
-                                if (ipTV_lib::$settings['enable_cache'] && ipTV_lib::$settings['redis_handler']) {
+                                if (CoreUtilities::$settings['enable_cache'] && CoreUtilities::$settings['redis_handler']) {
                                     $rSize = 100;
                                     $rColour = 'pink';
                                     $rHeader = 'Maximum';
@@ -286,15 +286,15 @@ if ((isset(ipTV_lib::$request["submit_settings"])) && (hasPermissions("adv", "se
 
                                                 <?php if ($rSettings['redis_handler']):
                                                     try {
-                                                        ipTV_lib::$redis = new Redis();
-                                                        ipTV_lib::$redis->connect(ipTV_lib::$Servers[SERVER_ID]['server_ip'], 6379);
+                                                        CoreUtilities::$redis = new Redis();
+                                                        CoreUtilities::$redis->connect(CoreUtilities::$Servers[SERVER_ID]['server_ip'], 6379);
                                                         $rStatus = true;
                                                     } catch (Exception $e) {
                                                         $rStatus = false;
                                                     }
 
                                                     try {
-                                                        ipTV_lib::$redis->auth(ipTV_lib::$settings['redis_password']);
+                                                        CoreUtilities::$redis->auth(CoreUtilities::$settings['redis_password']);
                                                         $rAuth = true;
                                                     } catch (Exception $e) {
                                                         $rAuth = false;

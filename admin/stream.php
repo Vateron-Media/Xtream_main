@@ -4,7 +4,7 @@ include "functions.php";
 if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_stream")) && (!hasPermissions("adv", "edit_stream")))) {
     exit;
 }
-if ((isset(ipTV_lib::$request["import"])) && (!hasPermissions("adv", "import_streams"))) {
+if ((isset(CoreUtilities::$request["import"])) && (!hasPermissions("adv", "import_streams"))) {
     exit;
 }
 
@@ -20,16 +20,16 @@ foreach ($rEPGSources as $rEPG) {
 $rServerTree = array();
 $rOnDemand = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>Stream Source</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
-if (isset(ipTV_lib::$request["id"])) {
-    if ((isset(ipTV_lib::$request["import"])) or (!hasPermissions("adv", "edit_stream"))) {
+if (isset(CoreUtilities::$request["id"])) {
+    if ((isset(CoreUtilities::$request["import"])) or (!hasPermissions("adv", "edit_stream"))) {
         exit;
     }
-    $rStream = getStream(ipTV_lib::$request["id"]);
+    $rStream = getStream(CoreUtilities::$request["id"]);
     if ((!$rStream) or ($rStream["type"] <> 1)) {
         exit;
     }
-    $rStreamOptions = getStreamOptions(ipTV_lib::$request["id"]);
-    $rStreamSys = getStreamSys(ipTV_lib::$request["id"]);
+    $rStreamOptions = getStreamOptions(CoreUtilities::$request["id"]);
+    $rStreamSys = getStreamSys(CoreUtilities::$request["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStreamSys[intval($rServer["id"])])) {
             if ($rStreamSys[intval($rServer["id"])]["parent_id"] <> 0) {
@@ -67,15 +67,15 @@ include "header.php";
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li>
-                                <a href="./streams.php<?php if (isset(ipTV_lib::$request["category"])) {
-                                                            echo "?category=" . ipTV_lib::$request["category"];
+                                <a href="./streams.php<?php if (isset(CoreUtilities::$request["category"])) {
+                                                            echo "?category=" . CoreUtilities::$request["category"];
                                                         } ?>">
                                     <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
                                         <?= $_["permission_streams"] ?>
                                     </button>
                                 </a>
                                 <?php if (!isset($rStream)) {
-                                    if (!isset(ipTV_lib::$request["import"])) { ?>
+                                    if (!isset(CoreUtilities::$request["import"])) { ?>
                                         <a href="./stream.php?import=1">
                                             <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
                                                 <?= $_["import_m3u"] ?>
@@ -94,7 +94,7 @@ include "header.php";
                     </div>
                     <h4 class="page-title"><?php if (isset($rStream["id"])) {
                                                 echo $rStream["stream_display_name"] . ' &nbsp;<button type="button" class="btn btn-outline-info waves-effect waves-light btn-xs" onClick="player(' . $rStream["id"] . ');"><i class="mdi mdi-play"></i></button>';
-                                            } elseif (isset(ipTV_lib::$request["import"])) {
+                                            } elseif (isset(CoreUtilities::$request["import"])) {
                                                 echo $_["import_streams"];
                                             } else {
                                                 echo $_["add_stream"];
@@ -143,7 +143,7 @@ include "header.php";
                 <div class="card">
                     <div class="card-body">
                         <form
-                            <?php if (isset(ipTV_lib::$request["import"])): ?>
+                            <?php if (isset(CoreUtilities::$request["import"])): ?>
                             enctype="multipart/form-data"
                             <?php endif; ?>
                             action="#"
@@ -170,7 +170,7 @@ include "header.php";
                                             <span class="d-none d-sm-inline"><?= $_["advanced"] ?> </span>
                                         </a>
                                     </li>
-                                    <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                    <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                         <li class="nav-item">
                                             <a href="#stream-map" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                                 <i class="mdi mdi-map mr-1"></i>
@@ -185,7 +185,7 @@ include "header.php";
                                             </span>
                                         </a>
                                     </li>
-                                    <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                    <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                         <li class="nav-item">
                                             <a href="#epg-options" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                                 <i class="mdi mdi-television-guide mr-1"></i>
@@ -205,7 +205,7 @@ include "header.php";
                                     <div class="tab-pane" id="stream-details">
                                         <div class="row">
                                             <div class="col-12">
-                                                <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                                <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
                                                             for="stream_display_name"><?= $_["stream_name"] ?>
@@ -303,7 +303,7 @@ include "header.php";
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                                <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
                                                             for="stream_icon"><?= $_["stream_logo_url"] ?>
@@ -577,7 +577,7 @@ include "header.php";
                                             </li>
                                         </ul>
                                     </div>
-                                    <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                    <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                         <div class="tab-pane" id="stream-map">
                                             <div class="row">
                                                 <div class="col-12">
@@ -688,7 +688,7 @@ include "header.php";
                                             </li>
                                         </ul>
                                     </div>
-                                    <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                    <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                         <div class="tab-pane" id="epg-options">
                                             <div class="row">
                                                 <div class="col-12">
@@ -1198,7 +1198,7 @@ include "header.php";
         });
 
         $("#stream_form").submit(function(e) {
-            <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+            <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                 if ($("#stream_display_name").val().length == 0) {
                     e.preventDefault();
                     $.toast("Enter a stream name.");

@@ -16,7 +16,7 @@ function requestLoger($output) {
     global $REQUESTLOGER;
     if ($REQUESTLOGER) {
         $data = array(
-            'request' => ipTV_lib::$request,
+            'request' => CoreUtilities::$request,
             'response' => $output,
         );
         $log = date('Y-m-d H:i:s') . ' ' . print_r($data, true);
@@ -151,13 +151,13 @@ register_shutdown_function('shutdown');
 
 $rIP = ipTV_streaming::getUserIP();
 $rCountryCode = ipTV_streaming::getIPInfo($rIP)['country']['iso_code'];
-$rMAC = (!empty(ipTV_lib::$request['mac']) ? ipTV_lib::$request['mac'] : $_COOKIE['mac']);
+$rMAC = (!empty(CoreUtilities::$request['mac']) ? CoreUtilities::$request['mac'] : $_COOKIE['mac']);
 $rUserAgent = (!empty($_SERVER['HTTP_X_USER_AGENT']) ? $_SERVER['HTTP_X_USER_AGENT'] : null);
-$rGMode = (!empty(ipTV_lib::$request['gmode']) ? intval(ipTV_lib::$request['gmode']) : null);
-$rDebug = ipTV_lib::$settings['enable_debug_stalker'];
+$rGMode = (!empty(CoreUtilities::$request['gmode']) ? intval(CoreUtilities::$request['gmode']) : null);
+$rDebug = CoreUtilities::$settings['enable_debug_stalker'];
 $rDevice = array();
 $rTypes = array('live', 'created_live');
-$rForceProtocol = (ipTV_lib::$settings['mag_disable_ssl'] ? 'http' : null);
+$rForceProtocol = (CoreUtilities::$settings['mag_disable_ssl'] ? 'http' : null);
 $rUpdateCache = false;
 
 if ($rReqType == 'stb' && $rReqAction == 'handshake') {
@@ -166,7 +166,7 @@ if ($rReqType == 'stb' && $rReqAction == 'handshake') {
 
     if ($rDevice) {
         $rDevice['token'] = strtoupper(md5(uniqid(rand(), true)));
-        $rVerifyToken = encryptData(igbinary_serialize(array('id' => $rDevice['mag_id'], 'token' => $rDevice['token'])), ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+        $rVerifyToken = encryptData(igbinary_serialize(array('id' => $rDevice['mag_id'], 'token' => $rDevice['token'])), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
         $rDevice['authenticated'] = false;
         $ipTV_db->query('UPDATE `mag_devices` SET `token` = ? WHERE `mag_id` = ?', $rDevice['token'], $rDevice['mag_id']);
         $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(?, 1, ?, ?);', SERVER_ID, time(), json_encode(array('type' => 'update_line', 'id' => $rDevice['user_id'])));
@@ -197,7 +197,7 @@ if ($rAuthHeader && preg_match('/Bearer\\s+(.*)$/i', $rAuthHeader, $rMatches)) {
 }
 
 if ($rAuthToken) {
-    $rVerify = igbinary_unserialize(decryptData($rAuthToken, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA));
+    $rVerify = igbinary_unserialize(decryptData($rAuthToken, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA));
     $rDevice = (isset($rVerify['id']) ? getDevice($rVerify['id']) : array());
 
     if ($rDevice['token'] != $rVerify['token']) {
@@ -209,16 +209,16 @@ if ($rAuthToken) {
 }
 
 if ($rDevice && $rReqType == 'stb' && $rReqAction == 'get_profile') {
-    $rSerialNumber = (!empty(ipTV_lib::$request['sn']) ? ipTV_lib::$request['sn'] : null);
-    $rSTBType = (!empty(ipTV_lib::$request['stb_type']) ? ipTV_lib::$request['stb_type'] : null);
-    $rVersion = (!empty(ipTV_lib::$request['ver']) ? ipTV_lib::$request['ver'] : null);
-    $rImageVersion = (!empty(ipTV_lib::$request['image_version']) ? ipTV_lib::$request['image_version'] : null);
-    $rDeviceID = (!empty(ipTV_lib::$request['device_id']) ? ipTV_lib::$request['device_id'] : null);
-    $rDeviceID2 = (!empty(ipTV_lib::$request['device_id2']) ? ipTV_lib::$request['device_id2'] : null);
-    $rHWVersion = (!empty(ipTV_lib::$request['hw_version']) ? ipTV_lib::$request['hw_version'] : null);
+    $rSerialNumber = (!empty(CoreUtilities::$request['sn']) ? CoreUtilities::$request['sn'] : null);
+    $rSTBType = (!empty(CoreUtilities::$request['stb_type']) ? CoreUtilities::$request['stb_type'] : null);
+    $rVersion = (!empty(CoreUtilities::$request['ver']) ? CoreUtilities::$request['ver'] : null);
+    $rImageVersion = (!empty(CoreUtilities::$request['image_version']) ? CoreUtilities::$request['image_version'] : null);
+    $rDeviceID = (!empty(CoreUtilities::$request['device_id']) ? CoreUtilities::$request['device_id'] : null);
+    $rDeviceID2 = (!empty(CoreUtilities::$request['device_id2']) ? CoreUtilities::$request['device_id2'] : null);
+    $rHWVersion = (!empty(CoreUtilities::$request['hw_version']) ? CoreUtilities::$request['hw_version'] : null);
     $rVerified = true;
 
-    if (!(empty(ipTV_lib::$settings['allowed_stb_types']) || in_array(strtolower($rSTBType), ipTV_lib::$settings['allowed_stb_types']))) {
+    if (!(empty(CoreUtilities::$settings['allowed_stb_types']) || in_array(strtolower($rSTBType), CoreUtilities::$settings['allowed_stb_types']))) {
         // console log STB Types not alowed
         $rVerified = false;
     }
@@ -260,7 +260,7 @@ if ($rDevice && $rReqType == 'stb' && $rReqAction == 'get_profile') {
         }
     }
 
-    if (!empty(ipTV_lib::$settings['stalker_lock_images']) && !in_array($ver, ipTV_lib::$settings['stalker_lock_images'])) {
+    if (!empty(CoreUtilities::$settings['stalker_lock_images']) && !in_array($ver, CoreUtilities::$settings['stalker_lock_images'])) {
         $rVerified = false;
     }
 
@@ -286,7 +286,7 @@ if ($rDevice && $rReqType == 'stb' && $rReqAction == 'get_profile') {
         $ipTV_db->query('UPDATE `mag_devices` SET `ip` = ?, `stb_type` = ?, `sn` = ?, `ver` = ?, `image_version` = ?, `device_id` = ?, `device_id2` = ?, `hw_version` = ? WHERE `mag_id` = ?;', $rIP, $rSTBType, $rSerialNumber, $rVersion, $rImageVersion, $rDeviceID, $rDeviceID2, $rHWVersion, $rDevice['mag_id']);
         updatecache();
     } else {
-        ipTV_lib::unlinkFile(STALKER_TMP_PATH . 'stalker_' . $rDevice['id']);
+        CoreUtilities::unlinkFile(STALKER_TMP_PATH . 'stalker_' . $rDevice['id']);
         $rDevice = array();
     }
 }
@@ -296,7 +296,7 @@ $rAuthenticated = ($rDevice['authenticated'] ?: false);
 
 
 $rMagData = array();
-$rProfile = array('id' => $rDevice['mag_id'], 'name' => $rDevice['mag_id'], 'sname' => '', 'pass' => '', 'use_embedded_settings' => '', 'parent_password' => '0000', 'bright' => '200', 'contrast' => '127', 'saturation' => '127', 'video_out' => '', 'volume' => '70', 'playback_buffer_bytes' => '0', 'playback_buffer_size' => '0', 'audio_out' => '1', 'mac' => $rMAC, 'ip' => '127.0.0.1', 'ls' => '', 'version' => '', 'lang' => '', 'locale' => $rDevice['locale'], 'city_id' => '0', 'hd' => '1', 'main_notify' => '1', 'fav_itv_on' => '0', 'now_playing_start' => '2018-02-18 17:33:43', 'now_playing_type' => '1', 'now_playing_content' => 'Test channel', 'additional_services_on' => '1', 'time_last_play_tv' => '0000-00-00 00:00:00', 'time_last_play_video' => '0000-00-00 00:00:00', 'operator_id' => '0', 'storage_name' => '', 'hd_content' => '0', 'image_version' => 'undefined', 'last_change_status' => '0000-00-00 00:00:00', 'last_start' => '2018-02-18 17:33:38', 'last_active' => '2018-02-18 17:33:43', 'keep_alive' => '2018-02-18 17:33:43', 'screensaver_delay' => '10', 'phone' => '', 'fname' => '', 'login' => '', 'password' => '', 'stb_type' => '', 'num_banks' => '0', 'tariff_plan_id' => '0', 'comment' => null, 'now_playing_link_id' => '0', 'now_playing_streamer_id' => '0', 'just_started' => '1', 'last_watchdog' => '2018-02-18 17:33:39', 'created' => '2018-02-18 14:40:12', 'plasma_saving' => '0', 'ts_enabled' => '0', 'ts_enable_icon' => '1', 'ts_path' => '', 'ts_max_length' => '3600', 'ts_buffer_use' => 'cyclic', 'ts_action_on_exit' => 'no_save', 'ts_delay' => 'on_pause', 'video_clock' => 'Off', 'verified' => '0', 'hdmi_event_reaction' => 1, 'pri_audio_lang' => '', 'sec_audio_lang' => '', 'pri_subtitle_lang' => '', 'sec_subtitle_lang' => '', 'subtitle_color' => '16777215', 'subtitle_size' => '20', 'show_after_loading' => '', 'play_in_preview_by_ok' => null, 'hw_version' => 'undefined', 'openweathermap_city_id' => '0', 'theme' => '', 'settings_password' => '0000', 'expire_billing_date' => '0000-00-00 00:00:00', 'reseller_id' => null, 'account_balance' => '', 'client_type' => 'STB', 'hw_version_2' => '62', 'blocked' => '0', 'units' => 'metric', 'tariff_expired_date' => null, 'tariff_id_instead_expired' => null, 'activation_code_auto_issue' => '1', 'last_itv_id' => 0, 'updated' => array('id' => '1', 'uid' => '1', 'anec' => '0', 'vclub' => '0'), 'rtsp_type' => '4', 'rtsp_flags' => '0', 'stb_lang' => 'en', 'display_menu_after_loading' => '', 'record_max_length' => 180, 'web_proxy_host' => '', 'web_proxy_port' => '', 'web_proxy_user' => '', 'web_proxy_pass' => '', 'web_proxy_exclude_list' => '', 'demo_video_url' => '', 'tv_quality' => 'high', 'tv_quality_filter' => '', 'is_moderator' => false, 'timeslot_ratio' => 0.33333333333333, 'timeslot' => 40, 'kinopoisk_rating' => '1', 'enable_tariff_plans' => '', 'cas_type' => 0, 'cas_params' => null, 'cas_web_params' => null, 'cas_additional_params' => array(), 'cas_hw_descrambling' => 0, 'cas_ini_file' => '', 'logarithm_volume_control' => '', 'allow_subscription_from_stb' => '1', 'deny_720p_gmode_on_mag200' => '1', 'enable_arrow_keys_setpos' => '1', 'show_purchased_filter' => '', 'timezone_diff' => 0, 'enable_connection_problem_indication' => '1', 'invert_channel_switch_direction' => '', 'play_in_preview_only_by_ok' => false, 'enable_stream_error_logging' => '', 'always_enabled_subtitles' => (ipTV_lib::$settings['always_enabled_subtitles'] == 1 ? '1' : ''), 'enable_service_button' => '', 'enable_setting_access_by_pass' => '', 'tv_archive_continued' => '', 'plasma_saving_timeout' => '600', 'show_tv_only_hd_filter_option' => '', 'tv_playback_retry_limit' => '0', 'fading_tv_retry_timeout' => '1', 'epg_update_time_range' => 0.6, 'store_auth_data_on_stb' => false, 'account_page_by_password' => '', 'tester' => false, 'enable_stream_losses_logging' => '', 'external_payment_page_url' => '', 'max_local_recordings' => '10', 'tv_channel_default_aspect' => 'fit', 'default_led_level' => '10', 'standby_led_level' => '90', 'show_version_in_main_menu' => '1', 'disable_youtube_for_mag200' => '1', 'auth_access' => false, 'epg_data_block_period_for_stb' => '5', 'standby_on_hdmi_off' => '1', 'force_ch_link_check' => '', 'stb_ntp_server' => 'pool.ntp.org', 'overwrite_stb_ntp_server' => '', 'hide_tv_genres_in_fullscreen' => null, 'advert' => null);
+$rProfile = array('id' => $rDevice['mag_id'], 'name' => $rDevice['mag_id'], 'sname' => '', 'pass' => '', 'use_embedded_settings' => '', 'parent_password' => '0000', 'bright' => '200', 'contrast' => '127', 'saturation' => '127', 'video_out' => '', 'volume' => '70', 'playback_buffer_bytes' => '0', 'playback_buffer_size' => '0', 'audio_out' => '1', 'mac' => $rMAC, 'ip' => '127.0.0.1', 'ls' => '', 'version' => '', 'lang' => '', 'locale' => $rDevice['locale'], 'city_id' => '0', 'hd' => '1', 'main_notify' => '1', 'fav_itv_on' => '0', 'now_playing_start' => '2018-02-18 17:33:43', 'now_playing_type' => '1', 'now_playing_content' => 'Test channel', 'additional_services_on' => '1', 'time_last_play_tv' => '0000-00-00 00:00:00', 'time_last_play_video' => '0000-00-00 00:00:00', 'operator_id' => '0', 'storage_name' => '', 'hd_content' => '0', 'image_version' => 'undefined', 'last_change_status' => '0000-00-00 00:00:00', 'last_start' => '2018-02-18 17:33:38', 'last_active' => '2018-02-18 17:33:43', 'keep_alive' => '2018-02-18 17:33:43', 'screensaver_delay' => '10', 'phone' => '', 'fname' => '', 'login' => '', 'password' => '', 'stb_type' => '', 'num_banks' => '0', 'tariff_plan_id' => '0', 'comment' => null, 'now_playing_link_id' => '0', 'now_playing_streamer_id' => '0', 'just_started' => '1', 'last_watchdog' => '2018-02-18 17:33:39', 'created' => '2018-02-18 14:40:12', 'plasma_saving' => '0', 'ts_enabled' => '0', 'ts_enable_icon' => '1', 'ts_path' => '', 'ts_max_length' => '3600', 'ts_buffer_use' => 'cyclic', 'ts_action_on_exit' => 'no_save', 'ts_delay' => 'on_pause', 'video_clock' => 'Off', 'verified' => '0', 'hdmi_event_reaction' => 1, 'pri_audio_lang' => '', 'sec_audio_lang' => '', 'pri_subtitle_lang' => '', 'sec_subtitle_lang' => '', 'subtitle_color' => '16777215', 'subtitle_size' => '20', 'show_after_loading' => '', 'play_in_preview_by_ok' => null, 'hw_version' => 'undefined', 'openweathermap_city_id' => '0', 'theme' => '', 'settings_password' => '0000', 'expire_billing_date' => '0000-00-00 00:00:00', 'reseller_id' => null, 'account_balance' => '', 'client_type' => 'STB', 'hw_version_2' => '62', 'blocked' => '0', 'units' => 'metric', 'tariff_expired_date' => null, 'tariff_id_instead_expired' => null, 'activation_code_auto_issue' => '1', 'last_itv_id' => 0, 'updated' => array('id' => '1', 'uid' => '1', 'anec' => '0', 'vclub' => '0'), 'rtsp_type' => '4', 'rtsp_flags' => '0', 'stb_lang' => 'en', 'display_menu_after_loading' => '', 'record_max_length' => 180, 'web_proxy_host' => '', 'web_proxy_port' => '', 'web_proxy_user' => '', 'web_proxy_pass' => '', 'web_proxy_exclude_list' => '', 'demo_video_url' => '', 'tv_quality' => 'high', 'tv_quality_filter' => '', 'is_moderator' => false, 'timeslot_ratio' => 0.33333333333333, 'timeslot' => 40, 'kinopoisk_rating' => '1', 'enable_tariff_plans' => '', 'cas_type' => 0, 'cas_params' => null, 'cas_web_params' => null, 'cas_additional_params' => array(), 'cas_hw_descrambling' => 0, 'cas_ini_file' => '', 'logarithm_volume_control' => '', 'allow_subscription_from_stb' => '1', 'deny_720p_gmode_on_mag200' => '1', 'enable_arrow_keys_setpos' => '1', 'show_purchased_filter' => '', 'timezone_diff' => 0, 'enable_connection_problem_indication' => '1', 'invert_channel_switch_direction' => '', 'play_in_preview_only_by_ok' => false, 'enable_stream_error_logging' => '', 'always_enabled_subtitles' => (CoreUtilities::$settings['always_enabled_subtitles'] == 1 ? '1' : ''), 'enable_service_button' => '', 'enable_setting_access_by_pass' => '', 'tv_archive_continued' => '', 'plasma_saving_timeout' => '600', 'show_tv_only_hd_filter_option' => '', 'tv_playback_retry_limit' => '0', 'fading_tv_retry_timeout' => '1', 'epg_update_time_range' => 0.6, 'store_auth_data_on_stb' => false, 'account_page_by_password' => '', 'tester' => false, 'enable_stream_losses_logging' => '', 'external_payment_page_url' => '', 'max_local_recordings' => '10', 'tv_channel_default_aspect' => 'fit', 'default_led_level' => '10', 'standby_led_level' => '90', 'show_version_in_main_menu' => '1', 'disable_youtube_for_mag200' => '1', 'auth_access' => false, 'epg_data_block_period_for_stb' => '5', 'standby_on_hdmi_off' => '1', 'force_ch_link_check' => '', 'stb_ntp_server' => 'pool.ntp.org', 'overwrite_stb_ntp_server' => '', 'hide_tv_genres_in_fullscreen' => null, 'advert' => null);
 $rLocales['get_locales']['English'] = 'en_GB.utf8';
 $rMagData['get_years'] = array('js' => array(array('id' => '*', 'title' => '*')));
 
@@ -304,13 +304,13 @@ foreach (range(1900, date('Y')) as $rYear) {
     $rMagData['get_years']['js'][] = array('id' => $rYear, 'title' => $rYear);
 }
 $rMagData['get_abc'] = array('js' => array(array('id' => '*', 'title' => '*'), array('id' => 'A', 'title' => 'A'), array('id' => 'B', 'title' => 'B'), array('id' => 'C', 'title' => 'C'), array('id' => 'D', 'title' => 'D'), array('id' => 'E', 'title' => 'E'), array('id' => 'F', 'title' => 'F'), array('id' => 'G', 'title' => 'G'), array('id' => 'H', 'title' => 'H'), array('id' => 'I', 'title' => 'I'), array('id' => 'G', 'title' => 'G'), array('id' => 'K', 'title' => 'K'), array('id' => 'L', 'title' => 'L'), array('id' => 'M', 'title' => 'M'), array('id' => 'N', 'title' => 'N'), array('id' => 'O', 'title' => 'O'), array('id' => 'P', 'title' => 'P'), array('id' => 'Q', 'title' => 'Q'), array('id' => 'R', 'title' => 'R'), array('id' => 'S', 'title' => 'S'), array('id' => 'T', 'title' => 'T'), array('id' => 'U', 'title' => 'U'), array('id' => 'V', 'title' => 'V'), array('id' => 'W', 'title' => 'W'), array('id' => 'X', 'title' => 'X'), array('id' => 'W', 'title' => 'W'), array('id' => 'Z', 'title' => 'Z')));
-$rTimezone = (empty($_COOKIE['timezone']) || $_COOKIE['timezone'] == 'undefined' ? ipTV_lib::$settings['default_timezone'] : $_COOKIE['timezone']);
+$rTimezone = (empty($_COOKIE['timezone']) || $_COOKIE['timezone'] == 'undefined' ? CoreUtilities::$settings['default_timezone'] : $_COOKIE['timezone']);
 
 if (!in_array($rTimezone, DateTimeZone::listIdentifiers())) {
-    $rTimezone = ipTV_lib::$settings['default_timezone'];
+    $rTimezone = CoreUtilities::$settings['default_timezone'];
 }
 
-$rTheme = (empty(ipTV_lib::$settings['stalker_theme']) ? 'default' : ipTV_lib::$settings['stalker_theme']);
+$rTheme = (empty(CoreUtilities::$settings['stalker_theme']) ? 'default' : CoreUtilities::$settings['stalker_theme']);
 
 switch ($rReqType) {
     case 'stb':
@@ -318,28 +318,28 @@ switch ($rReqType) {
             case 'get_profile':
                 $rTotal = ($rAuthenticated ? array_merge($rProfile, $rDevice['get_profile_vars']) : $rProfile);
                 $rTotal['status'] = intval(!$rAuthenticated);
-                $rTotal['update_url'] = (empty(ipTV_lib::$settings['update_url']) ? '' : ipTV_lib::$settings['update_url']);
-                $rTotal['test_download_url'] = (empty(ipTV_lib::$settings['test_download_url']) ? '' : ipTV_lib::$settings['test_download_url']);
-                $rTotal['default_timezone'] = ipTV_lib::$settings['default_timezone'];
+                $rTotal['update_url'] = (empty(CoreUtilities::$settings['update_url']) ? '' : CoreUtilities::$settings['update_url']);
+                $rTotal['test_download_url'] = (empty(CoreUtilities::$settings['test_download_url']) ? '' : CoreUtilities::$settings['test_download_url']);
+                $rTotal['default_timezone'] = CoreUtilities::$settings['default_timezone'];
                 $rTotal['default_locale'] = $rDevice['locale'];
-                $rTotal['allowed_stb_types_for_local_recording'] = ipTV_lib::$settings['allowed_stb_types'];
+                $rTotal['allowed_stb_types_for_local_recording'] = CoreUtilities::$settings['allowed_stb_types'];
                 $rTotal['storages'] = array();
-                $rTotal['tv_channel_default_aspect'] = (empty(ipTV_lib::$settings['tv_channel_default_aspect']) ? 'fit' : ipTV_lib::$settings['tv_channel_default_aspect']);
-                $rTotal['playback_limit'] = (empty(ipTV_lib::$settings['playback_limit']) ? false : intval(ipTV_lib::$settings['playback_limit']));
+                $rTotal['tv_channel_default_aspect'] = (empty(CoreUtilities::$settings['tv_channel_default_aspect']) ? 'fit' : CoreUtilities::$settings['tv_channel_default_aspect']);
+                $rTotal['playback_limit'] = (empty(CoreUtilities::$settings['playback_limit']) ? false : intval(CoreUtilities::$settings['playback_limit']));
 
                 if (empty($rTotal['playback_limit'])) {
                     $rTotal['enable_playback_limit'] = false;
                 }
 
-                $rTotal['show_tv_channel_logo'] = !empty(ipTV_lib::$settings['show_tv_channel_logo']);
-                $rTotal['show_channel_logo_in_preview'] = !empty(ipTV_lib::$settings['show_channel_logo_in_preview']);
-                $rTotal['enable_connection_problem_indication'] = !empty(ipTV_lib::$settings['enable_connection_problem_indication']);
+                $rTotal['show_tv_channel_logo'] = !empty(CoreUtilities::$settings['show_tv_channel_logo']);
+                $rTotal['show_channel_logo_in_preview'] = !empty(CoreUtilities::$settings['show_channel_logo_in_preview']);
+                $rTotal['enable_connection_problem_indication'] = !empty(CoreUtilities::$settings['enable_connection_problem_indication']);
                 $rTotal['hls_fast_start'] = '1';
                 $rTotal['check_ssl_certificate'] = 0;
                 $rTotal['enable_buffering_indication'] = 0;
                 $rTotal['watchdog_timeout'] = mt_rand(80, 120);
 
-                if (empty($rTotal['aspect']) && ipTV_lib::$Servers[SERVER_ID]['server_protocol'] == 'https') {
+                if (empty($rTotal['aspect']) && CoreUtilities::$Servers[SERVER_ID]['server_protocol'] == 'https') {
                     $rTotal['aspect'] = '16';
                 }
 
@@ -358,7 +358,7 @@ switch ($rReqType) {
                 requestLoger(json_encode(array('js' => $rModules)));
 
             case 'get_types_list':
-                requestLoger(json_encode(array('js' => array('allowed_stb_types' => ipTV_lib::$settings['allowed_stb_types'], 'strict_stb_type_check' => ''))));
+                requestLoger(json_encode(array('js' => array('allowed_stb_types' => CoreUtilities::$settings['allowed_stb_types'], 'strict_stb_type_check' => ''))));
         }
 
         break;
@@ -378,7 +378,7 @@ switch ($rReqType) {
                             requestLoger(json_encode($rDevice['aspect']));
 
                         case 'set_volume':
-                            $rVolume = ipTV_lib::$request['vol'];
+                            $rVolume = CoreUtilities::$request['vol'];
 
                             if (empty($rVolume)) {
                                 break;
@@ -401,8 +401,8 @@ switch ($rReqType) {
                             $rInfo = $ipTV_db->get_row();
                             $rSettings = array('js' => array('modules' => array(array('name' => 'lock'), array('name' => 'lang'), array('name' => 'update'), array('name' => 'net_info', 'sub' => array(array('name' => 'wired'), array('name' => 'pppoe', 'sub' => array(array('name' => 'dhcp'), array('name' => 'dhcp_manual'), array('name' => 'disable'))), array('name' => 'wireless'), array('name' => 'speed'))), array('name' => 'video'), array('name' => 'audio'), array('name' => 'net', 'sub' => array(array('name' => 'ethernet', 'sub' => array(array('name' => 'dhcp'), array('name' => 'dhcp_manual'), array('name' => 'manual'), array('name' => 'no_ip'))), array('name' => 'pppoe', 'sub' => array(array('name' => 'dhcp'), array('name' => 'dhcp_manual'), array('name' => 'disable'))), array('name' => 'wifi', 'sub' => array(array('name' => 'dhcp'), array('name' => 'dhcp_manual'), array('name' => 'manual'))), array('name' => 'speed'))), array('name' => 'advanced'), array('name' => 'dev_info'), array('name' => 'reload'), array('name' => 'internal_portal'), array('name' => 'reboot'))));
                             $rSettings['js']['parent_password'] = $rInfo['parent_password'];
-                            $rSettings['js']['update_url'] = ipTV_lib::$settings['update_url'];
-                            $rSettings['js']['test_download_url'] = ipTV_lib::$settings['test_download_url'];
+                            $rSettings['js']['update_url'] = CoreUtilities::$settings['update_url'];
+                            $rSettings['js']['test_download_url'] = CoreUtilities::$settings['test_download_url'];
                             $rSettings['js']['playback_buffer_size'] = $rInfo['playback_buffer_size'];
                             $rSettings['js']['screensaver_delay'] = $rInfo['screensaver_delay'];
                             $rSettings['js']['plasma_saving'] = $rInfo['plasma_saving'];
@@ -419,7 +419,7 @@ switch ($rReqType) {
                             $rSettings['js']['show_after_loading'] = $rInfo['show_after_loading'];
                             $rSettings['js']['sec_audio_lang'] = $rProfile['sec_audio_lang'];
 
-                            if (ipTV_lib::$settings['always_enabled_subtitles'] == 1) {
+                            if (CoreUtilities::$settings['always_enabled_subtitles'] == 1) {
                                 $rSettings['js']['pri_subtitle_lang'] = $rProfile['pri_subtitle_lang'];
                                 $rSettings['js']['sec_subtitle_lang'] = $rProfile['sec_subtitle_lang'];
                             } else {
@@ -443,8 +443,8 @@ switch ($rReqType) {
 
 
                         case 'set_aspect':
-                            $rChannelID = ipTV_lib::$request['ch_id'];
-                            $rAspect = ipTV_lib::$request['aspect'];
+                            $rChannelID = CoreUtilities::$request['ch_id'];
+                            $rAspect = CoreUtilities::$request['aspect'];
                             $rDeviceAspect = $rDevice['aspect'];
 
                             if (empty($rDeviceAspect)) {
@@ -466,7 +466,7 @@ switch ($rReqType) {
 
                         case 'set_screensaver_delay':
                             if (!empty($_SERVER['HTTP_COOKIE'])) {
-                                $rDelay = intval(ipTV_lib::$request['screensaver_delay']);
+                                $rDelay = intval(CoreUtilities::$request['screensaver_delay']);
                                 $rDevice['screensaver_delay'] = $rDelay;
                                 $ipTV_db->query('UPDATE `mag_devices` SET `screensaver_delay` = ? WHERE `mag_id` = ?', $rDelay, $rDevice['mag_id']);
                                 updatecache();
@@ -476,8 +476,8 @@ switch ($rReqType) {
 
                         case 'set_playback_buffer':
                             if (!empty($_SERVER['HTTP_COOKIE'])) {
-                                $rBufferBytes = intval(ipTV_lib::$request['playback_buffer_bytes']);
-                                $rBufferSize = intval(ipTV_lib::$request['playback_buffer_size']);
+                                $rBufferBytes = intval(CoreUtilities::$request['playback_buffer_bytes']);
+                                $rBufferSize = intval(CoreUtilities::$request['playback_buffer_size']);
                                 $rDevice['playback_buffer_bytes'] = $rBufferBytes;
                                 $rDevice['playback_buffer_size'] = $rBufferSize;
                                 $ipTV_db->query('UPDATE `mag_devices` SET `playback_buffer_bytes` = ? , `playback_buffer_size` = ? WHERE `mag_id` = ?', $rBufferBytes, $rBufferSize, $rDevice['mag_id']);
@@ -487,7 +487,7 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => true)));
 
                         case 'set_plasma_saving':
-                            $rPlasmaSaving = intval(ipTV_lib::$request['plasma_saving']);
+                            $rPlasmaSaving = intval(CoreUtilities::$request['plasma_saving']);
                             $rDevice['plasma_saving'] = $rPlasmaSaving;
                             $ipTV_db->query('UPDATE `mag_devices` SET `plasma_saving` = ? WHERE `mag_id` = ?', $rPlasmaSaving, $rDevice['mag_id']);
                             updatecache();
@@ -495,9 +495,9 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => true)));
 
                         case 'set_parent_password':
-                            if (isset(ipTV_lib::$request['parent_password']) && isset(ipTV_lib::$request['pass']) && isset(ipTV_lib::$request['repeat_pass']) && ipTV_lib::$request['pass'] == ipTV_lib::$request['repeat_pass']) {
-                                $rDevice['parent_password'] = ipTV_lib::$request['pass'];
-                                $ipTV_db->query('UPDATE `mag_devices` SET `parent_password` = ? WHERE `mag_id` = ?', ipTV_lib::$request['pass'], $rDevice['mag_id']);
+                            if (isset(CoreUtilities::$request['parent_password']) && isset(CoreUtilities::$request['pass']) && isset(CoreUtilities::$request['repeat_pass']) && CoreUtilities::$request['pass'] == CoreUtilities::$request['repeat_pass']) {
+                                $rDevice['parent_password'] = CoreUtilities::$request['pass'];
+                                $ipTV_db->query('UPDATE `mag_devices` SET `parent_password` = ? WHERE `mag_id` = ?', CoreUtilities::$request['pass'], $rDevice['mag_id']);
                                 updatecache();
 
                                 requestLoger(json_encode(array('js' => true)));
@@ -506,17 +506,17 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => true)));
 
                         case 'set_locale':
-                            if (!empty(ipTV_lib::$request['locale'])) {
-                                $rDevice['locale'] = ipTV_lib::$request['locale'];
-                                $ipTV_db->query('UPDATE `mag_devices` SET `locale` = ? WHERE `mag_id` = ?', ipTV_lib::$request['locale'], $rDevice['mag_id']);
+                            if (!empty(CoreUtilities::$request['locale'])) {
+                                $rDevice['locale'] = CoreUtilities::$request['locale'];
+                                $ipTV_db->query('UPDATE `mag_devices` SET `locale` = ? WHERE `mag_id` = ?', CoreUtilities::$request['locale'], $rDevice['mag_id']);
                                 updatecache();
                             }
 
                             requestLoger(json_encode(array('js' => array())));
 
                         case 'set_hdmi_reaction':
-                            if (!empty($_SERVER['HTTP_COOKIE']) || isset(ipTV_lib::$request['data'])) {
-                                $rReaction = ipTV_lib::$request['data'];
+                            if (!empty($_SERVER['HTTP_COOKIE']) || isset(CoreUtilities::$request['data'])) {
+                                $rReaction = CoreUtilities::$request['data'];
                                 $rDevice['hdmi_event_reaction'] = $rReaction;
                                 $ipTV_db->query('UPDATE `mag_devices` SET `hdmi_event_reaction` = ? WHERE `mag_id` = ?', $rReaction, $rDevice['mag_id']);
                                 updatecache();
@@ -552,11 +552,11 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => $rData), JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'confirm_event':
-                            if (empty(ipTV_lib::$request['event_active_id'])) {
+                            if (empty(CoreUtilities::$request['event_active_id'])) {
                                 break;
                             }
 
-                            $rActiveID = ipTV_lib::$request['event_active_id'];
+                            $rActiveID = CoreUtilities::$request['event_active_id'];
                             $ipTV_db->query('UPDATE `mag_events` SET `status` = 1 WHERE `id` = ?', $rActiveID);
 
                             requestLoger(json_encode(array('js' => array('data' => 'ok'))));
@@ -570,11 +570,11 @@ switch ($rReqType) {
                             $rOutput = array();
                             $rOutput['js'] = array();
 
-                            if (ipTV_lib::$settings['show_all_category_mag'] == 1) {
+                            if (CoreUtilities::$settings['show_all_category_mag'] == 1) {
                                 $rOutput['js'][] = array('id' => '*', 'title' => 'All', 'alias' => '*', 'censored' => 0);
                             }
 
-                            foreach (ipTV_lib::$categories as $rCategoryID => $rCategory) {
+                            foreach (CoreUtilities::$categories as $rCategoryID => $rCategory) {
                                 if ($rCategory['category_type'] == 'movie' && in_array($rCategory['id'], $rDevice['category_ids'])) {
                                     $rOutput['js'][] = array('id' => $rCategory['id'], 'title' => $rCategory['category_name'], 'alias' => $rCategory['category_name'], 'censored' => intval($rCategory['is_adult']));
                                 }
@@ -588,17 +588,17 @@ switch ($rReqType) {
                 case 'itv':
                     switch ($rReqAction) {
                         case 'create_link':
-                            $rCommand = ipTV_lib::$request['cmd'];
+                            $rCommand = CoreUtilities::$request['cmd'];
                             $rValue = 'http://localhost/ch/';
                             list($rStreamID, $rStreamValue) = explode('_', substr($rCommand, strpos($rCommand, $rValue) + strlen($rValue)));
 
                             if (empty($rStreamValue)) {
-                                $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStreamID . '/' . ipTV_lib::$settings['mag_container'] . '/' . $rDevice['token'];
-                                $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                                $rURL = $rPlayer . ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+                                $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStreamID . '/' . CoreUtilities::$settings['mag_container'] . '/' . $rDevice['token'];
+                                $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                $rURL = $rPlayer . ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
-                                if (ipTV_lib::$settings['mag_keep_extension']) {
-                                    $rURL .= '?ext=.' . ipTV_lib::$settings['mag_container'];
+                                if (CoreUtilities::$settings['mag_keep_extension']) {
+                                    $rURL .= '?ext=.' . CoreUtilities::$settings['mag_container'];
                                 }
                             } else {
                                 $rURL = $rPlayer . $rStreamValue;
@@ -607,9 +607,9 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => array('id' => $rStreamID, 'cmd' => $rURL), 'streamer_id' => 0, 'link_id' => 0, 'load' => 0, 'error' => '')));
 
                         case 'set_claim':
-                            if (!empty(ipTV_lib::$request['id']) || !empty(ipTV_lib::$request['real_type'])) {
-                                $rID = intval(ipTV_lib::$request['id']);
-                                $rRealType = ipTV_lib::$request['real_type'];
+                            if (!empty(CoreUtilities::$request['id']) || !empty(CoreUtilities::$request['real_type'])) {
+                                $rID = intval(CoreUtilities::$request['id']);
+                                $rRealType = CoreUtilities::$request['real_type'];
                                 $rDate = date('Y-m-d H:i:s');
                                 $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(?, ?, ?, ?)', $rID, $rDevice['mag_id'], $rRealType, $rDate);
                             }
@@ -617,7 +617,7 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => true)));
 
                         case 'set_fav':
-                            $rChannels = (empty(ipTV_lib::$request['fav_ch']) ? '' : ipTV_lib::$request['fav_ch']);
+                            $rChannels = (empty(CoreUtilities::$request['fav_ch']) ? '' : CoreUtilities::$request['fav_ch']);
                             $rChannels = array_filter(array_map('intval', explode(',', $rChannels)));
                             $rDevice['fav_channels']['live'] = $rChannels;
                             $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
@@ -629,20 +629,20 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => $rDevice['fav_channels']['live'])));
 
                         case 'get_all_channels':
-                            $rGenre = (empty(ipTV_lib::$request['genre']) || !is_numeric(ipTV_lib::$request['genre']) ? null : intval(ipTV_lib::$request['genre']));
+                            $rGenre = (empty(CoreUtilities::$request['genre']) || !is_numeric(CoreUtilities::$request['genre']) ? null : intval(CoreUtilities::$request['genre']));
 
                             requestLoger(getStreams($rGenre, true));
 
                         case 'get_ordered_list':
-                            $rFav = (!empty(ipTV_lib::$request['fav']) ? 1 : null);
-                            $rSortBy = (!empty(ipTV_lib::$request['sortby']) ? ipTV_lib::$request['sortby'] : null);
-                            $rGenre = (empty(ipTV_lib::$request['genre']) || !is_numeric(ipTV_lib::$request['genre']) ? null : intval(ipTV_lib::$request['genre']));
-                            $rSearch = (!empty(ipTV_lib::$request['search']) ? ipTV_lib::$request['search'] : null);
+                            $rFav = (!empty(CoreUtilities::$request['fav']) ? 1 : null);
+                            $rSortBy = (!empty(CoreUtilities::$request['sortby']) ? CoreUtilities::$request['sortby'] : null);
+                            $rGenre = (empty(CoreUtilities::$request['genre']) || !is_numeric(CoreUtilities::$request['genre']) ? null : intval(CoreUtilities::$request['genre']));
+                            $rSearch = (!empty(CoreUtilities::$request['search']) ? CoreUtilities::$request['search'] : null);
 
                             requestLoger(getStreams($rGenre, false, $rFav, $rSortBy, $rSearch));
 
                         case 'get_all_fav_channels':
-                            $rGenre = (empty(ipTV_lib::$request['genre']) || !is_numeric(ipTV_lib::$request['genre']) ? null : intval(ipTV_lib::$request['genre']));
+                            $rGenre = (empty(CoreUtilities::$request['genre']) || !is_numeric(CoreUtilities::$request['genre']) ? null : intval(CoreUtilities::$request['genre']));
 
                             requestLoger(getStreams($rGenre, true, 1));
 
@@ -650,8 +650,8 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => array('data' => array())), JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'get_short_epg':
-                            if (!empty(ipTV_lib::$request['ch_id'])) {
-                                $rChannelID = ipTV_lib::$request['ch_id'];
+                            if (!empty(CoreUtilities::$request['ch_id'])) {
+                                $rChannelID = CoreUtilities::$request['ch_id'];
                                 $rEPG = array('js' => array());
                                 $rTime = time();
                                 $rEPGData = array();
@@ -669,7 +669,7 @@ switch ($rReqType) {
                                 }
 
                                 if (!empty($rEPGData)) {
-                                    $rTimeDifference = (ipTV_lib::getDiffTimezone($rTimezone) ?: 0);
+                                    $rTimeDifference = (CoreUtilities::getDiffTimezone($rTimezone) ?: 0);
                                     $i = 0;
 
                                     for ($n = 0; $n < count($rEPGData); $n++) {
@@ -699,7 +699,7 @@ switch ($rReqType) {
                                             $rEPG['js'][$i]['mark_memo'] = 0;
                                             $rEPG['js'][$i]['mark_archive'] = 0;
 
-                                            if (count($rEPG['js']) != ((intval(ipTV_lib::$request['size']) ?: 4))) {
+                                            if (count($rEPG['js']) != ((intval(CoreUtilities::$request['size']) ?: 4))) {
                                                 $i++;
                                             }
                                         }
@@ -710,7 +710,7 @@ switch ($rReqType) {
                             requestLoger(json_encode($rEPG, JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'set_last_id':
-                            $rChannelID = intval(ipTV_lib::$request['id']);
+                            $rChannelID = intval(CoreUtilities::$request['id']);
 
                             if ($rChannelID > 0) {
                                 $rDevice['last_itv_id'] = $rChannelID;
@@ -724,11 +724,11 @@ switch ($rReqType) {
                             $rOutput = array();
                             $rNumber = 1;
 
-                            if (ipTV_lib::$settings['show_all_category_mag'] == 1) {
+                            if (CoreUtilities::$settings['show_all_category_mag'] == 1) {
                                 $rOutput['js'][] = array('id' => '*', 'title' => 'All', 'alias' => 'All', 'active_sub' => true, 'censored' => 0);
                             }
 
-                            foreach (ipTV_lib::$categories as $rCategoryID => $rCategory) {
+                            foreach (CoreUtilities::$categories as $rCategoryID => $rCategory) {
                                 if ($rCategory['category_type'] == 'live' && in_array($rCategory['id'], $rDevice['category_ids'])) {
                                     $rOutput['js'][] = array('id' => $rCategory['id'], 'title' => $rCategory['category_name'], 'modified' => '', 'number' => $rNumber++, 'alias' => strtolower($rCategory['category_name']), 'censored' => intval($rCategory['is_adult']));
                                 }
@@ -741,16 +741,16 @@ switch ($rReqType) {
                 case 'vod':
                     switch ($rReqAction) {
                         case 'set_claim':
-                            if (!empty(ipTV_lib::$request['id']) || !empty(ipTV_lib::$request['real_type'])) {
-                                $rID = intval(ipTV_lib::$request['id']);
-                                $rRealType = ipTV_lib::$request['real_type'];
+                            if (!empty(CoreUtilities::$request['id']) || !empty(CoreUtilities::$request['real_type'])) {
+                                $rID = intval(CoreUtilities::$request['id']);
+                                $rRealType = CoreUtilities::$request['real_type'];
                                 $rDate = date('Y-m-d H:i:s');
                                 $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(?, ?, ?, ?)', $rID, $rDevice['mag_id'], $rRealType, $rDate);
                             }
 
                         case 'set_fav':
-                            if (!empty(ipTV_lib::$request['video_id'])) {
-                                $rVideoID = intval(ipTV_lib::$request['video_id']);
+                            if (!empty(CoreUtilities::$request['video_id'])) {
+                                $rVideoID = intval(CoreUtilities::$request['video_id']);
 
                                 if (!in_array($rVideoID, $rDevice['fav_channels']['movie'])) {
                                     $rDevice['fav_channels']['movie'][] = $rVideoID;
@@ -763,8 +763,8 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => true)));
 
                         case 'del_fav':
-                            if (!empty(ipTV_lib::$request['video_id'])) {
-                                $rVideoID = intval(ipTV_lib::$request['video_id']);
+                            if (!empty(CoreUtilities::$request['video_id'])) {
+                                $rVideoID = intval(CoreUtilities::$request['video_id']);
 
                                 foreach ($rDevice['fav_channels']['movie'] as $rKey => $rValue) {
                                     if ($rValue == $rVideoID) {
@@ -782,11 +782,11 @@ switch ($rReqType) {
                             $rOutput = array();
                             $rOutput['js'] = array();
 
-                            if (ipTV_lib::$settings['show_all_category_mag'] == 1) {
+                            if (CoreUtilities::$settings['show_all_category_mag'] == 1) {
                                 $rOutput['js'][] = array('id' => '*', 'title' => 'All', 'alias' => '*', 'censored' => 0);
                             }
 
-                            foreach (ipTV_lib::$categories as $rCategoryID => $rCategory) {
+                            foreach (CoreUtilities::$categories as $rCategoryID => $rCategory) {
                                 if ($rCategory['category_type'] == 'movie' && in_array($rCategory['id'], $rDevice['category_ids'])) {
                                     $rOutput['js'][] = array('id' => $rCategory['id'], 'title' => $rCategory['category_name'], 'alias' => $rCategory['category_name'], 'censored' => intval($rCategory['is_adult']));
                                 }
@@ -798,7 +798,7 @@ switch ($rReqType) {
                             $rOutput = array();
                             $rOutput['js'][] = array('id' => '*', 'title' => '*');
 
-                            foreach (ipTV_lib::$categories as $rCategoryID => $rCategory) {
+                            foreach (CoreUtilities::$categories as $rCategoryID => $rCategory) {
                                 if ($rCategory['category_type'] == 'movie' && in_array($rCategory['id'], $rDevice['category_ids'])) {
                                     $rOutput['js'][] = array('id' => $rCategory['id'], 'title' => $rCategory['category_name']);
                                 }
@@ -810,20 +810,20 @@ switch ($rReqType) {
                             requestLoger(json_encode($rMagData['get_years']));
 
                         case 'get_ordered_list':
-                            $rCategory = (!empty(ipTV_lib::$request['category']) && is_numeric(ipTV_lib::$request['category']) ? ipTV_lib::$request['category'] : null);
-                            $rFav = (!empty(ipTV_lib::$request['fav']) ? 1 : null);
-                            $rSortBy = (!empty(ipTV_lib::$request['sortby']) ? ipTV_lib::$request['sortby'] : 'added');
-                            $rSearch = (!empty(ipTV_lib::$request['search']) ? ipTV_lib::$request['search'] : null);
+                            $rCategory = (!empty(CoreUtilities::$request['category']) && is_numeric(CoreUtilities::$request['category']) ? CoreUtilities::$request['category'] : null);
+                            $rFav = (!empty(CoreUtilities::$request['fav']) ? 1 : null);
+                            $rSortBy = (!empty(CoreUtilities::$request['sortby']) ? CoreUtilities::$request['sortby'] : 'added');
+                            $rSearch = (!empty(CoreUtilities::$request['search']) ? CoreUtilities::$request['search'] : null);
                             $rPicking = array();
-                            $rPicking['abc'] = (!empty(ipTV_lib::$request['abc']) ? ipTV_lib::$request['abc'] : '*');
-                            $rPicking['genre'] = (!empty(ipTV_lib::$request['genre']) ? ipTV_lib::$request['genre'] : '*');
-                            $rPicking['years'] = (!empty(ipTV_lib::$request['years']) ? ipTV_lib::$request['years'] : '*');
+                            $rPicking['abc'] = (!empty(CoreUtilities::$request['abc']) ? CoreUtilities::$request['abc'] : '*');
+                            $rPicking['genre'] = (!empty(CoreUtilities::$request['genre']) ? CoreUtilities::$request['genre'] : '*');
+                            $rPicking['years'] = (!empty(CoreUtilities::$request['years']) ? CoreUtilities::$request['years'] : '*');
 
                             requestLoger(getMovies($rCategory, $rFav, $rSortBy, $rSearch, $rPicking));
 
                         case 'create_link':
-                            $rCommand = ipTV_lib::$request['cmd'];
-                            $rSeries = (!empty(ipTV_lib::$request['series']) ? (int) ipTV_lib::$request['series'] : 0);
+                            $rCommand = CoreUtilities::$request['cmd'];
+                            $rSeries = (!empty(CoreUtilities::$request['series']) ? (int) CoreUtilities::$request['series'] : 0);
                             $rError = '';
 
                             if (!stristr($rCommand, '/media/')) {
@@ -861,10 +861,10 @@ switch ($rReqType) {
                                     }
                             }
                             $rEncData = 'ministra::' . $rCommand['type'] . '/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rCommand['stream_id'] . '/' . $rCommand['target_container'] . '/' . $rDevice['token'];
-                            $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                            $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+                            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                            $rURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
-                            if (ipTV_lib::$settings['mag_keep_extension']) {
+                            if (CoreUtilities::$settings['mag_keep_extension']) {
                                 $rURL .= '?ext=.' . $rCommand['target_container'];
                             }
 
@@ -881,9 +881,9 @@ switch ($rReqType) {
                 case 'series':
                     switch ($rReqAction) {
                         case 'set_claim':
-                            if (!empty(ipTV_lib::$request['id']) || !empty(ipTV_lib::$request['real_type'])) {
-                                $rID = intval(ipTV_lib::$request['id']);
-                                $rRealType = ipTV_lib::$request['real_type'];
+                            if (!empty(CoreUtilities::$request['id']) || !empty(CoreUtilities::$request['real_type'])) {
+                                $rID = intval(CoreUtilities::$request['id']);
+                                $rRealType = CoreUtilities::$request['real_type'];
                                 $rDate = date('Y-m-d H:i:s');
                                 $ipTV_db->query('INSERT INTO `mag_claims` (`stream_id`,`mag_id`,`real_type`,`date`) VALUES(?, ?, ?, ?)', $rID, $rDevice['mag_id'], $rRealType, $rDate);
                             }
@@ -891,8 +891,8 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => true)));
 
                         case 'set_fav':
-                            if (!empty(ipTV_lib::$request['video_id'])) {
-                                $rVideoID = intval(ipTV_lib::$request['video_id']);
+                            if (!empty(CoreUtilities::$request['video_id'])) {
+                                $rVideoID = intval(CoreUtilities::$request['video_id']);
 
                                 if (!in_array($rVideoID, $rDevice['fav_channels']['series'])) {
                                     $rDevice['fav_channels']['series'][] = $rVideoID;
@@ -905,8 +905,8 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => true)));
 
                         case 'del_fav':
-                            if (!empty(ipTV_lib::$request['video_id'])) {
-                                $rVideoID = intval(ipTV_lib::$request['video_id']);
+                            if (!empty(CoreUtilities::$request['video_id'])) {
+                                $rVideoID = intval(CoreUtilities::$request['video_id']);
 
                                 foreach ($rDevice['fav_channels']['series'] as $rKey => $rValue) {
                                     if ($rValue == $rVideoID) {
@@ -925,11 +925,11 @@ switch ($rReqType) {
                             $rOutput = array();
                             $rOutput['js'] = array();
 
-                            if (ipTV_lib::$settings['show_all_category_mag'] == 1) {
+                            if (CoreUtilities::$settings['show_all_category_mag'] == 1) {
                                 $rOutput['js'][] = array('id' => '*', 'title' => 'All', 'alias' => '*', 'censored' => 0);
                             }
 
-                            foreach (ipTV_lib::$categories as $rCategoryID => $rCategory) {
+                            foreach (CoreUtilities::$categories as $rCategoryID => $rCategory) {
                                 if ($rCategory['category_type'] == 'series' && in_array($rCategory['id'], $rDevice['category_ids'])) {
                                     $rOutput['js'][] = array('id' => $rCategory['id'], 'title' => $rCategory['category_name'], 'alias' => $rCategory['category_name'], 'censored' => intval($rCategory['is_adult']));
                                 }
@@ -941,7 +941,7 @@ switch ($rReqType) {
                             $rOutput = array();
                             $rOutput['js'][] = array('id' => '*', 'title' => '*');
 
-                            foreach (ipTV_lib::$categories as $rCategoryID => $rCategory) {
+                            foreach (CoreUtilities::$categories as $rCategoryID => $rCategory) {
                                 if ($rCategory['category_type'] == 'series' && in_array($rCategory['id'], $rDevice['category_ids'])) {
                                     $rOutput['js'][] = array('id' => $rCategory['id'], 'title' => $rCategory['category_name']);
                                 }
@@ -953,15 +953,15 @@ switch ($rReqType) {
                             requestLoger(json_encode($rMagData['get_years']));
 
                         case 'get_ordered_list':
-                            $rCategory = (!empty(ipTV_lib::$request['category']) && is_numeric(ipTV_lib::$request['category']) ? ipTV_lib::$request['category'] : null);
-                            $rFav = (!empty(ipTV_lib::$request['fav']) ? 1 : null);
-                            $rSortBy = (!empty(ipTV_lib::$request['sortby']) ? ipTV_lib::$request['sortby'] : 'added');
-                            $rSearch = (!empty(ipTV_lib::$request['search']) ? ipTV_lib::$request['search'] : null);
-                            $rMovieID = (!empty(ipTV_lib::$request['movie_id']) ? (int) ipTV_lib::$request['movie_id'] : null);
+                            $rCategory = (!empty(CoreUtilities::$request['category']) && is_numeric(CoreUtilities::$request['category']) ? CoreUtilities::$request['category'] : null);
+                            $rFav = (!empty(CoreUtilities::$request['fav']) ? 1 : null);
+                            $rSortBy = (!empty(CoreUtilities::$request['sortby']) ? CoreUtilities::$request['sortby'] : 'added');
+                            $rSearch = (!empty(CoreUtilities::$request['search']) ? CoreUtilities::$request['search'] : null);
+                            $rMovieID = (!empty(CoreUtilities::$request['movie_id']) ? (int) CoreUtilities::$request['movie_id'] : null);
                             $rPicking = array();
-                            $rPicking['abc'] = (!empty(ipTV_lib::$request['abc']) ? ipTV_lib::$request['abc'] : '*');
-                            $rPicking['genre'] = (!empty(ipTV_lib::$request['genre']) ? ipTV_lib::$request['genre'] : '*');
-                            $rPicking['years'] = (!empty(ipTV_lib::$request['years']) ? ipTV_lib::$request['years'] : '*');
+                            $rPicking['abc'] = (!empty(CoreUtilities::$request['abc']) ? CoreUtilities::$request['abc'] : '*');
+                            $rPicking['genre'] = (!empty(CoreUtilities::$request['genre']) ? CoreUtilities::$request['genre'] : '*');
+                            $rPicking['years'] = (!empty(CoreUtilities::$request['years']) ? CoreUtilities::$request['years'] : '*');
 
                             requestLoger(getSeries($rMovieID, $rCategory, $rFav, $rSortBy, $rSearch, $rPicking));
 
@@ -979,15 +979,15 @@ switch ($rReqType) {
                                 $rExpiry = date('F j, Y, g:i a', $rDevice['exp_date']);
                             }
 
-                            requestLoger(json_encode(array('js' => array('mac' => $rMAC, 'phone' => $rExpiry, 'message' => htmlspecialchars_decode(str_replace("\n", '<br/>', ipTV_lib::$settings['mag_message']))))));
+                            requestLoger(json_encode(array('js' => array('mac' => $rMAC, 'phone' => $rExpiry, 'message' => htmlspecialchars_decode(str_replace("\n", '<br/>', CoreUtilities::$settings['mag_message']))))));
                     }
                     break;
 
                 case 'radio':
                     switch ($rReqAction) {
                         case 'get_ordered_list':
-                            $rFav = (!empty(ipTV_lib::$request['fav']) ? 1 : null);
-                            $rSortBy = (!empty(ipTV_lib::$request['sortby']) ? ipTV_lib::$request['sortby'] : 'added');
+                            $rFav = (!empty(CoreUtilities::$request['fav']) ? 1 : null);
+                            $rSortBy = (!empty(CoreUtilities::$request['sortby']) ? CoreUtilities::$request['sortby'] : 'added');
 
                             requestLoger(getStations(null, $rFav, $rSortBy));
 
@@ -995,7 +995,7 @@ switch ($rReqType) {
                             requestLoger(getStations(null, 1, null));
 
                         case 'set_fav':
-                            $f3f9f9fa3c58c22b = (empty(ipTV_lib::$request['fav_radio']) ? '' : ipTV_lib::$request['fav_radio']);
+                            $f3f9f9fa3c58c22b = (empty(CoreUtilities::$request['fav_radio']) ? '' : CoreUtilities::$request['fav_radio']);
                             $f3f9f9fa3c58c22b = array_filter(array_map('intval', explode(',', $f3f9f9fa3c58c22b)));
                             $rDevice['fav_channels']['radio_streams'] = $f3f9f9fa3c58c22b;
                             $ipTV_db->query('UPDATE `mag_devices` SET `fav_channels` = ? WHERE `mag_id` = ?', json_encode($rDevice['fav_channels']), $rDevice['mag_id']);
@@ -1012,8 +1012,8 @@ switch ($rReqType) {
                 case 'tv_archive':
                     switch ($rReqAction) {
                         case 'get_next_part_url':
-                            if (!empty(ipTV_lib::$request['id'])) {
-                                $rID = ipTV_lib::$request['id'];
+                            if (!empty(CoreUtilities::$request['id'])) {
+                                $rID = CoreUtilities::$request['id'];
                                 $rStreamID = substr($rID, 0, strpos($rID, '_'));
                                 $rDate = strtotime(substr($rID, strpos($rID, '_') + 1));
                                 $rRow = (getepg($rStreamID, $rDate, $rDate + 86400)[0] ?: null);
@@ -1024,10 +1024,10 @@ switch ($rReqType) {
                                     $rDuration = intval(($rRow['end'] - $rRow['start']) / 60);
                                     $rTitle = $rRow['title'];
                                     $rEncData = 'ministra::timeshift/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rDuration . '/' . $rProgramStart . '/' . $rStreamID . '/' . $rDevice['token'];
-                                    $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                                    $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken . '?&osd_title=' . $rTitle;
+                                    $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                    $rURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken . '?&osd_title=' . $rTitle;
 
-                                    if (ipTV_lib::$settings['mag_keep_extension']) {
+                                    if (CoreUtilities::$settings['mag_keep_extension']) {
                                         $rURL .= '&ext=.ts';
                                     }
 
@@ -1038,7 +1038,7 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => false)));
 
                         case 'create_link':
-                            $rCommand = (empty(ipTV_lib::$request['cmd']) ? '' : ipTV_lib::$request['cmd']);
+                            $rCommand = (empty(CoreUtilities::$request['cmd']) ? '' : CoreUtilities::$request['cmd']);
                             list($rEPGDataID, $rStreamID) = explode('_', pathinfo($rCommand)['filename']);
                             $rRow = (getprogramme($rStreamID, $rEPGDataID) ?: null);
 
@@ -1049,10 +1049,10 @@ switch ($rReqType) {
                             $rStart = $rRow['start'];
                             $rDuration = intval(($rRow['end'] - $rRow['start']) / 60);
                             $rEncData = 'ministra::timeshift/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rDuration . '/' . $rStart . '/' . $rStreamID . '/' . $rDevice['token'];
-                            $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                            $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+                            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                            $rURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
-                            if (ipTV_lib::$settings['mag_keep_extension']) {
+                            if (CoreUtilities::$settings['mag_keep_extension']) {
                                 $rURL .= '?ext=.ts';
                             }
 
@@ -1062,11 +1062,11 @@ switch ($rReqType) {
 
                         case 'get_link_for_channel':
                             $rOutput = array();
-                            $rChannelID = (!empty(ipTV_lib::$request['ch_id']) ? intval(ipTV_lib::$request['ch_id']) : 0);
+                            $rChannelID = (!empty(CoreUtilities::$request['ch_id']) ? intval(CoreUtilities::$request['ch_id']) : 0);
                             $rStart = strtotime(date('Ymd-H'));
                             $rEncData = 'ministra::timeshift/' . $rDevice['username'] . '/' . $rDevice['password'] . '/60/' . $rStart . '/' . $rChannelID . '/' . $rDevice['token'];
-                            $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-                            $rURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken . ((ipTV_lib::$settings['mag_keep_extension'] ? '?ext=.ts' : '')) . ' position:' . (intval(date('i')) * 60 + intval(date('s'))) . ' media_len:' . (intval(date('H')) * 3600 + intval(date('i')) * 60 + intval(date('s')));
+                            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                            $rURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken . ((CoreUtilities::$settings['mag_keep_extension'] ? '?ext=.ts' : '')) . ' position:' . (intval(date('i')) * 60 + intval(date('s'))) . ' media_len:' . (intval(date('H')) * 3600 + intval(date('i')) * 60 + intval(date('s')));
                             $rOutput['js'] = array('id' => 0, 'cmd' => $rPlayer . $rURL, 'storage_id' => '', 'load' => 0, 'error' => '');
 
                             requestLoger(json_encode($rOutput, JSON_PARTIAL_OUTPUT_ON_ERROR));
@@ -1097,13 +1097,13 @@ switch ($rReqType) {
                             requestLoger(json_encode(array('js' => array()), JSON_PARTIAL_OUTPUT_ON_ERROR));
 
                         case 'get_simple_data_table':
-                            if (empty(ipTV_lib::$request['ch_id']) || empty(ipTV_lib::$request['date'])) {
+                            if (empty(CoreUtilities::$request['ch_id']) || empty(CoreUtilities::$request['date'])) {
                                 exit();
                             }
 
-                            $rChannelID = ipTV_lib::$request['ch_id'];
-                            $rReqDate = ipTV_lib::$request['date'];
-                            $rPage = intval(ipTV_lib::$request['p']);
+                            $rChannelID = CoreUtilities::$request['ch_id'];
+                            $rReqDate = CoreUtilities::$request['date'];
+                            $rPage = intval(CoreUtilities::$request['p']);
                             $rPageItems = 10;
                             $rDefaultPage = false;
                             $rEPGDatas = array();
@@ -1125,7 +1125,7 @@ switch ($rReqType) {
                             if (file_exists(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID))) {
                                 $rStreamRow = igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID)))['info'];
                             } else {
-                                $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = ?;', ipTV_lib::$request['ch_id']);
+                                $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = ?;', CoreUtilities::$request['ch_id']);
 
                                 if ($ipTV_db->num_rows() > 0) {
                                     $rStreamRow = $ipTV_db->get_row();
@@ -1157,7 +1157,7 @@ switch ($rReqType) {
 
                             $rProgram = array_slice($rEPGDatas, ($rPage - 1) * $rPageItems, $rPageItems);
                             $rData = array();
-                            $rTimeDifference = ipTV_lib::getDiffTimezone($rTimezone);
+                            $rTimeDifference = CoreUtilities::getDiffTimezone($rTimezone);
 
                             for ($i = 0; $i < count($rProgram); $i++) {
                                 $open = 0;
@@ -1213,13 +1213,13 @@ switch ($rReqType) {
                         case 'get_all_program_for_ch':
                             $rOutput = array();
                             $rOutput['js'] = array();
-                            $rChannelID = (empty(ipTV_lib::$request['ch_id']) ? 0 : intval(ipTV_lib::$request['ch_id']));
-                            $rTimeDifference = ipTV_lib::getDiffTimezone($rTimezone);
+                            $rChannelID = (empty(CoreUtilities::$request['ch_id']) ? 0 : intval(CoreUtilities::$request['ch_id']));
+                            $rTimeDifference = CoreUtilities::getDiffTimezone($rTimezone);
 
                             if (file_exists(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID))) {
                                 $rStreamRow = igbinary_unserialize(file_get_contents(STREAMS_TMP_PATH . 'stream_' . intval($rChannelID)))['info'];
                             } else {
-                                $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = ?;', ipTV_lib::$request['ch_id']);
+                                $ipTV_db->query('SELECT `tv_archive_duration` FROM `streams` WHERE `id` = ?;', CoreUtilities::$request['ch_id']);
 
                                 if ($ipTV_db->num_rows() > 0) {
                                     $rStreamRow = $ipTV_db->get_row();
@@ -1387,7 +1387,7 @@ function getItems($rTypes = array(), $rCategoryID = null, $rFav = null, $rOrderB
         $rWhereV[] = $rPicking['genre'];
     }
 
-    $rChannels = ipTV_lib::sortChannels($rChannels);
+    $rChannels = CoreUtilities::sortChannels($rChannels);
 
     if (!empty($rFav)) {
         $favoriteChannelIds = array();
@@ -1436,7 +1436,7 @@ function getItems($rTypes = array(), $rCategoryID = null, $rFav = null, $rOrderB
 
         case 'number':
         default:
-            if (ipTV_lib::$settings['channel_number_type'] != 'manual') {
+            if (CoreUtilities::$settings['channel_number_type'] != 'manual') {
                 $rOrder = 'FIELD(id,' . implode(',', $rChannels) . ')';
             } else {
                 $rOrder = '`order` ASC';
@@ -1579,24 +1579,24 @@ function getDevice($rID = null, $rMAC = null) {
             $rLiveIDs = $rVODIDs = $rRadioIDs = $rCategoryIDs = $rChannelIDs = $rSeriesIDs = array();
 
             foreach ($rDevice['bouquet'] as $rID) {
-                if (isset(ipTV_lib::$Bouquets[$rID]['streams'])) {
-                    $rChannelIDs = array_merge($rChannelIDs, ipTV_lib::$Bouquets[$rID]['streams']);
+                if (isset(CoreUtilities::$Bouquets[$rID]['streams'])) {
+                    $rChannelIDs = array_merge($rChannelIDs, CoreUtilities::$Bouquets[$rID]['streams']);
                 }
 
-                if (isset(ipTV_lib::$Bouquets[$rID]['series'])) {
-                    $rSeriesIDs = array_merge($rSeriesIDs, ipTV_lib::$Bouquets[$rID]['series']);
+                if (isset(CoreUtilities::$Bouquets[$rID]['series'])) {
+                    $rSeriesIDs = array_merge($rSeriesIDs, CoreUtilities::$Bouquets[$rID]['series']);
                 }
 
-                if (isset(ipTV_lib::$Bouquets[$rID]['channels'])) {
-                    $rLiveIDs = array_merge($rLiveIDs, ipTV_lib::$Bouquets[$rID]['channels']);
+                if (isset(CoreUtilities::$Bouquets[$rID]['channels'])) {
+                    $rLiveIDs = array_merge($rLiveIDs, CoreUtilities::$Bouquets[$rID]['channels']);
                 }
 
-                if (isset(ipTV_lib::$Bouquets[$rID]['movies'])) {
-                    $rVODIDs = array_merge($rVODIDs, ipTV_lib::$Bouquets[$rID]['movies']);
+                if (isset(CoreUtilities::$Bouquets[$rID]['movies'])) {
+                    $rVODIDs = array_merge($rVODIDs, CoreUtilities::$Bouquets[$rID]['movies']);
                 }
 
-                if (isset(ipTV_lib::$Bouquets[$rID]['radios'])) {
-                    $rRadioIDs = array_merge($rRadioIDs, ipTV_lib::$Bouquets[$rID]['radios']);
+                if (isset(CoreUtilities::$Bouquets[$rID]['radios'])) {
+                    $rRadioIDs = array_merge($rRadioIDs, CoreUtilities::$Bouquets[$rID]['radios']);
                 }
             }
             $rDevice['channel_ids'] = array_map('intval', array_unique($rChannelIDs));
@@ -1655,7 +1655,7 @@ function getMovies($rCategoryID = null, $rFav = null, $rOrderBy = null, $rSearch
     global $rPageItems;
     global $rForceProtocol;
     $rDefaultPage = false;
-    $rPage = (!empty(ipTV_lib::$request['p']) ? ipTV_lib::$request['p'] : 0);
+    $rPage = (!empty(CoreUtilities::$request['p']) ? CoreUtilities::$request['p'] : 0);
 
     if ($rPage == 0) {
         $rDefaultPage = true;
@@ -1725,7 +1725,7 @@ function getSeries($rMovieID = null, $rCategoryID = null, $rFav = null, $rOrderB
     global $ipTV_db;
     global $rPageItems;
     global $rForceProtocol;
-    $rPage = (!empty(ipTV_lib::$request['p']) ? ipTV_lib::$request['p'] : 0);
+    $rPage = (!empty(CoreUtilities::$request['p']) ? CoreUtilities::$request['p'] : 0);
     $rDefaultPage = false;
 
     if (empty($rMovieID)) {
@@ -1845,7 +1845,7 @@ function getStations($rCategoryID = null, $rFav = null, $rOrderBy = null) {
     global $rPlayer;
     global $rPageItems;
     $rDefaultPage = false;
-    $rPage = (!empty(ipTV_lib::$request['p']) ? ipTV_lib::$request['p'] : 0);
+    $rPage = (!empty(CoreUtilities::$request['p']) ? CoreUtilities::$request['p'] : 0);
 
     if ($rPage == 0) {
         $rDefaultPage = true;
@@ -1857,13 +1857,13 @@ function getStations($rCategoryID = null, $rFav = null, $rOrderBy = null) {
     $rDatas = array();
     $i = 0;
     foreach ($rStreams['streams'] as $rStream) {
-        if (ipTV_lib::$settings['mag_security'] == 0) {
-            $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStream['id'] . '/' . ipTV_lib::$settings['mag_container'] . '/' . $rDevice['token'];
-            $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-            $rStreamURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+        if (CoreUtilities::$settings['mag_security'] == 0) {
+            $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStream['id'] . '/' . CoreUtilities::$settings['mag_container'] . '/' . $rDevice['token'];
+            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+            $rStreamURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
-            if (ipTV_lib::$settings['mag_keep_extension']) {
-                $rStreamURL .= '?ext=.' . ipTV_lib::$settings['mag_container'];
+            if (CoreUtilities::$settings['mag_keep_extension']) {
+                $rStreamURL .= '?ext=.' . CoreUtilities::$settings['mag_container'];
             }
 
             $rStreamSourceSt = 0;
@@ -1893,12 +1893,12 @@ function getStreams($rCategoryID = null, $rAll = false, $rFav = null, $rOrderBy 
     global $rTimezone;
     global $rForceProtocol;
     $rDefaultPage = false;
-    $rPage = (isset(ipTV_lib::$request['p']) ? intval(ipTV_lib::$request['p']) : 0);
+    $rPage = (isset(CoreUtilities::$request['p']) ? intval(CoreUtilities::$request['p']) : 0);
 
     if ($rPage == 0 && $rCategoryID != -1) {
         $rDefaultPage = true;
 
-        if (ipTV_lib::$request['p'] == 0 || !empty($rDevice['last_itv_id'])) {
+        if (CoreUtilities::$request['p'] == 0 || !empty($rDevice['last_itv_id'])) {
             $rPosition = getitems(array('live', 'created_live'), $rCategoryID, $rFav, $rOrderBy, $rSearchBy, null, 0, 0, $rDevice['last_itv_id']);
             if (!is_array($rPosition)) {
                 $rPage = floor(($rPosition - 1) / $rPageItems) + 1;
@@ -1926,18 +1926,18 @@ function getStreams($rCategoryID = null, $rAll = false, $rFav = null, $rOrderBy 
     }
 
     $rDatas = array();
-    $rTimeDifference = ipTV_lib::getDiffTimezone($rTimezone);
+    $rTimeDifference = CoreUtilities::getDiffTimezone($rTimezone);
 
     foreach ($rStreams['streams'] as $rStream) {
         $rHD = intval(1200 < $rStream['stream_info']['codecs']['video']['width']);
 
-        if (ipTV_lib::$settings['mag_security'] == 0) {
-            $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStream['id'] . '/' . ipTV_lib::$settings['mag_container'] . '/' . $rDevice['token'];
-            $rToken = encryptData($rEncData, ipTV_lib::$settings['live_streaming_pass'], OPENSSL_EXTRA);
-            $rStreamURL = ((ipTV_lib::$settings['mag_disable_ssl'] ? ipTV_lib::$Servers[SERVER_ID]['http_url'] : ipTV_lib::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
+        if (CoreUtilities::$settings['mag_security'] == 0) {
+            $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStream['id'] . '/' . CoreUtilities::$settings['mag_container'] . '/' . $rDevice['token'];
+            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+            $rStreamURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
-            if (ipTV_lib::$settings['mag_keep_extension']) {
-                $rStreamURL .= '?ext=.' . ipTV_lib::$settings['mag_container'];
+            if (CoreUtilities::$settings['mag_keep_extension']) {
+                $rStreamURL .= '?ext=.' . CoreUtilities::$settings['mag_container'];
             }
 
             $rStreamSourceSt = 0;

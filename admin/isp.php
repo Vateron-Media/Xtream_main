@@ -5,15 +5,15 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "permission_block_is
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_isp"])) {
+if (isset(CoreUtilities::$request["submit_isp"])) {
     $rArray = array("isp" => "", "blocked" => 0);
-    if (isset(ipTV_lib::$request["blocked"])) {
+    if (isset(CoreUtilities::$request["blocked"])) {
         $rArray["blocked"] = 1;
-        unset(ipTV_lib::$request["blocked"]);
+        unset(CoreUtilities::$request["blocked"]);
     } else {
         $rArray["blocked"] = 0;
     }
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
+    foreach (CoreUtilities::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
@@ -30,14 +30,14 @@ if (isset(ipTV_lib::$request["submit_isp"])) {
             $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset(ipTV_lib::$request["edit"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         $rCols = "id," . $rCols;
-        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+        $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `isp_addon`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset(ipTV_lib::$request["edit"])) {
-            $rInsertID = intval(ipTV_lib::$request["edit"]);
+        if (isset(CoreUtilities::$request["edit"])) {
+            $rInsertID = intval(CoreUtilities::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -50,8 +50,8 @@ if (isset(ipTV_lib::$request["submit_isp"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rISPArr = getISP(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rISPArr = getISP(CoreUtilities::$request["id"]);
     if (!$rISPArr) {
         exit;
     }
@@ -100,8 +100,8 @@ include "header.php";
                             <?php } ?>
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="./isp.php<?php if (isset(ipTV_lib::$request["id"])) {
-                                        echo "?id=" . ipTV_lib::$request["id"];
+                                    <form action="./isp.php<?php if (isset(CoreUtilities::$request["id"])) {
+                                        echo "?id=" . CoreUtilities::$request["id"];
                                     } ?>" method="POST" id="isp_form" data-parsley-validate="">
                                         <?php if (isset($rISPArr)) { ?>
                                                 <input type="hidden" name="edit" value="<?= $rISPArr["id"] ?>" />

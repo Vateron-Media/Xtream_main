@@ -5,9 +5,9 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_epg")) && (!ha
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_epg"])) {
+if (isset(CoreUtilities::$request["submit_epg"])) {
     $rArray = array("epg_name" => "", "epg_file" => "", "days_keep" => 7, "data" => "");
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
+    foreach (CoreUtilities::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
@@ -24,19 +24,19 @@ if (isset(ipTV_lib::$request["submit_epg"])) {
             $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset(ipTV_lib::$request["edit"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         if (!hasPermissions("adv", "epg_edit")) {
             exit;
         }
         $rCols = "id," . $rCols;
-        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+        $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
     } elseif (!hasPermissions("adv", "add_epg")) {
         exit;
     }
     $rQuery = "REPLACE INTO `epg`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset(ipTV_lib::$request["edit"])) {
-            $rInsertID = intval(ipTV_lib::$request["edit"]);
+        if (isset(CoreUtilities::$request["edit"])) {
+            $rInsertID = intval(CoreUtilities::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -49,8 +49,8 @@ if (isset(ipTV_lib::$request["submit_epg"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rEPGArr = getEPG(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rEPGArr = getEPG(CoreUtilities::$request["id"]);
     if ((!$rEPGArr) or (!hasPermissions("adv", "epg_edit"))) {
         exit;
     }
@@ -102,8 +102,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./epg.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./epg.php<?php if (isset(CoreUtilities::$request["id"])) {
+                            echo "?id=" . CoreUtilities::$request["id"];
                         } ?>" method="POST" id="category_form" data-parsley-validate="">
                             <?php if (isset($rEPGArr)) { ?>
                                 <input type="hidden" name="edit" value="<?= $rEPGArr["id"] ?>" />

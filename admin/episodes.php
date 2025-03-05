@@ -76,7 +76,7 @@ include "header.php";
                                         <select id="episodes_server" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
                                             <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
+                                                <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>><?= $rServer["server_name"] ?></option>
                                             <?php } ?>
@@ -86,7 +86,7 @@ include "header.php";
                                         <select id="episodes_series" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_series"] ?></option>
                                             <?php foreach (getSeriesList() as $rSeriesArr) { ?>
-                                                <option value="<?= $rSeriesArr["id"] ?>" <?php if ((isset(ipTV_lib::$request["series"])) && (ipTV_lib::$request["series"] == $rSeriesArr["id"])) {
+                                                <option value="<?= $rSeriesArr["id"] ?>" <?php if ((isset(CoreUtilities::$request["series"])) && (CoreUtilities::$request["series"] == $rSeriesArr["id"])) {
                                                       echo " selected";
                                                   } ?>><?= $rSeriesArr["title"] ?></option>
                                             <?php } ?>
@@ -112,7 +112,7 @@ include "header.php";
                                         <select id="episodes_server" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
                                             <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
+                                                <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>><?= $rServer["server_name"] ?></option>
                                             <?php } ?>
@@ -122,7 +122,7 @@ include "header.php";
                                         <select id="episodes_series" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_series"] ?></option>
                                             <?php foreach (getSeriesList() as $rSeriesArr) { ?>
-                                                <option value="<?= $rSeriesArr["id"] ?>" <?php if ((isset(ipTV_lib::$request["series"])) && (ipTV_lib::$request["series"] == $rSeriesArr["id"])) {
+                                                <option value="<?= $rSeriesArr["id"] ?>" <?php if ((isset(CoreUtilities::$request["series"])) && (CoreUtilities::$request["series"] == $rSeriesArr["id"])) {
                                                       echo " selected";
                                                   } ?>><?= $rSeriesArr["title"] ?></option>
                                             <?php } ?>
@@ -353,7 +353,7 @@ include "header.php";
             if (event.which == 13 && event.target.nodeName != "TEXTAREA") return false;
         });
         formCache.init();
-        <?php if (!isset(ipTV_lib::$request["series"])) { ?>
+        <?php if (!isset(CoreUtilities::$request["series"])) { ?>
             formCache.fetch();
         <?php } ?>
 

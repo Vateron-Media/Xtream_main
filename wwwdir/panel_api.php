@@ -3,20 +3,20 @@
 require "init.php";
 ini_set("memory_limit", -1);
 $streaming_block = true;
-if (!empty(ipTV_lib::$request["username"]) && !empty(ipTV_lib::$request["password"])) {
+if (!empty(CoreUtilities::$request["username"]) && !empty(CoreUtilities::$request["password"])) {
     $valid_actions = array("get_epg");
-    $username = ipTV_lib::$request["username"];
-    $password = ipTV_lib::$request["password"];
-    $action = !empty(ipTV_lib::$request["action"]) && in_array(ipTV_lib::$request["action"], $valid_actions) ? ipTV_lib::$request["action"] : '';
+    $username = CoreUtilities::$request["username"];
+    $password = CoreUtilities::$request["password"];
+    $action = !empty(CoreUtilities::$request["action"]) && in_array(CoreUtilities::$request["action"], $valid_actions) ? CoreUtilities::$request["action"] : '';
     $output = array();
     $output["user_info"] = array();
     if ($result = ipTV_streaming::getUserInfo(null, $username, $password, true, true, true)) {
         $streaming_block = false;
         switch ($action) {
             case "get_epg":
-                if (!empty(ipTV_lib::$request["stream_id"]) && (is_null($result["exp_date"]) or $result["exp_date"] > time())) {
-                    $stream_id = intval(ipTV_lib::$request["stream_id"]);
-                    $from_now = !empty(ipTV_lib::$request["from_now"]) && ipTV_lib::$request["from_now"] > 0 ? true : false;
+                if (!empty(CoreUtilities::$request["stream_id"]) && (is_null($result["exp_date"]) or $result["exp_date"] > time())) {
+                    $stream_id = intval(CoreUtilities::$request["stream_id"]);
+                    $from_now = !empty(CoreUtilities::$request["from_now"]) && CoreUtilities::$request["from_now"] > 0 ? true : false;
                     $EPGs = GetEPGStream($stream_id, $from_now);
                     $index = 0;
                     while ($index < count($EPGs)) {
@@ -35,8 +35,8 @@ if (!empty(ipTV_lib::$request["username"]) && !empty(ipTV_lib::$request["passwor
                 }
             default:
                 $categories = GetCategories();
-                $url = empty(ipTV_lib::$Servers[SERVER_ID]["domain_name"]) ? ipTV_lib::$Servers[SERVER_ID]["server_ip"] : ipTV_lib::$Servers[SERVER_ID]["domain_name"];
-                $output["server_info"] = array("url" => $url, "port" => ipTV_lib::$Servers[SERVER_ID]["http_broadcast_port"], "https_port" => ipTV_lib::$Servers[SERVER_ID]["https_broadcast_port"], "server_protocol" => ipTV_lib::$Servers[SERVER_ID]["server_protocol"]);
+                $url = empty(CoreUtilities::$Servers[SERVER_ID]["domain_name"]) ? CoreUtilities::$Servers[SERVER_ID]["server_ip"] : CoreUtilities::$Servers[SERVER_ID]["domain_name"];
+                $output["server_info"] = array("url" => $url, "port" => CoreUtilities::$Servers[SERVER_ID]["http_broadcast_port"], "https_port" => CoreUtilities::$Servers[SERVER_ID]["https_broadcast_port"], "server_protocol" => CoreUtilities::$Servers[SERVER_ID]["server_protocol"]);
                 $output["user_info"]["username"] = $result["username"];
                 $output["user_info"]["password"] = $result["password"];
                 $output["user_info"]["auth"] = 1;
@@ -62,7 +62,7 @@ if (!empty(ipTV_lib::$request["username"]) && !empty(ipTV_lib::$request["passwor
                 $output["available_channels"] = array();
                 $live_num = $movie_num = 0;
                 foreach ($result["channels"] as $channel) {
-                    $movie_properties = ipTV_lib::movieProperties($channel["id"]);
+                    $movie_properties = CoreUtilities::movieProperties($channel["id"]);
                     if ($channel["live"] == 1) {
                         $live_num++;
                         $stream_icon = $channel["stream_icon"];

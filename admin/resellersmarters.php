@@ -9,7 +9,7 @@ if (!isset($_SESSION['hash'])) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_secret"])) {
+if (isset(CoreUtilities::$request["submit_secret"])) {
     $salt = "!SMARTERS!";
     $return = array();
     $result = $ipTV_db_admin->query("CREATE TABLE IF NOT EXISTS reseller_credentials (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,member_id VARCHAR(30), api_key VARCHAR(100) NOT NULL,ip_allow VARCHAR(30))");

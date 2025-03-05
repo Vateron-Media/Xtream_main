@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         require str_replace("\\", "/", dirname($argv[0])) . "/../wwwdir/init.php";
         cli_set_process_title('XC_VM[Live Checker]');
         $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
-        ipTV_lib::checkCron($unique_id);
+        CoreUtilities::checkCron($unique_id);
         loadCron();
     } else {
         exit(0);
@@ -15,13 +15,13 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
 }
 function loadCron() {
     global $ipTV_db;
-    if (ipTV_lib::isRunning()) {
-        if (ipTV_lib::$settings['redis_handler']) {
-            ipTV_lib::connectRedis();
+    if (CoreUtilities::isRunning()) {
+        if (CoreUtilities::$settings['redis_handler']) {
+            CoreUtilities::connectRedis();
         }
         $activePIDs = array();
         $streamIDs = array();
-        if (ipTV_lib::$settings['redis_handler']) {
+        if (CoreUtilities::$settings['redis_handler']) {
             $ipTV_db->query('SELECT t2.stream_display_name, t1.stream_started, t1.stream_info, t2.fps_restart, t1.stream_status, t1.progress_info, t1.stream_id, t1.monitor_pid, t1.on_demand, t1.server_stream_id, t1.pid, servers_attached.attached, t2.vframes_server_id, t2.vframes_pid, t2.tv_archive_server_id, t2.tv_archive_pid FROM `streams_servers` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.direct_source = 0 INNER JOIN `streams_types` t3 ON t3.type_id = t2.type LEFT JOIN (SELECT `stream_id`, COUNT(*) AS `attached` FROM `streams_servers` WHERE `parent_id` = ? AND `pid` IS NOT NULL AND `pid` > 0 AND `monitor_pid` IS NOT NULL AND `monitor_pid` > 0) AS `servers_attached` ON `servers_attached`.`stream_id` = t1.`stream_id` WHERE (t1.pid IS NOT NULL OR t1.stream_status <> 0 OR t1.to_analyze = 1) AND t1.server_id = ? AND t3.live = 1', SERVER_ID, SERVER_ID);
         } else {
             $ipTV_db->query("SELECT t2.stream_display_name, t1.stream_started, t1.stream_info, t2.fps_restart, t1.stream_status, t1.progress_info, t1.stream_id, t1.monitor_pid, t1.on_demand, t1.server_stream_id, t1.pid, clients.online_clients, clients_hls.online_clients_hls, servers_attached.attached, t2.vframes_server_id, t2.vframes_pid, t2.tv_archive_server_id, t2.tv_archive_pid FROM `streams_servers` t1 INNER JOIN `streams` t2 ON t2.id = t1.stream_id AND t2.direct_source = 0 INNER JOIN `streams_types` t3 ON t3.type_id = t2.type LEFT JOIN (SELECT stream_id, COUNT(*) as online_clients FROM `lines_live` WHERE `server_id` = ? AND `hls_end` = 0 GROUP BY stream_id) AS clients ON clients.stream_id = t1.stream_id LEFT JOIN (SELECT `stream_id`, COUNT(*) AS `attached` FROM `streams_servers` WHERE `parent_id` = ? AND `pid` IS NOT NULL AND `pid` > 0 AND `monitor_pid` IS NOT NULL AND `monitor_pid` > 0) AS `servers_attached` ON `servers_attached`.`stream_id` = t1.`stream_id` LEFT JOIN (SELECT stream_id, COUNT(*) as online_clients_hls FROM `lines_live` WHERE `server_id` = ? AND `container` = 'hls' AND `hls_end` = 0 GROUP BY stream_id) AS clients_hls ON clients_hls.stream_id = t1.stream_id WHERE (t1.pid IS NOT NULL OR t1.stream_status <> 0 OR t1.to_analyze = 1) AND t1.server_id = ? AND t3.live = 1", SERVER_ID, SERVER_ID, SERVER_ID, SERVER_ID);
@@ -32,11 +32,11 @@ function loadCron() {
                 $streamIDs[] = $stream['stream_id'];
                 if (ipTV_streaming::checkMonitorRunning($stream['monitor_pid'], $stream['stream_id']) || $stream['on_demand']) {
                     if ($stream['on_demand'] == 1 && $stream['attached'] == 0) {
-                        if (ipTV_lib::$settings['redis_handler']) {
+                        if (CoreUtilities::$settings['redis_handler']) {
                             $rCount = 0;
-                            $rKeys = ipTV_lib::$redis->zRangeByScore('STREAM#' . $stream['stream_id'], '-inf', '+inf');
+                            $rKeys = CoreUtilities::$redis->zRangeByScore('STREAM#' . $stream['stream_id'], '-inf', '+inf');
                             if (count($rKeys) > 0) {
-                                $rConnections = array_map('igbinary_unserialize', ipTV_lib::$redis->mGet($rKeys));
+                                $rConnections = array_map('igbinary_unserialize', CoreUtilities::$redis->mGet($rKeys));
                                 foreach ($rConnections as $rConnection) {
                                     if ($rConnection && $rConnection['server_id'] == SERVER_ID) {
                                         $rCount++;
@@ -46,7 +46,7 @@ function loadCron() {
                             $stream['online_clients'] = $rCount;
                         }
                         $rAdminQueue = $rQueue = 0;
-                        if (ipTV_lib::$settings['on_demand_instant_off'] && file_exists(SIGNALS_TMP_PATH . 'queue_' . intval($stream['stream_id']))) {
+                        if (CoreUtilities::$settings['on_demand_instant_off'] && file_exists(SIGNALS_TMP_PATH . 'queue_' . intval($stream['stream_id']))) {
                             foreach ((igbinary_unserialize(file_get_contents(SIGNALS_TMP_PATH . 'queue_' . intval($stream['stream_id']))) ?: array()) as $PID) {
                                 if (ipTV_streaming::isProcessRunning($PID, 'php-fpm')) {
                                     $rQueue++;
@@ -60,7 +60,7 @@ function loadCron() {
                                 unlink(SIGNALS_TMP_PATH . 'admin_' . intval($stream['stream_id']));
                             }
                         }
-                        if ($rQueue == 0 && $rAdminQueue == 0 && $stream['online_clients'] == 0 && (file_exists(STREAMS_PATH . $stream['stream_id'] . '_.m3u8') || intval(ipTV_lib::$settings['on_demand_wait_time']) < time() - intval($stream['stream_started']) || $stream['stream_status'] == 1)) {
+                        if ($rQueue == 0 && $rAdminQueue == 0 && $stream['online_clients'] == 0 && (file_exists(STREAMS_PATH . $stream['stream_id'] . '_.m3u8') || intval(CoreUtilities::$settings['on_demand_wait_time']) < time() - intval($stream['stream_started']) || $stream['stream_status'] == 1)) {
                             echo 'Stop on-demand stream...' . "\n\n";
                             ipTV_stream::stopStream($stream['stream_id'], true);
                         }
@@ -181,7 +181,7 @@ function loadCron() {
                 }
             }
         }
-        if (ipTV_lib::$settings['kill_rogue_ffmpeg']) {
+        if (CoreUtilities::$settings['kill_rogue_ffmpeg']) {
             exec("ps aux | grep -v grep | grep '/*_.m3u8' | awk '{print \$2}'", $rFFMPEG);
             foreach ($rFFMPEG as $PID) {
                 $activePIDsMap = array_flip($activePIDs);

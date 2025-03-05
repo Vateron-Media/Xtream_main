@@ -5,12 +5,12 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_packages")) &&
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_package"])) {
-    if (isset(ipTV_lib::$request["edit"])) {
+if (isset(CoreUtilities::$request["submit_package"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         if (!hasPermissions("adv", "edit_package")) {
             exit;
         }
-        $rArray = getPackage(ipTV_lib::$request["edit"]);
+        $rArray = getPackage(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
         if (!hasPermissions("adv", "add_packages")) {
@@ -18,38 +18,38 @@ if (isset(ipTV_lib::$request["submit_package"])) {
         }
         $rArray = array("package_name" => "", "is_trial" => 0, "is_official" => 0, "trial_credits" => 0, "official_credits" => 0, "trial_duration_in" => "hours", "trial_duration" => 0, "official_duration" => 1, "official_duration_in" => "years", "groups" => array(), "bouquets" => array(), "can_gen_mag" => 1, "only_mag" => 0, "output_formats" => array(1, 2, 3), "is_isplock" => 0, "max_connections" => 1, "is_restreamer" => 0, "force_server_id" => 0, "only_e2" => 0, "can_gen_e2" => 1, "forced_country" => "", "lock_device" => 0);
     }
-    if (strlen(ipTV_lib::$request["package_name"]) == 0) {
+    if (strlen(CoreUtilities::$request["package_name"]) == 0) {
         $_STATUS = 1;
     }
     foreach (array("is_trial", "is_official", "can_gen_mag", "can_gen_e2", "only_mag", "only_e2", "lock_device", "is_restreamer") as $rSelection) {
-        if (isset(ipTV_lib::$request[$rSelection])) {
+        if (isset(CoreUtilities::$request[$rSelection])) {
             $rArray[$rSelection] = 1;
-            unset(ipTV_lib::$request[$rSelection]);
+            unset(CoreUtilities::$request[$rSelection]);
         } else {
             $rArray[$rSelection] = 0;
         }
     }
-    if (isset(ipTV_lib::$request["groups"])) {
+    if (isset(CoreUtilities::$request["groups"])) {
         $rArray["groups"] = array();
-        foreach (ipTV_lib::$request["groups"] as $rGroupID) {
+        foreach (CoreUtilities::$request["groups"] as $rGroupID) {
             $rArray["groups"][] = intval($rGroupID);
         }
         $rArray["groups"] = "[" . join(",", $rArray["groups"]) . "]";
-        unset(ipTV_lib::$request["groups"]);
+        unset(CoreUtilities::$request["groups"]);
     }
-    $rArray["bouquets"] = sortArrayByArray(array_values(json_decode(ipTV_lib::$request["bouquets_selected"], true)), array_keys(getBouquetOrder()));
+    $rArray["bouquets"] = sortArrayByArray(array_values(json_decode(CoreUtilities::$request["bouquets_selected"], true)), array_keys(getBouquetOrder()));
     $rArray["bouquets"] = "[" . join(",", $rArray["bouquets"]) . "]";
-    unset(ipTV_lib::$request["bouquets_selected"]);
-    if (isset(ipTV_lib::$request["output_formats"])) {
+    unset(CoreUtilities::$request["bouquets_selected"]);
+    if (isset(CoreUtilities::$request["output_formats"])) {
         $rArray["output_formats"] = array();
-        foreach (ipTV_lib::$request["output_formats"] as $rOutput) {
+        foreach (CoreUtilities::$request["output_formats"] as $rOutput) {
             $rArray["output_formats"][] = intval($rOutput);
         }
         $rArray["output_formats"] = "[" . join(",", $rArray["output_formats"]) . "]";
-        unset(ipTV_lib::$request["output_formats"]);
+        unset(CoreUtilities::$request["output_formats"]);
     }
     if (!isset($_STATUS)) {
-        foreach (ipTV_lib::$request as $rKey => $rValue) {
+        foreach (CoreUtilities::$request as $rKey => $rValue) {
             if (isset($rArray[$rKey])) {
                 $rArray[$rKey] = $rValue;
             }
@@ -66,14 +66,14 @@ if (isset(ipTV_lib::$request["submit_package"])) {
                 $rValues .= '\'' . $rValue . '\'';
             }
         }
-        if (isset(ipTV_lib::$request["edit"])) {
+        if (isset(CoreUtilities::$request["edit"])) {
             $rCols = "`id`," . $rCols;
-            $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+            $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `packages`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
-            if (isset(ipTV_lib::$request["edit"])) {
-                $rInsertID = intval(ipTV_lib::$request["edit"]);
+            if (isset(CoreUtilities::$request["edit"])) {
+                $rInsertID = intval(CoreUtilities::$request["edit"]);
             } else {
                 $rInsertID = $ipTV_db_admin->last_insert_id();
             }
@@ -85,8 +85,8 @@ if (isset(ipTV_lib::$request["submit_package"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rPackage = getPackage(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rPackage = getPackage(CoreUtilities::$request["id"]);
     if ((!$rPackage) or (!hasPermissions("adv", "edit_package"))) {
         exit;
     }
@@ -138,8 +138,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./package.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./package.php<?php if (isset(CoreUtilities::$request["id"])) {
+                            echo "?id=" . CoreUtilities::$request["id"];
                         } ?>" method="POST" id="package_form" data-parsley-validate="">
                             <?php if (isset($rPackage)) { ?>
                                 <input type="hidden" name="edit" value="<?= $rPackage["id"] ?>" />

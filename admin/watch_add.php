@@ -5,52 +5,52 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch_add"))
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_folder"])) {
-    $rPath = ipTV_lib::$request["selected_path"];
+if (isset(CoreUtilities::$request["submit_folder"])) {
+    $rPath = CoreUtilities::$request["selected_path"];
     if ((strlen($rPath) > 0) && ($rPath <> "/")) {
         $rExtra = "";
-        if (isset(ipTV_lib::$request["edit"])) {
-            $rExtra = " AND `id` <> " . intval(ipTV_lib::$request["edit"]);
+        if (isset(CoreUtilities::$request["edit"])) {
+            $rExtra = " AND `id` <> " . intval(CoreUtilities::$request["edit"]);
         }
-        $ipTV_db_admin->query("SELECT `id` FROM `watch_folders` WHERE `type` = '" . ipTV_lib::$request["folder_type"] . "' AND `directory` = '" . $rPath . "' AND `server_id` = " . intval(ipTV_lib::$request["server_id"]) . $rExtra . ";");
+        $ipTV_db_admin->query("SELECT `id` FROM `watch_folders` WHERE `type` = '" . CoreUtilities::$request["folder_type"] . "' AND `directory` = '" . $rPath . "' AND `server_id` = " . intval(CoreUtilities::$request["server_id"]) . $rExtra . ";");
         if ($ipTV_db_admin->num_rows() == 0) {
-            if (isset(ipTV_lib::$request["edit"])) {
-                $rArray = getWatchFolder(ipTV_lib::$request["edit"]);
+            if (isset(CoreUtilities::$request["edit"])) {
+                $rArray = getWatchFolder(CoreUtilities::$request["edit"]);
                 unset($rArray["id"]);
             } else {
                 $rArray = array("directory" => "", "last_run" => 0, "server_id" => 0, "type" => "movie", "active" => 1, "bouquets" => "[]", "fb_bouquets" => "[]", "category_id" => 0, "fb_category_id" => 0, "disable_tmdb" => 0, "ignore_no_match" => 0, "auto_subtitles" => 0, "allowed_extensions" => array());
             }
-            $rArray["type"] = ipTV_lib::$request["folder_type"];
+            $rArray["type"] = CoreUtilities::$request["folder_type"];
             $rArray["directory"] = $rPath;
-            $rArray["server_id"] = intval(ipTV_lib::$request["server_id"]);
-            if (count(ipTV_lib::$request["bouquets"]) > 0) {
-                $rArray["bouquets"] = json_encode(ipTV_lib::$request["bouquets"]);
+            $rArray["server_id"] = intval(CoreUtilities::$request["server_id"]);
+            if (count(CoreUtilities::$request["bouquets"]) > 0) {
+                $rArray["bouquets"] = json_encode(CoreUtilities::$request["bouquets"]);
             } else {
                 $rArray["bouquets"] = "[]";
             }
-            if (count(ipTV_lib::$request["fb_bouquets"]) > 0) {
-                $rArray["fb_bouquets"] = json_encode(ipTV_lib::$request["fb_bouquets"]);
+            if (count(CoreUtilities::$request["fb_bouquets"]) > 0) {
+                $rArray["fb_bouquets"] = json_encode(CoreUtilities::$request["fb_bouquets"]);
             } else {
                 $rArray["fb_bouquets"] = "[]";
             }
-            if (count(ipTV_lib::$request["allowed_extensions"]) > 0) {
-                $rArray["allowed_extensions"] = json_encode(ipTV_lib::$request["allowed_extensions"]);
+            if (count(CoreUtilities::$request["allowed_extensions"]) > 0) {
+                $rArray["allowed_extensions"] = json_encode(CoreUtilities::$request["allowed_extensions"]);
             } else {
                 $rArray["allowed_extensions"] = "[]";
             }
-            $rArray["category_id"] = intval(ipTV_lib::$request["category_id_" . ipTV_lib::$request["folder_type"]]);
-            $rArray["fb_category_id"] = intval(ipTV_lib::$request["fb_category_id_" . ipTV_lib::$request["folder_type"]]);
-            if (isset(ipTV_lib::$request["disable_tmdb"])) {
+            $rArray["category_id"] = intval(CoreUtilities::$request["category_id_" . CoreUtilities::$request["folder_type"]]);
+            $rArray["fb_category_id"] = intval(CoreUtilities::$request["fb_category_id_" . CoreUtilities::$request["folder_type"]]);
+            if (isset(CoreUtilities::$request["disable_tmdb"])) {
                 $rArray["disable_tmdb"] = 1;
             } else {
                 $rArray["disable_tmdb"] = 0;
             }
-            if (isset(ipTV_lib::$request["ignore_no_match"])) {
+            if (isset(CoreUtilities::$request["ignore_no_match"])) {
                 $rArray["ignore_no_match"] = 1;
             } else {
                 $rArray["ignore_no_match"] = 0;
             }
-            if (isset(ipTV_lib::$request["auto_subtitles"])) {
+            if (isset(CoreUtilities::$request["auto_subtitles"])) {
                 $rArray["auto_subtitles"] = 1;
             } else {
                 $rArray["auto_subtitles"] = 0;
@@ -67,14 +67,14 @@ if (isset(ipTV_lib::$request["submit_folder"])) {
                     $rValues .= '\'' . $rValue . '\'';
                 }
             }
-            if (isset(ipTV_lib::$request["edit"])) {
+            if (isset(CoreUtilities::$request["edit"])) {
                 $rCols = "id," . $rCols;
-                $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+                $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `watch_folders`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
-                if (isset(ipTV_lib::$request["edit"])) {
-                    $rInsertID = intval(ipTV_lib::$request["edit"]);
+                if (isset(CoreUtilities::$request["edit"])) {
+                    $rInsertID = intval(CoreUtilities::$request["edit"]);
                 } else {
                     $rInsertID = $ipTV_db_admin->last_insert_id();
                 }
@@ -89,8 +89,8 @@ if (isset(ipTV_lib::$request["submit_folder"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rFolder = getWatchFolder(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rFolder = getWatchFolder(CoreUtilities::$request["id"]);
     if (!$rFolder) {
         exit;
     }
@@ -142,8 +142,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./watch_add.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./watch_add.php<?php if (isset(CoreUtilities::$request["id"])) {
+                            echo "?id=" . CoreUtilities::$request["id"];
                         } ?>" method="POST" id="ip_form" data-parsley-validate="">
                             <?php if (isset($rFolder)) { ?>
                                 <input type="hidden" name="edit" value="<?= $rFolder["id"] ?>" />

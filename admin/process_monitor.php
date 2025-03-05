@@ -5,25 +5,25 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "process_monitor")))
     exit;
 }
 
-if ((!isset(ipTV_lib::$request["server"])) or (!isset($rServers[ipTV_lib::$request["server"]]))) {
+if ((!isset(CoreUtilities::$request["server"])) or (!isset($rServers[CoreUtilities::$request["server"]]))) {
     header("Location: ./dashboard.php");
     exit;
 }
 
-if (isset(ipTV_lib::$request["clear"])) {
-    freeTemp(ipTV_lib::$request["server"]);
-    header("Location: ./process_monitor.php?server=" . ipTV_lib::$request["server"]);
+if (isset(CoreUtilities::$request["clear"])) {
+    freeTemp(CoreUtilities::$request["server"]);
+    header("Location: ./process_monitor.php?server=" . CoreUtilities::$request["server"]);
     exit;
 }
 
-if (isset(ipTV_lib::$request["clear_s"])) {
-    freeStreams(ipTV_lib::$request["server"]);
-    header("Location: ./process_monitor.php?server=" . ipTV_lib::$request["server"]);
+if (isset(CoreUtilities::$request["clear_s"])) {
+    freeStreams(CoreUtilities::$request["server"]);
+    header("Location: ./process_monitor.php?server=" . CoreUtilities::$request["server"]);
     exit;
 }
 
-$rStreams = getStreamPIDs(ipTV_lib::$request["server"]);
-$rFS = getFreeSpace(ipTV_lib::$request["server"]);
+$rStreams = getStreamPIDs(CoreUtilities::$request["server"]);
+$rFS = getFreeSpace(CoreUtilities::$request["server"]);
 
 include "header.php";
 ?>
@@ -83,7 +83,7 @@ include "header.php";
                                                                     <div class="btn-group">
                                                                         <?php if (substr($rSystem["mount"], strlen($rSystem["mount"]) - 3, 3) == "tmp") { ?>
                                                                                 <a
-                                                                                    href="./process_monitor.php?server=<?= ipTV_lib::$request["server"] ?>&clear"><button
+                                                                                    href="./process_monitor.php?server=<?= CoreUtilities::$request["server"] ?>&clear"><button
                                                                                         data-toggle="tooltip" data-placement="top" title=""
                                                                                         data-original-title="<?= $_["clear_temp"] ?>"
                                                                                         type="button"
@@ -91,7 +91,7 @@ include "header.php";
                                                                                             class="mdi mdi-close"></i></button></a>
                                                                         <?php } elseif (substr($rSystem["mount"], strlen($rSystem["mount"]) - 7, 7) == "streams") { ?>
                                                                                 <a
-                                                                                    href="./process_monitor.php?server=<?= ipTV_lib::$request["server"] ?>&clear_s"><button
+                                                                                    href="./process_monitor.php?server=<?= CoreUtilities::$request["server"] ?>&clear_s"><button
                                                                                         data-toggle="tooltip" data-placement="top" title=""
                                                                                         data-original-title="<?= $_["clear_streams"] ?>"
                                                                                         type="button"
@@ -120,7 +120,7 @@ include "header.php";
                                             <div class="col-md-3">
                                                 <select id="live_filter" class="form-control" data-toggle="select2">
                                                     <?php foreach ($rServers as $rServer) { ?>
-                                                            <option value="<?= $rServer["id"] ?>" <?php if (ipTV_lib::$request["server"] == $rServer["id"]) {
+                                                            <option value="<?= $rServer["id"] ?>" <?php if (CoreUtilities::$request["server"] == $rServer["id"]) {
                                                                   echo " selected";
                                                               } ?>><?= $rServer["server_name"] ?></option>
                                                     <?php } ?>
@@ -155,7 +155,7 @@ include "header.php";
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach (getPIDs(ipTV_lib::$request["server"]) as $rProcess) { ?>
+                                            <?php foreach (getPIDs(CoreUtilities::$request["server"]) as $rProcess) { ?>
                                                     <tr>
                                                         <td><?= $rProcess["pid"] ?></td>
                                                         <td><?= $rProcess["user"] ?></td>
@@ -188,7 +188,7 @@ include "header.php";
                                                                             data-original-title="<?= $_["kill_process_info"] ?>"
                                                                             type="button"
                                                                             class="btn btn-light waves-effect waves-light btn-xs"
-                                                                            onClick="kill(<?= ipTV_lib::$request["server"] ?>, <?= $rProcess["pid"] ?>);"><i
+                                                                            onClick="kill(<?= CoreUtilities::$request["server"] ?>, <?= $rProcess["pid"] ?>);"><i
                                                                                 class="mdi mdi-close"></i></button>
                                                                 <?php } else { ?>
                                                                         <button disabled type="button"
@@ -277,7 +277,7 @@ include "header.php";
                             "targets": [0, 1, 2, 4, 5, 6, 7]
                         }],
 
-                        <?php if (isset(ipTV_lib::$request["mem"])) { ?>
+                        <?php if (isset(CoreUtilities::$request["mem"])) { ?>
                                                         order: [
                                     [5, "desc"]
                                 ],

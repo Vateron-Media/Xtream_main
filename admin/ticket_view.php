@@ -1,20 +1,20 @@
 <?php
 include "session.php";
 include "functions.php";
-if (!isset(ipTV_lib::$request["id"])) {
+if (!isset(CoreUtilities::$request["id"])) {
     exit;
 }
 if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_tickets"))) {
     exit;
 }
 
-$rTicket = getTicket(ipTV_lib::$request["id"]);
+$rTicket = getTicket(CoreUtilities::$request["id"]);
 if (!$rTicket) {
     exit;
 }
 
 if ($rUserInfo["id"] <> $rTicket["member_id"]) {
-    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 1 WHERE `id` = " . intval(ipTV_lib::$request["id"]) . ";");
+    $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 1 WHERE `id` = " . intval(CoreUtilities::$request["id"]) . ";");
 }
 
 include "header.php";

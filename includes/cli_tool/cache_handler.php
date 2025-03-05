@@ -8,17 +8,17 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         $rLastCheck = null;
         $rInterval = 60;
         $rMD5 = md5_file(__FILE__);
-        ipTV_lib::$settings = ipTV_lib::getSettings(true);
-        if (ipTV_lib::$settings['enable_cache']) {
+        CoreUtilities::$settings = CoreUtilities::getSettings(true);
+        if (CoreUtilities::$settings['enable_cache']) {
             while (true) {
                 if (!$ipTV_db->ping()) {
                     break;
                 }
                 if ($rLastCheck && $rInterval > time() - $rLastCheck) {
                 } else {
-                    ipTV_lib::$settings = ipTV_lib::getSettings(true);
-                    ipTV_lib::$Servers = ipTV_lib::getServers(true);
-                    if (ipTV_lib::$settings['enable_cache']) {
+                    CoreUtilities::$settings = CoreUtilities::getSettings(true);
+                    CoreUtilities::$Servers = CoreUtilities::getServers(true);
+                    if (CoreUtilities::$settings['enable_cache']) {
                         if (md5_file(__FILE__) == $rMD5) {
                             $rLastCheck = time();
                         } else {
@@ -71,7 +71,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                     }
                     $rUpdatedLines = array_unique($rUpdatedLines);
                     foreach ($rUpdatedLines as $rUserID) {
-                        ipTV_lib::updateLine($rUserID);
+                        CoreUtilities::updateLine($rUserID);
                     }
                     sleep(1);
                 } catch (Exception $e) {

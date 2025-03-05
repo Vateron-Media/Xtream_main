@@ -5,18 +5,18 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_e2")) && (!has
     exit;
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rEditID = ipTV_lib::$request["id"];
+if (isset(CoreUtilities::$request["id"])) {
+    $rEditID = CoreUtilities::$request["id"];
 }
 
-if (isset(ipTV_lib::$request["submit_e2"])) {
-    if (filter_var(ipTV_lib::$request["mac"], FILTER_VALIDATE_MAC)) {
-        if ($rArray = getUser(ipTV_lib::$request["paired_user"])) {
-            if (isset(ipTV_lib::$request["edit"])) {
+if (isset(CoreUtilities::$request["submit_e2"])) {
+    if (filter_var(CoreUtilities::$request["mac"], FILTER_VALIDATE_MAC)) {
+        if ($rArray = getUser(CoreUtilities::$request["paired_user"])) {
+            if (isset(CoreUtilities::$request["edit"])) {
                 if (!hasPermissions("adv", "edit_e2")) {
                     exit;
                 }
-                $rCurE2 = getEnigma(ipTV_lib::$request["edit"]);
+                $rCurE2 = getEnigma(CoreUtilities::$request["edit"]);
                 $ipTV_db_admin->query("DELETE FROM `lines` WHERE `id` = " . intval($rCurE2["user_id"]) . ";"); // Delete existing user.
                 $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rCurE2["user_id"]) . ";");
             } elseif (!hasPermissions("adv", "add_e2")) {
@@ -42,27 +42,27 @@ if (isset(ipTV_lib::$request["submit_e2"])) {
             $rQuery = "INSERT INTO `lines`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
                 $rNewID = $ipTV_db_admin->last_insert_id();
-                $rArray = array("user_id" => $rNewID, "mac" => ipTV_lib::$request["mac"]);
+                $rArray = array("user_id" => $rNewID, "mac" => CoreUtilities::$request["mac"]);
                 // Create / Edit Enigma.
-                if (isset(ipTV_lib::$request["edit"])) {
-                    $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `user_id` = " . intval($rNewID) . ", `mac` = '" . ipTV_lib::$request["mac"] . "' WHERE `device_id` = " . intval(ipTV_lib::$request["edit"]) . ";");
-                    $rEditID = ipTV_lib::$request["edit"];
+                if (isset(CoreUtilities::$request["edit"])) {
+                    $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `user_id` = " . intval($rNewID) . ", `mac` = '" . CoreUtilities::$request["mac"] . "' WHERE `device_id` = " . intval(CoreUtilities::$request["edit"]) . ";");
+                    $rEditID = CoreUtilities::$request["edit"];
                 } else {
-                    $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rNewID) . ", '" . ipTV_lib::$request["mac"] . "');");
+                    $ipTV_db_admin->query("INSERT INTO `enigma2_devices`(`user_id`, `mac`) VALUES(" . intval($rNewID) . ", '" . CoreUtilities::$request["mac"] . "');");
                     $rEditID = $ipTV_db_admin->last_insert_id();
                 }
                 $ipTV_db_admin->query("INSERT INTO `user_output`(`user_id`, `access_output_id`) VALUES(" . intval($rNewID) . ", 2);");
                 header("Location: ./enigma.php?id=" . $rNewID);
                 exit;
             }
-        } elseif ((isset(ipTV_lib::$request["edit"])) && (strlen(ipTV_lib::$request["edit"]))) {
+        } elseif ((isset(CoreUtilities::$request["edit"])) && (strlen(CoreUtilities::$request["edit"]))) {
             // Don't create a new user, legacy support for device.
-            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . ipTV_lib::$request["mac"] . "' WHERE `device_id` = " . intval(ipTV_lib::$request["edit"]) . ";");
-            header("Location: ./enigma.php?id=" . ipTV_lib::$request["edit"]);
+            $ipTV_db_admin->query("UPDATE `enigma2_devices` SET `mac` = '" . CoreUtilities::$request["mac"] . "' WHERE `device_id` = " . intval(CoreUtilities::$request["edit"]) . ";");
+            header("Location: ./enigma.php?id=" . CoreUtilities::$request["edit"]);
             exit;
         }
     } else {
-        $rE2Arr = array("mac" => ipTV_lib::$request["mac"], "paired_user" => ipTV_lib::$request["paired_user"]);
+        $rE2Arr = array("mac" => CoreUtilities::$request["mac"], "paired_user" => CoreUtilities::$request["paired_user"]);
         $_STATUS = 1;
     }
 }

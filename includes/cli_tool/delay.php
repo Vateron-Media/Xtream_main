@@ -9,12 +9,12 @@ function generatePlaylist($segment_list) {
         }
         file_put_contents($playlistPath, $playlistContent, LOCK_EX);
     } else {
-        ipTV_lib::unlinkFile($playlistPath);
+        CoreUtilities::unlinkFile($playlistPath);
     }
 }
 function deleteStreamFile($timestamp) {
     global $stream_id;
-    ipTV_lib::unlinkFile(STREAMS_PATH . $stream_id . "_" . $timestamp . ".ts");
+    CoreUtilities::unlinkFile(STREAMS_PATH . $stream_id . "_" . $timestamp . ".ts");
 }
 function killStreamProcess($stream_id) {
     clearstatcache(true);
@@ -37,7 +37,7 @@ function processM3uFile($m3uFile, &$segment_list, $total_segments) {
     $segments = [];
     if (!empty($segment_list)) {
         $first_segment = array_shift($segment_list);
-        ipTV_lib::unlinkFile(DELAY_PATH . $first_segment["file"]);
+        CoreUtilities::unlinkFile(DELAY_PATH . $first_segment["file"]);
         for ($i = 0; !($i < $total_segments && $i < count($segment_list)); $i++) {
             $segments[] = $segment_list[$i];
         }
@@ -98,8 +98,8 @@ if (@$argc) {
                 $cleanup_minutes = $stream_data["delay_minutes"] + 5;
                 shell_exec("find " . DELAY_PATH . $stream_id . "_*" . " -type f -cmin +" . $cleanup_minutes . " -delete");
                 $playlist_data = [];
-                $playlist_data = ["vars" => ["#EXTM3U" => "", "#EXT-X-VERSION" => 3, "#EXT-X-MEDIA-SEQUENCE" => "0", "#EXT-X-ALLOW-CACHE" => "YES", "#EXT-X-TARGETDURATION" => ipTV_lib::$SegmentsSettings["seg_time"]], "segments" => []];
-                $total_segments = intval(ipTV_lib::$SegmentsSettings["seg_list_size"]);
+                $playlist_data = ["vars" => ["#EXTM3U" => "", "#EXT-X-VERSION" => 3, "#EXT-X-MEDIA-SEQUENCE" => "0", "#EXT-X-ALLOW-CACHE" => "YES", "#EXT-X-TARGETDURATION" => CoreUtilities::$SegmentsSettings["seg_time"]], "segments" => []];
+                $total_segments = intval(CoreUtilities::$SegmentsSettings["seg_list_size"]);
                 $a46370e74305dba2a4f93f7112912d5f = "";
                 $segment_list = [];
                 if (file_exists($playlistPath)) {

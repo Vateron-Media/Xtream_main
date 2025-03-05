@@ -5,55 +5,55 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch_settin
     exit;
 }
 
-if (isset(ipTV_lib::$request["update"])) {
+if (isset(CoreUtilities::$request["update"])) {
     updateTMDbCategories();
     header("Location: ./settings_watch.php");
 }
 
-if (isset(ipTV_lib::$request["submit_settings"])) {
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
+if (isset(CoreUtilities::$request["submit_settings"])) {
+    foreach (CoreUtilities::$request as $rKey => $rValue) {
         $rSplit = explode("_", $rKey);
         if ($rSplit[0] == "genre") {
             $rGenreID = intval($rSplit[1]);
-            $rBouquets = json_encode(ipTV_lib::$request["bouquet_" . $rGenreID]);
+            $rBouquets = json_encode(CoreUtilities::$request["bouquet_" . $rGenreID]);
             if (!$rBouquets) {
                 $rBouquets = "[]";
             }
             $ipTV_db_admin->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . $rBouquets . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 1;");
         }
     }
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
+    foreach (CoreUtilities::$request as $rKey => $rValue) {
         $rSplit = explode("_", $rKey);
         if ($rSplit[0] == "genretv") {
             $rGenreID = intval($rSplit[1]);
-            $rBouquets = json_encode(ipTV_lib::$request["bouquettv_" . $rGenreID]);
+            $rBouquets = json_encode(CoreUtilities::$request["bouquettv_" . $rGenreID]);
             if (!$rBouquets) {
                 $rBouquets = "[]";
             }
             $ipTV_db_admin->query("UPDATE `watch_categories` SET `category_id` = " . intval($rValue) . ", `bouquets` = '" . $rBouquets . "' WHERE `genre_id` = " . intval($rGenreID) . " AND `type` = 2;");
         }
     }
-    if (isset(ipTV_lib::$request["read_native"])) {
+    if (isset(CoreUtilities::$request["read_native"])) {
         $rNative = 1;
     } else {
         $rNative = 0;
     }
-    if (isset(ipTV_lib::$request["movie_symlink"])) {
+    if (isset(CoreUtilities::$request["movie_symlink"])) {
         $rSymLink = 1;
     } else {
         $rSymLink = 0;
     }
-    if (isset(ipTV_lib::$request["auto_encode"])) {
+    if (isset(CoreUtilities::$request["auto_encode"])) {
         $rAutoEncode = 1;
     } else {
         $rAutoEncode = 0;
     }
-    if (isset(ipTV_lib::$request["ffprobe_input"])) {
+    if (isset(CoreUtilities::$request["ffprobe_input"])) {
         $rProbeInput = 1;
     } else {
         $rProbeInput = 0;
     }
-    $ipTV_db_admin->query("UPDATE `watch_settings` SET `ffprobe_input` = " . $rProbeInput . ", `percentage_match` = " . intval(ipTV_lib::$request["percentage_match"]) . ", `read_native` = " . $rNative . ", `movie_symlink` = " . $rSymLink . ", `auto_encode` = " . $rAutoEncode . ", `transcode_profile_id` = " . intval(ipTV_lib::$request["transcode_profile_id"]) . ", `scan_seconds` = " . intval(ipTV_lib::$request["scan_seconds"]) . ";");
+    $ipTV_db_admin->query("UPDATE `watch_settings` SET `ffprobe_input` = " . $rProbeInput . ", `percentage_match` = " . intval(CoreUtilities::$request["percentage_match"]) . ", `read_native` = " . $rNative . ", `movie_symlink` = " . $rSymLink . ", `auto_encode` = " . $rAutoEncode . ", `transcode_profile_id` = " . intval(CoreUtilities::$request["transcode_profile_id"]) . ", `scan_seconds` = " . intval(CoreUtilities::$request["scan_seconds"]) . ";");
 }
 
 $rBouquets = getBouquets();

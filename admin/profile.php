@@ -5,62 +5,62 @@ if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "tprofile"))) {
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_profile"])) {
-    $rArray = array("profile_name" => ipTV_lib::$request["profile_name"], "profile_options" => null);
+if (isset(CoreUtilities::$request["submit_profile"])) {
+    $rArray = array("profile_name" => CoreUtilities::$request["profile_name"], "profile_options" => null);
     $rProfileOptions = array();
-    if (strlen(ipTV_lib::$request["video_codec"]) > 0) {
-        $rProfileOptions["-vcodec"] = ipTV_lib::$request["video_codec"];
+    if (strlen(CoreUtilities::$request["video_codec"]) > 0) {
+        $rProfileOptions["-vcodec"] = CoreUtilities::$request["video_codec"];
     }
-    if (strlen(ipTV_lib::$request["audio_codec"]) > 0) {
-        $rProfileOptions["-acodec"] = ipTV_lib::$request["audio_codec"];
+    if (strlen(CoreUtilities::$request["audio_codec"]) > 0) {
+        $rProfileOptions["-acodec"] = CoreUtilities::$request["audio_codec"];
     }
-    if (strlen(ipTV_lib::$request["preset"]) > 0) {
-        $rProfileOptions["-preset"] = ipTV_lib::$request["preset"];
+    if (strlen(CoreUtilities::$request["preset"]) > 0) {
+        $rProfileOptions["-preset"] = CoreUtilities::$request["preset"];
     }
-    if (strlen(ipTV_lib::$request["video_profile"]) > 0) {
-        $rProfileOptions["-profile:v"] = ipTV_lib::$request["video_profile"];
+    if (strlen(CoreUtilities::$request["video_profile"]) > 0) {
+        $rProfileOptions["-profile:v"] = CoreUtilities::$request["video_profile"];
     }
-    if (strlen(ipTV_lib::$request["video_bitrate"]) > 0) {
-        $rProfileOptions["3"] = array("cmd" => "-b:v " . intval(ipTV_lib::$request["video_bitrate"]) . "k", "val" => intval(ipTV_lib::$request["video_bitrate"]));
+    if (strlen(CoreUtilities::$request["video_bitrate"]) > 0) {
+        $rProfileOptions["3"] = array("cmd" => "-b:v " . intval(CoreUtilities::$request["video_bitrate"]) . "k", "val" => intval(CoreUtilities::$request["video_bitrate"]));
     }
-    if (strlen(ipTV_lib::$request["audio_bitrate"]) > 0) {
-        $rProfileOptions["4"] = array("cmd" => "-b:a " . intval(ipTV_lib::$request["audio_bitrate"]) . "k", "val" => intval(ipTV_lib::$request["audio_bitrate"]));
+    if (strlen(CoreUtilities::$request["audio_bitrate"]) > 0) {
+        $rProfileOptions["4"] = array("cmd" => "-b:a " . intval(CoreUtilities::$request["audio_bitrate"]) . "k", "val" => intval(CoreUtilities::$request["audio_bitrate"]));
     }
-    if (strlen(ipTV_lib::$request["min_tolerance"]) > 0) {
-        $rProfileOptions["5"] = array("cmd" => "-minrate " . intval(ipTV_lib::$request["min_tolerance"]) . "k", "val" => intval(ipTV_lib::$request["min_tolerance"]));
+    if (strlen(CoreUtilities::$request["min_tolerance"]) > 0) {
+        $rProfileOptions["5"] = array("cmd" => "-minrate " . intval(CoreUtilities::$request["min_tolerance"]) . "k", "val" => intval(CoreUtilities::$request["min_tolerance"]));
     }
-    if (strlen(ipTV_lib::$request["max_tolerance"]) > 0) {
-        $rProfileOptions["6"] = array("cmd" => "-maxrate " . intval(ipTV_lib::$request["max_tolerance"]) . "k", "val" => intval(ipTV_lib::$request["max_tolerance"]));
+    if (strlen(CoreUtilities::$request["max_tolerance"]) > 0) {
+        $rProfileOptions["6"] = array("cmd" => "-maxrate " . intval(CoreUtilities::$request["max_tolerance"]) . "k", "val" => intval(CoreUtilities::$request["max_tolerance"]));
     }
-    if (strlen(ipTV_lib::$request["buffer_size"]) > 0) {
-        $rProfileOptions["7"] = array("cmd" => "-bufsize " . intval(ipTV_lib::$request["buffer_size"]) . "k", "val" => intval(ipTV_lib::$request["buffer_size"]));
+    if (strlen(CoreUtilities::$request["buffer_size"]) > 0) {
+        $rProfileOptions["7"] = array("cmd" => "-bufsize " . intval(CoreUtilities::$request["buffer_size"]) . "k", "val" => intval(CoreUtilities::$request["buffer_size"]));
     }
-    if (strlen(ipTV_lib::$request["crf_value"]) > 0) {
-        $rProfileOptions["8"] = array("cmd" => "-crf " . ipTV_lib::$request["crf_value"], "val" => ipTV_lib::$request["crf_value"]);
+    if (strlen(CoreUtilities::$request["crf_value"]) > 0) {
+        $rProfileOptions["8"] = array("cmd" => "-crf " . CoreUtilities::$request["crf_value"], "val" => CoreUtilities::$request["crf_value"]);
     }
-    if (strlen(ipTV_lib::$request["scaling"]) > 0) {
-        $rProfileOptions["9"] = array("cmd" => "-vf scale=" . ipTV_lib::$request["scaling"], "val" => ipTV_lib::$request["scaling"]);
+    if (strlen(CoreUtilities::$request["scaling"]) > 0) {
+        $rProfileOptions["9"] = array("cmd" => "-vf scale=" . CoreUtilities::$request["scaling"], "val" => CoreUtilities::$request["scaling"]);
     }
-    if (strlen(ipTV_lib::$request["aspect_ratio"]) > 0) {
-        $rProfileOptions["10"] = array("cmd" => "-aspect " . ipTV_lib::$request["aspect_ratio"], "val" => ipTV_lib::$request["aspect_ratio"]);
+    if (strlen(CoreUtilities::$request["aspect_ratio"]) > 0) {
+        $rProfileOptions["10"] = array("cmd" => "-aspect " . CoreUtilities::$request["aspect_ratio"], "val" => CoreUtilities::$request["aspect_ratio"]);
     }
-    if (strlen(ipTV_lib::$request["framerate"]) > 0) {
-        $rProfileOptions["11"] = array("cmd" => "-r " . intval(ipTV_lib::$request["framerate"]), "val" => intval(ipTV_lib::$request["framerate"]));
+    if (strlen(CoreUtilities::$request["framerate"]) > 0) {
+        $rProfileOptions["11"] = array("cmd" => "-r " . intval(CoreUtilities::$request["framerate"]), "val" => intval(CoreUtilities::$request["framerate"]));
     }
-    if (strlen(ipTV_lib::$request["samplerate"]) > 0) {
-        $rProfileOptions["12"] = array("cmd" => "-ar " . intval(ipTV_lib::$request["samplerate"]), "val" => intval(ipTV_lib::$request["samplerate"]));
+    if (strlen(CoreUtilities::$request["samplerate"]) > 0) {
+        $rProfileOptions["12"] = array("cmd" => "-ar " . intval(CoreUtilities::$request["samplerate"]), "val" => intval(CoreUtilities::$request["samplerate"]));
     }
-    if (strlen(ipTV_lib::$request["audio_channels"]) > 0) {
-        $rProfileOptions["13"] = array("cmd" => "-ac " . intval(ipTV_lib::$request["audio_channels"]), "val" => intval(ipTV_lib::$request["audio_channels"]));
+    if (strlen(CoreUtilities::$request["audio_channels"]) > 0) {
+        $rProfileOptions["13"] = array("cmd" => "-ac " . intval(CoreUtilities::$request["audio_channels"]), "val" => intval(CoreUtilities::$request["audio_channels"]));
     }
-    if (strlen(ipTV_lib::$request["remove_parts"]) > 0) {
-        $rProfileOptions["14"] = array("cmd" => "-vf delogo=" . ipTV_lib::$request["remove_parts"], "val" => ipTV_lib::$request["remove_parts"]);
+    if (strlen(CoreUtilities::$request["remove_parts"]) > 0) {
+        $rProfileOptions["14"] = array("cmd" => "-vf delogo=" . CoreUtilities::$request["remove_parts"], "val" => CoreUtilities::$request["remove_parts"]);
     }
-    if (strlen(ipTV_lib::$request["threads"]) > 0) {
-        $rProfileOptions["15"] = array("cmd" => "-threads " . intval(ipTV_lib::$request["threads"]), "val" => intval(ipTV_lib::$request["threads"]));
+    if (strlen(CoreUtilities::$request["threads"]) > 0) {
+        $rProfileOptions["15"] = array("cmd" => "-threads " . intval(CoreUtilities::$request["threads"]), "val" => intval(CoreUtilities::$request["threads"]));
     }
-    if (strlen(ipTV_lib::$request["logo_path"]) > 0) {
-        $rProfileOptions["16"] = array("cmd" => "-i \"" . ipTV_lib::$request["logo_path"] . "\" -filter_complex \"overlay\"", "val" => ipTV_lib::$request["logo_path"]);
+    if (strlen(CoreUtilities::$request["logo_path"]) > 0) {
+        $rProfileOptions["16"] = array("cmd" => "-i \"" . CoreUtilities::$request["logo_path"] . "\" -filter_complex \"overlay\"", "val" => CoreUtilities::$request["logo_path"]);
     }
     $rArray["profile_options"] = json_encode($rProfileOptions);
     $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
@@ -75,17 +75,17 @@ if (isset(ipTV_lib::$request["submit_profile"])) {
             $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset(ipTV_lib::$request["edit"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         if (!hasPermissions("adv", "edit_tprofile")) {
             exit;
         }
         $rCols = "profile_id," . $rCols;
-        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+        $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
     }
     $rQuery = "REPLACE INTO `transcoding_profiles`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset(ipTV_lib::$request["edit"])) {
-            $rInsertID = intval(ipTV_lib::$request["edit"]);
+        if (isset(CoreUtilities::$request["edit"])) {
+            $rInsertID = intval(CoreUtilities::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -98,8 +98,8 @@ if (isset(ipTV_lib::$request["submit_profile"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    $rProfileArr = getTranscodeProfile(ipTV_lib::$request["id"]);
+if (isset(CoreUtilities::$request["id"])) {
+    $rProfileArr = getTranscodeProfile(CoreUtilities::$request["id"]);
     if ((!$rProfileArr) or (!hasPermissions("adv", "edit_tprofile"))) {
         exit;
     }
@@ -151,8 +151,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./profile.php<?php if (isset(ipTV_lib::$request["id"])) {
-                                                        echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./profile.php<?php if (isset(CoreUtilities::$request["id"])) {
+                                                        echo "?id=" . CoreUtilities::$request["id"];
                                                     } ?>" method="POST" id="profile_form" data-parsley-validate="">
                             <?php if (isset($rProfileArr)) { ?>
                                 <input type="hidden" name="edit" value="<?= $rProfileArr["profile_id"] ?>" />

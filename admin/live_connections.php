@@ -199,8 +199,8 @@ include "header.php";
         formCache.init();
         formCache.fetch();
 
-        <?php if (isset(ipTV_lib::$request["server_id"])) { ?>
-            $("#live_filter").val(<?= ipTV_lib::$request["server_id"] ?>);
+        <?php if (isset(CoreUtilities::$request["server_id"])) { ?>
+            $("#live_filter").val(<?= CoreUtilities::$request["server_id"] ?>);
         <?php } ?>
 
         $('select').select2({
@@ -226,10 +226,10 @@ include "header.php";
                 "data": function (d) {
                     d.id = "live_connections";
                     d.server_id = getServer();
-                    <?php if (isset(ipTV_lib::$request["stream_id"])) { ?>
-                        d.stream_id = <?= intval(ipTV_lib::$request["stream_id"]) ?>;
-                    <?php } elseif (isset(ipTV_lib::$request["user_id"])) { ?>
-                        d.user_id = <?= intval(ipTV_lib::$request["user_id"]) ?>;
+                    <?php if (isset(CoreUtilities::$request["stream_id"])) { ?>
+                        d.stream_id = <?= intval(CoreUtilities::$request["stream_id"]) ?>;
+                    <?php } elseif (isset(CoreUtilities::$request["user_id"])) { ?>
+                        d.user_id = <?= intval(CoreUtilities::$request["user_id"]) ?>;
                     <?php } ?>
                 }
             },

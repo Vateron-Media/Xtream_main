@@ -15,13 +15,13 @@ $downloading = false;
 $IP = ipTV_streaming::getUserIP();
 $countryCode = ipTV_streaming::getIPInfo($IP)['country']['iso_code'];
 $rUserAgent = (empty($_SERVER['HTTP_USER_AGENT']) ? '' : htmlentities(trim($_SERVER['HTTP_USER_AGENT'])));
-$username = ipTV_lib::$request['username'];
-$password = ipTV_lib::$request['password'];
-$rGZ = !empty(ipTV_lib::$request['gzip']) && intval(ipTV_lib::$request['gzip']) == 1;
+$username = CoreUtilities::$request['username'];
+$password = CoreUtilities::$request['password'];
+$rGZ = !empty(CoreUtilities::$request['gzip']) && intval(CoreUtilities::$request['gzip']) == 1;
 
-if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'])) {
-    $username = ipTV_lib::$request['username'];
-    $password = ipTV_lib::$request['password'];
+if (isset(CoreUtilities::$request['username']) && isset(CoreUtilities::$request['password'])) {
+    $username = CoreUtilities::$request['username'];
+    $password = CoreUtilities::$request['password'];
 
     if (empty($username) || empty($password)) {
         generateError('NO_CREDENTIALS');
@@ -29,8 +29,8 @@ if (isset(ipTV_lib::$request['username']) && isset(ipTV_lib::$request['password'
 
     $rUserInfo = ipTV_streaming::getUserInfo(null, $username, $password, false, false, $IP);
 } else {
-    if (isset(ipTV_lib::$request['token'])) {
-        $rToken = ipTV_lib::$request['token'];
+    if (isset(CoreUtilities::$request['token'])) {
+        $rToken = CoreUtilities::$request['token'];
 
         if (empty($rToken)) {
             generateError('NO_CREDENTIALS');
@@ -69,8 +69,8 @@ if ($rUserInfo) {
         generateError('DISABLED');
     }
 
-    if (ipTV_lib::$settings['restrict_playlists']) {
-        if (empty($rUserAgent) && ipTV_lib::$settings['disallow_empty_user_agents'] == 1) {
+    if (CoreUtilities::$settings['restrict_playlists']) {
+        if (empty($rUserAgent) && CoreUtilities::$settings['disallow_empty_user_agents'] == 1) {
             generateError('EMPTY_USER_AGENT');
         }
 
@@ -85,7 +85,7 @@ if ($rUserInfo) {
                 generateError('FORCED_COUNTRY_INVALID');
             }
 
-            if (!($rForceCountry || in_array('ALL', ipTV_lib::$settings['allow_countries']) || in_array($countryCode, ipTV_lib::$settings['allow_countries']))) {
+            if (!($rForceCountry || in_array('ALL', CoreUtilities::$settings['allow_countries']) || in_array($countryCode, CoreUtilities::$settings['allow_countries']))) {
                 generateError('NOT_IN_ALLOWED_COUNTRY');
             }
         }
@@ -106,7 +106,7 @@ if ($rUserInfo) {
     $rBouquets = array();
 
     foreach ($rUserInfo['bouquet'] as $rBouquetID) {
-        if (in_array($rBouquetID, array_keys(ipTV_lib::$Bouquets))) {
+        if (in_array($rBouquetID, array_keys(CoreUtilities::$Bouquets))) {
             $rBouquets[] = $rBouquetID;
         }
     }

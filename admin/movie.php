@@ -4,23 +4,23 @@ include "functions.php";
 if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_movie")) && (!hasPermissions("adv", "edit_movie")))) {
     exit;
 }
-if ((isset(ipTV_lib::$request["import"])) && (!hasPermissions("adv", "import_movies"))) {
+if ((isset(CoreUtilities::$request["import"])) && (!hasPermissions("adv", "import_movies"))) {
     exit;
 }
 
 $rCategories = getCategories_admin("movie");
 $rTranscodeProfiles = getTranscodeProfiles();
 
-if (isset(ipTV_lib::$request["submit_movie"])) {
+if (isset(CoreUtilities::$request["submit_movie"])) {
     set_time_limit(0);
     ini_set('mysql.connect_timeout', 0);
     ini_set('max_execution_time', 0);
     ini_set('default_socket_timeout', 0);
-    if (isset(ipTV_lib::$request["edit"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         if (!hasPermissions("adv", "edit_movie")) {
             exit;
         }
-        $rArray = getStream(ipTV_lib::$request["edit"]);
+        $rArray = getStream(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
         if (!hasPermissions("adv", "add_movie")) {
@@ -28,60 +28,60 @@ if (isset(ipTV_lib::$request["submit_movie"])) {
         }
         $rArray = array("movie_symlink" => 0, "type" => 2, "target_container" => array("mp4"), "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 1, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "movie_subtitles" => array(), "category_id" => array(), "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 256000);
     }
-    $rArray["stream_display_name"] = ipTV_lib::$request["stream_display_name"];
-    if (strlen(ipTV_lib::$request["movie_subtitles"]) > 0) {
-        $rSplit = explode(":", ipTV_lib::$request["movie_subtitles"]);
+    $rArray["stream_display_name"] = CoreUtilities::$request["stream_display_name"];
+    if (strlen(CoreUtilities::$request["movie_subtitles"]) > 0) {
+        $rSplit = explode(":", CoreUtilities::$request["movie_subtitles"]);
         $rArray["movie_subtitles"] = array("files" => array($rSplit[2]), "names" => array("Subtitles"), "charset" => array("UTF-8"), "location" => intval($rSplit[1]));
     } else {
         $rArray["movie_subtitles"] = array();
     }
-    $rArray["notes"] = ipTV_lib::$request["notes"];
-    if (isset(ipTV_lib::$request["target_container"])) {
-        $rArray["target_container"] = array(ipTV_lib::$request["target_container"]);
+    $rArray["notes"] = CoreUtilities::$request["notes"];
+    if (isset(CoreUtilities::$request["target_container"])) {
+        $rArray["target_container"] = array(CoreUtilities::$request["target_container"]);
     }
-    $categoriesIDs = ipTV_lib::$request["category_id"];
-    if (isset(ipTV_lib::$request["custom_sid"])) {
-        $rArray["custom_sid"] = ipTV_lib::$request["custom_sid"];
+    $categoriesIDs = CoreUtilities::$request["category_id"];
+    if (isset(CoreUtilities::$request["custom_sid"])) {
+        $rArray["custom_sid"] = CoreUtilities::$request["custom_sid"];
     }
-    $rArray["transcode_profile_id"] = ipTV_lib::$request["transcode_profile_id"];
+    $rArray["transcode_profile_id"] = CoreUtilities::$request["transcode_profile_id"];
     if (!$rArray["transcode_profile_id"]) {
         $rArray["transcode_profile_id"] = 0;
     }
     if ($rArray["transcode_profile_id"] > 0) {
         $rArray["enable_transcode"] = 1;
     }
-    if (isset(ipTV_lib::$request["read_native"])) {
+    if (isset(CoreUtilities::$request["read_native"])) {
         $rArray["read_native"] = 1;
-        unset(ipTV_lib::$request["read_native"]);
+        unset(CoreUtilities::$request["read_native"]);
     } else {
         $rArray["read_native"] = 0;
     }
-    if (isset(ipTV_lib::$request["movie_symlink"])) {
+    if (isset(CoreUtilities::$request["movie_symlink"])) {
         $rArray["movie_symlink"] = 1;
-        unset(ipTV_lib::$request["movie_symlink"]);
+        unset(CoreUtilities::$request["movie_symlink"]);
     } else {
         $rArray["movie_symlink"] = 0;
     }
-    if (isset(ipTV_lib::$request["direct_source"])) {
+    if (isset(CoreUtilities::$request["direct_source"])) {
         $rArray["direct_source"] = 1;
-        unset(ipTV_lib::$request["direct_source"]);
+        unset(CoreUtilities::$request["direct_source"]);
     } else {
         $rArray["direct_source"] = 0;
     }
-    if (isset(ipTV_lib::$request["remove_subtitles"])) {
+    if (isset(CoreUtilities::$request["remove_subtitles"])) {
         $rArray["remove_subtitles"] = 1;
-        unset(ipTV_lib::$request["remove_subtitles"]);
+        unset(CoreUtilities::$request["remove_subtitles"]);
     } else {
         $rArray["remove_subtitles"] = 0;
     }
-    if (isset(ipTV_lib::$request["restart_on_edit"])) {
+    if (isset(CoreUtilities::$request["restart_on_edit"])) {
         $rRestart = true;
-        unset(ipTV_lib::$request["restart_on_edit"]);
+        unset(CoreUtilities::$request["restart_on_edit"]);
     } else {
         $rRestart = false;
     }
-    $rBouquets = ipTV_lib::$request["bouquets"];
-    unset(ipTV_lib::$request["bouquets"]);
+    $rBouquets = CoreUtilities::$request["bouquets"];
+    unset(CoreUtilities::$request["bouquets"]);
     $rImportStreams = array();
     if (!empty($_FILES['m3u_file']['tmp_name'])) {
         if (!hasPermissions("adv", "import_movies")) {
@@ -124,7 +124,7 @@ if (isset(ipTV_lib::$request["submit_movie"])) {
                 $rImportStreams[] = $rImportArray;
             }
         }
-    } elseif (!empty(ipTV_lib::$request["import_folder"])) {
+    } elseif (!empty(CoreUtilities::$request["import_folder"])) {
         if (!hasPermissions("adv", "import_movies")) {
             exit;
         }
@@ -139,9 +139,9 @@ if (isset(ipTV_lib::$request["submit_movie"])) {
                 }
             }
         }
-        $rParts = explode(":", ipTV_lib::$request["import_folder"]);
+        $rParts = explode(":", CoreUtilities::$request["import_folder"]);
         if (is_numeric($rParts[1])) {
-            if (isset(ipTV_lib::$request["scan_recursive"])) {
+            if (isset(CoreUtilities::$request["scan_recursive"])) {
                 $rFiles = scanRecursive(intval($rParts[1]), $rParts[2], array("mp4", "mkv", "avi", "mpg", "flv")); // Only these containers are accepted.
             } else {
                 $rFiles = array();
@@ -159,22 +159,22 @@ if (isset(ipTV_lib::$request["submit_movie"])) {
             }
         }
     } else {
-        $rImportArray = array("stream_source" => array(ipTV_lib::$request["stream_source"]), "stream_icon" => $rArray["stream_icon"], "stream_display_name" => $rArray["stream_display_name"], "movie_properties" => array(), "async" => false);
-        if (strlen(ipTV_lib::$request["tmdb_id"]) > 0) {
-            $rTMDBURL = "https://www.themoviedb.org/movie/" . ipTV_lib::$request["tmdb_id"];
+        $rImportArray = array("stream_source" => array(CoreUtilities::$request["stream_source"]), "stream_icon" => $rArray["stream_icon"], "stream_display_name" => $rArray["stream_display_name"], "movie_properties" => array(), "async" => false);
+        if (strlen(CoreUtilities::$request["tmdb_id"]) > 0) {
+            $rTMDBURL = "https://www.themoviedb.org/movie/" . CoreUtilities::$request["tmdb_id"];
         } else {
             $rTMDBURL = "";
         }
         if ($rSettings["download_images"]) {
-            ipTV_lib::$request["movie_image"] = downloadImage(ipTV_lib::$request["movie_image"]);
-            ipTV_lib::$request["backdrop_path"] = downloadImage(ipTV_lib::$request["backdrop_path"]);
+            CoreUtilities::$request["movie_image"] = downloadImage(CoreUtilities::$request["movie_image"]);
+            CoreUtilities::$request["backdrop_path"] = downloadImage(CoreUtilities::$request["backdrop_path"]);
         }
-        $rSeconds = intval(ipTV_lib::$request["episode_run_time"]) * 60;
-        $rImportArray["movie_properties"] = array("tmdb_url" => $rTMDBURL, "tmdb_id" => ipTV_lib::$request["tmdb_id"], "name" => $rArray["stream_display_name"], "o_name" => $rArray["stream_display_name"], "cover_big" => ipTV_lib::$request["movie_image"], "movie_image" => ipTV_lib::$request["movie_image"], "releasedate" => ipTV_lib::$request["releasedate"], "episode_run_time" => ipTV_lib::$request["episode_run_time"], "youtube_trailer" => ipTV_lib::$request["youtube_trailer"], "director" => ipTV_lib::$request["director"], "actors" => ipTV_lib::$request["cast"], "cast" => ipTV_lib::$request["cast"], "description" => ipTV_lib::$request["plot"], "plot" => ipTV_lib::$request["plot"], "age" => "", "mpaa_rating" => "", "rating_count_kinopoisk" => 0, "country" => ipTV_lib::$request["country"], "genre" => ipTV_lib::$request["genre"], "backdrop_path" => array(ipTV_lib::$request["backdrop_path"]), "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => ipTV_lib::$request["rating"]);
+        $rSeconds = intval(CoreUtilities::$request["episode_run_time"]) * 60;
+        $rImportArray["movie_properties"] = array("tmdb_url" => $rTMDBURL, "tmdb_id" => CoreUtilities::$request["tmdb_id"], "name" => $rArray["stream_display_name"], "o_name" => $rArray["stream_display_name"], "cover_big" => CoreUtilities::$request["movie_image"], "movie_image" => CoreUtilities::$request["movie_image"], "releasedate" => CoreUtilities::$request["releasedate"], "episode_run_time" => CoreUtilities::$request["episode_run_time"], "youtube_trailer" => CoreUtilities::$request["youtube_trailer"], "director" => CoreUtilities::$request["director"], "actors" => CoreUtilities::$request["cast"], "cast" => CoreUtilities::$request["cast"], "description" => CoreUtilities::$request["plot"], "plot" => CoreUtilities::$request["plot"], "age" => "", "mpaa_rating" => "", "rating_count_kinopoisk" => 0, "country" => CoreUtilities::$request["country"], "genre" => CoreUtilities::$request["genre"], "backdrop_path" => array(CoreUtilities::$request["backdrop_path"]), "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => CoreUtilities::$request["rating"]);
         if (strlen($rImportArray["movie_properties"]["backdrop_path"][0]) == 0) {
             unset($rImportArray["movie_properties"]["backdrop_path"]);
         }
-        if (isset(ipTV_lib::$request["edit"])) {
+        if (isset(CoreUtilities::$request["edit"])) {
             $rImportStreams[] = $rImportArray;
         } else {
             $ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `streams` WHERE `stream_display_name` = '" . $rImportArray["stream_display_name"] . "' AND `type` = 2;");
@@ -210,19 +210,19 @@ if (isset(ipTV_lib::$request["submit_movie"])) {
                     $rValues .= '\'' . $rValue . '\'';
                 }
             }
-            if (isset(ipTV_lib::$request["edit"])) {
+            if (isset(CoreUtilities::$request["edit"])) {
                 $rCols = "`id`," . $rCols;
-                $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+                $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
             }
             $rQuery = "REPLACE INTO `streams`(" . $rCols . ") VALUES(" . $rValues . ");";
             if ($ipTV_db_admin->query($rQuery)) {
-                if (isset(ipTV_lib::$request["edit"])) {
-                    $rInsertID = intval(ipTV_lib::$request["edit"]);
+                if (isset(CoreUtilities::$request["edit"])) {
+                    $rInsertID = intval(CoreUtilities::$request["edit"]);
                 } else {
                     $rInsertID = $ipTV_db_admin->last_insert_id();
                 }
                 $rStreamExists = array();
-                if (isset(ipTV_lib::$request["edit"])) {
+                if (isset(CoreUtilities::$request["edit"])) {
                     $ipTV_db_admin->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
                     if ($ipTV_db_admin->num_rows() > 0) {
                         foreach ($ipTV_db_admin->get_rows() as $row) {
@@ -230,9 +230,9 @@ if (isset(ipTV_lib::$request["submit_movie"])) {
                         }
                     }
                 }
-                if (isset(ipTV_lib::$request["server_tree_data"])) {
+                if (isset(CoreUtilities::$request["server_tree_data"])) {
                     $rStreamsAdded = array();
-                    $rServerTree = json_decode(ipTV_lib::$request["server_tree_data"], true);
+                    $rServerTree = json_decode(CoreUtilities::$request["server_tree_data"], true);
                     foreach ($rServerTree as $rServer) {
                         if ($rServer["parent"] <> "#") {
                             $rServerID = intval($rServer["id"]);
@@ -279,7 +279,7 @@ if (isset(ipTV_lib::$request["submit_movie"])) {
         if (isset($_FILES["m3u_file"])) {
             header("Location: ./movies.php");
             exit;
-        } elseif (!isset(ipTV_lib::$request["id"])) {
+        } elseif (!isset(CoreUtilities::$request["id"])) {
             header("Location: ./movie.php?id=" . $rInsertID);
             exit;
         }
@@ -293,16 +293,16 @@ if (isset(ipTV_lib::$request["submit_movie"])) {
 
 $rServerTree = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>" . $_["stream_source"] . "</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
-if (isset(ipTV_lib::$request["id"])) {
-    if ((isset(ipTV_lib::$request["import"])) or (!hasPermissions("adv", "edit_movie"))) {
+if (isset(CoreUtilities::$request["id"])) {
+    if ((isset(CoreUtilities::$request["import"])) or (!hasPermissions("adv", "edit_movie"))) {
         exit;
     }
-    $rMovie = getStream(ipTV_lib::$request["id"]);
+    $rMovie = getStream(CoreUtilities::$request["id"]);
     if ((!$rMovie) or ($rMovie["type"] <> 2)) {
         exit;
     }
     $rMovie["properties"] = json_decode($rMovie["movie_properties"], true);
-    $rStreamSys = getStreamSys(ipTV_lib::$request["id"]);
+    $rStreamSys = getStreamSys(CoreUtilities::$request["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStreamSys[intval($rServer["id"])])) {
             if ($rStreamSys[intval($rServer["id"])]["parent_id"] <> 0) {
@@ -335,14 +335,14 @@ include "header.php";
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li>
-                                <a href="./movies.php<?php if (isset(ipTV_lib::$request["category"])) {
-                                    echo "?category=" . ipTV_lib::$request["category"];
+                                <a href="./movies.php<?php if (isset(CoreUtilities::$request["category"])) {
+                                    echo "?category=" . CoreUtilities::$request["category"];
                                 } ?>">
                                     <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
                                         <?= $_["view_movies"] ?>
                                     </button>
                                 </a>
-                                <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                     <a href="./movie.php?import">
                                         <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
                                             <?= $_["import_multiple"] ?>
@@ -360,7 +360,7 @@ include "header.php";
                     </div>
                     <h4 class="page-title"><?php if (isset($rMovie["id"])) {
                         echo $rMovie["stream_display_name"] . ' &nbsp;<button type="button" class="btn btn-outline-info waves-effect waves-light btn-xs" onClick="player(' . $rMovie["id"] . ', \'' . json_decode($rMovie["target_container"], true)[0] . '\');"><i class="mdi mdi-play"></i></button>';
-                    } elseif (isset(ipTV_lib::$request["import"])) {
+                    } elseif (isset(CoreUtilities::$request["import"])) {
                         echo $_["import_movies"];
                     } else {
                         echo $_["add_movie"];
@@ -439,12 +439,12 @@ include "header.php";
                 } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form<?php if (isset(ipTV_lib::$request["import"])) {
+                        <form<?php if (isset(CoreUtilities::$request["import"])) {
                             echo " enctype=\"multipart/form-data\"";
-                        } ?> action="./movie.php<?php if (isset(ipTV_lib::$request["import"])) {
+                        } ?> action="./movie.php<?php if (isset(CoreUtilities::$request["import"])) {
                               echo "?import";
-                          } elseif (isset(ipTV_lib::$request["id"])) {
-                              echo "?id=" . ipTV_lib::$request["id"];
+                          } elseif (isset(CoreUtilities::$request["id"])) {
+                              echo "?id=" . CoreUtilities::$request["id"];
                           } ?>" method="POST" id="stream_form" data-parsley-validate="">
                             <?php if (isset($rMovie["id"])) { ?>
                                 <input type="hidden" name="edit" value="<?= $rMovie["id"] ?>" />
@@ -462,7 +462,7 @@ include "header.php";
                                             <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                         </a>
                                     </li>
-                                    <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                    <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                         <li class="nav-item">
                                             <a href="#movie-information" data-toggle="tab"
                                                 class="nav-link rounded-0 pt-2 pb-2">
@@ -490,7 +490,7 @@ include "header.php";
                                     <div class="tab-pane" id="stream-details">
                                         <div class="row">
                                             <div class="col-12">
-                                                <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                                <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                                     <div class="form-group row mb-4">
                                                         <label class="col-md-4 col-form-label"
                                                             for="stream_display_name"><?= $_["movie_name"] ?></label>
@@ -823,7 +823,7 @@ include "header.php";
                                                             } ?>data-plugin="switchery"
                                                             class="js-switch" data-color="#039cfd" />
                                                     </div>
-                                                    <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                                    <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                                         <label class="col-md-4 col-form-label"
                                                             for="custom_sid"><?= $_["custom_channel_sid"] ?> <i
                                                                 data-toggle="tooltip" data-placement="top" title=""
@@ -852,7 +852,7 @@ include "header.php";
                                                         </div>
                                                     <?php } ?>
                                                 </div>
-                                                <?php if (!isset(ipTV_lib::$request["import"])) {
+                                                <?php if (!isset(CoreUtilities::$request["import"])) {
                                                     $rSubFile = "";
                                                     if (isset($rMovie)) {
                                                         $rSubData = json_decode($rMovie["movie_subtitles"], true);
@@ -909,7 +909,7 @@ include "header.php";
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
-                                                    <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                                    <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                                         <label class="col-md-4 col-form-label"
                                                             for="target_container"><?= $_["target_container"] ?>
                                                             <i data-toggle="tooltip" data-placement="top" title=""
@@ -1007,7 +1007,7 @@ include "header.php";
                                         <div class="col-md-8">
                                             <select id="server_id" class="form-control" data-toggle="select2">
                                                 <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                    <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
+                                                    <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                           echo " selected";
                                                       } ?>>
                                                         <?= htmlspecialchars($rServer["server_name"]) ?>
@@ -1028,7 +1028,7 @@ include "header.php";
                                             </div>
                                         </div>
                                     </div>
-                                    <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+                                    <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                                         <div class="form-group row mb-4">
                                             <label class="col-md-4 col-form-label"
                                                 for="search"><?= $_["search_directory"] ?></label>
@@ -1068,7 +1068,7 @@ include "header.php";
                                             </table>
                                         </div>
                                     </div>
-                                    <?php if (isset(ipTV_lib::$request["import"])) { ?>
+                                    <?php if (isset(CoreUtilities::$request["import"])) { ?>
                                         <div class="float-right">
                                             <input id="select_folder" type="button" class="btn btn-info"
                                                 value="<?= $_["select"] ?>" />
@@ -1345,7 +1345,7 @@ include "header.php";
         });
 
         $("#stream_form").submit(function (e) {
-            <?php if (!isset(ipTV_lib::$request["import"])) { ?>
+            <?php if (!isset(CoreUtilities::$request["import"])) { ?>
                 if ($("#stream_display_name").val().length == 0) {
                     e.preventDefault();
                     $.toast("<?= $_["enter_movie_name"] ?>");

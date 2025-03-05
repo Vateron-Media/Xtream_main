@@ -5,26 +5,26 @@ if ((!$rPermissions["is_reseller"]) or (!$rPermissions["create_sub_resellers"]))
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_user"])) {
-    if (isset(ipTV_lib::$request["edit"])) {
-        if (!hasPermissions("reg_user", ipTV_lib::$request["edit"])) {
+if (isset(CoreUtilities::$request["submit_user"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
+        if (!hasPermissions("reg_user", CoreUtilities::$request["edit"])) {
             exit;
         }
-        $rArray = getRegisteredUser(ipTV_lib::$request["edit"]);
+        $rArray = getRegisteredUser(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
         $rArray = array("username" => "", "date_registered" => time(), "password" => "", "email" => "", "reseller_dns" => "", "member_group_id" => 1, "verified" => 1, "credits" => 0, "notes" => "", "status" => 1, "owner_id" => intval($rUserInfo["id"]));
     }
-    if (((strlen(ipTV_lib::$request["username"]) == 0) or ((strlen(ipTV_lib::$request["password"]) == 0)) or ((strlen(ipTV_lib::$request["email"]) == 0))) and (!isset(ipTV_lib::$request["edit"]))) {
+    if (((strlen(CoreUtilities::$request["username"]) == 0) or ((strlen(CoreUtilities::$request["password"]) == 0)) or ((strlen(CoreUtilities::$request["email"]) == 0))) and (!isset(CoreUtilities::$request["edit"]))) {
         $_STATUS = 1;
     }
-    $rUser = ipTV_lib::$request;
-    if (!isset(ipTV_lib::$request["edit"])) {
+    $rUser = CoreUtilities::$request;
+    if (!isset(CoreUtilities::$request["edit"])) {
         $rCost = intval($rPermissions["create_sub_resellers_price"]);
         if ($rUserInfo["credits"] - $rCost < 0) {
             $_STATUS = 3;
         }
-        $ipTV_db_admin->query("SELECT `id` FROM `reg_users` WHERE `username` = '" . ipTV_lib::$request["username"] . "';");
+        $ipTV_db_admin->query("SELECT `id` FROM `reg_users` WHERE `username` = '" . CoreUtilities::$request["username"] . "';");
         if ($ipTV_db_admin->num_rows() > 0) {
             $_STATUS = 4;
         }
@@ -36,20 +36,20 @@ if (isset(ipTV_lib::$request["submit_user"])) {
         }
     }
     if (!isset($_STATUS)) {
-        if (!isset(ipTV_lib::$request["edit"])) {
-            $rArray["username"] = ipTV_lib::$request["username"];
+        if (!isset(CoreUtilities::$request["edit"])) {
+            $rArray["username"] = CoreUtilities::$request["username"];
         }
-        if (!strlen(ipTV_lib::$request["password"]) == 0) {
-            $rArray["password"] = cryptPassword(ipTV_lib::$request["password"]);
+        if (!strlen(CoreUtilities::$request["password"]) == 0) {
+            $rArray["password"] = cryptPassword(CoreUtilities::$request["password"]);
         }
-        if (isset(ipTV_lib::$request["email"])) {
-            $rArray["email"] = ipTV_lib::$request["email"];
+        if (isset(CoreUtilities::$request["email"])) {
+            $rArray["email"] = CoreUtilities::$request["email"];
         }
-        if (isset(ipTV_lib::$request["reseller_dns"])) {
-            $rArray["reseller_dns"] = ipTV_lib::$request["reseller_dns"];
+        if (isset(CoreUtilities::$request["reseller_dns"])) {
+            $rArray["reseller_dns"] = CoreUtilities::$request["reseller_dns"];
         }
-        if (isset(ipTV_lib::$request["notes"])) {
-            $rArray["notes"] = ipTV_lib::$request["notes"];
+        if (isset(CoreUtilities::$request["notes"])) {
+            $rArray["notes"] = CoreUtilities::$request["notes"];
         }
         $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
         foreach (array_values($rArray) as $rValue) {
@@ -63,21 +63,21 @@ if (isset(ipTV_lib::$request["submit_user"])) {
                 $rValues .= '\'' . $rValue . '\'';
             }
         }
-        if (isset(ipTV_lib::$request["edit"])) {
+        if (isset(CoreUtilities::$request["edit"])) {
             $rCols = "`id`," . $rCols;
-            $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+            $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
         }
         $rQuery = "REPLACE INTO `reg_users`(" . $rCols . ") VALUES(" . $rValues . ");";
         if ($ipTV_db_admin->query($rQuery)) {
-            if (isset(ipTV_lib::$request["edit"])) {
-                $rInsertID = intval(ipTV_lib::$request["edit"]);
+            if (isset(CoreUtilities::$request["edit"])) {
+                $rInsertID = intval(CoreUtilities::$request["edit"]);
             } else {
                 $rInsertID = $ipTV_db_admin->last_insert_id();
             }
             if (isset($rCost)) {
                 $rNewCredits = floatval($rUserInfo["credits"]) - $rCost;
                 $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = " . floatval($rNewCredits) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
-                $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rArray["username"] . "', '" . $rArray["password"] . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["new_subreseller"] . " [" . ipTV_lib::$request["username"] . "] Credits: <font color=\"green\">" . floatval($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
+                $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rArray["username"] . "', '" . $rArray["password"] . "', " . intval(time()) . ", '[<b>UserPanel</b>] -> " . $_["new_subreseller"] . " [" . CoreUtilities::$request["username"] . "] Credits: <font color=\"green\">" . floatval($rUserInfo["credits"]) . "</font> -> <font color=\"red\">" . $rNewCredits . "</font>');");
                 $rUserInfo["credits"] = $rNewCredits;
             }
             header("Location: ./subreseller.php?id=" . $rInsertID);
@@ -88,11 +88,11 @@ if (isset(ipTV_lib::$request["submit_user"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
-    if (!hasPermissions("reg_user", ipTV_lib::$request["id"])) {
+if (isset(CoreUtilities::$request["id"])) {
+    if (!hasPermissions("reg_user", CoreUtilities::$request["id"])) {
         exit;
     }
-    $rUser = getRegisteredUser(ipTV_lib::$request["id"]);
+    $rUser = getRegisteredUser(CoreUtilities::$request["id"]);
     if (!$rUser) {
         exit;
     }
@@ -169,10 +169,10 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./subreseller.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./subreseller.php<?php if (isset(CoreUtilities::$request["id"])) {
+                            echo "?id=" . CoreUtilities::$request["id"];
                         } ?>" method="POST" id="user_form" data-parsley-validate="">
-                            <?php if (isset(ipTV_lib::$request["id"])) { ?>
+                            <?php if (isset(CoreUtilities::$request["id"])) { ?>
                                 <input type="hidden" name="edit" value="<?= $rUser["id"] ?>" />
                             <?php } ?>
                             <div id="basicwizard">
@@ -183,7 +183,7 @@ include "header.php";
                                             <span class="d-none d-sm-inline"><?= $_["details"] ?></span>
                                         </a>
                                     </li>
-                                    <?php if (!isset(ipTV_lib::$request["id"])) { ?>
+                                    <?php if (!isset(CoreUtilities::$request["id"])) { ?>
                                         <li class="nav-item">
                                             <a href="#review-purchase" data-toggle="tab"
                                                 class="nav-link rounded-0 pt-2 pb-2">
@@ -201,7 +201,7 @@ include "header.php";
                                                     <label class="col-md-4 col-form-label"
                                                         for="username"><?= $_["username"] ?></label>
                                                     <div class="col-md-8">
-                                                        <input <?php if (isset(ipTV_lib::$request["id"])) {
+                                                        <input <?php if (isset(CoreUtilities::$request["id"])) {
                                                             echo "disabled ";
                                                         } ?>type="text" class="form-control"
                                                             id="username" name="username" value="<?php if (isset($rUser)) {
@@ -210,7 +210,7 @@ include "header.php";
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-4">
-                                                    <label class="col-md-4 col-form-label" for="password"><?php if (isset(ipTV_lib::$request["id"])) {
+                                                    <label class="col-md-4 col-form-label" for="password"><?php if (isset(CoreUtilities::$request["id"])) {
                                                         ?><?= $_["change"] ?>
                                                             <?php
                                                     } ?><?= $_["password"] ?></label>
@@ -257,7 +257,7 @@ include "header.php";
                                         </div> <!-- end row -->
                                         <ul class="list-inline wizard mb-0">
                                             <li class="next list-inline-item float-right">
-                                                <?php if (!isset(ipTV_lib::$request["id"])) { ?>
+                                                <?php if (!isset(CoreUtilities::$request["id"])) { ?>
                                                     <a href="javascript: void(0);"
                                                         class="btn btn-secondary"><?= $_["next"] ?></a>
                                                 <?php } else { ?>
@@ -267,7 +267,7 @@ include "header.php";
                                             </li>
                                         </ul>
                                     </div>
-                                    <?php if (!isset(ipTV_lib::$request["id"])) { ?>
+                                    <?php if (!isset(CoreUtilities::$request["id"])) { ?>
                                         <div class="tab-pane" id="review-purchase">
                                             <div class="row">
                                                 <div class="col-12">

@@ -16,17 +16,17 @@ if (intval($rSettings["login_flood"]) > 0) {
 
 if (!isset($_STATUS)) {
 	$rGA = new PHPGangsta_GoogleAuthenticator();
-	if ((isset(ipTV_lib::$request["username"])) && (isset(ipTV_lib::$request["password"]))) {
+	if ((isset(CoreUtilities::$request["username"])) && (isset(CoreUtilities::$request["password"]))) {
 		if ($rSettings["recaptcha_enable"]) {
-			$rResponse = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $rSettings["recaptcha_v2_secret_key"] . '&response=' . ipTV_lib::$request['g-recaptcha-response']), true);
+			$rResponse = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $rSettings["recaptcha_v2_secret_key"] . '&response=' . CoreUtilities::$request['g-recaptcha-response']), true);
 			if ((!$rResponse["success"]) && (!in_array("invalid-input-secret", $rResponse["error-codes"]))) {
 				$_STATUS = 5;
 			}
 		}
 		if (!isset($_STATUS)) {
-			$rUserInfo = doLogin(ipTV_lib::$request["username"], ipTV_lib::$request["password"]);
+			$rUserInfo = doLogin(CoreUtilities::$request["username"], CoreUtilities::$request["password"]);
 			if (isset($rUserInfo)) {
-				if ((strlen(ipTV_lib::$request["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
+				if ((strlen(CoreUtilities::$request["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
 					$rChangePass = md5($rUserInfo["password"]);
 				} else {
 					$rPermissions = getPermissions($rUserInfo["member_group_id"]);
@@ -47,19 +47,19 @@ if (!isset($_STATUS)) {
 				}
 			} else {
 				if (intval($rSettings["login_flood"]) > 0) {
-					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . getIP() . "');");
+					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . CoreUtilities::$request["username"] . "', '" . getIP() . "');");
 				}
 				$_STATUS = 0;
 			}
 		}
-	} elseif ((isset(ipTV_lib::$request["newpass"])) && (isset(ipTV_lib::$request["confirm"])) && (isset(ipTV_lib::$request["hash"])) && (isset(ipTV_lib::$request["change"]))) {
-		$rUserInfo = getRegisteredUserHash(ipTV_lib::$request["hash"]);
-		$rChangePass = ipTV_lib::$request["change"];
+	} elseif ((isset(CoreUtilities::$request["newpass"])) && (isset(CoreUtilities::$request["confirm"])) && (isset(CoreUtilities::$request["hash"])) && (isset(CoreUtilities::$request["change"]))) {
+		$rUserInfo = getRegisteredUserHash(CoreUtilities::$request["hash"]);
+		$rChangePass = CoreUtilities::$request["change"];
 		if (($rUserInfo) && ($rChangePass == md5($rUserInfo["password"]))) {
-			if ((ipTV_lib::$request["newpass"] == ipTV_lib::$request["confirm"]) && (strlen(ipTV_lib::$request["newpass"]) >= intval($rSettings["pass_length"]))) {
+			if ((CoreUtilities::$request["newpass"] == CoreUtilities::$request["confirm"]) && (strlen(CoreUtilities::$request["newpass"]) >= intval($rSettings["pass_length"]))) {
 				$rPermissions = getPermissions($rUserInfo["member_group_id"]);
 				if (($rPermissions) && (($rPermissions["is_admin"]) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . cryptPassword(ipTV_lib::$request["newpass"]) . "', `ip` = '" . getIP() . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . cryptPassword(CoreUtilities::$request["newpass"]) . "', `ip` = '" . getIP() . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
 					$_SESSION['hash'] = md5($rUserInfo["username"]);
 					$_SESSION['ip'] = getIP();
 					if ($rPermissions["is_admin"]) {
@@ -77,7 +77,7 @@ if (!isset($_STATUS)) {
 			}
 		} else {
 			if (intval($rSettings["login_flood"]) > 0) {
-				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . ipTV_lib::$request["username"] . "', '" . getIP() . "');");
+				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . CoreUtilities::$request["username"] . "', '" . getIP() . "');");
 			}
 			$_STATUS = 0;
 		}

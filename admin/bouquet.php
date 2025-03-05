@@ -5,23 +5,23 @@ if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_bouquet")) && 
     exit;
 }
 
-if (isset(ipTV_lib::$request["submit_bouquet"])) {
+if (isset(CoreUtilities::$request["submit_bouquet"])) {
     $rArray = array("bouquet_name" => "", "bouquet_channels" => array(), "bouquet_movies" => array(), "bouquet_radios" => array(), "bouquet_series" => array());
-    if (is_array(json_decode(ipTV_lib::$request["bouquet_data"], true))) {
-        $rBouquetData = json_decode(ipTV_lib::$request["bouquet_data"], true);
+    if (is_array(json_decode(CoreUtilities::$request["bouquet_data"], true))) {
+        $rBouquetData = json_decode(CoreUtilities::$request["bouquet_data"], true);
         $rArray["bouquet_channels"] = array_values($rBouquetData["stream"]);
         $rArray["bouquet_series"] = array_values($rBouquetData["series"]);
         $rArray["bouquet_movies"] = array_values($rBouquetData["vod"]);
         $rArray["bouquet_radios"] = array_values($rBouquetData["radios"]);
-    } elseif (isset(ipTV_lib::$request["edit"])) {
+    } elseif (isset(CoreUtilities::$request["edit"])) {
         echo $_["bouquet_data_not_transfered"];
         exit;
     }
-    if (!isset(ipTV_lib::$request["edit"])) {
+    if (!isset(CoreUtilities::$request["edit"])) {
         $ipTV_db_admin->query("SELECT MAX(`bouquet_order`) AS `max` FROM `bouquets`;");
         $rArray["bouquet_order"] = intval($ipTV_db_admin->get_row()["max"]) + 1;
     }
-    foreach (ipTV_lib::$request as $rKey => $rValue) {
+    foreach (CoreUtilities::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
             $rArray[$rKey] = $rValue;
         }
@@ -38,19 +38,19 @@ if (isset(ipTV_lib::$request["submit_bouquet"])) {
             $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if (isset(ipTV_lib::$request["edit"])) {
+    if (isset(CoreUtilities::$request["edit"])) {
         if (!hasPermissions("adv", "edit_bouquet")) {
             exit;
         }
         $rCols = "id," . $rCols;
-        $rValues = ipTV_lib::$request["edit"] . "," . $rValues;
+        $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
     } elseif (!hasPermissions("adv", "add_bouquet")) {
         exit;
     }
     $rQuery = "REPLACE INTO `bouquets`(" . $rCols . ") VALUES(" . $rValues . ");";
     if ($ipTV_db_admin->query($rQuery)) {
-        if (isset(ipTV_lib::$request["edit"])) {
-            $rInsertID = intval(ipTV_lib::$request["edit"]);
+        if (isset(CoreUtilities::$request["edit"])) {
+            $rInsertID = intval(CoreUtilities::$request["edit"]);
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
@@ -63,9 +63,9 @@ if (isset(ipTV_lib::$request["submit_bouquet"])) {
     }
 }
 
-if (isset(ipTV_lib::$request["id"])) {
+if (isset(CoreUtilities::$request["id"])) {
     $rBouquets = getBouquets();
-    $rBouquetArr = $rBouquets[ipTV_lib::$request["id"]];
+    $rBouquetArr = $rBouquets[CoreUtilities::$request["id"]];
     if ((!$rBouquetArr) or (!hasPermissions("adv", "edit_bouquet"))) {
         exit;
     }
@@ -118,8 +118,8 @@ include "header.php";
                 <?php } ?>
                 <div class="card">
                     <div class="card-body">
-                        <form action="./bouquet.php<?php if (isset(ipTV_lib::$request["id"])) {
-                            echo "?id=" . ipTV_lib::$request["id"];
+                        <form action="./bouquet.php<?php if (isset(CoreUtilities::$request["id"])) {
+                            echo "?id=" . CoreUtilities::$request["id"];
                         } ?>" method="POST" id="bouquet_form" data-parsley-validate="">
                             <?php if (isset($rBouquetArr)) { ?>
                                 <input type="hidden" name="edit" value="<?= $rBouquetArr["id"] ?>" />

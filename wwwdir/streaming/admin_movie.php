@@ -12,12 +12,12 @@ if (!in_array($user_ip, ipTV_streaming::getAllowedIPsAdmin(true))) {
     http_response_code(401);
     die;
 }
-if (empty(ipTV_lib::$request['stream']) || empty(ipTV_lib::$request['password']) || ipTV_lib::$settings['live_streaming_pass'] != ipTV_lib::$request['password']) {
+if (empty(CoreUtilities::$request['stream']) || empty(CoreUtilities::$request['password']) || CoreUtilities::$settings['live_streaming_pass'] != CoreUtilities::$request['password']) {
     http_response_code(401);
     die;
 }
 $f0ac6ad2b40669833242a10c23cad2e0 = false;
-$stream = pathinfo(ipTV_lib::$request['stream']);
+$stream = pathinfo(CoreUtilities::$request['stream']);
 $stream_id = intval($stream['filename']);
 $extension = $stream['extension'];
 $ipTV_db->query('
@@ -26,7 +26,7 @@ $ipTV_db->query('
                     INNER JOIN `streams_servers` t2 ON t2.stream_id = t1.id AND t2.pid IS NOT NULL AND t2.server_id = ?
                     INNER JOIN `streams_types` t3 ON t3.type_id = t1.type AND t3.type_key = \'movie\'
                     WHERE t1.`id` = ?', SERVER_ID, $stream_id);
-if (ipTV_lib::$settings['use_buffer'] == 0) {
+if (CoreUtilities::$settings['use_buffer'] == 0) {
     header('X-Accel-Buffering: no');
 }
 if ($ipTV_db->num_rows() > 0) {

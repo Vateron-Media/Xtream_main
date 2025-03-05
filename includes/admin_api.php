@@ -7,7 +7,7 @@ class API {
 	public static $rUserInfo = array();
 
 	public static function init($rUserID = null) {
-		self::$rSettings = ipTV_lib::getSettings();
+		self::$rSettings = CoreUtilities::getSettings();
 		self::$rServers = getStreamingServers();
 
 		if (!$rUserID && isset($_SESSION['hash'])) {
@@ -206,7 +206,7 @@ class API {
 				}
 			}
 
-			if (ipTV_lib::setSettings($rArray)) {
+			if (CoreUtilities::setSettings($rArray)) {
 				clearSettingsCache();
 				return array('status' => STATUS_SUCCESS);
 			} else {

@@ -88,7 +88,7 @@ include "header.php";
                                         <select id="movies_server" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
                                             <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
+                                                <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>>
                                                     <?= $rServer["server_name"] ?></option>
@@ -116,7 +116,7 @@ include "header.php";
                                         <select id="movies_server" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
                                             <?php foreach (getStreamingServers() as $rServer) { ?>
-                                                <option value="<?= $rServer["id"] ?>" <?php if ((isset(ipTV_lib::$request["server"])) && (ipTV_lib::$request["server"] == $rServer["id"])) {
+                                                <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>>
                                                     <?= $rServer["server_name"] ?></option>

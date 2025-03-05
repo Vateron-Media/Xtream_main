@@ -9,17 +9,17 @@ class SimpleXMLExtended extends SimpleXMLElement {
     }
 }
 $streaming_block = true;
-if (!isset(ipTV_lib::$request['username']) || !isset(ipTV_lib::$request['password'])) {
+if (!isset(CoreUtilities::$request['username']) || !isset(CoreUtilities::$request['password'])) {
     die('Missing parameters.');
 }
-$username = ipTV_lib::$request['username'];
-$password = ipTV_lib::$request['password'];
-$type = !empty(ipTV_lib::$request['type']) ? ipTV_lib::$request['type'] : null;
-$cat_id = !empty(ipTV_lib::$request['cat_id']) ? intval(ipTV_lib::$request['cat_id']) : null;
-$scat_id = !empty(ipTV_lib::$request['scat_id']) ? intval(ipTV_lib::$request['scat_id']) : null;
-$series_id = !empty(ipTV_lib::$request['series_id']) ? intval(ipTV_lib::$request['series_id']) : null;
-$id = !empty(ipTV_lib::$request['season']) ? intval(ipTV_lib::$request['season']) : null;
-$url = !empty($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] . '/' : ipTV_lib::$Servers[SERVER_ID]['site_url'];
+$username = CoreUtilities::$request['username'];
+$password = CoreUtilities::$request['password'];
+$type = !empty(CoreUtilities::$request['type']) ? CoreUtilities::$request['type'] : null;
+$cat_id = !empty(CoreUtilities::$request['cat_id']) ? intval(CoreUtilities::$request['cat_id']) : null;
+$scat_id = !empty(CoreUtilities::$request['scat_id']) ? intval(CoreUtilities::$request['scat_id']) : null;
+$series_id = !empty(CoreUtilities::$request['series_id']) ? intval(CoreUtilities::$request['series_id']) : null;
+$id = !empty(CoreUtilities::$request['season']) ? intval(CoreUtilities::$request['season']) : null;
+$url = !empty($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] . '/' : CoreUtilities::$Servers[SERVER_ID]['site_url'];
 ini_set('memory_limit', -1);
 if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, true, false)) {
     $streaming_block = false;
@@ -38,10 +38,10 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
     switch ($type) {
         case 'get_live_categories':
             $xml = new SimpleXMLExtended('<items/>');
-            $xml->addchild('playlist_name', 'Live [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+            $xml->addchild('playlist_name', 'Live [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
             $category = $xml->addchild('category');
             $category->addchild('category_id', 1);
-            $category->addchild('category_title', 'Live [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+            $category->addchild('category_title', 'Live [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
             $value = $xml->addchild('channel');
             $value->addchild('title', base64_encode('All'));
             $value->addchild('description', base64_encode('Live Streams Category [ ALL ]'));
@@ -64,10 +64,10 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
             break;
         case 'get_vod_categories':
             $xml = new SimpleXMLExtended('<items/>');
-            $xml->addchild('playlist_name', 'Movie [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+            $xml->addchild('playlist_name', 'Movie [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
             $category = $xml->addchild('category');
             $category->addchild('category_id', 1);
-            $category->addchild('category_title', 'Movie [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+            $category->addchild('category_title', 'Movie [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
             $value = $xml->addchild('channel');
             $value->addchild('title', base64_encode('All'));
             $value->addchild('description', base64_encode('Movie Streams Category [ ALL ]'));
@@ -90,10 +90,10 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
             break;
         case 'get_series_categories':
             $xml = new SimpleXMLExtended('<items/>');
-            $xml->addchild('playlist_name', 'SubCategory [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+            $xml->addchild('playlist_name', 'SubCategory [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
             $category = $xml->addchild('category');
             $category->addchild('category_id', 1);
-            $category->addchild('category_title', 'SubCategory [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+            $category->addchild('category_title', 'SubCategory [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
             $value = $xml->addchild('channel');
             $value->addchild('title', base64_encode('All'));
             $value->addchild('description', base64_encode('TV Series Category [ ALL ]'));
@@ -120,7 +120,7 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
                 $category = $xml->addchild('category');
                 $category->addchild('category_id', 1);
                 $category->addchild('category_title', "TV Series [ {$category_name} ]");
-                $series = ipTV_lib::seriesData();
+                $series = CoreUtilities::seriesData();
                 foreach ($series as $id => $serie) {
                     if (!in_array($id, $user_infos['series_ids'])) {
                         continue;
@@ -172,7 +172,7 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
             break;
         case 'get_series_streams':
             if (isset($series_id) && isset($id) && in_array($series_id, $user_infos['series_ids'])) {
-                $serie = ipTV_lib::seriesData()[$series_id];
+                $serie = CoreUtilities::seriesData()[$series_id];
                 $xml = new SimpleXMLExtended('<items/>');
                 $xml->addchild('playlist_name', "TV Series [ {$serie['title']} Season {$id} ]");
                 $category = $xml->addchild('category');
@@ -202,10 +202,10 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
             if (isset($cat_id) || is_null($cat_id)) {
                 $cat_id = is_null($cat_id) ? 0 : $cat_id;
                 $xml = new SimpleXMLExtended('<items/>');
-                $xml->addchild('playlist_name', 'Live [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+                $xml->addchild('playlist_name', 'Live [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
                 $category = $xml->addchild('category');
                 $category->addchild('category_id', 1);
-                $category->addchild('category_title', 'Live [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+                $category->addchild('category_title', 'Live [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
                 foreach ($live_streams as $user_info) {
                     if ($cat_id != 0) {
                         if ($cat_id != $user_info['category_id']) {
@@ -246,17 +246,17 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
             if (isset($cat_id) || is_null($cat_id)) {
                 $cat_id = is_null($cat_id) ? 0 : $cat_id;
                 $xml = new SimpleXMLExtended('<items/>');
-                $xml->addchild('playlist_name', 'Movie [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+                $xml->addchild('playlist_name', 'Movie [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
                 $category = $xml->addchild('category');
                 $category->addchild('category_id', 1);
-                $category->addchild('category_title', 'Movie [ ' . ipTV_lib::$settings['bouquet_name'] . ' ]');
+                $category->addchild('category_title', 'Movie [ ' . CoreUtilities::$settings['bouquet_name'] . ' ]');
                 foreach ($vod_streams as $user_info) {
                     if ($cat_id != 0) {
                         if ($cat_id != $user_info['category_id']) {
                             continue;
                         }
                     }
-                    $movie_properties = ipTV_lib::movieProperties($user_info['id']);
+                    $movie_properties = CoreUtilities::movieProperties($user_info['id']);
                     $value = $xml->addchild('channel');
                     $value->addchild('title', base64_encode($user_info['stream_display_name']));
                     $desc = '';
@@ -286,10 +286,10 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
             break;
         default:
             $xml = new SimpleXMLExtended('<items/>');
-            $xml->addchild('playlist_name', ipTV_lib::$settings['bouquet_name']);
+            $xml->addchild('playlist_name', CoreUtilities::$settings['bouquet_name']);
             $category = $xml->addchild('category');
             $category->addchild('category_id', 1);
-            $category->addchild('category_title', ipTV_lib::$settings['bouquet_name']);
+            $category->addchild('category_title', CoreUtilities::$settings['bouquet_name']);
             if (!empty($live_streams)) {
                 $value = $xml->addchild('channel');
                 $value->addchild('title', base64_encode('Live Streams'));
