@@ -5,7 +5,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XC_VM[Stream Logs]');
-        $rIdentifier = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+        $rIdentifier = CRONS_TMP_PATH . md5(CoreUtilities::generateUniqueCode() . __FILE__);
         CoreUtilities::checkCron($rIdentifier);
         $rLog = LOGS_TMP_PATH . 'stream_log.log';
         if (file_exists($rLog)) {

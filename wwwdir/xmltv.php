@@ -127,7 +127,7 @@ if ($rUserInfo) {
     }
 
     if (file_exists($rFile)) {
-        if (startDownload('epg', $rUserInfo, getmypid())) {
+        if (ipTV_streaming::startDownload('epg', $rUserInfo, getmypid())) {
             $downloading = true;
             header('Content-disposition: attachment; filename="' . $rFilename . '"');
 
@@ -151,7 +151,7 @@ if ($rUserInfo) {
 
     exit();
 } else {
-    checkBruteforce(null, null, $username);
+    CoreUtilities::checkBruteforce(null, null, $username);
     generateError('INVALID_CREDENTIALS');
 }
 
@@ -179,12 +179,12 @@ function shutdown() {
     global $downloading;
 
     if ($deny) {
-        checkFlood();
+        CoreUtilities::checkFlood();
     }
     if (is_object($ipTV_db)) {
         $ipTV_db->close_mysql();
     }
     if ($downloading) {
-        stopDownload('epg', $rUserInfo, getmypid());
+        ipTV_streaming::stopDownload('epg', $rUserInfo, getmypid());
     }
 }

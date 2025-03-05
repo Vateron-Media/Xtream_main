@@ -166,7 +166,7 @@ if ($rReqType == 'stb' && $rReqAction == 'handshake') {
 
     if ($rDevice) {
         $rDevice['token'] = strtoupper(md5(uniqid(rand(), true)));
-        $rVerifyToken = encryptData(igbinary_serialize(array('id' => $rDevice['mag_id'], 'token' => $rDevice['token'])), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+        $rVerifyToken = ipTV_streaming::encryptData(igbinary_serialize(array('id' => $rDevice['mag_id'], 'token' => $rDevice['token'])), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
         $rDevice['authenticated'] = false;
         $ipTV_db->query('UPDATE `mag_devices` SET `token` = ? WHERE `mag_id` = ?', $rDevice['token'], $rDevice['mag_id']);
         $ipTV_db->query('INSERT INTO `signals`(`server_id`, `cache`, `time`, `custom_data`) VALUES(?, 1, ?, ?);', SERVER_ID, time(), json_encode(array('type' => 'update_line', 'id' => $rDevice['user_id'])));
@@ -197,7 +197,7 @@ if ($rAuthHeader && preg_match('/Bearer\\s+(.*)$/i', $rAuthHeader, $rMatches)) {
 }
 
 if ($rAuthToken) {
-    $rVerify = igbinary_unserialize(decryptData($rAuthToken, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA));
+    $rVerify = igbinary_unserialize(ipTV_streaming::decryptData($rAuthToken, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA));
     $rDevice = (isset($rVerify['id']) ? getDevice($rVerify['id']) : array());
 
     if ($rDevice['token'] != $rVerify['token']) {
@@ -594,7 +594,7 @@ switch ($rReqType) {
 
                             if (empty($rStreamValue)) {
                                 $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStreamID . '/' . CoreUtilities::$settings['mag_container'] . '/' . $rDevice['token'];
-                                $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                $rToken = ipTV_streaming::encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                                 $rURL = $rPlayer . ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
                                 if (CoreUtilities::$settings['mag_keep_extension']) {
@@ -861,7 +861,7 @@ switch ($rReqType) {
                                     }
                             }
                             $rEncData = 'ministra::' . $rCommand['type'] . '/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rCommand['stream_id'] . '/' . $rCommand['target_container'] . '/' . $rDevice['token'];
-                            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                            $rToken = ipTV_streaming::encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                             $rURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
                             if (CoreUtilities::$settings['mag_keep_extension']) {
@@ -1024,7 +1024,7 @@ switch ($rReqType) {
                                     $rDuration = intval(($rRow['end'] - $rRow['start']) / 60);
                                     $rTitle = $rRow['title'];
                                     $rEncData = 'ministra::timeshift/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rDuration . '/' . $rProgramStart . '/' . $rStreamID . '/' . $rDevice['token'];
-                                    $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                                    $rToken = ipTV_streaming::encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                                     $rURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken . '?&osd_title=' . $rTitle;
 
                                     if (CoreUtilities::$settings['mag_keep_extension']) {
@@ -1049,7 +1049,7 @@ switch ($rReqType) {
                             $rStart = $rRow['start'];
                             $rDuration = intval(($rRow['end'] - $rRow['start']) / 60);
                             $rEncData = 'ministra::timeshift/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rDuration . '/' . $rStart . '/' . $rStreamID . '/' . $rDevice['token'];
-                            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                            $rToken = ipTV_streaming::encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                             $rURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
                             if (CoreUtilities::$settings['mag_keep_extension']) {
@@ -1065,7 +1065,7 @@ switch ($rReqType) {
                             $rChannelID = (!empty(CoreUtilities::$request['ch_id']) ? intval(CoreUtilities::$request['ch_id']) : 0);
                             $rStart = strtotime(date('Ymd-H'));
                             $rEncData = 'ministra::timeshift/' . $rDevice['username'] . '/' . $rDevice['password'] . '/60/' . $rStart . '/' . $rChannelID . '/' . $rDevice['token'];
-                            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                            $rToken = ipTV_streaming::encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                             $rURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken . ((CoreUtilities::$settings['mag_keep_extension'] ? '?ext=.ts' : '')) . ' position:' . (intval(date('i')) * 60 + intval(date('s'))) . ' media_len:' . (intval(date('H')) * 3600 + intval(date('i')) * 60 + intval(date('s')));
                             $rOutput['js'] = array('id' => 0, 'cmd' => $rPlayer . $rURL, 'storage_id' => '', 'load' => 0, 'error' => '');
 
@@ -1253,8 +1253,8 @@ switch ($rReqType) {
             }
         } else {
             if ($rReqType == 'stb' && $rReqAction == 'get_profile') {
-                checkBruteforce($rIP, $rMAC);
-                checkFlood();
+                CoreUtilities::checkBruteforce($rIP, $rMAC);
+                CoreUtilities::checkFlood();
             }
 
             exit();
@@ -1859,7 +1859,7 @@ function getStations($rCategoryID = null, $rFav = null, $rOrderBy = null) {
     foreach ($rStreams['streams'] as $rStream) {
         if (CoreUtilities::$settings['mag_security'] == 0) {
             $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStream['id'] . '/' . CoreUtilities::$settings['mag_container'] . '/' . $rDevice['token'];
-            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+            $rToken = ipTV_streaming::encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
             $rStreamURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
             if (CoreUtilities::$settings['mag_keep_extension']) {
@@ -1933,7 +1933,7 @@ function getStreams($rCategoryID = null, $rAll = false, $rFav = null, $rOrderBy 
 
         if (CoreUtilities::$settings['mag_security'] == 0) {
             $rEncData = 'ministra::live/' . $rDevice['username'] . '/' . $rDevice['password'] . '/' . $rStream['id'] . '/' . CoreUtilities::$settings['mag_container'] . '/' . $rDevice['token'];
-            $rToken = encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+            $rToken = ipTV_streaming::encryptData($rEncData, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
             $rStreamURL = ((CoreUtilities::$settings['mag_disable_ssl'] ? CoreUtilities::$Servers[SERVER_ID]['http_url'] : CoreUtilities::$Servers[SERVER_ID]['site_url'])) . 'play/' . $rToken;
 
             if (CoreUtilities::$settings['mag_keep_extension']) {

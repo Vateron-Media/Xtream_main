@@ -335,7 +335,7 @@ function queueSize($queue) {
 function shutdown() {
     global $ipTV_db, $streaming_block, $activity_id, $connection_speed_file, $user_info, $container_priority, $stream_id, $user_agent, $user_ip, $geoip_country_code, $external_device, $date;
     if ($streaming_block) {
-        CheckFlood();
+        CoreUtilities::checkFlood();
         http_response_code(401);
     }
     $ipTV_db->close_mysql();

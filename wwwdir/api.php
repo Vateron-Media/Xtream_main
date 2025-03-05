@@ -89,7 +89,7 @@ switch ($action) {
         break;
 
     case 'stats':
-        echo json_encode(getStats());
+        echo json_encode(ipTV_servers::getStats());
         exit();
 
     case 'getDiff':
@@ -257,6 +257,6 @@ function shutdown() {
     global $rDeny;
 
     if ($rDeny) {
-        checkFlood();
+        CoreUtilities::checkFlood();
     }
 }

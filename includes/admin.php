@@ -1802,7 +1802,7 @@ function downloadImage($rImage, $rType = null) {
             }
         }
         if (in_array(strtolower($rExt), array('jpg', 'jpeg', 'png'))) {
-            $rFilename = encryptData($rImage, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+            $rFilename = ipTV_streaming::encryptData($rImage, CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
             $rPrevPath = IMAGES_PATH . $rFilename . '.' . $rExt;
             if (file_exists($rPrevPath)) {
                 return 's:' . SERVER_ID . ':/images/' . $rFilename . '.' . $rExt;

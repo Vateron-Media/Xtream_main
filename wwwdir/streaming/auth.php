@@ -11,7 +11,7 @@ $rIsMag = false;
 $rMagToken = null;
 
 if (isset(CoreUtilities::$request['token']) && !ctype_xdigit(CoreUtilities::$request['token'])) {
-    $rData = explode('/', decryptData(CoreUtilities::$request['token'], CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA));
+    $rData = explode('/', ipTV_streaming::decryptData(CoreUtilities::$request['token'], CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA));
     CoreUtilities::$request['type'] = $rData[0];
     $rTypeSplit = explode('::', CoreUtilities::$request['type']);
 
@@ -169,7 +169,7 @@ if ($rExtension) {
 
     if ($rUserInfo) {
         $rDeny = false;
-        checkAuthFlood($rUserInfo, $IP);
+        CoreUtilities::checkAuthFlood($rUserInfo, $IP);
 
         if ($rUserInfo['is_e2']) {
             $rIsEnigma = true;
@@ -334,7 +334,7 @@ if ($rExtension) {
             ipTV_streaming::showVideoServer('show_expiring_video', 'expiring_video_path', $rExtension, $rUserInfo, $IP, $rCountryCode, $rUserInfo['con_isp_name'], SERVER_ID);
         }
     } else {
-        checkBruteforce($IP, null, $rUsername);
+        CoreUtilities::checkBruteforce($IP, null, $rUsername);
         ipTV_streaming::clientLog($streamID, 0, 'AUTH_FAILED', $IP);
         generateError('INVALID_CREDENTIALS');
     }
@@ -371,7 +371,7 @@ if ($rExtension) {
                         }
                         $tokenData = array('stream_id' => $streamID, 'username' => $rUserInfo['username'], 'password' => $rUserInfo['password'], 'extension' => $rExtension, 'pid' => $PID, 'channel_info' => array('redirect_id' => $rChannelInfo['redirect_id'], 'pid' => $rChannelInfo['pid'], 'on_demand' => $rChannelInfo['on_demand'], 'llod' => $rChannelInfo['llod'], 'monitor_pid' => $rChannelInfo['monitor_pid']), 'user_info' => array('id' => $rUserInfo['id'], 'max_connections' => $rUserInfo['max_connections'], 'pair_id' => $rUserInfo['pair_id'], 'con_isp_name' => $rUserInfo['con_isp_name'], 'is_restreamer' => $rUserInfo['is_restreamer']), 'external_device' => $rExternalDevice, 'activity_start' => $rActivityStart, 'country_code' => $rCountryCode, 'video_codec' => $rVideoCodec, 'uuid' => $rUUID);
 
-                        $rToken = encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                        $rToken = ipTV_streaming::encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
 
                         if (CoreUtilities::$settings['allow_cdn_access']) {
                             header('Location: ' . $rURL . '/sauth/' . $streamID . '.m3u8?token=' . $rToken);
@@ -390,7 +390,7 @@ if ($rExtension) {
                         }
                         $tokenData = array('stream_id' => $streamID, 'username' => $rUserInfo['username'], 'password' => $rUserInfo['password'], 'extension' => $rExtension, 'channel_info' => array('stream_id' => $rChannelInfo['stream_id'], 'redirect_id' => ($rChannelInfo['redirect_id'] ?: null), 'pid' => $rChannelInfo['pid'], 'on_demand' => $rChannelInfo['on_demand'], 'llod' => $rChannelInfo['llod'], 'monitor_pid' => $rChannelInfo['monitor_pid']), 'user_info' => array('id' => $rUserInfo['id'], 'max_connections' => $rUserInfo['max_connections'], 'pair_id' => $rUserInfo['pair_id'], 'con_isp_name' => $rUserInfo['con_isp_name'], 'is_restreamer' => $rUserInfo['is_restreamer']), 'pid' => $PID, 'prebuffer' => $rPrebuffer, 'country_code' => $rCountryCode, 'activity_start' => $rActivityStart, 'external_device' => $rExternalDevice, 'video_codec' => $rVideoCodec, 'uuid' => $rUUID);
 
-                        $rToken = encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                        $rToken = ipTV_streaming::encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
 
                         if (CoreUtilities::$settings['allow_cdn_access']) {
                             header('Location: ' . $rURL . '/sauth/' . $streamID . '.ts?token=' . $rToken);
@@ -415,7 +415,7 @@ if ($rExtension) {
 
                 $tokenData = array('stream_id' => $streamID, 'username' => $rUserInfo['username'], 'password' => $rUserInfo['password'], 'extension' => $rExtension, 'type' => $rType, 'pid' => $PID, 'channel_info' => array('stream_id' => $rChannelInfo['stream_id'], 'bitrate' => $rChannelInfo['bitrate'], 'target_container' => $rChannelInfo['target_container'], 'redirect_id' => $rChannelInfo['redirect_id'], 'pid' => $rChannelInfo['pid']), 'user_info' => array('id' => $rUserInfo['id'], 'max_connections' => $rUserInfo['max_connections'], 'pair_id' => $rUserInfo['pair_id'], 'con_isp_name' => $rUserInfo['con_isp_name'], 'is_restreamer' => $rUserInfo['is_restreamer']), 'country_code' => $rCountryCode, 'activity_start' => $rActivityStart, 'is_mag' => $rIsMag, 'uuid' => $rUUID, 'http_range' => (isset($_SERVER['HTTP_RANGE']) ? $_SERVER['HTTP_RANGE'] : null));
 
-                $rToken = encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                $rToken = ipTV_streaming::encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
 
                 if (CoreUtilities::$settings['allow_cdn_access']) {
                     header('Location: ' . $rURL . '/vauth/' . $streamID . '.' . $rExtension . '?token=' . $rToken);
@@ -444,7 +444,7 @@ if ($rExtension) {
                     }
 
                     $tokenData = array('stream' => $streamID, 'username' => $rUserInfo['username'], 'password' => $rUserInfo['password'], 'extension' => $rExtension, 'pid' => $PID, 'start' => $rStartDate, 'duration' => $rDuration, 'redirect_id' => $rRedirectID, 'user_info' => array('id' => $rUserInfo['id'], 'max_connections' => $rUserInfo['max_connections'], 'pair_line_info' => $rUserInfo['pair_line_info'], 'pair_id' => $rUserInfo['pair_id'], 'active_cons' => $rUserInfo['active_cons'], 'con_isp_name' => $rUserInfo['con_isp_name'], 'is_restreamer' => $rUserInfo['is_restreamer']), 'country_code' => $rCountryCode, 'activity_start' => $rActivityStart, 'uuid' => $rUUID, 'http_range' => (isset($_SERVER['HTTP_RANGE']) ? $_SERVER['HTTP_RANGE'] : null));
-                    $rToken = encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                    $rToken = ipTV_streaming::encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
 
                     if (CoreUtilities::$settings['allow_cdn_access']) {
                         header('Location: ' . $rURL . '/tsauth/' . $streamID . '_' . $rStartDate . '_' . $rDuration . '.m3u8?token=' . $rToken);
@@ -463,7 +463,7 @@ if ($rExtension) {
 
                     $rActivityStart = time();
                     $tokenData = array('stream' => $streamID, 'username' => $rUserInfo['username'], 'password' => $rUserInfo['password'], 'extension' => $rExtension, 'pid' => $PID, 'start' => $rStartDate, 'duration' => $rDuration, 'redirect_id' => $rRedirectID, 'user_info' => array('id' => $rUserInfo['id'], 'max_connections' => $rUserInfo['max_connections'], 'pair_line_info' => $rUserInfo['pair_line_info'], 'pair_id' => $rUserInfo['pair_id'], 'active_cons' => $rUserInfo['active_cons'], 'con_isp_name' => $rUserInfo['con_isp_name'], 'is_restreamer' => $rUserInfo['is_restreamer']), 'country_code' => $rCountryCode, 'activity_start' => $rActivityStart, 'uuid' => $rUUID, 'http_range' => (isset($_SERVER['HTTP_RANGE']) ? $_SERVER['HTTP_RANGE'] : null));
-                    $rToken = encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                    $rToken = ipTV_streaming::encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
 
                     if (CoreUtilities::$settings['allow_cdn_access']) {
                         header('Location: ' . $rURL . '/tsauth/' . $streamID . '_' . $rStartDate . '_' . $rDuration . '.ts?token=' . $rToken);
@@ -500,7 +500,7 @@ if ($rExtension) {
             $tokenData = array('stream' => $streamID, 'expires' => time() + 5);
 
             $rURL = ipTV_streaming::getStreamingURL($rStreamInfo['info']['vframes_server_id'], $rForceHTTP);
-            $rToken = encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+            $rToken = ipTV_streaming::encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
             header('Location: ' . $rURL . '/thauth/' . $rToken);
 
             exit();
@@ -511,7 +511,7 @@ if ($rExtension) {
             if ($rChannelInfo) {
                 $rURL = ipTV_streaming::getStreamingURL($rChannelInfo['redirect_id'], $rForceHTTP);
                 $tokenData = array('stream_id' => $streamID, 'sub_id' => (intval(CoreUtilities::$request['sid']) ?: 0), 'webvtt' => (intval(CoreUtilities::$request['webvtt']) ?: 0), 'expires' => time() + 5);
-                $rToken = encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
+                $rToken = ipTV_streaming::encryptData(json_encode($tokenData), CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA);
                 header('Location: ' . $rURL . '/subauth/' . $rToken);
 
                 exit();
@@ -540,7 +540,7 @@ function shutdown() {
     global $ipTV_db;
 
     if ($rDeny) {
-        checkFlood();
+        CoreUtilities::checkFlood();
     }
 
     if (is_object($ipTV_db)) {

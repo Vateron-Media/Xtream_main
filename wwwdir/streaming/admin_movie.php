@@ -112,7 +112,7 @@ if ($ipTV_db->num_rows() > 0) {
 function shutdown() {
     global $ipTV_db, $f0ac6ad2b40669833242a10c23cad2e0;
     if ($f0ac6ad2b40669833242a10c23cad2e0) {
-        CheckFlood();
+        CoreUtilities::checkFlood();
     }
     if (is_object($ipTV_db)) {
         $ipTV_db->close_mysql();

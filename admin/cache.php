@@ -221,7 +221,7 @@ if ((isset(CoreUtilities::$request["submit_settings"])) && (hasPermissions("adv"
                                                                         </td>
                                                                         <td class="text-center">
                                                                             <button type="button"
-                                                                                class="btn btn-info btn-xs waves-effect waves-light"><?= secondsToTime($rSettings['last_cache_taken']) ?></button>
+                                                                                class="btn btn-info btn-xs waves-effect waves-light"><?= CoreUtilities::secondsToTime($rSettings['last_cache_taken']) ?></button>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>

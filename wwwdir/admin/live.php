@@ -12,7 +12,7 @@ if (CoreUtilities::$settings['use_buffer'] == 0) {
 }
 
 if (!empty(CoreUtilities::$request['uitoken'])) {
-    $rTokenData = json_decode(decryptData(CoreUtilities::$request['uitoken'], CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA), true);
+    $rTokenData = json_decode(ipTV_streaming::decryptData(CoreUtilities::$request['uitoken'], CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA), true);
     CoreUtilities::$request['stream'] = $rTokenData['stream_id'];
     CoreUtilities::$request['extension'] = 'm3u8';
     $rIPMatch = (CoreUtilities::$settings['ip_subnet_match'] ? implode('.', array_slice(explode('.', $rTokenData['ip']), 0, -1)) == implode('.', array_slice(explode('.', ipTV_streaming::getUserIP()), 0, -1)) : $rTokenData['ip'] == ipTV_streaming::getUserIP());

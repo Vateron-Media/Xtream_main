@@ -8,7 +8,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         require str_replace('\\', '/', dirname($argv[0])) . '/../includes/admin.php';
         if (CoreUtilities::$Servers[SERVER_ID]['is_main']) {
             cli_set_process_title('XC_VM[Backups]');
-            $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+            $unique_id = CRONS_TMP_PATH . md5(CoreUtilities::generateUniqueCode() . __FILE__);
             CoreUtilities::checkCron($unique_id);
             $rForce = false;
             if (count($argv) > 1) {

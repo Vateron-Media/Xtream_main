@@ -357,20 +357,20 @@ class CoreUtilities {
             $http_port = ($server_protocol == 'http' ? intval($row['http_broadcast_port']) : intval($row['https_broadcast_port']));
             $row["server_protocol"] = $server_protocol;
             $row["request_port"] = $http_port;
-            $row["api_url"] = $server_protocol . "://" . $url . ":" . $http_port . "/api.php?password=" . CoreUtilities::$settings["live_streaming_pass"];
+            $row["api_url"] = $server_protocol . "://" . $url . ":" . $http_port . "/api.php?password=" . self::$settings["live_streaming_pass"];
             $row["site_url"] = $server_protocol . "://" . $url . ":" . $http_port . "/";
             $row['http_url'] = 'http://' . $url . ':' . intval($row['http_broadcast_port']) . '/';
             $row['https_url'] = 'https://' . $url . ':' . intval($row['https_broadcast_port']) . '/';
             $row["rtmp_server"] = "rtmp://" . $url . ":" . $row["rtmp_port"] . "/live/";
             $row["rtmp_mport_url"] = "http://127.0.0.1:31210/";
-            $row["api_url_ip"] = $server_protocol . "://" . $row["server_ip"] . ":" . $http_port . "/api.php?password=" . CoreUtilities::$settings["live_streaming_pass"];
+            $row["api_url_ip"] = $server_protocol . "://" . $row["server_ip"] . ":" . $http_port . "/api.php?password=" . self::$settings["live_streaming_pass"];
             $row["site_url_ip"] = $server_protocol . "://" . $row["server_ip"] . ":" . $http_port . "/";
             $row["geoip_countries"] = empty($row["geoip_countries"]) ? array() : json_decode($row["geoip_countries"], true);
             $row["isp_names"] = empty($row["isp_names"]) ? array() : json_decode($row["isp_names"], true);
             $row["server_online"] = in_array($row["status"], $server_status) && time() - $row["last_check_ago"] <= 90 || SERVER_ID == $row["id"] ? true : false;
             $row['domains'] = array('protocol' => $server_protocol, 'port' => $http_port, 'urls' => array_filter(array_map('escapeshellcmd', explode(',', $row['domain_name']))));
             $row['watchdog'] = json_decode($row['watchdog_data'], true);
-            
+
             unset($row["ssh_password"], $row["last_check_ago"]);
             $servers[intval($row["id"])] = $row;
         }
@@ -509,7 +509,7 @@ class CoreUtilities {
         $results = array();
         $mh = curl_multi_init();
         foreach ($urls as $key => $val) {
-            if (CoreUtilities::$Servers[$key]["server_online"]) {
+            if (self::$Servers[$key]["server_online"]) {
                 $ch[$key] = curl_init();
                 curl_setopt($ch[$key], CURLOPT_URL, $val["url"]);
                 curl_setopt($ch[$key], CURLOPT_RETURNTRANSFER, true);
@@ -789,5 +789,284 @@ class CoreUtilities {
         }
 
         return $stackTrace;
+    }
+
+    public static function getUptime() {
+        if (!(file_exists('/proc/uptime') && is_readable('/proc/uptime'))) {
+            return '';
+        }
+        $tmp = explode(' ', file_get_contents('/proc/uptime'));
+        return self::secondsToTime(intval($tmp[0]));
+    }
+
+    public static function secondsToTime($inputSeconds) {
+        $secondsInAMinute = 60;
+        $secondsInAnHour = 60 * $secondsInAMinute;
+        $secondsInADay = 24 * $secondsInAnHour;
+        $days = (int) floor($inputSeconds / $secondsInADay);
+        $hourSeconds = $inputSeconds % $secondsInADay;
+        $hours = (int) floor($hourSeconds / $secondsInAnHour);
+        $minuteSeconds = $hourSeconds % $secondsInAnHour;
+        $minutes = (int) floor($minuteSeconds / $secondsInAMinute);
+        $remainingSeconds = $minuteSeconds % $secondsInAMinute;
+        $seconds = (int) ceil($remainingSeconds);
+        $final = '';
+        if ($days != 0) {
+            $final .= "{$days}d ";
+        }
+        if ($hours != 0) {
+            $final .= "{$hours}h ";
+        }
+        if ($minutes != 0) {
+            $final .= "{$minutes}m ";
+        }
+        $final .= "{$seconds}s";
+        return $final;
+    }
+
+    /**
+     * Function to display the call stack, showing the sequence of function calls leading up to the current point in the code.
+     *
+     * This function retrieves the backtrace of the current execution point, excluding the current function call itself.
+     * It then iterates through the backtrace array, extracting information such as function name, file, and line number for each call.
+     * The extracted information is formatted and stored in an array, with each entry representing a function call in the call stack.
+     * Finally, the formatted call stack information is concatenated into a string with newline characters and returned.
+     *
+     * @return string The formatted call stack information as a string with each function call entry on a new line.
+     */
+    public static function display_call_stack() {
+        $trace = debug_backtrace();
+        $stack = array();
+
+        foreach ($trace as $index => $call) {
+            if ($index === 0) {
+                continue; // Skip the current function call
+            }
+
+            $function = isset($call['class']) ? $call['class'] . $call['type'] . $call['function'] : $call['function'];
+            $file = isset($call['file']) ? $call['file'] : '[internal function]';
+            $line = isset($call['line']) ? $call['line'] : '';
+
+            $stack[] = sprintf("#%d %s(%s:%d)", $index, $function, $file, $line);
+        }
+
+        return implode("\n", $stack) . "\n";
+    }
+
+    public static function generateUniqueCode() {
+        return substr(md5(self::$settings['live_streaming_pass']), 0, 15);
+    }
+
+    /**
+     * Checks for flood attempts based on IP address.
+     *
+     * This function checks for flood attempts based on the provided IP address.
+     * It handles the restriction of flood attempts based on settings and time intervals.
+     * If the IP is not provided, it retrieves the user's IP address.
+     * It excludes certain IPs from flood checking based on settings.
+     * It tracks and limits flood attempts within a specified time interval.
+     * If the number of requests exceeds the limit, it blocks the IP and logs the attack.
+     *
+     * @param string|null $rIP (Optional) The IP address to check for flood attempts.
+     * @return null|null Returns null if no flood attempt is detected, or a string indicating the block status if the IP is blocked.
+     */
+    public static function checkFlood($rIP = null) {
+        global $ipTV_db;
+        if (self::$settings['flood_limit'] == 0) {
+            return null;
+        }
+        if (!$rIP) {
+            $rIP = ipTV_streaming::getUserIP();
+        }
+        if (empty($rIP) || in_array($rIP, self::$allowedIPs)) {
+            return null;
+        }
+        $rFloodExclude = array_filter(array_unique(explode(',', self::$settings['flood_ips_exclude'])));
+        if (in_array($rIP, $rFloodExclude)) {
+            return null;
+        }
+        $rIPFile = FLOOD_TMP_PATH . $rIP;
+        if (!file_exists($rIPFile)) {
+            file_put_contents($rIPFile, json_encode(array('requests' => 0, 'last_request' => time())), LOCK_EX);
+        }
+        $rFloodRow = json_decode(file_get_contents($rIPFile), true);
+        $rFloodSeconds = self::$settings['flood_seconds'];
+        $rFloodLimit = self::$settings['flood_limit'];
+        if (time() - $rFloodRow['last_request'] <= $rFloodSeconds) {
+            $rFloodRow['requests']++;
+            if ($rFloodLimit > $rFloodRow['requests']) {
+                $rFloodRow['last_request'] = time();
+                file_put_contents($rIPFile, json_encode($rFloodRow), LOCK_EX);
+            } else {
+                if (!in_array($rIP, self::$blockedISP)) {
+                    if (self::$cached) {
+                        self::setSignal('flood_attack/' . $rIP, 1);
+                    } else {
+                        $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?,?,?)', $rIP, 'FLOOD ATTACK', time());
+                    }
+                    touch(FLOOD_TMP_PATH . 'block_' . $rIP);
+                }
+                self::unlinkFile($rIPFile);
+                return null;
+            }
+        } else {
+            $rFloodRow['requests'] = 0;
+            $rFloodRow['last_request'] = time();
+            file_put_contents($rIPFile, json_encode($rFloodRow), LOCK_EX);
+        }
+    }
+
+    /**
+     * Truncates the attempts based on a given frequency.
+     *
+     * This function takes an array of attempts and a frequency value as input.
+     * It checks if the time difference between the current time and each attempt time is less than the given frequency.
+     * If the $rList parameter is true, it iterates through the attempt times directly.
+     * If $rList is false, it iterates through the attempts as key-value pairs.
+     * It returns an array of allowed attempts that meet the frequency criteria.
+     *
+     * @param array $rAttempts An array of attempt times or key-value pairs.
+     * @param int $rFrequency The time frequency in seconds to compare against.
+     * @param bool $rList (Optional) If true, iterates through attempts directly; otherwise, iterates through key-value pairs.
+     * @return array An array containing the allowed attempts based on the frequency criteria.
+     */
+    function truncateAttempts($rAttempts, $rFrequency, $rList = false) {
+        $rAllowedAttempts = array();
+        $rTime = time();
+        if ($rList) {
+            foreach ($rAttempts as $rAttemptTime) {
+                if ($rTime - $rAttemptTime < $rFrequency) {
+                    $rAllowedAttempts[] = $rAttemptTime;
+                }
+            }
+        } else {
+            foreach ($rAttempts as $rAttempt => $rAttemptTime) {
+                if ($rTime - $rAttemptTime < $rFrequency) {
+                    $rAllowedAttempts[$rAttempt] = $rAttemptTime;
+                }
+            }
+        }
+        return $rAllowedAttempts;
+    }
+
+    /**
+     * Checks for authentication flood attempts for a user and IP address.
+     *
+     * This function checks for authentication flood attempts for a user and optional IP address.
+     * It verifies if the user is not a restreamer and checks the IP address against allowed IPs and exclusions.
+     * It tracks and limits authentication flood attempts based on settings and time intervals.
+     * If the number of attempts exceeds the limit, it blocks further attempts until a specified time.
+     *
+     * @param array $rUser The user information containing the ID and restreamer status.
+     * @param string|null $rIP (Optional) The IP address of the user.
+     * @return null|null Returns null if no authentication flood attempt is detected, or a string indicating the block status if the user is blocked.
+     */
+    public static function checkAuthFlood($rUser, $rIP = null) {
+        if (self::$settings['auth_flood_limit'] != 0) {
+            if (!$rUser['is_restreamer']) {
+                if (!$rIP) {
+                    $rIP = ipTV_streaming::getUserIP();
+                }
+                if (!(empty($rIP) || in_array($rIP, self::$allowedIPs))) {
+                    $rFloodExclude = array_filter(array_unique(explode(',', self::$settings['flood_ips_exclude'])));
+                    if (!in_array($rIP, $rFloodExclude)) {
+                        $rUserFile = FLOOD_TMP_PATH . intval($rUser['id']) . '_' . $rIP;
+                        if (file_exists($rUserFile)) {
+                            $rFloodRow = json_decode(file_get_contents($rUserFile), true);
+                            $rFloodSeconds = self::$settings['auth_flood_seconds'];
+                            $rFloodLimit = self::$settings['auth_flood_limit'];
+                            $rFloodRow['attempts'] = self::truncateAttempts($rFloodRow['attempts'], $rFloodSeconds, true);
+                            if ($rFloodLimit < count($rFloodRow['attempts'])) {
+                                $rFloodRow['block_until'] = time() + intval(self::$settings['auth_flood_seconds']);
+                            }
+                            $rFloodRow['attempts'][] = time();
+                            file_put_contents($rUserFile, json_encode($rFloodRow), LOCK_EX);
+                        } else {
+                            file_put_contents($rUserFile, json_encode(array('attempts' => array(time()))), LOCK_EX);
+                        }
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Checks for brute force attempts based on IP, MAC address, and username.
+     *
+     * This function checks for brute force attempts based on the provided IP, MAC address, and username.
+     * It handles the restriction of brute force attempts based on settings and frequency.
+     * If the IP is not provided, it retrieves the user's IP address.
+     * It excludes certain IPs from flood checking based on settings.
+     * It tracks and limits brute force attempts for MAC and username separately.
+     * If the number of attempts exceeds the limit, it blocks the IP and logs the attack.
+     *
+     * @param string|null $rIP (Optional) The IP address of the user.
+     * @param string|null $rMAC (Optional) The MAC address of the device.
+     * @param string|null $rUsername (Optional) The username of the user.
+     * @return null|null|string Returns null if no brute force attempt is detected, or a string indicating the type of attack if the IP is blocked.
+     */
+    public static function checkBruteforce($rIP = null, $rMAC = null, $rUsername = null) {
+        global $ipTV_db;
+        if ($rMAC || $rUsername) {
+            if (!($rMAC && self::$settings['bruteforce_mac_attempts'] == 0)) {
+                if (!($rUsername && self::$settings['bruteforce_username_attempts'] == 0)) {
+                    if (!$rIP) {
+                        $rIP = ipTV_streaming::getUserIP();
+                    }
+                    if (!(empty($rIP) || in_array($rIP, self::$allowedIPs))) {
+                        $rFloodExclude = array_filter(array_unique(explode(',', self::$settings['flood_ips_exclude'])));
+                        if (!in_array($rIP, $rFloodExclude)) {
+                            $rFloodType = (!is_null($rMAC) ? 'mac' : 'user');
+                            $rTerm = (!is_null($rMAC) ? $rMAC : $rUsername);
+                            $rIPFile = FLOOD_TMP_PATH . $rIP . '_' . $rFloodType;
+                            if (file_exists($rIPFile)) {
+                                $rFloodRow = json_decode(file_get_contents($rIPFile), true);
+                                $rFloodSeconds = intval(self::$settings['bruteforce_frequency']);
+                                $rFloodLimit = intval(self::$settings[array('mac' => 'bruteforce_mac_attempts', 'user' => 'bruteforce_username_attempts')[$rFloodType]]);
+                                $rFloodRow['attempts'] = self::truncateAttempts($rFloodRow['attempts'], $rFloodSeconds);
+                                if (!in_array($rTerm, array_keys($rFloodRow['attempts']))) {
+                                    $rFloodRow['attempts'][$rTerm] = time();
+                                    if ($rFloodLimit > count($rFloodRow['attempts'])) {
+                                        file_put_contents($rIPFile, json_encode($rFloodRow), LOCK_EX);
+                                    } else {
+                                        if (!in_array($rIP, self::$blockedIPs)) {
+                                            if (self::$cached) {
+                                                self::setSignal('bruteforce_attack/' . $rIP, 1);
+                                            } else {
+                                                $ipTV_db->query('INSERT INTO `blocked_ips` (`ip`,`notes`,`date`) VALUES(?,?,?)', $rIP, 'BRUTEFORCE ' . strtoupper($rFloodType) . ' ATTACK', time());
+                                            }
+                                            touch(FLOOD_TMP_PATH . 'block_' . $rIP);
+                                        }
+                                        self::unlinkFile($rIPFile);
+                                        return null;
+                                    }
+                                }
+                            } else {
+                                $rFloodRow = array('attempts' => array($rTerm => time()));
+                                file_put_contents($rIPFile, json_encode($rFloodRow), LOCK_EX);
+                            }
+                        } else {
+                            return null;
+                        }
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 }

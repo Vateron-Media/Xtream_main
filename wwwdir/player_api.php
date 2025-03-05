@@ -16,7 +16,7 @@ $rUserAgent = trim($_SERVER['HTTP_USER_AGENT']);
 $rOffset = (empty(CoreUtilities::$request['params']['offset']) ? 0 : abs(intval(CoreUtilities::$request['params']['offset'])));
 $rLimit = (empty(CoreUtilities::$request['params']['items_per_page']) ? 0 : abs(intval(CoreUtilities::$request['params']['items_per_page'])));
 $rNameTypes = array('live' => 'Live Streams', 'movie' => 'Movies', 'created_live' => 'Created Channels', 'radio_streams' => 'Radio Stations', 'series' => 'TV Series');
-$rDomainName = getDomainName();
+$rDomainName = ipTV_streaming::getDomainName();
 $rDomain = parse_url($rDomainName)['host'];
 $rValidActions = array(200 => 'get_vod_categories', 201 => 'get_live_categories', 202 => 'get_live_streams', 203 => 'get_vod_streams', 204 => 'get_series_info', 205 => 'get_short_epg', 206 => 'get_series_categories', 207 => 'get_simple_data_table', 208 => 'get_series', 209 => 'get_vod_info');
 $output = array();
@@ -76,7 +76,7 @@ if ($rUserInfo) {
         }
     }
 
-    checkAuthFlood($rUserInfo);
+    CoreUtilities::checkAuthFlood($rUserInfo);
     header('Content-Type: application/json');
 
     if (isset($_SERVER['HTTP_ORIGIN'])) {
@@ -204,7 +204,7 @@ if ($rUserInfo) {
             break;
 
         case 'get_vod_categories':
-            $rCategories = GetCategories('movie');
+            $rCategories = ipTV_streaming::GetCategories('movie');
 
             foreach ($rCategories as $rCategory) {
                 if (in_array($rCategory['id'], $rUserInfo['category_ids'])) {
@@ -215,7 +215,7 @@ if ($rUserInfo) {
             break;
 
         case 'get_series_categories':
-            $rCategories = GetCategories('series');
+            $rCategories = ipTV_streaming::GetCategories('series');
 
             foreach ($rCategories as $rCategory) {
                 if (in_array($rCategory['id'], $rUserInfo['category_ids'])) {
@@ -226,7 +226,7 @@ if ($rUserInfo) {
             break;
 
         case 'get_live_categories':
-            $rCategories = array_merge(GetCategories('live'), GetCategories('radio'));
+            $rCategories = array_merge(ipTV_streaming::GetCategories('live'), ipTV_streaming::GetCategories('radio'));
 
             foreach ($rCategories as $rCategory) {
                 if (in_array($rCategory['id'], $rUserInfo['category_ids'])) {
@@ -533,7 +533,7 @@ if ($rUserInfo) {
     }
     die(json_encode($output, JSON_PARTIAL_OUTPUT_ON_ERROR));
 } else {
-    checkBruteforce(null, null, $rUsername);
+    CoreUtilities::checkBruteforce(null, null, $rUsername);
     generateError('INVALID_CREDENTIALS');
 }
 
@@ -553,7 +553,7 @@ function shutdown() {
     global $ipTV_db;
 
     if ($rDeny) {
-        checkFlood();
+        CoreUtilities::checkFlood();
     }
 
     if (is_object($ipTV_db)) {

@@ -34,7 +34,7 @@ if (!empty(CoreUtilities::$request["username"]) && !empty(CoreUtilities::$reques
                     die;
                 }
             default:
-                $categories = GetCategories();
+                $categories = ipTV_streaming::GetCategories();
                 $url = empty(CoreUtilities::$Servers[SERVER_ID]["domain_name"]) ? CoreUtilities::$Servers[SERVER_ID]["server_ip"] : CoreUtilities::$Servers[SERVER_ID]["domain_name"];
                 $output["server_info"] = array("url" => $url, "port" => CoreUtilities::$Servers[SERVER_ID]["http_broadcast_port"], "https_port" => CoreUtilities::$Servers[SERVER_ID]["https_broadcast_port"], "server_protocol" => CoreUtilities::$Servers[SERVER_ID]["server_protocol"]);
                 $output["user_info"]["username"] = $result["username"];
@@ -71,7 +71,7 @@ if (!empty(CoreUtilities::$request["username"]) && !empty(CoreUtilities::$reques
                         $stream_icon = $movie_properties["movie_image"];
                     }
                     $tv_archive_duration = !empty($channel["tv_archive_server_id"]) && !empty($channel["tv_archive_duration"]) ? 1 : 0;
-                    $output["available_channels"][$channel["id"]] = array("num" => $channel["live"] == 1 ? $live_num : $movie_num, "name" => $channel["stream_display_name"], "stream_type" => $channel["type_key"], "type_name" => $channel["type_name"], "stream_id" => $channel["id"], "stream_icon" => $stream_icon, "epg_channel_id" => $channel["channel_id"], "added" => $channel["added"], "category_name" => $channel["category_name"], "category_id" => !empty($channel["category_id"]) ? $channel["category_id"] : null, "series_no" => null, "live" => $channel["live"], "container_extension" => GetContainerExtension($channel["target_container"]), "custom_sid" => $channel["custom_sid"], "tv_archive" => $tv_archive_duration, "direct_source" => !empty($channel["stream_source"]) ? json_decode($channel["stream_source"], true)[0] : "", "tv_archive_duration" => $tv_archive_duration ? $channel["tv_archive_duration"] : 0);
+                    $output["available_channels"][$channel["id"]] = array("num" => $channel["live"] == 1 ? $live_num : $movie_num, "name" => $channel["stream_display_name"], "stream_type" => $channel["type_key"], "type_name" => $channel["type_name"], "stream_id" => $channel["id"], "stream_icon" => $stream_icon, "epg_channel_id" => $channel["channel_id"], "added" => $channel["added"], "category_name" => $channel["category_name"], "category_id" => !empty($channel["category_id"]) ? $channel["category_id"] : null, "series_no" => null, "live" => $channel["live"], "container_extension" => ipTV_streaming::GetContainerExtension($channel["target_container"]), "custom_sid" => $channel["custom_sid"], "tv_archive" => $tv_archive_duration, "direct_source" => !empty($channel["stream_source"]) ? json_decode($channel["stream_source"], true)[0] : "", "tv_archive_duration" => $tv_archive_duration ? $channel["tv_archive_duration"] : 0);
                 }
         }
     } else {
@@ -81,5 +81,24 @@ if (!empty(CoreUtilities::$request["username"]) && !empty(CoreUtilities::$reques
     die;
 }
 if ($streaming_block) {
-    CheckFlood();
+    CoreUtilities::checkFlood();
+}
+
+function GetEPGStream($stream_id, $from_now = false) {
+    global $ipTV_db;
+    $ipTV_db->query('SELECT `type`,`movie_properties`,`epg_id`,`channel_id` FROM `streams` WHERE `id` = ?', $stream_id);
+    if ($ipTV_db->num_rows() > 0) {
+        $data = $ipTV_db->get_row();
+        if ($data['type'] != 2) {
+            if ($from_now) {
+                $ipTV_db->query('SELECT * FROM `epg_data` WHERE `epg_id` = ? AND `channel_id` = ? AND `end` >= ?', $data['epg_id'], $data['channel_id'], date('Y-m-d H:i:00'));
+            } else {
+                $ipTV_db->query('SELECT * FROM `epg_data` WHERE `epg_id` = ? AND `channel_id` = ?', $data['epg_id'], $data['channel_id']);
+            }
+            return $ipTV_db->get_rows();
+        } else {
+            return json_decode($data['movie_properties'], true);
+        }
+    }
+    return array();
 }

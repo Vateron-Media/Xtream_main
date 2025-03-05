@@ -15,7 +15,7 @@ $rVideoCodec = 'h264';
 
 if (isset($_GET['token'])) {
     $rOffset = 0;
-    $rTokenArray = explode('/', decryptData($_GET['token'], $rSettings['live_streaming_pass'], OPENSSL_EXTRA));
+    $rTokenArray = explode('/', ipTV_streaming::decryptData($_GET['token'], $rSettings['live_streaming_pass'], OPENSSL_EXTRA));
 
     if (count($rTokenArray) > 6) {
         if ($rTokenArray[0] == 'TS') {

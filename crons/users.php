@@ -6,7 +6,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XC_VM[Users Parser]');
-        $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+        $unique_id = CRONS_TMP_PATH . md5(CoreUtilities::generateUniqueCode() . __FILE__);
         CoreUtilities::checkCron($unique_id);
         $rSync = null;
         if (count($argv) == 2 && CoreUtilities::$Servers[SERVER_ID]['is_main']) {

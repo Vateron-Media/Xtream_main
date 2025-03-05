@@ -23,9 +23,9 @@ $url = !empty($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] . '/' :
 ini_set('memory_limit', -1);
 if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, true, false)) {
     $streaming_block = false;
-    $live_categories = GetCategories('live');
-    $vod_categories = GetCategories('movie');
-    $series_categories = GetCategories('series');
+    $live_categories = ipTV_streaming::GetCategories('live');
+    $vod_categories = ipTV_streaming::GetCategories('movie');
+    $series_categories = ipTV_streaming::GetCategories('series');
     $live_streams = array();
     $vod_streams = array();
     foreach ($user_infos['channels'] as $user_info) {
@@ -190,7 +190,7 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
                     if (!empty($serie['stream_source'])) {
                         $source = json_decode($serie['stream_source'], true)[0];
                     } else {
-                        $source = $url . "series/{$username}/{$password}/{$serie['stream_id']}." . GetContainerExtension($serie['target_container']);
+                        $source = $url . "series/{$username}/{$password}/{$serie['stream_id']}." . ipTV_streaming::GetContainerExtension($serie['target_container']);
                     }
                     $cdata_url->addCData($source);
                 }
@@ -276,7 +276,7 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
                     if (!empty($user_info['stream_source'])) {
                         $source = json_decode($user_info['stream_source'], true)[0];
                     } else {
-                        $source = $url . "movie/{$username}/{$password}/{$user_info['id']}." . GetContainerExtension($user_info['target_container']);
+                        $source = $url . "movie/{$username}/{$password}/{$user_info['id']}." . ipTV_streaming::GetContainerExtension($user_info['target_container']);
                     }
                     $cdata_url->addCData($source);
                 }
@@ -318,5 +318,5 @@ if ($user_infos = ipTV_streaming::getUserInfo(null, $username, $password, true, 
 }
 if ($streaming_block) {
     http_response_code(401);
-    CheckFlood();
+    CoreUtilities::checkFlood();
 }

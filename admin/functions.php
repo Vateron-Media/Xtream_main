@@ -20,7 +20,6 @@ $rTimeout = 60;             // Seconds Timeout for Functions & Requests
 $rSQLTimeout = 5;           // Max execution time for MySQL queries.
 
 require_once '/home/xc_vm/wwwdir/constants.php';
-require_once INCLUDES_PATH . 'functions.php';
 require_once INCLUDES_PATH . 'core_utilities.php';
 require_once INCLUDES_PATH . 'pdo.php';
 require_once INCLUDES_PATH . 'streaming.php';

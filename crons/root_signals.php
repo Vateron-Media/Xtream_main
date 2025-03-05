@@ -4,7 +4,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'root') {
     if ($argc) {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
-        $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+        $unique_id = CRONS_TMP_PATH . md5(CoreUtilities::generateUniqueCode() . __FILE__);
         CoreUtilities::checkCron($unique_id);
         shell_exec("sudo kill -9 `ps -ef | grep 'XC_VM[Signals]' | grep -v grep | awk '{print \$2}'`;");
         cli_set_process_title('XC_VM[Signals]');

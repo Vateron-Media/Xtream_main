@@ -17,7 +17,7 @@ $rPID = getmypid();
 $rIsMag = false;
 
 if (isset(CoreUtilities::$request['token'])) {
-    $rTokenData = json_decode(decryptData(CoreUtilities::$request['token'], CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA), true);
+    $rTokenData = json_decode(ipTV_streaming::decryptData(CoreUtilities::$request['token'], CoreUtilities::$settings['live_streaming_pass'], OPENSSL_EXTRA), true);
 
     if (!is_array($rTokenData)) {
         ipTV_streaming::clientLog(0, 0, "LB_TOKEN_INVALID", $IP);

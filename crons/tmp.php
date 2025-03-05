@@ -4,7 +4,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         set_time_limit(0);
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XC_VM[TMP]');
-        $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+        $unique_id = CRONS_TMP_PATH . md5(CoreUtilities::generateUniqueCode() . __FILE__);
         CoreUtilities::checkCron($unique_id);
         foreach (array(TMP_PATH, CRONS_TMP_PATH, DIVERGENCE_TMP_PATH, FLOOD_TMP_PATH, STALKER_TMP_PATH, SIGNALS_TMP_PATH, LOGS_TMP_PATH) as $tmpPath) {
             foreach (scandir($tmpPath) as $file) {

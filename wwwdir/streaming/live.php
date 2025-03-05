@@ -33,7 +33,7 @@ $PID = getmypid();
 $rStartTime = time();
 $rVideoCodec = null;
 if (isset(CoreUtilities::$request["token"])) {
-    $tokenData = json_decode(decryptData(CoreUtilities::$request["token"], CoreUtilities::$settings["live_streaming_pass"], OPENSSL_EXTRA), true);
+    $tokenData = json_decode(ipTV_streaming::decryptData(CoreUtilities::$request["token"], CoreUtilities::$settings["live_streaming_pass"], OPENSSL_EXTRA), true);
     if (!is_array($tokenData)) {
         ipTV_streaming::clientLog(0, 0, "LB_TOKEN_INVALID", $rIP);
         generateError("LB_TOKEN_INVALID");

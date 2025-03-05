@@ -2,7 +2,6 @@
 
 require_once 'constants.php';
 require_once INCLUDES_PATH . 'core_utilities.php';
-require_once INCLUDES_PATH . 'functions.php';
 require_once INCLUDES_PATH . 'pdo.php';
 require_once INCLUDES_PATH . 'streaming.php';
 require_once INCLUDES_PATH . 'stream.php';

@@ -9,7 +9,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
             $rStartup = true;
         }
         cli_set_process_title('XC_VM[Cache Builder]');
-        $unique_id = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+        $unique_id = CRONS_TMP_PATH . md5(CoreUtilities::generateUniqueCode() . __FILE__);
         CoreUtilities::checkCron($unique_id);
         loadCron();
     } else {

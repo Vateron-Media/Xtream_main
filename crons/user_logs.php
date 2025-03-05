@@ -7,7 +7,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
         register_shutdown_function('shutdown');
         require str_replace('\\', '/', dirname($argv[0])) . '/../wwwdir/init.php';
         cli_set_process_title('XC_VM Logs]');
-        $identifier = CRONS_TMP_PATH . md5(generateUniqueCode() . __FILE__);
+        $identifier = CRONS_TMP_PATH . md5(CoreUtilities::generateUniqueCode() . __FILE__);
         CoreUtilities::checkCron($identifier);
         loadCron();
     } else {

@@ -102,8 +102,8 @@ if ($rUserInfo) {
 
     $rDownloading = true;
 
-    if (startDownload('playlist', $rUserInfo, getmypid())) {
-        if (!generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey, $rTypeKey, $rNoCache)) {
+    if (ipTV_streaming::startDownload('playlist', $rUserInfo, getmypid())) {
+        if (!ipTV_streaming::generatePlaylist($rUserInfo, $rDeviceKey, $rOutputKey, $rTypeKey, $rNoCache)) {
             generateError('GENERATE_PLAYLIST_FAILED');
         }
     } else {
@@ -112,7 +112,7 @@ if ($rUserInfo) {
         exit();
     }
 } else {
-    checkBruteforce(null, null, $rUsername);
+    CoreUtilities::checkBruteforce(null, null, $rUsername);
     generateError('INVALID_CREDENTIALS');
 }
 
@@ -123,7 +123,7 @@ function shutdown() {
     global $rUserInfo;
 
     if ($rDeny) {
-        checkFlood();
+        CoreUtilities::checkFlood();
     }
 
     if (is_object($ipTV_db)) {
@@ -131,6 +131,6 @@ function shutdown() {
     }
 
     if ($rDownloading) {
-        stopDownload('playlist', $rUserInfo, getmypid());
+        ipTV_streaming::stopDownload('playlist', $rUserInfo, getmypid());
     }
 }

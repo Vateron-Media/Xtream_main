@@ -290,6 +290,7 @@ switch ($action) {
         }
         break;
 }
+
 function GetColumnNames($data) {
     global $ipTV_db;
     $query = '';
@@ -305,6 +306,7 @@ function GetColumnNames($data) {
     }
     return rtrim($query, ',');
 }
+
 function queryParse($data) {
     global $ipTV_db;
     $query = '(';
@@ -325,6 +327,16 @@ function queryParse($data) {
     $query = rtrim($query, ',') . ');';
     return $query;
 }
+
 function parseJson($string) {
     return is_array(json_decode($string, true));
+}
+
+function searchQuery($tableName, $columnName, $value) {
+    global $ipTV_db;
+    $ipTV_db->query("SELECT * FROM `{$tableName}` WHERE `{$columnName}` = ?", $value);
+    if ($ipTV_db->num_rows() > 0) {
+        return true;
+    }
+    return false;
 }
