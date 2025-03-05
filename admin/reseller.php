@@ -4,7 +4,6 @@ include "functions.php";
 if ($rPermissions["is_admin"]) {
     exit;
 }
-$rStatusArray = array(0 => "CLOSED", 1 => "OPEN", 2 => "RESPONDED", 3 => "READ");
 include "header.php";
 ?>
 <div class="wrapper">

@@ -241,11 +241,11 @@ include "header.php";
                                                             <select name="default_timezone" id="default_timezone"
                                                                 class="form-control text-center" data-toggle="select2">
                                                                 <?php
-                                                                foreach ($rTimeZones as $rValue => $rText) { ?>
-                                                                    <option <?php if ($rSettings["default_timezone"] == $rValue) {
+                                                                foreach (tz_list() as $rValue) { ?>
+                                                                    <option <?php if ($rSettings["default_timezone"] == $rValue['zone']) {
                                                                         echo "selected ";
-                                                                    } ?>value="<?= $rValue ?>">
-                                                                        <?= $rText
+                                                                    } ?>value="<?= $rValue['zone'] ?>">
+                                                                        <?= $rValue['zone'] . " " . $rValue['diff_from_GMT']
                                                                             ?>
                                                                     </option>
                                                                     <?php

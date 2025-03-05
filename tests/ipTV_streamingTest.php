@@ -144,8 +144,6 @@ class GetStreamingURLTest extends TestCase {
     }
 }
 
-
-
 class GetBouquetMapTest extends TestCase {
     private $testFilePath;
 
@@ -261,7 +259,6 @@ class MatchCIDRTest extends TestCase {
         $this->assertEquals(["range2", "192.168.2.0", "192.168.2.255"], $result);
     }
 }
-
 
 class CheckISPTest extends TestCase {
     protected function setUp(): void {
