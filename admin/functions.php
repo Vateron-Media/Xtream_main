@@ -43,8 +43,8 @@ CoreUtilities::$ipTV_db = &$ipTV_db_admin;
 CoreUtilities::init();
 ipTV_streaming::$ipTV_db = &$ipTV_db_admin;
 // ipTV_stream::$ipTV_db = &$ipTV_db_admin;
-API::$ipTV_db = &$ipTV_db_admin;
-API::init();
+AdminAPI::$ipTV_db = &$ipTV_db_admin;
+AdminAPI::init();
 CoreUtilities::connectRedis();
 
 $rProtocol = getProtocol();
@@ -119,5 +119,13 @@ if (getPageName() != 'setup') {
     if ($ipTV_db_admin->get_row()['count'] == 0) {
         header('Location: ./setup.php');
         exit();
+    }
+}
+
+function shutdown_admin() {
+    global $ipTV_db_admin;
+
+    if (is_object($ipTV_db_admin)) {
+        $ipTV_db_admin->close_mysql();
     }
 }

@@ -163,7 +163,7 @@ if (1 < $rICount) {
     if (checkPermissions($_PAGE)) {
         switch ($rAction) {
             case 'server_install':
-                $rReturn = API::installServer($rData);
+                $rReturn = AdminAPI::installServer($rData);
                 if ($rReturn['status'] == STATUS_SUCCESS) {
                     // echo json_encode(array('result' => true, 'location' => 'server_view?id=' . intval($rReturn['data']['insert_id']) . '&status=' . intval($rReturn['status']), 'status' => $rReturn['status']));
                     echo json_encode(array('result' => true, 'location' => 'servers', 'status' => $rReturn['status']));
@@ -172,7 +172,7 @@ if (1 < $rICount) {
                 echo json_encode(array('result' => false, 'data' => $rReturn['data'], 'status' => $rReturn['status']));
                 exit();
             case 'settings':
-                $rReturn = API::editSettings($rData);
+                $rReturn = AdminAPI::editSettings($rData);
                 if ($rReturn['status'] == STATUS_SUCCESS) {
                     echo json_encode(array('result' => true, 'location' => 'settings?status=' . intval($rReturn['status']), 'status' => $rReturn['status']));
                     exit();
@@ -181,7 +181,7 @@ if (1 < $rICount) {
                 exit();
             case 'server':
                 $rData['server_type'] = 0;
-                $rReturn = API::processServer($rData);
+                $rReturn = AdminAPI::processServer($rData);
                 if ($rReturn['status'] == STATUS_SUCCESS) {
                     echo json_encode(array('result' => true, 'location' => 'server?id=' . intval($rReturn['data']['insert_id']) . '&status=' . intval($rReturn['status']), 'status' => $rReturn['status']));
                     exit();
@@ -189,7 +189,7 @@ if (1 < $rICount) {
                 echo json_encode(array('result' => false, 'data' => $rReturn['data'], 'status' => $rReturn['status']));
                 exit();
             case 'stream':
-                $rReturn = API::processStream($rData);
+                $rReturn = AdminAPI::processStream($rData);
 
                 if ($rReturn['status'] == STATUS_SUCCESS) {
                     if (isset($_FILES['m3u_file'])) {

@@ -35,15 +35,6 @@ function getRegisteredUser($rID) {
     return null;
 }
 
-function shutdown_admin() {
-    global $ipTV_db_admin;
-
-    if (is_object($ipTV_db_admin)) {
-        $ipTV_db_admin->close_mysql();
-    }
-}
-
-
 function getRegisteredUserHash($rHash) {
     global $ipTV_db_admin;
     $ipTV_db_admin->query("SELECT * FROM `reg_users` WHERE MD5(`username`) = ? LIMIT 1;", $rHash);
@@ -170,7 +161,7 @@ function getFooter() {
     // Don't be a dick. Leave it.
     global $rPermissions, $rSettings, $_;
     if ($rPermissions["is_admin"]) {
-        return $_["copyright"] . " &copy; 2023 - " . date("Y") . " - <a href=\"https://github.com/Vateron-Media/Xtream_main\">Xtream UI</a> " . getScriptVer() . " - " . $_["free_forever"];
+        return $_["copyright"] . " &copy; 2023 - " . date("Y") . " - <a href=\"https://github.com/Vateron-Media/Xtream_main\">XC_VM</a> " . getScriptVer() . " - " . $_["free_forever"];
     } else {
         return $rSettings["copyrights_text"];
     }

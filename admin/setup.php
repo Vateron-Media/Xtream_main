@@ -275,7 +275,7 @@ if (!isset(CoreUtilities::$request['update'])) {
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="alert alert-secondary mb-4" role="alert">
-                                                    In order to migrate your database from a previous installation of Xtream UI,
+                                                    In order to migrate your database from a previous installation of XC_VM,
                                                     ZapX
                                                     (original and NXT), StreamCreed or generic Xtream Codes v2 installation, you
                                                     will

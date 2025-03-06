@@ -18,7 +18,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                 $rRequestsPerSecond = ($rLastRequests ? intval(floatval($rRequests - $rLastRequests) / (time() - $rLastRequestsTime)) : 0);
                 $rLastRequests = $rRequests;
                 $rLastRequestsTime = time();
-                $rStats = getStats();
+                $rStats = ipTV_servers::getStats();
                 if (!$rPrevStat) {
                     $rPrevStat = file('/proc/stat');
                     sleep(2);

@@ -1589,7 +1589,7 @@ class ipTV_streaming {
      * @param string $rData The input data to be encoded.
      * @return string The base64url encoded string.
      */
-    function base64url_encode($rData) {
+    public static function base64url_encode($rData) {
         return rtrim(strtr(base64_encode($rData), '+/', '-_'), '=');
     }
 
@@ -1601,7 +1601,7 @@ class ipTV_streaming {
      * @param string $rData The base64url encoded data to be decoded.
      * @return string|false The decoded original data, or false if decoding fails.
      */
-    function base64url_decode($rData) {
+    public static function base64url_decode($rData) {
         return base64_decode(strtr($rData, '-_', '+/'));
     }
 

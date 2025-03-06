@@ -93,7 +93,7 @@ class ipTV_servers {
      *
      * @return float The total CPU usage percentage across all CPU cores.
      */
-    function getTotalCPU() {
+    static function getTotalCPU() {
         $rTotalLoad = 0; // Initialize variable to store the total CPU load.
 
         // Execute `ps -Ao pid,pcpu` to retrieve the list of all processes and their CPU usage.
@@ -123,7 +123,7 @@ class ipTV_servers {
      *
      * @return int Total tmpfs usage in kilobytes.
      */
-    function getTotalTmpfs() {
+    static function getTotalTmpfs() {
         $rTotal = 0; // Initialize variable to store the total tmpfs usage.
 
         // Execute `df | grep tmpfs` to list tmpfs filesystems and their usage.
@@ -150,7 +150,7 @@ class ipTV_servers {
      *
      * @return array List of network interface names.
      */
-    function getNetworkInterfaces() {
+    static function getNetworkInterfaces() {
         $rReturn = array(); // Initialize an array to store network interfaces.
 
         // Execute `ls /sys/class/net/` to list network interfaces.
@@ -178,7 +178,7 @@ class ipTV_servers {
      * @param string|null $Interface The name of the network interface to filter (optional).
      * @return array Network statistics for the requested interface(s).
      */
-    function getNetwork($Interface = null) {
+    static function getNetwork($Interface = null) {
         $Return = array(); // Initialize an array to store network data.
 
         // Check if the network log file exists.
@@ -206,7 +206,7 @@ class ipTV_servers {
      *
      * @return array Parsed I/O statistics, or an empty array if retrieval fails.
      */
-    function getIO() {
+    static function getIO() {
         // Execute `iostat -o JSON -m` to get I/O statistics in JSON format.
         exec('iostat -o JSON -m', $rOutput, $rReturnVar);
 
@@ -227,7 +227,7 @@ class ipTV_servers {
      *
      * @return array An array containing GPU details such as driver version, CUDA version, and utilization.
      */
-    function getGPUInfo() {
+    static function getGPUInfo() {
         exec('nvidia-smi -x -q', $rOutput, $rReturnVar);
         $rOutput = implode('', $rOutput);
 
@@ -293,7 +293,7 @@ class ipTV_servers {
      *
      * @return array An array containing video device names and corresponding device paths.
      */
-    function getVideoDevices() {
+    static function getVideoDevices() {
         $rReturn = array();
         $rID = 0;
 
@@ -325,7 +325,7 @@ class ipTV_servers {
      *
      * @return array An array of detected audio devices.
      */
-    function getAudioDevices() {
+    static function getAudioDevices() {
         try {
             // Use `arecord -L` to list all available audio devices
             return array_filter(explode("\n", shell_exec('arecord -L | grep "hw:CARD="')));

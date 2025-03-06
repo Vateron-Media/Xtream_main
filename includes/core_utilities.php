@@ -930,7 +930,7 @@ class CoreUtilities {
      * @param bool $rList (Optional) If true, iterates through attempts directly; otherwise, iterates through key-value pairs.
      * @return array An array containing the allowed attempts based on the frequency criteria.
      */
-    function truncateAttempts($rAttempts, $rFrequency, $rList = false) {
+    public static function truncateAttempts($rAttempts, $rFrequency, $rList = false) {
         $rAllowedAttempts = array();
         $rTime = time();
         if ($rList) {

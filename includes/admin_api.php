@@ -1,6 +1,6 @@
 <?php
 
-class API {
+class AdminAPI {
 	public static $ipTV_db = null;
 	public static $rSettings = array();
 	public static $rServers = array();
