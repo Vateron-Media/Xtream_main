@@ -8,8 +8,8 @@ if ($ipTV_db_admin->get_row()['count'] > 0) {
     $rFirstRun = false;
     include 'session.php';
 
-    if (!checkPermissions()) {
-        goHome();
+    if (!UIController::checkPermissions()) {
+        UIController::goHome();
     }
 }
 
@@ -56,25 +56,25 @@ if (!isset(CoreUtilities::$request['update'])) {
                 CoreUtilities::$request['new'] = 1;
                 $_STATUS = STATUS_FAILURE;
             } else {
-                $rArray = verifyPostTable('reg_users');
+                $rArray = UIController::verifyPostTable('reg_users');
                 $rArray['username'] = CoreUtilities::$request['username'];
-                $rArray['password'] = cryptPassword(CoreUtilities::$request['password']);
+                $rArray['password'] = UIController::cryptPassword(CoreUtilities::$request['password']);
                 $rArray['email'] = CoreUtilities::$request['email'];
                 $rArray['last_login'] = time();
                 $rArray['date_registered'] = $rArray['last_login'];
                 $rArray['member_group_id'] = 1;
-                $rArray['ip'] = getIP();
+                $rArray['ip'] = UIController::getIP();
                 $rArray['last_login'] = time();
                 $rArray['status'] = 1;
-                $rPrepare = prepareArray($rArray);
+                $rPrepare = UIController::prepareArray($rArray);
                 $rQuery = 'INSERT INTO `reg_users`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
 
                 if ($ipTV_db_admin->query($rQuery, ...$rPrepare['data'])) {
                     $_SESSION['hash'] = $ipTV_db_admin->last_insert_id();
-                    $_SESSION['ip'] = getIP();
+                    $_SESSION['ip'] = UIController::getIP();
                     $_SESSION['verify'] = md5($rArray['username'] . '||' . $rArray['password']);
                     $ipTV_db_admin->query('UPDATE `servers` SET `server_ip` = ? WHERE `is_main` = 1 AND `server_type` = 0 LIMIT 1;', $_SERVER['SERVER_ADDR']);
-                    CoreUtilities::setSettings(["live_streaming_pass" => generateString(15)]);
+                    CoreUtilities::setSettings(["live_streaming_pass" => CoreUtilities::generateString(15)]);
 
                     header('Location: ./dashboard.php');
 
@@ -125,8 +125,8 @@ if (!isset(CoreUtilities::$request['update'])) {
         ksort($rCount);
     }
 
-    if (!($rFirstRun || checkPermissions())) {
-        goHome();
+    if (!($rFirstRun || UIController::checkPermissions())) {
+        UIController::goHome();
     }
 ?>
 
@@ -379,7 +379,7 @@ if (!isset(CoreUtilities::$request['update'])) {
         <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+                    <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
                 </div>
             </div>
         </footer>

@@ -1,11 +1,11 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "tprofiles"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "tprofiles"))) {
     exit;
 }
 
-$rProfiles = getTranscodeProfiles();
+$rProfiles = UIController::getTranscodeProfiles();
 include "header.php";
 ?>
 
@@ -15,7 +15,7 @@ include "header.php";
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <?php if (hasPermissions("adv", "tprofile")) { ?>
+                    <?php if (UIController::hasPermissions("adv", "tprofile")) { ?>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li>
@@ -56,7 +56,7 @@ include "header.php";
                                         <td><?= (strlen($rProfile["profile_options"]) > 100 ? substr($rProfile["profile_options"], 0, 100) . "..." : $rProfile["profile_options"]) ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php if (hasPermissions("adv", "edit_tprofile")) { ?>
+                                            <?php if (UIController::hasPermissions("adv", "edit_tprofile")) { ?>
                                                 <div class="btn-group">
                                                     <a href="./profile.php?id=<?= $rProfile["profile_id"] ?>"><button
                                                             type="button"
@@ -86,7 +86,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

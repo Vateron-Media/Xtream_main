@@ -1,12 +1,12 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_sedits"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "mass_sedits"))) {
     exit;
 }
 
-$rCategories = getCategories_admin("series");
-$rSeries = getSeries();
+$rCategories = UIController::getCategories_admin("series");
+$rSeries = UIController::getSeries();
 
 if (isset(CoreUtilities::$request["submit_stream"])) {
     $rArray = array();
@@ -108,7 +108,7 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
             }
         }
         if (isset(CoreUtilities::$request["reencode_on_edit"])) {
-            APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => array_values($rStreamIDs)));
+            UIController::APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => array_values($rStreamIDs)));
         }
         if (isset(CoreUtilities::$request["reprocess_tmdb"])) {
             foreach ($rStreamIDs as $rStreamID) {
@@ -122,7 +122,7 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
 }
 
 
-$rTranscodeProfiles = getTranscodeProfiles();
+$rTranscodeProfiles = UIController::getTranscodeProfiles();
 $rServerTree = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>" . $_["stream_source"] . "</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
 foreach ($rServers as $rServer) {
@@ -473,7 +473,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

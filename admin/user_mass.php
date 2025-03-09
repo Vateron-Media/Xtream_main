@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_edit_users"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "mass_edit_users"))) {
     exit;
 }
 
@@ -52,7 +52,7 @@ if (isset(CoreUtilities::$request["submit_user"])) {
                 $rArray["bouquet"][] = intval($rBouquet);
             }
         }
-        $rArray["bouquet"] = sortArrayByArray($rArray["bouquet"], array_keys(getBouquetOrder()));
+        $rArray["bouquet"] = UIController::sortArrayByArray($rArray["bouquet"], array_keys(UIController::getBouquetOrder()));
         $rArray["bouquet"] = "[" . join(",", $rArray["bouquet"]) . "]";
     }
     $rUsers = json_decode(CoreUtilities::$request["users_selected"], true);
@@ -80,7 +80,7 @@ if (isset(CoreUtilities::$request["submit_user"])) {
                 foreach ($ipTV_db_admin->get_rows() as $rRow) {
                     if (in_array($rRow["user_id"], $rUsers)) {
                         if (isset(CoreUtilities::$request["reset_stb_lock"])) {
-                            resetSTB($rRow["mag_id"]);
+                            UIController::resetSTB($rRow["mag_id"]);
                         }
                         if (isset(CoreUtilities::$request["c_lock_device"])) {
                             if (isset(CoreUtilities::$request["lock_device"])) {
@@ -175,7 +175,7 @@ include "header.php";
                                                 <select id="reseller_search" class="form-control" data-toggle="select2">
                                                     <option value="" selected><?= $_["all_resellers"] ?>
                                                     </option>
-                                                    <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
+                                                    <?php foreach (UIController::getRegisteredUsers() as $rRegisteredUser) { ?>
                                                         <option value="<?= $rRegisteredUser["id"] ?>">
                                                             <?= $rRegisteredUser["username"] ?>
                                                         </option>
@@ -250,7 +250,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <select disabled name="member_id" id="member_id"
                                                             class="form-control select2" data-toggle="select2">
-                                                            <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
+                                                            <?php foreach (UIController::getRegisteredUsers() as $rRegisteredUser) { ?>
                                                                 <option value="<?= $rRegisteredUser["id"] ?>">
                                                                     <?= $rRegisteredUser["username"] ?>
                                                                 </option>
@@ -440,7 +440,7 @@ include "header.php";
                                                     <label class="col-md-2 col-form-label"
                                                         for="access_output"><?= $_["access_output"] ?></label>
                                                     <div class="col-md-3">
-                                                        <?php foreach (getOutputs() as $rOutput) { ?>
+                                                        <?php foreach (UIController::getOutputs() as $rOutput) { ?>
                                                             <div class="checkbox form-check-inline">
                                                                 <input disabled class="output" data-size="large"
                                                                     type="checkbox"
@@ -510,7 +510,7 @@ include "header.php";
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                            <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                                 <tr>
                                                                     <td class="text-center">
                                                                         <?= $rBouquet["id"] ?>
@@ -566,7 +566,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

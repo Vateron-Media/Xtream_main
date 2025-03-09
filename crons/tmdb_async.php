@@ -3,9 +3,9 @@ include "/home/xc_vm/admin/functions.php";
 require INCLUDES_PATH . 'libs/tmdb.php';
 require INCLUDES_PATH . 'libs/tmdb_release.php';
 
-$rSettings = getSettings();
-$rCategories = getCategories_admin();
-$rServers = getStreamingServers();
+$rSettings = UIController::getSettings();
+$rCategories = UIController::getCategories_admin();
+$rServers = UIController::getStreamingServers();
 
 $ipTV_db_admin->query("SELECT * FROM `watch_settings`;");
 if ($ipTV_db_admin->num_rows() == 1) {
@@ -51,7 +51,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                     $rTitle = $rRelease->getTitle();
                     $rYear = $rRelease->getYear();
                 } else {
-                    $rRelease = tmdbParseRelease($rFilename);
+                    $rRelease = UIController::tmdbParseRelease($rFilename);
                     $rTitle = $rRelease["title"];
                     $rYear = $rRelease["year"];
                 }
@@ -82,8 +82,8 @@ if ($ipTV_db_admin->num_rows() > 0) {
                     $rThumb = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rMovieData['poster_path'];
                     $rBG = "https://image.tmdb.org/t/p/w1280" . $rMovieData['backdrop_path'];
                     if ($rSettings["download_images"]) {
-                        $rThumb = downloadImage($rThumb);
-                        $rBG = downloadImage($rBG);
+                        $rThumb = UIController::downloadImage($rThumb);
+                        $rBG = UIController::downloadImage($rBG);
                     } else {
                         sleep(1); // Avoid limits.
                     }
@@ -133,7 +133,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                     $rTitle = $rRelease->getTitle();
                     $rYear = $rRelease->getYear();
                 } else {
-                    $rRelease = tmdbParseRelease($rFilename);
+                    $rRelease = UIController::tmdbParseRelease($rFilename);
                     $rTitle = $rRelease["title"];
                     $rYear = $rRelease["year"];
                 }
@@ -166,13 +166,13 @@ if ($ipTV_db_admin->num_rows() > 0) {
                     $rSeriesArray["plot"] = $rShowData["overview"];
                     $rSeriesArray["rating"] = $rShowData["vote_average"];
                     $rSeriesArray["releaseDate"] = $rShowData["first_air_date"];
-                    $rSeriesArray["youtube_trailer"] = getSeriesTrailer($rShowData["id"]);
+                    $rSeriesArray["youtube_trailer"] = UIController::getSeriesTrailer($rShowData["id"]);
                     $rSeriesArray["cover"] = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rShowData['poster_path'];
                     $rSeriesArray["cover_big"] = $rSeriesArray["cover"];
                     $rSeriesArray["backdrop_path"] = array("https://image.tmdb.org/t/p/w1280" . $rShowData['backdrop_path']);
                     if ($rSettings["download_images"]) {
-                        $rSeriesArray["cover"] = downloadImage($rSeriesArray["cover"]);
-                        $rSeriesArray["backdrop_path"] = array(downloadImage($rSeriesArray["backdrop_path"][0]));
+                        $rSeriesArray["cover"] = UIController::downloadImage($rSeriesArray["cover"]);
+                        $rSeriesArray["backdrop_path"] = array(UIController::downloadImage($rSeriesArray["backdrop_path"][0]));
                     }
                     $rCast = array();
                     foreach ($rShowData["credits"]["cast"] as $rMember) {
@@ -212,7 +212,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                     $rQuery = "REPLACE INTO `series`(" . $ipTV_db_admin->escape($rCols) . ") VALUES(" . $rValues . ");";
                     $ipTV_db_admin->query($rQuery);
                     $rInsertID = $ipTV_db_admin->last_insert_id();
-                    updateSeries(intval($rInsertID));
+                    UIController::updateSeries(intval($rInsertID));
                     $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = 1 WHERE `id` = " . intval($rRow["id"]) . ";");
                 } else {
                     $ipTV_db_admin->query("UPDATE `tmdb_async` SET `status` = -1 WHERE `id` = " . intval($rRow["id"]) . ";");
@@ -241,7 +241,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                                     $rReleaseSeason = $rRelease->getSeason();
                                     $rReleaseEpisode = $rRelease->getEpisode();
                                 } else {
-                                    $rRelease = tmdbParseRelease($rFilename);
+                                    $rRelease = UIController::tmdbParseRelease($rFilename);
                                     $rReleaseSeason = $rRelease["season"];
                                     $rReleaseEpisode = $rRelease["episode"];
                                 }
@@ -257,7 +257,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                                         if (strlen($rEpisode["still_path"]) > 0) {
                                             $rImage = "https://image.tmdb.org/t/p/w300" . $rEpisode["still_path"];
                                             if ($rSettings["download_images"]) {
-                                                $rImage = downloadImage($rImage);
+                                                $rImage = UIController::downloadImage($rImage);
                                             }
                                         }
                                         if (strlen($rEpisode["name"]) > 0) {
@@ -295,5 +295,5 @@ if ($ipTV_db_admin->num_rows() > 0) {
 }
 
 foreach ($rUpdateSeries as $rSeriesID) {
-    updateSeries(intval($rSeriesID));
+    UIController::updateSeries(intval($rSeriesID));
 }

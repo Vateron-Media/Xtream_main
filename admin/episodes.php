@@ -4,7 +4,7 @@ include "functions.php";
 if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
     exit;
 }
-if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "episodes"))) {
+if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "episodes"))) {
     exit;
 }
 
@@ -46,7 +46,7 @@ include "header.php";
                                         </button>
                                     </a>
                                 <?php }
-                                if (hasPermissions("adv", "add_episode")) { ?>
+                                if (UIController::hasPermissions("adv", "add_episode")) { ?>
                                     <a href="#" onClick="showModal()">
                                         <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
                                             <i class="mdi mdi-plus"></i> <?= $_["add_episode"] ?>
@@ -75,7 +75,7 @@ include "header.php";
                                     <div class="col-md-3">
                                         <select id="episodes_server" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
-                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>><?= $rServer["server_name"] ?></option>
@@ -85,7 +85,7 @@ include "header.php";
                                     <div class="col-md-3">
                                         <select id="episodes_series" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_series"] ?></option>
-                                            <?php foreach (getSeriesList() as $rSeriesArr) { ?>
+                                            <?php foreach (UIController::getSeriesList() as $rSeriesArr) { ?>
                                                 <option value="<?= $rSeriesArr["id"] ?>" <?php if ((isset(CoreUtilities::$request["series"])) && (CoreUtilities::$request["series"] == $rSeriesArr["id"])) {
                                                       echo " selected";
                                                   } ?>><?= $rSeriesArr["title"] ?></option>
@@ -111,7 +111,7 @@ include "header.php";
                                     <div class="col-md-3">
                                         <select id="episodes_server" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
-                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>><?= $rServer["server_name"] ?></option>
@@ -121,7 +121,7 @@ include "header.php";
                                     <div class="col-md-3">
                                         <select id="episodes_series" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_series"] ?></option>
-                                            <?php foreach (getSeriesList() as $rSeriesArr) { ?>
+                                            <?php foreach (UIController::getSeriesList() as $rSeriesArr) { ?>
                                                 <option value="<?= $rSeriesArr["id"] ?>" <?php if ((isset(CoreUtilities::$request["series"])) && (CoreUtilities::$request["series"] == $rSeriesArr["id"])) {
                                                       echo " selected";
                                                   } ?>><?= $rSeriesArr["title"] ?></option>
@@ -187,7 +187,7 @@ include "header.php";
             <div class="modal-body">
                 <div class="col-12">
                     <select id="add_series_id" class="form-control" data-toggle="select2">
-                        <?php foreach (getSeriesList() as $rSeries) { ?>
+                        <?php foreach (UIController::getSeriesList() as $rSeries) { ?>
                             <option value="<?= $rSeries["id"] ?>"><?= $rSeries["title"] ?></option>
                         <?php } ?>
                     </select>
@@ -213,7 +213,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>
@@ -296,7 +296,7 @@ include "header.php";
         setTimeout(reloadStreams, 5000);
     }
 
-    function getSeries() {
+    function UIController::getSeries() {
         return $("#episodes_series").val();
     }
 
@@ -381,7 +381,7 @@ include "header.php";
                 url: "./table_search.php",
                 "data": function (d) {
                     d.id = "episodes";
-                    d.series = getSeries();
+                    d.series = UIController::getSeries();
                     d.server = getServer();
                     <?php if ($rPermissions["is_admin"]) { ?>
                         d.filter = getFilter();

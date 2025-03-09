@@ -3,12 +3,12 @@ include "session.php";
 include "functions.php";
 
 if ($rPermissions["is_admin"]) {
-    if (!hasPermissions("adv", "manage_e2")) {
+    if (!UIController::hasPermissions("adv", "manage_e2")) {
         exit;
     }
-    $rRegisteredUsers = getRegisteredUsers();
+    $rRegisteredUsers = UIController::getRegisteredUsers();
 } else {
-    $rRegisteredUsers = getRegisteredUsers($rUserInfo["id"]);
+    $rRegisteredUsers = UIController::getRegisteredUsers($rUserInfo["id"]);
 }
 
 include "header.php";
@@ -46,14 +46,14 @@ include "header.php";
                                         </button>
                                     </a>
                                 <?php }
-                                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "add_mag"))) { ?>
+                                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "add_mag"))) { ?>
                                     <a href="enigma.php">
                                         <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
                                             <i class="mdi mdi-link"></i> <?= $_["link_enigma"] ?>
                                         </button>
                                     </a>
                                 <?php }
-                                if ((hasPermissions("adv", "add_mag")) or ($rPermissions["is_reseller"])) { ?>
+                                if ((UIController::hasPermissions("adv", "add_mag")) or ($rPermissions["is_reseller"])) { ?>
                                     <a href="user<?php if ($rPermissions["is_reseller"]) {
                                         echo "_reseller";
                                     } ?>.php?e2">
@@ -146,7 +146,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

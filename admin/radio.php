@@ -1,19 +1,19 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_radio")) && (!hasPermissions("adv", "edit_radio")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_radio")) && (!UIController::hasPermissions("adv", "edit_radio")))) {
     exit;
 }
 
 if (isset(CoreUtilities::$request["submit_radio"])) {
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_radio")) {
+        if (!UIController::hasPermissions("adv", "edit_radio")) {
             exit;
         }
-        $rArray = getStream(CoreUtilities::$request["edit"]);
+        $rArray = UIController::getStream(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
-        if (!hasPermissions("adv", "add_radio")) {
+        if (!UIController::hasPermissions("adv", "add_radio")) {
             exit;
         }
         $rArray = array("type" => 4, "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 0, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "category_id" => array(), "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "custom_map" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 128000);
@@ -85,12 +85,12 @@ if (isset(CoreUtilities::$request["submit_radio"])) {
         foreach ($rImportStreams as $rImportStream) {
             $rImportArray = $rArray;
             if ($rSettings["download_images"]) {
-                $rImportStream["stream_icon"] = downloadImage($rImportStream["stream_icon"]);
+                $rImportStream["stream_icon"] = UIController::downloadImage($rImportStream["stream_icon"]);
             }
             foreach (array_keys($rImportStream) as $rKey) {
                 $rImportArray[$rKey] = $rImportStream[$rKey];
             }
-            $rImportArray["order"] = getNextOrder();
+            $rImportArray["order"] = UIController::getNextOrder();
             $rCols = "`" . implode('`,`', array_keys($rImportArray)) . "`";
             $rValues = null;
             foreach (array_values($rImportArray) as $rValue) {
@@ -170,15 +170,15 @@ if (isset(CoreUtilities::$request["submit_radio"])) {
                     $ipTV_db_admin->query("INSERT INTO `streams_options`(`stream_id`, `argument_id`, `value`) VALUES(" . intval($rInsertID) . ", 19, '" . CoreUtilities::$request["headers"] . "');");
                 }
                 if ($rRestart) {
-                    APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rInsertID)));
+                    UIController::APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rInsertID)));
                 }
                 foreach ($rBouquets as $rBouquet) {
-                    addToBouquet("radio", $rBouquet, $rInsertID);
+                    UIController::addToBouquet("radio", $rBouquet, $rInsertID);
                 }
                 if (isset(CoreUtilities::$request["edit"])) {
-                    foreach (getBouquets() as $rBouquet) {
+                    foreach (UIController::getBouquets() as $rBouquet) {
                         if (!in_array($rBouquet["id"], $rBouquets)) {
-                            removeFromBouquet("radio", $rBouquet["id"], $rInsertID);
+                            UIController::removeFromBouquet("radio", $rBouquet["id"], $rInsertID);
                         }
                     }
                 }
@@ -188,7 +188,7 @@ if (isset(CoreUtilities::$request["submit_radio"])) {
                 $rStation = $rArray;
             }
         }
-        scanBouquets();
+        UIController::scanBouquets();
         if (isset($rInsertID)) {
             header("Location: ./radio.php?id=" . $rInsertID);
             exit;
@@ -209,20 +209,20 @@ if (isset($_STATUS)) {
     }
 }
 
-$rStationArguments = getStreamArguments();
+$rStationArguments = UIController::getStreamArguments();
 $rServerTree = array();
 $rOnDemand = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>" . $_["stream_source"] . "</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
 if (isset(CoreUtilities::$request["id"])) {
-    if (!hasPermissions("adv", "edit_radio")) {
+    if (!UIController::hasPermissions("adv", "edit_radio")) {
         exit;
     }
-    $rStation = getStream(CoreUtilities::$request["id"]);
+    $rStation = UIController::getStream(CoreUtilities::$request["id"]);
     if ((!$rStation) or ($rStation["type"] <> 4)) {
         exit;
     }
-    $rStationOptions = getStreamOptions(CoreUtilities::$request["id"]);
-    $rStationSys = getStreamSys(CoreUtilities::$request["id"]);
+    $rStationOptions = UIController::getStreamOptions(CoreUtilities::$request["id"]);
+    $rStationSys = UIController::getStreamSys(CoreUtilities::$request["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStationSys[intval($rServer["id"])])) {
             if ($rStationSys[intval($rServer["id"])]["parent_id"] <> 0) {
@@ -241,7 +241,7 @@ if (isset(CoreUtilities::$request["id"])) {
         }
     }
 } else {
-    if (!hasPermissions("adv", "add_radio")) {
+    if (!UIController::hasPermissions("adv", "add_radio")) {
         exit;
     }
     foreach ($rServers as $rServer) {
@@ -397,7 +397,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <select name="category_id" id="category_id" class="form-control"
                                                             data-toggle="select2">
-                                                            <?php foreach (getCategories_admin("radio") as $rCategory) { ?>
+                                                            <?php foreach (UIController::getCategories_admin("radio") as $rCategory) { ?>
                                                                 <option <?php if (isset($rStation)) {
                                                                     if (intval($rStation["category_id"]) == intval($rCategory["id"])) {
                                                                         echo "selected ";
@@ -419,7 +419,7 @@ include "header.php";
                                                             class="form-control select2-multiple" data-toggle="select2"
                                                             multiple="multiple"
                                                             data-placeholder="<?= $_["choose"] ?>...">
-                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                            <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                                 <option <?php if (isset($rStation)) {
                                                                     if (in_array($rStation["id"], json_decode($rBouquet["bouquet_radios"], true))) {
                                                                         echo "selected ";
@@ -744,7 +744,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

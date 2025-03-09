@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "stream_tools"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "stream_tools"))) {
     exit;
 }
 
@@ -31,7 +31,7 @@ if (isset(CoreUtilities::$request["replace_dns"])) {
     $ipTV_db_admin->query("UPDATE `streams_servers` SET `server_id` = " . intval($rReplacement) . " WHERE `server_id` = " . intval($rSource) . ";");
     $_STATUS = 2;
 } elseif (isset(CoreUtilities::$request["cleanup_streams"])) {
-    $rStreams = getStreamList();
+    $rStreams = UIController::getStreamList();
     $rStreamArray = array();
     foreach ($rStreams as $rStream) {
         $rStreamArray[] = intval($rStream["id"]);
@@ -301,7 +301,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

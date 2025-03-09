@@ -9,7 +9,7 @@ CoreUtilities::$settings = CoreUtilities::getSettings(true);
 $rSettings = CoreUtilities::$settings;
 
 include "header.php";
-if ((isset(CoreUtilities::$request["submit_settings"])) && (hasPermissions("adv", "settings"))) {
+if ((isset(CoreUtilities::$request["submit_settings"])) && (UIController::hasPermissions("adv", "settings"))) {
     $rCheck = array(false, false);
     $rCron = array('*', '*', '*', '*', '*');
     $rPattern = '/^[0-9\\/*,-]+$/';
@@ -367,7 +367,7 @@ if ((isset(CoreUtilities::$request["submit_settings"])) && (hasPermissions("adv"
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

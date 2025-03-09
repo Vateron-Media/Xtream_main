@@ -11,7 +11,7 @@ if (!isset($_SESSION['hash'])) {
 $joinQuery = "";
 
 if (CoreUtilities::$request["id"] == "mag_events") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "manage_events"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "manage_events"))) {
         exit;
     }
     $table = 'mag_events';
@@ -32,7 +32,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
             'db' => 'mag_device_id',
             'dt' => 2,
             'formatter' => function ($d, $row) {
-                return base64_decode(getMag($d)["mac"]);
+                return base64_decode(UIController::getMag($d)["mac"]);
             }
         ),
         array('db' => 'event', 'dt' => 3),
@@ -47,7 +47,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
         )
     );
 } elseif (CoreUtilities::$request["id"] == "bouquets_streams") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "bouquets"))) {
         exit;
     }
     $table = 'streams';
@@ -79,7 +79,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
         )
     );
 } elseif (CoreUtilities::$request["id"] == "streams_short") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "categories"))) {
         exit;
     }
     $table = 'streams';
@@ -97,7 +97,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
             'db' => 'id',
             'dt' => 2,
             'formatter' => function ($d, $row) {
-                if (hasPermissions("adv", "edit_stream")) {
+                if (UIController::hasPermissions("adv", "edit_stream")) {
                     return '<a href="./stream.php?id=' . $d . '"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit Stream" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                 } else {
                     return '--';
@@ -106,7 +106,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
         )
     );
 } elseif (CoreUtilities::$request["id"] == "movies_short") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "categories"))) {
         exit;
     }
     $table = 'streams';
@@ -124,7 +124,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
             'db' => 'id',
             'dt' => 2,
             'formatter' => function ($d, $row) {
-                if (hasPermissions("adv", "edit_movie")) {
+                if (UIController::hasPermissions("adv", "edit_movie")) {
                     return '<a href="./movie.php?id=' . $d . '"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit Movie" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                 } else {
                     return '--';
@@ -133,7 +133,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
         )
     );
 } elseif (CoreUtilities::$request["id"] == "radios_short") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "categories"))) {
         exit;
     }
     $table = 'streams';
@@ -151,7 +151,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
             'db' => 'id',
             'dt' => 2,
             'formatter' => function ($d, $row) {
-                if (hasPermissions("adv", "edit_radio")) {
+                if (UIController::hasPermissions("adv", "edit_radio")) {
                     return '<a href="./radio.php?id=' . $d . '"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit Station" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                 } else {
                     return '--';
@@ -160,7 +160,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
         )
     );
 } elseif (CoreUtilities::$request["id"] == "series_short") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "categories"))) {
         exit;
     }
     $table = 'series';
@@ -178,7 +178,7 @@ if (CoreUtilities::$request["id"] == "mag_events") {
             'db' => 'id',
             'dt' => 2,
             'formatter' => function ($d, $row) {
-                if (hasPermissions("adv", "edit_series")) {
+                if (UIController::hasPermissions("adv", "edit_series")) {
                     return '<a href="./series.php?id=' . $d . '"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit Series" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                 } else {
                     return '--';
@@ -187,11 +187,11 @@ if (CoreUtilities::$request["id"] == "mag_events") {
         )
     );
 } elseif (CoreUtilities::$request["id"] == "vod_selection") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "create_channel"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "create_channel"))) {
         exit;
     }
-    $rCategoriesVOD = getCategories_admin("movie");
-    $rSeriesList = getEpisodeParents();
+    $rCategoriesVOD = UIController::getCategories_admin("movie");
+    $rSeriesList = UIController::getEpisodeParents();
     $table = 'streams';
     $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
@@ -237,10 +237,10 @@ if (CoreUtilities::$request["id"] == "mag_events") {
         )
     );
 } elseif (CoreUtilities::$request["id"] == "bouquets_vod") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "bouquets"))) {
         exit;
     }
-    $rCategoriesVOD = getCategories_admin("movie");
+    $rCategoriesVOD = UIController::getCategories_admin("movie");
     $table = 'streams';
     $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
@@ -270,10 +270,10 @@ if (CoreUtilities::$request["id"] == "mag_events") {
         )
     );
 } elseif (CoreUtilities::$request["id"] == "bouquets_series") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "bouquets"))) {
         exit;
     }
-    $rCategoriesVOD = getCategories_admin("series");
+    $rCategoriesVOD = UIController::getCategories_admin("series");
     $table = 'series';
     $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';
@@ -303,10 +303,10 @@ if (CoreUtilities::$request["id"] == "mag_events") {
         )
     );
 } elseif (CoreUtilities::$request["id"] == "bouquets_radios") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "bouquets"))) {
         exit;
     }
-    $rCategoriesVOD = getCategories_admin("radio");
+    $rCategoriesVOD = UIController::getCategories_admin("radio");
     $table = 'streams';
     $get = CoreUtilities::$request["id"];
     $primaryKey = 'id';

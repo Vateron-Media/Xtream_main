@@ -4,11 +4,11 @@ include "functions.php";
 if (!isset(CoreUtilities::$request["id"])) {
     exit;
 }
-if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_tickets"))) {
+if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "manage_tickets"))) {
     exit;
 }
 
-$rTicket = getTicket(CoreUtilities::$request["id"]);
+$rTicket = UIController::getTicket(CoreUtilities::$request["id"]);
 if (!$rTicket) {
     exit;
 }
@@ -26,7 +26,7 @@ include "header.php";
             <div class="col-12">
                 <div class="page-title-box">
                     <?php if ($rTicket["status"] > 0) {
-                        if (($rPermissions["is_reseller"]) or (hasPermissions("adv", "ticket"))) { ?>
+                        if (($rPermissions["is_reseller"]) or (UIController::hasPermissions("adv", "ticket"))) { ?>
                             <div class="page-title-right">
                                 <a href="./ticket.php?id=<?= $rTicket["id"] ?>">
                                     <button type="button" class="btn btn-sm btn-primary waves-effect waves-light float-right">
@@ -74,7 +74,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "tprofile"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "tprofile"))) {
     exit;
 }
 
@@ -76,7 +76,7 @@ if (isset(CoreUtilities::$request["submit_profile"])) {
         }
     }
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_tprofile")) {
+        if (!UIController::hasPermissions("adv", "edit_tprofile")) {
             exit;
         }
         $rCols = "profile_id," . $rCols;
@@ -99,8 +99,8 @@ if (isset(CoreUtilities::$request["submit_profile"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rProfileArr = getTranscodeProfile(CoreUtilities::$request["id"]);
-    if ((!$rProfileArr) or (!hasPermissions("adv", "edit_tprofile"))) {
+    $rProfileArr = UIController::getTranscodeProfile(CoreUtilities::$request["id"]);
+    if ((!$rProfileArr) or (!UIController::hasPermissions("adv", "edit_tprofile"))) {
         exit;
     }
     $rProfileOptions = json_decode($rProfileArr["profile_options"], true);
@@ -443,7 +443,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

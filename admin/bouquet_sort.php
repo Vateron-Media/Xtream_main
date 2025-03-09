@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_bouquet"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_bouquet"))) {
     exit;
 }
 
@@ -17,16 +17,16 @@ if (isset(CoreUtilities::$request["bouquet_order_array"])) {
         $rSort++;
     }
     if (isset(CoreUtilities::$request["confirmReplace"])) {
-        $rUsers = getUserBouquets();
+        $rUsers = UIController::getUserBouquets();
         foreach ($rUsers as $rUser) {
             $rBouquet = json_decode($rUser["bouquet"], true);
-            $rBouquet = sortArrayByArray($rBouquet, $rOrder);
+            $rBouquet = UIController::sortArrayByArray($rBouquet, $rOrder);
             $ipTV_db_admin->query("UPDATE `lines` SET `bouquet` = '[" . join(",", $rBouquet) . "]' WHERE `id` = " . intval($rUser["id"]) . ";");
         }
-        $rPackages = getPackages();
+        $rPackages = UIController::getPackages();
         foreach ($rPackages as $rPackage) {
             $rBouquet = json_decode($rPackage["bouquets"], true);
-            $rBouquet = sortArrayByArray($rBouquet, $rOrder);
+            $rBouquet = UIController::sortArrayByArray($rBouquet, $rOrder);
             $ipTV_db_admin->query("UPDATE `packages` SET `bouquets` = '[" . join(",", $rBouquet) . "]' WHERE `id` = " . intval($rPackage["id"]) . ";");
         }
         $_STATUS = 0;
@@ -81,7 +81,7 @@ include "header.php";
                                                 </p>
                                                 <select multiple id="sort_bouquet" class="form-control"
                                                     style="min-height:400px;">
-                                                    <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                    <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                         <option value="<?= $rBouquet["id"] ?>">
                                                             <?= $rBouquet["bouquet_name"] ?>
                                                         </option>
@@ -128,7 +128,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

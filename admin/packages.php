@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mng_packages"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "mng_packages"))) {
     exit;
 }
 
@@ -13,7 +13,7 @@ include "header.php";
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <?php if (hasPermissions("adv", "add_packages")) { ?>
+                    <?php if (UIController::hasPermissions("adv", "add_packages")) { ?>
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
                                     <li>
@@ -51,13 +51,13 @@ include "header.php";
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (getPackages() as $rPackage) { ?>
+                                <?php foreach (UIController::getPackages() as $rPackage) { ?>
                                         <tr id="package-<?= $rPackage["id"] ?>">
                                             <td class="text-center"><?= $rPackage["id"] ?></td>
                                             <td><?= $rPackage["package_name"] ?></td>
                                             <td class="text-center">
                                                 <div class="custom-control custom-checkbox mt-1">
-                                                    <input <?php if (!hasPermissions("adv", "edit_package")) {
+                                                    <input <?php if (!UIController::hasPermissions("adv", "edit_package")) {
                                                         echo "disabled ";
                                                     } ?>data-id="<?= $rPackage["id"] ?>" data-name="is_trial"
                                                         type="checkbox" class="custom-control-input"
@@ -70,7 +70,7 @@ include "header.php";
                                             </td>
                                             <td class="text-center">
                                                 <div class="custom-control custom-checkbox mt-1">
-                                                    <input <?php if (!hasPermissions("adv", "edit_package")) {
+                                                    <input <?php if (!UIController::hasPermissions("adv", "edit_package")) {
                                                         echo "disabled ";
                                                     } ?>data-id="<?= $rPackage["id"] ?>" data-name="is_official"
                                                         type="checkbox" class="custom-control-input"
@@ -83,7 +83,7 @@ include "header.php";
                                             </td>
                                             <td class="text-center">
                                                 <div class="custom-control custom-checkbox mt-1">
-                                                    <input <?php if (!hasPermissions("adv", "edit_package")) {
+                                                    <input <?php if (!UIController::hasPermissions("adv", "edit_package")) {
                                                         echo "disabled ";
                                                     } ?>data-id="<?= $rPackage["id"] ?>" data-name="can_gen_mag"
                                                         type="checkbox" class="custom-control-input"
@@ -96,7 +96,7 @@ include "header.php";
                                             </td>
                                             <td class="text-center">
                                                 <div class="custom-control custom-checkbox mt-1">
-                                                    <input <?php if (!hasPermissions("adv", "edit_package")) {
+                                                    <input <?php if (!UIController::hasPermissions("adv", "edit_package")) {
                                                         echo "disabled ";
                                                     } ?>data-id="<?= $rPackage["id"] ?>" data-name="only_mag"
                                                         type="checkbox" class="custom-control-input"
@@ -109,7 +109,7 @@ include "header.php";
                                             </td>
                                             <td class="text-center">
                                                 <div class="custom-control custom-checkbox mt-1">
-                                                    <input <?php if (!hasPermissions("adv", "edit_package")) {
+                                                    <input <?php if (!UIController::hasPermissions("adv", "edit_package")) {
                                                         echo "disabled ";
                                                     } ?>data-id="<?= $rPackage["id"] ?>" data-name="can_gen_e2"
                                                         type="checkbox" class="custom-control-input"
@@ -122,7 +122,7 @@ include "header.php";
                                             </td>
                                             <td class="text-center">
                                                 <div class="custom-control custom-checkbox mt-1">
-                                                    <input <?php if (!hasPermissions("adv", "edit_package")) {
+                                                    <input <?php if (!UIController::hasPermissions("adv", "edit_package")) {
                                                         echo "disabled ";
                                                     } ?>data-id="<?= $rPackage["id"] ?>" data-name="only_e2" type="checkbox"
                                                         class="custom-control-input" id="only_e2_<?= $rPackage["id"] ?>"
@@ -134,7 +134,7 @@ include "header.php";
                                                 </div>
                                             </td>
                                             <td class="text-center">
-                                                <?php if (hasPermissions("adv", "edit_package")) { ?>
+                                                <?php if (UIController::hasPermissions("adv", "edit_package")) { ?>
                                                         <div class="btn-group">
                                                             <a href="./package.php?id=<?= $rPackage["id"] ?>"><button type="button"
                                                                     data-toggle="tooltip" data-placement="top" title=""
@@ -167,7 +167,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>
@@ -210,7 +210,7 @@ include "header.php";
             }
         });
     }
-    <?php if (hasPermissions("adv", "edit_package")) { ?>
+    <?php if (UIController::hasPermissions("adv", "edit_package")) { ?>
             $('input:checkbox').change(function () {
                 $.getJSON("./api.php?action=package&sub=" + $(this).data("name") + "&package_id=" + $(this).data("id") + "&value=" + ($(this).is(":checked") ? 1 : 0), function (data) {
                     $.toast("<?= $_["package_modified"] ?>");

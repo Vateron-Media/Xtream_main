@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "panel_errors"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "panel_errors"))) {
     exit;
 }
 
@@ -50,7 +50,7 @@ include "header.php";
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (getPanelLogs() as $rPlog) {
+                                <?php foreach (UIController::getPanelLogs() as $rPlog) {
                                     ?>
                                     <tr>
                                         <td class="text-center"><?= $rPlog["id"] ?> </td>
@@ -109,7 +109,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

@@ -5,7 +5,7 @@ $rICount = count(get_included_files());
 include 'session.php';
 include 'functions.php';
 
-$_PAGE = getPageName();
+$_PAGE = UIController::getPageName();
 $_ERRORS = array();
 
 foreach (get_defined_constants(true)['user'] as $rKey => $rValue) {
@@ -160,7 +160,7 @@ if (1 < $rICount) {
         echo json_encode(array('result' => false));
         exit();
     }
-    if (checkPermissions($_PAGE)) {
+    if (UIController::checkPermissions($_PAGE)) {
         switch ($rAction) {
             case 'server_install':
                 $rReturn = AdminAPI::installServer($rData);

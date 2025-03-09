@@ -11,7 +11,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
 		}
 	}
 
-	$rSettings = getSettings();
+	$rSettings = UIController::getSettings();
 
 	$rTimeout = 3000;       // Limit by time.
 	set_time_limit($rTimeout);
@@ -22,13 +22,13 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
 
 	if (($rPeriod >= 60) && ($rSettings["dashboard_stats"])) {
 		$ipTV_db_admin->query("SELECT MIN(`date_start`) AS `min` FROM `user_activity`;");
-		$rMin = roundUpToAny(intval($ipTV_db_admin->get_row()["min"]), $rPeriod);
+		$rMin = UIController::roundUpToAny(intval($ipTV_db_admin->get_row()["min"]), $rPeriod);
 		$ipTV_db_admin->query("SELECT MAX(`time`) AS `max` FROM `dashboard_statistics` WHERE `type` IN ('users', 'conns');");
-		$rMinProc = roundUpToAny(intval($ipTV_db_admin->get_row()["max"]), $rPeriod);
+		$rMinProc = UIController::roundUpToAny(intval($ipTV_db_admin->get_row()["max"]), $rPeriod);
 		if ($rMinProc > $rMin) {
 			$rMin = $rMinProc - ($rPeriod * 3);
 		}
-		$rRange = range($rMin, roundUpToAny(time(), $rPeriod), $rPeriod);
+		$rRange = range($rMin, UIController::roundUpToAny(time(), $rPeriod), $rPeriod);
 		foreach ($rRange as $rDate) {
 			$rCount = 0;
 			$ipTV_db_admin->query("SELECT COUNT(`activity_id`) AS `count` FROM `user_activity` WHERE `date_start` <= " . intval($rDate) . " AND `date_end` >= " . intval($rDate) . ";");

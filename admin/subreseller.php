@@ -7,10 +7,10 @@ if ((!$rPermissions["is_reseller"]) or (!$rPermissions["create_sub_resellers"]))
 
 if (isset(CoreUtilities::$request["submit_user"])) {
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("reg_user", CoreUtilities::$request["edit"])) {
+        if (!UIController::hasPermissions("reg_user", CoreUtilities::$request["edit"])) {
             exit;
         }
-        $rArray = getRegisteredUser(CoreUtilities::$request["edit"]);
+        $rArray = UIController::getRegisteredUser(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
         $rArray = array("username" => "", "date_registered" => time(), "password" => "", "email" => "", "reseller_dns" => "", "member_group_id" => 1, "verified" => 1, "credits" => 0, "notes" => "", "status" => 1, "owner_id" => intval($rUserInfo["id"]));
@@ -40,7 +40,7 @@ if (isset(CoreUtilities::$request["submit_user"])) {
             $rArray["username"] = CoreUtilities::$request["username"];
         }
         if (!strlen(CoreUtilities::$request["password"]) == 0) {
-            $rArray["password"] = cryptPassword(CoreUtilities::$request["password"]);
+            $rArray["password"] = UIController::cryptPassword(CoreUtilities::$request["password"]);
         }
         if (isset(CoreUtilities::$request["email"])) {
             $rArray["email"] = CoreUtilities::$request["email"];
@@ -89,10 +89,10 @@ if (isset(CoreUtilities::$request["submit_user"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    if (!hasPermissions("reg_user", CoreUtilities::$request["id"])) {
+    if (!UIController::hasPermissions("reg_user", CoreUtilities::$request["id"])) {
         exit;
     }
-    $rUser = getRegisteredUser(CoreUtilities::$request["id"]);
+    $rUser = UIController::getRegisteredUser(CoreUtilities::$request["id"]);
     if (!$rUser) {
         exit;
     }
@@ -217,7 +217,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" id="password"
                                                             name="password" <?php if (!isset($rUser)) {
-                                                                echo 'value="' . generateString(10) . '" required data-parsley-trigger="change"';
+                                                                echo 'value="' . CoreUtilities::generateString(10) . '" required data-parsley-trigger="change"';
                                                             } else {
                                                                 echo 'value=""';
                                                             } ?> required data-parsley-trigger="change">
@@ -338,7 +338,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

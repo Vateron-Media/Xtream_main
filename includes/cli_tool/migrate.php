@@ -66,8 +66,8 @@ if ($argc) {
                                     $rResult['allowed_outputs'] = $rResult['output'];
                                 }
                                 $rResult['bouquet'] = '[' . implode(',', array_map('intval', json_decode($rResult['bouquet'], true))) . ']';
-                                $rResult = verifyPostTable('lines', $rResult);
-                                $rPrepare = prepareArray($rResult);
+                                $rResult = UIController::verifyPostTable('lines', $rResult);
+                                $rPrepare = UIController::prepareArray($rResult);
                                 $rQuery = 'INSERT INTO `lines`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
                                 $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
                             }
@@ -96,8 +96,8 @@ if ($argc) {
             //                 $odb->query('SELECT * FROM `reg_users` LIMIT ' . $rStep . ', 1000;');
             //                 $rResults = $odb->get_rows();
             //                 foreach ($rResults as $rResult) {
-            //                     $rResult = verifyPostTable('users', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('users', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `users`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 }
@@ -122,8 +122,8 @@ if ($argc) {
             //                 $odb->query('SELECT * FROM `members` LIMIT ' . $rStep . ', 1000;');
             //                 $rResults = $odb->get_rows();
             //                 foreach ($rResults as $rResult) {
-            //                     $rResult = verifyPostTable('users', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('users', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `users`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 }
@@ -141,8 +141,8 @@ if ($argc) {
             //         echo 'Blocking ' . number_format(count($rResults), 0) . ' IP addresses.' . "\n";
             //         foreach ($rResults as $rResult) {
             //             try {
-            //                 $rResult = verifyPostTable('blocked_ips', $rResult);
-            //                 $rPrepare = prepareArray($rResult);
+            //                 $rResult = UIController::verifyPostTable('blocked_ips', $rResult);
+            //                 $rPrepare = UIController::prepareArray($rResult);
             //                 $rQuery = 'INSERT INTO `blocked_ips`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                 $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //             } catch (Exception $e) {
@@ -161,8 +161,8 @@ if ($argc) {
             //             echo 'Blocking ' . number_format(count($rResults), 0) . ' user-agents.' . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('blocked_uas', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('blocked_uas', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `blocked_uas`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -181,8 +181,8 @@ if ($argc) {
             //             echo 'Blocking ' . number_format(count($rResults), 0) . " ISP's." . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('blocked_isps', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('blocked_isps', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `blocked_isps`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -201,8 +201,8 @@ if ($argc) {
             //             echo 'Blocking ' . number_format(count($rResults), 0) . " ISP's." . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('blocked_isps', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('blocked_isps', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `blocked_isps`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -248,8 +248,8 @@ if ($argc) {
             //                             $rResult['bouquet_' . $rType] = '[]';
             //                         }
             //                     }
-            //                     $rResult = verifyPostTable('bouquets', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('bouquets', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `bouquets`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -277,8 +277,8 @@ if ($argc) {
             //                     $rResults = $odb->get_rows();
             //                     foreach ($rResults as $rResult) {
             //                         $rResult['lock_device'] = 1;
-            //                         $rResult = verifyPostTable('enigma2_devices', $rResult);
-            //                         $rPrepare = prepareArray($rResult);
+            //                         $rResult = UIController::verifyPostTable('enigma2_devices', $rResult);
+            //                         $rPrepare = UIController::prepareArray($rResult);
             //                         $rQuery = 'INSERT INTO `enigma2_devices`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                         $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                     }
@@ -310,8 +310,8 @@ if ($argc) {
             //                         $rResult['lock_device'] = 1;
             //                         if (0 >= $rResult['user_id']) {
             //                         } else {
-            //                             $rResult = verifyPostTable('mag_devices', $rResult);
-            //                             $rPrepare = prepareArray($rResult);
+            //                             $rResult = UIController::verifyPostTable('mag_devices', $rResult);
+            //                             $rPrepare = UIController::prepareArray($rResult);
             //                             $rQuery = 'INSERT INTO `mag_devices`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                             $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                         }
@@ -332,8 +332,8 @@ if ($argc) {
             //             echo 'Processing ' . number_format(count($rResults), 0) . ' EPG URLs.' . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('epg', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('epg', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `epg`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -352,8 +352,8 @@ if ($argc) {
             //             echo 'Processing ' . number_format(count($rResults), 0) . ' EPG URLs.' . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('epg', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('epg', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `epg`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -376,8 +376,8 @@ if ($argc) {
             //                 $rResult['allow_change_password'] = 1;
             //                 $rResult['minimum_username_length'] = 8;
             //                 $rResult['minimum_password_length'] = 8;
-            //                 $rResult = verifyPostTable('users_groups', $rResult);
-            //                 $rPrepare = prepareArray($rResult);
+            //                 $rResult = UIController::verifyPostTable('users_groups', $rResult);
+            //                 $rPrepare = UIController::prepareArray($rResult);
             //                 $rQuery = 'INSERT INTO `users_groups`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                 $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //             } catch (Exception $e) {
@@ -402,8 +402,8 @@ if ($argc) {
             //                     $rResult['allow_change_password'] = 1;
             //                     $rResult['minimum_username_length'] = 8;
             //                     $rResult['minimum_password_length'] = 8;
-            //                     $rResult = verifyPostTable('users_groups', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('users_groups', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `users_groups`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -428,8 +428,8 @@ if ($argc) {
             //                     $rResult['allow_change_password'] = 1;
             //                     $rResult['minimum_username_length'] = 8;
             //                     $rResult['minimum_password_length'] = 8;
-            //                     $rResult = verifyPostTable('users_groups', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('users_groups', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `users_groups`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -469,8 +469,8 @@ if ($argc) {
             //                     } else {
             //                         $rResult['output_formats'] = '[1,2,3]';
             //                     }
-            //                     $rResult = verifyPostTable('users_packages', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('users_packages', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `users_packages`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -489,10 +489,10 @@ if ($argc) {
             //             echo 'Authorising ' . number_format(count($rResults), 0) . ' RTMP IPs.' . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('rtmp_ips', $rResult);
+            //                     $rResult = UIController::verifyPostTable('rtmp_ips', $rResult);
             //                     $rResult['push'] = 1;
             //                     $rResult['pull'] = 1;
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `rtmp_ips`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -525,8 +525,8 @@ if ($argc) {
             //                         } else {
             //                             $rResult['tmdb_id'] = null;
             //                         }
-            //                         $rResult = verifyPostTable('streams_series', $rResult);
-            //                         $rPrepare = prepareArray($rResult);
+            //                         $rResult = UIController::verifyPostTable('streams_series', $rResult);
+            //                         $rPrepare = UIController::prepareArray($rResult);
             //                         $rQuery = 'INSERT IGNORE INTO `streams_series`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                         $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                     }
@@ -555,8 +555,8 @@ if ($argc) {
             //                     $rResults = $odb->get_rows();
             //                     foreach ($rResults as $rResult) {
             //                         $rResult['episode_num'] = $rResult['sort'];
-            //                         $rResult = verifyPostTable('streams_episodes', $rResult);
-            //                         $rPrepare = prepareArray($rResult);
+            //                         $rResult = UIController::verifyPostTable('streams_episodes', $rResult);
+            //                         $rPrepare = UIController::prepareArray($rResult);
             //                         $rQuery = 'INSERT INTO `streams_episodes`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                         $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                     }
@@ -589,8 +589,8 @@ if ($argc) {
                             } else {
                                 $rResult['is_main'] = 0;
                             }
-                            $rResult = verifyPostTable('servers', $rResult);
-                            $rPrepare = prepareArray($rResult);
+                            $rResult = UIController::verifyPostTable('servers', $rResult);
+                            $rPrepare = UIController::prepareArray($rResult);
                             $rQuery = 'INSERT INTO `servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
                             $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
                         } catch (Exception $e) {
@@ -622,8 +622,8 @@ if ($argc) {
                             } else {
                                 $rResult['is_main'] = 0;
                             }
-                            $rResult = verifyPostTable('servers', $rResult);
-                            $rPrepare = prepareArray($rResult);
+                            $rResult = UIController::verifyPostTable('servers', $rResult);
+                            $rPrepare = UIController::prepareArray($rResult);
                             $rQuery = 'INSERT INTO `servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
                             $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
                         } catch (Exception $e) {
@@ -664,8 +664,8 @@ if ($argc) {
             //                                 list($rResult['target_container']) = json_decode($rResult['target_container'], true);
             //                             }
             //                             $rCreatedOptions[$rResult['id']] = $rResult['cchannel_rsources'];
-            //                             $rResult = verifyPostTable('streams', $rResult);
-            //                             $rPrepare = prepareArray($rResult);
+            //                             $rResult = UIController::verifyPostTable('streams', $rResult);
+            //                             $rPrepare = UIController::prepareArray($rResult);
             //                             $rQuery = 'INSERT INTO `streams`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                             $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                         } catch (Exception $e) {
@@ -696,8 +696,8 @@ if ($argc) {
             //                     $odb->query('SELECT * FROM `streams_options` LIMIT ' . $rStep . ', 1000;');
             //                     $rResults = $odb->get_rows();
             //                     foreach ($rResults as $rResult) {
-            //                         $rResult = verifyPostTable('streams_options', $rResult);
-            //                         $rPrepare = prepareArray($rResult);
+            //                         $rResult = UIController::verifyPostTable('streams_options', $rResult);
+            //                         $rPrepare = UIController::prepareArray($rResult);
             //                         $rQuery = 'INSERT INTO `streams_options`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                         $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                     }
@@ -743,8 +743,8 @@ if ($argc) {
             //                             } else {
             //                                 $rResult['pid'] = null;
             //                             }
-            //                             $rResult = verifyPostTable('streams_servers', $rResult);
-            //                             $rPrepare = prepareArray($rResult);
+            //                             $rResult = UIController::verifyPostTable('streams_servers', $rResult);
+            //                             $rPrepare = UIController::prepareArray($rResult);
             //                             $rQuery = 'INSERT INTO `streams_servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                             $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                         }
@@ -786,8 +786,8 @@ if ($argc) {
             //                             } else {
             //                                 $rResult['pid'] = null;
             //                             }
-            //                             $rResult = verifyPostTable('streams_servers', $rResult);
-            //                             $rPrepare = prepareArray($rResult);
+            //                             $rResult = UIController::verifyPostTable('streams_servers', $rResult);
+            //                             $rPrepare = UIController::prepareArray($rResult);
             //                             $rQuery = 'INSERT INTO `streams_servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                             $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                         }
@@ -808,8 +808,8 @@ if ($argc) {
             //             echo 'Creating ' . number_format(count($rResults), 0) . ' categories.' . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('streams_categories', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('streams_categories', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `streams_categories`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -828,8 +828,8 @@ if ($argc) {
             //             echo 'Creating ' . number_format(count($rResults), 0) . ' categories.' . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('streams_categories', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('streams_categories', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `streams_categories`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -848,8 +848,8 @@ if ($argc) {
             //             echo 'Posting ' . number_format(count($rResults), 0) . ' tickets.' . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('tickets', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('tickets', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `tickets`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -868,8 +868,8 @@ if ($argc) {
             //             echo 'Posting ' . number_format(count($rResults), 0) . ' replies.' . "\n";
             //             foreach ($rResults as $rResult) {
             //                 try {
-            //                     $rResult = verifyPostTable('tickets_replies', $rResult);
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rResult = UIController::verifyPostTable('tickets_replies', $rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `tickets_replies`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 } catch (Exception $e) {
@@ -917,10 +917,10 @@ if ($argc) {
             //                 $odb->query('SELECT * FROM `watch_folders`;');
             //                 $rResults = $odb->get_rows();
             //                 foreach ($rResults as $rResult) {
-            //                     $rResult = verifyPostTable('watch_folders', $rResult);
+            //                     $rResult = UIController::verifyPostTable('watch_folders', $rResult);
             //                     $rResult['bouquets'] = '[' . implode(',', array_map('intval', json_decode($rResult['bouquets'], true))) . ']';
             //                     $rResult['fb_bouquets'] = '[' . implode(',', array_map('intval', json_decode($rResult['fb_bouquets'], true))) . ']';
-            //                     $rPrepare = prepareArray($rResult);
+            //                     $rPrepare = UIController::prepareArray($rResult);
             //                     $rQuery = 'INSERT INTO `watch_folders`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
             //                     $ipTV_db_admin->query($rQuery, ...$rPrepare['data']);
             //                 }

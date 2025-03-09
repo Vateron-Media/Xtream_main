@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_delete"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "mass_delete"))) {
     exit;
 }
 
@@ -23,7 +23,7 @@ if (isset(CoreUtilities::$request["submit_movies"])) {
         $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $row) {
-                deleteMovieFile($row["server_id"], $rMovie);
+                UIController::deleteMovieFile($row["server_id"], $rMovie);
             }
         }
         $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rMovie) . ";");
@@ -53,7 +53,7 @@ if (isset(CoreUtilities::$request["submit_series"])) {
                 $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
                 if ($ipTV_db_admin->num_rows() > 0) {
                     while ($rRowB = $ipTV_db_admin->get_rows()) {
-                        deleteMovieFile($rRowB["server_id"], $rRow["stream_id"]);
+                        UIController::deleteMovieFile($rRowB["server_id"], $rRow["stream_id"]);
                     }
                 }
                 $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
@@ -62,7 +62,7 @@ if (isset(CoreUtilities::$request["submit_series"])) {
             $ipTV_db_admin->query("DELETE FROM `series_episodes` WHERE `series_id` = " . intval($rSerie) . ";");
         }
     }
-    scanBouquets();
+    UIController::scanBouquets();
     $_STATUS = 3;
 }
 
@@ -72,7 +72,7 @@ if (isset(CoreUtilities::$request["submit_episodes"])) {
         $ipTV_db_admin->query("SELECT `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rEpisode) . ";");
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $row) {
-                deleteMovieFile($row["server_id"], $rEpisode);
+                UIController::deleteMovieFile($row["server_id"], $rEpisode);
             }
         }
         $ipTV_db_admin->query("DELETE FROM `series_episodes` WHERE `stream_id` = " . intval($rEpisode) . ";");
@@ -83,7 +83,7 @@ if (isset(CoreUtilities::$request["submit_episodes"])) {
 }
 
 if ((isset(CoreUtilities::$request["submit_streams"])) or (isset(CoreUtilities::$request["submit_movies"]))) {
-    scanBouquets();
+    UIController::scanBouquets();
 }
 
 include "header.php";
@@ -245,7 +245,7 @@ include "header.php";
                                                     data-toggle="select2">
                                                     <option value="" selected><?= $_["all_categories"] ?>
                                                     </option>
-                                                    <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
+                                                    <?php foreach (UIController::getCategories_admin("movie") as $rCategory) { ?>
                                                         <option value="<?= $rCategory["id"] ?>" <?php if ((isset(CoreUtilities::$request["category"])) && (CoreUtilities::$request["category"] == $rCategory["id"])) {
                                                                                                     echo " selected";
                                                                                                 } ?>><?= $rCategory["category_name"] ?>
@@ -315,7 +315,7 @@ include "header.php";
                                                     <option value="" selected><?= $_["all_categories"] ?>
                                                     </option>
                                                     <option value="-1"><?= $_["no_tmdb_match"] ?></option>
-                                                    <?php foreach (getCategories_admin("series") as $rCategory) { ?>
+                                                    <?php foreach (UIController::getCategories_admin("series") as $rCategory) { ?>
                                                         <option value="<?= $rCategory["id"] ?>" <?php if ((isset(CoreUtilities::$request["category"])) && (CoreUtilities::$request["category"] == $rCategory["id"])) {
                                                                                                     echo " selected";
                                                                                                 } ?>><?= $rCategory["category_name"] ?>
@@ -369,7 +369,7 @@ include "header.php";
                                             <div class="col-md-3 col-6">
                                                 <select id="episode_series" class="form-control" data-toggle="select2">
                                                     <option value=""><?= $_["all_series"] ?></option>
-                                                    <?php foreach (getSeries() as $rSerie) { ?>
+                                                    <?php foreach (UIController::getSeries() as $rSerie) { ?>
                                                         <option value="<?= $rSerie["id"] ?>">
                                                             <?= $rSerie["title"] ?>
                                                         </option>
@@ -435,7 +435,7 @@ include "header.php";
                                                 <select id="reseller_search" class="form-control" data-toggle="select2">
                                                     <option value="" selected><?= $_["all_resellers"] ?>
                                                     </option>
-                                                    <?php foreach (getRegisteredUsers() as $rRegisteredUser) { ?>
+                                                    <?php foreach (UIController::getRegisteredUsers() as $rRegisteredUser) { ?>
                                                         <option value="<?= $rRegisteredUser["id"] ?>">
                                                             <?= $rRegisteredUser["username"] ?>
                                                         </option>
@@ -513,7 +513,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

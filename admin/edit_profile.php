@@ -20,7 +20,7 @@ if (isset(CoreUtilities::$request["submit_profile"])) {
     }
     if (!isset($_STATUS)) {
         if ((strlen(CoreUtilities::$request["password"]) > 0) && (($rSettings["change_own_password"]) or ($rPermissions["is_admin"]))) {
-            $rPassword = cryptPassword(CoreUtilities::$request["password"]);
+            $rPassword = UIController::cryptPassword(CoreUtilities::$request["password"]);
         } else {
             $rPassword = $rUserInfo["password"];
         }
@@ -40,7 +40,7 @@ if (isset(CoreUtilities::$request["submit_profile"])) {
             $bob = $rUserInfo["default_lang"];
         }
         $ipTV_db_admin->query("UPDATE `reg_users` SET `password` = '" . $rPassword . "', `email` = '" . $rEmail . "', `reseller_dns` = '" . $rDNS . "', `default_lang` = '" . $bob . "', `dark_mode` = " . intval($rDarkMode) . " WHERE `id` = " . intval($rUserInfo["id"]) . ";");
-        $rUserInfo = getRegisteredUser($rUserInfo["id"]);
+        $rUserInfo = UIController::getRegisteredUser($rUserInfo["id"]);
         $UserSettings["dark_mode"] = $rUserInfo["dark_mode"];
         $_STATUS = 0;
     }
@@ -183,7 +183,7 @@ include "header.php";
                 <footer class="footer">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+                            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
                         </div>
                     </div>
                 </footer>

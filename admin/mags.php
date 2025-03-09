@@ -3,12 +3,12 @@ include "session.php";
 include "functions.php";
 
 if ($rPermissions["is_admin"]) {
-    if (!hasPermissions("adv", "manage_mag")) {
+    if (!UIController::hasPermissions("adv", "manage_mag")) {
         exit;
     }
-    $rRegisteredUsers = getRegisteredUsers();
+    $rRegisteredUsers = UIController::getRegisteredUsers();
 } else {
-    $rRegisteredUsers = getRegisteredUsers($rUserInfo["id"]);
+    $rRegisteredUsers = UIController::getRegisteredUsers($rUserInfo["id"]);
 }
 
 include "header.php";
@@ -46,14 +46,14 @@ include "header.php";
                                         </button>
                                     </a>
                                 <?php }
-                                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "add_mag"))) { ?>
+                                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "add_mag"))) { ?>
                                     <a href="mag.php">
                                         <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
                                             <i class="mdi mdi-link"></i> <?= $_["link_mag"] ?>
                                         </button>
                                     </a>
                                 <?php }
-                                if ((hasPermissions("adv", "add_mag")) or ($rPermissions["is_reseller"])) { ?>
+                                if ((UIController::hasPermissions("adv", "add_mag")) or ($rPermissions["is_reseller"])) { ?>
                                     <a href="user<?php if ($rPermissions["is_reseller"]) {
                                         echo "_reseller";
                                     } ?>.php?mag">
@@ -207,7 +207,7 @@ if (($rPermissions["is_admin"]) or (($rPermissions["is_reseller"]) && ($rSetting
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

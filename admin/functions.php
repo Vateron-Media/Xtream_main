@@ -41,13 +41,14 @@ $ipTV_db_admin = new Database($_INFO['username'], $_INFO['password'], $_INFO['da
 
 CoreUtilities::$ipTV_db = &$ipTV_db_admin;
 CoreUtilities::init();
+UIController::$ipTV_db = &$ipTV_db_admin;
 ipTV_streaming::$ipTV_db = &$ipTV_db_admin;
 // ipTV_stream::$ipTV_db = &$ipTV_db_admin;
 AdminAPI::$ipTV_db = &$ipTV_db_admin;
 AdminAPI::init();
 CoreUtilities::connectRedis();
 
-$rProtocol = getProtocol();
+$rProtocol = UIController::getProtocol();
 $rSettings = CoreUtilities::$settings;
 $detect = new Mobile_Detect;
 $defaultLang = 'en';
@@ -72,22 +73,22 @@ $rWatchStatusArray = array(1 => "<button type='button' class='btn btn-outline-su
 
 
 if (isset($_SESSION['hash'])) {
-    $rUserInfo = getRegisteredUserHash($_SESSION['hash']);
+    $rUserInfo = UIController::getRegisteredUserHash($_SESSION['hash']);
     $UserSettings["dark_mode"] = $rUserInfo["dark_mode"];
-    $rPermissions = getPermissions($rUserInfo['member_group_id']);
+    $rPermissions = UIController::getPermissions($rUserInfo['member_group_id']);
     if ($rPermissions["is_admin"]) {
         $rPermissions["is_reseller"] = 0;
     }
     $rPermissions["advanced"] = json_decode($rPermissions["allowed_pages"], true);
-    if ((!$rUserInfo) or (!$rPermissions) or ((!$rPermissions["is_admin"]) && (!$rPermissions["is_reseller"])) or (($_SESSION['ip'] <> getIP()) && ($rSettings["ip_logout"]))) {
+    if ((!$rUserInfo) or (!$rPermissions) or ((!$rPermissions["is_admin"]) && (!$rPermissions["is_reseller"])) or (($_SESSION['ip'] <> UIController::getIP()) && ($rSettings["ip_logout"]))) {
         unset($rUserInfo);
         unset($rPermissions);
         session_unset();
         session_destroy();
         header("Location: ./index.php");
     }
-    $rCategories = getCategories_admin();
-    $rServers = getStreamingServers();
+    $rCategories = UIController::getCategories_admin();
+    $rServers = UIController::getStreamingServers();
     $rServerError = false;
     foreach ($rServers as $rServer) {
         if (((((time() - $rServer["last_check_ago"]) > 360)) or ($rServer["status"] == 2)) and ($rServer["can_delete"] == 1) and ($rServer["status"] <> 3)) {
@@ -101,7 +102,7 @@ if (isset($_SESSION['hash'])) {
 }
 
 if (php_sapi_name() !== 'cli' && isset($_SESSION['hash'])) {
-    $nabilos = getRegisteredUserHash($_SESSION['hash']);
+    $nabilos = UIController::getRegisteredUserHash($_SESSION['hash']);
 
     if (!empty($nabilos["default_lang"]) && file_exists("{$langPath}{$nabilos["default_lang"]}.php")) {
         $userLang = $nabilos["default_lang"];
@@ -113,7 +114,7 @@ if (isset(CoreUtilities::$request['status'])) {
     $_STATUS = intval(CoreUtilities::$request['status']);
 }
 
-if (getPageName() != 'setup') {
+if (UIController::getPageName() != 'setup') {
     $ipTV_db_admin->query('SELECT COUNT(`id`) AS `count` FROM `reg_users` LEFT JOIN `member_groups` ON `member_groups`.`group_id` = `reg_users`.`member_group_id` WHERE `member_groups`.`is_admin` = 1;');
 
     if ($ipTV_db_admin->get_row()['count'] == 0) {

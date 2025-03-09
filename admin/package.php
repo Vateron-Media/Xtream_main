@@ -1,19 +1,19 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_packages")) && (!hasPermissions("adv", "edit_package")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_packages")) && (!UIController::hasPermissions("adv", "edit_package")))) {
     exit;
 }
 
 if (isset(CoreUtilities::$request["submit_package"])) {
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_package")) {
+        if (!UIController::hasPermissions("adv", "edit_package")) {
             exit;
         }
-        $rArray = getPackage(CoreUtilities::$request["edit"]);
+        $rArray = UIController::getPackage(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
-        if (!hasPermissions("adv", "add_packages")) {
+        if (!UIController::hasPermissions("adv", "add_packages")) {
             exit;
         }
         $rArray = array("package_name" => "", "is_trial" => 0, "is_official" => 0, "trial_credits" => 0, "official_credits" => 0, "trial_duration_in" => "hours", "trial_duration" => 0, "official_duration" => 1, "official_duration_in" => "years", "groups" => array(), "bouquets" => array(), "can_gen_mag" => 1, "only_mag" => 0, "output_formats" => array(1, 2, 3), "is_isplock" => 0, "max_connections" => 1, "is_restreamer" => 0, "force_server_id" => 0, "only_e2" => 0, "can_gen_e2" => 1, "forced_country" => "", "lock_device" => 0);
@@ -37,7 +37,7 @@ if (isset(CoreUtilities::$request["submit_package"])) {
         $rArray["groups"] = "[" . join(",", $rArray["groups"]) . "]";
         unset(CoreUtilities::$request["groups"]);
     }
-    $rArray["bouquets"] = sortArrayByArray(array_values(json_decode(CoreUtilities::$request["bouquets_selected"], true)), array_keys(getBouquetOrder()));
+    $rArray["bouquets"] = UIController::sortArrayByArray(array_values(json_decode(CoreUtilities::$request["bouquets_selected"], true)), array_keys(UIController::getBouquetOrder()));
     $rArray["bouquets"] = "[" . join(",", $rArray["bouquets"]) . "]";
     unset(CoreUtilities::$request["bouquets_selected"]);
     if (isset(CoreUtilities::$request["output_formats"])) {
@@ -86,11 +86,11 @@ if (isset(CoreUtilities::$request["submit_package"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rPackage = getPackage(CoreUtilities::$request["id"]);
-    if ((!$rPackage) or (!hasPermissions("adv", "edit_package"))) {
+    $rPackage = UIController::getPackage(CoreUtilities::$request["id"]);
+    if ((!$rPackage) or (!UIController::hasPermissions("adv", "edit_package"))) {
         exit;
     }
-} elseif (!hasPermissions("adv", "add_packages")) {
+} elseif (!UIController::hasPermissions("adv", "add_packages")) {
     exit;
 }
 
@@ -364,7 +364,7 @@ include "header.php";
                                                     <label class="col-md-4 col-form-label"
                                                         for="output_formats"><?= $_["access_output"] ?></label>
                                                     <div class="col-md-8">
-                                                        <?php foreach (getOutputs() as $rOutput) { ?>
+                                                        <?php foreach (UIController::getOutputs() as $rOutput) { ?>
                                                             <div class="checkbox form-check-inline">
                                                                 <input data-size="large" type="checkbox"
                                                                     id="output_formats_<?= $rOutput["access_output_id"] ?>"
@@ -396,7 +396,7 @@ include "header.php";
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="form-group row mb-4">
-                                                    <?php foreach (getMemberGroups() as $rGroup) { ?>
+                                                    <?php foreach (UIController::getMemberGroups() as $rGroup) { ?>
                                                         <div class="col-md-6">
                                                             <div class="custom-control custom-checkbox mt-1">
                                                                 <input type="checkbox"
@@ -449,7 +449,7 @@ include "header.php";
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                            <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                                 <tr<?php if (isset($rPackage)) {
                                                                     if (in_array($rBouquet["id"], json_decode($rPackage["bouquets"], true))) {
                                                                         echo " class='selected selectedfilter ui-selected'";
@@ -504,7 +504,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

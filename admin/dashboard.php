@@ -16,7 +16,7 @@ include "header.php";
 
 <div class="wrapper">
 	<div class="container-fluid">
-		<?php if (hasPermissions("adv", "index")) { ?>
+		<?php if (UIController::hasPermissions("adv", "index")) { ?>
 			<!-- start page title -->
 			<div class="card-box1">
 				<!--<div class="col-12">
@@ -44,7 +44,7 @@ include "header.php";
 				<div class="tab-pane show active" id="server-home">
 					<div class="row">
 						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "live_connections")) { ?>
+							<?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
 								<a href="./live_connections.php">
 								<?php } ?>
 								<div class="card-box active-connections bg-primary">
@@ -71,13 +71,13 @@ include "header.php";
 										</div>
 									</div>
 								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "live_connections")) { ?>
+								<?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
 								</a>
 							<?php } ?>
 						</div> <!-- end col -->
 
 						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "live_connections")) { ?>
+							<?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
 								<a href="./live_connections.php">
 								<?php } ?>
 								<div class="card-box online-users bg-success">
@@ -104,13 +104,13 @@ include "header.php";
 										</div>
 									</div>
 								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "live_connections")) { ?>
+								<?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
 								</a>
 							<?php } ?>
 						</div> <!-- end col -->
 
 						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "live_connections")) { ?>
+							<?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
 								<a href="./live_connections.php">
 								<?php } ?>
 								<div class="card-box input-flow bg-pink">
@@ -136,13 +136,13 @@ include "header.php";
 										</div>
 									</div>
 								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "live_connections")) { ?>
+								<?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
 								</a>
 							<?php } ?>
 						</div> <!-- end col -->
 
 						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "live_connections")) { ?>
+							<?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
 								<a href="./live_connections.php">
 								<?php } ?>
 								<div class="card-box output-flow bg-info">
@@ -168,13 +168,13 @@ include "header.php";
 										</div>
 									</div>
 								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "live_connections")) { ?>
+								<?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
 								</a>
 							<?php } ?>
 						</div> <!-- end col -->
 
 						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "streams")) { ?>
+							<?php if (UIController::hasPermissions("adv", "streams")) { ?>
 								<a href="./streams.php?filter=1">
 								<?php } ?>
 								<div class="card-box active-streams bg-warning">
@@ -201,13 +201,13 @@ include "header.php";
 										</div>
 									</div>
 								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "streams")) { ?>
+								<?php if (UIController::hasPermissions("adv", "streams")) { ?>
 								</a>
 							<?php } ?>
 						</div> <!-- end col -->
 
 						<div class="col-md-6 col-xl-2">
-							<?php if (hasPermissions("adv", "streams")) { ?>
+							<?php if (UIController::hasPermissions("adv", "streams")) { ?>
 								<a href="./streams.php?filter=2">
 								<?php } ?>
 								<div class="card-box offline-streams bg-danger">
@@ -234,7 +234,7 @@ include "header.php";
 										</div>
 									</div>
 								</div> <!-- end card-box-->
-								<?php if (hasPermissions("adv", "streams")) { ?>
+								<?php if (UIController::hasPermissions("adv", "streams")) { ?>
 								</a>
 							<?php } ?>
 						</div> <!-- end col -->
@@ -274,7 +274,7 @@ include "header.php";
 							} ?>
 							<div class="col-xl-3 col-md-6">
 								<div class="card-header bg-dark text-white">
-									<?php if (hasPermissions("adv", "live_connections")) { ?>
+									<?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
 										<div class="float-right">
 											<a href="./live_connections.php?server_id=<?= $rServer["id"] ?>"
 												class="arrow-none card-drop">
@@ -821,7 +821,7 @@ include "header.php";
 							<footer class="footer">
 								<div class="container-fluid">
 									<div class="row">
-										<div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+										<div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
 									</div>
 								</div>
 							</footer>
@@ -1065,14 +1065,14 @@ include "header.php";
 							<script src="assets/js/amcharts4/writemaplive.js"></script>
 							<script>
 								<?php if ($rSettings["dashboard_world_map_live"]) { ?>
-									var mapData = showMap("WorldMapLive", [<?php getWorldMapLive(); ?>], "Live by Country");
+									var mapData = showMap("WorldMapLive", [<?php UIController::getWorldMapLive(); ?>], "Live by Country");
 								<?php } ?>
 							</script>
 
 							<script src="assets/js/amcharts4/writemapactivity.js"></script>
 							<script>
 								<?php if ($rSettings["dashboard_world_map_activity"]) { ?>
-									var mapData = showMap("WorldMapActivity", [<?php getWorldMapActivity(); ?>], "Activity by Country");
+									var mapData = showMap("WorldMapActivity", [<?php UIController::getWorldMapActivity(); ?>], "Activity by Country");
 								<?php } ?>
 							</script>
 							</body>

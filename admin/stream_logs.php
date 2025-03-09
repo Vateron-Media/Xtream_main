@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "stream_errors"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "stream_errors"))) {
     exit;
 }
 
@@ -42,7 +42,7 @@ include "header.php";
                             <div class="col-md-3">
                                 <select id="reseller" class="form-control" data-toggle="select2">
                                     <option value="" selected><?= $_["all_servers"] ?> </option>
-                                    <?php foreach (getStreamingServers() as $rServer) { ?>
+                                    <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                         <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?>
                                         </option>
                                     <?php } ?>
@@ -122,7 +122,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

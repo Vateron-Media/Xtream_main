@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_mag")) && (!hasPermissions("adv", "edit_mag")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_mag")) && (!UIController::hasPermissions("adv", "edit_mag")))) {
     exit;
 }
 
@@ -11,15 +11,15 @@ if (isset(CoreUtilities::$request["id"])) {
 
 if (isset(CoreUtilities::$request["submit_mag"])) {
     if (filter_var(CoreUtilities::$request["mac"], FILTER_VALIDATE_MAC)) {
-        if ($rArray = getUser(CoreUtilities::$request["paired_user"])) {
+        if ($rArray = UIController::getUser(CoreUtilities::$request["paired_user"])) {
             if ((isset(CoreUtilities::$request["edit"])) && (strlen(CoreUtilities::$request["edit"]))) {
-                if (!hasPermissions("adv", "edit_mag")) {
+                if (!UIController::hasPermissions("adv", "edit_mag")) {
                     exit;
                 }
-                $rCurMag = getMag(CoreUtilities::$request["edit"]);
+                $rCurMag = UIController::getMag(CoreUtilities::$request["edit"]);
                 $ipTV_db_admin->query("DELETE FROM `lines` WHERE `id` = " . intval($rCurMag["user_id"]) . ";"); // Delete existing user.
                 $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rCurMag["user_id"]) . ";");
-            } elseif (!hasPermissions("adv", "add_mag")) {
+            } elseif (!UIController::hasPermissions("adv", "add_mag")) {
                 exit;
             }
             $rArray["username"] .= rand(0, 999999);
@@ -69,18 +69,18 @@ if (isset(CoreUtilities::$request["submit_mag"])) {
 
 if ((isset($rMagArr["paired_user"])) && (!isset($rMagArr["username"]))) {
     // Edit failed, get username.
-    $rMagArr["username"] = getUser($rMagArr["paired_user"])["username"];
+    $rMagArr["username"] = UIController::getUser($rMagArr["paired_user"])["username"];
 }
 
 if ((isset($rEditID)) && (!isset($rMagArr))) {
-    if (!hasPermissions("adv", "edit_mag")) {
+    if (!UIController::hasPermissions("adv", "edit_mag")) {
         exit;
     }
-    $rMagArr = getMag($rEditID);
+    $rMagArr = UIController::getMag($rEditID);
     if (!$rMagArr) {
         exit;
     }
-} elseif (!hasPermissions("adv", "add_mag")) {
+} elseif (!UIController::hasPermissions("adv", "add_mag")) {
     exit;
 }
 
@@ -198,7 +198,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

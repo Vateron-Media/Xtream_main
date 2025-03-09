@@ -1,12 +1,12 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "flood_login"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "flood_login"))) {
     exit;
 }
 
 if (isset(CoreUtilities::$request["flush"])) {
-    flushLogins();
+    UIController::flushLogins();
     header("Location: ./flood_login.php");
 }
 
@@ -50,7 +50,7 @@ include "header.php";
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (getBlockedLogins() as $rIP) {
+                                <?php foreach (UIController::getBlockedLogins() as $rIP) {
                                     ?>
                                     <tr id="ip-<?= $rIP["id"] ?>">
                                         <td class="text-center"><?= $rIP["id"] ?></td>
@@ -79,7 +79,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

@@ -4,12 +4,12 @@ include "functions.php";
 if (!$rPermissions["is_admin"]) {
     exit;
 }
-if ((!hasPermissions("adv", "settings")) && (!hasPermissions("adv", "database"))) {
+if ((!UIController::hasPermissions("adv", "settings")) && (!UIController::hasPermissions("adv", "database"))) {
     exit;
 }
 
 if (isset(CoreUtilities::$request["geolite2"])) {
-    if (updateGeoLite2()) {
+    if (UIController::updateGeoLite2()) {
         $_STATUS = STATUS_SUCCESS_GEOLITE;
     } else {
         $_STATUS = STATUS_FAILURE_GEOLITE;
@@ -24,9 +24,9 @@ if ($rSettings['update_chanel'] == 'stable'){
 
 
 #Get versions
-$rGeoLite2Latest = getGithubReleases("Vateron-Media/Xtream_Update")['latest_release'];
+$rGeoLite2Latest = UIController::getGithubReleases("Vateron-Media/Xtream_Update")['latest_release'];
 $rGeoLite2Curent = json_decode(file_get_contents("/home/xc_vm/bin/maxmind/version.json"), true)["geolite2_version"];
-$rUpdatePanel = mb_substr(getGithubReleases("Vateron-Media/Xtream_main")[$release], 1);
+$rUpdatePanel = mb_substr(UIController::getGithubReleases("Vateron-Media/Xtream_main")[$release], 1);
 
 if (isset(CoreUtilities::$request["panel_version"])) {
     $ipTV_db_admin->query("DELETE FROM `signals` WHERE `server_id` = " . $_INFO["server_id"] . " AND `custom_data` LIKE '%\"action\":\"update\"%';");
@@ -34,7 +34,7 @@ if (isset(CoreUtilities::$request["panel_version"])) {
     $_STATUS = STATUS_SUCCESS_UPDATE;
 }
 
-$rSettings = getSettings(); // Update
+$rSettings = UIController::getSettings(); // Update
 include "header.php";
 ?>
 
@@ -97,7 +97,7 @@ include "header.php";
                         </div>
                         <?php
                     } ?>
-                    <?php if (version_compare($rUpdatePanel, getScriptVer())) { ?>
+                    <?php if (version_compare($rUpdatePanel, UIController::getScriptVer())) { ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -118,7 +118,7 @@ include "header.php";
                                         <h2 class="font-weight-normal mb-3">
                                             <small
                                                 class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
-                                            <span><?= getScriptVer() ?></span>
+                                            <span><?= UIController::getScriptVer() ?></span>
                                         </h2>
                                     </div>
                                     <div class="col-md-4">
@@ -145,7 +145,7 @@ include "header.php";
                         <div class="card-body">
                             <div id="basicwizard">
                                 <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
-                                    <?php if (hasPermissions("adv", "settings")) { ?>
+                                    <?php if (UIController::hasPermissions("adv", "settings")) { ?>
                                         <li class="nav-item">
                                             <a href="#general-details" data-toggle="tab"
                                                 class="nav-link rounded-0 pt-2 pb-2">
@@ -189,7 +189,7 @@ include "header.php";
                                         </li>
                                         <?php
                                     }
-                                    if (hasPermissions("adv", "database")) { ?>
+                                    if (UIController::hasPermissions("adv", "database")) { ?>
                                         <li class="nav-item">
                                             <a href="#database" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                                 <i class="mdi mdi-database mr-1"></i>
@@ -200,7 +200,7 @@ include "header.php";
                                     } ?>
                                 </ul>
                                 <div class="tab-content b-0 mb-0 pt-0">
-                                    <?php if (hasPermissions("adv", "settings")) { ?>
+                                    <?php if (UIController::hasPermissions("adv", "settings")) { ?>
                                         <div class="tab-pane" id="general-details">
                                             <div class="row">
                                                 <div class="col-12">
@@ -241,7 +241,7 @@ include "header.php";
                                                             <select name="default_timezone" id="default_timezone"
                                                                 class="form-control text-center" data-toggle="select2">
                                                                 <?php
-                                                                foreach (tz_list() as $rValue) { ?>
+                                                                foreach (UIController::tz_list() as $rValue) { ?>
                                                                     <option <?php if ($rSettings["default_timezone"] == $rValue['zone']) {
                                                                         echo "selected ";
                                                                     } ?>value="<?= $rValue['zone'] ?>">
@@ -2339,7 +2339,7 @@ include "header.php";
                                         </div>
                                         <?php
                                     }
-                                    if (hasPermissions("adv", "database")) { ?>
+                                    if (UIController::hasPermissions("adv", "database")) { ?>
                                         <div class="tab-pane" id="database">
                                             <div class="row">
                                                 <iframe width="100%" height="650px" src="./database.php"
@@ -2435,7 +2435,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

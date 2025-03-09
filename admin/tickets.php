@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_tickets"))) {
+if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "manage_tickets"))) {
     exit;
 }
 $rStatusArray = array(0 => "CLOSED", 1 => "OPEN", 2 => "RESPONDED", 3 => "READ");
@@ -46,9 +46,9 @@ include "header.php";
                         <tbody>
                             <?php
                             if ($rPermissions["is_admin"]) {
-                                $rTickets = getTickets();
+                                $rTickets = UIController::getTickets();
                             } else {
-                                $rTickets = getTickets($rUserInfo["id"]);
+                                $rTickets = UIController::getTickets($rUserInfo["id"]);
                             }
                             foreach ($rTickets as $rTicket) { ?>
                                 <tr id="ticket-<?= $rTicket["id"] ?>">
@@ -74,7 +74,7 @@ include "header.php";
                                                 <a class="dropdown-item"
                                                     href="./ticket_view.php?id=<?= $rTicket["id"] ?>"><i
                                                         class="mdi mdi-eye mr-2 text-muted font-18 vertical-middle"></i><?= $_["view_ticket"] ?></a>
-                                                <?php if (hasPermissions("adv", "ticket")) {
+                                                <?php if (UIController::hasPermissions("adv", "ticket")) {
                                                     if ($rTicket["status"] > 0) { ?>
                                                         <a class="dropdown-item" href="javascript:void(0);"
                                                             onClick="api(<?= $rTicket["id"] ?>, 'close');"><i
@@ -116,7 +116,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

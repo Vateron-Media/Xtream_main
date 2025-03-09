@@ -6,10 +6,10 @@ if ((!$rPermissions["is_reseller"]) or (!$rPermissions["create_sub_resellers"]))
 }
 
 if ((isset(CoreUtilities::$request["submit_credits"])) && (isset(CoreUtilities::$request["id"]))) {
-    if (!hasPermissions("reg_user", CoreUtilities::$request["id"])) {
+    if (!UIController::hasPermissions("reg_user", CoreUtilities::$request["id"])) {
         exit;
     }
-    $rUser = getRegisteredUser(CoreUtilities::$request["id"]);
+    $rUser = UIController::getRegisteredUser(CoreUtilities::$request["id"]);
     $rCost = intval(CoreUtilities::$request["credits"]);
     if (($rUserInfo["credits"] - $rCost < 0) && ($rCost > 0)) {
         $_STATUS = 1;
@@ -32,10 +32,10 @@ if ((isset(CoreUtilities::$request["submit_credits"])) && (isset(CoreUtilities::
 if (!isset(CoreUtilities::$request["id"])) {
     exit;
 }
-if (!hasPermissions("reg_user", CoreUtilities::$request["id"])) {
+if (!UIController::hasPermissions("reg_user", CoreUtilities::$request["id"])) {
     exit;
 }
-$rUser = getRegisteredUser(CoreUtilities::$request["id"]);
+$rUser = UIController::getRegisteredUser(CoreUtilities::$request["id"]);
 if (!$rUser) {
     exit;
 }
@@ -160,7 +160,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

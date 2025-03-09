@@ -3,9 +3,9 @@ include "/home/xc_vm/admin/functions.php";
 require INCLUDES_PATH . 'libs/tmdb.php';
 require INCLUDES_PATH . 'libs/tmdb_release.php';
 
-$rSettings = getSettings();
-$rServers = getStreamingServers();
-$rWatchCategories = array(1 => getWatchCategories(1), 2 => getWatchCategories(2));
+$rSettings = UIController::getSettings();
+$rServers = UIController::getStreamingServers();
+$rWatchCategories = array(1 => UIController::getWatchCategories(1), 2 => UIController::getWatchCategories(2));
 
 $ipTV_db_admin->query("SELECT * FROM `watch_settings`;");
 if ($ipTV_db_admin->num_rows() == 1) {
@@ -71,9 +71,9 @@ if ($ipTV_db_admin->num_rows() > 0) {
         if (count($rExtensions) == 0) {
             $rExtensions = array("mp4", "mkv", "avi", "mpg", "flv");
         }
-        $rFiles = scanRecursive(intval($rRow["server_id"]), $rRow["directory"], $rExtensions); // Only these containers are accepted.
+        $rFiles = UIController::scanRecursive(intval($rRow["server_id"]), $rRow["directory"], $rExtensions); // Only these containers are accepted.
         if (isset($rRow["auto_subtitles"])) {
-            $rSubtitles = scanRecursive(intval($rRow["server_id"]), $rRow["directory"], array("srt", "sub", "sbv"));
+            $rSubtitles = UIController::scanRecursive(intval($rRow["server_id"]), $rRow["directory"], array("srt", "sub", "sbv"));
         }
         foreach ($rFiles as $rFile) {
             $rFilePath = "s:" . intval($rRow["server_id"]) . ":" . $rFile;
@@ -91,7 +91,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                 $rImportArray[$rKey] = $rImportStream[$rKey];
             }
             $ipTV_db_admin->query("DELETE FROM `watch_output` WHERE `filename` = '" . $ipTV_db_admin->escape($rFile) . "' AND `type` = " . (array("movie" => 1, "series" => 2)[$rRow["type"]]) . ";");
-            if ((!$rWatchSettings["ffprobe_input"]) or (isset(checkSource($rRow["server_id"], $rFile)["streams"]))) {
+            if ((!$rWatchSettings["ffprobe_input"]) or (isset(UIController::checkSource($rRow["server_id"], $rFile)["streams"]))) {
                 $rFilename = pathinfo($rFile)["filename"];
                 if ($rSettings["release_parser"] == "php") {
                     $rRelease = new Release($rFilename);
@@ -100,7 +100,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                     $rReleaseSeason = $rRelease->getSeason();
                     $rReleaseEpisode = $rRelease->getEpisode();
                 } else {
-                    $rRelease = tmdbParseRelease($rFilename);
+                    $rRelease = UIController::tmdbParseRelease($rFilename);
                     $rTitle = $rRelease["title"];
                     $rYear = $rRelease["year"];
                     $rReleaseSeason = $rRelease["season"];
@@ -147,8 +147,8 @@ if ($ipTV_db_admin->num_rows() > 0) {
                             $rThumb = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rMovieData['poster_path'];
                             $rBG = "https://image.tmdb.org/t/p/w1280" . $rMovieData['backdrop_path'];
                             if ($rSettings["download_images"]) {
-                                $rThumb = downloadImage($rThumb);
-                                $rBG = downloadImage($rBG);
+                                $rThumb = UIController::downloadImage($rThumb);
+                                $rBG = UIController::downloadImage($rBG);
                             } else {
                                 sleep(1); // Avoid limits.
                             }
@@ -183,7 +183,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                             $rImportArray["read_native"] = $rWatchSettings["read_native"] ?: 1;
                             $rImportArray["movie_symlink"] = $rWatchSettings["movie_symlink"] ?: 1;
                             $rImportArray["transcode_profile_id"] = $rWatchSettings["transcode_profile_id"] ?: 0;
-                            $rImportArray["order"] = getNextOrder();
+                            $rImportArray["order"] = UIController::getNextOrder();
                             $rCategoryData = $rWatchCategories[1][intval($rMovieData["genres"][0]["id"])];
                             if ($rRow["category_id"] > 0) {
                                 $rImportArray["category_id"] = intval($rRow["category_id"]);
@@ -197,17 +197,17 @@ if ($ipTV_db_admin->num_rows() > 0) {
                         } else {
                             $rShow = $rTMDB->getTVShow($rMatch->get("id"));
                             $rShowData = json_decode($rShow->getJSON(), True);
-                            $rSeries = getSeriesByTMDB($rShowData["id"]);
+                            $rSeries = UIController::getSeriesByTMDB($rShowData["id"]);
                             if (!$rSeries) {
                                 // Series doesn't exist, create it!
                                 $rSeriesArray = array("title" => $rShowData["name"], "category_id" => "", "episode_run_time" => 0, "tmdb_id" => $rShowData["id"], "cover" => "", "genre" => "", "plot" => $rShowData["overview"], "cast" => "", "rating" => $rShowData["vote_average"], "director" => "", "releaseDate" => $rShowData["first_air_date"], "last_modified" => time(), "seasons" => array(), "backdrop_path" => array(), "youtube_trailer" => "");
-                                $rSeriesArray["youtube_trailer"] = getSeriesTrailer($rShowData["id"]);
+                                $rSeriesArray["youtube_trailer"] = UIController::getSeriesTrailer($rShowData["id"]);
                                 $rSeriesArray["cover"] = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rShowData['poster_path'];
                                 $rSeriesArray["cover_big"] = $rSeriesArray["cover"];
                                 $rSeriesArray["backdrop_path"] = array("https://image.tmdb.org/t/p/w1280" . $rShowData['backdrop_path']);
                                 if ($rSettings["download_images"]) {
-                                    $rSeriesArray["cover"] = downloadImage($rSeriesArray["cover"]);
-                                    $rSeriesArray["backdrop_path"] = array(downloadImage($rSeriesArray["backdrop_path"][0]));
+                                    $rSeriesArray["cover"] = UIController::downloadImage($rSeriesArray["cover"]);
+                                    $rSeriesArray["backdrop_path"] = array(UIController::downloadImage($rSeriesArray["backdrop_path"][0]));
                                 }
                                 $rCast = array();
                                 foreach ($rShowData["credits"]["cast"] as $rMember) {
@@ -258,7 +258,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                                     $rQuery = "INSERT INTO `series`(" . $ipTV_db_admin->escape($rCols) . ") VALUES(" . $rValues . ");";
                                     if ($ipTV_db_admin->query($rQuery)) {
                                         $rInsertID = $ipTV_db_admin->last_insert_id();
-                                        $rSeries = getSerie($rInsertID);
+                                        $rSeries = UIController::getSerie($rInsertID);
                                         $rORBouquets = json_decode($rRow["bouquets"], True);
                                         if (!$rORBouquets) {
                                             $rORBouquets = array();
@@ -275,7 +275,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                                             $rBouquets = array();
                                         }
                                         foreach ($rBouquets as $rBouquet) {
-                                            addToBouquet("series", $rBouquet, $rInsertID);
+                                            UIController::addToBouquet("series", $rBouquet, $rInsertID);
                                             $rChanged = True;
                                         }
                                     }
@@ -284,7 +284,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                             $rImportArray["read_native"] = $rWatchSettings["read_native"] ?: 1;
                             $rImportArray["movie_symlink"] = $rWatchSettings["movie_symlink"] ?: 1;
                             $rImportArray["transcode_profile_id"] = $rWatchSettings["transcode_profile_id"] ?: 0;
-                            $rImportArray["order"] = getNextOrder();
+                            $rImportArray["order"] = UIController::getNextOrder();
                             if (($rReleaseSeason) && ($rReleaseEpisode)) {
                                 $rImportArray["stream_display_name"] = $rShowData["name"] . " - S" . sprintf('%02d', intval($rReleaseSeason)) . "E" . sprintf('%02d', $rReleaseEpisode);
                                 $rEpisodes = json_decode($rTMDB->getSeason($rShowData["id"], intval($rReleaseSeason))->getJSON(), True);
@@ -293,7 +293,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                                         if (strlen($rEpisode["still_path"]) > 0) {
                                             $rImage = "https://image.tmdb.org/t/p/w300" . $rEpisode["still_path"];
                                             if ($rSettings["download_images"]) {
-                                                $rImage = downloadImage($rImage);
+                                                $rImage = UIController::downloadImage($rImage);
                                             }
                                         }
                                         if (strlen($rEpisode["name"]) > 0) {
@@ -320,7 +320,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                             $rImportArray["read_native"] = $rWatchSettings["read_native"] ?: 1;
                             $rImportArray["movie_symlink"] = $rWatchSettings["movie_symlink"] ?: 1;
                             $rImportArray["transcode_profile_id"] = $rWatchSettings["transcode_profile_id"] ?: 0;
-                            $rImportArray["order"] = getNextOrder();
+                            $rImportArray["order"] = UIController::getNextOrder();
                             $rCategoryData = $rWatchCategories[1][intval($rMovieData["genres"][0]["id"])];
                             if ($rRow["category_id"] > 0) {
                                 $rImportArray["category_id"] = intval($rRow["category_id"]);
@@ -336,7 +336,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                             $rImportArray["read_native"] = $rWatchSettings["read_native"] ?: 1;
                             $rImportArray["movie_symlink"] = $rWatchSettings["movie_symlink"] ?: 1;
                             $rImportArray["transcode_profile_id"] = $rWatchSettings["transcode_profile_id"] ?: 0;
-                            $rImportArray["order"] = getNextOrder();
+                            $rImportArray["order"] = UIController::getNextOrder();
                         }
                     }
                     if (isset($rRow["auto_subtitles"])) {
@@ -397,7 +397,7 @@ if ($ipTV_db_admin->num_rows() > 0) {
                             }
                             if ($rRow["type"] == "movie") {
                                 foreach ($rBouquets as $rBouquet) {
-                                    addToBouquet("stream", $rBouquet, $rInsertID);
+                                    UIController::addToBouquet("stream", $rBouquet, $rInsertID);
                                     $rChanged = True;
                                 }
                             } else {
@@ -428,8 +428,8 @@ if ($ipTV_db_admin->num_rows() > 0) {
     }
 }
 if ($rChanged) {
-    scanBouquets();
+    UIController::scanBouquets();
 }
 foreach ($rUpdateSeries as $rSeriesID) {
-    updateSeries(intval($rSeriesID));
+    UIController::updateSeries(intval($rSeriesID));
 }

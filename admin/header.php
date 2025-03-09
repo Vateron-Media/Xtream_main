@@ -64,7 +64,7 @@
                             <td class="text-center"><b><?= $rUserInfo["username"] ?></b></td>
                         </a>
                     </li>
-                    <?php if (($rServerError) && ($rPermissions["is_admin"]) && (hasPermissions("adv", "servers"))) { ?>
+                    <?php if (($rServerError) && ($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "servers"))) { ?>
                         <li class="notification-list">
                             <a href="./servers.php" class="nav-link right-bar-toggle waves-effect text-warning">
                                 <i class="mdi mdi-wifi-strength-off noti-icon"></i>
@@ -84,87 +84,87 @@
                         </li>
                     <?php } ?>
                     <?php if ($rPermissions["is_admin"]) {
-                        if ((hasPermissions("adv", "settings")) or (hasPermissions("adv", "database")) or (hasPermissions("adv", "block_ips")) or (hasPermissions("adv", "block_isps")) or (hasPermissions("adv", "block_uas")) or (hasPermissions("adv", "categories")) or (hasPermissions("adv", "channel_order")) or (hasPermissions("adv", "epg")) or (hasPermissions("adv", "folder_watch")) or (hasPermissions("adv", "mng_groups")) or (hasPermissions("adv", "mass_delete")) or (hasPermissions("adv", "mng_packages")) or (hasPermissions("adv", "process_monitor")) or (hasPermissions("adv", "rtmp")) or (hasPermissions("adv", "subresellers")) or (hasPermissions("adv", "tprofiles"))) { ?>
+                        if ((UIController::hasPermissions("adv", "settings")) or (UIController::hasPermissions("adv", "database")) or (UIController::hasPermissions("adv", "block_ips")) or (UIController::hasPermissions("adv", "block_isps")) or (UIController::hasPermissions("adv", "block_uas")) or (UIController::hasPermissions("adv", "categories")) or (UIController::hasPermissions("adv", "channel_order")) or (UIController::hasPermissions("adv", "epg")) or (UIController::hasPermissions("adv", "folder_watch")) or (UIController::hasPermissions("adv", "mng_groups")) or (UIController::hasPermissions("adv", "mass_delete")) or (UIController::hasPermissions("adv", "mng_packages")) or (UIController::hasPermissions("adv", "process_monitor")) or (UIController::hasPermissions("adv", "rtmp")) or (UIController::hasPermissions("adv", "subresellers")) or (UIController::hasPermissions("adv", "tprofiles"))) { ?>
                             <li class="dropdown notification-list">
                                 <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect text-white" data-toggle="dropdown"
                                     href="#" role="button" aria-haspopup="false" aria-expanded="false">
                                     <i class="fe-settings noti-icon text-warning"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                                    <?php if ((hasPermissions("adv", "settings")) or (hasPermissions("adv", "database"))) { ?>
+                                    <?php if ((UIController::hasPermissions("adv", "settings")) or (UIController::hasPermissions("adv", "database"))) { ?>
                                         <a href="./settings.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-wrench-outline mdi-rotate-90 mdi-18px">
                                                 <?= $_["settings"] ?></span></a>
                                     <?php }
-                                    if ((hasPermissions("adv", "database"))) { ?>
+                                    if ((UIController::hasPermissions("adv", "database"))) { ?>
                                         <a href="./backups.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-wrench-outline mdi-rotate-90 mdi-18px">
                                                 <?= $_["backup_settings"] ?></span></a>
                                     <?php }
-                                    if ((hasPermissions("adv", "settings"))) { ?>
+                                    if ((UIController::hasPermissions("adv", "settings"))) { ?>
                                         <a href="./cache.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-wrench-outline mdi-rotate-90 mdi-18px">
                                                 <?= $_["cache_cron_redis_settings"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "mng_packages")) { ?>
+                                    if (UIController::hasPermissions("adv", "mng_packages")) { ?>
                                         <a href="./packages.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-package mdi-18px"> <?= $_["packages"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "categories")) { ?>
+                                    if (UIController::hasPermissions("adv", "categories")) { ?>
                                         <a href="./stream_categories.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-folder-open-outline mdi-18px"> <?= $_["categories"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "mng_groups")) { ?>
+                                    if (UIController::hasPermissions("adv", "mng_groups")) { ?>
                                         <a href="./groups.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-account-multiple-outline mdi-18px"> <?= $_["groups"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "epg")) { ?>
+                                    if (UIController::hasPermissions("adv", "epg")) { ?>
                                         <a href="./epgs.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-play-protected-content mdi-18px"> <?= $_["epgs"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "channel_order")) { ?>
+                                    if (UIController::hasPermissions("adv", "channel_order")) { ?>
                                         <a href="./channel_order.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-reorder-horizontal mdi-18px"> <?= $_["channel_order"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "folder_watch")) { ?>
+                                    if (UIController::hasPermissions("adv", "folder_watch")) { ?>
                                         <a href="./watch.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-eye-outline mdi-18px"> <?= $_["folder_watch"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "subresellers")) { ?>
+                                    if (UIController::hasPermissions("adv", "subresellers")) { ?>
                                         <a href="./subresellers.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-account-multiple-outline mdi-18px">
                                                 <?= $_["subresellers"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "login_flood")) { ?>
+                                    if (UIController::hasPermissions("adv", "login_flood")) { ?>
                                         <a href="./flood_login.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-account-alert mdi-18px"> Logins Flood</span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "security_center")) { ?>
+                                    if (UIController::hasPermissions("adv", "security_center")) { ?>
                                         <a href="./security_center.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-security mdi-18px"> Security Center</span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "block_ips")) { ?>
+                                    if (UIController::hasPermissions("adv", "block_ips")) { ?>
                                         <a href="./ips.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-close-octagon-outline mdi-18px"> <?= $_["blocked_ips"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "block_isps")) { ?>
+                                    if (UIController::hasPermissions("adv", "block_isps")) { ?>
                                         <a href="./isps.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-close-network mdi-18px"> <?= $_["blocked_isps"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "rtmp")) { ?>
+                                    if (UIController::hasPermissions("adv", "rtmp")) { ?>
                                         <a href="./rtmp_ips.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-close mdi-18px"> <?= $_["rtmp_ips"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "block_uas")) { ?>
+                                    if (UIController::hasPermissions("adv", "block_uas")) { ?>
                                         <a href="./useragents.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-close-box-outline mdi-18px"> <?= $_["blocked_uas"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "process_monitor")) { ?>
+                                    if (UIController::hasPermissions("adv", "process_monitor")) { ?>
                                         <a href="./process_monitor.php?server=<?= $_INFO["server_id"] ?>"
                                             class="dropdown-item notify-item"><span class="mdi mdi-chart-line mdi-18px">
                                                 <?= $_["process_monitor"] ?></span></a>
                                     <?php }
-                                    if (hasPermissions("adv", "tprofiles")) { ?>
+                                    if (UIController::hasPermissions("adv", "tprofiles")) { ?>
                                         <a href="./profiles.php" class="dropdown-item notify-item"><span
                                                 class="mdi mdi-find-replace mdi-18px"> <?= $_["transcode_profiles"] ?></span></a>
                                     <?php } ?>
@@ -224,13 +224,13 @@
                             </li>
                             <?php }
                         if ($rPermissions["is_admin"]) {
-                            if ((hasPermissions("adv", "servers")) or (hasPermissions("adv", "add_server")) or (hasPermissions("adv", "live_connections")) or (hasPermissions("adv", "connection_logs"))) { ?>
+                            if ((UIController::hasPermissions("adv", "servers")) or (UIController::hasPermissions("adv", "add_server")) or (UIController::hasPermissions("adv", "live_connections")) or (UIController::hasPermissions("adv", "connection_logs"))) { ?>
                                 <li class="has-submenu">
                                     <a href="#"><i class="mdi mdi-server-network mdi-18px text-warning"></i><?= $_["servers"] ?>
                                         <div class="arrow-down"></div>
                                     </a>
                                     <ul class="submenu">
-                                        <?php if (hasPermissions("adv", "add_server")) { ?>
+                                        <?php if (UIController::hasPermissions("adv", "add_server")) { ?>
                                             <!-- <li><a href="./server.php"><span class="mdi mdi-upload-network-outline mdi-18px"></span>
                                                     <?= $_["add_existing_lb"] ?></a></li>
                                             <p> -->
@@ -239,12 +239,12 @@
                                                             <?= $_["install_load_balancer"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "servers")) { ?>
+                                        if (UIController::hasPermissions("adv", "servers")) { ?>
                                                 <li><a href="./servers.php"><span class="mdi mdi-server-network mdi-18px"></span>
                                                         <?= $_["manage_servers"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "servers")) { ?>
+                                        if (UIController::hasPermissions("adv", "servers")) { ?>
                                                 <li><a href="./smonitor.php"><span
                                                             class="mdi mdi-chart-line-variant mdi-18px"></span>
                                                         <?= $_["server_monitor"] ?></a></li>
@@ -252,20 +252,20 @@
                                     </ul>
                                 </li>
                             <?php }
-                            if ((hasPermissions("adv", "add_user")) or (hasPermissions("adv", "users")) or (hasPermissions("adv", "mass_edit_users")) or (hasPermissions("adv", "mng_regusers")) or (hasPermissions("adv", "add_reguser")) or (hasPermissions("adv", "credits_log")) or (hasPermissions("adv", "client_request_log")) or (hasPermissions("adv", "reg_userlog"))) { ?>
+                            if ((UIController::hasPermissions("adv", "add_user")) or (UIController::hasPermissions("adv", "users")) or (UIController::hasPermissions("adv", "mass_edit_users")) or (UIController::hasPermissions("adv", "mng_regusers")) or (UIController::hasPermissions("adv", "add_reguser")) or (UIController::hasPermissions("adv", "credits_log")) or (UIController::hasPermissions("adv", "client_request_log")) or (UIController::hasPermissions("adv", "reg_userlog"))) { ?>
                                 <li class="has-submenu">
                                     <a href="#"> <i
                                             class="mdi mdi-account-multiple-outline mdi-18px text-primary"></i><?= $_["reg_users"] ?>
                                         <div class="arrow-down"></div>
                                     </a>
                                     <ul class="submenu">
-                                        <?php if (hasPermissions("adv", "add_reguser")) { ?>
+                                        <?php if (UIController::hasPermissions("adv", "add_reguser")) { ?>
                                             <li><a href="./reg_user.php"><span
                                                         class="mdi mdi-account-multiple-plus-outline mdi-18px">
                                                         <?= $_["add_registered_user"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "mng_regusers")) { ?>
+                                        if (UIController::hasPermissions("adv", "mng_regusers")) { ?>
                                                 <li><a href="./reg_users.php"><span
                                                             class="mdi mdi-account-multiple-outline mdi-18px">
                                                             <?= $_["manage_registered_users"] ?></a></li>
@@ -273,56 +273,56 @@
                                     </ul>
                                 </li>
                             <?php }
-                            if ((hasPermissions("adv", "add_user")) or (hasPermissions("adv", "users")) or (hasPermissions("adv", "mass_edit_users")) or (hasPermissions("adv", "mng_regusers")) or (hasPermissions("adv", "add_reguser")) or (hasPermissions("adv", "credits_log")) or (hasPermissions("adv", "client_request_log")) or (hasPermissions("adv", "reg_userlog")) or (hasPermissions("adv", "add_mag")) or (hasPermissions("adv", "manage_mag")) or (hasPermissions("adv", "add_e2")) or (hasPermissions("adv", "manage_e2")) or (hasPermissions("adv", "manage_events"))) { ?>
+                            if ((UIController::hasPermissions("adv", "add_user")) or (UIController::hasPermissions("adv", "users")) or (UIController::hasPermissions("adv", "mass_edit_users")) or (UIController::hasPermissions("adv", "mng_regusers")) or (UIController::hasPermissions("adv", "add_reguser")) or (UIController::hasPermissions("adv", "credits_log")) or (UIController::hasPermissions("adv", "client_request_log")) or (UIController::hasPermissions("adv", "reg_userlog")) or (UIController::hasPermissions("adv", "add_mag")) or (UIController::hasPermissions("adv", "manage_mag")) or (UIController::hasPermissions("adv", "add_e2")) or (UIController::hasPermissions("adv", "manage_e2")) or (UIController::hasPermissions("adv", "manage_events"))) { ?>
                                 <li class="has-submenu">
                                     <a href="#"> <i class="mdi mdi-account-outline mdi-18px text-pink"></i><?= $_["users"] ?>
                                         <div class="arrow-down"></div>
                                     </a>
                                     <ul class="submenu">
-                                        <?php if (hasPermissions("adv", "add_user")) { ?>
+                                        <?php if (UIController::hasPermissions("adv", "add_user")) { ?>
                                             <li><a href="./user.php"><span class="mdi mdi-account-plus-outline mdi-18px"></span>
                                                     <?= $_["add_user"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "users")) { ?>
+                                        if (UIController::hasPermissions("adv", "users")) { ?>
                                                 <li><a href="./users.php"><span class="mdi mdi-account-multiple-outline mdi-18px">
                                                             <?= $_["manage_users"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if ((hasPermissions("adv", "add_mag")) or (hasPermissions("adv", "manage_mag"))) { ?>
+                                        if ((UIController::hasPermissions("adv", "add_mag")) or (UIController::hasPermissions("adv", "manage_mag"))) { ?>
                                             <div class="separator"></div>
                                         <?php }
-                                        if (hasPermissions("adv", "add_mag")) { ?>
+                                        if (UIController::hasPermissions("adv", "add_mag")) { ?>
                                             <li><a href="./user.php?mag"><span class="mdi mdi-account-plus-outline mdi-18px"></span>
                                                     <?= $_["add_mag"] ?></a></li>
                                             <p>
                                                 <!--<li><a href="./mag.php"><?= $_["link_mag"] ?></a></li>-->
                                             <?php }
-                                        if (hasPermissions("adv", "manage_mag")) { ?>
+                                        if (UIController::hasPermissions("adv", "manage_mag")) { ?>
                                                 <li><a href="./mags.php"><span class="mdi mdi-account-multiple-outline mdi-18px">
                                                             <?= $_["manage_mag_devices"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "add_mag")) { ?>
+                                        if (UIController::hasPermissions("adv", "add_mag")) { ?>
                                                 <li><a href="./mag.php"><span class="mdi mdi-account-switch mdi-18px">
                                                             <?= $_["link_mag"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if ((hasPermissions("adv", "add_e2")) or (hasPermissions("adv", "manage_e2"))) { ?>
+                                        if ((UIController::hasPermissions("adv", "add_e2")) or (UIController::hasPermissions("adv", "manage_e2"))) { ?>
                                             <div class="separator"></div>
                                         <?php }
-                                        if (hasPermissions("adv", "add_e2")) { ?>
+                                        if (UIController::hasPermissions("adv", "add_e2")) { ?>
                                             <li><a href="./user.php?e2"><span class="mdi mdi-account-plus-outline mdi-18px"></span>
                                                     <?= $_["add_enigma"] ?></a></li>
                                             <p>
                                                 <!--<li><a href="./enigma.php"><?= $_["link_enigma"] ?></a></li>-->
                                             <?php }
-                                        if (hasPermissions("adv", "manage_e2")) { ?>
+                                        if (UIController::hasPermissions("adv", "manage_e2")) { ?>
                                                 <li><a href="./enigmas.php"><span class="mdi mdi-account-multiple-outline mdi-18px">
                                                             <?= $_["manage_enigma_devices"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "add_e2")) { ?>
+                                        if (UIController::hasPermissions("adv", "add_e2")) { ?>
                                                 <li><a href="./enigma.php"><span class="mdi mdi-account-switch mdi-18px">
                                                             <?= $_["link_enigma"] ?></a></li>
                                             <?php } ?>
@@ -392,96 +392,96 @@
                             </li>
                             <?php }
                         if ($rPermissions["is_admin"]) {
-                            if ((hasPermissions("adv", "add_movie")) or (hasPermissions("adv", "import_movies")) or (hasPermissions("adv", "movies")) or (hasPermissions("adv", "series")) or (hasPermissions("adv", "add_series")) or (hasPermissions("adv", "radio")) or (hasPermissions("adv", "add_radio")) or (hasPermissions("adv", "mass_sedits_vod")) or (hasPermissions("adv", "mass_sedits")) or (hasPermissions("adv", "mass_edits_radio"))) { ?>
+                            if ((UIController::hasPermissions("adv", "add_movie")) or (UIController::hasPermissions("adv", "import_movies")) or (UIController::hasPermissions("adv", "movies")) or (UIController::hasPermissions("adv", "series")) or (UIController::hasPermissions("adv", "add_series")) or (UIController::hasPermissions("adv", "radio")) or (UIController::hasPermissions("adv", "add_radio")) or (UIController::hasPermissions("adv", "mass_sedits_vod")) or (UIController::hasPermissions("adv", "mass_sedits")) or (UIController::hasPermissions("adv", "mass_edits_radio"))) { ?>
                                 <li class="has-submenu">
                                     <a href="#"> <i class="mdi mdi-video-outline mdi-18px text-success"></i><?= $_["vod"] ?>
                                         <div class="arrow-down"></div>
                                     </a>
                                     <ul class="submenu">
-                                        <?php if (hasPermissions("adv", "add_movie")) { ?>
+                                        <?php if (UIController::hasPermissions("adv", "add_movie")) { ?>
                                             <li><a href="./movie.php"><span class="mdi mdi-plus mdi-18px">
                                                         <?= $_["add_movie"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "movies")) { ?>
+                                        if (UIController::hasPermissions("adv", "movies")) { ?>
                                                 <li><a href="./movies.php"><span class="mdi mdi-movie mdi-18px">
                                                             <?= $_["manage_movies"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if ((hasPermissions("adv", "add_series")) or (hasPermissions("adv", "series")) or (hasPermissions("adv", "episodes"))) { ?>
+                                        if ((UIController::hasPermissions("adv", "add_series")) or (UIController::hasPermissions("adv", "series")) or (UIController::hasPermissions("adv", "episodes"))) { ?>
                                             <div class="separator"></div>
                                         <?php }
-                                        if (hasPermissions("adv", "add_series")) { ?>
+                                        if (UIController::hasPermissions("adv", "add_series")) { ?>
                                             <li><a href="./serie.php"><span class="mdi mdi-plus mdi-18px">
                                                         <?= $_["add_series"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "series")) { ?>
+                                        if (UIController::hasPermissions("adv", "series")) { ?>
                                                 <li><a href="./series.php"><span class="mdi mdi-youtube-tv mdi-18px">
                                                             <?= $_["manage_series"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "episodes")) { ?>
+                                        if (UIController::hasPermissions("adv", "episodes")) { ?>
                                                 <li><a href="./episodes.php"><span class="mdi mdi-youtube-tv mdi-18px">
                                                             <?= $_["manage_episodes"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if ((hasPermissions("adv", "mass_sedits_vod")) or (hasPermissions("adv", "mass_sedits")) or (hasPermissions("adv", "mass_edit_radio"))) { ?>
+                                        if ((UIController::hasPermissions("adv", "mass_sedits_vod")) or (UIController::hasPermissions("adv", "mass_sedits")) or (UIController::hasPermissions("adv", "mass_edit_radio"))) { ?>
                                             <div class="separator"></div>
                                         <?php }
-                                        if (hasPermissions("adv", "add_radio")) { ?>
+                                        if (UIController::hasPermissions("adv", "add_radio")) { ?>
                                             <li><a href="./radio.php"><span class="mdi mdi-plus mdi-18px">
                                                         <?= $_["add_station"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "radio")) { ?>
+                                        if (UIController::hasPermissions("adv", "radio")) { ?>
                                                 <li><a href="./radios.php"><span class="mdi mdi-radio mdi-18px">
                                                             <?= $_["manage_stations"] ?></a></li>
                                             <?php } ?>
                                     </ul>
                                 </li>
                             <?php }
-                            if ((hasPermissions("adv", "add_stream")) or (hasPermissions("adv", "import_streams")) or (hasPermissions("adv", "create_channel")) or (hasPermissions("adv", "streams")) or (hasPermissions("adv", "mass_edit_streams")) or (hasPermissions("adv", "stream_tools")) or (hasPermissions("adv", "stream_errors")) or (hasPermissions("adv", "fingerprint"))) { ?>
+                            if ((UIController::hasPermissions("adv", "add_stream")) or (UIController::hasPermissions("adv", "import_streams")) or (UIController::hasPermissions("adv", "create_channel")) or (UIController::hasPermissions("adv", "streams")) or (UIController::hasPermissions("adv", "mass_edit_streams")) or (UIController::hasPermissions("adv", "stream_tools")) or (UIController::hasPermissions("adv", "stream_errors")) or (UIController::hasPermissions("adv", "fingerprint"))) { ?>
                                 <li class="has-submenu">
                                     <a href="#"> <i
                                             class="mdi mdi-play-circle-outline mdi-18px text-info"></i><?= $_["streams"] ?>
                                         <div class="arrow-down"></div>
                                     </a>
                                     <ul class="submenu">
-                                        <?php if (hasPermissions("adv", "add_stream")) { ?>
+                                        <?php if (UIController::hasPermissions("adv", "add_stream")) { ?>
                                             <li><a href="./stream.php"><span class="mdi mdi-plus mdi-18px">
                                                         <?= $_["add_stream"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "streams")) { ?>
+                                        if (UIController::hasPermissions("adv", "streams")) { ?>
                                                 <li><a href="./streams.php"><span class="mdi mdi-play-circle-outline mdi-18px">
                                                             <?= $_["manage_streams"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "create_channel")) { ?>
+                                        if (UIController::hasPermissions("adv", "create_channel")) { ?>
                                                 <li><a href="./created_channel.php"><span class="mdi mdi-plus mdi-18px">
                                                             <?= $_["create_channel"] ?></a></li>
                                             <?php } ?>
                                     </ul>
                                 </li>
                             <?php }
-                            if ((hasPermissions("adv", "add_bouquet")) or (hasPermissions("adv", "bouquets"))) { ?>
+                            if ((UIController::hasPermissions("adv", "add_bouquet")) or (UIController::hasPermissions("adv", "bouquets"))) { ?>
                                 <li class="has-submenu">
                                     <a href="#"> <i class="mdi mdi-flower-tulip-outline text-purple"></i><?= $_["bouquets"] ?>
                                         <div class="arrow-down"></div>
                                     </a>
                                     <ul class="submenu">
-                                        <?php if (hasPermissions("adv", "add_bouquet")) { ?>
+                                        <?php if (UIController::hasPermissions("adv", "add_bouquet")) { ?>
                                             <li><a href="./bouquet.php"><span class="mdi mdi-plus mdi-18px">
                                                         <?= $_["add_bouquet"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "bouquets")) { ?>
+                                        if (UIController::hasPermissions("adv", "bouquets")) { ?>
                                                 <li><a href="./bouquets.php"><span class="mdi mdi-flower-tulip-outline mdi-18px">
                                                             <?= $_["manage_bouquets"] ?></a></li>
                                             <p>
                                             <?php }
-                                        if (hasPermissions("adv", "edit_bouquet")) { ?>
+                                        if (UIController::hasPermissions("adv", "edit_bouquet")) { ?>
                                                 <li><a href="./bouquet_sort.php"><span class="mdi mdi-reorder-horizontal mdi-18px">
                                                             <?= $_["order_bouquets"] ?></a></li>
                                             <?php } ?>
@@ -508,31 +508,31 @@
                                 </ul>
                             </li>
                         <?php }
-                        if ((hasPermissions("adv", "add_user")) or (hasPermissions("adv", "users")) or (hasPermissions("adv", "mass_edit_users")) or (hasPermissions("adv", "mng_regusers")) or (hasPermissions("adv", "add_reguser")) or (hasPermissions("adv", "credits_log")) or (hasPermissions("adv", "panel_errors")) or (hasPermissions("adv", "client_request_log")) or (hasPermissions("adv", "reg_userlog")) or (hasPermissions("adv", "live_connections")) or (hasPermissions("adv", "connection_logs")) or (hasPermissions("adv", "stream_errors")) or (hasPermissions("adv", "manage_events")) or (hasPermissions("adv", "system_logs"))) { ?>
+                        if ((UIController::hasPermissions("adv", "add_user")) or (UIController::hasPermissions("adv", "users")) or (UIController::hasPermissions("adv", "mass_edit_users")) or (UIController::hasPermissions("adv", "mng_regusers")) or (UIController::hasPermissions("adv", "add_reguser")) or (UIController::hasPermissions("adv", "credits_log")) or (UIController::hasPermissions("adv", "panel_errors")) or (UIController::hasPermissions("adv", "client_request_log")) or (UIController::hasPermissions("adv", "reg_userlog")) or (UIController::hasPermissions("adv", "live_connections")) or (UIController::hasPermissions("adv", "connection_logs")) or (UIController::hasPermissions("adv", "stream_errors")) or (UIController::hasPermissions("adv", "manage_events")) or (UIController::hasPermissions("adv", "system_logs"))) { ?>
                             <li class="has-submenu">
                                 <a href="#"> <i
                                         class="mdi mdi-information-outline mdi-18px text-danger"></i><?= $_["logs"] ?>
                                     <div class="arrow-down"></div>
                                 </a>
                                 <ul class="submenu">
-                                    <?php if (hasPermissions("adv", "live_connections")) { ?>
+                                    <?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
                                         <li><a href="./live_connections.php"><span
                                                     class="mdi mdi-account-network-outline mdi-18px">
                                                     <?= $_["live_connections"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "panel_errors")) { ?>
+                                    if (UIController::hasPermissions("adv", "panel_errors")) { ?>
                                             <li><a href="./panel_logs.php"><span class="mdi mdi-file-document-outline mdi-18px">
                                                         <?= $_["panel_logs"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "system_logs")) { ?>
+                                    if (UIController::hasPermissions("adv", "system_logs")) { ?>
                                             <li><a href="./system_logs.php"><span
                                                         class="mdi mdi-file-document-outline mdi-18px">
                                                         <?= $_["system_logs"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "connection_logs")) { ?>
+                                    if (UIController::hasPermissions("adv", "connection_logs")) { ?>
                                             <li><a href="./user_activity.php"><span
                                                         class="mdi mdi-file-document-outline mdi-18px">
                                                         <?= $_["activity_logs"] ?></a></li>
@@ -541,56 +541,56 @@
                                                         <?= $_["line_ip_usage"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "credits_log")) { ?>
+                                    if (UIController::hasPermissions("adv", "credits_log")) { ?>
                                             <li><a href="./credit_logs.php"><span class="mdi mdi-credit-card-multiple mdi-18px">
                                                         <?= $_["credit_logs"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "client_request_log")) { ?>
+                                    if (UIController::hasPermissions("adv", "client_request_log")) { ?>
                                             <li><a href="./client_logs.php"><span class="mdi mdi-account-search mdi-18px">
                                                         <?= $_["client_logs"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "reg_userlog")) { ?>
+                                    if (UIController::hasPermissions("adv", "reg_userlog")) { ?>
                                             <li><a href="./reg_user_logs.php"><span class="mdi mdi-account-details mdi-18px">
                                                         <?= $_["reseller_logs"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "stream_errors")) { ?>
+                                    if (UIController::hasPermissions("adv", "stream_errors")) { ?>
                                             <li><a href="./stream_logs.php"><span
                                                         class="mdi mdi-file-document-outline mdi-18px">
                                                         <?= $_["stream_logs"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "manage_events")) { ?>
+                                    if (UIController::hasPermissions("adv", "manage_events")) { ?>
                                             <li><a href="./mag_events.php"><span class="mdi mdi-message-outline mdi-18px">
                                                         <?= $_["mag_event_logs"] ?></a></li>
                                         <?php } ?>
                                 </ul>
                             </li>
                         <?php }
-                        if ((hasPermissions("adv", "add_user")) or (hasPermissions("adv", "users")) or (hasPermissions("adv", "mass_edit_users")) or (hasPermissions("adv", "import_streams")) or (hasPermissions("adv", "streams")) or (hasPermissions("adv", "mass_edit_streams")) or (hasPermissions("adv", "manage_events")) or (hasPermissions("adv", "import_movies")) or (hasPermissions("adv", "movies")) or (hasPermissions("adv", "series")) or (hasPermissions("adv", "radio")) or (hasPermissions("adv", "mass_sedits_vod")) or (hasPermissions("adv", "mass_sedits")) or (hasPermissions("adv", "mass_edits_radio")) or (hasPermissions("adv", "stream_tools")) or (hasPermissions("adv", "fingerprint")) or (hasPermissions("adv", "mass_delete"))) { ?>
+                        if ((UIController::hasPermissions("adv", "add_user")) or (UIController::hasPermissions("adv", "users")) or (UIController::hasPermissions("adv", "mass_edit_users")) or (UIController::hasPermissions("adv", "import_streams")) or (UIController::hasPermissions("adv", "streams")) or (UIController::hasPermissions("adv", "mass_edit_streams")) or (UIController::hasPermissions("adv", "manage_events")) or (UIController::hasPermissions("adv", "import_movies")) or (UIController::hasPermissions("adv", "movies")) or (UIController::hasPermissions("adv", "series")) or (UIController::hasPermissions("adv", "radio")) or (UIController::hasPermissions("adv", "mass_sedits_vod")) or (UIController::hasPermissions("adv", "mass_sedits")) or (UIController::hasPermissions("adv", "mass_edits_radio")) or (UIController::hasPermissions("adv", "stream_tools")) or (UIController::hasPermissions("adv", "fingerprint")) or (UIController::hasPermissions("adv", "mass_delete"))) { ?>
                             <li class="has-submenu">
                                 <a href="#"> <i class="mdi mdi-progress-wrench mdi-18px text-primary"></i><?= $_["tools"] ?>
                                     <div class="arrow-down"></div>
                                 </a>
                                 <ul class="submenu">
-                                    <?php if (hasPermissions("adv", "mass_edit_users")) { ?>
+                                    <?php if (UIController::hasPermissions("adv", "mass_edit_users")) { ?>
                                         <li><a href="./user_mass.php"><span class="mdi mdi-account-edit mdi-18px">
                                                     <?= $_["mass_edit_users"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "mass_edit_streams")) { ?>
+                                    if (UIController::hasPermissions("adv", "mass_edit_streams")) { ?>
                                             <li><a href="./stream_mass.php"><span class="mdi mdi-border-color mdi-18px">
                                                         <?= $_["mass_edit_streams"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "mass_sedits_vod")) { ?>
+                                    if (UIController::hasPermissions("adv", "mass_sedits_vod")) { ?>
                                             <li><a href="./movie_mass.php"><span class="mdi mdi-border-color mdi-18px">
                                                         <?= $_["mass_edit_movies"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "mass_sedits")) { ?>
+                                    if (UIController::hasPermissions("adv", "mass_sedits")) { ?>
                                             <li><a href="./series_mass.php"><span class="mdi mdi-border-color mdi-18px">
                                                         <?= $_["mass_edit_series"] ?></a></li>
                                         <p>
@@ -598,33 +598,33 @@
                                                         <?= $_["mass_edit_episodes"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "mass_edit_radio")) { ?>
+                                    if (UIController::hasPermissions("adv", "mass_edit_radio")) { ?>
                                             <li><a href="./radio_mass.php"><span class="mdi mdi-border-color mdi-18px">
                                                         <?= $_["mass_edit_stations"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "mass_delete")) { ?>
+                                    if (UIController::hasPermissions("adv", "mass_delete")) { ?>
                                             <li><a href="./mass_delete.php"><span class="mdi mdi-delete-outline mdi-18px">
                                                         <?= $_["mass_delete"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "fingerprint")) { ?>
+                                    if (UIController::hasPermissions("adv", "fingerprint")) { ?>
                                             <li><a href="./fingerprint.php"><span class="mdi mdi-fingerprint mdi-18px">
                                                         <?= $_["fingerprint"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "stream_tools")) { ?>
+                                    if (UIController::hasPermissions("adv", "stream_tools")) { ?>
                                             <li><a href="./stream_tools.php"><span
                                                         class="mdi mdi-wrench-outline mdi-rotate-90 mdi-18px">
                                                         <?= $_["stream_tools"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "import_movies")) { ?>
+                                    if (UIController::hasPermissions("adv", "import_movies")) { ?>
                                             <li><a href="./movie.php?import"><span class="mdi mdi-file-plus mdi-18px">
                                                         <?= $_["import_movies"] ?></a></li>
                                         <p>
                                         <?php }
-                                    if (hasPermissions("adv", "import_streams")) { ?>
+                                    if (UIController::hasPermissions("adv", "import_streams")) { ?>
                                             <li><a href="./stream.php?import=1"><span class="mdi mdi-file-plus mdi-18px">
                                                         <?= $_["import_streams"] ?></a></li>
                                         <p>
@@ -673,7 +673,7 @@
                                 </ul>
                             </li>
                         <?php }
-                        if (($rPermissions["is_admin"]) && (hasPermissions("adv", "manage_tickets"))) { ?>
+                        if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "manage_tickets"))) { ?>
                             <li>
                                 <a href="./tickets.php"> <i
                                         class="mdi mdi-email-outline mdi-18px text-pink"></i><?= $_["tickets"] ?></a>

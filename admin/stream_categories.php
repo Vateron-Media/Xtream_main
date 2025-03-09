@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "categories"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "categories"))) {
     exit;
 }
 
@@ -19,7 +19,7 @@ if (isset(CoreUtilities::$request["categories"])) {
     }
 }
 
-$rCategories = array(1 => getCategories_admin(), 2 => getCategories_admin("movie"), 3 => getCategories_admin("series"), 4 => getCategories_admin("radio"));
+$rCategories = array(1 => UIController::getCategories_admin(), 2 => UIController::getCategories_admin("movie"), 3 => UIController::getCategories_admin("series"), 4 => UIController::getCategories_admin("radio"));
 $rMainCategories = array(1 => array(), 2 => array(), 3 => array());
 $rSubCategories = array(1 => array(), 2 => array(), 3 => array(), 4 => array());
 
@@ -41,7 +41,7 @@ include "header.php";
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <?php if (hasPermissions("adv", "add_cat")) { ?>
+                    <?php if (UIController::hasPermissions("adv", "add_cat")) { ?>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li>
@@ -110,7 +110,7 @@ include "header.php";
                                                                 <div class="dd3-content">
                                                                     <?= $rCategory["category_name"] ?>
                                                                     <span style="float:right;">
-                                                                        <?php if (hasPermissions("adv", "edit_cat")) { ?>
+                                                                        <?php if (UIController::hasPermissions("adv", "edit_cat")) { ?>
                                                                             <div class="btn-group">
                                                                                 <a
                                                                                     href="./stream_category.php?id=<?= $rCategory["id"] ?>"><button
@@ -134,7 +134,7 @@ include "header.php";
                                                                                 <div class="dd3-content">
                                                                                     <?= $rSubCategory["category_name"] ?>
                                                                                     <span style="float:right;">
-                                                                                        <?php if (hasPermissions("adv", "edit_cat")) { ?>
+                                                                                        <?php if (UIController::hasPermissions("adv", "edit_cat")) { ?>
                                                                                             <div class="btn-group">
                                                                                                 <a
                                                                                                     href="./stream_category.php?id=<?= $rSubCategory["id"] ?>"><button
@@ -186,7 +186,7 @@ include "header.php";
                                                                 <div class="dd3-content">
                                                                     <?= $rCategory["category_name"] ?>
                                                                     <span style="float:right;">
-                                                                        <?php if (hasPermissions("adv", "edit_cat")) { ?>
+                                                                        <?php if (UIController::hasPermissions("adv", "edit_cat")) { ?>
                                                                             <div class="btn-group">
                                                                                 <a
                                                                                     href="./stream_category.php?id=<?= $rCategory["id"] ?>"><button
@@ -210,7 +210,7 @@ include "header.php";
                                                                                 <div class="dd3-content">
                                                                                     <?= $rSubCategory["category_name"] ?>
                                                                                     <span style="float:right;">
-                                                                                        <?php if (hasPermissions("adv", "edit_cat")) { ?>
+                                                                                        <?php if (UIController::hasPermissions("adv", "edit_cat")) { ?>
                                                                                             <div class="btn-group">
                                                                                                 <a
                                                                                                     href="./stream_category.php?id=<?= $rSubCategory["id"] ?>"><button
@@ -262,7 +262,7 @@ include "header.php";
                                                                 <div class="dd3-content">
                                                                     <?= $rCategory["category_name"] ?>
                                                                     <span style="float:right;">
-                                                                        <?php if (hasPermissions("adv", "edit_cat")) { ?>
+                                                                        <?php if (UIController::hasPermissions("adv", "edit_cat")) { ?>
                                                                             <div class="btn-group">
                                                                                 <a
                                                                                     href="./stream_category.php?id=<?= $rCategory["id"] ?>"><button
@@ -286,7 +286,7 @@ include "header.php";
                                                                                 <div class="dd3-content">
                                                                                     <?= $rSubCategory["category_name"] ?>
                                                                                     <span style="float:right;">
-                                                                                        <?php if (hasPermissions("adv", "edit_cat")) { ?>
+                                                                                        <?php if (UIController::hasPermissions("adv", "edit_cat")) { ?>
                                                                                             <div class="btn-group">
                                                                                                 <a
                                                                                                     href="./stream_category.php?id=<?= $rSubCategory["id"] ?>"><button
@@ -338,7 +338,7 @@ include "header.php";
                                                                 <div class="dd3-content">
                                                                     <?= $rCategory["category_name"] ?>
                                                                     <span style="float:right;">
-                                                                        <?php if (hasPermissions("adv", "edit_cat")) { ?>
+                                                                        <?php if (UIController::hasPermissions("adv", "edit_cat")) { ?>
                                                                             <div class="btn-group">
                                                                                 <a
                                                                                     href="./stream_category.php?id=<?= $rCategory["id"] ?>"><button
@@ -362,7 +362,7 @@ include "header.php";
                                                                                 <div class="dd3-content">
                                                                                     <?= $rSubCategory["category_name"] ?>
                                                                                     <span style="float:right;">
-                                                                                        <?php if (hasPermissions("adv", "edit_cat")) { ?>
+                                                                                        <?php if (UIController::hasPermissions("adv", "edit_cat")) { ?>
                                                                                             <div class="btn-group">
                                                                                                 <a
                                                                                                     href="./stream_category.php?id=<?= $rSubCategory["id"] ?>"><button
@@ -408,7 +408,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

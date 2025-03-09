@@ -1,6 +1,6 @@
 <?php
 include "functions.php";
-if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "connection_logs"))) {
+if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "connection_logs"))) {
     exit;
 }
 if (($rPermissions["is_reseller"]) && (!$rPermissions["reseller_client_connection_logs"])) {
@@ -62,7 +62,7 @@ include "header.php";
                                 <div class="col-md-3">
                                     <select id="act_filter" class="form-control" data-toggle="select2">
                                         <option value="" selected><?= $_["all_servers"] ?></option>
-                                        <?php foreach (getStreamingServers() as $rServer) { ?>
+                                        <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                             <option value="<?= $rServer["id"] ?>"><?= $rServer["server_name"] ?>
                                             </option>
                                         <?php } ?>
@@ -148,7 +148,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

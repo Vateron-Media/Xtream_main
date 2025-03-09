@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_bouquet"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_bouquet"))) {
     exit;
 }
 
@@ -22,7 +22,7 @@ if (isset(CoreUtilities::$request["reorder"])) {
 if (!isset(CoreUtilities::$request["id"])) {
     exit;
 }
-$rBouquet = getBouquet(CoreUtilities::$request["id"]);
+$rBouquet = UIController::getBouquet(CoreUtilities::$request["id"]);
 if (!$rBouquet) {
     exit;
 }
@@ -288,7 +288,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

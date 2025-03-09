@@ -1,11 +1,11 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "subresellers"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "subresellers"))) {
     exit;
 }
 
-$rMemberGroups = getMemberGroups();
+$rMemberGroups = UIController::getMemberGroups();
 
 include "header.php";
 ?>
@@ -18,14 +18,14 @@ include "header.php";
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li>
-                                <?php if (hasPermissions("adv", "mng_regusers")) { ?>
+                                <?php if (UIController::hasPermissions("adv", "mng_regusers")) { ?>
                                     <a href="reg_users.php">
                                         <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
                                             <i class="mdi mdi-account-group"></i> <?= $_["registered_users"] ?>
                                         </button>
                                     </a>
                                 <?php }
-                                if (hasPermissions("adv", "subreseller")) { ?>
+                                if (UIController::hasPermissions("adv", "subreseller")) { ?>
                                     <a href="subreseller_setup.php">
                                         <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
                                             <i class="mdi mdi-plus"></i> <?= $_["setup_access"] ?>
@@ -55,13 +55,13 @@ include "header.php";
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (getSubresellerSetups() as $rItem) { ?>
+                                <?php foreach (UIController::getSubresellerSetups() as $rItem) { ?>
                                     <tr id="setup-<?= $rItem["id"] ?>">
                                         <td class="text-center"><?= $rItem["id"] ?></td>
                                         <td><?= $rMemberGroups[$rItem["reseller"]]["group_name"] ?></td>
                                         <td><?= $rMemberGroups[$rItem["subreseller"]]["group_name"] ?></td>
                                         <td class="text-center">
-                                            <?php if (hasPermissions("adv", "subreseller")) { ?>
+                                            <?php if (UIController::hasPermissions("adv", "subreseller")) { ?>
                                                 <div class="btn-group">
                                                     <a href="./subreseller_setup.php?id=<?= $rItem["id"] ?>"><button
                                                             type="button"
@@ -91,7 +91,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

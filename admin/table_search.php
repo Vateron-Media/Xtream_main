@@ -18,10 +18,10 @@ if (($rLimit > 1000) or ($rLimit == -1) or ($rLimit == 0)) {
 }
 
 if ($rType == "users") {
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "users")) && (!hasPermissions("adv", "mass_edit_users"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "users")) && (!UIController::hasPermissions("adv", "mass_edit_users"))) {
         exit;
     }
-    $rAvailableMembers = array_keys(getRegisteredUsers($rUserInfo["id"]));
+    $rAvailableMembers = array_keys(UIController::getRegisteredUsers($rUserInfo["id"]));
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`lines`.`id`", "`lines`.`username`", "`lines`.`password`", "`reg_users`.`username`", "`lines`.`enabled`", "`active_connections`", "`lines`.`is_trial`", "`lines`.`exp_date`", "`lines`.`max_connections`", "`lines`.`max_connections`", "`lines`.`isp_desc`", "`lines_live`.`user_ip`", false);
     if (strlen(CoreUtilities::$request["order"][0]["column"]) > 0) {
@@ -124,20 +124,20 @@ if ($rType == "users") {
                 } else {
                     $max_connections = $rRow["max_connections"];
                 }
-                if ((($rPermissions["is_reseller"]) && ($rPermissions["reseller_client_connection_logs"])) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "live_connections")))) {
+                if ((($rPermissions["is_reseller"]) && ($rPermissions["reseller_client_connection_logs"])) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "live_connections")))) {
                     $rActiveConnections = "<a href=\"./live_connections.php?user_id=" . $rRow["id"] . "\"> " . $rRow["active_connections"] . " / " . $max_connections . "</a>";
                 } else {
                     $rActiveConnections = "" . $rRow["active_connections"] . " / " . $max_connections . "</a>";
                 }
                 $rButtons = '<div class="btn-group">';
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_reset_isplock"]))) {
-                    //if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_reset_isplock"]))) {
+                    //if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user"))) {
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'resetispuser\');"><i class="mdi mdi-lock-reset"></i></button>
 					';
                 }
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_can_isplock"]))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_can_isplock"]))) {
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     if ($rRow["is_isplock"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unlock isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unlockk\');"><i class="mdi mdi-lock"></i></button>';
                     } else {
@@ -162,7 +162,7 @@ if ($rType == "users") {
                     $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
                 }
                 if ($rPermissions["is_admin"]) {
-                    if (hasPermissions("adv", "edit_user")) {
+                    if (UIController::hasPermissions("adv", "edit_user")) {
                         $rButtons .= '<a href="./user.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
 						';
                     }
@@ -177,18 +177,18 @@ if ($rType == "users") {
                 if ((($rPermissions["is_reseller"]) && ($rPermissions["allow_download"])) or ($rPermissions["is_admin"])) {
                     $rButtons .= '<button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Download Playlist" class="btn btn-light waves-effect waves-light btn-xs" onClick="download(\'' . $rRow["username"] . '\', \'' . $rRow["password"] . '\');"><i class="mdi mdi-arrow-collapse-down"></i></button>';
                 }
-                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Kill Connections" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'kill\');"><i class="fas fa-hammer"></i></button>
 					';
                 }
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
+                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user"))) {
                     if ($rRow["admin_enabled"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Ban" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'ban\');"><i class="mdi mdi-minus-circle-outline"></i></button>';
                     } else {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unban" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unban\');"><i class="mdi mdi-minus-circle"></i></button>';
                     }
                 }
-                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     if ($rRow["enabled"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Disable" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'disable\');"><i class="mdi mdi-checkbox-blank-circle-outline"></i></button>
 						';
@@ -197,7 +197,7 @@ if ($rType == "users") {
 						';
                     }
                 }
-                if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'delete\');"><i class="mdi mdi-close"></i></button>';
                 }
                 $rButtons .= '</div>';
@@ -241,7 +241,7 @@ if ($rType == "users") {
     exit;
 }
 if ($rType == "mags") {
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_mag"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "manage_mag"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -253,7 +253,7 @@ if ($rType == "mags") {
     }
     $rWhere = array();
     if ($rPermissions["is_reseller"]) {
-        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
+        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(UIController::getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
     if (strlen(CoreUtilities::$request["search"]["value"]) > 0) {
         $rSearch = CoreUtilities::$request["search"]["value"];
@@ -330,20 +330,20 @@ if ($rType == "mags") {
                 } else {
                     $rExpDate = "Unlimited";
                 }
-                if ((($rPermissions["is_reseller"]) && ($rPermissions["reseller_client_connection_logs"])) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "live_connections")))) {
+                if ((($rPermissions["is_reseller"]) && ($rPermissions["reseller_client_connection_logs"])) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "live_connections")))) {
                     $rActiveConnections = "<a href=\"./live_connections.php?user_id=" . $rRow["id"] . "\">" . $rRow["active_connections"] . "</a>";
                 } else {
                     $rActiveConnections = $rRow["active_connections"];
                 }
                 $rButtons = '<div class="btn-group">';
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_reset_isplock"]))) {
-                    //if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_reset_isplock"]))) {
+                    //if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user"))) {
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'resetispuser\');"><i class="mdi mdi-lock-reset"></i></button>
 					';
                 }
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_can_isplock"]))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_can_isplock"]))) {
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     if ($rRow["is_isplock"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unlock isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unlockk\');"><i class="mdi mdi-lock"></i></button>';
                     } else {
@@ -368,11 +368,11 @@ if ($rType == "mags") {
                     $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
                 }
                 if ($rPermissions["is_admin"]) {
-                    if (hasPermissions("adv", "manage_events")) {
+                    if (UIController::hasPermissions("adv", "manage_events")) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Send MAG Event" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="message(' . $rRow["mag_id"] . ', \'' . base64_decode($rRow["mac"]) . '\');"><i class="mdi mdi-comment-alert-outline"></i></button>
 						';
                     }
-                    if (hasPermissions("adv", "edit_mag")) {
+                    if (UIController::hasPermissions("adv", "edit_mag")) {
                         $rButtons .= '<a href="./user.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
 						';
                     }
@@ -390,11 +390,11 @@ if ($rType == "mags") {
                     $rButtons .= '<a href="./user_reseller.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                 }
 
-                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Kill Connections" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'kill\');"><i class="fas fa-hammer"></i></button>
 					';
                 }
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_mag"))) {
+                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_mag"))) {
                     if ($rRow["admin_enabled"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Ban" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'ban\');"><i class="mdi mdi-minus-circle-outline"></i></button>
 						';
@@ -403,7 +403,7 @@ if ($rType == "mags") {
 						';
                     }
                 }
-                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_mag")))) {
+                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_mag")))) {
                     if ($rRow["enabled"] == 1) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Disable" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'disable\');"><i class="mdi mdi-checkbox-blank-circle-outline"></i></button>
 						';
@@ -412,7 +412,7 @@ if ($rType == "mags") {
 						';
                     }
                 }
-                if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_mag")))) {
+                if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_mag")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'delete\');"><i class="mdi mdi-close"></i></button>';
                 }
                 $rButtons .= '</div>';
@@ -456,7 +456,7 @@ if ($rType == "mags") {
     exit;
 }
 if ($rType == "enigmas") {
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_e2"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "manage_e2"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -468,7 +468,7 @@ if ($rType == "enigmas") {
     }
     $rWhere = array();
     if ($rPermissions["is_reseller"]) {
-        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
+        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(UIController::getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
     if (strlen(CoreUtilities::$request["search"]["value"]) > 0) {
         $rSearch = CoreUtilities::$request["search"]["value"];
@@ -545,20 +545,20 @@ if ($rType == "enigmas") {
                 } else {
                     $rExpDate = "Unlimited";
                 }
-                if ((($rPermissions["is_reseller"]) && ($rPermissions["reseller_client_connection_logs"])) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "live_connections")))) {
+                if ((($rPermissions["is_reseller"]) && ($rPermissions["reseller_client_connection_logs"])) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "live_connections")))) {
                     $rActiveConnections = "<a href=\"./live_connections.php?user_id=" . $rRow["id"] . "\">" . $rRow["active_connections"] . "</a>";
                 } else {
                     $rActiveConnections = $rRow["active_connections"];
                 }
                 $rButtons = '<div class="btn-group">';
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_reset_isplock"]))) {
-                    //if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user"))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_reset_isplock"]))) {
+                    //if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user"))) {
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'resetispuser\');"><i class="mdi mdi-lock-reset"></i></button>
 					';
                 }
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_can_isplock"]))) {
-                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_can_isplock"]))) {
+                    //if (($rPermissions["is_reseller"]) OR (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     if ($rRow["is_isplock"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unlock isp" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unlockk\');"><i class="mdi mdi-lock"></i></button>';
                     } else {
@@ -583,7 +583,7 @@ if ($rType == "enigmas") {
                     $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
                 }
                 if ($rPermissions["is_admin"]) {
-                    if (hasPermissions("adv", "edit_e2")) {
+                    if (UIController::hasPermissions("adv", "edit_e2")) {
                         $rButtons .= '<a href="./user.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                     }
                 } else {
@@ -594,18 +594,18 @@ if ($rType == "enigmas") {
                     //selecao de bouquets fim
                     $rButtons .= '<a href="./user_reseller.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                 }
-                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_user")))) {
+                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_user")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Kill Connections" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'kill\');"><i class="fas fa-hammer"></i></button>
 					';
                 }
-                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_e2"))) {
+                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_e2"))) {
                     if ($rRow["admin_enabled"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Ban" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'ban\');"><i class="mdi mdi-minus-circle-outline"></i></button>';
                     } else {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Unban" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'unban\');"><i class="mdi mdi-minus-circle"></i></button>';
                     }
                 }
-                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_e2")))) {
+                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_e2")))) {
                     if ($rRow["enabled"]) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Disable" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'disable\');"><i class="mdi mdi-checkbox-blank-circle-outline"></i></button>
 						';
@@ -614,7 +614,7 @@ if ($rType == "enigmas") {
 						';
                     }
                 }
-                if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_e2")))) {
+                if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_e2")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'delete\');"><i class="mdi mdi-close"></i></button>';
                 }
                 $today = time();
@@ -652,13 +652,13 @@ if ($rType == "enigmas") {
     exit;
 }
 if ($rType == "streams") {
-    if (!hasPermissions("adv", "streams") && !hasPermissions("adv", "mass_edit_streams")) {
+    if (!UIController::hasPermissions("adv", "streams") && !UIController::hasPermissions("adv", "mass_edit_streams")) {
         exit;
     }
     $rSettings["streams_grouped"] = 0;
     $rSettings["fails_per_time"] = 86400;
 
-    $rCategories = getCategories_admin("live");
+    $rCategories = UIController::getCategories_admin("live");
     $rOrder = ["`streams`.`id`", "`streams`.`stream_icon`", "`streams`.`stream_display_name`", "`streams_servers`.`current_source`", "`clients`", "`streams_servers`.`stream_started`", false, false, false, "`streams_servers`.`bitrate`"];
     if (isset(CoreUtilities::$request["order"]) && 0 < strlen(CoreUtilities::$request["order"][0]["column"])) {
         $rOrderRow = (int) CoreUtilities::$request["order"][0]["column"];
@@ -800,7 +800,7 @@ if ($rType == "streams") {
                 }
                 $rStreamName = "<a href='stream_view?id=" . $rRow["id"] . "'><strong>" . $rRow["stream_display_name"] . "</strong><br><span style='font-size:11px;'>" . $rCategory . "</span></a>";
                 if ($rRow["server_name"]) {
-                    if (hasPermissions("adv", "servers")) {
+                    if (UIController::hasPermissions("adv", "servers")) {
                         $rServerName = "<a href='server_view?id=" . $rRow["server_id"] . "'>" . $rRow["server_name"] . "</a>";
                     } else {
                         $rServerName = $rRow["server_name"];
@@ -881,7 +881,7 @@ if ($rType == "streams") {
                 if ($rSettings["streams_grouped"] == 1) {
                     $rRow["server_id"] = -1;
                 }
-                if (hasPermissions("adv", "live_connections")) {
+                if (UIController::hasPermissions("adv", "live_connections")) {
                     if (0 < $rRow["clients"]) {
                         $rClients = "<a href='javascript: void(0);' onClick='viewLiveConnections(" . (int) $rRow["id"] . ", " . (int) $rRow["server_id"] . ");'><button type='button' class='btn btn-info btn-xs waves-effect waves-light'>" . number_format($rRow["clients"], 0) . "</button></a>";
                     } else {
@@ -940,7 +940,7 @@ if ($rType == "streams") {
                 } else {
                     $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
                 }
-                if (hasPermissions("adv", "edit_stream")) {
+                if (UIController::hasPermissions("adv", "edit_stream")) {
                     if ((intval($rActualStatus) == 1) or (intval($rActualStatus) == 2) or (intval($rActualStatus) == 3) or ($rRow["on_demand"] == 1) or ($rActualStatus == 5)) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Stop" type="button" class="btn btn-light waves-effect waves-light btn-xs api-stop" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'stop\');"><i class="mdi mdi-stop"></i></button>';
                         $rStatus = '';
@@ -1001,7 +1001,7 @@ if ($rType == "streams") {
                     }
                     $rStreamInfoText .= "<td>" . $rFPS . "</td></tr></tbody></table>";
                 }
-                if (hasPermissions("adv", "player")) {
+                if (UIController::hasPermissions("adv", "player")) {
                     if (((intval($rActualStatus) == 1) or ($rRow["on_demand"] == 1) or ($rActualStatus == 5))) {
                         $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ');"><i class="mdi mdi-play"></i></button>';
                     } else {
@@ -1041,7 +1041,7 @@ if ($rType == "radios") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "radio")) && (!hasPermissions("adv", "mass_edit_radio"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "radio")) && (!UIController::hasPermissions("adv", "mass_edit_radio"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -1152,7 +1152,7 @@ if ($rType == "radios") {
                     // Stopped
                     $rActualStatus = 0;
                 }
-                if (hasPermissions("adv", "live_connections")) {
+                if (UIController::hasPermissions("adv", "live_connections")) {
                     $rClients = "<a href=\"./live_connections.php?stream_id=" . $rRow["id"] . "&server_id=" . $rRow["server_id"] . "\">" . $rRow["clients"] . "</a>";
                 } else {
                     $rClients = $rRow["clients"];
@@ -1178,7 +1178,7 @@ if ($rType == "radios") {
                         $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
                     }
                 }
-                if (hasPermissions("adv", "edit_radio")) {
+                if (UIController::hasPermissions("adv", "edit_radio")) {
                     if ((intval($rActualStatus) == 1) or (intval($rActualStatus) == 2) or (intval($rActualStatus) == 3) or ($rRow["on_demand"] == 1) or ($rActualStatus == 5)) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Stop" type="button" class="btn btn-light waves-effect waves-light btn-xs api-stop" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'stop\');"><i class="mdi mdi-stop"></i></button>
 						';
@@ -1258,7 +1258,7 @@ if ($rType == "movies") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "movies")) && (!hasPermissions("adv", "mass_sedits_vod"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "movies")) && (!UIController::hasPermissions("adv", "mass_sedits_vod"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -1351,7 +1351,7 @@ if ($rType == "movies") {
                     // Not Encoded
                     $rActualStatus = 0;
                 }
-                if (hasPermissions("adv", "live_connections")) {
+                if (UIController::hasPermissions("adv", "live_connections")) {
                     $rClients = "<a href=\"./live_connections.php?stream_id=" . $rRow["id"] . "&server_id=" . $rRow["server_id"] . "\">" . $rRow["clients"] . "</a>";
                 } else {
                     $rClients = $rRow["clients"];
@@ -1367,7 +1367,7 @@ if ($rType == "movies") {
                         $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
                     }
                 }
-                if (hasPermissions("adv", "edit_movie")) {
+                if (UIController::hasPermissions("adv", "edit_movie")) {
                     if (intval($rActualStatus) == 1) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Encode" type="button" class="btn btn-light waves-effect waves-light btn-xs api-start" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'start\');"><i class="mdi mdi-refresh"></i></button>
 						';
@@ -1385,7 +1385,7 @@ if ($rType == "movies") {
 					<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'delete\');"><i class="mdi mdi-close"></i></button>';
                 }
                 $rButtons .= '</div>';
-                if (hasPermissions("adv", "player")) {
+                if (UIController::hasPermissions("adv", "player")) {
                     if (((intval($rActualStatus) == 1) or ($rActualStatus == 3))) {
                         $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ', \'' . json_decode($rRow["target_container"], true)[0] . '\');"><i class="mdi mdi-play"></i></button>';
                     } else {
@@ -1425,7 +1425,7 @@ if ($rType == "movies") {
     exit;
 }
 if ($rType == "episode_list") {
-    if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "import_episodes")) && (!hasPermissions("adv", "mass_delete")))) {
+    if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "import_episodes")) && (!UIController::hasPermissions("adv", "mass_delete")))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -1506,7 +1506,7 @@ if ($rType == "user_activity") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reseller_client_connection_logs"])) {
         exit;
     }
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "connection_logs"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "connection_logs"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -1518,7 +1518,7 @@ if ($rType == "user_activity") {
     }
     $rWhere = array();
     if ($rPermissions["is_reseller"]) {
-        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
+        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(UIController::getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
     if (strlen(CoreUtilities::$request["search"]["value"]) > 0) {
         $rSearch = CoreUtilities::$request["search"]["value"];
@@ -1568,7 +1568,7 @@ if ($rType == "user_activity") {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 // Format Rows
                 if ($rPermissions["is_admin"]) {
-                    if (hasPermissions("adv", "edit_user")) {
+                    if (UIController::hasPermissions("adv", "edit_user")) {
                         if ($rRow["mag"] == null) {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                         } else {
@@ -1619,7 +1619,7 @@ if ($rType == "live_connections") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reseller_client_connection_logs"])) {
         exit;
     }
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "live_connections"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "live_connections"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -1631,7 +1631,7 @@ if ($rType == "live_connections") {
     }
     $rWhere = array();
     if ($rPermissions["is_reseller"]) {
-        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ")";
+        $rWhere[] = "`lines`.`member_id` IN (" . join(",", array_keys(UIController::getRegisteredUsers($rUserInfo["id"]))) . ")";
     }
     if (strlen(CoreUtilities::$request["search"]["value"]) > 0) {
         $rSearch = CoreUtilities::$request["search"]["value"];
@@ -1681,7 +1681,7 @@ if ($rType == "live_connections") {
                     $rDivergence = '<button type="button" class="btn btn-outline-danger btn-rounded btn-xs waves-effect waves-light">' . intval(100 - $rRow['divergence']) . '%</button>';
                 }
                 if ($rPermissions["is_admin"]) {
-                    if (hasPermissions("adv", "edit_user")) {
+                    if (UIController::hasPermissions("adv", "edit_user")) {
                         if ($rRow["mag"] == null) {
                             $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                         } else {
@@ -1761,7 +1761,7 @@ if ($rType == "live_connections") {
     exit;
 }
 if ($rType == "stream_list") {
-    if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "import_streams")) && (!hasPermissions("adv", "mass_delete")))) {
+    if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "import_streams")) && (!UIController::hasPermissions("adv", "mass_delete")))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -1829,7 +1829,7 @@ if ($rType == "stream_list") {
     exit;
 }
 if ($rType == "movie_list") {
-    if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "import_movies")) && (!hasPermissions("adv", "mass_delete")))) {
+    if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "import_movies")) && (!UIController::hasPermissions("adv", "mass_delete")))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -1909,7 +1909,7 @@ if ($rType == "movie_list") {
     exit;
 }
 if ($rType == "radio_list") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_delete"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "mass_delete"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -1973,7 +1973,7 @@ if ($rType == "radio_list") {
     exit;
 }
 if ($rType == "series_list") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_delete"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "mass_delete"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2025,7 +2025,7 @@ if ($rType == "series_list") {
     exit;
 }
 if ($rType == "credits_log") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "credits_log"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "credits_log"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2078,7 +2078,7 @@ if ($rType == "credits_log") {
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
-                if (hasPermissions("adv", "edit_reguser")) {
+                if (UIController::hasPermissions("adv", "edit_reguser")) {
                     $rOwner = "<a href='./reg_user.php?id=" . $rRow["admin_id"] . "'>" . $rRow["owner_username"] . "</a>";
                     $rTarget = "<a href='./reg_user.php?id=" . $rRow["target_id"] . "'>" . $rRow["target_username"] . "</a>";
                 } else {
@@ -2093,7 +2093,7 @@ if ($rType == "credits_log") {
     exit;
 }
 if ($rType == "user_ips") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "connection_logs"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "connection_logs"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2136,7 +2136,7 @@ if ($rType == "user_ips") {
     exit;
 }
 if ($rType == "client_logs") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "client_request_log"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "client_request_log"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2189,7 +2189,7 @@ if ($rType == "client_logs") {
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
-                if (hasPermissions("adv", "edit_user")) {
+                if (UIController::hasPermissions("adv", "edit_user")) {
                     $rUsername = "<a href='./user.php?id=" . $rRow["user_id"] . "'>" . $rRow["username"] . "</a>";
                 } else {
                     $rUsername = $rRow["username"];
@@ -2202,7 +2202,7 @@ if ($rType == "client_logs") {
     exit;
 }
 if ($rType == "reg_user_logs") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "reg_userlog"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "reg_userlog"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2255,7 +2255,7 @@ if ($rType == "reg_user_logs") {
         $ipTV_db_admin->query($rQuery);
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
-                if (hasPermissions("adv", "edit_reguser")) {
+                if (UIController::hasPermissions("adv", "edit_reguser")) {
                     $rOwner = "<a href='./reg_user.php?id=" . $rRow["owner_id"] . "'>" . $rRow["owner"] . "</a>";
                 } else {
                     $rOwner = $rRow["owner"];
@@ -2268,7 +2268,7 @@ if ($rType == "reg_user_logs") {
     exit;
 }
 if ($rType == "stream_logs") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "stream_errors"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "stream_errors"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2329,7 +2329,7 @@ if ($rType == "stream_logs") {
     exit;
 }
 if ($rType == "stream_unique") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "fingerprint"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "fingerprint"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2382,10 +2382,10 @@ if ($rType == "reg_users") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["create_sub_resellers"])) {
         exit;
     }
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "mng_regusers"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "mng_regusers"))) {
         exit;
     }
-    $rAvailableMembers = array_keys(getRegisteredUsers($rUserInfo["id"]));
+    $rAvailableMembers = array_keys(UIController::getRegisteredUsers($rUserInfo["id"]));
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
     $rOrder = array("`reg_users`.`id`", "`reg_users`.`username`", "`r`.`username`", "`reg_users`.`ip`", "`member_groups`.`group_name`", "`reg_users`.`status`", "`reg_users`.`credits`", "`user_count`", "`reg_users`.`last_login`", false);
     if (strlen(CoreUtilities::$request["order"][0]["column"]) > 0) {
@@ -2448,7 +2448,7 @@ if ($rType == "reg_users") {
                     $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
                 }
                 if ($rPermissions["is_admin"]) {
-                    if (hasPermissions("adv", "edit_reguser")) {
+                    if (UIController::hasPermissions("adv", "edit_reguser")) {
                         $rButtons .= '<a href="./reg_user.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
 						';
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reset Two Factor Auth" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'reset\');"><i class="mdi mdi-two-factor-authentication"></i></button>
@@ -2458,7 +2458,7 @@ if ($rType == "reg_users") {
                     $rButtons .= '<a href="./credits_add.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Add Credits" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="fe-dollar-sign"></i></button></a>';
                     $rButtons .= '<a href="./subreseller.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>';
                 }
-                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_reguser")))) {
+                if (($rPermissions["is_reseller"]) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_reguser")))) {
                     if ($rRow["status"] == 1) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Disable" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'disable\');"><i class="mdi mdi-lock-outline"></i></button>
 						';
@@ -2467,7 +2467,7 @@ if ($rType == "reg_users") {
 						';
                     }
                 }
-                if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or (($rPermissions["is_admin"]) && (hasPermissions("adv", "edit_reguser")))) {
+                if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "edit_reguser")))) {
                     $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'delete\');"><i class="mdi mdi-close"></i></button>';
                 }
                 $rButtons .= '</div>';
@@ -2482,7 +2482,7 @@ if ($rType == "series") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "series")) && (!hasPermissions("adv", "mass_sedits"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "series")) && (!UIController::hasPermissions("adv", "mass_sedits"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2527,15 +2527,15 @@ if ($rType == "series") {
         if ($ipTV_db_admin->num_rows() > 0) {
             foreach ($ipTV_db_admin->get_rows() as $rRow) {
                 $rButtons = '<div class="btn-group">';
-                if (hasPermissions("adv", "add_episode")) {
+                if (UIController::hasPermissions("adv", "add_episode")) {
                     $rButtons .= '<a href="./episode.php?sid=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Add Episode(s)" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-plus-circle-outline"></i></button></a>
 					';
                 }
-                if (hasPermissions("adv", "episodes")) {
+                if (UIController::hasPermissions("adv", "episodes")) {
                     $rButtons .= '<a href="./episodes.php?series=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="View Episodes" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-eye"></i></button></a>
 					';
                 }
-                if (hasPermissions("adv", "edit_series")) {
+                if (UIController::hasPermissions("adv", "edit_series")) {
                     $rButtons .= '<a href="./series_order.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Reorder Episodes" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-format-line-spacing"></i></button></a>
 					<a href="./serie.php?id=' . $rRow["id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
 					<button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', \'delete\');"><i class="mdi mdi-close"></i></button>';
@@ -2564,7 +2564,7 @@ if ($rType == "episodes") {
     if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
         exit;
     }
-    if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "episodes")) && (!hasPermissions("adv", "mass_sedits"))) {
+    if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "episodes")) && (!UIController::hasPermissions("adv", "mass_sedits"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2655,7 +2655,7 @@ if ($rType == "episodes") {
                     // Not Encoded
                     $rActualStatus = 0;
                 }
-                if (hasPermissions("adv", "live_connections")) {
+                if (UIController::hasPermissions("adv", "live_connections")) {
                     $rClients = "<a href=\"./live_connections.php?stream_id=" . $rRow["id"] . "&server_id=" . $rRow["server_id"] . "\">" . $rRow["clients"] . "</a>";
                 } else {
                     $rClients = $rRow["clients"];
@@ -2671,7 +2671,7 @@ if ($rType == "episodes") {
                         $rButtons .= '<button disabled type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-note"></i></button>';
                     }
                 }
-                if (hasPermissions("adv", "edit_episode")) {
+                if (UIController::hasPermissions("adv", "edit_episode")) {
                     if (intval($rActualStatus) == 1) {
                         $rButtons .= '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Encode" type="button" class="btn btn-light waves-effect waves-light btn-xs api-start" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'start\');"><i class="mdi mdi-refresh"></i></button>
 						';
@@ -2689,7 +2689,7 @@ if ($rType == "episodes") {
 					<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(' . $rRow["id"] . ', ' . $rRow["server_id"] . ', \'delete\');"><i class="mdi mdi-close"></i></button>';
                 }
                 $rButtons .= '</div>';
-                if (hasPermissions("adv", "player")) {
+                if (UIController::hasPermissions("adv", "player")) {
                     if (((intval($rActualStatus) == 1) or ($rActualStatus == 3))) {
                         $rPlayer = '<button data-toggle="tooltip" data-placement="top" title="" data-original-title="Play" type="button" class="btn btn-light waves-effect waves-light btn-xs" onClick="player(' . $rRow["id"] . ', \'' . json_decode($rRow["target_container"], true)[0] . '\');"><i class="mdi mdi-play"></i></button>';
                     } else {
@@ -2730,10 +2730,10 @@ if ($rType == "episodes") {
     exit;
 }
 if ($rType == "backups") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "database"))) {
         exit;
     }
-    $rBackups = getBackups();
+    $rBackups = UIController::getBackups();
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => count($rBackups), "recordsFiltered" => count($rBackups), "data" => array());
     foreach ($rBackups as $rBackup) {
         $rButtons = '<div class="btn-group"><button type="button" data-toggle="tooltip" data-placement="top" title="" data-original-title="Restore Backup" class="btn btn-light waves-effect waves-light btn-xs" onClick="api(\'' . $rBackup["filename"] . '\', \'restore\');"><i class="mdi mdi-folder-upload"></i></button>
@@ -2744,7 +2744,7 @@ if ($rType == "backups") {
     exit;
 }
 if ($rType == "conn") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "database"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 1, "recordsFiltered" => 1, "data" => array($_INFO['hostname'], $_INFO['username'], $_INFO['password'], $_INFO['database'], $_INFO['port']));
@@ -2752,7 +2752,7 @@ if ($rType == "conn") {
     exit;
 }
 if ($rType == "watch_output") {
-    if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch_output"))) {
+    if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "folder_watch_output"))) {
         exit;
     }
     $rReturn = array("draw" => CoreUtilities::$request["draw"], "recordsTotal" => 0, "recordsFiltered" => 0, "data" => array());
@@ -2801,12 +2801,12 @@ if ($rType == "watch_output") {
                 $rButtons = '<div class="btn-group">';
                 if ($rRow["stream_id"] > 0) {
                     if ($rRow["type"] == 1) {
-                        if (hasPermissions("adv", "edit_movie")) {
+                        if (UIController::hasPermissions("adv", "edit_movie")) {
                             $rButtons = '<a href="./movie.php?id=' . $rRow["stream_id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit Movie" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
 							';
                         }
                     } else {
-                        if (hasPermissions("adv", "edit_episode")) {
+                        if (UIController::hasPermissions("adv", "edit_episode")) {
                             $rButtons = '<a href="./episode.php?id=' . $rRow["stream_id"] . '"><button data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit Episode" type="button" class="btn btn-light waves-effect waves-light btn-xs"><i class="mdi mdi-pencil-outline"></i></button></a>
 							';
                         }

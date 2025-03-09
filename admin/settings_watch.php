@@ -1,12 +1,12 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch_settings"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "folder_watch_settings"))) {
     exit;
 }
 
 if (isset(CoreUtilities::$request["update"])) {
-    updateTMDbCategories();
+    UIController::updateTMDbCategories();
     header("Location: ./settings_watch.php");
 }
 
@@ -56,7 +56,7 @@ if (isset(CoreUtilities::$request["submit_settings"])) {
     $ipTV_db_admin->query("UPDATE `watch_settings` SET `ffprobe_input` = " . $rProbeInput . ", `percentage_match` = " . intval(CoreUtilities::$request["percentage_match"]) . ", `read_native` = " . $rNative . ", `movie_symlink` = " . $rSymLink . ", `auto_encode` = " . $rAutoEncode . ", `transcode_profile_id` = " . intval(CoreUtilities::$request["transcode_profile_id"]) . ", `scan_seconds` = " . intval(CoreUtilities::$request["scan_seconds"]) . ";");
 }
 
-$rBouquets = getBouquets();
+$rBouquets = UIController::getBouquets();
 
 $ipTV_db_admin->query("SELECT * FROM `watch_settings`;");
 if ($ipTV_db_admin->num_rows() == 1) {
@@ -217,7 +217,7 @@ include "header.php";
                                                             } ?>value="0">
                                                                 <?= $_["transcoding_disabled"] ?>
                                                             </option>
-                                                            <?php foreach (getTranscodeProfiles() as $rProfile) { ?>
+                                                            <?php foreach (UIController::getTranscodeProfiles() as $rProfile) { ?>
                                                                 <option <?php if (intval($rWatchSettings["transcode_profile_id"]) == intval($rProfile["profile_id"])) {
                                                                     echo "selected ";
                                                                 } ?>value="<?= $rProfile["profile_id"] ?>">
@@ -257,7 +257,7 @@ include "header.php";
                                                                     } ?>value="0">
                                                                         <?= $_["do_not_use"] ?>
                                                                     </option>
-                                                                    <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
+                                                                    <?php foreach (UIController::getCategories_admin("movie") as $rCategory) { ?>
                                                                         <option <?php if (intval($rRow["category_id"]) == intval($rCategory["id"])) {
                                                                             echo "selected ";
                                                                         } ?>value="<?= $rCategory["id"] ?>">
@@ -316,7 +316,7 @@ include "header.php";
                                                                     } ?>value="0">
                                                                         <?= $_["do_not_use"] ?>
                                                                     </option>
-                                                                    <?php foreach (getCategories_admin("series") as $rCategory) { ?>
+                                                                    <?php foreach (UIController::getCategories_admin("series") as $rCategory) { ?>
                                                                         <option <?php if (intval($rRow["category_id"]) == intval($rCategory["id"])) {
                                                                             echo "selected ";
                                                                         } ?>value="<?= $rCategory["id"] ?>">
@@ -367,7 +367,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

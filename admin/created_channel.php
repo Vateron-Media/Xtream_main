@@ -1,22 +1,22 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "create_channel")) && (!hasPermissions("adv", "edit_cchannel")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "create_channel")) && (!UIController::hasPermissions("adv", "edit_cchannel")))) {
     exit;
 }
 
-$rCategories = getCategories_admin("live");
-$rTranscodeProfiles = getTranscodeProfiles();
+$rCategories = UIController::getCategories_admin("live");
+$rTranscodeProfiles = UIController::getTranscodeProfiles();
 
 if (isset(CoreUtilities::$request["submit_stream"])) {
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_cchannel")) {
+        if (!UIController::hasPermissions("adv", "edit_cchannel")) {
             exit;
         }
-        $rArray = getStream(CoreUtilities::$request["edit"]);
+        $rArray = UIController::getStream(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
-        if (!hasPermissions("adv", "create_channel")) {
+        if (!UIController::hasPermissions("adv", "create_channel")) {
             exit;
         }
         $rArray = array("type" => 3, "added" => time(), "read_native" => 1, "stream_all" => 1, "redirect_stream" => 0, "direct_source" => 0, "gen_timestamps" => 1, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "category_id" => array(), "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "custom_map" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => "", "probesize_ondemand" => 128000, "pids_create_channel" => array(), "created_channel_location" => 0, "cchannel_rsources" => array(), "series_no" => 0);
@@ -33,7 +33,7 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
     }
     $rArray["movie_properties"] = array("type" => intval(CoreUtilities::$request["channel_type"]));
     if (intval(CoreUtilities::$request["channel_type"]) == 0) {
-        $playlist = generateSeriesPlaylist(CoreUtilities::$request["series_no"]);
+        $playlist = UIController::generateSeriesPlaylist(CoreUtilities::$request["series_no"]);
         if ($playlist["success"]) {
             $rArray["created_channel_location"] = $playlist["server_id"];
             $rArray["stream_source"] = $playlist["sources"];
@@ -57,9 +57,9 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
     }
     if (count($rArray["stream_source"]) > 0) {
         if ($rSettings["download_images"]) {
-            $rArray["stream_icon"] = downloadImage($rArray["stream_icon"]);
+            $rArray["stream_icon"] = UIController::downloadImage($rArray["stream_icon"]);
         }
-        $rArray["order"] = getNextOrder();
+        $rArray["order"] = UIController::getNextOrder();
         $rCols = "`" . implode('`,`', array_keys($rArray)) . "`";
         $rValues = null;
         foreach (array_values($rArray) as $rValue) {
@@ -121,20 +121,20 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
                 }
             }
             if ($rRestart) {
-                APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rInsertID)));
+                UIController::APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rInsertID)));
             }
             foreach ($rBouquets as $rBouquet) {
-                addToBouquet("stream", $rBouquet, $rInsertID);
+                UIController::addToBouquet("stream", $rBouquet, $rInsertID);
             }
             if (isset(CoreUtilities::$request["edit"])) {
-                foreach (getBouquets() as $rBouquet) {
+                foreach (UIController::getBouquets() as $rBouquet) {
                     if (!in_array($rBouquet["id"], $rBouquets)) {
-                        removeFromBouquet("stream", $rBouquet["id"], $rInsertID);
+                        UIController::removeFromBouquet("stream", $rBouquet["id"], $rInsertID);
                     }
                 }
             }
             if (count($rBouquets) > 0) {
-                scanBouquets();
+                UIController::scanBouquets();
             }
             $_STATUS = 0;
             header("Location: ./created_channel.php?id=" . $rInsertID);
@@ -155,10 +155,10 @@ $rServerTree = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>Stream Source</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
 
 if (isset(CoreUtilities::$request["id"])) {
-    if (!hasPermissions("adv", "edit_cchannel")) {
+    if (!UIController::hasPermissions("adv", "edit_cchannel")) {
         exit;
     }
-    $rChannel = getStream(CoreUtilities::$request["id"]);
+    $rChannel = UIController::getStream(CoreUtilities::$request["id"]);
     if ((!$rChannel) or ($rChannel["type"] <> 3)) {
         exit;
     }
@@ -170,7 +170,7 @@ if (isset(CoreUtilities::$request["id"])) {
             $rProperties = array("type" => 1);
         }
     }
-    $rChannelSys = getStreamSys(CoreUtilities::$request["id"]);
+    $rChannelSys = UIController::getStreamSys(CoreUtilities::$request["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rChannelSys[intval($rServer["id"])])) {
             if ($rChannelSys[intval($rServer["id"])]["parent_id"] <> 0) {
@@ -184,7 +184,7 @@ if (isset(CoreUtilities::$request["id"])) {
         $rServerTree[] = array("id" => $rServer["id"], "parent" => $rParent, "text" => $rServer["server_name"], "icon" => "mdi mdi-server-network", "state" => array("opened" => true));
     }
 } else {
-    if (!hasPermissions("adv", "create_channel")) {
+    if (!UIController::hasPermissions("adv", "create_channel")) {
         exit;
     }
     foreach ($rServers as $rServer) {
@@ -276,7 +276,7 @@ include "header.php";
                             </table>
                         </div>
                     </div>
-                    <?php $rEncodeErrors = getEncodeErrors($rChannel["id"]);
+                    <?php $rEncodeErrors = UIController::getEncodeErrors($rChannel["id"]);
                     foreach ($rEncodeErrors as $rServerID => $rEncodeError) { ?>
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -365,7 +365,7 @@ include "header.php";
                                                             <option value="0">
                                                                 <?= $_["select_a_series"] ?>...
                                                             </option>
-                                                            <?php foreach (getSeries() as $rSeries) { ?>
+                                                            <?php foreach (UIController::getSeries() as $rSeries) { ?>
                                                                 <option <?php if (isset($rChannel)) {
                                                                     if (intval($rChannel["series_no"]) == intval($rSeries["id"])) {
                                                                         echo "selected ";
@@ -431,7 +431,7 @@ include "header.php";
                                                             class="form-control select2-multiple select2"
                                                             data-toggle="select2" multiple="multiple"
                                                             data-placeholder="<?= $_["choose"] ?>">
-                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                            <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                                 <option <?php if (isset($rChannel)) {
                                                                     if (in_array($rChannel["id"], json_decode($rBouquet["bouquet_channels"], true))) {
                                                                         echo "selected ";
@@ -480,7 +480,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <select id="server_idc" class="form-control select2"
                                                             data-toggle="select2">
-                                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                                 <option value="<?= $rServer["id"] ?>" <?php if (isset($rChannel) && ($rChannel["created_channel_location"] == $rServer["id"])) {
                                                                       echo " selected";
                                                                   } ?>><?= $rServer["server_name"] ?>
@@ -497,12 +497,12 @@ include "header.php";
                                                             data-toggle="select2">
                                                             <option value="" selected><?= $_["no_filter"] ?>
                                                             </option>
-                                                            <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
+                                                            <?php foreach (UIController::getCategories_admin("movie") as $rCategory) { ?>
                                                                 <option value="0:<?= $rCategory["id"] ?>">
                                                                     <?= $rCategory["category_name"] ?>
                                                                 </option>
                                                             <?php }
-                                                            foreach (getSeriesList() as $rSeries) { ?>
+                                                            foreach (UIController::getSeriesList() as $rSeries) { ?>
                                                                 <option value="1:<?= $rSeries["id"] ?>">
                                                                     <?= $rSeries["title"] ?>
                                                                 </option>
@@ -676,7 +676,7 @@ include "header.php";
                                         for="server_id"><?= $_["server_name"] ?></label>
                                     <div class="col-md-8">
                                         <select id="server_id" class="form-control select2" data-toggle="select2">
-                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if (isset($rChannel) && ($rChannel["created_channel_location"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>><?= $rServer["server_name"] ?></option>
@@ -737,7 +737,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>
@@ -777,7 +777,7 @@ include "header.php";
     var rChannels = {};
 
     <?php if ((isset($rChannel)) && ($rProperties["type"] == 2)) { ?>
-        var rSelection = <?= json_encode(getSelections(json_decode($rChannel["stream_source"], true))) ?>;
+        var rSelection = <?= json_encode(UIController::getSelections(json_decode($rChannel["stream_source"], true))) ?>;
     <?php } else { ?>
         var rSelection = [];
     <?php } ?>

@@ -8,7 +8,7 @@ function getuserip() {
 }
 
 if (isset(CoreUtilities::$request['id'])) {
-    if (hasPermissions('adv', 'player')) {
+    if (UIController::hasPermissions('adv', 'player')) {
         $rExpires = time() + 14400;
         $rTokenData = array('session_id' => session_id(), 'expires' => $rExpires, 'stream_id' => intval(CoreUtilities::$request['id']), 'ip' => getUserIP());
         $rLegacy = false;
@@ -55,7 +55,7 @@ if (isset(CoreUtilities::$request['id'])) {
                 }
             }
 
-            $rURL = $rProtocol . '://' . (($rServers[$rServerID]['domain_name'] ? explode(',', $rServers[$rServerID]['domain_name'])[0] : $rServers[$rServerID]['server_ip'])) . ':' . ((issecure() ? $rServers[$rServerID]['https_broadcast_port'] : $rServers[$rServerID]['http_broadcast_port'])) . '/admin/' . ((CoreUtilities::$request['type'] == 'live' ? 'live.php' : (CoreUtilities::$request['type'] == 'timeshift' ? 'timeshift' : 'vod'))) . '?uitoken=' . $rUIToken . ((CoreUtilities::$request['type'] == 'live' ? '&extension=.m3u8' : ''));
+            $rURL = $rProtocol . '://' . (($rServers[$rServerID]['domain_name'] ? explode(',', $rServers[$rServerID]['domain_name'])[0] : $rServers[$rServerID]['server_ip'])) . ':' . ((UIController::isSecure() ? $rServers[$rServerID]['https_broadcast_port'] : $rServers[$rServerID]['http_broadcast_port'])) . '/admin/' . ((CoreUtilities::$request['type'] == 'live' ? 'live.php' : (CoreUtilities::$request['type'] == 'timeshift' ? 'timeshift' : 'vod'))) . '?uitoken=' . $rUIToken . ((CoreUtilities::$request['type'] == 'live' ? '&extension=.m3u8' : ''));
 
 ?>
             <html>

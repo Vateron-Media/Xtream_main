@@ -1,12 +1,12 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_ips"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "block_ips"))) {
     exit;
 }
 
 if (isset(CoreUtilities::$request["flush"])) {
-    flushIPs();
+    UIController::flushIPs();
     header("Location: ./ips.php");
 }
 
@@ -56,7 +56,7 @@ include "header.php";
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (getBlockedIPs() as $rIP) {
+                                <?php foreach (UIController::getBlockedIPs() as $rIP) {
                                     ?>
                                     <tr id="ip-<?= $rIP["id"] ?>">
                                         <td class="text-center"><?= $rIP["id"] ?></td>
@@ -85,7 +85,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

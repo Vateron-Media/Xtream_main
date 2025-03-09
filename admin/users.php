@@ -3,12 +3,12 @@ include "session.php";
 include "functions.php";
 
 if ($rPermissions["is_admin"]) {
-    if (!hasPermissions("adv", "users")) {
+    if (!UIController::hasPermissions("adv", "users")) {
         exit;
     }
-    $rRegisteredUsers = getRegisteredUsers();
+    $rRegisteredUsers = UIController::getRegisteredUsers();
 } else {
-    $rRegisteredUsers = getRegisteredUsers($rUserInfo["id"]);
+    $rRegisteredUsers = UIController::getRegisteredUsers($rUserInfo["id"]);
 }
 
 include "header.php";
@@ -46,7 +46,7 @@ include "header.php";
                                         </button>
                                     </a>
                                 <?php }
-                                if ((hasPermissions("adv", "add_user")) or ($rPermissions["is_reseller"])) { ?>
+                                if ((UIController::hasPermissions("adv", "add_user")) or ($rPermissions["is_reseller"])) { ?>
                                     <a href="user<?php if ($rPermissions["is_reseller"]) {
                                         echo "_reseller";
                                     } ?>.php">
@@ -183,7 +183,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

@@ -1,11 +1,11 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_sedits"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "mass_sedits"))) {
     exit;
 }
 
-$rCategories = getCategories_admin("series");
+$rCategories = UIController::getCategories_admin("series");
 
 if (isset(CoreUtilities::$request["submit_series"])) {
     $rArray = array();
@@ -29,11 +29,11 @@ if (isset(CoreUtilities::$request["submit_series"])) {
             if (isset(CoreUtilities::$request["c_bouquets"])) {
                 $rBouquets = CoreUtilities::$request["bouquets"];
                 foreach ($rBouquets as $rBouquet) {
-                    addToBouquet("series", $rBouquet, $rSeriesID);
+                    UIController::addToBouquet("series", $rBouquet, $rSeriesID);
                 }
-                foreach (getBouquets() as $rBouquet) {
+                foreach (UIController::getBouquets() as $rBouquet) {
                     if (!in_array($rBouquet["id"], $rBouquets)) {
-                        removeFromBouquet("series", $rBouquet["id"], $rSeriesID);
+                        UIController::removeFromBouquet("series", $rBouquet["id"], $rSeriesID);
                     }
                 }
             }
@@ -46,7 +46,7 @@ if (isset(CoreUtilities::$request["submit_series"])) {
             }
         }
         if (isset(CoreUtilities::$request["c_bouquets"])) {
-            scanBouquets();
+            UIController::scanBouquets();
         }
     }
     $_STATUS = 0;
@@ -200,7 +200,7 @@ include "header.php";
                                                         <select disabled name="bouquets[]" id="bouquets"
                                                             class="form-control select2-multiple" data-toggle="select2"
                                                             multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
-                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                            <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                                 <option value="<?= $rBouquet["id"] ?>">
                                                                     <?= $rBouquet["bouquet_name"] ?>
                                                                 </option>
@@ -250,7 +250,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

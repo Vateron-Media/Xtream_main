@@ -8,7 +8,7 @@ if (!isset($_SESSION['hash'])) {
 if (isset(CoreUtilities::$request["action"])) {
     switch (CoreUtilities::$request["action"]) {
         case "stream":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_stream"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_stream"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -16,10 +16,10 @@ if (isset(CoreUtilities::$request["action"])) {
             $rServerID = intval(CoreUtilities::$request["server_id"]);
             $rSub = CoreUtilities::$request["sub"];
             if (in_array($rSub, array("start", "stop"))) {
-                echo APIRequest(array("action" => "stream", "sub" => $rSub, "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
+                echo UIController::APIRequest(array("action" => "stream", "sub" => $rSub, "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
             } elseif ($rSub == "restart") {
-                echo APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
+                echo UIController::APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
             } elseif ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . " AND `server_id` = " . intval($rServerID) . ";");
@@ -27,7 +27,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 if ($ipTV_db_admin->get_row()["count"] == 0) {
                     $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                 }
-                scanBouquets();
+                UIController::scanBouquets();
                 echo json_encode(array("result" => true));
                 exit;
             } else {
@@ -35,7 +35,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "movie":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_movie"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_movie"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -43,15 +43,15 @@ if (isset(CoreUtilities::$request["action"])) {
             $rServerID = intval(CoreUtilities::$request["server_id"]);
             $rSub = CoreUtilities::$request["sub"];
             if (in_array($rSub, array("start", "stop"))) {
-                echo APIRequest(array("action" => "vod", "sub" => $rSub, "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
+                echo UIController::APIRequest(array("action" => "vod", "sub" => $rSub, "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
             } elseif ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . " AND `server_id` = " . intval($rServerID) . ";");
                 $ipTV_db_admin->query("SELECT COUNT(`server_stream_id`) AS `count` FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . ";");
                 if ($ipTV_db_admin->get_row()["count"] == 0) {
                     $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
-                    deleteMovieFile($rServerID, $rStreamID);
-                    scanBouquets();
+                    UIController::deleteMovieFile($rServerID, $rStreamID);
+                    UIController::scanBouquets();
                 }
                 echo json_encode(array("result" => true));
                 exit;
@@ -60,7 +60,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "episode":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_episode"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_episode"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -68,7 +68,7 @@ if (isset(CoreUtilities::$request["action"])) {
             $rServerID = intval(CoreUtilities::$request["server_id"]);
             $rSub = CoreUtilities::$request["sub"];
             if (in_array($rSub, array("start", "stop"))) {
-                echo APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
+                echo UIController::APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => array($rStreamID), "servers" => array($rServerID)));
                 exit;
             } elseif ($rSub == "delete") {
                 $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rStreamID) . " AND `server_id` = " . intval($rServerID) . ";");
@@ -76,8 +76,8 @@ if (isset(CoreUtilities::$request["action"])) {
                 if ($ipTV_db_admin->get_row()["count"] == 0) {
                     $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rStreamID) . ";");
                     $ipTV_db_admin->query("DELETE FROM `series_episodes` WHERE `stream_id` = " . intval($rStreamID) . ";");
-                    deleteMovieFile($rServerID, $rStreamID);
-                    scanBouquets();
+                    UIController::deleteMovieFile($rServerID, $rStreamID);
+                    UIController::scanBouquets();
                 }
                 echo json_encode(array("result" => true));
                 exit;
@@ -88,10 +88,10 @@ if (isset(CoreUtilities::$request["action"])) {
         case "user":
             $rUserID = intval(CoreUtilities::$request["user_id"]);
             // Check if this user falls under the reseller or subresellers.
-            if (($rPermissions["is_reseller"]) && (!hasPermissions("user", $rUserID))) {
+            if (($rPermissions["is_reseller"]) && (!UIController::hasPermissions("user", $rUserID))) {
                 echo json_encode(array("result" => false));
                 exit;
-            } elseif (($rPermissions["is_admin"]) && (!hasPermissions("adv", "edit_user"))) {
+            } elseif (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "edit_user"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -99,7 +99,7 @@ if (isset(CoreUtilities::$request["action"])) {
             if ($rSub == "delete") {
                 if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or ($rPermissions["is_admin"])) {
                     if ($rPermissions["is_reseller"]) {
-                        $rUserDetails = getUser($rUserID);
+                        $rUserDetails = UIController::getUser($rUserID);
                         if ($rUserDetails) {
                             if ($rUserDetails["is_mag"]) {
                                 $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rUserDetails["username"] . "', '" . $rUserDetails["password"] . "', " . intval(time()) . ", '[<b>UserPanel</b> -> <u>Delete MAG</u>]');");
@@ -178,10 +178,10 @@ if (isset(CoreUtilities::$request["action"])) {
         case "user_activity":
             $rPID = intval(CoreUtilities::$request["pid"]);
             // Check if the user running this PID falls under the reseller or subresellers.
-            if (($rPermissions["is_reseller"]) && (!hasPermissions("pid", $rPID))) {
+            if (($rPermissions["is_reseller"]) && (!UIController::hasPermissions("pid", $rPID))) {
                 echo json_encode(array("result" => false));
                 exit;
-            } elseif (($rPermissions["is_admin"]) && (!hasPermissions("adv", "connection_logs"))) {
+            } elseif (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "connection_logs"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -189,7 +189,7 @@ if (isset(CoreUtilities::$request["action"])) {
             if ($rSub == "kill") {
                 $ipTV_db_admin->query("SELECT `server_id` FROM `lines_live` WHERE `pid` = " . intval($rPID) . " LIMIT 1;");
                 if ($ipTV_db_admin->num_rows() == 1) {
-                    SystemAPIRequest($ipTV_db_admin->get_row()["server_id"], array('action' => 'kill_pid', 'pid' => $rPID));
+                    UIController::SystemAPIRequest($ipTV_db_admin->get_row()["server_id"], array('action' => 'kill_pid', 'pid' => $rPID));
                     $ipTV_db_admin->query("DELETE FROM `lines_live` WHERE `pid` = " . $rPID . ";");
                     echo json_encode(array("result" => true));
                     exit;
@@ -198,20 +198,20 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array("result" => false));
             exit;
         case "process":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "process_monitor"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "process_monitor"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
-            SystemAPIRequest(CoreUtilities::$request['server'], array('action' => 'kill_pid', 'pid' => intval(CoreUtilities::$request['pid'])));
+            UIController::SystemAPIRequest(CoreUtilities::$request['server'], array('action' => 'kill_pid', 'pid' => intval(CoreUtilities::$request['pid'])));
             echo json_encode(array('result' => true));
             exit();
         case "reg_user":
             $rUserID = intval(CoreUtilities::$request["user_id"]);
             // Check if this registered user falls under the reseller or subresellers.
-            if (($rPermissions["is_reseller"]) && (!hasPermissions("reg_user", $rUserID))) {
+            if (($rPermissions["is_reseller"]) && (!UIController::hasPermissions("reg_user", $rUserID))) {
                 echo json_encode(array("result" => false));
                 exit;
-            } elseif (($rPermissions["is_admin"]) && (!hasPermissions("adv", "edit_reguser"))) {
+            } elseif (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "edit_reguser"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -219,11 +219,11 @@ if (isset(CoreUtilities::$request["action"])) {
             if ($rSub == "delete") {
                 if ((($rPermissions["is_reseller"]) && ($rPermissions["delete_users"])) or ($rPermissions["is_admin"])) {
                     if ($rPermissions["is_reseller"]) {
-                        $rUserDetails = getRegisteredUser($rUserID);
+                        $rUserDetails = UIController::getRegisteredUser($rUserID);
                         if ($rUserDetails) {
                             $ipTV_db_admin->query("INSERT INTO `reg_userlog`(`owner`, `username`, `password`, `date`, `type`) VALUES(" . intval($rUserInfo["id"]) . ", '" . $rUserDetails["username"] . "', '', " . intval(time()) . ", '[<b>UserPanel</b> -> <u>Delete Subreseller</u>]');");
                         }
-                        $rPrevOwner = getRegisteredUser($rUserDetails["owner_id"]);
+                        $rPrevOwner = UIController::getRegisteredUser($rUserDetails["owner_id"]);
                         $rCredits = $rUserDetails["credits"];
                         $rNewCredits = $rPrevOwner["credits"] + $rCredits;
                         $ipTV_db_admin->query("UPDATE `reg_users` SET `credits` = " . floatval($rNewCredits) . " WHERE `id` = " . intval($rPrevOwner["id"]) . ";");
@@ -254,10 +254,10 @@ if (isset(CoreUtilities::$request["action"])) {
         case "ticket":
             $rTicketID = intval(CoreUtilities::$request["ticket_id"]);
             // Check if this ticket falls under the reseller or subresellers.
-            if (($rPermissions["is_reseller"]) && (!hasPermissions("ticket", $rTicketID))) {
+            if (($rPermissions["is_reseller"]) && (!UIController::hasPermissions("ticket", $rTicketID))) {
                 echo json_encode(array("result" => false));
                 exit;
-            } elseif (($rPermissions["is_admin"]) && (!hasPermissions("adv", "ticket"))) {
+            } elseif (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "ticket"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -290,16 +290,16 @@ if (isset(CoreUtilities::$request["action"])) {
         case "mag":
             $rMagID = intval(CoreUtilities::$request["mag_id"]);
             // Check if this device falls under the reseller or subresellers.
-            if (($rPermissions["is_reseller"]) && (!hasPermissions("mag", $rMagID))) {
+            if (($rPermissions["is_reseller"]) && (!UIController::hasPermissions("mag", $rMagID))) {
                 echo json_encode(array("result" => false));
                 exit;
-            } elseif (($rPermissions["is_admin"]) && (!hasPermissions("adv", "edit_mag"))) {
+            } elseif (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "edit_mag"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
             $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
-                $rMagDetails = getMag($rMagID);
+                $rMagDetails = UIController::getMag($rMagID);
                 if (isset($rMagDetails["user_id"])) {
                     $ipTV_db_admin->query("DELETE FROM `lines` WHERE `id` = " . intval($rMagDetails["user_id"]) . ";");
                     $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rMagDetails["user_id"]) . ";");
@@ -312,7 +312,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "mag_event":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "manage_events"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "manage_events"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -327,7 +327,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "epg":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_epg"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_epg"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -342,7 +342,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "profile":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "tprofiles"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "tprofiles"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -357,7 +357,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "series":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_series"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_series"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -370,10 +370,10 @@ if (isset(CoreUtilities::$request["action"])) {
                     foreach ($ipTV_db_admin->get_rows() as $rRow) {
                         $ipTV_db_admin->query("DELETE FROM `streams_servers` WHERE `stream_id` = " . intval($rRow["stream_id"]) . ";");
                         $ipTV_db_admin->query("DELETE FROM `streams` WHERE `id` = " . intval($rRow["stream_id"]) . ";");
-                        deleteMovieFile($rServerID, $rStreamID);
+                        UIController::deleteMovieFile($rServerID, $rStreamID);
                     }
                     $ipTV_db_admin->query("DELETE FROM `series_episodes` WHERE `series_id` = " . intval($rSeriesID) . ";");
-                    scanBouquets();
+                    UIController::scanBouquets();
                 }
                 echo json_encode(array("result" => true));
                 exit;
@@ -382,7 +382,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "folder":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "folder_watch"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -397,7 +397,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "useragent":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_uas"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "block_uas"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -412,7 +412,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "isp":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_isps"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "block_isps"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -427,21 +427,21 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "ip":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_ips"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "block_ips"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
             $rSub = CoreUtilities::$request['sub'];
 
             if ($rSub == 'delete') {
-                rdeleteBlockedIP(CoreUtilities::$request['ip']);
+                UIController::rdeleteBlockedIP(CoreUtilities::$request['ip']);
                 echo json_encode(array('result' => true));
                 exit();
             }
             echo json_encode(array('result' => false));
             exit();
         case "login_flood":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_login_flood"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "add_login_flood"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -456,7 +456,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "rtmp_ip":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_rtmp"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "add_rtmp"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -471,7 +471,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "subreseller_setup":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "subreseller"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "subreseller"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -486,7 +486,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "watch_output":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch_output"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "folder_watch_output"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -503,16 +503,16 @@ if (isset(CoreUtilities::$request["action"])) {
         case "enigma":
             $rEnigmaID = intval(CoreUtilities::$request["enigma_id"]);
             // Check if this device falls under the reseller or subresellers.
-            if (($rPermissions["is_reseller"]) && (!hasPermissions("e2", $rEnigmaID))) {
+            if (($rPermissions["is_reseller"]) && (!UIController::hasPermissions("e2", $rEnigmaID))) {
                 echo json_encode(array("result" => false));
                 exit;
-            } elseif (($rPermissions["is_admin"]) && (!hasPermissions("adv", "edit_e2"))) {
+            } elseif (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "edit_e2"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
             $rSub = CoreUtilities::$request["sub"];
             if ($rSub == "delete") {
-                $rEnigmaDetails = getEnigma($rEnigmaID);
+                $rEnigmaDetails = UIController::getEnigma($rEnigmaID);
                 if (isset($rEnigmaDetails["user_id"])) {
                     $ipTV_db_admin->query("DELETE FROM `lines` WHERE `id` = " . intval($rEnigmaDetails["user_id"]) . ";");
                     $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rEnigmaDetails["user_id"]) . ";");
@@ -525,7 +525,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "server":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_server"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -547,7 +547,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 $ipTV_db_admin->query("SELECT `pid`, `server_id` FROM `lines_live` WHERE `server_id` = " . intval($rServerID) . ";");
                 if ($ipTV_db_admin->num_rows() > 0) {
                     foreach ($ipTV_db_admin->get_rows() as $rRow) {
-                        SystemAPIRequest($rRow["server_id"], array('action' => 'kill_pid', 'pid' => intval($rRow["pid"])));
+                        UIController::SystemAPIRequest($rRow["server_id"], array('action' => 'kill_pid', 'pid' => intval($rRow["pid"])));
                     }
                 }
                 echo json_encode(array("result" => true));
@@ -561,7 +561,7 @@ if (isset(CoreUtilities::$request["action"])) {
                     }
                 }
                 if (count($rStreamIDs) > 0) {
-                    $rResult = APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array_values($rStreamIDs), "servers" => array(intval($rServerID))));
+                    $rResult = UIController::APIRequest(array("action" => "stream", "sub" => "start", "stream_ids" => array_values($rStreamIDs), "servers" => array(intval($rServerID))));
                 }
                 echo json_encode(array("result" => true));
                 exit;
@@ -574,7 +574,7 @@ if (isset(CoreUtilities::$request["action"])) {
                     }
                 }
                 if (count($rStreamIDs) > 0) {
-                    $rResult = APIRequest(array("action" => "stream", "sub" => "stop", "stream_ids" => array_values($rStreamIDs), "servers" => array(intval($rServerID))));
+                    $rResult = UIController::APIRequest(array("action" => "stream", "sub" => "stop", "stream_ids" => array_values($rStreamIDs), "servers" => array(intval($rServerID))));
                 }
                 echo json_encode(array("result" => true));
                 exit;
@@ -583,7 +583,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "package":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_package"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_package"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -602,7 +602,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "group":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_group"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_group"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -621,7 +621,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "bouquet":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_bouquet"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_bouquet"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -636,7 +636,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "category":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_cat"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_cat"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -661,7 +661,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 }
                 $rData["exp_date"] = date('Y-m-d', strtotime('+' . intval($rData["official_duration"]) . ' ' . $rData["official_duration_in"]));
                 if (isset(CoreUtilities::$request["user_id"])) {
-                    if ($rUser = getUser(CoreUtilities::$request["user_id"])) {
+                    if ($rUser = UIController::getUser(CoreUtilities::$request["user_id"])) {
                         if (time() < $rUser["exp_date"]) {
                             $rData["exp_date"] = date('Y-m-d', strtotime('+' . intval($rData["official_duration"]) . ' ' . $rData["official_duration_in"], $rUser["exp_date"]));
                         } else {
@@ -700,7 +700,7 @@ if (isset(CoreUtilities::$request["action"])) {
             }
             exit;
         case "streams":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "streams"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "streams"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -710,13 +710,13 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array("result" => true, "data" => $rStreams));
             exit;
         case "chart_stats":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "index"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "index"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
             $rStatistics = array("users" => array(), "conns" => array());
             $rPeriod = intval($rSettings["dashboard_stats_frequency"]) ?: 600;
-            $rMax = roundUpToAny(time(), $rPeriod);
+            $rMax = UIController::roundUpToAny(time(), $rPeriod);
             $rMin = $rMax - (60 * 60 * 24 * 7);
             $ipTV_db_admin->query("SELECT `type`, `time`, `count` FROM `dashboard_statistics` WHERE `time` >= " . intval($rMin) . " AND `time` <= " . intval($rMax) . " AND `type` = 'conns';");
             if ($ipTV_db_admin->num_rows() > 0) {
@@ -727,7 +727,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array("result" => true, "data" => $rStatistics, "dates" => array("hour" => array($rMax - (60 * 60), $rMax), "day" => array($rMax - (60 * 60 * 24), $rMax), "week" => array(null, null))));
             exit;
         case "stats":
-            if (!hasPermissions('adv', 'index')) {
+            if (!UIController::hasPermissions('adv', 'index')) {
                 echo json_encode(array('result' => false));
                 exit();
             }
@@ -934,17 +934,17 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
             $return = array("open_connections" => 0, "online_users" => 0, "active_accounts" => 0, "credits" => 0);
-            $ipTV_db_admin->query("SELECT `activity_id` FROM `lines_live` AS `a` LEFT JOIN `lines` AS `u` ON `a`.`user_id` = `u`.`id` WHERE `u`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ");");
+            $ipTV_db_admin->query("SELECT `activity_id` FROM `lines_live` AS `a` LEFT JOIN `lines` AS `u` ON `a`.`user_id` = `u`.`id` WHERE `u`.`member_id` IN (" . join(",", array_keys(UIController::getRegisteredUsers($rUserInfo["id"]))) . ");");
             $return["open_connections"] = $ipTV_db_admin->num_rows();
-            $ipTV_db_admin->query("SELECT `activity_id` FROM `lines_live` AS `a` LEFT JOIN `lines` AS `u` ON `a`.`user_id` = `u`.`id` WHERE `u`.`member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ") GROUP BY `a`.`user_id`;");
+            $ipTV_db_admin->query("SELECT `activity_id` FROM `lines_live` AS `a` LEFT JOIN `lines` AS `u` ON `a`.`user_id` = `u`.`id` WHERE `u`.`member_id` IN (" . join(",", array_keys(UIController::getRegisteredUsers($rUserInfo["id"]))) . ") GROUP BY `a`.`user_id`;");
             $return["online_users"] = $ipTV_db_admin->num_rows();
-            $ipTV_db_admin->query("SELECT `id` FROM `lines` WHERE `member_id` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ");");
+            $ipTV_db_admin->query("SELECT `id` FROM `lines` WHERE `member_id` IN (" . join(",", array_keys(UIController::getRegisteredUsers($rUserInfo["id"]))) . ");");
             $return["active_accounts"] = $ipTV_db_admin->num_rows();
             $return["credits"] = $rUserInfo["credits"];
             echo json_encode($return);
             exit;
         case "review_selection":
-            if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "edit_cchannel") && (!hasPermissions("adv", "create_channel"))))) {
+            if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "edit_cchannel") && (!UIController::hasPermissions("adv", "create_channel"))))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -961,7 +961,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode($return);
             exit;
         case "review_bouquet":
-            if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "edit_bouquet") && (!hasPermissions("adv", "add_bouquet"))))) {
+            if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "edit_bouquet") && (!UIController::hasPermissions("adv", "add_bouquet"))))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1006,7 +1006,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode($return);
             exit;
         case "userlist":
-            if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "edit_e2") && (!hasPermissions("adv", "add_e2")) && (!hasPermissions("adv", "add_mag")) && (!hasPermissions("adv", "edit_mag"))))) {
+            if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "edit_e2") && (!UIController::hasPermissions("adv", "add_e2")) && (!UIController::hasPermissions("adv", "add_mag")) && (!UIController::hasPermissions("adv", "edit_mag"))))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1029,7 +1029,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode($return);
             exit;
         case "streamlist":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "manage_mag"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "manage_mag"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1052,7 +1052,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode($return);
             exit;
         case "force_epg":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "epg"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "epg"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1061,7 +1061,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array('result' => true));
             exit();
         case "tmdb_search":
-            if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_series")) && (!hasPermissions("adv", "edit_series")) && (!hasPermissions("adv", "add_movie")) && (!hasPermissions("adv", "edit_movie")) && (!hasPermissions("adv", "add_episode")) && (!hasPermissions("adv", "edit_episode")))) {
+            if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_series")) && (!UIController::hasPermissions("adv", "edit_series")) && (!UIController::hasPermissions("adv", "add_movie")) && (!UIController::hasPermissions("adv", "edit_movie")) && (!UIController::hasPermissions("adv", "add_episode")) && (!UIController::hasPermissions("adv", "edit_episode")))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1077,7 +1077,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 $rRelease = new Release($rTerm);
                 $rTerm = $rRelease->getTitle();
             } else {
-                $rRelease = tmdbParseRelease($rTerm);
+                $rRelease = UIController::tmdbParseRelease($rTerm);
                 $rTerm = $rRelease["title"];
             }
             $rJSON = array();
@@ -1101,7 +1101,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array("result" => false));
             exit;
         case "tmdb":
-            if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_series")) && (!hasPermissions("adv", "edit_series")) && (!hasPermissions("adv", "add_movie")) && (!hasPermissions("adv", "edit_movie")) && (!hasPermissions("adv", "add_episode")) && (!hasPermissions("adv", "edit_episode")))) {
+            if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_series")) && (!UIController::hasPermissions("adv", "edit_series")) && (!UIController::hasPermissions("adv", "add_movie")) && (!UIController::hasPermissions("adv", "edit_movie")) && (!UIController::hasPermissions("adv", "add_episode")) && (!UIController::hasPermissions("adv", "edit_episode")))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1119,7 +1119,7 @@ if (isset(CoreUtilities::$request["action"])) {
             } elseif (CoreUtilities::$request["type"] == "series") {
                 $rSeries = $rTMDB->getTVShow($rID);
                 $rResult = json_decode($rSeries->getJSON(), true);
-                $rResult["trailer"] = getSeriesTrailer($rID);
+                $rResult["trailer"] = UIController::getSeriesTrailer($rID);
             }
             if ($rResult) {
                 echo json_encode(array("result" => true, "data" => $rResult));
@@ -1128,7 +1128,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array("result" => false));
             exit;
         case "listdir":
-            if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_episode")) && (!hasPermissions("adv", "edit_episode")) && (!hasPermissions("adv", "add_movie")) && (!hasPermissions("adv", "edit_movie")) && (!hasPermissions("adv", "create_channel")) && (!hasPermissions("adv", "edit_cchannel")) && (!hasPermissions("adv", "folder_watch_add")))) {
+            if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_episode")) && (!UIController::hasPermissions("adv", "edit_episode")) && (!UIController::hasPermissions("adv", "add_movie")) && (!UIController::hasPermissions("adv", "edit_movie")) && (!UIController::hasPermissions("adv", "create_channel")) && (!UIController::hasPermissions("adv", "edit_cchannel")) && (!UIController::hasPermissions("adv", "folder_watch_add")))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1140,13 +1140,13 @@ if (isset(CoreUtilities::$request["action"])) {
                 $rFilter = null;
             }
             if ((isset(CoreUtilities::$request["server"])) && (isset(CoreUtilities::$request["dir"]))) {
-                echo json_encode(array("result" => true, "data" => listDir(intval(CoreUtilities::$request["server"]), CoreUtilities::$request["dir"], $rFilter)));
+                echo json_encode(array("result" => true, "data" => UIController::listDir(intval(CoreUtilities::$request["server"]), CoreUtilities::$request["dir"], $rFilter)));
                 exit;
             }
             echo json_encode(array("result" => false));
             exit;
         case "fingerprint":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "fingerprint"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "fingerprint"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1179,7 +1179,7 @@ if (isset(CoreUtilities::$request["action"])) {
                                 $rArray["message"] = $rData["message"];
                             }
                             $rArray["action"] = "signal_send";
-                            $rSuccess = SystemAPIRequest(intval($row["server_id"]), $rArray);
+                            $rSuccess = UIController::SystemAPIRequest(intval($row["server_id"]), $rArray);
                         }
                     }
                     echo json_encode(array("result" => true));
@@ -1189,7 +1189,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array("result" => false));
             exit;
         case "restart_services":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_server"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1201,7 +1201,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array('result' => false));
             exit;
         case "reboot_server":
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_server"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_server"))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1213,7 +1213,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array('result' => false));
             exit;
         case "map_stream":
-            if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_stream")) && (!hasPermissions("adv", "edit_stream")))) {
+            if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_stream")) && (!UIController::hasPermissions("adv", "edit_stream")))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1223,7 +1223,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo shell_exec("/home/xc_vm/bin/ffprobe -v quiet -probesize 4000000 -print_format json -show_format -show_streams \"" . CoreUtilities::$request["stream"] . "\"");
             exit;
         case "clear_logs":
-            if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "reg_userlog")) && (!hasPermissions("adv", "client_request_log")) && (!hasPermissions("adv", "connection_logs")) && (!hasPermissions("adv", "stream_errors")) && (!hasPermissions("adv", "panel_errors")) && (!hasPermissions("adv", "credits_log")) && (!hasPermissions("adv", "folder_watch_settings")))) {
+            if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "reg_userlog")) && (!UIController::hasPermissions("adv", "client_request_log")) && (!UIController::hasPermissions("adv", "connection_logs")) && (!UIController::hasPermissions("adv", "stream_errors")) && (!UIController::hasPermissions("adv", "panel_errors")) && (!UIController::hasPermissions("adv", "credits_log")) && (!UIController::hasPermissions("adv", "folder_watch_settings")))) {
                 echo json_encode(array("result" => false));
                 exit;
             }
@@ -1268,7 +1268,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array("result" => true));
             exit;
         case 'backup':
-            if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "database"))) {
+            if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "database"))) {
                 echo json_encode(array('result' => false));
                 exit();
             }
@@ -1305,9 +1305,9 @@ if (isset(CoreUtilities::$request["action"])) {
 
             /*
  case "send_event":
-    if ((!$rPermissions["is_admin"]) OR (!hasPermissions("adv", "manage_events"))) { echo json_encode(Array("result" => false)); exit; }
+    if ((!$rPermissions["is_admin"]) OR (!UIController::hasPermissions("adv", "manage_events"))) { echo json_encode(Array("result" => false)); exit; }
     $rData = json_decode(CoreUtilities::$request["data"], true);
-    $rMag = getMag($rData["id"]);
+    $rMag = UIController::getMag($rData["id"]);
     if ($rMag) {
         if ($rData["type"] == "send_msg") {
             $rData["need_confirm"] = 1;
@@ -1316,7 +1316,7 @@ if (isset(CoreUtilities::$request["action"])) {
             $rData["reboot_portal"] = 0;
             $rData["message"] = intval($rData["channel"]);
         } else if ($rData["type"] == "reset_stb_lock") {
-            resetSTB($rData["id"]);
+            UIController::resetSTB($rData["id"]);
             echo json_encode(Array("result" => true));exit;
         } else {
             $rData["need_confirm"] = 0;
@@ -1332,9 +1332,9 @@ if (isset(CoreUtilities::$request["action"])) {
 */
             // SEND MAG EVENT RESELLERS
         case "send_event":
-            if (($rPermissions["is_admin"]) && (hasPermissions("adv", "manage_events")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_mag_events"]))) {
+            if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "manage_events")) or (($rPermissions["is_reseller"]) && ($rSettings["reseller_mag_events"]))) {
                 $rData = json_decode(CoreUtilities::$request["data"], true);
-                $rMag = getMag($rData["id"]);
+                $rMag = UIController::getMag($rData["id"]);
                 if ($rMag) {
                     if ($rData["type"] == "send_msg") {
                         $rData["need_confirm"] = 1;
@@ -1343,7 +1343,7 @@ if (isset(CoreUtilities::$request["action"])) {
                         $rData["reboot_portal"] = 0;
                         $rData["message"] = intval($rData["channel"]);
                     } elseif ($rData["type"] == "reset_stb_lock") {
-                        resetSTB($rData["id"]);
+                        UIController::resetSTB($rData["id"]);
                         echo json_encode(array("result" => true));
                         exit;
                     } else {
@@ -1368,7 +1368,7 @@ if (isset(CoreUtilities::$request["action"])) {
                 exit;
             }
         case "enable_cache":
-            if (hasPermissions('adv', 'backups')) {
+            if (UIController::hasPermissions('adv', 'backups')) {
                 CoreUtilities::setSettings(["enable_cache" => 1]);
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php');
@@ -1384,7 +1384,7 @@ if (isset(CoreUtilities::$request["action"])) {
             exit();
 
         case "disable_cache":
-            if (hasPermissions('adv', 'backups')) {
+            if (UIController::hasPermissions('adv', 'backups')) {
                 CoreUtilities::setSettings(["enable_cache" => 0]);
 
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache.php');
@@ -1394,7 +1394,7 @@ if (isset(CoreUtilities::$request["action"])) {
             echo json_encode(array('result' => false));
             exit();
         case 'regenerate_cache':
-            if (hasPermissions('adv', 'backups')) {
+            if (UIController::hasPermissions('adv', 'backups')) {
                 shell_exec(PHP_BIN . ' ' . CRON_PATH . 'cache_engine.php "force"');
                 echo json_encode(array('result' => true));
                 exit();
@@ -1403,7 +1403,7 @@ if (isset(CoreUtilities::$request["action"])) {
             exit();
 
         case 'disable_handler':
-            if (hasPermissions('adv', 'backups')) {
+            if (UIController::hasPermissions('adv', 'backups')) {
                 CoreUtilities::setSettings(["redis_handler" => 0]);
 
                 if (file_exists(CACHE_TMP_PATH . 'settings')) {
@@ -1440,7 +1440,7 @@ if (isset(CoreUtilities::$request["action"])) {
             exit();
 
         case 'enable_handler':
-            if (hasPermissions('adv', 'backups')) {
+            if (UIController::hasPermissions('adv', 'backups')) {
                 CoreUtilities::setSettings(["redis_handler" => 1]);
 
                 if (file_exists(CACHE_TMP_PATH . 'settings')) {
@@ -1481,8 +1481,8 @@ if (isset(CoreUtilities::$request["action"])) {
             exit();
 
         case 'clear_redis':
-            if (hasPermissions('adv', 'backups')) {
-                iptv_lib::$redis->flushAll();
+            if (UIController::hasPermissions('adv', 'backups')) {
+                CoreUtilities::$redis->flushAll();
                 echo json_encode(array('result' => true));
                 exit();
             }

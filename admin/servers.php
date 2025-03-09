@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "servers"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "servers"))) {
     exit;
 }
 
@@ -21,7 +21,7 @@ include "header.php";
                                         <i class="mdi mdi-refresh"></i> <?= $_["refresh"] ?>
                                     </button>
                                 </a>
-                                <?php if (hasPermissions("adv", "add_server")) { ?>
+                                <?php if (UIController::hasPermissions("adv", "add_server")) { ?>
                                     <a href="server.php">
                                         <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
                                             <i class="mdi mdi-plus"></i> <?= $_["add_server"] ?>
@@ -96,12 +96,12 @@ include "header.php";
                                         </td>
                                         <td class="text-center"><?= $rServer["domain_name"] ?></td>
                                         <td class="text-center"><?= $rServer["server_ip"] ?></td>
-                                        <?php if (hasPermissions("adv", "live_connections")) { ?>
+                                        <?php if (UIController::hasPermissions("adv", "live_connections")) { ?>
                                             <td class="text-center"><a
-                                                    href="./live_connections.php?server_id=<?= $rServer["id"] ?>"><?= count(getConnections($rServer["id"])) ?>
+                                                    href="./live_connections.php?server_id=<?= $rServer["id"] ?>"><?= count(UIController::getConnections($rServer["id"])) ?>
                                                     / <?= $rServer["total_clients"] ?></a></td>
                                         <?php } else { ?>
-                                            <td class="text-center"><?= count(getConnections($rServer["id"])) ?> /
+                                            <td class="text-center"><?= count(UIController::getConnections($rServer["id"])) ?> /
                                                 <?= $rServer["total_clients"] ?>
                                             </td>
                                         <?php } ?>
@@ -110,7 +110,7 @@ include "header.php";
                                             <?= intval($rWatchDog["total_mem_used_percent"]) ?>%
                                         </td>
                                         <td class="text-center">
-                                            <?php if (hasPermissions("adv", "edit_server")) { ?>
+                                            <?php if (UIController::hasPermissions("adv", "edit_server")) { ?>
                                                 <div class="btn-group">
                                                     <button type="button" data-toggle="tooltip" data-placement="top" title=""
                                                         data-original-title="<?= $_["restart_reboot_fast-reload_full-remake_update-release"] ?>"
@@ -204,7 +204,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "credits_log"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "credits_log"))) {
     exit;
 }
 
@@ -41,7 +41,7 @@ include "header.php";
                             <div class="col-md-4">
                                 <select id="reseller" class="form-control" data-toggle="select2">
                                     <option value="" selected><?= $_["all_resellers"] ?></option>
-                                    <?php foreach (getRegisteredUsers() as $rReseller) { ?>
+                                    <?php foreach (UIController::getRegisteredUsers() as $rReseller) { ?>
                                         <option value="<?= $rReseller["id"] ?>"><?= $rReseller["username"] ?>
                                         </option>
                                     <?php } ?>
@@ -119,7 +119,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

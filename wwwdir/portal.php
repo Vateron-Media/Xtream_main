@@ -1016,7 +1016,7 @@ switch ($rReqType) {
                                 $rID = CoreUtilities::$request['id'];
                                 $rStreamID = substr($rID, 0, strpos($rID, '_'));
                                 $rDate = strtotime(substr($rID, strpos($rID, '_') + 1));
-                                $rRow = (getepg($rStreamID, $rDate, $rDate + 86400)[0] ?: null);
+                                $rRow = (getEPG($rStreamID, $rDate, $rDate + 86400)[0] ?: null);
 
                                 if ($rRow) {
                                     $rRow = $ipTV_db->get_row();
@@ -1631,14 +1631,14 @@ function getEPGs($rStreamIDs, $rStartDate = null, $rFinishDate = null) {
     $rReturn = array();
 
     foreach ($rStreamIDs as $rStreamID) {
-        $rReturn[$rStreamID] = getepg($rStreamID, $rStartDate, $rFinishDate);
+        $rReturn[$rStreamID] = getEPG($rStreamID, $rStartDate, $rFinishDate);
     }
 
     return $rReturn;
 }
 
 function getProgramme($rStreamID, $rProgrammeID) {
-    $rData = getepg($rStreamID, null, null, true);
+    $rData = getEPG($rStreamID, null, null, true);
 
     if (isset($rData[$rProgrammeID])) {
         return $rData[$rProgrammeID];

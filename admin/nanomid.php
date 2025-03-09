@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "manage_tickets"))) {
+if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "manage_tickets"))) {
     exit;
 }
 
@@ -37,7 +37,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

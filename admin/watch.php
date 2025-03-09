@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "folder_watch"))) {
     exit;
 }
 
@@ -23,14 +23,14 @@ include "header.php";
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li>
-                                <?php if (hasPermissions("adv", "folder_watch_settings")) { ?>
+                                <?php if (UIController::hasPermissions("adv", "folder_watch_settings")) { ?>
                                     <a href="settings_watch.php">
                                         <button type="button" class="btn btn-primary waves-effect waves-light btn-sm">
                                             <?= $_["settings"] ?>
                                         </button>
                                     </a>
                                 <?php }
-                                if (hasPermissions("adv", "folder_watch_output")) { ?>
+                                if (UIController::hasPermissions("adv", "folder_watch_output")) { ?>
                                     <a href="watch_output.php">
                                         <button type="button" class="btn btn-info waves-effect waves-light btn-sm">
                                             <?= $_["watch_output"] ?>
@@ -44,7 +44,7 @@ include "header.php";
                                         <i class="mdi mdi-hammer"></i>
                                     </button>
                                 </a>
-                                <?php if (hasPermissions("adv", "folder_watch_add")) { ?>
+                                <?php if (UIController::hasPermissions("adv", "folder_watch_add")) { ?>
                                     <a href="watch_add.php">
                                         <button type="button" class="btn btn-success waves-effect waves-light btn-sm"
                                             data-toggle="tooltip" data-placement="top" title=""
@@ -86,7 +86,7 @@ include "header.php";
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (getWatchFolders() as $rFolder) {
+                                <?php foreach (UIController::getWatchFolders() as $rFolder) {
                                     if ($rFolder["last_run"] > 0) {
                                         $rDate = date("Y-m-d H:i:s", $rFolder["last_run"]);
                                     } else {
@@ -126,7 +126,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_uas"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "block_uas"))) {
     exit;
 }
 
@@ -46,7 +46,7 @@ include "header.php";
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (getUserAgents() as $rUserAgent) {
+                                <?php foreach (UIController::getUserAgents() as $rUserAgent) {
                                     ?>
                                     <tr id="ua-<?= $rUserAgent["id"] ?>">
                                         <td class="text-center"><?= $rUserAgent["id"] ?></td>
@@ -79,7 +79,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

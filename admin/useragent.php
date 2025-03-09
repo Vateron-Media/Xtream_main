@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "block_uas"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "block_uas"))) {
     exit;
 }
 
@@ -49,7 +49,7 @@ if (isset(CoreUtilities::$request["submit_ua"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rUAArr = getUserAgent(CoreUtilities::$request["id"]);
+    $rUAArr = UIController::getUserAgent(CoreUtilities::$request["id"]);
     if (!$rUAArr) {
         exit;
     }
@@ -162,7 +162,7 @@ include "header.php";
                 <footer class="footer">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+                            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
                         </div>
                     </div>
                 </footer>

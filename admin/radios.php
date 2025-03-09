@@ -4,11 +4,11 @@ include "functions.php";
 if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
     exit;
 }
-if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "radio"))) {
+if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "radio"))) {
     exit;
 }
 
-$rCategories = getCategories_admin("radio");
+$rCategories = UIController::getCategories_admin("radio");
 
 include "header.php";
 ?>
@@ -47,7 +47,7 @@ include "header.php";
                                         </button>
                                     </a>
                                 <?php }
-                                if (($rPermissions["is_admin"]) && (hasPermissions("adv", "add_radio"))) { ?>
+                                if (($rPermissions["is_admin"]) && (UIController::hasPermissions("adv", "add_radio"))) { ?>
                                     <a href="radio.php">
                                         <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
                                             <?= $_["add_station"] ?>
@@ -87,7 +87,7 @@ include "header.php";
                                     <div class="col-md-3">
                                         <select id="station_server_id" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
-                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>>
@@ -115,7 +115,7 @@ include "header.php";
                                     <div class="col-md-3">
                                         <select id="station_server_id" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
-                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>>
@@ -207,7 +207,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

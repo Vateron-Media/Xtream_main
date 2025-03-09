@@ -1,16 +1,16 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_stream")) && (!hasPermissions("adv", "edit_stream")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_stream")) && (!UIController::hasPermissions("adv", "edit_stream")))) {
     exit;
 }
-if ((isset(CoreUtilities::$request["import"])) && (!hasPermissions("adv", "import_streams"))) {
+if ((isset(CoreUtilities::$request["import"])) && (!UIController::hasPermissions("adv", "import_streams"))) {
     exit;
 }
 
-$rEPGSources = getEPGSources();
-$rStreamArguments = getStreamArguments();
-$rTranscodeProfiles = getTranscodeProfiles();
+$rEPGSources = UIController::getEPGSources();
+$rStreamArguments = UIController::getStreamArguments();
+$rTranscodeProfiles = UIController::getTranscodeProfiles();
 
 $rEPGJS = array(0 => array());
 foreach ($rEPGSources as $rEPG) {
@@ -21,15 +21,15 @@ $rServerTree = array();
 $rOnDemand = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>Stream Source</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
 if (isset(CoreUtilities::$request["id"])) {
-    if ((isset(CoreUtilities::$request["import"])) or (!hasPermissions("adv", "edit_stream"))) {
+    if ((isset(CoreUtilities::$request["import"])) or (!UIController::hasPermissions("adv", "edit_stream"))) {
         exit;
     }
-    $rStream = getStream(CoreUtilities::$request["id"]);
+    $rStream = UIController::getStream(CoreUtilities::$request["id"]);
     if ((!$rStream) or ($rStream["type"] <> 1)) {
         exit;
     }
-    $rStreamOptions = getStreamOptions(CoreUtilities::$request["id"]);
-    $rStreamSys = getStreamSys(CoreUtilities::$request["id"]);
+    $rStreamOptions = UIController::getStreamOptions(CoreUtilities::$request["id"]);
+    $rStreamSys = UIController::getStreamSys(CoreUtilities::$request["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStreamSys[intval($rServer["id"])])) {
             if ($rStreamSys[intval($rServer["id"])]["parent_id"] <> 0) {
@@ -48,7 +48,7 @@ if (isset(CoreUtilities::$request["id"])) {
         }
     }
 } else {
-    if (!hasPermissions("adv", "add_stream")) {
+    if (!UIController::hasPermissions("adv", "add_stream")) {
         exit;
     }
     foreach ($rServers as $rServer) {
@@ -274,7 +274,7 @@ include "header.php";
                                                         <select name="category_id[]" id="category_id"
                                                             class="form-control select2-multiple" data-toggle="select2"
                                                             multiple="multiple" data-placeholder="Choose...">
-                                                            <?php foreach (getCategories_admin('live') as $rCategory): ?>
+                                                            <?php foreach (UIController::getCategories_admin('live') as $rCategory): ?>
                                                                 <option <?php if (isset($rStream) && in_array(intval($rCategory['id']), json_decode($rStream['category_id'], true))) {
                                                                             echo 'selected ';
                                                                         } ?>value="<?php echo $rCategory['id']; ?>">
@@ -291,7 +291,7 @@ include "header.php";
                                                         <select name="bouquets[]" id="bouquets"
                                                             class="form-control select2-multiple" data-toggle="select2"
                                                             multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
-                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                            <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                                 <option <?php if (isset($rStream)) {
                                                                             if (in_array($rStream["id"], json_decode($rBouquet["bouquet_channels"], true))) {
                                                                                 echo "selected ";
@@ -890,7 +890,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

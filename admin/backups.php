@@ -2,12 +2,12 @@
 include 'session.php';
 include 'functions.php';
 
-if (!checkPermissions()) {
-    goHome();
+if (!UIController::checkPermissions()) {
+    UIController::goHome();
 }
 
-if ((isset(CoreUtilities::$request["submit_settings"])) && (hasPermissions("adv", "database"))) {
-    $rArray = getSettings();
+if ((isset(CoreUtilities::$request["submit_settings"])) && (UIController::hasPermissions("adv", "database"))) {
+    $rArray = UIController::getSettings();
 
     foreach (CoreUtilities::$request as $rKey => $rValue) {
         if (isset($rArray[$rKey])) {
@@ -21,7 +21,7 @@ if ((isset(CoreUtilities::$request["submit_settings"])) && (hasPermissions("adv"
     }
 }
 
-$rSettings = getSettings(); // Update
+$rSettings = UIController::getSettings(); // Update
 
 include "header.php";
 
@@ -138,7 +138,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

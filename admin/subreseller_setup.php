@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "subreseller"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "subreseller"))) {
     exit;
 }
 
@@ -50,7 +50,7 @@ if (isset(CoreUtilities::$request["submit_subreseller"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rSubreseller = getSubresellerSetup(CoreUtilities::$request["id"]);
+    $rSubreseller = UIController::getSubresellerSetup(CoreUtilities::$request["id"]);
     if (!$rSubreseller) {
         exit;
     }
@@ -117,7 +117,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <select name="reseller" id="reseller"
                                                             class="form-control select2" data-toggle="select2">
-                                                            <?php foreach (getMemberGroups() as $rGroup) {
+                                                            <?php foreach (UIController::getMemberGroups() as $rGroup) {
                                                                 if ($rGroup["is_reseller"] == 1) { ?>
                                                                     <option <?php if (isset($rSubreseller)) {
                                                                         if (intval($rSubreseller["reseller"]) == intval($rGroup["group_id"])) {
@@ -136,7 +136,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <select name="subreseller" id="subreseller"
                                                             class="form-control select2" data-toggle="select2">
-                                                            <?php foreach (getMemberGroups() as $rGroup) {
+                                                            <?php foreach (UIController::getMemberGroups() as $rGroup) {
                                                                 if ($rGroup["is_reseller"] == 1) { ?>
                                                                     <option <?php if (isset($rSubreseller)) {
                                                                         if (intval($rSubreseller["subreseller"]) == intval($rGroup["group_id"])) {
@@ -172,7 +172,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

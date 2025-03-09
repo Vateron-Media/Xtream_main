@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "folder_watch_add"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "folder_watch_add"))) {
     exit;
 }
 
@@ -15,7 +15,7 @@ if (isset(CoreUtilities::$request["submit_folder"])) {
         $ipTV_db_admin->query("SELECT `id` FROM `watch_folders` WHERE `type` = '" . CoreUtilities::$request["folder_type"] . "' AND `directory` = '" . $rPath . "' AND `server_id` = " . intval(CoreUtilities::$request["server_id"]) . $rExtra . ";");
         if ($ipTV_db_admin->num_rows() == 0) {
             if (isset(CoreUtilities::$request["edit"])) {
-                $rArray = getWatchFolder(CoreUtilities::$request["edit"]);
+                $rArray = UIController::getWatchFolder(CoreUtilities::$request["edit"]);
                 unset($rArray["id"]);
             } else {
                 $rArray = array("directory" => "", "last_run" => 0, "server_id" => 0, "type" => "movie", "active" => 1, "bouquets" => "[]", "fb_bouquets" => "[]", "category_id" => 0, "fb_category_id" => 0, "disable_tmdb" => 0, "ignore_no_match" => 0, "auto_subtitles" => 0, "allowed_extensions" => array());
@@ -90,13 +90,13 @@ if (isset(CoreUtilities::$request["submit_folder"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rFolder = getWatchFolder(CoreUtilities::$request["id"]);
+    $rFolder = UIController::getWatchFolder(CoreUtilities::$request["id"]);
     if (!$rFolder) {
         exit;
     }
 }
 
-$rBouquets = getBouquets();
+$rBouquets = UIController::getBouquets();
 
 include "header.php";
 ?>
@@ -188,7 +188,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <select id="server_id" name="server_id" class="form-control"
                                                             data-toggle="select2">
-                                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset($rFolder)) && ($rFolder["server_id"] == $rServer["id"])) {
                                                                       echo " selected";
                                                                   } ?>>
@@ -274,7 +274,7 @@ include "header.php";
                                                             } ?>value="0">
                                                                 <?= $_["do_not_use"] ?>
                                                             </option>
-                                                            <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
+                                                            <?php foreach (UIController::getCategories_admin("movie") as $rCategory) { ?>
                                                                 <option <?php if (isset($rFolder)) {
                                                                     if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
                                                                         echo "selected ";
@@ -308,7 +308,7 @@ include "header.php";
                                                             } ?>value="0">
                                                                 <?= $_["do_not_use"] ?>
                                                             </option>
-                                                            <?php foreach (getCategories_admin("series") as $rCategory) { ?>
+                                                            <?php foreach (UIController::getCategories_admin("series") as $rCategory) { ?>
                                                                 <option <?php if (isset($rFolder)) {
                                                                     if (intval($rFolder["category_id"]) == intval($rCategory["id"])) {
                                                                         echo "selected ";
@@ -362,7 +362,7 @@ include "header.php";
                                                             } ?>value="0">
                                                                 <?= $_["do_not_use"] ?>
                                                             </option>
-                                                            <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
+                                                            <?php foreach (UIController::getCategories_admin("movie") as $rCategory) { ?>
                                                                 <option <?php if (isset($rFolder)) {
                                                                     if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
                                                                         echo "selected ";
@@ -396,7 +396,7 @@ include "header.php";
                                                             } ?>value="0">
                                                                 <?= $_["do_not_use"] ?>
                                                             </option>
-                                                            <?php foreach (getCategories_admin("series") as $rCategory) { ?>
+                                                            <?php foreach (UIController::getCategories_admin("series") as $rCategory) { ?>
                                                                 <option <?php if (isset($rFolder)) {
                                                                     if (intval($rFolder["fb_category_id"]) == intval($rCategory["id"])) {
                                                                         echo $_["checked "];
@@ -526,7 +526,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

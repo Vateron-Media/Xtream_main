@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_group")) && (!hasPermissions("adv", "edit_group")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_group")) && (!UIController::hasPermissions("adv", "edit_group")))) {
     exit;
 }
 
@@ -101,14 +101,14 @@ $rAdvPermissions = array(
 
 if (isset(CoreUtilities::$request["submit_group"])) {
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_group")) {
+        if (!UIController::hasPermissions("adv", "edit_group")) {
             exit;
         }
-        $rArray = getMemberGroup(CoreUtilities::$request["edit"]);
+        $rArray = UIController::getMemberGroup(CoreUtilities::$request["edit"]);
         $rGroup = $rArray;
         unset($rArray["group_id"]);
     } else {
-        if (!hasPermissions("adv", "add_group")) {
+        if (!UIController::hasPermissions("adv", "add_group")) {
             exit;
         }
         $rArray = array("group_name" => "", "group_color" => "", "is_banned" => 0, "is_admin" => 0, "is_reseller" => 0, "total_allowed_gen_in" => "day", "total_allowed_gen_trials" => 0, "minimum_trial_credits" => 0, "can_delete" => 1, "delete_users" => 0, "allowed_pages" => "", "reseller_force_server" => "", "create_sub_resellers_price" => 0, "create_sub_resellers" => 0, "alter_packages_ids" => 0, "alter_packages_prices" => 0, "reseller_client_connection_logs" => 0, "reseller_assign_pass" => 0, "allow_change_pass" => 0, "allow_import" => 0, "allow_export" => 0, "reseller_trial_credit_allow" => 0, "edit_mac" => 0, "edit_isplock" => 0, "reset_stb_data" => 0, "reseller_bonus_package_inc" => 0, "allow_download" => 1, "reseller_can_select_bouquets" => 0);
@@ -168,11 +168,11 @@ if (isset(CoreUtilities::$request["submit_group"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rGroup = getMemberGroup(CoreUtilities::$request["id"]);
-    if ((!$rGroup) or (!hasPermissions("adv", "edit_group"))) {
+    $rGroup = UIController::getMemberGroup(CoreUtilities::$request["id"]);
+    if ((!$rGroup) or (!UIController::hasPermissions("adv", "edit_group"))) {
         exit;
     }
-} elseif (!hasPermissions("adv", "add_group")) {
+} elseif (!UIController::hasPermissions("adv", "add_group")) {
     exit;
 }
 
@@ -574,7 +574,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

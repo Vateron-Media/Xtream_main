@@ -1,16 +1,16 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_server")) && (!hasPermissions("adv", "edit_server")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_server")) && (!UIController::hasPermissions("adv", "edit_server")))) {
     exit;
 }
 
-if (!checkPermissions()) {
-    goHome();
+if (!UIController::checkPermissions()) {
+    UIController::goHome();
 }
 
 if (!isset(CoreUtilities::$request['id']) || !isset($rServers[CoreUtilities::$request['id']])) {
-    goHome();
+    UIController::goHome();
     return;
 }
 
@@ -502,7 +502,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

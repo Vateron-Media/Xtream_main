@@ -8,14 +8,14 @@ class AdminAPI {
 
 	public static function init($rUserID = null) {
 		self::$rSettings = CoreUtilities::getSettings();
-		self::$rServers = getStreamingServers();
+		self::$rServers = UIController::getStreamingServers();
 
 		if (!$rUserID && isset($_SESSION['hash'])) {
 			$rUserID = $_SESSION['hash'];
 		}
 
 		if ($rUserID) {
-			self::$rUserInfo = getRegisteredUser($rUserID);
+			self::$rUserInfo = UIController::getRegisteredUser($rUserID);
 		}
 	}
 	private static function checkMinimumRequirements($rData) {
@@ -34,7 +34,7 @@ class AdminAPI {
 		return true;
 	}
 	public static function installServer($rData) {
-		if (hasPermissions('adv', 'add_server')) {
+		if (UIController::hasPermissions('adv', 'add_server')) {
 			if (self::checkMinimumRequirements($rData)) {
 				if (isset($rData['update_sysctl'])) {
 					$rUpdateSysctl = 1;
@@ -59,14 +59,14 @@ class AdminAPI {
 				// }
 				$rData['can_delete'] = 1;
 				$rData['total_clients'] = 1000;
-				$rArray = verifyPostTable('servers', $rData);
+				$rArray = UIController::verifyPostTable('servers', $rData);
 				$rArray['status'] = 3;
 				unset($rArray['id']);
 
 				if (strlen($rArray['server_ip']) != 0 && filter_var($rArray['server_ip'], FILTER_VALIDATE_IP)) {
 					$rArray['network_interface'] = 'auto';
 
-					$rPrepare = prepareArray($rArray);
+					$rPrepare = UIController::prepareArray($rArray);
 
 					$rQuery = 'INSERT INTO `servers`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
 
@@ -91,7 +91,7 @@ class AdminAPI {
 		exit();
 	}
 	public static function processServer($rData) {
-		if (!hasPermissions('adv', 'edit_server')) {
+		if (!UIController::hasPermissions('adv', 'edit_server')) {
 			exit();
 		}
 
@@ -99,12 +99,12 @@ class AdminAPI {
 			return ['status' => STATUS_INVALID_INPUT, 'data' => $rData];
 		}
 
-		$rServer = getStreamingServersByID($rData['edit']);
+		$rServer = UIController::getStreamingServersByID($rData['edit']);
 		if (!$rServer) {
 			return ['status' => STATUS_INVALID_INPUT, 'data' => $rData];
 		}
 
-		$rArray = verifyPostTable('servers', $rData, true);
+		$rArray = UIController::verifyPostTable('servers', $rData, true);
 		$rArray['http_broadcast_port'] = $rData['http_broadcast_port'];
 		$rArray['https_broadcast_port'] = $rData['https_broadcast_port'];
 
@@ -134,20 +134,20 @@ class AdminAPI {
 		if (strlen($rData['server_ip']) > 0 && filter_var($rData['server_ip'], FILTER_VALIDATE_IP)) {
 			if (strlen($rData['private_ip']) <= 0 || filter_var($rData['private_ip'], FILTER_VALIDATE_IP)) {
 				$rArray['total_services'] = $rData['total_services'];
-				$rPrepare = prepareArray($rArray);
+				$rPrepare = UIController::prepareArray($rArray);
 				$rPrepare['data'][] = $rData['edit'];
 				$rQuery = 'UPDATE `servers` SET ' . $rPrepare['update'] . ' WHERE `id` = ?;';
 
 				if (self::$ipTV_db->query($rQuery, ...$rPrepare['data'])) {
 					$rInsertID = $rData['edit'];
 
-					changePort($rInsertID, 0, $rArray['http_broadcast_port'], false);
-					changePort($rInsertID, 1, $rArray['https_broadcast_port'], false);
-					changePort($rInsertID, 2, $rArray['rtmp_port'], false);
-					setServices($rInsertID, intval($rArray['total_services']), true);
+					UIController::changePort($rInsertID, 0, $rArray['http_broadcast_port'], false);
+					UIController::changePort($rInsertID, 1, $rArray['https_broadcast_port'], false);
+					UIController::changePort($rInsertID, 2, $rArray['rtmp_port'], false);
+					UIController::setServices($rInsertID, intval($rArray['total_services']), true);
 
 					if (!empty($rArray['sysctl'])) {
-						setSysctl($rInsertID, $rArray['sysctl']);
+						UIController::setSysctl($rInsertID, $rArray['sysctl']);
 					}
 
 					if (file_exists(CACHE_TMP_PATH . 'servers')) {
@@ -167,7 +167,7 @@ class AdminAPI {
 	}
 	public static function editSettings($rData) {
 		if (self::checkMinimumRequirements($rData)) {
-			$rArray = getSettings();
+			$rArray = UIController::getSettings();
 
 			foreach (array("active_mannuals", "allow_cdn_access", "always_enabled_subtitles", "audio_restart_loss", "block_proxies", "block_streaming_servers", "block_svp", "case_sensitive_line", "change_own_dns", "change_own_email", "change_own_lang", "change_own_password", "change_usernames", "client_logs_save", "cloudflare", "county_override_1st", "dashboard_stats", "dashboard_world_map_activity", "dashboard_world_map_live", "debug_show_errors", "detect_restream_block_user", "disable_hls", "disable_hls_allow_restream", "disable_mag_token", "disable_ministra", "disable_trial", "disable_ts", "disable_ts_allow_restream", "disallow_2nd_ip_con", "disallow_empty_user_agents", "download_images", "enable_connection_problem_indication", "enable_debug_stalker", "enable_isp_lock", "encrypt_hls", "encrypt_playlist", "encrypt_playlist_restreamer", "ffmpeg_warnings", "ignore_invalid_users", "ignore_keyframes", "ip_logout", "ip_subnet_match", "kill_rogue_ffmpeg", "mag_disable_ssl", "mag_keep_extension", "mag_legacy_redirect", "mag_security", "monitor_connection_status", "on_demand_failure_exit", "on_demand_instant_off", "ondemand_balance_equal", "playlist_from_mysql", "priority_backup", "recaptcha_enable", "reseller_can_isplock", "reseller_mag_events", "reseller_reset_isplock", "reseller_restrictions", "restart_php_fpm", "restream_deny_unauthorised", "restrict_playlists", "restrict_same_ip", "rtmp_random", "save_closed_connection", "save_restart_logs", "show_all_category_mag", "show_banned_video", "show_channel_logo_in_preview", "show_expired_video", "show_expiring_video", "show_isps", "show_not_on_air_video", "show_tv_channel_logo", "stb_change_pass", "stream_logs_save", "use_buffer", "use_mdomain_in_lists",) as $rSetting) {
 				if (isset($rData[$rSetting])) {
@@ -207,7 +207,7 @@ class AdminAPI {
 			}
 
 			if (CoreUtilities::setSettings($rArray)) {
-				clearSettingsCache();
+				UIController::clearSettingsCache();
 				return array('status' => STATUS_SUCCESS);
 			} else {
 				return array('status' => STATUS_FAILURE);
@@ -226,15 +226,15 @@ class AdminAPI {
 		ini_set('default_socket_timeout', 0);
 
 		if (isset($rData['edit'])) {
-			if (!hasPermissions('adv', 'edit_stream')) {
+			if (!UIController::hasPermissions('adv', 'edit_stream')) {
 				exit();
 			}
-			$rArray = overwriteData(getStream($rData['edit']), $rData);
+			$rArray = UIController::overwriteData(UIController::getStream($rData['edit']), $rData);
 		} else {
-			if (!hasPermissions('adv', 'add_stream')) {
+			if (!UIController::hasPermissions('adv', 'add_stream')) {
 				exit();
 			}
-			$rArray = verifyPostTable('streams', $rData);
+			$rArray = UIController::verifyPostTable('streams', $rData);
 			$rArray['type'] = 1;
 			$rArray['added'] = time();
 			unset($rArray['id']);
@@ -281,7 +281,7 @@ class AdminAPI {
 
 			foreach ($rData['review'] as $rImportStream) {
 				if (!$rImportStream['channel_id'] || $rImportStream['tvg_id']) {
-					$rEPG = findEPG($rImportStream['tvg_id']);
+					$rEPG = UIController::findEPG($rImportStream['tvg_id']);
 
 					if (isset($rEPG)) {
 						$rImportStream['epg_id'] = $rEPG['epg_id'];
@@ -297,13 +297,13 @@ class AdminAPI {
 			}
 		} else {
 			if (isset($_FILES['m3u_file'])) {
-				if (!hasPermissions('adv', 'import_streams')) {
+				if (!UIController::hasPermissions('adv', 'import_streams')) {
 					exit();
 				}
 				if (empty($_FILES['m3u_file']['tmp_name']) || strtolower(pathinfo(explode('?', $_FILES['m3u_file']['name'])[0], PATHINFO_EXTENSION)) != 'm3u') {
 					return array('status' => STATUS_INVALID_FILE, 'data' => $rData);
 				}
-				$rResults = parseM3U($_FILES['m3u_file']['tmp_name']);
+				$rResults = UIController::parseM3U($_FILES['m3u_file']['tmp_name']);
 
 				if (count($rResults) > 0) {
 					$rEPGDatabase = $rSourceDatabase = $rStreamDatabase = array();
@@ -454,7 +454,7 @@ class AdminAPI {
 
 		if (!$rReview) {
 			foreach (json_decode($rData['bouquet_create_list'], true) as $rBouquet) {
-				$rPrepare = prepareArray(array('bouquet_name' => $rBouquet, 'bouquet_channels' => array(), 'bouquet_movies' => array(), 'bouquet_series' => array(), 'bouquet_radios' => array()));
+				$rPrepare = UIController::prepareArray(array('bouquet_name' => $rBouquet, 'bouquet_channels' => array(), 'bouquet_movies' => array(), 'bouquet_series' => array(), 'bouquet_radios' => array()));
 				$rQuery = 'INSERT INTO `bouquets`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
 
 				if (self::$ipTV_db->query($rQuery, ...$rPrepare['data'])) {
@@ -464,7 +464,7 @@ class AdminAPI {
 			}
 
 			foreach (json_decode($rData['category_create_list'], true) as $rCategory) {
-				$rPrepare = prepareArray(array('category_type' => 'live', 'category_name' => $rCategory, 'parent_id' => 0, 'cat_order' => 99, 'is_adult' => 0));
+				$rPrepare = UIController::prepareArray(array('category_type' => 'live', 'category_name' => $rCategory, 'parent_id' => 0, 'cat_order' => 99, 'is_adult' => 0));
 				$rQuery = 'INSERT INTO `streams_categories`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
 
 				if (self::$ipTV_db->query($rQuery, ...$rPrepare['data'])) {
@@ -479,7 +479,7 @@ class AdminAPI {
 				$rImportArray = $rArray;
 
 				if (self::$rSettings['download_images']) {
-					$rImportStream['stream_icon'] = downloadImage($rImportStream['stream_icon'], 1);
+					$rImportStream['stream_icon'] = UIController::downloadImage($rImportStream['stream_icon'], 1);
 				}
 
 				if ($rReview) {
@@ -517,10 +517,10 @@ class AdminAPI {
 				}
 
 				if (!isset($rData['edit']) || !isset($rImportStream['id'])) {
-					$rImportArray['order'] = getNextOrder();
+					$rImportArray['order'] = UIController::getNextOrder();
 				}
 
-				$rPrepare = prepareArray($rImportArray);
+				$rPrepare = UIController::prepareArray($rImportArray);
 				$rQuery = 'REPLACE INTO `streams`(' . $rPrepare['columns'] . ') VALUES(' . $rPrepare['placeholder'] . ');';
 
 				if (self::$ipTV_db->query($rQuery, ...$rPrepare['data'])) {
@@ -560,7 +560,7 @@ class AdminAPI {
 
 					foreach ($rStreamExists as $rServerID => $rDBID) {
 						if (!in_array($rServerID, $rStreamsAdded)) {
-							deleteStream($rInsertID, $rServerID, false, false);
+							UIController::deleteStream($rInsertID, $rServerID, false, false);
 						}
 					}
 					self::$ipTV_db->query('DELETE FROM `streams_options` WHERE `stream_id` = ?;', $rInsertID);
@@ -582,23 +582,23 @@ class AdminAPI {
 					}
 
 					if ($rRestart) {
-						APIRequest(array('action' => 'stream', 'sub' => 'start', 'stream_ids' => array($rInsertID)));
+						UIController::APIRequest(array('action' => 'stream', 'sub' => 'start', 'stream_ids' => array($rInsertID)));
 					}
 
 					foreach ($rBouquets as $rBouquet) {
-						addToBouquet('stream', $rBouquet, $rInsertID);
+						UIController::addToBouquet('stream', $rBouquet, $rInsertID);
 					}
 
 					if (isset($rData['edit']) || isset($rImportStream['id'])) {
-						foreach (getBouquets() as $rBouquet) {
+						foreach (UIController::getBouquets() as $rBouquet) {
 							if (!in_array($rBouquet['id'], $rBouquets)) {
-								removeFromBouquet('stream', $rBouquet['id'], $rInsertID);
+								UIController::removeFromBouquet('stream', $rBouquet['id'], $rInsertID);
 							}
 						}
 					}
 
 					if ($rArray['epg_id'] == 0 || !empty($rArray['channel_id'])) {
-						processEPGAPI($rInsertID, $rArray['channel_id']);
+						UIController::processEPGAPI($rInsertID, $rArray['channel_id']);
 					}
 
 					ipTV_streaming::updateStream($rInsertID);

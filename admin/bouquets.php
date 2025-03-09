@@ -1,10 +1,10 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "bouquets"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "bouquets"))) {
     exit;
 }
-$rBouquets = getBouquets();
+$rBouquets = UIController::getBouquets();
 
 include "header.php";
 ?>
@@ -14,7 +14,7 @@ include "header.php";
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <?php if (hasPermissions("adv", "add_bouquet")) { ?>
+                    <?php if (UIController::hasPermissions("adv", "add_bouquet")) { ?>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li>
@@ -66,7 +66,7 @@ include "header.php";
                                             <?= count(json_decode($rBouquet["bouquet_series"], True)) ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php if (hasPermissions("adv", "edit_bouquet")) { ?>
+                                            <?php if (UIController::hasPermissions("adv", "edit_bouquet")) { ?>
                                                 <div class="btn-group">
                                                     <a href="./bouquet_order.php?id=<?= $rBouquet["id"] ?>"><button
                                                             type="button" data-toggle="tooltip" data-placement="top" title=""
@@ -105,7 +105,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

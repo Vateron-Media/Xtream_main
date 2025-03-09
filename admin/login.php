@@ -6,7 +6,7 @@ if (isset($_SESSION['hash'])) {
 }
 
 if (intval($rSettings["login_flood"]) > 0) {
-	$ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `login_flood` WHERE `ip` = '" . getIP() . "' AND TIME_TO_SEC(TIMEDIFF(NOW(), `dateadded`)) <= 86400;");
+	$ipTV_db_admin->query("SELECT COUNT(`id`) AS `count` FROM `login_flood` WHERE `ip` = '" . UIController::getIP() . "' AND TIME_TO_SEC(TIMEDIFF(NOW(), `dateadded`)) <= 86400;");
 	if ($ipTV_db_admin->num_rows() == 1) {
 		if (intval($ipTV_db_admin->get_row()["count"]) >= intval($rSettings["login_flood"])) {
 			$_STATUS = 7;
@@ -24,16 +24,16 @@ if (!isset($_STATUS)) {
 			}
 		}
 		if (!isset($_STATUS)) {
-			$rUserInfo = doLogin(CoreUtilities::$request["username"], CoreUtilities::$request["password"]);
+			$rUserInfo = UIController::doLogin(CoreUtilities::$request["username"], CoreUtilities::$request["password"]);
 			if (isset($rUserInfo)) {
 				if ((strlen(CoreUtilities::$request["password"]) < intval($rSettings["pass_length"])) && (intval($rSettings["pass_length"]) > 0)) {
 					$rChangePass = md5($rUserInfo["password"]);
 				} else {
-					$rPermissions = getPermissions($rUserInfo["member_group_id"]);
+					$rPermissions = UIController::getPermissions($rUserInfo["member_group_id"]);
 					if (($rPermissions) && (($rPermissions["is_admin"]) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-						$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = ? WHERE `id` = ?;", getIP(), intval($rUserInfo["id"]));
+						$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `ip` = ? WHERE `id` = ?;", UIController::getIP(), intval($rUserInfo["id"]));
 						$_SESSION['hash'] = md5($rUserInfo["username"]);
-						$_SESSION['ip'] = getIP();
+						$_SESSION['ip'] = UIController::getIP();
 						if ($rPermissions["is_admin"]) {
 							header("Location: ./dashboard.php");
 						}
@@ -47,21 +47,21 @@ if (!isset($_STATUS)) {
 				}
 			} else {
 				if (intval($rSettings["login_flood"]) > 0) {
-					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . CoreUtilities::$request["username"] . "', '" . getIP() . "');");
+					$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . CoreUtilities::$request["username"] . "', '" . UIController::getIP() . "');");
 				}
 				$_STATUS = 0;
 			}
 		}
 	} elseif ((isset(CoreUtilities::$request["newpass"])) && (isset(CoreUtilities::$request["confirm"])) && (isset(CoreUtilities::$request["hash"])) && (isset(CoreUtilities::$request["change"]))) {
-		$rUserInfo = getRegisteredUserHash(CoreUtilities::$request["hash"]);
+		$rUserInfo = UIController::getRegisteredUserHash(CoreUtilities::$request["hash"]);
 		$rChangePass = CoreUtilities::$request["change"];
 		if (($rUserInfo) && ($rChangePass == md5($rUserInfo["password"]))) {
 			if ((CoreUtilities::$request["newpass"] == CoreUtilities::$request["confirm"]) && (strlen(CoreUtilities::$request["newpass"]) >= intval($rSettings["pass_length"]))) {
-				$rPermissions = getPermissions($rUserInfo["member_group_id"]);
+				$rPermissions = UIController::getPermissions($rUserInfo["member_group_id"]);
 				if (($rPermissions) && (($rPermissions["is_admin"]) && ((!$rPermissions["is_banned"]) && ($rUserInfo["status"] == 1)))) {
-					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . cryptPassword(CoreUtilities::$request["newpass"]) . "', `ip` = '" . getIP() . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
+					$ipTV_db_admin->query("UPDATE `reg_users` SET `last_login` = UNIX_TIMESTAMP(), `password` = '" . UIController::cryptPassword(CoreUtilities::$request["newpass"]) . "', `ip` = '" . UIController::getIP() . "' WHERE `id` = " . intval($rUserInfo["id"]) . ";");
 					$_SESSION['hash'] = md5($rUserInfo["username"]);
-					$_SESSION['ip'] = getIP();
+					$_SESSION['ip'] = UIController::getIP();
 					if ($rPermissions["is_admin"]) {
 						header("Location: ./dashboard.php");
 					}
@@ -77,7 +77,7 @@ if (!isset($_STATUS)) {
 			}
 		} else {
 			if (intval($rSettings["login_flood"]) > 0) {
-				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . CoreUtilities::$request["username"] . "', '" . getIP() . "');");
+				$ipTV_db_admin->query("INSERT INTO `login_flood`(`username`, `ip`) VALUES('" . CoreUtilities::$request["username"] . "', '" . UIController::getIP() . "');");
 			}
 			$_STATUS = 0;
 		}

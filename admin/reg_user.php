@@ -2,19 +2,19 @@
 include "session.php";
 include "functions.php";
 
-if (!checkPermissions()) {
-    goHome();
+if (!UIController::checkPermissions()) {
+    UIController::goHome();
 }
 
 if (isset(CoreUtilities::$request["submit_user"])) {
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_reguser")) {
+        if (!UIController::hasPermissions("adv", "edit_reguser")) {
             exit;
         }
-        $rArray = getRegisteredUser(CoreUtilities::$request["edit"]);
+        $rArray = UIController::getRegisteredUser(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
-        if (!hasPermissions("adv", "add_reguser")) {
+        if (!UIController::hasPermissions("adv", "add_reguser")) {
             exit;
         }
         $rArray = array("username" => "", "password" => "", "email" => "", "member_group_id" => 1, "verified" => 0, "credits" => 0, "notes" => "", "status" => 1, "owner_id" => 0);
@@ -23,7 +23,7 @@ if (isset(CoreUtilities::$request["submit_user"])) {
         $_STATUS = 1;
     }
     if (strlen(CoreUtilities::$request["password"]) > 0) {
-        $rArray["password"] = cryptPassword(CoreUtilities::$request["password"]);
+        $rArray["password"] = UIController::cryptPassword(CoreUtilities::$request["password"]);
     } elseif (!isset(CoreUtilities::$request["edit"])) {
         $_STATUS = 1;
     }
@@ -88,9 +88,9 @@ if (isset(CoreUtilities::$request["submit_user"])) {
     }
 }
 
-$rUser = isset(CoreUtilities::$request['id']) ? getRegisteredUser(CoreUtilities::$request['id']) : null;
+$rUser = isset(CoreUtilities::$request['id']) ? UIController::getRegisteredUser(CoreUtilities::$request['id']) : null;
 if ($rUser === false) {
-    goHome();
+    UIController::goHome();
 }
 
 $_TITLE = 'User';
@@ -176,7 +176,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" id="username"
                                                             name="username"
-                                                            value="<?= $rUser ? htmlspecialchars($rUser['username']) : generateString(10) ?>"
+                                                            value="<?= $rUser ? htmlspecialchars($rUser['username']) : CoreUtilities::generateString(10) ?>"
                                                             required data-parsley-trigger="change">
                                                     </div>
                                                 </div>
@@ -186,7 +186,7 @@ include "header.php";
                                                                                                                                 } ?><?= $_["password"] ?></label>
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" id="password" name="password" <?php if (!isset($rUser)) {
-                                                                                                                                    echo 'value="' . generateString(10) . '" required data-parsley-trigger="change"';
+                                                                                                                                    echo 'value="' . CoreUtilities::generateString(10) . '" required data-parsley-trigger="change"';
                                                                                                                                 } else {
                                                                                                                                     echo 'value=""';
                                                                                                                                 } ?>>
@@ -208,7 +208,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <select name="member_group_id" id="member_group_id"
                                                             class="form-control select2" data-toggle="select2">
-                                                            <?php foreach (getMemberGroups() as $rGroup) { ?>
+                                                            <?php foreach (UIController::getMemberGroups() as $rGroup) { ?>
                                                                 <option <?php if (isset($rUser)) {
                                                                             if (intval($rUser["member_group_id"]) == intval($rGroup["group_id"])) {
                                                                                 echo "selected ";
@@ -225,7 +225,7 @@ include "header.php";
                                                         <select name="owner_id" id="owner_id"
                                                             class="form-control select2" data-toggle="select2">
                                                             <option value="0"><?= $_["no_owner"] ?></option>
-                                                            <?php foreach (getRegisteredUsers(0) as $rRegUser) { ?>
+                                                            <?php foreach (UIController::getRegisteredUsers(0) as $rRegUser) { ?>
                                                                 <option <?php if (isset($rUser)) {
                                                                             if (intval($rUser["owner_id"]) == intval($rRegUser["id"])) {
                                                                                 echo "selected ";
@@ -319,7 +319,7 @@ include "header.php";
                                                     <tbody>
                                                         <?php
                                                         $rOverride = json_decode($rUser["override_packages"], true);
-                                                        foreach (getPackages($rUser["member_group_id"]) as $rPackage) {
+                                                        foreach (UIController::getPackages($rUser["member_group_id"]) as $rPackage) {
                                                             if ($rPackage["is_official"]) { ?>
                                                                 <tr>
                                                                     <td class="text-center"><?= $rPackage["id"] ?></td>
@@ -368,7 +368,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

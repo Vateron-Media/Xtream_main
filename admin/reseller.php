@@ -155,7 +155,7 @@ include "header.php";
                             <div class="slimscroll" style="height:350px;">
                                 <div class="timeline-alt">
                                     <?php
-                                    $ipTV_db_admin->query("SELECT `u`.`username`, `r`.`owner`, `r`.`date`, `r`.`type` FROM `reg_userlog` AS `r` INNER JOIN `reg_users` AS `u` ON `r`.`owner` = `u`.`id` WHERE `r`.`owner` IN (" . join(",", array_keys(getRegisteredUsers($rUserInfo["id"]))) . ") ORDER BY `r`.`date` DESC LIMIT 100;");
+                                    $ipTV_db_admin->query("SELECT `u`.`username`, `r`.`owner`, `r`.`date`, `r`.`type` FROM `reg_userlog` AS `r` INNER JOIN `reg_users` AS `u` ON `r`.`owner` = `u`.`id` WHERE `r`.`owner` IN (" . join(",", array_keys(UIController::getRegisteredUsers($rUserInfo["id"]))) . ") ORDER BY `r`.`date` DESC LIMIT 100;");
                                     if ($ipTV_db_admin->num_rows() > 0) {
                                         foreach ($ipTV_db_admin->get_rows() as $rRow) { ?>
                                             <div class="timeline-item">
@@ -197,8 +197,8 @@ include "header.php";
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $rRegisteredUsers = getRegisteredUsers();
-                                        foreach (getExpiring($rUserInfo["id"]) as $rUser) { ?>
+                                        <?php $rRegisteredUsers = UIController::getRegisteredUsers();
+                                        foreach (UIController::getExpiring($rUserInfo["id"]) as $rUser) { ?>
                                             <tr id="user-<?= $rUser["id"] ?>">
                                                 <td class="text-center"><?= $rUser["username"] ?></td>
                                                 <td class="text-center"><?= $rUser["password"] ?></td>
@@ -234,7 +234,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

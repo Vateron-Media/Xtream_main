@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_bouquet")) && (!hasPermissions("adv", "edit_bouquet")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_bouquet")) && (!UIController::hasPermissions("adv", "edit_bouquet")))) {
     exit;
 }
 
@@ -39,12 +39,12 @@ if (isset(CoreUtilities::$request["submit_bouquet"])) {
         }
     }
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_bouquet")) {
+        if (!UIController::hasPermissions("adv", "edit_bouquet")) {
             exit;
         }
         $rCols = "id," . $rCols;
         $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
-    } elseif (!hasPermissions("adv", "add_bouquet")) {
+    } elseif (!UIController::hasPermissions("adv", "add_bouquet")) {
         exit;
     }
     $rQuery = "REPLACE INTO `bouquets`(" . $rCols . ") VALUES(" . $rValues . ");";
@@ -55,7 +55,7 @@ if (isset(CoreUtilities::$request["submit_bouquet"])) {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
         $_STATUS = 0;
-        scanBouquet($rInsertID);
+        UIController::scanBouquet($rInsertID);
         header("Location: ./bouquet.php?id=" . $rInsertID);
         exit;
     } else {
@@ -64,12 +64,12 @@ if (isset(CoreUtilities::$request["submit_bouquet"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rBouquets = getBouquets();
+    $rBouquets = UIController::getBouquets();
     $rBouquetArr = $rBouquets[CoreUtilities::$request["id"]];
-    if ((!$rBouquetArr) or (!hasPermissions("adv", "edit_bouquet"))) {
+    if ((!$rBouquetArr) or (!UIController::hasPermissions("adv", "edit_bouquet"))) {
         exit;
     }
-} elseif (!hasPermissions("adv", "add_bouquet")) {
+} elseif (!UIController::hasPermissions("adv", "add_bouquet")) {
     exit;
 }
 
@@ -270,7 +270,7 @@ include "header.php";
                                                                 <option value="" selected>
                                                                     <?= $_["all_categories"] ?>
                                                                 </option>
-                                                                <?php foreach (getCategories_admin("movie") as $rCategory) { ?>
+                                                                <?php foreach (UIController::getCategories_admin("movie") as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>">
                                                                         <?= $rCategory["category_name"] ?>
                                                                     </option>
@@ -332,7 +332,7 @@ include "header.php";
                                                                 <option value="" selected>
                                                                     <?= $_["all_categories"] ?>
                                                                 </option>
-                                                                <?php foreach (getCategories_admin("series") as $rCategory) { ?>
+                                                                <?php foreach (UIController::getCategories_admin("series") as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>">
                                                                         <?= $rCategory["category_name"] ?>
                                                                     </option>
@@ -394,7 +394,7 @@ include "header.php";
                                                                 <option value="" selected>
                                                                     <?= $_["all_categories"] ?>
                                                                 </option>
-                                                                <?php foreach (getCategories_admin("radio") as $rCategory) { ?>
+                                                                <?php foreach (UIController::getCategories_admin("radio") as $rCategory) { ?>
                                                                     <option value="<?= $rCategory["id"] ?>">
                                                                         <?= $rCategory["category_name"] ?>
                                                                     </option>
@@ -495,7 +495,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

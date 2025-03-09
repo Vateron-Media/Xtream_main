@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "edit_series"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "edit_series"))) {
     exit;
 }
 
@@ -21,7 +21,7 @@ if (isset(CoreUtilities::$request["reorder"])) {
 if (!isset(CoreUtilities::$request["id"])) {
     exit;
 }
-$rSeries = getSerie(CoreUtilities::$request["id"]);
+$rSeries = UIController::getSerie(CoreUtilities::$request["id"]);
 if (!$rSeries) {
     exit;
 }
@@ -126,7 +126,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

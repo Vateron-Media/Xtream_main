@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "permission_block_isps"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "permission_block_isps"))) {
     exit;
 }
 
@@ -51,7 +51,7 @@ if (isset(CoreUtilities::$request["submit_isp"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rISPArr = getISP(CoreUtilities::$request["id"]);
+    $rISPArr = UIController::getISP(CoreUtilities::$request["id"]);
     if (!$rISPArr) {
         exit;
     }
@@ -164,7 +164,7 @@ include "header.php";
                 <footer class="footer">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+                            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
                         </div>
                     </div>
                 </footer>

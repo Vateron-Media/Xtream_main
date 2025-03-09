@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_e2")) && (!hasPermissions("adv", "edit_e2")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_e2")) && (!UIController::hasPermissions("adv", "edit_e2")))) {
     exit;
 }
 
@@ -11,15 +11,15 @@ if (isset(CoreUtilities::$request["id"])) {
 
 if (isset(CoreUtilities::$request["submit_e2"])) {
     if (filter_var(CoreUtilities::$request["mac"], FILTER_VALIDATE_MAC)) {
-        if ($rArray = getUser(CoreUtilities::$request["paired_user"])) {
+        if ($rArray = UIController::getUser(CoreUtilities::$request["paired_user"])) {
             if (isset(CoreUtilities::$request["edit"])) {
-                if (!hasPermissions("adv", "edit_e2")) {
+                if (!UIController::hasPermissions("adv", "edit_e2")) {
                     exit;
                 }
-                $rCurE2 = getEnigma(CoreUtilities::$request["edit"]);
+                $rCurE2 = UIController::getEnigma(CoreUtilities::$request["edit"]);
                 $ipTV_db_admin->query("DELETE FROM `lines` WHERE `id` = " . intval($rCurE2["user_id"]) . ";"); // Delete existing user.
                 $ipTV_db_admin->query("DELETE FROM `user_output` WHERE `user_id` = " . intval($rCurE2["user_id"]) . ";");
-            } elseif (!hasPermissions("adv", "add_e2")) {
+            } elseif (!UIController::hasPermissions("adv", "add_e2")) {
                 exit;
             }
             $rArray["username"] .= rand(0, 999999);
@@ -69,15 +69,15 @@ if (isset(CoreUtilities::$request["submit_e2"])) {
 
 if ((isset($rE2Arr["paired_user"])) && (!isset($rE2Arr["username"]))) {
     // Edit failed, get username.
-    $rE2Arr["username"] = getUser($rE2Arr["paired_user"])["username"];
+    $rE2Arr["username"] = UIController::getUser($rE2Arr["paired_user"])["username"];
 }
 
 if ((isset($rEditID)) && (!isset($rE2Arr))) {
-    $rE2Arr = getEnigma($rEditID);
-    if ((!$rE2Arr) or (!hasPermissions("adv", "edit_e2"))) {
+    $rE2Arr = UIController::getEnigma($rEditID);
+    if ((!$rE2Arr) or (!UIController::hasPermissions("adv", "edit_e2"))) {
         exit;
     }
-} elseif (!hasPermissions("adv", "add_e2")) {
+} elseif (!UIController::hasPermissions("adv", "add_e2")) {
     exit;
 }
 
@@ -196,7 +196,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

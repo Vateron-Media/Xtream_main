@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "security_center"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "security_center"))) {
     exit;
 }
 
@@ -66,7 +66,7 @@ include "header.php";
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach (getSecurityCenter() as $rIP) {
+                                            <?php foreach (UIController::getSecurityCenter() as $rIP) {
                                                 ?>
                                                 <tr id="ip-<?= $rIP["id"] ?>">
                                                     <td class="text-center"><a
@@ -101,7 +101,7 @@ include "header.php";
                                                     } else {
                                                         echo '<i class="text-danger fas fa-times fa-lg"></i>';
                                                     }
-                                                    rIP["is_restreamer"] ?></td>-->
+                                                    $rIP["is_restreamer"] ?></td>-->
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -138,7 +138,7 @@ include "header.php";
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach (getLeakedLines() as $rIP) {
+                                            <?php foreach (UIController::getLeakedLines() as $rIP) {
                                                 ?>
                                                 <tr id="ip-<?= $rIP["id"] ?>">
                                                     <td class="text-center"><a
@@ -178,7 +178,7 @@ include "header.php";
                                                     } else {
                                                         echo '<i class="text-danger fas fa-times fa-lg"></i>';
                                                     }
-                                                    rIP["is_restreamer"] ?></td>-->
+                                                    $rIP["is_restreamer"] ?></td>-->
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -197,7 +197,7 @@ include "header.php";
         <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+                    <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
                 </div>
             </div>
         </footer>

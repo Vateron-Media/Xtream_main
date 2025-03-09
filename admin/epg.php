@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_epg")) && (!hasPermissions("adv", "epg_edit")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_epg")) && (!UIController::hasPermissions("adv", "epg_edit")))) {
     exit;
 }
 
@@ -25,12 +25,12 @@ if (isset(CoreUtilities::$request["submit_epg"])) {
         }
     }
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "epg_edit")) {
+        if (!UIController::hasPermissions("adv", "epg_edit")) {
             exit;
         }
         $rCols = "id," . $rCols;
         $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
-    } elseif (!hasPermissions("adv", "add_epg")) {
+    } elseif (!UIController::hasPermissions("adv", "add_epg")) {
         exit;
     }
     $rQuery = "REPLACE INTO `epg`(" . $rCols . ") VALUES(" . $rValues . ");";
@@ -50,11 +50,11 @@ if (isset(CoreUtilities::$request["submit_epg"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rEPGArr = getEPG(CoreUtilities::$request["id"]);
-    if ((!$rEPGArr) or (!hasPermissions("adv", "epg_edit"))) {
+    $rEPGArr = UIController::getEPG(CoreUtilities::$request["id"]);
+    if ((!$rEPGArr) or (!UIController::hasPermissions("adv", "epg_edit"))) {
         exit;
     }
-} elseif (!hasPermissions("adv", "add_epg")) {
+} elseif (!UIController::hasPermissions("adv", "add_epg")) {
     exit;
 }
 
@@ -217,7 +217,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

@@ -1,21 +1,21 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_episode")) && (!hasPermissions("adv", "edit_episode")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_episode")) && (!UIController::hasPermissions("adv", "edit_episode")))) {
     exit;
 }
 
-$rTranscodeProfiles = getTranscodeProfiles();
+$rTranscodeProfiles = UIController::getTranscodeProfiles();
 
 if (isset(CoreUtilities::$request["submit_stream"])) {
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_episode")) {
+        if (!UIController::hasPermissions("adv", "edit_episode")) {
             exit;
         }
-        $rArray = getStream(CoreUtilities::$request["edit"]);
+        $rArray = UIController::getStream(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
-        if (!hasPermissions("adv", "add_episode")) {
+        if (!UIController::hasPermissions("adv", "add_episode")) {
             exit;
         }
         $rArray = array("movie_symlink" => 0, "type" => 5, "target_container" => array("mp4"), "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 1, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "movie_subtitles" => array(), "category_id" => null, "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 128000);
@@ -74,12 +74,12 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
     }
     $rProcessArray = array();
     if (isset(CoreUtilities::$request["multi"])) {
-        if (!hasPermissions("adv", "import_episodes")) {
+        if (!UIController::hasPermissions("adv", "import_episodes")) {
             exit;
         }
         set_time_limit(0);
         include INCLUDES_PATH . 'libs/tmdb.php';
-        $rSeries = getSerie(intval(CoreUtilities::$request["series"]));
+        $rSeries = UIController::getSerie(intval(CoreUtilities::$request["series"]));
         if (strlen($rSettings["tmdb_language"]) > 0) {
             $rTMDB = new TMDB($rSettings["tmdb_api_key"], $rSettings["tmdb_language"]);
         } else {
@@ -107,7 +107,7 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
                             if (strlen($rEpisode["still_path"]) > 0) {
                                 $rImage = "https://image.tmdb.org/t/p/w600_and_h900_bestv2" . $rEpisode["still_path"];
                                 if ($rSettings["download_images"]) {
-                                    $rImage = downloadImage($rImage);
+                                    $rImage = UIController::downloadImage($rImage);
                                 }
                             }
                             $rImportArray["name"] .= $rEpisode["name"];
@@ -130,7 +130,7 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
     } else {
         $rImportArray = array("filename" => $rArray["stream_source"][0], "properties" => array(), "name" => $rArray["stream_display_name"], "episode" => CoreUtilities::$request["episode"]);
         if ($rSettings["download_images"]) {
-            CoreUtilities::$request["movie_image"] = downloadImage(CoreUtilities::$request["movie_image"]);
+            CoreUtilities::$request["movie_image"] = UIController::downloadImage(CoreUtilities::$request["movie_image"]);
         }
         $rSeconds = intval(CoreUtilities::$request["episode_run_time"]) * 60;
         $rImportArray["properties"] = array("releasedate" => CoreUtilities::$request["releasedate"], "plot" => CoreUtilities::$request["plot"], "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "movie_image" => CoreUtilities::$request["movie_image"], "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => CoreUtilities::$request["rating"], "season" => CoreUtilities::$request["season_num"], "tmdb_id" => CoreUtilities::$request["tmdb_id"]);
@@ -173,7 +173,7 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
             }
             $ipTV_db_admin->query("DELETE FROM `series_episodes` WHERE `stream_id` = " . $rInsertID . ";");
             $ipTV_db_admin->query("INSERT INTO `series_episodes`(`season_num`, `series_id`, `stream_id`, `sort`) VALUES(" . intval(CoreUtilities::$request["season_num"]) . ", " . intval(CoreUtilities::$request["series"]) . ", " . $rInsertID . ", " . intval($rImportArray["episode"]) . ");");
-            updateSeries(intval(CoreUtilities::$request["series"]));
+            UIController::updateSeries(intval(CoreUtilities::$request["series"]));
             $rStreamExists = array();
             if (isset(CoreUtilities::$request["edit"])) {
                 $ipTV_db_admin->query("SELECT `server_stream_id`, `server_id` FROM `streams_servers` WHERE `stream_id` = " . intval($rInsertID) . ";");
@@ -215,7 +215,7 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
         }
     }
     if ($rRestart) {
-        APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => $rRestartIDs));
+        UIController::APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => $rRestartIDs));
     }
     if (isset(CoreUtilities::$request["multi"])) {
         header("Location: ./episodes.php?series=" . intval(CoreUtilities::$request["series"]));
@@ -235,17 +235,17 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
 $rServerTree = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>" . $_["stream_source"] . "</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
 
-$rSeries = getSerie(CoreUtilities::$request["sid"]);
+$rSeries = UIController::getSerie(CoreUtilities::$request["sid"]);
 if (!$rSeries) {
     header("Location: ./series.php");
     exit;
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    if (!hasPermissions("adv", "edit_episode")) {
+    if (!UIController::hasPermissions("adv", "edit_episode")) {
         exit;
     }
-    $rEpisode = getStream(CoreUtilities::$request["id"]);
+    $rEpisode = UIController::getStream(CoreUtilities::$request["id"]);
     if ((!$rEpisode) or ($rEpisode["type"] <> 5)) {
         exit;
     }
@@ -259,7 +259,7 @@ if (isset(CoreUtilities::$request["id"])) {
         $rEpisode["season"] = 0;
     }
     $rEpisode["properties"] = json_decode($rEpisode["movie_properties"], true);
-    $rStreamSys = getStreamSys(CoreUtilities::$request["id"]);
+    $rStreamSys = UIController::getStreamSys(CoreUtilities::$request["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStreamSys[intval($rServer["id"])])) {
             if ($rStreamSys[intval($rServer["id"])]["parent_id"] <> 0) {
@@ -273,14 +273,14 @@ if (isset(CoreUtilities::$request["id"])) {
         $rServerTree[] = array("id" => $rServer["id"], "parent" => $rParent, "text" => $rServer["server_name"], "icon" => "mdi mdi-server-network", "state" => array("opened" => true));
     }
 } else {
-    if (!hasPermissions("adv", "add_episode")) {
+    if (!UIController::hasPermissions("adv", "add_episode")) {
         exit;
     }
     foreach ($rServers as $rServer) {
         $rServerTree[] = array("id" => $rServer["id"], "parent" => "#", "text" => $rServer["server_name"], "icon" => "mdi mdi-server-network", "state" => array("opened" => true));
     }
     if (isset(CoreUtilities::$request["multi"])) {
-        if (!hasPermissions("adv", "import_episodes")) {
+        if (!UIController::hasPermissions("adv", "import_episodes")) {
             exit;
         }
         $rMulti = true;
@@ -372,7 +372,7 @@ include "header.php";
                             </table>
                         </div>
                     </div>
-                    <?php $rEncodeErrors = getEncodeErrors($rEpisode["id"]);
+                    <?php $rEncodeErrors = UIController::getEncodeErrors($rEpisode["id"]);
                     foreach ($rEncodeErrors as $rServerID => $rEncodeError) { ?>
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -869,7 +869,7 @@ include "header.php";
                                         for="server_id"><?= $_["server_name"] ?></label>
                                     <div class="col-md-8">
                                         <select id="server_id" class="form-control" data-toggle="select2">
-                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                       echo " selected";
                                                   } ?>>
@@ -950,7 +950,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>
@@ -1065,9 +1065,9 @@ include "header.php";
         rPath = $(elem).parent().parent().find("input").val();
         if (rPath.length > 0) {
             if (rPath.substring(0, 1) == ".") {
-                window.open('<?= getURL() ?>' + rPath.substring(1, rPath.length));
+                window.open('<?= UIController::getURL() ?>' + rPath.substring(1, rPath.length));
             } else if (rPath.substring(0, 1) == "/") {
-                window.open('<?= getURL() ?>' + rPath);
+                window.open('<?= UIController::getURL() ?>' + rPath);
             } else {
                 window.open(rPath);
             }

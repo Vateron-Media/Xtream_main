@@ -2,8 +2,8 @@
 include "session.php";
 include "functions.php";
 
-if (!checkPermissions()) {
-    goHome();
+if (!UIController::checkPermissions()) {
+    UIController::goHome();
 }
 
 include "header.php";
@@ -153,7 +153,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

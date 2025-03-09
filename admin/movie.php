@@ -1,15 +1,15 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_movie")) && (!hasPermissions("adv", "edit_movie")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_movie")) && (!UIController::hasPermissions("adv", "edit_movie")))) {
     exit;
 }
-if ((isset(CoreUtilities::$request["import"])) && (!hasPermissions("adv", "import_movies"))) {
+if ((isset(CoreUtilities::$request["import"])) && (!UIController::hasPermissions("adv", "import_movies"))) {
     exit;
 }
 
-$rCategories = getCategories_admin("movie");
-$rTranscodeProfiles = getTranscodeProfiles();
+$rCategories = UIController::getCategories_admin("movie");
+$rTranscodeProfiles = UIController::getTranscodeProfiles();
 
 if (isset(CoreUtilities::$request["submit_movie"])) {
     set_time_limit(0);
@@ -17,13 +17,13 @@ if (isset(CoreUtilities::$request["submit_movie"])) {
     ini_set('max_execution_time', 0);
     ini_set('default_socket_timeout', 0);
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_movie")) {
+        if (!UIController::hasPermissions("adv", "edit_movie")) {
             exit;
         }
-        $rArray = getStream(CoreUtilities::$request["edit"]);
+        $rArray = UIController::getStream(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
-        if (!hasPermissions("adv", "add_movie")) {
+        if (!UIController::hasPermissions("adv", "add_movie")) {
             exit;
         }
         $rArray = array("movie_symlink" => 0, "type" => 2, "target_container" => array("mp4"), "added" => time(), "read_native" => 0, "stream_all" => 0, "redirect_stream" => 1, "direct_source" => 0, "gen_timestamps" => 1, "transcode_attributes" => array(), "stream_display_name" => "", "stream_source" => array(), "movie_subtitles" => array(), "category_id" => array(), "stream_icon" => "", "notes" => "", "custom_sid" => "", "custom_ffmpeg" => "", "transcode_profile_id" => 0, "enable_transcode" => 0, "auto_restart" => "[]", "allow_record" => 0, "rtmp_output" => 0, "epg_id" => null, "channel_id" => null, "epg_lang" => null, "tv_archive_server_id" => 0, "tv_archive_duration" => 0, "delay_minutes" => 0, "external_push" => array(), "probesize_ondemand" => 256000);
@@ -84,7 +84,7 @@ if (isset(CoreUtilities::$request["submit_movie"])) {
     unset(CoreUtilities::$request["bouquets"]);
     $rImportStreams = array();
     if (!empty($_FILES['m3u_file']['tmp_name'])) {
-        if (!hasPermissions("adv", "import_movies")) {
+        if (!UIController::hasPermissions("adv", "import_movies")) {
             exit;
         }
         $rStreamDatabase = array();
@@ -125,7 +125,7 @@ if (isset(CoreUtilities::$request["submit_movie"])) {
             }
         }
     } elseif (!empty(CoreUtilities::$request["import_folder"])) {
-        if (!hasPermissions("adv", "import_movies")) {
+        if (!UIController::hasPermissions("adv", "import_movies")) {
             exit;
         }
         $rStreamDatabase = array();
@@ -142,10 +142,10 @@ if (isset(CoreUtilities::$request["submit_movie"])) {
         $rParts = explode(":", CoreUtilities::$request["import_folder"]);
         if (is_numeric($rParts[1])) {
             if (isset(CoreUtilities::$request["scan_recursive"])) {
-                $rFiles = scanRecursive(intval($rParts[1]), $rParts[2], array("mp4", "mkv", "avi", "mpg", "flv")); // Only these containers are accepted.
+                $rFiles = UIController::scanRecursive(intval($rParts[1]), $rParts[2], array("mp4", "mkv", "avi", "mpg", "flv")); // Only these containers are accepted.
             } else {
                 $rFiles = array();
-                foreach (listDir(intval($rParts[1]), rtrim($rParts[2], "/"), array("mp4", "mkv", "avi", "mpg", "flv"))["files"] as $rFile) {
+                foreach (UIController::listDir(intval($rParts[1]), rtrim($rParts[2], "/"), array("mp4", "mkv", "avi", "mpg", "flv"))["files"] as $rFile) {
                     $rFiles[] = rtrim($rParts[2], "/") . "/" . $rFile;
                 }
             }
@@ -166,8 +166,8 @@ if (isset(CoreUtilities::$request["submit_movie"])) {
             $rTMDBURL = "";
         }
         if ($rSettings["download_images"]) {
-            CoreUtilities::$request["movie_image"] = downloadImage(CoreUtilities::$request["movie_image"]);
-            CoreUtilities::$request["backdrop_path"] = downloadImage(CoreUtilities::$request["backdrop_path"]);
+            CoreUtilities::$request["movie_image"] = UIController::downloadImage(CoreUtilities::$request["movie_image"]);
+            CoreUtilities::$request["backdrop_path"] = UIController::downloadImage(CoreUtilities::$request["backdrop_path"]);
         }
         $rSeconds = intval(CoreUtilities::$request["episode_run_time"]) * 60;
         $rImportArray["movie_properties"] = array("tmdb_url" => $rTMDBURL, "tmdb_id" => CoreUtilities::$request["tmdb_id"], "name" => $rArray["stream_display_name"], "o_name" => $rArray["stream_display_name"], "cover_big" => CoreUtilities::$request["movie_image"], "movie_image" => CoreUtilities::$request["movie_image"], "releasedate" => CoreUtilities::$request["releasedate"], "episode_run_time" => CoreUtilities::$request["episode_run_time"], "youtube_trailer" => CoreUtilities::$request["youtube_trailer"], "director" => CoreUtilities::$request["director"], "actors" => CoreUtilities::$request["cast"], "cast" => CoreUtilities::$request["cast"], "description" => CoreUtilities::$request["plot"], "plot" => CoreUtilities::$request["plot"], "age" => "", "mpaa_rating" => "", "rating_count_kinopoisk" => 0, "country" => CoreUtilities::$request["country"], "genre" => CoreUtilities::$request["genre"], "backdrop_path" => array(CoreUtilities::$request["backdrop_path"]), "duration_secs" => $rSeconds, "duration" => sprintf('%02d:%02d:%02d', ($rSeconds / 3600), ($rSeconds / 60 % 60), $rSeconds % 60), "video" => array(), "audio" => array(), "bitrate" => 0, "rating" => CoreUtilities::$request["rating"]);
@@ -194,7 +194,7 @@ if (isset(CoreUtilities::$request["submit_movie"])) {
                 $rImportArray[$rKey] = $rImportStream[$rKey];
             }
             $rImportArray['category_id'] = '[' . implode(',', array_map('intval', $categoriesIDs)) . ']';
-            $rImportArray["order"] = getNextOrder();
+            $rImportArray["order"] = UIController::getNextOrder();
             $rSync = $rImportArray["async"];
             unset($rImportArray["async"]);
             $rCols = "`" . implode('`,`', array_keys($rImportArray)) . "`";
@@ -259,11 +259,11 @@ if (isset(CoreUtilities::$request["submit_movie"])) {
                     $rRestartIDs[] = $rInsertID;
                 }
                 foreach ($rBouquets as $rBouquet) {
-                    addToBouquet("movie", $rBouquet, $rInsertID);
+                    UIController::addToBouquet("movie", $rBouquet, $rInsertID);
                 }
-                foreach (getBouquets() as $rBouquet) {
+                foreach (UIController::getBouquets() as $rBouquet) {
                     if (!in_array($rBouquet["id"], $rBouquets)) {
-                        removeFromBouquet("movie", $rBouquet["id"], $rInsertID);
+                        UIController::removeFromBouquet("movie", $rBouquet["id"], $rInsertID);
                     }
                 }
                 if ($rSync) {
@@ -272,9 +272,9 @@ if (isset(CoreUtilities::$request["submit_movie"])) {
                 }
             }
         }
-        scanBouquets();
+        UIController::scanBouquets();
         if ($rRestart) {
-            APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => $rRestartIDs));
+            UIController::APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => $rRestartIDs));
         }
         if (isset($_FILES["m3u_file"])) {
             header("Location: ./movies.php");
@@ -294,15 +294,15 @@ if (isset(CoreUtilities::$request["submit_movie"])) {
 $rServerTree = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>" . $_["stream_source"] . "</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
 if (isset(CoreUtilities::$request["id"])) {
-    if ((isset(CoreUtilities::$request["import"])) or (!hasPermissions("adv", "edit_movie"))) {
+    if ((isset(CoreUtilities::$request["import"])) or (!UIController::hasPermissions("adv", "edit_movie"))) {
         exit;
     }
-    $rMovie = getStream(CoreUtilities::$request["id"]);
+    $rMovie = UIController::getStream(CoreUtilities::$request["id"]);
     if ((!$rMovie) or ($rMovie["type"] <> 2)) {
         exit;
     }
     $rMovie["properties"] = json_decode($rMovie["movie_properties"], true);
-    $rStreamSys = getStreamSys(CoreUtilities::$request["id"]);
+    $rStreamSys = UIController::getStreamSys(CoreUtilities::$request["id"]);
     foreach ($rServers as $rServer) {
         if (isset($rStreamSys[intval($rServer["id"])])) {
             if ($rStreamSys[intval($rServer["id"])]["parent_id"] <> 0) {
@@ -316,7 +316,7 @@ if (isset(CoreUtilities::$request["id"])) {
         $rServerTree[] = array("id" => $rServer["id"], "parent" => $rParent, "text" => $rServer["server_name"], "icon" => "mdi mdi-server-network", "state" => array("opened" => true));
     }
 } else {
-    if (!hasPermissions("adv", "add_movie")) {
+    if (!UIController::hasPermissions("adv", "add_movie")) {
         exit;
     }
     foreach ($rServers as $rServer) {
@@ -425,7 +425,7 @@ include "header.php";
                             </table>
                         </div>
                     </div>
-                    <?php $rEncodeErrors = getEncodeErrors($rMovie["id"]);
+                    <?php $rEncodeErrors = UIController::getEncodeErrors($rMovie["id"]);
                     foreach ($rEncodeErrors as $rServerID => $rEncodeError) { ?>
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -593,7 +593,7 @@ include "header.php";
                                                         <select name="category_id[]" id="category_id"
                                                             class="form-control select2-multiple" data-toggle="select2"
                                                             multiple="multiple" data-placeholder="Choose...">
-                                                            <?php foreach (getCategories_admin('movie') as $rCategory): ?>
+                                                            <?php foreach (UIController::getCategories_admin('movie') as $rCategory): ?>
                                                                 <option <?php if (isset($rMovie) && in_array(intval($rCategory['id']), json_decode($rMovie['category_id'], true))) {
                                                                     echo 'selected ';
                                                                 } ?>value="<?php echo $rCategory['id']; ?>">
@@ -611,7 +611,7 @@ include "header.php";
                                                             class="form-control select2-multiple" data-toggle="select2"
                                                             multiple="multiple"
                                                             data-placeholder="<?= $_["choose"] ?>...">
-                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                            <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                                 <option <?php if (isset($rMovie)) {
                                                                     if (in_array($rMovie["id"], json_decode($rBouquet["bouquet_movies"], true))) {
                                                                         echo "selected ";
@@ -1006,7 +1006,7 @@ include "header.php";
                                             for="server_id"><?= $_["server_name"] ?></label>
                                         <div class="col-md-8">
                                             <select id="server_id" class="form-control" data-toggle="select2">
-                                                <?php foreach (getStreamingServers() as $rServer) { ?>
+                                                <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                     <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                           echo " selected";
                                                       } ?>>
@@ -1087,7 +1087,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>
@@ -1196,9 +1196,9 @@ include "header.php";
         rPath = $(elem).parent().parent().find("input").val();
         if (rPath.length > 0) {
             if (rPath.substring(0, 1) == ".") {
-                window.open('<?= getURL() ?>' + rPath.substring(1, rPath.length));
+                window.open('<?= UIController::getURL() ?>' + rPath.substring(1, rPath.length));
             } else if (rPath.substring(0, 1) == "/") {
-                window.open('<?= getURL() ?>' + rPath);
+                window.open('<?= UIController::getURL() ?>' + rPath);
             } else {
                 window.open(rPath);
             }

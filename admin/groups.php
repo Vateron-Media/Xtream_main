@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mng_groups"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "mng_groups"))) {
     exit;
 }
 
@@ -13,7 +13,7 @@ include "header.php";
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <?php if (hasPermissions("adv", "add_group")) { ?>
+                    <?php if (UIController::hasPermissions("adv", "add_group")) { ?>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li>
@@ -48,7 +48,7 @@ include "header.php";
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (getMemberGroups() as $rGroup) { ?>
+                                <?php foreach (UIController::getMemberGroups() as $rGroup) { ?>
                                     <tr id="group-<?= $rGroup["group_id"] ?>">
                                         <td class="text-center"><?= $rGroup["group_id"] ?></td>
                                         <td><?= $rGroup["group_name"] ?></td>
@@ -87,7 +87,7 @@ include "header.php";
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group">
-                                                <?php if (hasPermissions("adv", "edit_group")) { ?>
+                                                <?php if (UIController::hasPermissions("adv", "edit_group")) { ?>
                                                     <a href="./group.php?id=<?= $rGroup["group_id"] ?>"><button type="button"
                                                             data-toggle="tooltip" data-placement="top" title=""
                                                             data-original-title="<?= $_["edit_group"] ?>"
@@ -119,7 +119,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "ticket"))) {
+if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "ticket"))) {
     exit;
 }
 
@@ -33,7 +33,7 @@ if (isset(CoreUtilities::$request["submit_ticket"])) {
                 $_STATUS = 2;
             }
         } else {
-            $rTicket = getTicket(CoreUtilities::$request["respond"]);
+            $rTicket = UIController::getTicket(CoreUtilities::$request["respond"]);
             if ($rTicket) {
                 if (intval($rUserInfo["id"]) == intval($rTicket["member_id"])) {
                     $ipTV_db_admin->query("UPDATE `tickets` SET `admin_read` = 0, `user_read` = 1 WHERE `id` = " . intval(CoreUtilities::$request["respond"]) . ";");
@@ -51,7 +51,7 @@ if (isset(CoreUtilities::$request["submit_ticket"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rTicket = getTicket(CoreUtilities::$request["id"]);
+    $rTicket = UIController::getTicket(CoreUtilities::$request["id"]);
     if (!$rTicket) {
         exit;
     }
@@ -163,7 +163,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

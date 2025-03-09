@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "channel_order"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "channel_order"))) {
     exit;
 }
 
@@ -83,7 +83,7 @@ include "header.php";
                                                     <div class="col-md-8">
                                                         <select name="select_category" id="select_category"
                                                             class="form-control select2" data-toggle="select2">>
-                                                            <?php foreach (getCategories_admin() as $rCategory) { ?>
+                                                            <?php foreach (UIController::getCategories_admin() as $rCategory) { ?>
                                                                 <option value="<?= $rCategory["id"] ?>">
                                                                     <?= $rCategory["category_name"] ?>
                                                                 </option>
@@ -128,7 +128,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

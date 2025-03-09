@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "process_monitor"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "process_monitor"))) {
     exit;
 }
 
@@ -11,19 +11,19 @@ if ((!isset(CoreUtilities::$request["server"])) or (!isset($rServers[CoreUtiliti
 }
 
 if (isset(CoreUtilities::$request["clear"])) {
-    freeTemp(CoreUtilities::$request["server"]);
+    UIController::freeTemp(CoreUtilities::$request["server"]);
     header("Location: ./process_monitor.php?server=" . CoreUtilities::$request["server"]);
     exit;
 }
 
 if (isset(CoreUtilities::$request["clear_s"])) {
-    freeStreams(CoreUtilities::$request["server"]);
+    UIController::freeStreams(CoreUtilities::$request["server"]);
     header("Location: ./process_monitor.php?server=" . CoreUtilities::$request["server"]);
     exit;
 }
 
-$rStreams = getStreamPIDs(CoreUtilities::$request["server"]);
-$rFS = getFreeSpace(CoreUtilities::$request["server"]);
+$rStreams = UIController::getStreamPIDs(CoreUtilities::$request["server"]);
+$rFS = UIController::getFreeSpace(CoreUtilities::$request["server"]);
 
 include "header.php";
 ?>
@@ -155,7 +155,7 @@ include "header.php";
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach (getPIDs(CoreUtilities::$request["server"]) as $rProcess) { ?>
+                                            <?php foreach (UIController::getPIDs(CoreUtilities::$request["server"]) as $rProcess) { ?>
                                                     <tr>
                                                         <td><?= $rProcess["pid"] ?></td>
                                                         <td><?= $rProcess["user"] ?></td>
@@ -214,7 +214,7 @@ include "header.php";
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+                        <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
                     </div>
                 </div>
             </footer>

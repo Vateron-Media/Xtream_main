@@ -4,7 +4,7 @@ if (!isset($_SESSION['hash'])) {
     header("Location: ./login.php");
     exit;
 }
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "rtmp"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "rtmp"))) {
     exit;
 }
 
@@ -17,7 +17,7 @@ include "header.php";
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <?php if (hasPermissions("adv", "add_rtmp")) { ?>
+                    <?php if (UIController::hasPermissions("adv", "add_rtmp")) { ?>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li>
@@ -49,7 +49,7 @@ include "header.php";
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach (getRTMPIPs() as $rIP) {
+                                <?php foreach (UIController::getRTMPIPs() as $rIP) {
                                     ?>
                                     <tr id="ip-<?= $rIP["id"] ?>">
                                         <td class="text-center"><?= $rIP["id"] ?></td>
@@ -57,7 +57,7 @@ include "header.php";
                                         <td><?= $rIP["notes"] ?></td>
                                         <td class="text-center">
                                             <div class="btn-group">
-                                                <?php if (hasPermissions("adv", "add_rtmp")) { ?>
+                                                <?php if (UIController::hasPermissions("adv", "add_rtmp")) { ?>
                                                     <a href="./rtmp_ip.php?id=<?= $rIP["id"] ?>"><button type="button"
                                                             class="btn btn-light waves-effect waves-light btn-xs"><i
                                                                 class="mdi mdi-pencil-outline"></i></button></a>
@@ -83,7 +83,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

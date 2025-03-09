@@ -1,7 +1,7 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "add_cat"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "add_cat"))) {
     exit;
 }
 
@@ -24,7 +24,7 @@ if (isset(CoreUtilities::$request["submit_category"])) {
             $rValues .= '\'' . $rValue . '\'';
         }
     }
-    if ((isset(CoreUtilities::$request["edit"])) && (hasPermissions("adv", "edit_cat"))) {
+    if ((isset(CoreUtilities::$request["edit"])) && (UIController::hasPermissions("adv", "edit_cat"))) {
         $rCols = "id," . $rCols;
         $rValues = CoreUtilities::$request["edit"] . "," . $rValues;
     }
@@ -45,8 +45,8 @@ if (isset(CoreUtilities::$request["submit_category"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rCategoryArr = getCategory(CoreUtilities::$request["id"]);
-    if ((!$rCategoryArr) or (!hasPermissions("adv", "edit_cat"))) {
+    $rCategoryArr = UIController::getCategory(CoreUtilities::$request["id"]);
+    if ((!$rCategoryArr) or (!UIController::hasPermissions("adv", "edit_cat"))) {
         exit;
     }
 }
@@ -206,7 +206,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

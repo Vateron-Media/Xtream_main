@@ -1,28 +1,28 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or ((!hasPermissions("adv", "add_series")) && (!hasPermissions("adv", "edit_series")))) {
+if ((!$rPermissions["is_admin"]) or ((!UIController::hasPermissions("adv", "add_series")) && (!UIController::hasPermissions("adv", "edit_series")))) {
     exit;
 }
 
-$rCategories = getCategories_admin("series");
+$rCategories = UIController::getCategories_admin("series");
 
 if (isset(CoreUtilities::$request["submit_series"])) {
     if (isset(CoreUtilities::$request["edit"])) {
-        if (!hasPermissions("adv", "edit_series")) {
+        if (!UIController::hasPermissions("adv", "edit_series")) {
             exit;
         }
-        $rArray = getSerie(CoreUtilities::$request["edit"]);
+        $rArray = UIController::getSerie(CoreUtilities::$request["edit"]);
         unset($rArray["id"]);
     } else {
-        if (!hasPermissions("adv", "add_series")) {
+        if (!UIController::hasPermissions("adv", "add_series")) {
             exit;
         }
         $rArray = array("title" => "", "category_id" => "", "episode_run_time" => 0, "tmdb_id" => 0, "cover" => "", "genre" => "", "plot" => "", "cast" => "", "rating" => 0, "director" => "", "releaseDate" => "", "last_modified" => time(), "seasons" => array(), "backdrop_path" => array(), "youtube_trailer" => "");
     }
     if ($rSettings["download_images"]) {
-        CoreUtilities::$request["cover"] = downloadImage(CoreUtilities::$request["cover"]);
-        CoreUtilities::$request["backdrop_path"] = downloadImage(CoreUtilities::$request["backdrop_path"]);
+        CoreUtilities::$request["cover"] = UIController::downloadImage(CoreUtilities::$request["cover"]);
+        CoreUtilities::$request["backdrop_path"] = UIController::downloadImage(CoreUtilities::$request["backdrop_path"]);
     }
     $rBouquets = CoreUtilities::$request["bouquets"];
     unset(CoreUtilities::$request["bouquets"]);
@@ -62,16 +62,16 @@ if (isset(CoreUtilities::$request["submit_series"])) {
         } else {
             $rInsertID = $ipTV_db_admin->last_insert_id();
         }
-        updateSeries(intval($rInsertID));
+        UIController::updateSeries(intval($rInsertID));
         foreach ($rBouquets as $rBouquet) {
-            addToBouquet("series", $rBouquet, $rInsertID);
+            UIController::addToBouquet("series", $rBouquet, $rInsertID);
         }
-        foreach (getBouquets() as $rBouquet) {
+        foreach (UIController::getBouquets() as $rBouquet) {
             if (!in_array($rBouquet["id"], $rBouquets)) {
-                removeFromBouquet("series", $rBouquet["id"], $rInsertID);
+                UIController::removeFromBouquet("series", $rBouquet["id"], $rInsertID);
             }
         }
-        scanBouquets();
+        UIController::scanBouquets();
     }
     if (isset($rInsertID)) {
         header("Location: ./serie.php?id=" . $rInsertID);
@@ -82,11 +82,11 @@ if (isset(CoreUtilities::$request["submit_series"])) {
 }
 
 if (isset(CoreUtilities::$request["id"])) {
-    $rSeries = getSerie(CoreUtilities::$request["id"]);
-    if ((!$rSeries) or (!hasPermissions("adv", "edit_series"))) {
+    $rSeries = UIController::getSerie(CoreUtilities::$request["id"]);
+    if ((!$rSeries) or (!UIController::hasPermissions("adv", "edit_series"))) {
         exit;
     }
-} elseif (!hasPermissions("adv", "add_series")) {
+} elseif (!UIController::hasPermissions("adv", "add_series")) {
     exit;
 }
 
@@ -209,7 +209,7 @@ include "header.php";
                                                         <select name="bouquets[]" id="bouquets"
                                                             class="form-control select2-multiple" data-toggle="select2"
                                                             multiple="multiple" data-placeholder="<?= $_["choose"] ?>">
-                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                            <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                                 <option <?php if (isset($rSeries)) {
                                                                     if (in_array($rSeries["id"], json_decode($rBouquet["bouquet_series"], true))) {
                                                                         echo "selected ";
@@ -376,7 +376,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>
@@ -432,9 +432,9 @@ include "header.php";
         rPath = $(elem).parent().parent().find("input").val();
         if (rPath.length > 0) {
             if (rPath.substring(0, 1) == ".") {
-                window.open('<?= getURL() ?>' + rPath.substring(1, rPath.length));
+                window.open('<?= UIController::getURL() ?>' + rPath.substring(1, rPath.length));
             } else if (rPath.substring(0, 1) == "/") {
-                window.open('<?= getURL() ?>' + rPath);
+                window.open('<?= UIController::getURL() ?>' + rPath);
             } else {
                 window.open(rPath);
             }

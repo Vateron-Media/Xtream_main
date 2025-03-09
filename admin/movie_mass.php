@@ -1,11 +1,11 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "mass_sedits_vod"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "mass_sedits_vod"))) {
     exit;
 }
 
-$rCategories = getCategories_admin("movie");
+$rCategories = UIController::getCategories_admin("movie");
 
 if (isset(CoreUtilities::$request["submit_stream"])) {
     $rArray = array();
@@ -108,17 +108,17 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
             if (isset(CoreUtilities::$request["c_bouquets"])) {
                 $rBouquets = CoreUtilities::$request["bouquets"];
                 foreach ($rBouquets as $rBouquet) {
-                    addToBouquet("movie", $rBouquet, $rStreamID);
+                    UIController::addToBouquet("movie", $rBouquet, $rStreamID);
                 }
-                foreach (getBouquets() as $rBouquet) {
+                foreach (UIController::getBouquets() as $rBouquet) {
                     if (!in_array($rBouquet["id"], $rBouquets)) {
-                        removeFromBouquet("movie", $rBouquet["id"], $rStreamID);
+                        UIController::removeFromBouquet("movie", $rBouquet["id"], $rStreamID);
                     }
                 }
             }
         }
         if (isset(CoreUtilities::$request["reencode_on_edit"])) {
-            APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => array_values($rStreamIDs)));
+            UIController::APIRequest(array("action" => "vod", "sub" => "start", "stream_ids" => array_values($rStreamIDs)));
         }
         if (isset(CoreUtilities::$request["reprocess_tmdb"])) {
             foreach ($rStreamIDs as $rStreamID) {
@@ -128,14 +128,14 @@ if (isset(CoreUtilities::$request["submit_stream"])) {
             }
         }
         if (isset(CoreUtilities::$request["c_bouquets"])) {
-            scanBouquets();
+            UIController::scanBouquets();
         }
     }
     $_STATUS = 0;
 }
 
 
-$rTranscodeProfiles = getTranscodeProfiles();
+$rTranscodeProfiles = UIController::getTranscodeProfiles();
 $rServerTree = array();
 $rServerTree[] = array("id" => "source", "parent" => "#", "text" => "<strong>" . $_["stream_source"] . "</strong>", "icon" => "mdi mdi-youtube-tv", "state" => array("opened" => true));
 foreach ($rServers as $rServer) {
@@ -311,7 +311,7 @@ include "header.php";
                                                             class="form-control select2-multiple" data-toggle="select2"
                                                             multiple="multiple"
                                                             data-placeholder="<?= $_["choose"] ?>...">
-                                                            <?php foreach (getBouquets() as $rBouquet) { ?>
+                                                            <?php foreach (UIController::getBouquets() as $rBouquet) { ?>
                                                                 <option value="<?= $rBouquet["id"] ?>">
                                                                     <?= $rBouquet["bouquet_name"] ?>
                                                                 </option>
@@ -511,7 +511,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

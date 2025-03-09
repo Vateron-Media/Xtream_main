@@ -24,7 +24,7 @@ function loadCron() {
     $ipTV_db_admin->query('SELECT `id`, `stream_display_name`, `series_no`, `stream_source` FROM `streams` WHERE `type` = 3 AND `series_no` <> 0;');
     if ($ipTV_db_admin->num_rows() > 0) {
         foreach ($ipTV_db_admin->get_rows() as $rRow) {
-            $rPlaylist = generateSeriesPlaylist(intval($rRow['series_no']));
+            $rPlaylist = UIController::generateSeriesPlaylist(intval($rRow['series_no']));
             if ($rPlaylist['success']) {
                 $rSourceArray = json_decode($rRow['stream_source'], true);
                 $rUpdate = false;
@@ -40,5 +40,5 @@ function loadCron() {
             }
         }
     }
-    scanBouquets();
+    UIController::scanBouquets();
 }

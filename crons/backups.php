@@ -42,7 +42,7 @@ if (posix_getpwuid(posix_geteuid())['name'] == 'xc_vm') {
                     }
                 }
             }
-            $rBackups = getBackups();
+            $rBackups = UIController::getBackups();
             if ((count($rBackups) > intval(CoreUtilities::$settings['backups_to_keep'])) && (intval(CoreUtilities::$settings['backups_to_keep']) > 0)) {
                 $rDelete = array_slice($rBackups, 0, count($rBackups) - intval(CoreUtilities::$settings['backups_to_keep']));
                 foreach ($rDelete as $rItem) {

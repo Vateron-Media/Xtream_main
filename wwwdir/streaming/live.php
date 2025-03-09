@@ -21,7 +21,7 @@ header("Access-Control-Allow-Origin: *");
 // }
 // if (!empty(CoreUtilities::$settings["send_unique_header"])) {
 //     $rExpires = new DateTime("+6 months", new DateTimeZone("GMT"));
-//     header("Set-Cookie: " . CoreUtilities::$settings["send_unique_header"] . "=" . generateString(11) . "; Domain=" . CoreUtilities::$settings["send_unique_header_domain"] . "; Expires=" . $rExpires->format(DATE_RFC2822) . "; Path=/; Secure; HttpOnly; SameSite=none");
+//     header("Set-Cookie: " . CoreUtilities::$settings["send_unique_header"] . "=" . CoreUtilities::generateString(11) . "; Domain=" . CoreUtilities::$settings["send_unique_header_domain"] . "; Expires=" . $rExpires->format(DATE_RFC2822) . "; Path=/; Secure; HttpOnly; SameSite=none");
 // }
 $rCreateExpiration = CoreUtilities::$settings["create_expiration"] ?: 5;
 $rIP = ipTV_streaming::getUserIP();

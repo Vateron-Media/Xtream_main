@@ -4,7 +4,7 @@ include "functions.php";
 if (($rPermissions["is_reseller"]) && (!$rPermissions["reset_stb_data"])) {
     exit;
 }
-if (($rPermissions["is_admin"]) && (!hasPermissions("adv", "streams"))) {
+if (($rPermissions["is_admin"]) && (!UIController::hasPermissions("adv", "streams"))) {
     exit;
 }
 
@@ -44,14 +44,14 @@ include "header.php";
                                 </a>
                                 <?php
                                 if ($rPermissions["is_admin"]) {
-                                    if (hasPermissions("adv", "add_stream")) { ?>
+                                    if (UIController::hasPermissions("adv", "add_stream")) { ?>
                                         <a href="stream.php">
                                             <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
                                                 <?= $_["add_stream"] ?>
                                             </button>
                                         </a>
                                     <?php }
-                                    if (hasPermissions("adv", "create_channel")) { ?>
+                                    if (UIController::hasPermissions("adv", "create_channel")) { ?>
                                         <a href="created_channel.php">
                                             <button type="button" class="btn btn-purple waves-effect waves-light btn-sm">
                                                 <?= $_["create"] ?>
@@ -94,7 +94,7 @@ include "header.php";
                                     <div class="col-md-3">
                                         <select id="stream_server_id" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
-                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                                                             echo " selected";
                                                                                         } ?>><?= $rServer["server_name"] ?></option>
@@ -120,7 +120,7 @@ include "header.php";
                                     <div class="col-md-3">
                                         <select id="stream_server_id" class="form-control" data-toggle="select2">
                                             <option value="" selected><?= $_["all_servers"] ?></option>
-                                            <?php foreach (getStreamingServers() as $rServer) { ?>
+                                            <?php foreach (UIController::getStreamingServers() as $rServer) { ?>
                                                 <option value="<?= $rServer["id"] ?>" <?php if ((isset(CoreUtilities::$request["server"])) && (CoreUtilities::$request["server"] == $rServer["id"])) {
                                                                                             echo " selected";
                                                                                         } ?>><?= $rServer["server_name"] ?></option>
@@ -213,7 +213,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>

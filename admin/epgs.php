@@ -1,11 +1,11 @@
 <?php
 include "session.php";
 include "functions.php";
-if ((!$rPermissions["is_admin"]) or (!hasPermissions("adv", "epg"))) {
+if ((!$rPermissions["is_admin"]) or (!UIController::hasPermissions("adv", "epg"))) {
     exit;
 }
 
-$rEPGs = getEPGs();
+$rEPGs = UIController::getEPGs();
 include "header.php";
 ?>
 
@@ -22,7 +22,7 @@ include "header.php";
                                     onClick="forceUpdate();" id="force_update">
                                     <i class="mdi mdi-refresh"></i> <?= $_["force_epg_reload"] ?>
                                 </button>
-                                <?php if (hasPermissions("adv", "add_epg")) { ?>
+                                <?php if (UIController::hasPermissions("adv", "add_epg")) { ?>
                                     <a href="epg.php">
                                         <button type="button" class="btn btn-success waves-effect waves-light btn-sm">
                                             <i class="mdi mdi-plus"></i> <?= $_["add_epg"] ?>
@@ -67,7 +67,7 @@ include "header.php";
                                             echo $_["never"];
                                         } ?></td>
                                         <td class="text-center">
-                                            <?php if (hasPermissions("adv", "epg_edit")) { ?>
+                                            <?php if (UIController::hasPermissions("adv", "epg_edit")) { ?>
                                                 <div class="btn-group">
                                                     <a href="./epg.php?id=<?= $rEPG["id"] ?>"><button type="button"
                                                             data-toggle="tooltip" data-placement="top" title=""
@@ -100,7 +100,7 @@ include "header.php";
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 copyright text-center"><?= getFooter() ?></div>
+            <div class="col-md-12 copyright text-center"><?= UIController::getFooter() ?></div>
         </div>
     </div>
 </footer>
